@@ -1,67 +1,15 @@
-Ext.provide('Phlexible.siteroots.UrlGrid');
+Ext.define('Phlexible.siteroots.UrlGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.siteroots-urls',
 
-Ext.require('Phlexible.siteroots.model.Url');
-Ext.require('Phlexible.siteroots.grid.LanguageCheckColumn');
-Ext.require('Phlexible.elements.EidSelector');
-
-Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.url_mappings,
     strings: Phlexible.siteroots.Strings,
     border: false,
-    autoExpandColumn: 'hostname',
-
-    viewConfig: {
-        emptyText: Phlexible.siteroots.Strings.no_url_mappings
-    },
+    emptyText: Phlexible.siteroots.Strings.no_url_mappings,
 
     initComponent: function () {
-
-        // Create RowActions Plugin
-        this.actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
-//          autoWidth:false,
-            width: 150,
-            actions: [
-                {
-                    iconCls: 'p-siteroot-delete-icon',
-                    tooltip: this.strings.delete,
-                    callback: function (grid, record, action, row, col) {
-                        var r = grid.store.getAt(row);
-
-                        Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
-                            if (btn === 'yes') {
-                                this.onDeleteUrl(r);
-                            }
-                        }, this);
-                    }.createDelegate(this)
-                }
-            ],
-            getData: function (value, cell, record, row, col, store) {
-                switch (record.get('handler')) {
-                    case 'Siteroot':
-                        record.data.hide_config = false;
-                        break;
-
-                    default:
-                        record.data.hide_config = true;
-                        break;
-                }
-
-                return record.data || {};
-            }
-        });
-
-        this.tbar = [
-            {
-                text: this.strings.add_mapping,
-                iconCls: 'p-siteroot-add-icon',
-                handler: this.onAddUrl,
-                scope: this
-            }
-        ];
-
-        this.store = new Ext.data.JsonStore({
-            fields: Phlexible.siteroots.model.Url
+        this.store = new Ext.data.Store({
+            model: 'Phlexible.siteroots.model.Url'
         });
 
         this.columns = [
@@ -70,29 +18,33 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 hidden: true,
                 dataIndex: 'id'
             },
-            this.cc2 = new Phlexible.siteroots.grid.LanguageCheckColumn({
+            {
+                xtype: 'checkcolumn',
                 header: this.strings['default'],
                 dataIndex: 'default',
                 languageIndex: 'language',
                 width: 50
-            }),
+            },
             {
                 id: 'hostname',
                 header: this.strings.hostname,
                 dataIndex: 'hostname',
                 sortable: true,
                 vtype: 'url',
-                editor: new Ext.form.TextField({
-                    //allowBlank: false
-                })
+                flex: 1,
+                editor: {
+                    xtype: 'textfield',
+                    allowBlank: false
+                }
             },
             {
                 header: this.strings.language,
                 dataIndex: 'language',
                 sortable: true,
-                renderer: this.renderLanguage.createDelegate(this),
+                renderer: this.renderLanguage,
                 width: 100,
-                editor: new Ext.ux.IconCombo({
+                editor: {
+                    xtype: 'iconcombo',
                     allowBlank: true,
                     editable: false,
                     triggerAction: 'all',
@@ -102,18 +54,19 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     valueField: 'language',
                     iconClsField: 'icon',
                     emptyText: '',
-                    store: new Ext.data.SimpleStore({
-                        fields: ['language', 'title', 'icon'],
-                        data: Phlexible.Config.get('set.language.frontend')
+                    store: Ext.create('Ext.data.SimpleStore', {
+                        model: 'Phlexible.gui.model.KeyValueIconCls',
+                        data: Phlexible.App.getConfig().get('set.language.frontend')
                     })
-                })
+                }
             },
             {
                 header: this.strings.target,
                 dataIndex: 'target',
                 sortable: true,
-                width: 200,
-                editor: new Phlexible.elements.EidSelector({
+                width: 200/*,
+                TODO: enable
+                editor: Ext.reate('Phlexible.elements.EidSelector', {
                     labelSeparator: '',
                     element: {
                         siteroot_id: this.siterootId
@@ -121,23 +74,42 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     width: 300,
                     listWidth: 283,
                     treeWidth: 283
-                })
+                })*/
             },
-            this.actions
+            {
+                xtype: 'actioncolumn',
+                items: [{
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                    tooltip: this.strings.delete,
+                    handler: function (grid, rowIndex, colIndex) {
+                        var r = grid.getStore().getAt(rowIndex);
+
+                        Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
+                            if (btn === 'yes') {
+                                this.onDeleteUrl(r);
+                            }
+                        }, this);
+                    },
+                    scope: this
+                }]
+            }
         ];
 
-        this.plugins = [this.cc2, this.actions];
+        this.tbar = [
+            {
+                text: this.strings.add_mapping,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                handler: this.onAddUrl,
+                scope: this
+            }
+        ];
 
-        this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect: true
-        });
-
-        this.addListener({
+        this.on({
             afterEdit: this.onValidateEdit,
             scope: this
         });
 
-        Phlexible.siteroots.UrlGrid.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     renderLanguage: function (v, md, r, ri, ci, store) {
@@ -198,9 +170,12 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         this.store.loadData(data.urls);
 
-        var cm = this.getColumnModel();
+        /*
+         TODO: enable
+        var cm = this.getSelectionModel();
         var editor = cm.getCellEditor(4, 0);
         editor.field.setSiterootId(id);
+         */
     },
 
     /**
@@ -298,5 +273,3 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     }
 
 });
-
-Ext.reg('siteroots-urls', Phlexible.siteroots.UrlGrid);

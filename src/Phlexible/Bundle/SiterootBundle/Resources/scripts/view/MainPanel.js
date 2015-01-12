@@ -1,40 +1,35 @@
-Ext.provide('Phlexible.siteroots.MainPanel');
+Ext.define('Phlexible.siteroots.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.siteroots-main',
 
-Ext.require('Phlexible.siteroots.SiterootGrid');
-Ext.require('Phlexible.siteroots.ContentChannelGrid');
-Ext.require('Phlexible.siteroots.NavigationGrid');
-Ext.require('Phlexible.siteroots.PropertyGrid');
-Ext.require('Phlexible.siteroots.SpecialTidGrid');
-Ext.require('Phlexible.siteroots.TitleForm');
-Ext.require('Phlexible.siteroots.UrlGrid');
-
-Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.siteroots.Strings,
     title: Phlexible.siteroots.Strings.siteroots,
-    iconCls: 'p-siteroot-component-icon',
+    iconCls: Phlexible.Icon.get('globe'),
     cls: 'p-siteroots-main-panel',
-
+    border: false,
     layout: 'border',
 
+    /**
+     * Fires after the active Siteroot has been changed
+     *
+     * @event siterootChange
+     * @param {Number} siterootId The ID of the selected ElementType.
+     * @param {String} siterootTitle The Title of the selected ElementType.
+     */
+
+    /**
+     *
+     */
     initComponent: function () {
-
-        this.addEvents(
-            /**
-             * @event siterootChange
-             * Fires after the active Siteroot has been changed
-             * @param {Number} siteroot_id The ID of the selected ElementType.
-             * @param {String} siteriit_title The Title of the selected ElementType.
-             */
-            'siterootChange'
-        );
-
         this.items = [{
-            xtype: 'siteroots-siteroots',
+            xtype: 'siteroots-list',
             region: 'west',
+            itemId: 'list',
             width: 250,
             minWidth: 200,
             maxWidth: 350,
-            split: true,
+            split: false,
+            padding: '5 0 5 5',
             listeners: {
                 siterootChange: this.onSiterootChange,
                 siterootDataChange: this.onSiterootDataChange,
@@ -43,13 +38,15 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
         }, {
             region: 'center',
             xtype: 'panel',
+            itemId: 'accordion',
             title: 'no_siteroot_loaded',
             layout: 'accordion',
             disabled: true,
+            padding: 5,
             tbar: [
                 {
                     text: this.strings.save_siteroot_data,
-                    iconCls: 'p-siteroot-save-icon',
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                     handler: this.onSaveData,
                     scope: this
                 }
@@ -73,7 +70,7 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
             ]
         }];
 
-        Phlexible.siteroots.MainPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadParams: function () {
@@ -95,16 +92,13 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
 
                 this.siterootId = id;
                 this.siterootTitle = title;
-                this.getComponent(1).setTitle(title);
+                this.getComponent('accordion').setTitle(title);
 
-                this.getComponent(1).items.each(function (panel) {
+                this.getComponent('accordion').items.each(function (panel) {
                     panel.loadData(id, title, data);
                 });
 
-                this.getComponent(1).enable();
-
-                // fire event for plugins
-                this.fireEvent('siterootChange', id, title);
+                this.getComponent('accordion').enable();
             },
             scope: this
         })
@@ -176,5 +170,3 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
 
     }
 });
-
-Ext.reg('siteroots-main', Phlexible.siteroots.MainPanel);

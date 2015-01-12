@@ -1,10 +1,7 @@
-Ext.provide('Phlexible.siteroots.NavigationGrid');
+Ext.define('Phlexible.siteroots.NavigationGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.siteroots-navigations',
 
-Ext.require('Phlexible.siteroots.model.Navigation');
-Ext.require('Phlexible.siteroots.NavigationFlagsWindow');
-Ext.require('Phlexible.siteroots.SiterootNavigationWindow');
-
-Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.navigations,
     strings: Phlexible.siteroots.Strings,
     border: false,
@@ -15,76 +12,8 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     },
 
     initComponent: function () {
-        this.store = new Ext.data.JsonStore({
-            fields: Phlexible.siteroots.model.Navigation
-        });
-
-        // Create RowActions Plugin
-        this.actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
-//          autoWidth:false,
-            width: 150,
-            actions: [
-                {
-                    iconCls: 'p-siteroot-handler-config-icon',
-                    hideIndex: 'hide_config',
-                    tooltip: '_configure',
-                    callback: function (grid, record, action, row, col) {
-                        var r = grid.store.getAt(row);
-
-                        switch (r.get('handler')) {
-                            case 'Siteroot':
-                                var w = new Phlexible.siteroots.SiterootNavigationWindow({
-                                    record: r,
-                                    siterootId: this.siterootId
-                                });
-
-                                w.show();
-
-                                break;
-                        }
-                    }
-                },
-                {
-                    iconCls: 'p-siteroot-flag-icon',
-                    tooltip: this.strings.flags,
-                    callback: function (grid, record, action, row, col) {
-                        var r = grid.store.getAt(row);
-
-                        var w = new Phlexible.siteroots.NavigationFlagsWindow({
-                            record: r
-                        });
-
-                        w.show();
-                    }.createDelegate(this)
-                },
-                {
-                    iconCls: 'p-siteroot-delete-icon',
-                    tooltip: this.strings.delete,
-                    callback: function (grid, record, action, row, col) {
-                        var r = grid.store.getAt(row);
-
-                        Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
-                            if (btn === 'yes') {
-                                this.onDeleteNavigation(r);
-                            }
-                        }, this);
-                    }.createDelegate(this)
-                }
-            ],
-            getData: function (value, cell, record, row, col, store) {
-                switch (record.get('handler')) {
-                    case 'Siteroot':
-                        record.data.hide_config = false;
-                        break;
-
-                    default:
-                        record.data.hide_config = true;
-                        break;
-                }
-
-                return record.data || {};
-            }
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.siteroots.model.Navigation'
         });
 
         this.columns = [
@@ -92,7 +21,7 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 header: this.strings.title,
                 dataIndex: 'title',
                 editor: new Ext.form.TextField(),
-                width: 150
+                flex: 1
             },
             {
                 header: this.strings.handler,
@@ -104,19 +33,19 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 header: this.strings.start_tid,
                 dataIndex: 'start_tid',
                 editor: new Ext.form.TextField(),
-                width: 50
+                width: 80
             },
             {
                 header: this.strings.max_depth,
                 dataIndex: 'max_depth',
                 editor: new Ext.form.NumberField(),
-                width: 50
+                width: 80
             },
             {
                 header: this.strings.flags,
                 dataIndex: 'flags',
                 editor: new Ext.form.NumberField(),
-                width: 50,
+                width: 80,
                 hidden: true
             },
             {
@@ -126,25 +55,73 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 width: 100,
                 hidden: true
             },
-            this.actions
-        ];
+            {
+                xtype: 'actioncolumn',
+                width: 60,
+                items: [
+                    {
+                        iconCls: Phlexible.Icon.get('wrench'),
+                        hideIndex: 'hide_config',
+                        tooltip: '_configure',
+                        handler: function (grid, rowIndex, colIndex) {
+                            var r = grid.store.getAt(rowIndex);
 
-        this.plugins = [
-            this.actions
-        ];
+                            switch (r.get('handler')) {
+                                case 'Siteroot':
+                                    var w = Ext.create('Phlexible.siteroots.SiterootNavigationWindow', {
+                                        record: r,
+                                        siterootId: this.siterootId
+                                    });
 
-        this.sm = new Ext.grid.RowSelectionModel({singleSelect: true});
+                                    w.show();
+
+                                    break;
+                            }
+                        },
+                        scope: this
+                    },
+                    {
+                        iconCls: Phlexible.Icon.get('flag'),
+                        tooltip: this.strings.flags,
+                        handle: function (grid, rowIndex, colIndex) {
+                            var r = grid.store.getAt(rowIndex);
+
+                            var w = Ext.create('Phlexible.siteroots.NavigationFlagsWindow', {
+                                record: r
+                            });
+
+                            w.show();
+                        },
+                        scope: this
+                    },
+                    {
+                        iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                        tooltip: this.strings.delete,
+                        handler: function (grid, rowIndex, colIndex) {
+                            var r = grid.store.getAt(rowIndex);
+
+                            Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
+                                if (btn === 'yes') {
+                                    this.onDeleteNavigation(r);
+                                }
+                            }, this);
+                        },
+                        scope: this
+                    }
+                ]
+            }
+        ];
 
         this.tbar = [
             {
                 text: this.strings.add_navigation,
-                iconCls: 'p-siteroot-add-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddNavigation,
                 scope: this
             }
         ];
 
-        Phlexible.siteroots.NavigationGrid.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     /**
@@ -152,7 +129,7 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     onAddNavigation: function () {
         // create new empty record
-        var newRecord = new Phlexible.siteroots.model.Navigation({
+        var newRecord = Ext.create('Phlexible.siteroots.model.Navigation', {
             id: '',
             siteroot_id: this.siterootId,
             title: '',
@@ -259,5 +236,3 @@ Phlexible.siteroots.NavigationGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     }
 
 });
-
-Ext.reg('siteroots-navigations', Phlexible.siteroots.NavigationGrid);

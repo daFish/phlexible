@@ -1,36 +1,72 @@
-Ext.provide('Phlexible.siteroots.SiterootGrid');
+Ext.define('Phlexible.siteroots.SiterootGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.siteroots-list',
 
-Ext.require('Phlexible.siteroots.model.Siteroot');
-
-Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.siteroots.Strings.siteroot,
     strings: Phlexible.siteroots.Strings,
-    autoExpandColumn: 'title',
 
+    /**
+     * Fires after the active Siteroot has been changed
+     *
+     * @event siterootChange
+     * @param {Number} siteroot_id The ID of the selected ElementType.
+     * @param {String} siteriit_title The Title of the selected ElementType.
+     */
+
+    /**
+     * Fires after a siteroot is added or title has been changed
+     *
+     * @event siterootDataChange
+     */
+
+    /**
+     *
+     */
     initComponent: function () {
+        this.store = new Ext.data.Store({
+            model: 'Phlexible.siteroots.model.Siteroot',
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('siteroots_siteroot_list'),
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'siteroots',
+                    idProperty: 'id',
+                    totalProperty: 'count'
+                },
+                extraParams: this.storeExtraParams
+            },
+            autoLoad: true,
+            remoteSort: true,
+            sorters: [{
+                property: 'title',
+                direction: 'ASC'
+            }],
+            listeners: {
+                load: this.onLoadStore,
+                scope: this
+            }
+        });
 
-        this.addEvents(
-            /**
-             * @event siterootChange
-             * Fires after the active Siteroot has been changed
-             * @param {Number} siteroot_id The ID of the selected ElementType.
-             * @param {String} siteriit_title The Title of the selected ElementType.
-             */
-            'siterootChange',
-            /**
-             * @event siterootDataChange
-             * Fires after a siteroot is added or title has been changed
-             */
-            'siterootDataChange'
-        );
-
-        this.contextMenu = new Ext.menu.Menu({
-            items: [
-                {
-                    text: this.strings.remove,
-                    iconCls: 'p-siteroot-siteroot_delete-icon',
-                    handler: function (item) {
-                        var r = item.parentMenu.record;
+        this.columns = [
+            {
+                header: this.strings.id,
+                hidden: true,
+                dataIndex: 'id'
+            },{
+                header: this.strings.siteroots,
+                dataIndex: 'title',
+                flex: 1,
+                sortable: true
+            },{
+                xtype: 'actioncolumn',
+                width: 30,
+                items: [{
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                    tooltip: this.strings.remove,
+                    handler: function(grid, rowIndex, colIndex) {
+                        var r = grid.getStore().getAt(rowIndex);
 
                         Ext.MessageBox.confirm(
                             this.strings.remove,
@@ -39,98 +75,26 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
                         );
                     },
                     scope: this
-                }
-            ]
-        });
-
+                }]
+            }
+        ];
 
         this.tbar = [
             {
                 text: this.strings.add_siteroot,
-                iconCls: 'p-siteroot-siteroot_add-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddSiteroot,
                 scope: this
             }
         ];
 
-        this.store = new Ext.data.JsonStore({
-            autoLoad: true,
-            root: 'siteroots',
-            id: 'id',
-            totalProperty: 'count',
-            fields: Phlexible.siteroots.model.Siteroot,
-            url: Phlexible.Router.generate('siteroots_siteroot_list'),
-            sortInfo: {
-                field: 'title',
-                direction: 'ASC'
-            },
-            listeners: {
-                load: {
-                    fn: this.onLoadStore,
-                    scope: this
-                }
-            }
+        this.on({
+            select: this.onSelectSiteroot,
+            siterootDataChange: this.onSiterootDataChange,
+            scope: this
         });
 
-        this.columns = [
-            {
-                id: 'id',
-                header: this.strings.id,
-                hidden: true,
-                dataIndex: 'id'
-            },
-            {
-                id: 'title',
-                header: this.strings.siteroots,
-                dataIndex: 'title',
-                sortable: true
-            }
-        ];
-
-        this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect: true,
-            listeners: {
-                'rowselect': {
-                    fn: this.onSelectSiteroot,
-                    scope: this
-                }
-            }
-        });
-
-        this.addListener({
-            rowcontextmenu: {
-                fn: this.onRowContextMenu,
-                scope: this
-            },
-            siterootDataChange: {
-                fn: this.onSiterootDataChange,
-                scope: this
-            }
-        });
-
-        Phlexible.siteroots.SiterootGrid.superclass.initComponent.call(this);
-    },
-
-    /**
-     * Store the current record and shoe context menu
-     *
-     * @param {Object} grid
-     * @param {Number} rowIndex
-     * @param {Object} event
-     */
-    onRowContextMenu: function (grid, rowIndex, event) {
-        event.stopEvent();
-
-        var r = grid.store.getAt(rowIndex);
-        this.contextMenu.record = r;
-
-        var coords = event.getXY();
-        this.contextMenu.showAt([coords[0], coords[1]]);
-
-        var sm = grid.getSelectionModel();
-        if (!sm.hasSelection() || (sm.getSelected().id != r.id)) {
-            sm.selectRow(rowIndex);
-        }
+        this.callParent(arguments);
     },
 
     /**
@@ -145,11 +109,11 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
 
         if ((store.getCount() > 0)) {
             if (!this.selected) {
-                sm.selectFirstRow();
+                sm.selectRange(0, 0);
             } else {
                 var i = store.find('id', this.selected);
                 this.selected = null;
-                sm.selectRow(i);
+                sm.select([i]);
             }
         }
     },
@@ -161,7 +125,7 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
      * @param {Number} rowIndex
      * @param {Object} record
      */
-    onSelectSiteroot: function (selModel, rowIndex, record) {
+    onSelectSiteroot: function (grid, record, rowIndex) {
         this.fireEvent('siterootChange', record.get('id'), record.get('title'));
     },
 
@@ -233,5 +197,3 @@ Phlexible.siteroots.SiterootGrid = Ext.extend(Ext.grid.GridPanel, {
     }
 
 });
-
-Ext.reg('siteroots-siteroots', Phlexible.siteroots.SiterootGrid);

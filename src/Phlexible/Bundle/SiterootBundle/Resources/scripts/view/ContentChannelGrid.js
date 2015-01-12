@@ -1,8 +1,7 @@
-Ext.provide('Phlexible.siteroots.ContentChannelGrid');
+Ext.define('Phlexible.siteroots.ContentChannelGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.siteroots-contentchannels',
 
-Ext.require('Phlexible.siteroots.model.Contentchannel');
-
-Phlexible.siteroots.ContentChannelGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.contentchannels,
     strings: Phlexible.siteroots.Strings,
     iconCls: 'p-contentchannels-component-icon',
@@ -74,5 +73,3 @@ Phlexible.siteroots.ContentChannelGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         };
     }
 });
-
-Ext.reg('siteroots-contentchannels', Phlexible.siteroots.ContentChannelGrid);

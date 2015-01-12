@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.siteroots.SiterootNavigationWindow');
+Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.siteroots.SiterootNavigationWindow = Ext.extend(Ext.Window, {
     title: Phlexible.siteroots.Strings.siteroot_navigation,
     strings: Phlexible.siteroots.Strings,
     width: 400,

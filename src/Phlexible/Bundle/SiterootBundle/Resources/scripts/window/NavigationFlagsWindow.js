@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.siteroots.NavigationFlagsWindow');
+Ext.define('Phlexible.siteroots.NavigationFlagsWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
     title: Phlexible.siteroots.Strings.flags,
     strings: Phlexible.siteroots.Strings,
     iconCls: 'p-siteroot-flag-icon',
@@ -131,6 +131,6 @@ Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.siteroots.NavigationFlagsWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     }
 });

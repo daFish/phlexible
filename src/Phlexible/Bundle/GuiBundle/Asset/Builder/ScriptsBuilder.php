@@ -110,9 +110,10 @@ class ScriptsBuilder
         $entryPoints = array();
 
         $allowedEntry = array(
-            'phlexiblegui',
             'phlexibledashboard',
+            'phlexiblegui',
             'phlexiblemediatype',
+            'phlexiblesiteroot',
             'phlexibletask',
         );
 
@@ -242,6 +243,13 @@ class ScriptsBuilder
                 'form',
                 'numberfield',
                 'radio',
+                'actioncolumn',
+                'checkcolumn',
+                'fieldcontainer',
+                'grid',
+                'combo',
+                'combobox',
+                'checkboxgroup',
             );
 
             if (!empty($file->requires)) {

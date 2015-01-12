@@ -1,77 +1,40 @@
-Ext.provide('Phlexible.siteroots.SpecialTidGrid');
+Ext.define('Phlexible.siteroots.SpecialTidGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.siteroots-specialtids',
 
-Ext.require('Phlexible.siteroots.model.SpecialTid');
-
-Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.special_tids,
     strings: Phlexible.siteroots.Strings,
     border: false,
-
-    viewConfig: {
-        emptyText: Phlexible.siteroots.Strings.no_special_tids
-    },
+    emptyText: Phlexible.siteroots.Strings.no_special_tids,
 
     initComponent: function () {
-
-        // Create RowActions Plugin
-        this.actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
-//          autoWidth:false,
-            width: 150,
-            actions: [
-                {
-                    iconCls: 'p-siteroot-delete-icon',
-                    tooltip: this.strings.delete,
-                    callback: function (grid, record, action, row, col) {
-                        var r = grid.store.getAt(row);
-
-                        Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
-                            if (btn === 'yes') {
-                                this.onDeleteSpecialTid(r);
-                            }
-                        }, this);
-                    }.createDelegate(this)
-                }
-            ],
-            getData: function (value, cell, record, row, col, store) {
-                switch (record.get('handler')) {
-                    case 'Siteroot':
-                        record.data.hide_config = false;
-                        break;
-
-                    default:
-                        record.data.hide_config = true;
-                        break;
-                }
-
-                return record.data || {};
-            }
-        });
-
-        this.store = new Ext.data.JsonStore({
-            fields: Phlexible.siteroots.model.SpecialTid,
-            sortInfo: {
-                field: 'key',
-                dir: 'asc'
-            },
-            remoteSort: false
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.siteroots.model.SpecialTid',
+            sorters: [{
+                property: 'key',
+                direction: 'asc'
+            }]
         });
 
         this.columns = [
             {
                 header: this.strings.key,
                 dataIndex: 'key',
-                width: 300,
+                flex: 1,
                 sortable: true,
-                editor: new Ext.form.TextField()
+                editor: {
+                    xtype: 'textfield',
+                    allowBlank: false
+                }
             },
             {
                 header: this.strings.language,
                 dataIndex: 'language',
                 sortable: true,
-                renderer: this.renderLanguage.createDelegate(this),
+                renderer: this.renderLanguage,
                 width: 100,
-                editor: new Ext.ux.IconCombo({
+                editor: {
+                    xtype: 'iconcombo',
                     allowBlank: true,
                     editable: false,
                     triggerAction: 'all',
@@ -81,38 +44,53 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     valueField: 'language',
                     iconClsField: 'icon',
                     emptyText: '',
-                    store: new Ext.data.SimpleStore({
-                        fields: ['language', 'title', 'icon'],
-                        data: Phlexible.Config.get('set.language.frontend')
+                    store: Ext.create('Ext.data.SimpleStore', {
+                        model: 'Phlexible.gui.model.KeyValueIconCls',
+                        data: Phlexible.App.getConfig().get('set.language.frontend')
                     })
-                })
+                }
             },
             {
                 header: this.strings.tid,
                 dataIndex: 'tid',
                 width: 200,
                 sortable: true,
-                editor: new Ext.form.NumberField()
-            },
-            this.actions
+                editor: {
+                    xtype: 'numberfield',
+                    allowBlank: false
+                }
+            },{
+                xtype: 'actioncolumn',
+                width: 30,
+                items: [
+                    {
+                        iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                        tooltip: this.strings.delete,
+                        handler: function (grid, rowIndex, colIndex) {
+                            var r = grid.store.getAt(rowIndex);
+
+                            Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
+                                if (btn === 'yes') {
+                                    this.onDeleteSpecialTid(r);
+                                }
+                            }, this);
+                        },
+                        scope: this
+                    }
+                ]
+            }
         ];
-
-        this.plugins = [this.actions];
-
-        this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect: true
-        });
 
         this.tbar = [
             {
                 text: this.strings.add_specialtid,
-                iconCls: 'p-siteroot-add-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddSpecialTid,
                 scope: this
             }
         ];
 
-        Phlexible.siteroots.SpecialTidGrid.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     /**
@@ -238,5 +216,3 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     }
 
 });
-
-Ext.reg('siteroots-specialtids', Phlexible.siteroots.SpecialTidGrid);

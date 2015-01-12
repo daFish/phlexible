@@ -1,6 +1,7 @@
-Ext.provide('Phlexible.siteroots.PropertyGrid');
+Ext.define('Phlexible.siteroots.PropertyGrid', {
+    extend: 'Ext.grid.PropertyGrid',
+    alias: 'widget.siteroots-properties',
 
-Phlexible.siteroots.PropertyGrid = Ext.extend(Ext.grid.PropertyGrid, {
     title: Phlexible.siteroots.Strings.properties,
     strings: Phlexible.siteroots.Strings,
     border: false,
@@ -37,5 +38,3 @@ Phlexible.siteroots.PropertyGrid = Ext.extend(Ext.grid.PropertyGrid, {
         };
     }
 });
-
-Ext.reg('siteroots-properties', Phlexible.siteroots.PropertyGrid);

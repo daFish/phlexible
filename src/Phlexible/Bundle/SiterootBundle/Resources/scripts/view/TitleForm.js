@@ -1,17 +1,10 @@
-Ext.provide('Phlexible.siteroots.TitleForm');
-Ext.provide('Phlexible.siteroots.CustomTitleTpl');
+Ext.define('Phlexible.siteroots.TitleForm', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.siteroots-titles',
 
-Phlexible.siteroots.CustomTitleTpl = new Ext.XTemplate(
-    '<tpl for=".">',
-    '<span style="padding-right: 15px;"><b>{placeholder}</b> {title}</span>',
-    '</tpl>'
-);
-
-Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
     title: Phlexible.siteroots.Strings.titles,
     strings: Phlexible.siteroots.Strings,
     border: false,
-    bodyStyle: 'padding: 5px;',
 
     initComponent: function () {
         this.task1 = new Ext.util.DelayedTask(this.updateDefaultPreview, this);
@@ -20,6 +13,7 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
         this.items = [
             {
                 xtype: 'form',
+                itemId: 'titles',
                 border: false,
                 bodyStyle: 'padding: 5px;',
                 xlabelAlign: 'top',
@@ -27,12 +21,14 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
             },
             {
                 xtype: 'form',
+                itemId: 'custom_titles',
                 border: false,
                 bodyStyle: 'padding: 5px;',
                 labelAlign: 'top',
                 items: [
                     {
                         xtype: 'panel',
+                        itemId: 'head_title',
                         title: this.strings.default_custom_title,
                         layout: 'form',
                         autoScroll: true,
@@ -41,6 +37,7 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                         items: [
                             {
                                 fieldLabel: this.strings.title,
+                                itemId: 'head_title_text',
                                 name: 'head_title',
                                 xtype: 'textfield',
                                 anchor: '-50',
@@ -60,33 +57,40 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                                 }
                             },
                             {
+                                xtype: 'fieldcontainer',
+                                itemId: 'head_title_example_wrap',
                                 fieldLabel: this.strings.example,
-                                name: 'example',
-                                xtype: 'textfield',
-                                anchor: '-50',
-                                readOnly: true,
-                                append: [
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'p-siteroot-reload-icon',
-                                        handler: this.updateDefaultPreview,
-                                        scope: this
-                                    }
-                                ]
+                                layout: 'hbox',
+                                items: [{
+                                    itemId: 'head_title_example',
+                                    name: 'example',
+                                    xtype: 'textfield',
+                                    flex: 1,
+                                    readOnly: true
+                                },{
+                                    xtype: 'button',
+                                    itemId: 'head_title_example_button',
+                                    iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
+                                    width: 30,
+                                    handler: this.updateDefaultPreview,
+                                    scope: this
+                                }]
                             }
                         ]
                     },
                     {
                         xtype: 'panel',
+                        itemId: 'start_head_title',
                         title: this.strings.start_custom_title,
                         layout: 'form',
                         bodyStyle: 'padding: 5px;',
                         style: 'padding-bottom: 5px;',
                         items: [
                             {
-                                fieldLabel: this.strings.title,
-                                name: 'start_head_title',
                                 xtype: 'textfield',
+                                itemId: 'start_head_title_text',
+                                name: 'start_head_title',
+                                fieldLabel: this.strings.title,
                                 anchor: '-50',
                                 emptyText: this.strings.no_customized_start_title,
                                 enableKeyEvents: true,
@@ -104,19 +108,23 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                                 }
                             },
                             {
+                                xtype: 'fieldcontainer',
+                                itemId: 'start_head_title_example_wrap',
                                 fieldLabel: this.strings.example,
-                                name: 'start_example',
-                                xtype: 'textfield',
-                                anchor: '-50',
-                                readOnly: true,
-                                append: [
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'p-siteroot-reload-icon',
-                                        handler: this.updateHomePreview,
-                                        scope: this
-                                    }
-                                ]
+                                layout: 'hbox',
+                                items: [{
+                                    xtype: 'textfield',
+                                    itemId: 'start_head_title_example',
+                                    name: 'start_example',
+                                    flex: 1,
+                                    readOnly: true
+                                },{
+                                    xtype: 'button',
+                                    itemId: 'start_head_title_example_button',
+                                    iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
+                                    handler: this.updateHomePreview,
+                                    scope: this
+                                }]
                             }
                         ]
                     },
@@ -127,16 +135,27 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                         items: [
                             {
                                 xtype: 'dataview',
-                                store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('siteroots_customtitle_placeholders'),
-                                    root: 'placeholders',
+                                store: Ext.create('Ext.data.Store', {
                                     fields: ['placeholder', 'title'],
+                                    proxy: {
+                                        type: 'ajax',
+                                        url: Phlexible.Router.generate('siteroots_customtitle_placeholders'),
+                                        simpleSortMode: true,
+                                        reader: {
+                                            type: 'json',
+                                            rootProperty: 'placeholders'
+                                        }
+                                    },
                                     autoLoad: true
                                 }),
-                                tpl: Phlexible.siteroots.CustomTitleTpl,
+                                tpl: new Ext.XTemplate(
+                                    '<tpl for=".">',
+                                    '<span style="padding-right: 15px;"><b>{placeholder}</b> {title}</span>',
+                                    '</tpl>'
+                                ),
                                 autoHeight: true,
                                 singleSelect: true,
-                                overClass: 'xxx',
+                                overItemClass: 'xxx',
                                 itemSelector: 'div'
                             }
                         ]
@@ -145,17 +164,65 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
             }
         ];
 
-        for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
+        for (var i = 0; i < Phlexible.App.getConfig().get('set.language.frontend').length; i++) {
             this.items[0].items.push({
-                fieldLabel: Phlexible.inlineIcon(Phlexible.Config.get('set.language.frontend')[i][2]) + ' ' + Phlexible.Config.get('set.language.frontend')[i][1],
-                name: Phlexible.Config.get('set.language.frontend')[i][0],
+                fieldLabel: Phlexible.Icon.inline(Phlexible.App.getConfig().get('set.language.frontend')[i][2]) + ' ' + Phlexible.App.getConfig().get('set.language.frontend')[i][1],
+                name: Phlexible.App.getConfig().get('set.language.frontend')[i][0],
                 xtype: 'textfield',
-                width: 300,
+                flex: 1,
                 allowBlank: false
             });
         }
 
-        Phlexible.siteroots.TitleForm.superclass.initComponent.call(this);
+        this.callParent(arguments);
+    },
+
+    getTitlePanels: function() {
+        return this.getComponent('titles');
+    },
+
+    getCustomTitlePanels: function() {
+        return this.getComponent('custom_titles');
+    },
+
+    getHeadTitlePanel: function() {
+        return this.getCustomTitlePanels().getComponent('head_title');
+    },
+
+    getHeadTitleField: function() {
+        return this.getHeadTitlePanel().getComponent('head_title_text');
+    },
+
+    getHeadTitleExampleWrap: function() {
+        return this.getHeadTitlePanel().getComponent('head_title_example_wrap');
+    },
+
+    getHeadTitleExampleField: function() {
+        return this.getHeadTitleExampleWrap().getComponent('head_title_example');
+    },
+
+    getHeadTitleExampleButton: function() {
+        return this.getHeadTitleExampleWrap().getComponent('head_title_example_button');
+    },
+
+    getStartHeadTitlePanel: function() {
+        return this.getCustomTitlePanels().getComponent('start_head_title');
+    },
+
+    getStartHeadTitleField: function() {
+        return this.getStartHeadTitlePanel().getComponent('start_head_title_text');
+    },
+
+    getStartHeadTitleExampleWrap: function() {
+        return this.getStartHeadTitlePanel().getComponent('start_head_title_example_wrap');
+    },
+
+    getStartHeadTitleExampleField: function() {
+        return this.getStartHeadTitleExampleWrap().getComponent('start_head_title_example');
+    },
+
+    getStartHeadTitleExampleButton: function() {
+        return this.getStartHeadTitleExampleWrap().getComponent('start_head_title_example_button');
     },
 
     /**
@@ -169,18 +236,18 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
         // remember current siteroot id
         this.siterootId = id;
 
-        this.getComponent(0).getForm().reset();
-        this.getComponent(0).getForm().setValues(data.titles);
+        this.getComponent('titles').getForm().reset();
+        this.getComponent('titles').getForm().setValues(data.titles);
 
-        this.getComponent(1).getForm().reset();
-        this.getComponent(1).getForm().setValues(data.customtitles);
+        this.getComponent('custom_titles').getForm().reset();
+        this.getComponent('custom_titles').getForm().setValues(data.customtitles);
 
         this.updateDefaultPreview();
         this.updateHomePreview();
     },
 
     isValid: function () {
-        var valid = this.getComponent(0).getForm().isValid() && this.getComponent(1).getForm().isValid();
+        var valid = this.getComponent('titles').getForm().isValid() && this.getComponent(1).getForm().isValid();
 
         if (valid) {
             this.header.child('span').removeClass('error');
@@ -196,23 +263,23 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
      */
     getSaveData: function () {
         return {
-            'titles': this.getComponent(0).getForm().getValues(),
+            'titles': this.getTitlePanels().getForm().getValues(),
             'customtitles': {
-                head_title: this.getComponent(1).getComponent(0).getComponent(0).getValue(),
-                start_head_title: this.getComponent(1).getComponent(1).getComponent(0).getValue()
+                head_title: this.getHeadTitleField().getValue(),
+                start_head_title: this.getStartHeadTitleField.getValue()
             }
         };
     },
 
 
     updateDefaultPreview: function () {
-        var title = this.getComponent(1).getComponent(0).getComponent(0).getValue();
+        var title = this.getHeadTitleField().getValue();
         if (!title) {
-            this.getComponent(1).getComponent(0).getComponent(1).reset();
+            this.getHeadTitleExampleField().reset();
             return;
         }
 
-        this.getComponent(1).getComponent(0).getComponent(1).append[0].setIconClass('p-siteroot-loading-icon');
+        this.getHeadTitleExampleButton().setIconCls('p-siteroot-loading-icon');
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('siteroots_customtitle_example'),
@@ -224,23 +291,23 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                 var data = Ext.decode(response.responseText);
 
                 if (data.success) {
-                    this.getComponent(1).getComponent(0).getComponent(1).setValue(data.data.example);
+                    this.getHeadTitleExampleField().setValue(data.data.example);
                 }
 
-                this.getComponent(1).getComponent(0).getComponent(1).append[0].setIconClass('p-siteroot-reload-icon');
+                this.getHeadTitleExampleButton().setIconCls(Phlexible.Icon.get(Phlexible.Icon.RELOAD));
             },
             scope: this
         });
     },
 
     updateHomePreview: function () {
-        var title = this.getComponent(1).getComponent(1).getComponent(0).getValue();
+        var title = this.getStartHeadTitleField().getValue();
         if (!title) {
-            this.getComponent(1).getComponent(1).getComponent(1).reset();
+            this.getStartHeadTitleExampleField().reset();
             return;
         }
 
-        this.getComponent(1).getComponent(1).getComponent(1).append[0].setIconClass('p-siteroot-loading-icon');
+        this.getStartHeadTitleExampleButton().setIconCls('p-siteroot-loading-icon');
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('siteroots_customtitle_example'),
@@ -252,14 +319,12 @@ Phlexible.siteroots.TitleForm = Ext.extend(Ext.Panel, {
                 var data = Ext.decode(response.responseText);
 
                 if (data.success) {
-                    this.getComponent(1).getComponent(1).getComponent(1).setValue(data.data.example);
+                    this.getStartHeadTitleExampleField().setValue(data.data.example);
                 }
 
-                this.getComponent(1).getComponent(1).getComponent(1).append[0].setIconClass('p-siteroot-reload-icon');
+                this.getStartHeadTitleExampleButton().setIconCls(Phlexible.Icon.get(Phlexible.Icon.RELOAD));
             },
             scope: this
         });
     }
 });
-
-Ext.reg('siteroots-titles', Phlexible.siteroots.TitleForm);

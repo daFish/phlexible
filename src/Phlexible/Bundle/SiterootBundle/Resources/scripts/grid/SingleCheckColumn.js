@@ -1,14 +1,12 @@
-Ext.provide('Phlexible.siteroots.grid.SingleCheckColumn');
+Ext.define('Phlexible.siteroots.grid.SingleCheckColumn', {
+    constructor: function (config) {
+        Ext.apply(this, config);
+        if (!this.id) {
+            this.id = Ext.id();
+        }
+        this.renderer = this.renderer.createDelegate(this);
+    },
 
-Phlexible.siteroots.grid.SingleCheckColumn = function (config) {
-    Ext.apply(this, config);
-    if (!this.id) {
-        this.id = Ext.id();
-    }
-    this.renderer = this.renderer.createDelegate(this);
-};
-
-Phlexible.siteroots.grid.SingleCheckColumn.prototype = {
     init: function (grid) {
         this.grid = grid;
         this.grid.on('render', function () {
@@ -44,4 +42,4 @@ Phlexible.siteroots.grid.SingleCheckColumn.prototype = {
         p.css += ' x-grid3-check-col-td';
         return '<div class="x-grid3-check-col' + (v ? '-on' : '') + ' x-grid3-cc-' + this.id + '">&#160;</div>';
     }
-};
+});

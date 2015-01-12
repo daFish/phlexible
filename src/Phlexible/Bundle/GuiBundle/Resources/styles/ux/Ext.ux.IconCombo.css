@@ -1,24 +1,16 @@
-/* Ext.ux.IconCombo mandatory styles */
-.x-icon-combo-icon {
-    background-repeat: no-repeat;
-    background-position: 0 50%;
-    width: 18px;
+/* X-BROWSER-WARNING: this is not being honored by Safari */
+.ux-icon-combo-input {
+    padding-left: 25px;
+}
+
+.x-form-item-body .ux-icon-combo-icon {
+    top: 3px;
+    left: 5px;
+    width: 16px;
     height: 16px;
 }
-
-.x-icon-combo-input,
-.ext-safari .x-icon-combo-input,
-.ext-chrome .x-icon-combo-input {
-    padding-left: 22px;
-}
-
-.x-form-field-wrap .x-icon-combo-icon {
-    top: 3px;
-    left: 3px;
-}
-
-.x-icon-combo-item {
-    background-repeat: no-repeat !important;
-    background-position: 3px 50% !important;
-    padding-left: 24px;
+.ux-icon-combo-item {
+    background-repeat: no-repeat ! important;
+    background-position: 3px 50% ! important;
+    padding-left: 24px ! important;
 }
