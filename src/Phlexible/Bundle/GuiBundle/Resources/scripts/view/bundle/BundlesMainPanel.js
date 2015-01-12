@@ -11,6 +11,8 @@ Ext.define('Phlexible.gui.bundles.MainPanel', {
     border: false,
 
     initComponent: function () {
+        this.iconCls = Phlexible.Icon.get('resource-monitor');
+
         this.items = [
             {
                 xtype: 'gui-bundles-filter',

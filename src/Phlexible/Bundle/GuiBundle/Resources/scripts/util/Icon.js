@@ -22,7 +22,7 @@ Ext.define('Phlexible.gui.util.Icon', {
     /**
      * Constructor
      *
-     * @param {Object} config
+     * @param {Object} config
      */
     constructor: function(config) {
         this.initConfig(config);
@@ -88,7 +88,7 @@ Ext.define('Phlexible.gui.util.Icon', {
         this.css.update(
             this.css.getHtml() +
                 ' .' + rule +
-                ' {background-image: url(' + this.path + '/16/' + icon + this.config.extension + ') !important;}' + "\n"
+                ' {background-image: url(' + this.getPath() + '/16/' + icon + this.getExtension() + ') !important;}' + "\n"
         );
 
         this.rules[icon] = rule;

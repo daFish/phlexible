@@ -3,7 +3,7 @@ Ext.define('Phlexible.gui.Help', {
     alias: 'widget.gui-help',
 
     title: Phlexible.gui.Strings.help,
-    iconCls: 'p-gui-help-icon',
+    iconCls: Phlexible.Icon.get('book-question'),
     closable: false,
 
     defaultSrc: 'http://www.test.de',

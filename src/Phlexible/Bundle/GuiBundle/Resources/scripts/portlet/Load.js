@@ -5,7 +5,6 @@ Ext.define('Phlexible.gui.portlet.Load', {
     title: Phlexible.gui.Strings.server_load,
     strings: Phlexible.gui.Strings,
     bodyStyle: 'padding: 5px 5px 5px 5px',
-    iconCls: 'p-gui-load-icon',
 
     COLOR1: '#eacc00',
     COLOR5: '#ea8f00',
@@ -15,6 +14,8 @@ Ext.define('Phlexible.gui.portlet.Load', {
 //        if (Phlexible.StartMessage) {
 //            Phlexible.StartMessage.on('task', this.processMessage, this);
 //        }
+
+        this.iconCls = Phlexible.Icon.get('system-monitor');
 
         this.tpl = new Ext.XTemplate(
             '<table>',
@@ -38,7 +39,7 @@ Ext.define('Phlexible.gui.portlet.Load', {
 
         this.store = new Ext.data.Store({
             model: 'Phlexible.gui.model.LoadEntry',
-            data: [this.data]
+            data: this.data
         });
         delete this.data;
 

@@ -44,9 +44,6 @@ Ext.define('Phlexible.gui.bundles.BundlesGrid', {
                 header: this.strings.bundle,
                 width: 250,
                 dataIndex: 'id',
-                renderer: function (id, md, r) {
-                    return Phlexible.inlineIcon(r.get('icon')) + ' ' + id;
-                },
                 resizable: false
             },
             {
@@ -59,7 +56,8 @@ Ext.define('Phlexible.gui.bundles.BundlesGrid', {
                 header: this.strings.classname,
                 width: 400,
                 dataIndex: 'classname',
-                resizable: false
+                resizable: false,
+                flex: 1
             },
             {
                 header: this.strings.path,

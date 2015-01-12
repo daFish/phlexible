@@ -12,7 +12,7 @@ Phlexible.Handles.add('tray', function() {
 
 Phlexible.Handles.add('account', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.Menu', {
-        iconCls: 'p-gui-account-icon',
+        iconCls: Phlexible.Icon.get('card-address'),
         getText: function () {
             return Phlexible.App.getUser().getDisplayName();
         }
@@ -22,21 +22,21 @@ Phlexible.Handles.add('account', function() {
 Phlexible.Handles.add('administration', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.Menu', {
         text: Phlexible.gui.Strings.administration,
-        iconCls: 'p-gui-menu_admin-icon'
+        iconCls: Phlexible.Icon.get('wrench-screwdriver')
     });
 });
 
 Phlexible.Handles.add('configuration', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.Menu', {
         text: Phlexible.gui.Strings.configuration,
-        iconCls: 'p-gui-menu_config-icon'
+        iconCls: Phlexible.Icon.get('wrench-screwdriver')
     });
 });
 
 Phlexible.Handles.add('debug', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.Menu', {
         text: Phlexible.gui.Strings.debug,
-        iconCls: 'p-gui-menu_debug-icon'
+        iconCls: Phlexible.Icon.get('bug')
     });
 });
 
@@ -62,7 +62,7 @@ Phlexible.Handles.add('spacer', function() {
 Phlexible.Handles.add('bundles', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.XtypeHandle', {
         text: Phlexible.gui.Strings.bundles,
-        iconCls: 'p-gui-manager-icon',
+        iconCls: Phlexible.Icon.get('resource-monitor'),
         xtype: 'gui-bundles'
     });
 });
@@ -70,7 +70,7 @@ Phlexible.Handles.add('bundles', function() {
 Phlexible.Handles.add('help', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.XtypeHandle', {
         text: Phlexible.gui.Strings.help,
-        iconCls: 'p-gui-help-icon',
+        iconCls: Phlexible.Icon.get('book-question'),
         xtype: 'gui-help'
     });
 });
@@ -78,7 +78,7 @@ Phlexible.Handles.add('help', function() {
 Phlexible.Handles.add('properties', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.XtypeHandle', {
         text: Phlexible.gui.Strings.properties,
-        iconCls: 'p-gui-php-icon',
+        iconCls: Phlexible.Icon.get('property'),
         xtype: ''
     });
 });

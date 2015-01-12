@@ -54,6 +54,9 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
                     hideLabel: true
                 },
                 items: [{
+                    border: false,
+                    plain: true,
+                    frame: false,
                     html: '<div class="loading-indicator">Loading...</div>'
                 }]
             }
@@ -68,7 +71,7 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
             },{
                 xtype: 'button',
                 text: this.strings.reset,
-                iconCls: 'p-gui-reset-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
                 disabled: true,
                 handler: this.resetFilter,
                 scope: this
@@ -100,7 +103,7 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
                     boxLabel: item.title,
                     checked: item.checked,
                     listeners: {
-                        change: this.updateFilter(),
+                        change: this.updateFilter,
                         scope: this
                     }
                 });

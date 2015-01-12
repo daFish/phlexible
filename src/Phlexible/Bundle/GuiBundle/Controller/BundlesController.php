@@ -52,8 +52,6 @@ class BundlesController extends Controller
                 $package = current($namespaceParts);
             }
 
-            $icon = 'p-' . str_replace(['bundle', 'phlexible'], ['', ''], strtolower($id)) . '-component-icon';
-
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
@@ -61,7 +59,6 @@ class BundlesController extends Controller
                 'id'          => $id,
                 'classname'   => $className,
                 'package'     => $package,
-                'icon'        => $icon,
                 'path'        => $path,
             ];
         }
@@ -96,8 +93,10 @@ class BundlesController extends Controller
 
         $packages = [];
         foreach (array_keys($packageList) as $package) {
-            $packages[] = ['id' => $package, 'title' => ucfirst($package), 'checked' => true];
+            $packages[$package] = ['id' => $package, 'title' => ucfirst($package), 'checked' => true];
         }
+        ksort($packages);
+        $packages = array_values($packages);
 
         return new JsonResponse([
             'packages' => $packages,
