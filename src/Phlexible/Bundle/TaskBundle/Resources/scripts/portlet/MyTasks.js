@@ -1,36 +1,7 @@
-Ext.provide('Phlexible.tasks.portlet.TaskRecord');
-Ext.provide('Phlexible.tasks.portlet.MyTasksTemplate');
-Ext.provide('Phlexible.tasks.portlet.MyTasks');
+Ext.define('Phlexible.tasks.portlet.MyTasks', {
+    extend: 'Portal.view.Portlet',
+    alias: 'widget.tasks-portlet-mytasks',
 
-Phlexible.tasks.portlet.TaskRecord = Ext.data.Record.create([
-    {name: 'id', type: 'string'},
-    {name: 'type', type: 'string'},
-    {name: 'text', type: 'string'},
-    {name: 'status', type: 'string'},
-    {name: 'create_uid', type: 'string'},
-    {name: 'create_user', type: 'string'},
-    {name: 'create_date', type: 'string'}
-]);
-
-Phlexible.tasks.portlet.MyTasksTemplate = new Ext.XTemplate(
-    '<tpl for=".">',
-    '<div id="portal_tasks_{id}" class="portlet-task" style="cursor: pointer; padding-bottom: 5px;">',
-    '<div>',
-    '<b><img src="{[Phlexible.bundleAsset("/tasks/icons/status_"+values.status+".png")]} width="16" height="16" style="vertical-align: middle;"> {[Phlexible.tasks.Strings.get(values.status)]}</b>, von<b> {create_user}</b>, <b>{create_date}</b>',
-    '</div>',
-    '<div style="padding-left: 20px;">',
-    '{text}',
-    '</div>',
-    '<tpl if="comment">',
-    '<div style="padding-left: 20px;">',
-    '{[Phlexible.tasks.Strings.comment]}: {comment}',
-    '</div>',
-    '</tpl>',
-    '</div>',
-    '</tpl>'
-);
-
-Phlexible.tasks.portlet.MyTasks = Ext.extend(Ext.ux.Portlet, {
     bodyStyle: 'padding: 5px 5px 5px 5px',
     iconCls: 'p-task-portlet-icon',
     strings: Phlexible.tasks.Strings,
@@ -38,8 +9,8 @@ Phlexible.tasks.portlet.MyTasks = Ext.extend(Ext.ux.Portlet, {
 
     initComponent: function () {
 
-        this.store = new Ext.data.SimpleStore({
-            fields: Phlexible.tasks.portlet.TaskRecord,
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.tasks.model.MyTask',
             id: 'id'
             //sortInfo: {field: 'type', username: 'ASC'},
         });
@@ -47,7 +18,7 @@ Phlexible.tasks.portlet.MyTasks = Ext.extend(Ext.ux.Portlet, {
         var data = this.record.get('data');
         if (data) {
             Ext.each(data, function (item) {
-                this.add(new Phlexible.tasks.portlet.TaskRecord(item, item.id));
+                this.add(new Phlexible.tasks.model.MyTask(item, item.id));
             }, this.store);
         }
 
@@ -61,7 +32,23 @@ Phlexible.tasks.portlet.MyTasks = Ext.extend(Ext.ux.Portlet, {
                 deferEmptyText: false,
                 autoHeight: true,
                 store: this.store,
-                tpl: Phlexible.tasks.portlet.MyTasksTemplate,
+                tpl: new Ext.XTemplate(
+                    '<tpl for=".">',
+                    '<div id="portal_tasks_{id}" class="portlet-task" style="cursor: pointer; padding-bottom: 5px;">',
+                    '<div>',
+                    '<b><img src="{[Phlexible.bundleAsset("/tasks/icons/status_"+values.status+".png")]} width="16" height="16" style="vertical-align: middle;"> {[Phlexible.tasks.Strings.get(values.status)]}</b>, von<b> {create_user}</b>, <b>{create_date}</b>',
+                    '</div>',
+                    '<div style="padding-left: 20px;">',
+                    '{text}',
+                    '</div>',
+                    '<tpl if="comment">',
+                    '<div style="padding-left: 20px;">',
+                    '{[Phlexible.tasks.Strings.comment]}: {comment}',
+                    '</div>',
+                    '</tpl>',
+                    '</div>',
+                    '</tpl>'
+                ),
                 listeners: {
                     dblclick: function (view, index) {
                         r = view.store.getAt(index);
@@ -83,7 +70,7 @@ Phlexible.tasks.portlet.MyTasks = Ext.extend(Ext.ux.Portlet, {
             }
         ];
 
-        Phlexible.tasks.portlet.MyTasks.superclass.initComponent.call(this);
+        this.callParent(this);
     },
 
     updateData: function (data) {
@@ -130,5 +117,3 @@ Phlexible.tasks.portlet.MyTasks = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('type', 'ASC');
     }
 });
-
-Ext.reg('tasks-portlet-mytasks', Phlexible.tasks.portlet.MyTasks);

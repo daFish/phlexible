@@ -1,29 +1,34 @@
-Ext.provide('Phlexible.tasks.TasksGrid');
+Ext.define('Phlexible.tasks.TasksGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.tasks-list',
 
-Ext.require('Phlexible.tasks.model.Task');
-
-Phlexible.tasks.TasksGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-task-grid',
     viewConfig: {
         deferEmptyText: false,
         emptyText: Phlexible.tasks.Strings.no_tasks_found
     },
-    autoExpandColumn: 6,
     loadMask: true,
 
     initComponent: function () {
-        this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('tasks_list'),
-            baseParams: {
-                start: 0,
-                limit: 20
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.tasks.model.Task',
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('tasks_list'),
+                simpleSortMode: true,
+                remoteSort: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'tasks',
+                    idProperty: 'id',
+                    totalProperty: 'total'
+                },
+                extraParams: {
+                    start: 0,
+                    limit: 20
+                }
             },
-            fields: Phlexible.tasks.model.Task,
-            root: 'tasks',
-            id: 'id',
-            totalProperty: 'total',
-            remoteSort: true,
             listeners: {
                 load: function () {
                     if (this.taskId) {
@@ -72,7 +77,8 @@ Phlexible.tasks.TasksGrid = Ext.extend(Ext.grid.GridPanel, {
             }, {
                 header: this.strings.description,
                 dataIndex: 'description',
-                width: 150
+                width: 150,
+                flex: 1
             }, {
                 header: this.strings.assigned_to,
                 dataIndex: 'assigned_user',
@@ -88,18 +94,15 @@ Phlexible.tasks.TasksGrid = Ext.extend(Ext.grid.GridPanel, {
                 hidden: true
             }];
 
-        this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect: true,
-            listeners: {
-                selectionchange: function (sm) {
-                    var r = sm.getSelected();
-                    if (!r) {
-                        return;
-                    }
-                    this.fireEvent('taskchange', r);
-                },
-                scope: this
-            }
+        this.on({
+            selectionchange: function (sm) {
+                var r = sm.getSelected();
+                if (!r) {
+                    return;
+                }
+                this.fireEvent('taskchange', r);
+            },
+            scope: this
         });
 
         this.tbar = [{
@@ -115,7 +118,7 @@ Phlexible.tasks.TasksGrid = Ext.extend(Ext.grid.GridPanel, {
             store: this.store
         });
 
-        Phlexible.tasks.TasksGrid.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     setStatus: function (task_id, new_status, comment) {
@@ -141,5 +144,3 @@ Phlexible.tasks.TasksGrid = Ext.extend(Ext.grid.GridPanel, {
         });
     }
 });
-
-Ext.reg('tasks-tasksgrid', Phlexible.tasks.TasksGrid);

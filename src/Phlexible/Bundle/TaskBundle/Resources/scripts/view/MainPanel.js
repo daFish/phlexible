@@ -1,13 +1,3 @@
-Ext.provide('Phlexible.tasks.ViewTemplate');
-Ext.provide('Phlexible.tasks.CommentsTemplate');
-Ext.provide('Phlexible.tasks.TransitionsTemplate');
-Ext.provide('Phlexible.tasks.MainPanel');
-
-Ext.require('Phlexible.tasks.FilterPanel');
-Ext.require('Phlexible.tasks.TasksGrid');
-Ext.require('Phlexible.tasks.AssignWindow');
-Ext.require('Phlexible.tasks.CommentWindow');
-
 Phlexible.tasks.ViewTemplate = new Ext.XTemplate(
     '<div class="p-tasks-view">',
     '<table cellpadding="0" cellspacing="5">',
@@ -76,7 +66,10 @@ Phlexible.tasks.TransitionsTemplate = new Ext.XTemplate(
     '</div>'
 );
 
-Phlexible.tasks.MainPanel = Ext.extend(Ext.Panel, {
+Ext.define('Phlexible.tasks.MainPanel', {
+    extend: 'Ext.Panel',
+    alias: 'widget.tasks-main',
+
     title: Phlexible.tasks.Strings.tasks,
     strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-main-panel',
@@ -97,7 +90,7 @@ Phlexible.tasks.MainPanel = Ext.extend(Ext.Panel, {
     initComponent: function () {
         this.items = [
             {
-                xtype: 'tasks-filterpanel',
+                xtype: 'tasks-filter',
                 region: 'west',
                 width: 200,
                 collapsible: true,
@@ -115,7 +108,7 @@ Phlexible.tasks.MainPanel = Ext.extend(Ext.Panel, {
                 layout: 'border',
                 border: false,
                 items: [{
-                    xtype: 'tasks-tasksgrid',
+                    xtype: 'tasks-list',
                     region: 'center',
                     taskId: this.params.id || false,
                     listeners: {
@@ -213,5 +206,3 @@ Phlexible.tasks.MainPanel = Ext.extend(Ext.Panel, {
         return this.getComponent(1).getComponent(1).getComponent(1).getComponent(1);
     }
 });
-
-Ext.reg('tasks-mainpanel', Phlexible.tasks.MainPanel);

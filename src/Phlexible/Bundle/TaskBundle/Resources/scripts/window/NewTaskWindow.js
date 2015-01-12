@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.tasks.NewTaskWindow');
+Ext.define('Phlexible.tasks.NewTaskWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.tasks.NewTaskWindow = Ext.extend(Ext.Window, {
     title: Phlexible.tasks.Strings.new_task,
     strings: Phlexible.tasks.Strings,
     iconCls: 'p-task-component-icon',
@@ -15,7 +15,6 @@ Phlexible.tasks.NewTaskWindow = Ext.extend(Ext.Window, {
     component_filter: null,
 
     initComponent: function () {
-
         this.items = [
             {
                 xtype: 'form',
@@ -126,7 +125,7 @@ Phlexible.tasks.NewTaskWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.tasks.NewTaskWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     onSend: function () {

@@ -16,7 +16,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.Group', {
                 if (menuItem.roles) {
                     var allowed = false;
                     Ext.each(menuItem.roles, function(role) {
-                        if (Phlexible.User.isGranted(role)) {
+                        if (Phlexible.App.isGranted(role)) {
                             allowed = true;
                             return false;
                         }

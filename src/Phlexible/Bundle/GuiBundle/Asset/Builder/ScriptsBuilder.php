@@ -113,6 +113,7 @@ class ScriptsBuilder
             'phlexiblegui',
             'phlexibledashboard',
             'phlexiblemediatype',
+            'phlexibletask',
         );
 
         $dir = $this->puliRepository->get('/phlexible/scripts');
@@ -240,6 +241,7 @@ class ScriptsBuilder
                 'dataview',
                 'form',
                 'numberfield',
+                'radio',
             );
 
             if (!empty($file->requires)) {

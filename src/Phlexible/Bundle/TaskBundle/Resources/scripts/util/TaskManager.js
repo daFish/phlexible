@@ -1,6 +1,4 @@
-Ext.provide('Phlexible.tasks.util.TaskManager');
-
-Phlexible.tasks.util.TaskManager = {
+Ext.define('Phlexible.tasks.util.TaskManager', {
     comment: function (task_id, comment, callback, scope) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('tasks_create_comment'),
@@ -71,4 +69,4 @@ Phlexible.tasks.util.TaskManager = {
             scope: scope || this
         });
     }
-};
+});

@@ -1,8 +1,6 @@
-Ext.provide('Phlexible.tasks.CommentWindow');
+Ext.define('Phlexible.tasks.CommentWindow', {
+    extend: 'Ext.window.Window',
 
-Ext.require('Phlexible.tasks.util.TaskManager');
-
-Phlexible.tasks.CommentWindow = Ext.extend(Ext.Window, {
     title: Phlexible.tasks.Strings.comment,
     strings: Phlexible.tasks.Strings,
     width: 400,
@@ -68,7 +66,7 @@ Phlexible.tasks.CommentWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.tasks.CommentWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     comment: function () {
@@ -77,7 +75,7 @@ Phlexible.tasks.CommentWindow = Ext.extend(Ext.Window, {
         }
 
         var values = this.getComponent(0).getForm().getValues();
-        Phlexible.tasks.util.TaskManager.comment(this.taskId, values.comment, function(success, result) {
+        Phlexible.tasks.TaskManager.comment(this.taskId, values.comment, function(success, result) {
             if (success && result.success) {
                 this.fireEvent('success');
                 this.close();

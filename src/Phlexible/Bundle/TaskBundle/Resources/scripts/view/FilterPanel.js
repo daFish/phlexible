@@ -1,6 +1,7 @@
-Ext.provide('Phlexible.tasks.FilterPanel');
+Ext.define('Phlexible.tasks.FilterPanel', {
+    extend: 'Ext.form.FormPanel',
+    alias: 'widget.tasks-filter',
 
-Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.tasks.Strings.filter,
     strings: Phlexible.tasks.Strings,
     bodyStyle: 'padding: 5px;',
@@ -202,7 +203,7 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
 //            scope: this
 //        });
 
-        Phlexible.tasks.FilterPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     onReset: function () {
@@ -238,5 +239,3 @@ Phlexible.tasks.FilterPanel = Ext.extend(Ext.form.FormPanel, {
         this.fireEvent('updateFilter', values);
     }
 });
-
-Ext.reg('tasks-filterpanel', Phlexible.tasks.FilterPanel);
