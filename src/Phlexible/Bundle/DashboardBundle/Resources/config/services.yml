@@ -3,6 +3,10 @@ services:
         class: Phlexible\Bundle\DashboardBundle\Portlet\PortletCollection
         arguments: [[]]
 
+    phlexible_dashboard.infobars:
+        class: Phlexible\Bundle\DashboardBundle\Infobar\InfobarCollection
+        arguments: [[]]
+
     # event listeners
     phlexible_dashboard.listener.get_config:
         class: Phlexible\Bundle\DashboardBundle\EventListener\GetConfigListener

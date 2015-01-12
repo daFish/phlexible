@@ -28,7 +28,7 @@ class Portlet
     /**
      * @var string
      */
-    private $class;
+    private $xtype;
 
     /**
      * @var string
@@ -88,19 +88,19 @@ class Portlet
     /**
      * @return string
      */
-    public function getClass()
+    public function getXtype()
     {
-        return $this->class;
+        return $this->xtype;
     }
 
     /**
-     * @param string $class
+     * @param string $xtype
      *
      * @return $this
      */
-    public function setClass($class)
+    public function setXtype($xtype)
     {
-        $this->class = $class;
+        $this->xtype = $xtype;
 
         return $this;
     }
@@ -179,7 +179,7 @@ class Portlet
         return array(
             'id'       => $this->getId(),
             'title'    => $this->getTitle(),
-            'class'    => $this->getClass(),
+            'xtype'    => $this->getXtype(),
             'iconCls'  => $this->getIconClass(),
             'data'     => $this->getData(),
             'settings' => $this->getSettings(),

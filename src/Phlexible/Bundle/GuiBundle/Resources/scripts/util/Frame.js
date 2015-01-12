@@ -90,7 +90,7 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                 );
             },
             failure: function () {
-                Ext.MessageBox.alert('Load error', 'Error loading config.');
+                Ext.window.MessageBox.alert('Load error', 'Error loading config.');
             },
             scope: this
         });
@@ -189,11 +189,11 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
         }
 
         if (!ok) {
-            Ext.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_not_suported, navigator.appName + ' ' + navigator.appVersion));
+            Ext.window.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_not_suported, navigator.appName + ' ' + navigator.appVersion));
         }
         else {
             if (Ext.isOpera) {
-                Ext.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_no_right_click, navigator.appName + ' ' + navigator.appVersion));
+                Ext.window.MessageBox.alert(Phlexible.gui.Strings.warning, String.format(Phlexible.gui.Strings.check_no_right_click, navigator.appName + ' ' + navigator.appVersion));
             }
         }
     },

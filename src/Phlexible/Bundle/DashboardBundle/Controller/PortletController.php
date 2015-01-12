@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\DashboardBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\DashboardBundle\Infobar\AbstractInfobar;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -38,13 +39,34 @@ class PortletController extends Controller
     {
         $securityContext = $this->get('security.context');
 
-        $data = [];
-        foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
-            if ($portlet->hasRole() && !$securityContext->isGranted($portlet->getRole())) {
-                continue;
+        $portlets = $this->get('phlexible_dashboard.portlets');
+        $infobars = $this->get('phlexible_dashboard.infobars');
+
+        $data = array(
+            'headerBar' => array(),
+            'footerBar' => array(),
+            'portlets'  => array(),
+        );
+
+        foreach ($infobars->all() as $infobar) {
+            switch ($infobar->getRegion()) {
+                case AbstractInfobar::REGION_HEADER:
+                    $data['headerBar'][] = $infobar->toArray();
+                    break;
+
+                case AbstractInfobar::REGION_FOOTER:
+                    $data['footerBar'][] = $infobar->toArray();
+                    break;
             }
 
-            $data[] = $portlet->toArray();
+        }
+
+        foreach ($portlets->all() as $portlet) {
+            #if ($portlet->hasResource() && !$acl->isAllowed($currentUser, $portlet->getResource())) {
+            #    continue;
+            #}
+
+            $data['portlets'][] = $portlet->toArray();
         }
 
         return new JsonResponse($data);
@@ -80,5 +102,26 @@ class PortletController extends Controller
         $this->get('phlexible_user.user_manager')->updateUser($user);
 
         return new ResultResponse(true, 'Portlets saved.');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/columns", name="dashboard_portlets_columns")
+     * @method("POST")
+     */
+    public function columnsAction(Request $request)
+    {
+        $count = $request->request->get('column');
+
+        $user = $this->getUser();
+
+        $user->setProperty('dashboard.columns', $count);
+
+        $response = new ResultResponse();
+        $response->setResult(true, 'Columns changed.');
+
+        return $response;
     }
 }

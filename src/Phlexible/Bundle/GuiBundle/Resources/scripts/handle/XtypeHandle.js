@@ -1,24 +1,25 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.XtypeHandle');
+Ext.define('Phlexible.gui.menuhandle.handle.XtypeHandle', {
+    extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Handle');
+    /**
+     * @cfg {String} xtype
+     */
 
-Phlexible.gui.menuhandle.handle.XtypeHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
-    handle: function () {
-        var identifier = this.getIdentifier(),
-            component = this.getComponent(),
-            parameters = this.getParameters();
+    /**
+     * @cfg {Object} parameters
+     */
 
-        if (typeof(component) !== 'string') {
-            throw Error('Component has to be a xtype-string.');
-        }
-
-        Phlexible.console.debug('XtypeHandle.handle(' + component + ', ' + identifier + ')', parameters);
-
-        Phlexible.Frame.loadPanel(identifier, component, parameters);
+    /**
+     * Return xtype
+     *
+     * @return {String}
+     */
+    getXtype: function () {
+        return this.xtype;
     },
 
     getIdentifier: function () {
-        return this.getComponent();
+        return this.getXtype();
     },
 
     getParameters: function () {
@@ -27,5 +28,11 @@ Phlexible.gui.menuhandle.handle.XtypeHandle = Ext.extend(Phlexible.gui.menuhandl
 
     setParameters: function (parameters) {
         this.parameters = parameters;
+    },
+
+    handle: function () {
+        Phlexible.console.debug('XtypeHandle.handle(' + this.getXtype() + ', ' + this.getIdentifier() + ')', this.getParameters());
+
+        Phlexible.App.addPanelByHandle(this);
     }
 });

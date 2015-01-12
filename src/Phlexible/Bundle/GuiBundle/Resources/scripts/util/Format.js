@@ -1,6 +1,4 @@
-Ext.provide('Phlexible.Format');
-
-Phlexible.Format = {
+Ext.define('Phlexible.gui.util.Format', {
     size: function (size, binarySuffix) {
         if (!size) {
             return 0;
@@ -161,4 +159,4 @@ Phlexible.Format = {
 
         //return result.trim();
     }
-};
+});

@@ -1,92 +1,95 @@
-Ext.provide('Phlexible.dashboard.PortalPanel');
+/**
+ * Portal panel
+ */
+Ext.define('Phlexible.dashboard.view.PortalPanel', {
+    extend: 'Portal.view.PortalPanel',
+    alias: 'widget.dashboard-portalpanel',
 
-Ext.require('Ext.ux.Portal');
-Ext.require('Phlexible.dashboard.store.Portlet');
-
-Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
-    store: Phlexible.dashboard.store.Portlet,
+    store: Ext.create('Phlexible.dashboard.store.Portlets'),
     cls: 'p-dashboard-portal-panel',
     border: false,
     cols: 3,
     panels: {},
+    ui: 'nope',
 
-    initComponent: function () {
-        this.addEvents(
-            'portletAdd',
-            'portletClose',
-            'portletCollapse',
-            'portletExpand'
-        );
+    /**
+     * @event portletAdd
+     */
+    /**
+     * @event portletClose
+     */
+    /**
+     * @event portletCollapse
+     */
+    /**
+     * @event portletExpand
+     */
 
-        Phlexible.Frame.on('frameready', function() {
-            Phlexible.Frame.getSystemMessage().on('message', this.processMessage, this);
-        });
+    /**
+     *
+     */
+    initComponent: function() {
+        var items = [],
+            poller = Phlexible.App.getPoller();
 
-        var items = [];
-        for (var i = 0; i < this.cols; i++) {
+        if (poller) {
+            poller.on('message', this.processMessage, this);
+        }
+
+        for (i=0; i<this.cols; i+=1) {
             items.push({
                 id: 'col' + i,
                 col: i,
-                columnWidth: 1 / this.cols,
-                style: 'padding:10px 10px 10px 10px'
+                columnWidth: 1/this.cols,
+                padding: 10
                 //,items: [{title: 'Column' + (i+1), html: 'test'}]
             });
         }
 
         this.items = items;
 
-//        Phlexible.Frame.loader.on('beforeload', function(){
-//            Phlexible.Frame.getSystemMessage().purgeListeners();
-//        }, this);
-
-        //this.store.on('load', this.updatePanels, this);
-
-//        Phlexible.StartMessage = new Phlexible.dashboard.Message();
-
-        Phlexible.dashboard.PortalPanel.superclass.initComponent.call(this);
-
         this.on({
-            render: function () {
+            render: function() {
                 Ext.DomHelper.append(this.el, {
                     tag: 'img',
-                    src: Phlexible.bundleAsset('/phlexiblegui/images/watermark.gif'),
-                    width: 250,
-                    height: 89,
+                    src: '/bundles/phlexiblegui/images/watermark.gif',
                     cls: 'p-dashboard-watermark'
                 });
 
-                if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
+                if (Phlexible.App.isGranted('ROLE_ADMIN')) {
                     Ext.DomHelper.append(this.el, {
                         tag: 'div',
                         cls: 'p-dashboard-info'
-                    }, true).load(Phlexible.url('/dashboard/info'));
+                    }, true).load({
+                        url: Phlexible.Router.generate('dashboard_info', {extjs: Ext.versions.extjs.version})
+                    });
                 }
             },
             scope: this
         });
+
+        this.callParent(arguments);
     },
 
-    updatePanels: function () {
-
-        for (var i = 0; i < this.store.getCount(); i++) {
+    updatePanels: function() {
+        for(var i=0; i<this.store.getCount(); i++){
             var r = this.store.getAt(i);
             this.addRecordPanel(r);
         }
 
         this.doLayout();
-
     },
 
-    getCol: function (pos) {
+    getCol: function(pos) {
         return this.items.get(pos);
     },
 
-    getBestCol: function () {
+    getBestCol: function() {
         var childs = {};
         var best;
         var max = 999;
 
-        for (i = 0; i < this.items.getCount(); i++) {
+        for(i=0; i<this.items.getCount(); i++) {
             var item = this.items.get(i);
             if (!item.items.getCount()) {
                 return item;
@@ -101,72 +104,80 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         return best;
     },
 
-    addRecordPanel: function (r, skipEvent) {
-        var col = parseInt(r.get('col'), 10);
-        if (col !== false && col < this.cols) {
-            col = this.getCol(col);
+    addPortlet: function(item, skipEvent) {
+        var col;
+        if (item.col !== false && item.col < this.cols) {
+            col = this.getCol(item.col);
         } else {
             col = this.getBestCol();
         }
-        if (r.get('class')) {
-            var classname = Phlexible.evalClassString(r.get('class'));
-            if (classname) {
-                r.set('col', col.col);
-                r.set('pos', col.items.length + 1);
 
-                var tools = [];
-                var plugins = [];
+        if (item.xtype) {
+            item.col = col.col;
+            item.pos =  col.items.length + 1;
 
+            var tools = [];
+            var plugins = [];
+            if (item.configuration && item.configuration.length) {
                 tools.push({
-                    id: 'close',
-                    handler: function (e, target, panel) {
-                        delete this.panels[panel.record.id];
-                        this.fireEvent('portletClose', panel, panel.record);
+                    id: 'gear',
+                    portletId: item.id,
+                    portletConfig: item.configuration,
+                    handler: function(event, toolEl){
+                        var w = Ext.xcreate('Phlexible.dashboard.ConfigWindow', {
+                            portletId: toolEl.portletId,
+                            portletConfig: toolEl.portletConfig
+                        });
+                        w.show();
                     },
                     scope: this
                 });
+            }
 
-                var o = new classname({
-                    id: r.data.id,
-                    record: r,
-                    collapsed: r.get('mode') == 'collapsed',
-                    tools: tools,
-                    plugins: plugins,
-                    listeners: {
-                        collapse: function (panel) {
-                            panel.record.set('mode', 'collapsed');
+            var o = {
+                xtype: item.xtype,
+                id: item.id,
+                item: item,
+                collapsed: item.mode == 'collapsed',
+                tools: tools,
+                plugins: plugins,
+                listeners: {
+                    close: function(panel) {
+                        panel.ownerCt.remove(panel, true);
+                        panel.destroy();
+                        this.fireEvent('portletClose', panel, panel.item);
+                    },
+                    collapse: function(panel){
+                        panel.item.mode = 'collapsed';
 
-                            this.fireEvent('portletCollapse', panel, panel.record);
-                        },
-                        expand: function (panel) {
-                            panel.record.set('mode', 'expanded');
+                        this.fireEvent('portletCollapse', panel, panel.item);
+                    },
+                    expand: function(panel){
+                        panel.item.mode = 'expanded';
 
-                            this.fireEvent('portletExpand', panel, panel.record);
-                        },
-                        scope: this
-                    }
-                });
-                var panel = col.add(o);
-
-                this.panels[r.id] = o;
-
-                this.doLayout();
-
-                if (!skipEvent) {
-                    this.fireEvent('portletAdd', panel, panel.record);
+                        this.fireEvent('portletExpand', panel, panel.item);
+                    },
+                    scope: this
                 }
+            };
+            var panel = col.add(o);
+
+            this.doLayout();
+
+            if (!skipEvent) {
+                this.fireEvent('portletAdd', item, item.record);
             }
         }
     },
 
-    getSaveData: function () {
+    getSaveData: function() {
         var data = {}, x = 0, y = 0;
 
-        this.items.each(function (col) {
-            col.items.each(function (item) {
+        this.items.each(function(col) {
+            col.items.each(function(item) {
                 data[item.id] = {
                     id: item.id,
-                    mode: item.record.data.mode,
+                    mode: item.item.mode,
                     col: x,
                     pos: y
                 };
@@ -179,15 +190,15 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         return data;
     },
 
-    processMessage: function (event) {
-        if (typeof event == "object" && event.type == "start") {
+    processMessage: function(event){
+        if(typeof event == "object" && event.type == "dashboard") {
             var data = event.data;
 
             var r;
-            for (var id in data) {
+            for(var id in data) {
                 var panel = this.panels[id];
 
-                if (!panel || !panel.updateData) {
+                if(!panel || !panel.updateData) {
                     continue;
                 }
 
@@ -196,5 +207,3 @@ Phlexible.dashboard.PortalPanel = Ext.extend(Ext.ux.Portal, {
         }
     }
 });
-
-Ext.reg('dashboard-portalpanel', Phlexible.dashboard.PortalPanel);

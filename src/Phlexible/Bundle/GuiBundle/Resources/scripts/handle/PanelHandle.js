@@ -1,8 +1,6 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.PanelHandle');
+Ext.define('Phlexible.gui.menuhandle.handle.PanelHandle', {
+    extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Handle');
-
-Phlexible.gui.menuhandle.handle.PanelHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     handle: function () {
         var identifier = this.getIdentifier(),
             component = this.getComponent(),

@@ -26,7 +26,7 @@ class GetConfigListener
         $config = $event->getConfig();
 
         $defaultPortlets = [
-            'online-portlet'   => [
+            'users-online-portlet'   => [
                 'mode' => 'opened',
                 'col'  => 1,
                 'pos'  => 1
@@ -44,6 +44,7 @@ class GetConfigListener
             $portlets = $defaultPortlets;
         }
 
-        $config->set('user.portlets', $portlets);
+        $config->set('dashboard.portlets', $portlets);
+        $config->set('dashboard.columns', $user->getProperty('dashboard.columns', 2));
     }
 }

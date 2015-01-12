@@ -1,8 +1,7 @@
-Ext.provide('Phlexible.gui.portlet.Load');
+Ext.define('Phlexible.gui.portlet.Load', {
+    extend: 'Portal.view.Portlet',
+    alias: 'widget.gui-load-portlet',
 
-Ext.require('Ext.ux.Portlet');
-
-Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
     title: Phlexible.gui.Strings.server_load,
     strings: Phlexible.gui.Strings,
     bodyStyle: 'padding: 5px 5px 5px 5px',
@@ -37,15 +36,11 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             '</table>'
         );
 
-        var data = this.record.get('data');
-        this.store = new Ext.data.SimpleStore({
-            fields: [
-                {name: 'l1', type: 'float'},
-                {name: 'l5', type: 'float'},
-                {name: 'l15', type: 'float'}
-            ],
-            data: [data]
+        this.store = new Ext.data.Store({
+            model: 'Phlexible.gui.model.LoadEntry',
+            data: [this.data]
         });
+        delete this.data;
 
         this.items = [
             {
@@ -58,15 +53,13 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
                     height: 100
                 },
                 listeners: {
-                    render: {
-                        fn: function (c) {
-                            //console.log('RENDER');
-                            //console.log(this.getSize());
-                            //console.log(c);
-                            //c.setWidth(this.getSize().width - 20);
-                        },
-                        scope: this
-                    }
+                    render: function (c) {
+                        //console.log('RENDER');
+                        //console.log(this.getSize());
+                        //console.log(c);
+                        //c.setWidth(this.getSize().width - 20);
+                    },
+                    scope: this
                 }
             },
             {
@@ -80,7 +73,7 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
             }
         }, this);
 
-        Phlexible.gui.portlet.Load.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     updateData: function (data) {
@@ -243,5 +236,3 @@ Phlexible.gui.portlet.Load = Ext.extend(Ext.ux.Portlet, {
         }
     }
 });
-
-Ext.reg('gui-portlet-load', Phlexible.gui.portlet.Load);

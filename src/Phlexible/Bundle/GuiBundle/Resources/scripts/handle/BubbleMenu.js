@@ -1,8 +1,6 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.BubbleMenu');
+Ext.define('Phlexible.gui.menuhandle.handle.BubbleMenu', {
+    extend: 'Phlexible.gui.menuhandle.handle.Menu',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Menu');
-
-Phlexible.gui.menuhandle.handle.BubbleMenu = Ext.extend(Phlexible.gui.menuhandle.handle.Menu, {
     createConfig: function (data) {
         if (data.menu && Ext.isArray(data.menu) && data.menu.length === 1) {
             var handleFactory, handler;
@@ -22,6 +20,6 @@ Phlexible.gui.menuhandle.handle.BubbleMenu = Ext.extend(Phlexible.gui.menuhandle
             return handler.createConfig(data.menu[0]);
         }
 
-        return Phlexible.gui.menuhandle.handle.BubbleMenu.superclass.createConfig.call(this, data);
+        return this.callParent([data]);
     }
 });

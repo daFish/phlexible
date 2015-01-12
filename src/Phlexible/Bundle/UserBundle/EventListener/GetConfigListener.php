@@ -65,6 +65,7 @@ class GetConfigListener
             ->set('user.email', $user->getEmail())
             ->set('user.firstname', $user->getFirstname() ?: '')
             ->set('user.lastname', $user->getLastname() ?: '')
+            ->set('user.displayName', $user->getDisplayName() ?: '')
             ->set('user.properties', $user->getProperties())
             ->set('user.roles', $roles)
             ->set('defaults', $this->defaults);

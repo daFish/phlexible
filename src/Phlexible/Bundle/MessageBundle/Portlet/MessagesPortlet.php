@@ -51,7 +51,7 @@ class MessagesPortlet extends Portlet
         $this
             ->setId('messages-portlet')
             ->setTitle($translator->trans('messages.messages', [], 'gui'))
-            ->setClass('Phlexible.messages.portlet.Messages')
+            ->setXtype('messages-portlet')
             ->setIconClass('p-message-component-icon')
             ->setRole('ROLE_MESSAGE_SUBSCRIPTIONS');
 

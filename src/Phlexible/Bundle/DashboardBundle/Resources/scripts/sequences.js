@@ -1,11 +1,9 @@
-Ext.require('Phlexible.dashboard.MainPanel');
-Ext.require('Phlexible.gui.util.Frame');
+Ext.require('Phlexible.gui.util.Application');
 
-Phlexible.gui.util.Frame.prototype.initStartItems =
-    Phlexible.gui.util.Frame.prototype.initStartItems.createSequence(function() {
-        this.startItems.push({
-            xtype: 'dashboard-main-panel',
-            id: 'Phlexible_dashboard_MainPanel',
+Phlexible.gui.util.Application.prototype.initPanels =
+    Ext.Function.createSequence(Phlexible.gui.util.Application.prototype.initPanels, function() {
+        this.initialPanels.push({
+            xtype: 'dashboard-dashboard',
             header: false
         });
     });

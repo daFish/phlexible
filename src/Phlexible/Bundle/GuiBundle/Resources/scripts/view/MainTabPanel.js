@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.gui.MainTabPanel');
+Ext.define('Phlexible.gui.MainTabPanel', {
+    extend: 'Ext.tab.TabPanel',
 
-Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
     plain: false,
     border: false,
     activeTab: 0,
@@ -10,11 +10,6 @@ Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
     enableTabScroll: true,
 
     initComponent: function () {
-        this.addEvents(
-            'beforeLoadPanel',
-            'loadPanel'
-        );
-
         this.addListener({
             beforeremove: function (main, panel) {
                 if (panel.isDirty && panel.isDirty()) {
@@ -24,7 +19,7 @@ Phlexible.gui.MainTabPanel = Ext.extend(Ext.TabPanel, {
             }
         });
 
-        Phlexible.gui.MainTabPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadPanel: function (id, cls, params) {

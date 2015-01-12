@@ -109,10 +109,17 @@ class ScriptsBuilder
     {
         $entryPoints = array();
 
+        $allowedEntry = array(
+            'phlexiblegui',
+            'phlexibledashboard'
+        );
+
         $dir = $this->puliRepository->get('/phlexible/scripts');
         /* @var $dir DirectoryResource */
         foreach ($dir->listChildren() as $dir) {
-            //if ($dir->getName() !== 'phlexiblegui') continue;
+            if (!in_array($dir->getName(), $allowedEntry)) {
+                continue;
+            }
             foreach ($dir->listChildren() as $resource) {
                 if ($resource instanceof FileResource && substr($resource->getName(), -3) === '.js') {
                     $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
@@ -132,14 +139,69 @@ class ScriptsBuilder
             $file->requires = array();
             $file->provides = array();
 
-            preg_match_all('/Ext\.provide\(["\'](.+)["\']\)/', $body, $matches);
-            foreach ($matches[1] as $provide) {
-                $file->provides[] = $provide;
+            if (preg_match_all('/Ext\.define\(\s*["\'](.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $provide) {
+                    $file->provides[] = $provide;
+                }
             }
 
-            preg_match_all('/Ext\.require\(["\'](.+)["\']\)/', $body, $matches);
-            foreach ($matches[1] as $require) {
-                $file->requires[] = $require;
+            if (preg_match_all('/alias:\s*["\']widget\.(.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $provide) {
+                    $file->provides[] = $provide;
+                }
+            }
+
+            if (preg_match_all('/Ext\.require\(["\'](.+)["\']\)/', $body, $matches)) {
+                foreach ($matches[1] as $require) {
+                    $file->requires[] = $require;
+                }
+            }
+
+            if (preg_match_all('/Ext\.create\(\s*["\'](.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $require) {
+                    $file->requires[] = $require;
+                }
+            }
+
+            if (preg_match_all('/extend:\s*["\'](.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $require) {
+                    $file->requires[] = $require;
+                }
+            }
+
+            if (preg_match_all('/xtype:\s*["\'](.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $require) {
+                    $file->requires[] = $require;
+                }
+            }
+
+            if (preg_match_all('/window:\s*["\'](.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $require) {
+                    $file->requires[] = $require;
+                }
+            }
+
+            if (preg_match_all('/model:\s*["\'](.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $require) {
+                    $file->requires[] = $require;
+                }
+            }
+
+            if (preg_match_all('/defaultType:\s*["\'](.+)["\']/', $body, $matches)) {
+                foreach ($matches[1] as $require) {
+                    $file->requires[] = $require;
+                }
+            }
+
+            if (preg_match_all('/requires:\s*\[(["\'].+["\'])\]/m', $body, $matches)) {
+                $file->requires = array();
+                foreach ($matches[1] as $require) {
+                    $parts = explode(', ', $require);
+                    foreach ($parts as $part) {
+                        $file->requires[] = trim($part, " \t\n\r\0\"'");
+                    }
+
+                }
             }
 
             $files[$resource->getPath()] = $file;
@@ -164,8 +226,26 @@ class ScriptsBuilder
 
             $file->added = true;
 
+            $skip = array(
+                'buttongroup',
+                'tabpanel',
+                'box',
+                'panel',
+                'textfield',
+                'checkbox',
+                'button',
+                'toolbar',
+                'component',
+                'dataview',
+                'form',
+                'numberfield',
+            );
+
             if (!empty($file->requires)) {
                 foreach ($file->requires as $require) {
+                    if ((substr($require, 0, 4) === 'Ext.' && substr($require, 0, 8) !== 'Ext.app.') || in_array($require, $skip)) {
+                        continue;
+                    }
                     if (!isset($symbols[$require])) {
                         throw new \Exception("Symbol '$require' not found for file {$file->file}.");
                     }

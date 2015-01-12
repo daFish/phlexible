@@ -1,17 +1,3 @@
-Ext.require = function(require) {
-
-}
-
-Ext.provide = function(provide) {
-    var provides = provide.split('.');
-    if (provides.length < 2) {
-        return;
-    }
-    provides.pop();
-    provide = provides.join('.');
-    Ext.namespace(provide);
-}
-
 String.prototype.ellipse = function (maxLength) {
     if (this.length > maxLength) {
         return this.substr(0, maxLength - 3) + '...';
@@ -53,6 +39,7 @@ String.prototype.lcfirst = function () {
  });
  */
 
+/*
 Ext.form.Field.prototype.show = Ext.form.Field.prototype.show.createSequence(function () {
     if (this.getEl().up('div.x-form-item')) {
         this.getEl().up('div.x-form-item').setVisibilityMode(Ext.Element.DISPLAY).show();
@@ -72,4 +59,4 @@ Ext.data.Store.prototype.onMetaChange = function (meta, rtype, o) {
     this.modified = [];
     this.fireEvent('metachange', this, this.reader.meta);
 };
-
+*/

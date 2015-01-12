@@ -1,8 +1,6 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.FunctionHandle');
+Ext.define('Phlexible.gui.menuhandle.handle.FunctionHandle', {
+    extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Handle');
-
-Phlexible.gui.menuhandle.handle.FunctionHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     handle: function () {
         var component = this.getComponent();
 

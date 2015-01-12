@@ -1,10 +1,11 @@
-Ext.provide('Phlexible.gui.BundlesFilterPanel');
+Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
+    extend: 'Ext.form.FormPanel',
+    alias: 'widget.gui-bundles-filter',
 
-Phlexible.gui.BundlesFilterPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.gui.Strings.filter,
     strings: Phlexible.gui.Strings,
-    bodyStyle: 'padding: 5px;',
-    cls: 'p-gui-componentfilter-panel',
+    bodyPadding: 5,
+    cls: 'p-gui-bundles-filter',
     iconCls: 'p-gui-filter-icon',
     autoScroll: true,
 
@@ -17,7 +18,6 @@ Phlexible.gui.BundlesFilterPanel = Ext.extend(Ext.form.FormPanel, {
                 title: this.strings.filter,
                 layout: 'form',
                 frame: true,
-                collapsible: true,
                 defaults: {
                     hideLabel: true
                 },
@@ -44,23 +44,35 @@ Phlexible.gui.BundlesFilterPanel = Ext.extend(Ext.form.FormPanel, {
             },
             {
                 xtype: 'panel',
+                itemId: 'packages',
                 title: this.strings['package'],
+                margin: '5 0 0 0',
                 layout: 'form',
                 frame: true,
                 collapsible: true,
                 defaults: {
                     hideLabel: true
                 },
-                html: '<div class="loading-indicator">Loading...</div>'
+                items: [{
+                    html: '<div class="loading-indicator">Loading...</div>'
+                }]
             }
         ];
 
-        this.tbar = ['->', {
-            text: this.strings.reset,
-            iconCls: 'p-gui-reset-icon',
-            disabled: true,
-            handler: this.resetFilter,
-            scope: this
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                xtype: 'component', flex: 1
+            },{
+                xtype: 'button',
+                text: this.strings.reset,
+                iconCls: 'p-gui-reset-icon',
+                disabled: true,
+                handler: this.resetFilter,
+                scope: this
+            }]
         }];
 
         Ext.Ajax.request({
@@ -69,46 +81,45 @@ Phlexible.gui.BundlesFilterPanel = Ext.extend(Ext.form.FormPanel, {
             scope: this
         });
 
-        Phlexible.gui.BundlesFilterPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
+    },
+
+    getPackagesForm: function() {
+        return this.getComponent('packages');
     },
 
     onLoadFilterValues: function (response) {
         var data = Ext.decode(response.responseText);
 
         if (data.packages && data.packages.length && Ext.isArray(data.packages)) {
-            this.getComponent(1).body.update('');
+            this.getPackagesForm().removeAll();
             Ext.each(data.packages, function (item) {
-                this.getComponent(1).add({
+                this.getPackagesForm().add({
                     xtype: 'checkbox',
                     name: 'package_' + item.id,
                     boxLabel: item.title,
                     checked: item.checked,
                     listeners: {
-                        check: function (cb, checked) {
-                            this.updateFilter();
-                        },
+                        change: this.updateFilter(),
                         scope: this
                     }
                 });
             }, this);
-            this.getComponent(1).items.each(function (item) {
-                this.form.add(item);
-            }, this);
+        }
+    },
+
+    resetFilter: function () {
+        this.getForm().reset();
+        this.updateFilter(true);
+        this.getDockedComponent(0).getComponent(1).disable();
+    },
+
+    updateFilter: function (noEnable) {
+        if (!noEnable) {
+            this.getDockedComponent(0).getComponent(1).enable();
         }
 
-        this.doLayout();
-    },
-
-    resetFilter: function (btn) {
-        this.form.reset();
-        this.updateFilter();
-        btn.disable();
-    },
-
-    updateFilter: function () {
-        this.getTopToolbar().items.items[1].enable();
-
-        var values = this.form.getValues();
+        var values = this.getValues();
 
         var data = {
             status: [],
@@ -117,6 +128,8 @@ Phlexible.gui.BundlesFilterPanel = Ext.extend(Ext.form.FormPanel, {
         };
 
         for (var key in values) {
+            if (!values.hasOwnProperty(key)) continue;
+
             //if (values[key] !== 'on') continue;
 
             if (key.substr(0, 8) == 'package_' && values[key] === 'on') {
@@ -130,5 +143,3 @@ Phlexible.gui.BundlesFilterPanel = Ext.extend(Ext.form.FormPanel, {
         this.fireEvent('updateFilter', data);
     }
 });
-
-Ext.reg('gui-bundles-filter', Phlexible.gui.BundlesFilterPanel);

@@ -33,7 +33,7 @@ class OnlinePortlet extends Portlet
         $this
             ->setId('online-portlet')
             ->setTitle($translator->trans('users.who_is_online', [], 'gui'))
-            ->setClass('Phlexible.users.portlet.Online')
+            ->setXtype('users-online-portlet')
             ->setIconClass('p-user-portlet-icon');
 
         $this->userManager = $userManager;

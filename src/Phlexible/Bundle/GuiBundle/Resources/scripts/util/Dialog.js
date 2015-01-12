@@ -33,16 +33,29 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
     values: {},
     formConfig: {},
 
-    initComponent: function () {
-        this.addEvents(
-            'beforeSubmit',
-            'submit',
-            'submitSuccess',
-            'submitFailure',
-            'success',
-            'failure'
-        );
+    /**
+     * @event beforeSubmit
+     */
+    /**
+     * @event submit
+     */
+    /**
+     * @event submitSuccess
+     */
+    /**
+     * @event submitFailure
+     */
+    /**
+     * @event success
+     */
+    /**
+     * @event failure
+     */
 
+    /**
+     * Init component
+     */
+    initComponent: function () {
         var formItems = [
             {
                 xtype: 'panel',
@@ -142,7 +155,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
             }
         }, this);
 
-        Phlexible.gui.util.Dialog.superclass.initComponent.call(this);
+        this.callParent(arguments);
 
         this.addListener('render', function () {
             var keyMap = this.getKeyMap();
@@ -241,7 +254,7 @@ Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
         this.fireEvent('submitFailure', this, action.result);
 
         if (action.result.msg) {
-            Ext.MessageBox.alert('Failure', action.result.msg);
+            Ext.window.MessageBox.alert('Failure', action.result.msg);
         }
     }
 });

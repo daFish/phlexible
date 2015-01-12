@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\DashboardBundle;
 
+use Phlexible\Bundle\DashboardBundle\DependencyInjection\Compiler\AddInfobarsPass;
 use Phlexible\Bundle\DashboardBundle\DependencyInjection\Compiler\AddPortletsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -25,6 +26,7 @@ class PhlexibleDashboardBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container
-            ->addCompilerPass(new AddPortletsPass());
+            ->addCompilerPass(new AddPortletsPass())
+            ->addCompilerPass(new AddInfobarsPass());
     }
 }

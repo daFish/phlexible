@@ -1,10 +1,8 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.Handle');
+Ext.define('Phlexible.gui.menuhandle.handle.Handle', {
+    constructor: function(config) {
+        Ext.apply(this, config);
+    },
 
-Phlexible.gui.menuhandle.handle.Handle = function(config) {
-    Ext.apply(this, config);
-};
-
-Ext.extend(Phlexible.gui.menuhandle.handle.Handle, Ext.util.Observable, {
     /**
      * @cfg {String} text Display text
      */
@@ -14,11 +12,6 @@ Ext.extend(Phlexible.gui.menuhandle.handle.Handle, Ext.util.Observable, {
      * @cfg {String} iconCls Icon class
      */
     iconCls: '',
-
-    /**
-     * @cfg {String} component Component
-     */
-    component: '',
 
     /**
      * Return text
@@ -34,14 +27,6 @@ Ext.extend(Phlexible.gui.menuhandle.handle.Handle, Ext.util.Observable, {
      */
     getIconCls: function () {
         return this.iconCls;
-    },
-
-    /**
-     * Return iconCls
-     * @return {String}
-     */
-    getComponent: function () {
-        return this.component;
     },
 
     /**

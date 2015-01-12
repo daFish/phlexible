@@ -1,17 +1,9 @@
 Ext.require('Phlexible.gui.util.Console');
-Phlexible.console = new Phlexible.gui.util.Console();
+Phlexible.console = Ext.create('Phlexible.gui.util.Console');
 
-Ext.provide('Phlexible.Handles');
-Ext.require('Phlexible.gui.util.Handles');
-Phlexible.Handles = new Phlexible.gui.util.Handles();
+Phlexible.Handles = Ext.create('Phlexible.gui.util.Handles');
 
-Ext.provide('Phlexible.Cookie');
-Ext.require('Phlexible.gui.util.Cookie');
-Phlexible.Cookie = new Phlexible.gui.util.Cookie();
-
-Ext.provide('Phlexible.globalKeyMap');
 Phlexible.globalKeyMap = new Ext.KeyMap(document);
-
 Phlexible.globalKeyMap.accessKey = function (key, handler, scope) {
     var h = function (keyCode, e) {
         if (Ext.isIE) {
@@ -27,22 +19,22 @@ Phlexible.globalKeyMap.accessKey = function (key, handler, scope) {
     this.on(key, h, scope);
 };
 
-Ext.require('Phlexible.globalKeyMap');
-Ext.require('Phlexible.gui.Actions');
 Phlexible.globalKeyMap.accessKey({key: 'y', alt: true}, function () {
     Phlexible.gui.Actions.show();
 });
 
-Ext.provide('Phlexible.PluginRegistry');
-Ext.require('Phlexible.gui.util.PluginRegistry');
-Phlexible.PluginRegistry = new Phlexible.gui.util.PluginRegistry();
+Phlexible.PluginRegistry = Ext.create('Phlexible.gui.util.PluginManager');
 
-Ext.provide('Phlexible.Router');
-Ext.require('Phlexible.gui.util.Router');
-Phlexible.Router = new Phlexible.gui.util.Router();
+Phlexible.Router = Ext.create('Phlexible.gui.util.Router');
+
+Phlexible.Icon = Ext.create('Phlexible.gui.util.Icon');
+
+Phlexible.Notify = Ext.create('Phlexible.gui.util.Notify');
 
 Ext.onReady(function () {
-    Ext.require('Phlexible.gui.util.Frame');
-    Phlexible.Frame = new Phlexible.gui.util.Frame();
-    Phlexible.Frame.initFrame();
+    Phlexible.App = Ext.create('Phlexible.gui.util.Application', {
+        config: Phlexible.config,
+        menu: Phlexible.menu
+    });
+    Phlexible.App.init();
 });

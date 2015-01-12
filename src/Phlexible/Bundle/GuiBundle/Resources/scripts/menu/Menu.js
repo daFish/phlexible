@@ -1,5 +1,3 @@
-Ext.provide('Phlexible.gui.util.Menu');
-
 /**
  * @class Phlexible.gui.MenuBar
  * @extends Ext.util.Observable
@@ -12,39 +10,41 @@ Ext.provide('Phlexible.gui.util.Menu');
  * </code></pre>
  * @constructor
  */
-Phlexible.gui.util.Menu = function (config) {
-    config = config || {};
+Ext.define('Phlexible.gui.menu.Menu', {
+    extend: 'Ext.util.Observable',
 
-    this.addEvents(
-        /**
-         * @event beforeload
-         * Fires before menu is loaded.
-         * @param {Phlexible.gui.Menu} menu
-         */
-        "beforeload",
-        /**
-         * @event load
-         * Fires after menu is loaded.
-         * @param {Phlexible.gui.Menu} menu
-         */
-        "load",
-        /**
-         * @event addTrayItem
-         * Fires after a tray item was added.
-         * @param {Phlexible.gui.Menu} menu
-         * @param {Object} item
-         */
-        "addTrayItem"
-    );
+    /**
+     * @event beforeload
+     * Fires before menu is loaded.
+     * @param {Phlexible.gui.Menu} menu
+     */
 
-    if (config.listeners) {
-        this.on(config.listeners);
-    }
+    /**
+     * @event load
+     * Fires after menu is loaded.
+     * @param {Phlexible.gui.Menu} menu
+     */
 
-    this.load();
-};
+    /**
+     * @event addTrayItem
+     * Fires after a tray item was added.
+     * @param {Phlexible.gui.Menu} menu
+     * @param {Object} item
+     */
 
-Ext.extend(Phlexible.gui.util.Menu, Ext.util.Observable, {
+    /**
+     * Constructor
+     */
+    constructor: function(config) {
+        this.callParent(arguments);
+
+        if (config.menuData) {
+            this.populate(config.menuData);
+        } else {
+            this.load();
+        }
+    },
+
     items: [],
     trayItems: [],
 
@@ -65,7 +65,7 @@ Ext.extend(Phlexible.gui.util.Menu, Ext.util.Observable, {
             url: Phlexible.Router.generate('gui_menu'),
             success: this.onLoadSuccess,
             failure: function () {
-                Ext.MessageBox.alert('Load error', 'Error loading menu.');
+                Ext.window.MessageBox.alert('Load error', 'Error loading menu.');
             },
             scope: this
         });
@@ -85,11 +85,19 @@ Ext.extend(Phlexible.gui.util.Menu, Ext.util.Observable, {
     onLoadSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
+        this.populate(data);
+
+        this.fireEvent('load', this, this.items);
+    },
+
+    populate: function(data) {
+        this.fireEvent('beforepopulate', this, data);
+
         this.items = this.iterate(data);
 
         this.loaded = true;
 
-        this.fireEvent('load', this, this.items);
+        this.fireEvent('populate', this, this.items);
     },
 
     getItems: function () {

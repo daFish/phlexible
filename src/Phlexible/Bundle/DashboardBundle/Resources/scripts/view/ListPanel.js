@@ -8,11 +8,14 @@ Phlexible.dashboard.ListPanel = Ext.extend(Ext.Panel, {
     width: 200,
     cls: 'p-dashboard-list-panel',
 
-    initComponent: function () {
-        this.addEvents(
-            'portletOpen'
-        );
+    /**
+     * @event portletOpen
+     */
 
+    /**
+     *
+     */
+    initComponent: function () {
         this.items = [{
             xtype: 'dataview',
             store: Phlexible.dashboard.store.List,

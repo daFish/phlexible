@@ -1,8 +1,6 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.FillHandle');
+Ext.define('Phlexible.gui.menuhandle.handle.FillHandle', {
+    extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Handle');
-
-Phlexible.gui.menuhandle.handle.FillHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     createConfig: function (data) {
         return '->';
     }

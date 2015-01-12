@@ -1,36 +1,36 @@
-Ext.provide('Phlexible.gui.BundlesGrid');
+Ext.define('Phlexible.gui.bundles.BundlesGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.gui-bundles-grid',
 
-Ext.require('Phlexible.gui.model.Bundle');
-
-Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.gui.Strings,
     loadMask: true,
     hint: false,
-    cls: 'p-gui-component-grid',
+    cls: 'p-gui-bundles-list',
 
     initComponent: function () {
-        this.addEvents(
-            'dirty'
-        );
-
-        // create the Data Store
-        this.store = new Ext.data.GroupingStore({
-            // load using HTTP
-            proxy: new Ext.data.HttpProxy({
-                url: Phlexible.Router.generate('gui_bundles')
-            }),
-            baseParams: {
-                required: 0
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.gui.model.Bundle',
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('gui_bundles'),
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'users',
+                    idProperty: 'uid',
+                    totalProperty: 'count'
+                },
+                extraParams: this.storeExtraParams
             },
-            // the return will be XML, so lets set up a reader
-            reader: new Ext.data.JsonReader({
-                id: 'id'
-            }, Phlexible.gui.model.Bundle),
-
+            // TODO: enable when buffered paging reload works. disabled for now.
             autoLoad: true,
-            sortInfo: {field: 'id', direction: 'ASC'},
+            remoteSort: false,
+            sorters: [{
+                property: 'id',
+                direction: 'ASC'
+            }],
             listeners: {
-                load: function () {
+                load: function() {
                     if (this.filterData) {
                         this.setFilterData(this.filterData);
                     }
@@ -70,20 +70,13 @@ Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         ];
 
-        this.view = new Ext.grid.GroupingView({
-            emptyText: Phlexible.gui.Strings.no_bundles,
-            deferEmptyText: true,
-            hideGroupedColumn: true,
-            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? Phlexible.gui.Strings.bundles : Phlexible.gui.Strings.bundle]})'
-        });
-
-        Phlexible.gui.BundlesGrid.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     setFilterData: function (data) {
         this.filterData = data;
         this.store.clearFilter();
-        this.store.filterBy(function (record, id, data) {
+        this.store.filterBy(function (record, id) {
             if (data.packages.length && data.packages.indexOf(record.data['package']) === -1) {
                 return false;
             }
@@ -97,8 +90,6 @@ Phlexible.gui.BundlesGrid = Ext.extend(Ext.grid.GridPanel, {
             }
 
             return true;
-        }.createDelegate(this, [data], true));
+        }, this);
     }
 });
-
-Ext.reg('gui-bundles-grid', Phlexible.gui.BundlesGrid);

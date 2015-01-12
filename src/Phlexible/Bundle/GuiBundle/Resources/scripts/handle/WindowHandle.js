@@ -1,22 +1,35 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.WindowHandle');
+Ext.define('Phlexible.gui.menuhandle.handle.WindowHandle', {
+    extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Handle');
+    /**
+     * @cfg {String} window
+     */
 
-Phlexible.gui.menuhandle.handle.WindowHandle = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
+    /**
+     * @cfg {Object} parameters
+     */
+
+    /**
+     * Return window
+     *
+     * @return {String}
+     */
+    getWindow: function () {
+        return this.window;
+    },
+
+    getParameters: function () {
+        return this.parameters || {};
+    },
+
+    setParameters: function (parameters) {
+        this.parameters = parameters;
+    },
+
     handle: function () {
-        var component = Phlexible.evalClassString(this.getComponent()),
-            parameters = {};
+        Phlexible.console.debug('WindowHandle.handle(' + this.getWindow() + ')', this.getParameters());
 
-        if (typeof(component) === 'string') {
-            component = Phlexible.evalClassString(component);
-        }
-        if (typeof(component) !== 'function') {
-            throw Error('Not a function.');
-        }
-
-        Phlexible.console.debug('WindowHandle.handle(' + component + ')', parameters);
-
-        var win = new component();
+        var win = Ext.create(this.getWindow(), this.getParameters());
         win.show();
     }
 });

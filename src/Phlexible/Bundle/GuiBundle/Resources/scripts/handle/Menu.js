@@ -1,8 +1,6 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.Menu');
+Ext.define('Phlexible.gui.menuhandle.handle.Menu', {
+    extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Handle');
-
-Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     menu: [],
 
     createConfig: function (data) {
@@ -26,7 +24,7 @@ Phlexible.gui.menuhandle.handle.Menu = Ext.extend(Phlexible.gui.menuhandle.handl
                 if (menuItem.roles) {
                     var allowed = false;
                     Ext.each(menuItem.roles, function(role) {
-                        if (Phlexible.User.isGranted(role)) {
+                        if (Phlexible.App.isGranted(role)) {
                             allowed = true;
                             return false;
                         }

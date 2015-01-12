@@ -35,7 +35,7 @@ class ProblemsPortlet extends Portlet
         $this
             ->setId('problems-portlet')
             ->setTitle($translator->trans('problems.problems', [], 'gui'))
-            ->setClass('Phlexible.problems.portlet.Problems')
+            ->setXtype('problems-portlet')
             ->setIconClass('p-problem-portlet-icon')
             ->setRole('ROLE_PROBLEMS');
 

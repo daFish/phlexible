@@ -26,7 +26,7 @@ class LoadPortlet extends Portlet
         $this
             ->setId('load-portlet')
             ->setTitle($translator->trans('gui.server_load', [], 'gui'))
-            ->setClass('Phlexible.gui.portlet.Load')
+            ->setXtype('gui-load-portlet')
             ->setIconClass('p-gui-load-icon');
     }
 
@@ -35,11 +35,16 @@ class LoadPortlet extends Portlet
      */
     public function getData()
     {
+        $l1 = 0;
+        $l5 = 0;
+        $l15 = 0;
         if (function_exists('sys_getloadavg')) {
-            $data = sys_getloadavg();
-        } else {
-            $data = [0, 0, 0];
+            $l = sys_getloadavg();
+            $l1 = $l[0];
+            $l5 = $l[1];
+            $l15 = $l[2];
         }
+        $data = [['l1' => $l1, 'l5' => $l5, 'l15' => $l15, 'point' => 0, 'ts' => time()]];
 
         return $data;
     }

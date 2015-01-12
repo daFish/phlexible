@@ -1,0 +1,42 @@
+.p-dashboard-header {
+    padding: 10px 10px 0 10px;
+}
+.p-dashboard-footer {
+    padding: 0 10px 10px 10px;
+    text-align: center;
+}
+.p-dashboard-infobar {
+    text-align: center;
+}
+/*
+.p-dashboard-infobar .x-panel-body{
+    padding: 5px;
+}
+.p-dashboard-infobar .x-panel-ml {
+    padding-left:2px;
+}
+.p-dashboard-infobar .x-panel-mr {
+    padding-right:2px;
+}
+.p-dashboard-infobar .x-panel-bl {
+    padding-left:2px;
+}
+.p-dashboard-infobar .x-panel-br {
+    padding-right:2px;
+}
+.p-dashboard-infobar .x-panel-mc {
+    padding-top:2px;
+}
+.p-dashboard-infobar .x-panel-bc .x-panel-footer {
+    padding-bottom:2px;
+}
+.p-dashboard-infobar .x-panel-nofooter .x-panel-bc {
+    height:2px;
+}
+*/
+.p-dashboard-infobar-notice .x-panel-mc {
+    background-color: #FFFF77 !important;
+}
+.p-dashboard-infobar-urgent .x-panel-mc {
+    background-color: #FF7777 !important;
+}

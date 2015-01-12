@@ -1,14 +1,15 @@
-Ext.provide('Phlexible.gui.util.Handles');
+Ext.define('Phlexible.gui.util.Handles', {
+    constructor: function() {
+        this.handles = {};
+    },
+    get: function(key) {
+        return this.handles[key];
+    },
+    has: function(key) {
+        return this.handles[key] !== undefined;
+    },
+    add: function(key, fn) {
+        this.handles[key] = fn;
+    }
+});
 
-Phlexible.gui.util.Handles = function() {
-    this.handles = {};
-};
-Phlexible.gui.util.Handles.prototype.get = function(key) {
-    return this.handles[key];
-}
-Phlexible.gui.util.Handles.prototype.has = function(key) {
-    return this.handles[key] !== undefined;
-}
-Phlexible.gui.util.Handles.prototype.add = function(key, fn) {
-    this.handles[key] = fn;
-}

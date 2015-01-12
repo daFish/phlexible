@@ -5,11 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
     <link rel="icon" type="image/png" href="{{ asset("bundles/phlexiblegui/images/phlexible.png") }}">
-    <link href="{{ asset("resources/css/ext-all.css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.sencha.com/ext/gpl/5.1.0/build/packages/ext-theme-classic/build/resources/ext-theme-classic-all.css">
+    <script type="text/javascript" src="//cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js"></script>
+    <script type="text/javascript" src="//cdn.sencha.com/ext/gpl/5.1.0/build/packages/ext-theme-classic/build/ext-theme-classic-debug.js"></script>
+    {#
     {% set theme = app.user.property("theme", "default") %}
     {% if  theme != "default" %}
     <link id="theme" href="{{ asset("/resources/css/xtheme-" ~ theme ~ ".css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
     {% endif %}
+    #}
     <link href="{{ path("asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
     <link href="{{ path("asset_icons") }}" media="screen" rel="stylesheet" type="text/css"/>
     <style type="text/css">
@@ -50,28 +54,14 @@
 </div>
 <noscript>{{ noScript }}</noscript>
 </body>
-<script type="text/javascript" src="{{ asset("adapter/ext/ext-base.js", "extjs") }}"></script>
-{% if app.debug %}
-<script type="text/javascript" src="{{ asset("ext-all-debug.js", "extjs") }}"></script>
-{% else %}
-<script type="text/javascript" src="{{ asset("ext-all.js", "extjs") }}"></script>
-{% endif %}
 {% set language = app.user.getProperty("interfaceLanguage", "en") %}
+{#
 <script type="text/javascript" src="{{ asset("locale/ext-lang-" ~ language ~ ".js", "extjs") }}"></script>
+#}
 <script type="text/javascript">
     //<![CDATA[
     Ext.BLANK_IMAGE_URL = "{{ asset("bundles/phlexiblegui/images/blank.gif") }}";
     Ext.QuickTips.init();
-    Ext.require = function(require) {};
-    Ext.provide = function(provide) {
-        var provides = provide.split('.');
-        if (provides.length < 2) {
-            return;
-        }
-        provides.pop();
-        provide = provides.join('.');
-        Ext.namespace(provide);
-    };
 
     var Phlexible = {
         title: "{{ project.title }}",
@@ -80,7 +70,8 @@
         baseUrl: "{{ app.request.baseUrl }}/admin",
         basePath: "{{ app.request.basePath }}/admin",
         bundlePath: "{{ app.request.basePath }}/bundles",
-        config: {{ render(path("gui_config"))|raw }}
+        config: {{ render(path("gui_config"))|raw }},
+        menu: {{ render(path("gui_menu"))|raw }}
     };
     //]]>
 </script>

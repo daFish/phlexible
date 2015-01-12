@@ -1,14 +1,14 @@
-Ext.provide('Phlexible.gui.BundlesMainPanel');
+Ext.define('Phlexible.gui.bundles.MainPanel', {
+    extend: 'Ext.Panel',
+    alias: 'widget.gui-bundles',
 
-Ext.require('Phlexible.gui.BundlesFilterPanel');
-Ext.require('Phlexible.gui.BundlesGrid');
-
-Phlexible.gui.BundlesMainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.gui.Strings.bundles,
     strings: Phlexible.gui.Strings,
     iconCls: 'p-gui-manager-icon',
+    cls: 'p-gui-bundles',
     closable: true,
     layout: 'border',
+    border: false,
 
     initComponent: function () {
         this.items = [
@@ -16,26 +16,28 @@ Phlexible.gui.BundlesMainPanel = Ext.extend(Ext.Panel, {
                 xtype: 'gui-bundles-filter',
                 region: 'west',
                 width: 200,
+                padding: '5 0 5 5',
+                header: false,
                 listeners: {
                     updateFilter: function (data) {
-                        this.getComponent(1).setFilterData(data);
+                        this.getComponent('list').setFilterData(data);
                     },
                     scope: this
                 }
             },
             {
                 xtype: 'gui-bundles-grid',
+                itemId: 'list',
                 region: 'center',
-                border: true
+                border: true,
+                padding: 5
             }
         ];
 
-        Phlexible.gui.BundlesMainPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadParams: function () {
 
     }
 });
-
-Ext.reg('gui-bundles', Phlexible.gui.BundlesMainPanel);

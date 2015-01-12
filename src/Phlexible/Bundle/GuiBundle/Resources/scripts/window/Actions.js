@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.gui.Actions');
+Ext.define('Phlexible.gui.Actions', {
+    extend: 'Ext.Window',
 
-Phlexible.gui.Actions = new Ext.Window({
     title: Phlexible.gui.Strings.menu,
     width: 400,
     height: 72,
@@ -26,14 +26,7 @@ Phlexible.gui.Actions = new Ext.Window({
             anchor: '-10',
             tpl: '<tpl for="."><div class="x-combo-list-item">{[Phlexible.inlineIcon(values.iconCls)]} {text}</div></tpl>',
             listeners: {
-                select: function (c, r) {
-                    if (!r || !r.data.handler || !r.data.menu) {
-                        return;
-                    }
-
-                    r.data.handler(r.data.menu);
-                    Phlexible.gui.Actions.hide();
-                }
+                select: 'onSelect'
             }
         }
     ],
@@ -44,5 +37,13 @@ Phlexible.gui.Actions = new Ext.Window({
         show: function (c) {
             c.getComponent(0).focus();
         }
+    },
+    onSelect: function (c, r) {
+        if (!r || !r.data.handler || !r.data.menu) {
+            return;
+        }
+
+        r.data.handler(r.data.menu);
+        Phlexible.gui.Actions.hide();
     }
 });

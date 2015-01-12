@@ -66,7 +66,7 @@ class LatestElementsPortlet extends Portlet
         $this
             ->setId('elements-portlet')
             ->setTitle($translator->trans('elements.latest_element_changes', [], 'gui'))
-            ->setClass('Phlexible.elements.portlet.LatestElements')
+            ->setXtype('elements-latest-elements-portlet')
             ->setIconClass('p-element-component-icon')
             ->setRole('ROLE_ELEMENTS');
 

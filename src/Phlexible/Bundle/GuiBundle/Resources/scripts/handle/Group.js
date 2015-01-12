@@ -1,8 +1,6 @@
-Ext.provide('Phlexible.gui.menuhandle.handle.Group');
+Ext.define('Phlexible.gui.menuhandle.handle.Group', {
+    extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
-Ext.require('Phlexible.gui.menuhandle.handle.Handle');
-
-Phlexible.gui.menuhandle.handle.Group = Ext.extend(Phlexible.gui.menuhandle.handle.Handle, {
     createConfig: function (data) {
         var btns = [];
 
