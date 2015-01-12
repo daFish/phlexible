@@ -111,7 +111,8 @@ class ScriptsBuilder
 
         $allowedEntry = array(
             'phlexiblegui',
-            'phlexibledashboard'
+            'phlexibledashboard',
+            'phlexiblemediatype',
         );
 
         $dir = $this->puliRepository->get('/phlexible/scripts');

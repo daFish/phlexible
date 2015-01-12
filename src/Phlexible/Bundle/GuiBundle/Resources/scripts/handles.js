@@ -29,7 +29,7 @@ Phlexible.Handles.add('administration', function() {
 Phlexible.Handles.add('configuration', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.Menu', {
         text: Phlexible.gui.Strings.configuration,
-        iconCls: Phlexible.Icon.get('wrench-screwdriver')
+        iconCls: Phlexible.Icon.get('equalizer')
     });
 });
 

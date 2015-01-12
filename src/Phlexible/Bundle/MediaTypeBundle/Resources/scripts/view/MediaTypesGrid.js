@@ -1,8 +1,7 @@
-Ext.provide('Phlexible.mediatype.MediaTypesGrid');
+Ext.define('MediaTypesGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.mediatype-list',
 
-Ext.require('Phlexible.mediatype.model.MediaType');
-
-Phlexible.mediatype.MediaTypesGrid = Ext.extend(Ext.grid.GridPanel, {
     title: Phlexible.mediatype.Strings.media_types,
     strings: Phlexible.mediatype.Strings,
     iconCls: 'p-mediatype-component-icon',
@@ -10,25 +9,24 @@ Phlexible.mediatype.MediaTypesGrid = Ext.extend(Ext.grid.GridPanel, {
     stripeRows: true,
 
     initComponent: function () {
-        this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('mediatypes_list'),
-            root: 'mediatypes',
-            id: 'id',
-            totalProperty: 'totalCount',
-            fields: Phlexible.mediatype.model.MediaType,
+        this.store = Ext.create('Ext.data.Store', {
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('mediatypes_list'),
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'mediatypes',
+                    idProperty: 'id',
+                    totalProperty: 'totalCount'
+                }
+            },
+            model: 'Phlexible.mediatype.model.MediaType',
             autoLoad: true,
-            sortInfo: {field: 'key', direction: 'ASC'}
-        });
-
-        this.selModel = new Ext.grid.RowSelectionModel({
-            singleSelect: true,
-            listeners: {
-                selectionchange: function (sm) {
-                    var r = sm.getSelected();
-                    this.fireEvent('mediaTypeChange', r);
-                },
-                scope: this
-            }
+            sorters: [{
+                property: 'key',
+                direction: 'ASC'
+            }]
         });
 
         this.columns = [
@@ -112,14 +110,15 @@ Phlexible.mediatype.MediaTypesGrid = Ext.extend(Ext.grid.GridPanel, {
             }
         ];
 
-        this.addListener({
-            rowdblclick: function (grid, index) {
-                var r = grid.getStore().getAt(index);
-
-                if (!r) {
+        this.on({
+            selectionchange: function (sm) {
+                var records = sm.getSelection();
+                if (!records.length) {
                     return;
                 }
-
+                this.fireEvent('mediaTypeChange', records[0]);
+            },
+            itemdblclick: function (grid, r) {
                 var key = r.get('key');
 
                 var w = new Ext.Window({
@@ -153,13 +152,11 @@ Phlexible.mediatype.MediaTypesGrid = Ext.extend(Ext.grid.GridPanel, {
             scope: this
         });
 
-        Phlexible.mediatype.MediaTypesGrid.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     iconRenderer: function (k) {
-        var icon = k ? 'found' : 'missing';
-        return Phlexible.inlineIcon('p-mediatype-' + icon + '-icon', {alt: k});
+        var icon = k ? 'tick-circle' : 'cross-circle';
+        return Phlexible.Icon.inline(icon);
     }
 });
-
-Ext.reg('mediatype-mediatypesgrid', Phlexible.mediatype.MediaTypesGrid);

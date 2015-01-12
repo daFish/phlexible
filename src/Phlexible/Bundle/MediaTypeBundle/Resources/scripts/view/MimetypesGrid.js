@@ -1,43 +1,39 @@
-Ext.provide('Phlexible.mediatype.MimetypesGrid');
+Ext.define('Phlexible.mediatype.MimetypesGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.mediatype-mimetypes',
 
-Phlexible.mediatype.MimetypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.mediatype.Strings.mimetypes,
     strings: Phlexible.mediatype.Strings,
-    iconCls: 'p-mediatype-component-icon',
+    iconCls: Phlexible.Icon.get('image-share'),
     loadMask: true,
-    viewConfig: {
-        forceFit: true
-    },
     stripeRows: true,
 
     initComponent: function () {
-        this.store = new Ext.data.SimpleStore({
+        this.store = new Ext.data.Store({
             fields: ['mimetype'],
-            sortInfo: {field: 'mimetype', direction: 'ASC'}
+            sorters: [{
+                property: 'mimetype',
+                direction: 'ASC'
+            }]
         });
-
-        this.selModel = new Ext.grid.RowSelectionModel();
 
         this.columns = [
             {
                 header: this.strings.mimetype,
                 dataIndex: 'mimetype',
                 sortable: true,
-                width: 220,
-                editor: new Ext.form.TextField({
-                    allowBlank: false
-                })
+                flex: 1
             }
         ];
 
-        Phlexible.mediatype.MimetypesGrid.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadMimetypes: function (mimetypes) {
         if (mimetypes) {
             var mimetypesData = [];
             Ext.each(mimetypes, function (mimetype) {
-                mimetypesData.push([mimetype]);
+                mimetypesData.push({mimetype: mimetype});
             });
             this.store.loadData(mimetypesData);
         } else {
@@ -45,5 +41,3 @@ Phlexible.mediatype.MimetypesGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         }
     }
 });
-
-Ext.reg('mediatype-mimetypesgrid', Phlexible.mediatype.MimetypesGrid);

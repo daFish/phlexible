@@ -1,45 +1,43 @@
-Ext.provide('Phlexible.mediatype.MainPanel');
+Ext.define('Phlexible.mediatype.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediatype-main',
 
-Ext.require('Phlexible.mediatype.MediaTypesGrid');
-Ext.require('Phlexible.mediatype.MimetypesGrid');
-
-Phlexible.mediatype.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatype.Strings.media_types,
-    iconCls: 'p-mediatype-component-icon',
-    closable: true,
+    iconCls: Phlexible.Icon.get('image-share'),
     layout: 'border',
+    border: false,
 
     initComponent: function () {
         this.items = [
             {
-                xtype: 'mediatype-mediatypesgrid',
+                xtype: 'mediatype-list',
                 region: 'center',
+                header: false,
+                padding: 5,
                 listeners: {
                     mediaTypeChange: function (r) {
-                        var mimetypes;
+                        var mimetypes = null;
                         if (r) {
                             mimetypes = r.get('mimetypes');
-                        } else {
-                            mimetypes = null;
                         }
-                        this.getComponent(1).loadMimetypes(mimetypes);
+                        this.getComponent('mimetypes').loadMimetypes(mimetypes);
                     },
                     scope: this
                 }
             },
             {
-                xtype: 'mediatype-mimetypesgrid',
+                xtype: 'mediatype-mimetypes',
+                itemId: 'mimetypes',
                 region: 'east',
+                padding: '5 5 5 0',
                 width: 400
             }
         ];
 
-        Phlexible.mediatype.MainPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadParams: function () {
 
     }
 });
-
-Ext.reg('mediatype-mainpanel', Phlexible.mediatype.MainPanel);
