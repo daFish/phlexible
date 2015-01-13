@@ -1,6 +1,6 @@
 Ext.define('Phlexible.mediatemplates.audio.MainPanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediatypes-audio-main',
+    alias: 'widget.mediatemplates-audio-main',
 
     title: Phlexible.mediatemplates.Strings.audio_template,
     strings: Phlexible.mediatemplates.Strings,

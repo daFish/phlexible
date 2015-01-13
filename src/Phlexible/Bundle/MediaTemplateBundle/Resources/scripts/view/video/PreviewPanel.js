@@ -1,9 +1,8 @@
-Ext.provide('Phlexible.mediatemplates.video.PreviewPanel');
+Ext.define('Phlexible.mediatemplates.video.PreviewPanel', {
+    extend: 'Phlexible.mediatemplates.BasePreviewPanel',
+    alias: 'widget.mediatemplates-video-preview',
 
-Ext.require('Phlexible.mediatemplates.BasePreviewPanel');
-
-Phlexible.mediatemplates.video.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
-    getCreateUrl: function () {
+    createUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_video');
     },
 
@@ -24,7 +23,7 @@ Phlexible.mediatemplates.video.PreviewPanel = Ext.extend(Phlexible.mediatemplate
         return s;
     },
 
-    getPreviewDomHelperConfig: function (data) {
+    createPreviewDomHelperConfig: function (data) {
         //var link = 'file=' + Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()});
 
         return {
@@ -55,5 +54,3 @@ Phlexible.mediatemplates.video.PreviewPanel = Ext.extend(Phlexible.mediatemplate
         };
     }
 });
-
-Ext.reg('mediatemplates-videopreviewpanel', Phlexible.mediatemplates.video.PreviewPanel);

@@ -1,8 +1,7 @@
-Ext.provide('Phlexible.mediatemplates.video.FormPanel');
+Ext.define('Phlexible.mediatemplates.video.FormPanel', {
+    extend: 'Ext.form.FormPanel',
+    alias: 'widget.mediatemplates-video-form',
 
-Ext.require('Ext.ux.form.XCheckbox');
-
-Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.mediatemplates.Strings.video_template,
     strings: Phlexible.mediatemplates.Strings,
 //    labelWidth: 80,
@@ -14,12 +13,20 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
     debugPreview: false,
 
     initComponent: function () {
+        this.initMyItems();
+        this.initMyDockedItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'panel',
                 layout: 'form',
                 title: this.strings.video,
-                iconCls: 'p-mediatemplate-type_video-icon',
+                iconCls: Phlexible.mediatemplates.TemplateIcons.video,
                 bodyStyle: 'padding: 5px',
                 border: false,
                 autoScroll: true,
@@ -39,7 +46,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         helpText: this.strings.help_height_video
                     },
                     {
-                        xtype: 'xcheckbox',
+                        xtype: 'checkbox',
                         width: 280,
                         name: 'for_web',
                         hideLabel: true,
@@ -54,7 +61,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'format'],
                             data: Phlexible.mediatemplates.VideoFormats
                         }),
@@ -64,7 +71,6 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.format,
                         hiddenName: 'format',
@@ -79,7 +85,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         }
                     },
                     {
-                        xtype: 'xcheckbox',
+                        xtype: 'checkbox',
                         width: 280,
                         name: 'match_format',
                         hideLabel: true,
@@ -88,7 +94,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'bitrate'],
                             data: Phlexible.mediatemplates.VideoBitrates
                         }),
@@ -98,7 +104,6 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.bitrate,
                         hiddenName: 'video_bitrate',
@@ -108,7 +113,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'framerate'],
                             data: Phlexible.mediatemplates.VideoFramerates
                         }),
@@ -118,7 +123,6 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.framerate,
                         hiddenName: 'video_framerate',
@@ -127,7 +131,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         helpText: this.strings.help_framerate
                     },
                     {
-                        xtype: 'xcheckbox',
+                        xtype: 'checkbox',
                         width: 280,
                         name: 'deinterlace',
                         hideLabel: true,
@@ -140,14 +144,14 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                 xtype: 'panel',
                 layout: 'form',
                 title: this.strings.audio,
-                iconCls: 'p-mediatemplate-type_audio-icon',
+                iconCls: Phlexible.mediatemplates.TemplateIcons.audio,
                 bodyStyle: 'padding: 5px',
                 border: false,
                 autoScroll: true,
                 items: [
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'bitrate'],
                             data: Phlexible.mediatemplates.AudioBitrates
                         }),
@@ -157,7 +161,6 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.bitrate,
                         hiddenName: 'audio_bitrate',
@@ -167,7 +170,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'samplerate'],
                             data: Phlexible.mediatemplates.AudioSamplerates
                         }),
@@ -177,7 +180,6 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.samplerate,
                         hiddenName: 'audio_samplerate',
@@ -187,7 +189,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'samplebits'],
                             data: Phlexible.mediatemplates.AudioSamplebits
                         }),
@@ -197,7 +199,6 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.samplebits,
                         hiddenName: 'audio_samplebits',
@@ -207,7 +208,7 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'channels'],
                             data: Phlexible.mediatemplates.AudioChannels
                         }),
@@ -217,7 +218,6 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.channels,
                         hiddenName: 'audio_channels',
@@ -228,46 +228,57 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
                 ]
             }
         ];
+    },
 
-        this.tbar = [
-            {
-                text: this.strings.save,
-                iconCls: 'p-mediatemplate-save-icon',
-                handler: this.saveParameters,
-                scope: this
-            },
-            '->',
-            {
-                xtype: 'tbsplit',
-                text: this.strings.preview,
-                iconCls: 'p-mediatemplate-preview-icon',
-                handler: function () {
-                    var values = this.getForm().getValues();
-
-                    values.template = this.template_key;
-                    values.debug = this.debugPreview;
-
-                    this.fireEvent('preview', values, this.debugPreview);
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            itemId: 'tbar',
+            items: [
+                {
+                    text: this.strings.save,
+                    itemId: 'saveBtn',
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
+                    handler: this.saveParameters,
+                    scope: this
                 },
-                scope: this,
-                menu: [
-                    {
-                        text: this.strings.debug,
-                        checked: this.debugPreview,
-                        checkHandler: function (checkItem, checked) {
-                            this.debugPreview = checked;
-                        },
-                        scope: this
-                    }
-                ]
-            }
-        ];
+                '->',
+                {
+                    xtype: 'splitbutton',
+                    text: this.strings.preview,
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.PREVIEW),
+                    handler: function () {
+                        var values = this.getForm().getValues();
 
-        this.on('clientvalidation', function (f, valid) {
-            this.getTopToolbar().items.items[0].setDisabled(!valid);
-        }, this);
+                        values.template = this.template_key;
+                        values.debug = this.debugPreview;
 
-        Phlexible.mediatemplates.video.FormPanel.superclass.initComponent.call(this);
+                        this.fireEvent('preview', values, this.debugPreview);
+                    },
+                    scope: this,
+                    menu: [
+                        {
+                            text: this.strings.debug,
+                            checked: this.debugPreview,
+                            checkHandler: function (checkItem, checked) {
+                                this.debugPreview = checked;
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+            ]
+        }];
+    },
+
+    initMyListeners: function() {
+        this.on({
+            clientvalidation: function (f, valid) {
+                this.getDockedComponent('tbar').getComponent('saveBtn').setDisabled(!valid);
+            },
+            scope: this
+        });
     },
 
     updateForWeb: function () {
@@ -336,5 +347,3 @@ Phlexible.mediatemplates.video.FormPanel = Ext.extend(Ext.form.FormPanel, {
         });
     }
 });
-
-Ext.reg('mediatemplates-videoformpanel', Phlexible.mediatemplates.video.FormPanel);

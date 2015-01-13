@@ -1,5 +1,77 @@
 Ext.namespace('Phlexible.mediatemplates');
 
+Phlexible.mediatemplates.TemplateIcons = {
+    image: Phlexible.Icon.get('image'),
+    video: Phlexible.Icon.get('film'),
+    audio: Phlexible.Icon.get('music'),
+    pdf2swf: Phlexible.Icon.get('document-pdf')
+};
+
+Phlexible.mediatemplates.ImageMethods = [
+    ['width', Phlexible.mediatemplates.Strings.method_width, Phlexible.mediatemplates.Strings.method_width_help],
+    ['height', Phlexible.mediatemplates.Strings.method_height, Phlexible.mediatemplates.Strings.method_height_help],
+    ['exact', Phlexible.mediatemplates.Strings.method_exact, Phlexible.mediatemplates.Strings.method_exact_help],
+    ['exactFit', Phlexible.mediatemplates.Strings.method_exactFit, Phlexible.mediatemplates.Strings.method_exactFit_help],
+    ['fit', Phlexible.mediatemplates.Strings.method_fit, Phlexible.mediatemplates.Strings.method_fit_help],
+    ['crop', Phlexible.mediatemplates.Strings.method_crop, Phlexible.mediatemplates.Strings.method_crop_help]
+];
+
+Phlexible.mediatemplates.ImageScales = [
+    ['updown', Phlexible.mediatemplates.Strings.scale_up_and_down],
+    ['down', Phlexible.mediatemplates.Strings.scale_down],
+    ['up', Phlexible.mediatemplates.Strings.scale_up]
+];
+
+Phlexible.mediatemplates.ImageFormats = [
+    //['', Phlexible.mediatemplates.Strings.keep_format],
+    ['gif', 'GIF'],
+    ['jpg', 'JPG'],
+    ['png', 'PNG'],
+    ['tif', 'TIF'],
+    ['bmp', 'BMP']
+];
+
+Phlexible.mediatemplates.ImageColorspaces = [
+    ['', Phlexible.mediatemplates.Strings.keep_colorspace],
+    ['rgb', Phlexible.mediatemplates.Strings.colorspace_rgb],
+    ['cmyk', Phlexible.mediatemplates.Strings.colorspace_cmyk],
+    ['gray', Phlexible.mediatemplates.Strings.colorspace_gray]
+];
+
+Phlexible.mediatemplates.ImageDepths = [
+    ['', Phlexible.mediatemplates.Strings.keep_depth],
+    ['8', Phlexible.mediatemplates.Strings.eight_bit_per_channel],
+    ['16', Phlexible.mediatemplates.Strings.sixteen_bit_per_channel]
+];
+
+Phlexible.mediatemplates.ImageTiffCompressions = [
+    ['none', Phlexible.mediatemplates.Strings.tiffcompression_none],
+    ['zip', Phlexible.mediatemplates.Strings.tiffcompression_zip],
+    ['lzw', Phlexible.mediatemplates.Strings.tiffcompression_lzw]
+];
+
+Phlexible.mediatemplates.ImageCompressions = [
+    ['0', '0 - ' + Phlexible.mediatemplates.Strings.compression_huffman],
+    ['1', '1 - ' + Phlexible.mediatemplates.Strings.compression_fastest],
+    ['2', '2'],
+    ['3', '3'],
+    ['4', '4'],
+    ['5', '5'],
+    ['6', '6'],
+    ['7', '7'],
+    ['8', '8'],
+    ['9', '9 - ' + Phlexible.mediatemplates.Strings.compression_best]
+];
+
+Phlexible.mediatemplates.ImageFilterTypes = [
+    ['0', 'None'],
+    ['1', 'Sub'],
+    ['2', 'Up'],
+    ['3', 'Average'],
+    ['4', 'Paeth'],
+    ['5', 'Adaptive filtering']
+];
+
 Phlexible.mediatemplates.VideoFormats = [
     ['', Phlexible.mediatemplates.Strings.keep_format],
     ['flv', 'FLV'],

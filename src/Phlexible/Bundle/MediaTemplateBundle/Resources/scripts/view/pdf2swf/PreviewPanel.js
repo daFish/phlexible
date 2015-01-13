@@ -1,9 +1,8 @@
-Ext.provide('Phlexible.mediatemplates.pdf2swf.PreviewPanel');
+Ext.define('Phlexible.mediatemplates.pdf2swf.PreviewPanel', {
+    extend: 'Phlexible.mediatemplates.BasePreviewPanel',
+    alias: 'widget.mediatemplates-pdf2swf-preview',
 
-Ext.require('Phlexible.mediatemplates.BasePreviewPanel');
-
-Phlexible.mediatemplates.pdf2swf.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
-    getCreateUrl: function () {
+    createUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_pdf');
     },
 
@@ -21,7 +20,7 @@ Phlexible.mediatemplates.pdf2swf.PreviewPanel = Ext.extend(Phlexible.mediatempla
         return s;
     },
 
-    getPreviewDomHelperConfig: function (data) {
+    createPreviewDomHelperConfig: function (data) {
         return {
             tag: 'embed',
             src: Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()}),
@@ -32,5 +31,3 @@ Phlexible.mediatemplates.pdf2swf.PreviewPanel = Ext.extend(Phlexible.mediatempla
         };
     }
 });
-
-Ext.reg('mediatemplates-pdf2swfpreviewpanel', Phlexible.mediatemplates.pdf2swf.PreviewPanel);

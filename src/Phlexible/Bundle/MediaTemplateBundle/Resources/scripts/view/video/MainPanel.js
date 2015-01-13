@@ -1,6 +1,6 @@
 Ext.define('Phlexible.mediatemplates.video.MainPanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'mediatemplates-video-main',
+    alias: 'widget.mediatemplates-video-main',
 
     title: Phlexible.mediatemplates.Strings.video_template,
     strings: Phlexible.mediatemplates.Strings,

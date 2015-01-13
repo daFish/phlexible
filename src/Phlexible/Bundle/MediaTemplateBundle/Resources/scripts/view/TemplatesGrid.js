@@ -5,139 +5,151 @@ Ext.define('Phlexible.mediatemplates.TemplatesGrid', {
     title: Phlexible.mediatemplates.Strings.mediatemplates,
     strings: Phlexible.mediatemplates.Strings,
     border: true,
-    autoExpandColumn: 1,
 
     initComponent: function () {
-        this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('mediatemplates_templates_list'),
-            root: 'templates',
-            id: 'key',
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
             fields: ['key', 'type'],
-            sortInfo: {
-                field: 'key',
-                direction: 'ASC'
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('mediatemplates_templates_list'),
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'templates',
+                    idProperty: 'key'
+                },
+                extraParams: this.storeExtraParams
             },
+            sorters: [{
+                property: 'key',
+                direction: 'ASC'
+            }],
             autoLoad: true
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
-            {
-                header: this.strings.type,
-                dataIndex: 'type',
-                width: 35,
-                renderer: function (s) {
-                    return Phlexible.inlineIcon('p-mediatemplate-type_' + s + '-icon');
-                }
-            },
             {
                 header: this.strings.title,
                 dataIndex: 'key',
-                width: 170,
-                sortable: true
+                width: 35,
+                flex: 1,
+                sortable: true,
+                renderer: function (v, md, r) {
+                    return Phlexible.Icon.inline(Phlexible.mediatemplates.TemplateIcons[r.get('type')]) + ' ' + v;
+                }
             }
         ];
+    },
 
-        this.selModel = new Ext.grid.RowSelectionModel();
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'tbar',
+            dock: 'top',
+            items: [
+                {
+                    text: this.strings.add,
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                    menu: [
+                        {
+                            text: this.strings.image,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.image,
+                            handler: this.newImageTemplate,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.video,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.video,
+                            handler: this.newVideoTemplate,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.audio,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.audio,
+                            handler: this.newAudioTemplate,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.pdf2swf,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.pdf2swf,
+                            handler: this.newPdfTemplate,
+                            scope: this
+                        }
+                    ]
+                },
+                '->',
+                {
+                    text: this.strings.no_filter,
+                    itemId: 'filter',
+                    iconCls: Phlexible.Icon.get('funnel'),
+                    menu: [
+                        {
+                            text: this.strings.no_filter,
+                            iconCls: Phlexible.Icon.get('funnel'),
+                            filter: '',
+                            handler: this.toggleFilter,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.image,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.image,
+                            filter: 'image',
+                            handler: this.toggleFilter,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.video,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.video,
+                            filter: 'video',
+                            handler: this.toggleFilter,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.audio,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.audio,
+                            filter: 'audio',
+                            handler: this.toggleFilter,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.pdf2swf,
+                            iconCls: Phlexible.mediatemplates.TemplateIcons.pdf2swf,
+                            filter: 'pdf2swf',
+                            handler: this.toggleFilter,
+                            scope: this
+                        }
+                    ]
+                }
+            ]
+        }];
+    },
 
-        this.tbar = [
-            {
-                text: this.strings.add,
-                iconCls: 'p-mediatemplate-add-icon',
-                menu: [
-                    {
-                        text: this.strings.image,
-                        iconCls: 'p-mediatemplate-type_image-icon',
-                        handler: this.newImageTemplate,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.video,
-                        iconCls: 'p-mediatemplate-type_video-icon',
-                        handler: this.newVideoTemplate,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.audio,
-                        iconCls: 'p-mediatemplate-type_audio-icon',
-                        handler: this.newAudioTemplate,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.pdf2swf,
-                        iconCls: 'p-mediatemplate-type_pdf-icon',
-                        handler: this.newPdfTemplate,
-                        scope: this
-                    }
-                ]
-            },
-            '->',
-            {
-                text: this.strings.no_filter,
-                iconCls: 'p-metatemplate-filter-icon',
-                menu: [
-                    {
-                        cls: 'x-btn-text-icon-bold',
-                        text: this.strings.filter,
-                        canActivate: false,
-                        hideOnClick: false
-                    },
-                    '-',
-                    {
-                        text: this.strings.no_filter,
-                        iconCls: 'p-metatemplate-filter-icon',
-                        filter: '',
-                        handler: this.toggleFilter,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.image,
-                        iconCls: 'p-mediatemplate-type_image-icon',
-                        filter: 'image',
-                        handler: this.toggleFilter,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.video,
-                        iconCls: 'p-mediatemplate-type_video-icon',
-                        filter: 'video',
-                        handler: this.toggleFilter,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.audio,
-                        iconCls: 'p-mediatemplate-type_audio-icon',
-                        filter: 'audio',
-                        handler: this.toggleFilter,
-                        scope: this
-                    },
-                    {
-                        text: this.strings.pdf2swf,
-                        iconCls: 'p-mediatemplate-type_pdf-icon',
-                        filter: 'pdf',
-                        handler: this.toggleFilter,
-                        scope: this
-                    }
-                ]
-            }
-        ];
-
-        this.addListener({
-            rowdblclick: function (grid, rowIndex) {
-                var r = grid.store.getAt(rowIndex);
-                this.fireEvent('templatechange', r);
+    initMyListeners: function() {
+        this.on({
+            rowdblclick: function (grid, record) {
+                this.fireEvent('templatechange', record);
             },
             scope: this
         });
-
-        Phlexible.mediatemplates.TemplatesGrid.superclass.initComponent.call(this);
     },
 
     toggleFilter: function (btn) {
         if (btn.filter === undefined) {
             return;
         }
-        this.getTopToolbar().items.items[2].setIconClass(btn.iconCls);
-        this.getTopToolbar().items.items[2].setText(btn.text);
+        this.getDockedComponent('tbar').getComponent('filter').setIconCls(btn.iconCls);
+        this.getDockedComponent('tbar').getComponent('filter').setText(btn.text);
         if (!btn.filter) {
             this.getStore().clearFilter();
         } else {

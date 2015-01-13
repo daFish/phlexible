@@ -37,6 +37,7 @@ Ext.define('Phlexible.gui.util.Icon', {
         this.FILTER  = 'funnel';
         this.NOK     = 'cross-circle';
         this.OK      = 'tick-circle';
+        this.PREVIEW = 'magnifier';
         this.RELOAD  = 'arrow-circle-315';
         this.RESTORE = 'arrow-circle-135-left';
         this.RESET   = 'arrow-return-180-left';

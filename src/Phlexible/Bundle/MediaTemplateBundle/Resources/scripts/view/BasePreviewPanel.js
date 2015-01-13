@@ -12,17 +12,19 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
     initComponent: function () {
         this.initMyItems();
 
-        this.callParent(argument);
+        this.callParent(arguments);
     },
 
     initMyItems: function() {
         this.items = [
             {
+                itemId: 'empty',
                 border: false,
                 html: this.strings.no_preview_available,
                 bodyStyle: 'padding-bottom: 10px'
             },
             {
+                itemId: 'debug',
                 xtype: 'fieldset',
                 title: this.strings.debug,
                 collapsible: true,
@@ -36,6 +38,7 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
                 ]
             },
             {
+                itemId: 'preview',
                 border: false,
                 html: '&nbsp;',
                 bodyStyle: 'padding: 10px;'
@@ -43,19 +46,35 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
         ];
     },
 
+    getEmptyPanel: function() {
+        return this.getComponent('empty');
+    },
+
+    getDebugFieldSet: function() {
+        return this.getComponent('debug');
+    },
+
+    getDebugPanel: function() {
+        return this.getDebugFieldSet().getComponent(0);
+    },
+
+    getPreviewPanel: function() {
+        return this.getComponent('preview');
+    },
+
     clear: function () {
-        this.getComponent(0).body.update('&nbsp;');
-        this.getComponent(1).getComponent(0).body.update('&nbsp;');
-        this.getComponent(2).body.update('&nbsp;');
+        this.getEmptyPanel().body.update('&nbsp;');
+        this.getDebugPanel().body.update('&nbsp;');
+        this.getPreviewPanel().body.update('&nbsp;');
     },
 
     createUrl: function () {
-        throw new Error('getCreateUrl() has to be implemented in Classes extending Phlexible.mediatemplates.BasePreviewPanel.');
+        throw new Error('createUrl() has to be implemented in Classes extending Phlexible.mediatemplates.BasePreviewPanel.');
     },
 
     createPreview: function (params, debug) {
         Ext.Ajax.request({
-            url: this.getCreateUrl(),
+            url: this.createUrl(),
             params: params,
             success: function (response) {
                 var data = Ext.decode(response.responseText);
@@ -73,24 +92,24 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
     },
 
     updateFailure: function (msg) {
-        this.getComponent(0).body.update(msg);
+        this.getEmptyPanel().body.update(msg);
     },
 
     getResult: Ext.emptyFn,
-    getPreviewDomHelperConfig: Ext.emptyFn,
+    createPreviewDomHelperConfig: Ext.emptyFn,
 
     updatePreview: function (data, debug) {
-        this.getComponent(0).body.update(this.getResult(data));
+        this.getEmptyPanel().body.update(this.getResult(data));
 
         if (debug) {
-            this.getComponent(1).show();
-            this.getComponent(1).getComponent(0).body.update('<pre>' + data.debug + '</pre>');
+            this.getDebugFieldSet().show();
+            this.getDebugPanel().body.update('<pre>' + data.debug + '</pre>');
         }
         else {
-            this.getComponent(1).hide();
+            this.getDebugFieldSet().hide();
         }
 
-        Ext.DomHelper.overwrite(this.getComponent(2).body, this.getPreviewDomHelperConfig(data));
+        Ext.DomHelper.overwrite(this.getPreviewPanel().body, this.createPreviewDomHelperConfig(data));
 
         this.enable();
     }

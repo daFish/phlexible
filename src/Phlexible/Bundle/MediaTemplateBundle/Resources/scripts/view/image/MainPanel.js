@@ -3,6 +3,7 @@ Ext.define('Phlexible.mediatemplates.image.MainPanel', {
     alias: 'widget.mediatemplates-image-main',
 
     title: Phlexible.mediatemplates.Strings.image_template,
+    header: false,
     strings: Phlexible.mediatemplates.Strings,
     layout: 'border',
 
@@ -18,6 +19,7 @@ Ext.define('Phlexible.mediatemplates.image.MainPanel', {
                 xtype: 'mediatemplates-image-form',
                 region: 'west',
                 width: 320,
+                margin: 5,
                 header: false,
                 listeners: {
                     paramsload: function () {
@@ -35,13 +37,14 @@ Ext.define('Phlexible.mediatemplates.image.MainPanel', {
             {
                 xtype: 'mediatemplates-image-preview',
                 region: 'center',
+                margin: '5 5 5 0',
                 header: false
             }
         ];
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(Ext.String.format(this.strings.image_template_title, template_key));
+        this.getComponent(0).setTitle(Ext.String.format(this.strings.image_template_title, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

@@ -24,7 +24,7 @@ Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
                 xtype: 'panel',
                 layout: 'form',
                 title: this.strings.audio,
-                iconCls: 'p-mediatemplate-type_audio-icon',
+                iconCls: Phlexible.mediatemplates.TemplateIcons.audio,
                 bodyStyle: 'padding: 5px',
                 border: false,
                 autoScroll: true,
@@ -41,7 +41,6 @@ Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.bitrate,
                         hiddenName: 'audio_bitrate',
@@ -61,7 +60,6 @@ Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.samplerate,
                         hiddenName: 'audio_samplerate',
@@ -81,7 +79,6 @@ Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.samplebits,
                         hiddenName: 'audio_samplebits',
@@ -101,7 +98,6 @@ Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
                         mode: 'local',
                         triggerAction: 'all',
                         value: '',
-                        selectOnFocus: true,
                         editable: false,
                         fieldLabel: this.strings.channels,
                         hiddenName: 'audio_channels',
@@ -122,16 +118,16 @@ Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
             items: [
                 {
                     text: this.strings.save,
-                    iconCls: 'p-mediatemplate-save-icon',
+                    iconCls: Phlexible.Icons.get(Phlexible.Icon.SAVE),
                     itemId: 'saveBtn',
                     handler: this.saveParameters,
                     scope: this
                 },
                 '->',
                 {
-                    xtype: 'tbsplit',
+                    xtype: 'splitbutton',
                     text: this.strings.preview,
-                    iconCls: 'p-mediatemplate-preview-icon',
+                    iconCls: Phlexible.Icons.get(Phlexible.Icon.PREVIEW),
                     handler: function () {
                         var values = this.getForm().getValues();
 

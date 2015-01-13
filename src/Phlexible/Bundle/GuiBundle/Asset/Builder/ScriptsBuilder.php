@@ -112,6 +112,7 @@ class ScriptsBuilder
         $allowedEntry = array(
             'phlexibledashboard',
             'phlexiblegui',
+            'phlexiblemediatemplate',
             'phlexiblemediatype',
             'phlexiblemetaset',
             'phlexibleproblem',
@@ -255,6 +256,9 @@ class ScriptsBuilder
                 'combobox',
                 'checkboxgroup',
                 'pagingtoolbar',
+                'splitbutton',
+                'fieldset',
+                'tbtext',
             );
 
             if (!empty($file->requires)) {

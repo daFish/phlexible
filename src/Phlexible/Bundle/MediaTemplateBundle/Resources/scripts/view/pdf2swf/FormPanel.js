@@ -1,6 +1,7 @@
-Ext.provide('Phlexible.mediatemplates.pdf2swf.FormPanel');
+Ext.define('Phlexible.mediatemplates.pdf2swf.FormPanel', {
+    extend: 'Ext.form.FormPanel',
+    alias: 'widget.mediatemplates-pdf2swf-form',
 
-Phlexible.mediatemplates.pdf2swf.FormPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.mediatemplates.Strings.pdf2swf_template,
     strings: Phlexible.mediatemplates.Strings,
 //    labelWidth: 80,
@@ -11,12 +12,19 @@ Phlexible.mediatemplates.pdf2swf.FormPanel = Ext.extend(Ext.form.FormPanel, {
     debugPreview: false,
 
     initComponent: function () {
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'panel',
                 layout: 'form',
                 title: this.strings.pdf2swf,
-                iconCls: 'p-mediatemplate-type_pdf-icon',
+                iconCls: Phlexible.mediatemplates.TemplateIcons.pdf2swf,
                 bodyStyle: 'padding: 5px',
                 border: false,
                 autoScroll: true,
@@ -73,50 +81,61 @@ Phlexible.mediatemplates.pdf2swf.FormPanel = Ext.extend(Ext.form.FormPanel, {
                 ]
             }
         ];
+    },
 
-        this.tbar = [
-            {
-                text: this.strings.save,
-                iconCls: 'p-mediatemplate-save-icon',
-                handler: this.saveParameters,
-                scope: this
-            },
-            '->',
-            {
-                xtype: 'tbsplit',
-                text: this.strings.preview,
-                iconCls: 'p-mediatemplate-preview-icon',
-                handler: function () {
-                    var values = this.getForm().getValues();
-
-                    if (values.method) {
-                        values.xmethod = values.method;
-                        delete values.xmethod;
-                    }
-                    values.template = this.template_key;
-                    values.debug = this.debugPreview;
-
-                    this.fireEvent('preview', values, this.debugPreview);
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            itemId: 'tbar',
+            items: [
+                {
+                    text: this.strings.save,
+                    itemId: 'saveBtn',
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
+                    handler: this.saveParameters,
+                    scope: this
                 },
-                scope: this,
-                menu: [
-                    {
-                        text: this.strings.debug,
-                        checked: this.debugPreview,
-                        checkHandler: function (checkItem, checked) {
-                            this.debugPreview = checked;
-                        },
-                        scope: this
-                    }
-                ]
-            }
-        ];
+                '->',
+                {
+                    xtype: 'splitbutton',
+                    text: this.strings.preview,
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.PREVIEW),
+                    handler: function () {
+                        var values = this.getForm().getValues();
 
-        this.on('clientvalidation', function (f, valid) {
-            this.getTopToolbar().items.items[0].setDisabled(!valid);
-        }, this);
+                        if (values.method) {
+                            values.xmethod = values.method;
+                            delete values.xmethod;
+                        }
+                        values.template = this.template_key;
+                        values.debug = this.debugPreview;
 
-        Phlexible.mediatemplates.pdf2swf.FormPanel.superclass.initComponent.call(this);
+                        this.fireEvent('preview', values, this.debugPreview);
+                    },
+                    scope: this,
+                    menu: [
+                        {
+                            text: this.strings.debug,
+                            checked: this.debugPreview,
+                            checkHandler: function (checkItem, checked) {
+                                this.debugPreview = checked;
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+            ]
+        }];
+    },
+
+    initMyListeners: function() {
+        this.on({
+            clientvalidation: function (f, valid) {
+                this.getDockedComponent('tbar').getComponent('saveBtn').setDisabled(!valid);
+            },
+            scope: this
+        });
     },
 
     loadParameters: function (template_key) {
@@ -136,7 +155,6 @@ Phlexible.mediatemplates.pdf2swf.FormPanel = Ext.extend(Ext.form.FormPanel, {
             },
             scope: this
         });
-
     },
 
     saveParameters: function () {
@@ -159,5 +177,3 @@ Phlexible.mediatemplates.pdf2swf.FormPanel = Ext.extend(Ext.form.FormPanel, {
         });
     }
 });
-
-Ext.reg('mediatemplates-pdf2swfformpanel', Phlexible.mediatemplates.pdf2swf.FormPanel);

@@ -4,7 +4,7 @@ Ext.define('Phlexible.mediatemplates.MainPanel', {
 
     title: Phlexible.mediatemplates.Strings.mediatemplates,
     strings: Phlexible.mediatemplates.Strings,
-    iconCls: 'p-mediatemplate-component-icon',
+    iconCls: Phlexible.Icon.get('document-template'),
     layout: 'border',
     border: false,
 
@@ -22,62 +22,13 @@ Ext.define('Phlexible.mediatemplates.MainPanel', {
             xtype: 'mediatemplates-list',
             region: 'west',
             itemId: 'list',
-            width: '200',
+            width: 200,
+            margin: '5 0 5 5',
+            header: false,
             listeners: {
-                templatechange: function (r) {
-                    switch (r.get('type')) {
-                        case 'image':
-                            this.getCardPanel().getLayout().setActiveItem(0);
-                            this.getImagePanel().loadParameters(r.get('key'));
-                            break;
-
-                        case 'video':
-                            this.getCardPanel().getLayout().setActiveItem(1);
-                            this.getVideoPanel().loadParameters(r.get('key'));
-                            break;
-
-                        case 'audio':
-                            this.getCardPanel().getLayout().setActiveItem(2);
-                            this.getAudioPanel().loadParameters(r.get('key'));
-                            break;
-
-                        case 'pdf':
-                            this.getCardPanel().getLayout().setActiveItem(3);
-                            this.getPdf2swfPanel().loadParameters(r.get('key'));
-                            break;
-
-                        default:
-                            Ext.MessageBox.alert('Warning', 'Unknown template');
-                    }
-
-                },
-                create: function (template_id, template_title, template_type) {
-                    switch (template_type) {
-                        case 'image':
-                            this.imagePanel.loadParameters(template_id, template_title);
-                            this.cardPanel.getLayout().setActiveItem(0);
-                            break;
-
-                        case 'video':
-                            this.videoFormPanel.loadParameters(template_id, template_title);
-                            this.cardPanel.getLayout().setActiveItem(1);
-                            break;
-
-                        case 'audio':
-                            this.audioFormPanel.loadParameters(template_id, template_title);
-                            this.cardPanel.getLayout().setActiveItem(2);
-                            break;
-
-                        case 'pdf':
-                            this.pdfFormPanel.loadParameters(template_id, template_title);
-                            this.cardPanel.getLayout().setActiveItem(3);
-                            break;
-
-                        default:
-                            Ext.MessageBox.alert('Warning', 'Unknown template');
-                    }
-                },
-                scope: this,
+                templatechange: this.onTemplateChange,
+                create: this.onTemplateCreate,
+                scope: this
             }
         }, {
             region: 'center',
@@ -88,12 +39,13 @@ Ext.define('Phlexible.mediatemplates.MainPanel', {
             items: [{
                 xtype: 'mediatemplates-image-main',
                 itemId: 'image',
+                border: false,
                 listeners: {
                     paramsload: function () {},
                     paramssave: this.reloadStore,
                     scope: this
                 }
-            }, {
+            }/*, {
                 xtype: 'mediatemplates-video-main',
                 itemId: 'video',
                 listeners: {
@@ -117,7 +69,7 @@ Ext.define('Phlexible.mediatemplates.MainPanel', {
                     paramssave: this.reloadStore,
                     scope: this
                 }
-            }]
+            }*/]
         }];
     },
 
@@ -147,5 +99,45 @@ Ext.define('Phlexible.mediatemplates.MainPanel', {
 
     getPdf2swfPanel: function() {
         return this.getCardPanel().getComponent('pdf2swf');
+    },
+
+    getTemplatePanelByType: function(type) {
+        switch (type) {
+            case 'image':
+                return this.getImagePanel();
+
+            case 'video':
+                return this.getVideoPanel();
+
+            case 'audio':
+                return this.getAudioPanel();
+
+            case 'pdf2swf':
+                return this.getPdf2swfPanel();
+        }
+
+        return null;
+    },
+
+    onTemplateChange: function (r) {
+        var activePanel = this.getTemplatePanelByType(r.get('type'));
+
+        if (activePanel) {
+            this.getCardPanel().getLayout().setActiveItem(activePanel);
+            activePanel.loadParameters(r.get('key'));
+        } else {
+            Ext.MessageBox.alert('Warning', 'Unknown template');
+        }
+    },
+
+    onTemplateCreate: function (templateId, templateTitle, templateType) {
+        var activePanel = this.getTemplatePanelByType(templateType);
+
+        if (activePanel) {
+            this.getCardPanel().getLayout().setActiveItem(activePanel);
+            activePanel.loadParameters(templateId, templateTitle);
+        } else {
+            Ext.MessageBox.alert('Warning', 'Unknown template');
+        }
     }
 });

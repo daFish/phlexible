@@ -20,7 +20,7 @@ Ext.define('Phlexible.mediatemplates.audio.PreviewPanel', {
         return s;
     },
 
-    getPreviewDomHelperConfig: function (data) {
+    createPreviewDomHelperConfig: function (data) {
         //var link = 'file=' + Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()});
 
         return {
@@ -48,5 +48,3 @@ Ext.define('Phlexible.mediatemplates.audio.PreviewPanel', {
         };
     }
 });
-
-Ext.reg('', Phlexible.mediatemplates.audio.PreviewPanel);

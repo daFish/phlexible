@@ -1,73 +1,73 @@
-Ext.provide('Phlexible.mediatemplates.image.PreviewPanel');
+Ext.define('Phlexible.mediatemplates.image.PreviewPanel', {
+    extend: 'Phlexible.mediatemplates.BasePreviewPanel',
+    alias: 'widget.mediatemplates-image-preview',
 
-Ext.require('Phlexible.mediatemplates.BasePreviewPanel');
-Ext.require('Ext.ux.form.ColorField');
-
-Phlexible.mediatemplates.image.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
-    getCreateUrl: function () {
+    createUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_image');
     },
 
     initComponent: function () {
-        this.tbar = [
-            {
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 xtype: 'tbtext',
                 text: this.strings.change_background_color_to
             },
-            {
-                text: this.strings.white,
-                handler: function () {
-                    this.getComponent(2).body.setStyle('background-color', '#FFFFFF');
-                    this.getTopToolbar().items.items[4].setValue('#FFFFFF');
+                {
+                    text: this.strings.white,
+                    handler: function () {
+                        this.getPreviewFieldSet().body.setStyle('background-color', '#FFFFFF');
+                        this.getTopToolbar().items.items[4].setValue('#FFFFFF');
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            {
-                text: this.strings.black,
-                handler: function () {
-                    this.getComponent(2).body.setStyle('background-color', '#000000');
-                    this.getTopToolbar().items.items[4].setValue('#000000');
+                {
+                    text: this.strings.black,
+                    handler: function () {
+                        this.getPreviewFieldSet().body.setStyle('background-color', '#000000');
+                        this.getTopToolbar().items.items[4].setValue('#000000');
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            {
-                text: this.strings.random,
-                handler: function () {
-                    var red = Math.floor(Math.random() * 255);
-                    var green = Math.floor(Math.random() * 255);
-                    var blue = Math.floor(Math.random() * 255);
-                    var color = this.toColor(red, green, blue);
-                    this.getComponent(2).body.setStyle('background-color', color);
-                    this.getTopToolbar().items.items[4].setValue(color);
+                {
+                    text: this.strings.random,
+                    handler: function () {
+                        var red = Math.floor(Math.random() * 255);
+                        var green = Math.floor(Math.random() * 255);
+                        var blue = Math.floor(Math.random() * 255);
+                        var color = this.toColor(red, green, blue);
+                        this.getPreviewFieldSet().body.setStyle('background-color', color);
+                        this.getTopToolbar().items.items[4].setValue(color);
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            {
-                xtype: 'colorfield',
-                value: '#FFFFFF',
-                enableKeyEvents: true,
-                listeners: {
-                    keyup: {
-                        fn: function (f, e) {
+                {
+                    type: 'colorfield', // TODO: colorfield
+                    xtype: 'textfield',
+                    value: '#FFFFFF',
+                    enableKeyEvents: true,
+                    listeners: {
+                        keyup: function (f, e) {
                             if (e.keyCode === 13) {
-                                this.getComponent(2).body.setStyle('background-color', f.getValue());
+                                this.getPreviewFieldSet().body.setStyle('background-color', f.getValue());
                             }
                         },
-                        scope: this
-                    },
-                    select: {
-                        fn: function (f, v) {
-                            if (this.getComponent(2).rendered) {
-                                this.getComponent(2).body.setStyle('background-color', v);
+                        select: function (f, v) {
+                            if (this.getPreviewFieldSet().rendered) {
+                                this.getPreviewFieldSet().body.setStyle('background-color', v);
                             }
                         },
                         scope: this
                     }
-                }
-            }
-        ];
-
-        Phlexible.mediatemplates.image.PreviewPanel.superclass.initComponent.call(this);
+                }]
+        }]
     },
 
     toColor: function (r, g, b) {
@@ -122,7 +122,7 @@ Phlexible.mediatemplates.image.PreviewPanel = Ext.extend(Phlexible.mediatemplate
         return s;
     },
 
-    getPreviewDomHelperConfig: function (data) {
+    createPreviewDomHelperConfig: function (data) {
         return {
             tag: 'img',
             alt: 'Loading image preview',
@@ -130,5 +130,3 @@ Phlexible.mediatemplates.image.PreviewPanel = Ext.extend(Phlexible.mediatemplate
         };
     }
 });
-
-Ext.reg('mediatemplates-imagepreviewpanel', Phlexible.mediatemplates.image.PreviewPanel);
