@@ -31,6 +31,8 @@ Phlexible.Icon = Ext.create('Phlexible.gui.util.Icon');
 
 Phlexible.Notify = Ext.create('Phlexible.gui.util.Notify');
 
+Phlexible.Format = Ext.create('Phlexible.gui.util.Format');
+
 Ext.onReady(function () {
     Phlexible.App = Ext.create('Phlexible.gui.util.Application', {
         config: Phlexible.config,

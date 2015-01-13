@@ -21,7 +21,7 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
                 itemId: 'empty',
                 border: false,
                 html: this.strings.no_preview_available,
-                bodyStyle: 'padding-bottom: 10px'
+                bodyPadding: '0 0 10 0'
             },
             {
                 itemId: 'debug',
@@ -41,7 +41,7 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
                 itemId: 'preview',
                 border: false,
                 html: '&nbsp;',
-                bodyStyle: 'padding: 10px;'
+                bodyPadding: 10
             }
         ];
     },
@@ -111,6 +111,8 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
 
         Ext.DomHelper.overwrite(this.getPreviewPanel().body, this.createPreviewDomHelperConfig(data));
 
+        this.getPreviewPanel().setHeight(data.height);
+        
         this.enable();
     }
 });

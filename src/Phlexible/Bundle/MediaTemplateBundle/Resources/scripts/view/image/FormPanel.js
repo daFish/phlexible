@@ -48,7 +48,9 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                             fields: ['id', 'method', 'help'],
                             data: Phlexible.mediatemplates.ImageMethods
                         }),
-                        tpl: '<tpl for="."><div class="x-combo-list-item"><div>{method}</div><div style="font-size: 11px; color: gray;">{help}</div></div></tpl>',
+                        tpl: '<tpl for=".">' +
+                                 '<div class="x-boundlist-item">{method}<div style="line-height: 14px; font-size: 11px; color: gray;">{help}</div></div>' +
+                             '</tpl>',
                         displayField: 'method',
                         valueField: 'id',
                         typeAhead: false,
@@ -58,7 +60,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         editable: false,
                         allowBlank: false,
                         fieldLabel: this.strings.method,
-                        hiddenName: 'xmethod',
+                        name: 'xmethod',
                         width: 280,
                         listWidth: 650,
                         helpText: this.strings.help_method,
@@ -96,7 +98,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         editable: false,
                         allowBlank: false,
                         fieldLabel: this.strings.scale,
-                        hiddenName: 'scale',
+                        name: 'scale',
                         width: 280,
                         //listWidth: 550,
                         helpText: this.strings.help_scale
@@ -133,7 +135,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.format,
-                        hiddenName: 'format',
+                        name: 'format',
                         width: 280,
                         listWidth: 280,
                         allowBlank: false,
@@ -163,7 +165,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.colorspace,
-                        hiddenName: 'colorspace',
+                        name: 'colorspace',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_colorspace
@@ -182,7 +184,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.depth,
-                        hiddenName: 'depth',
+                        name: 'depth',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_depth
@@ -201,7 +203,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.tiffcompression,
-                        hiddenName: 'tiffcompression',
+                        name: 'tiffcompression',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.tiffcompression_help
@@ -230,7 +232,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.compression,
-                        hiddenName: 'compression',
+                        name: 'compression',
                         width: 280,
                         listWidth: 280,
                         allowBlank: false,
@@ -251,7 +253,7 @@ Ext.define('Phlexible.mediatemplates.image.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.filtertype,
-                        hiddenName: 'filtertype',
+                        name: 'filtertype',
                         width: 280,
                         listWidth: 280,
                         allowBlank: false,

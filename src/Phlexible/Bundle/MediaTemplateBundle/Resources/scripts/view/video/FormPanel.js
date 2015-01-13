@@ -73,7 +73,7 @@ Ext.define('Phlexible.mediatemplates.video.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.format,
-                        hiddenName: 'format',
+                        name: 'format',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_format,
@@ -106,7 +106,7 @@ Ext.define('Phlexible.mediatemplates.video.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.bitrate,
-                        hiddenName: 'video_bitrate',
+                        name: 'video_bitrate',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_bitrate
@@ -125,7 +125,7 @@ Ext.define('Phlexible.mediatemplates.video.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.framerate,
-                        hiddenName: 'video_framerate',
+                        name: 'video_framerate',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_framerate
@@ -163,7 +163,7 @@ Ext.define('Phlexible.mediatemplates.video.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.bitrate,
-                        hiddenName: 'audio_bitrate',
+                        name: 'audio_bitrate',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_bitrate
@@ -182,7 +182,7 @@ Ext.define('Phlexible.mediatemplates.video.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.samplerate,
-                        hiddenName: 'audio_samplerate',
+                        name: 'audio_samplerate',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_samplerate
@@ -201,7 +201,7 @@ Ext.define('Phlexible.mediatemplates.video.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.samplebits,
-                        hiddenName: 'audio_samplebits',
+                        name: 'audio_samplebits',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_samplebits
@@ -220,7 +220,7 @@ Ext.define('Phlexible.mediatemplates.video.FormPanel', {
                         value: '',
                         editable: false,
                         fieldLabel: this.strings.channels,
-                        hiddenName: 'audio_channels',
+                        name: 'audio_channels',
                         width: 280,
                         listWidth: 280,
                         helpText: this.strings.help_channels
