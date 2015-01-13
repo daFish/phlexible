@@ -7,9 +7,18 @@ Ext.define('Phlexible.siteroots.TitleForm', {
     border: false,
 
     initComponent: function () {
+        this.initMyTasks();
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyTasks: function() {
         this.task1 = new Ext.util.DelayedTask(this.updateDefaultPreview, this);
         this.task2 = new Ext.util.DelayedTask(this.updateHomePreview, this);
+    },
 
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -173,8 +182,6 @@ Ext.define('Phlexible.siteroots.TitleForm', {
                 allowBlank: false
             });
         }
-
-        this.callParent(arguments);
     },
 
     getTitlePanels: function() {

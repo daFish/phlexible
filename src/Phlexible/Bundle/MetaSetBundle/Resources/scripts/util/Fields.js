@@ -1,15 +1,14 @@
-Ext.provide('Phlexible.metasets.util.Fields');
+Ext.define('Phlexible.metasets.util.Fields', {
+    constructor: function () {
+        this.initFields();
+        this.initEditors();
+        this.initSelectEditorCallbacks();
+        this.initBeforeEditCallbacks();
+        this.initAfterEditCallbacks();
 
-Phlexible.metasets.util.Fields = function (config) {
-    this.initFields();
-    this.initEditors();
-    this.initSelectEditorCallbacks();
-    this.initBeforeEditCallbacks();
-    this.initAfterEditCallbacks();
+        this.callParent(arguments);
+    },
 
-    Phlexible.metasets.util.Fields.superclass.constructor.call(this, config);
-};
-Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
     getFields: function () {
         return this.fields;
     },

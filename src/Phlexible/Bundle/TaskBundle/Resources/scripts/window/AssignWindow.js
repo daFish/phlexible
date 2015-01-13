@@ -14,6 +14,13 @@ Ext.define('Phlexible.tasks.AssignWindow', {
     component_filter: null,
 
     initComponent: function () {
+        this.initMyItems();
+        this.initMyButtons();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -73,7 +80,9 @@ Ext.define('Phlexible.tasks.AssignWindow', {
                 }
             }
         ];
+    },
 
+    initMyButtons: function() {
         this.buttons = [
             {
                 text: this.strings.cancel,
@@ -87,8 +96,6 @@ Ext.define('Phlexible.tasks.AssignWindow', {
                 scope: this
             }
         ];
-
-        this.callParent(arguments);
     },
 
     assign: function () {

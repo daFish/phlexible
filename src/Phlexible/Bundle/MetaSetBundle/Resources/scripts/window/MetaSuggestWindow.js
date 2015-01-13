@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.metasets.MetaSuggestWindow');
+Ext.define('Phlexible.metasets.MetaSuggestWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
     width: 400,
     height: 350,
     layout: 'fit',
@@ -40,6 +40,13 @@ Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
 
         this.title = 'Edit ' + this.metaKey;
 
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -109,29 +116,34 @@ Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
                     }
                 ]
             }];
+    },
 
-        this.buttons = [
-            {
-                text: 'Store',
-                handler: function () {
-                    var value = this.getComponent(0).getComponent(0).getValue();
-                    if (this.record) {
-                        this.record.set(this.valueField, value);
-                    }
-                    this.fireEvent('store', this, value);
-                    this.close();
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                {
+                    text: 'Store',
+                    handler: function () {
+                        var value = this.getComponent(0).getComponent(0).getValue();
+                        if (this.record) {
+                            this.record.set(this.valueField, value);
+                        }
+                        this.fireEvent('store', this, value);
+                        this.close();
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            {
-                text: 'Cancel',
-                handler: function () {
-                    this.close();
-                },
-                scope: this
-            }
-        ];
-
-        Phlexible.metasets.MetaSuggestWindow.superclass.initComponent.call(this);
+                {
+                    text: 'Cancel',
+                    handler: function () {
+                        this.close();
+                    },
+                    scope: this
+                }
+            ]
+        }];
     }
 });

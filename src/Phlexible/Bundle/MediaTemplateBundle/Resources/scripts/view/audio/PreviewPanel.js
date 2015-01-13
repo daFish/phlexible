@@ -1,9 +1,8 @@
-Ext.provide('Phlexible.mediatemplates.audio.PreviewPanel');
+Ext.define('Phlexible.mediatemplates.audio.PreviewPanel', {
+    extend: 'Phlexible.mediatemplates.BasePreviewPanel',
+    alias: 'widget.mediatemplates-audio-preview',
 
-Ext.require('Phlexible.mediatemplates.BasePreviewPanel');
-
-Phlexible.mediatemplates.audio.PreviewPanel = Ext.extend(Phlexible.mediatemplates.BasePreviewPanel, {
-    getCreateUrl: function () {
+    createUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_audio');
     },
 
@@ -50,4 +49,4 @@ Phlexible.mediatemplates.audio.PreviewPanel = Ext.extend(Phlexible.mediatemplate
     }
 });
 
-Ext.reg('mediatemplates-audiopreviewpanel', Phlexible.mediatemplates.audio.PreviewPanel);
+Ext.reg('', Phlexible.mediatemplates.audio.PreviewPanel);

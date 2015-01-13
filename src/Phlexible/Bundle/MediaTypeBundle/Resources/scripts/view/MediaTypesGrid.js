@@ -9,6 +9,15 @@ Ext.define('MediaTypesGrid', {
     stripeRows: true,
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             proxy: {
                 type: 'ajax',
@@ -28,7 +37,9 @@ Ext.define('MediaTypesGrid', {
                 direction: 'ASC'
             }]
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.id,
@@ -98,18 +109,24 @@ Ext.define('MediaTypesGrid', {
                 renderer: this.iconRenderer
             }
         ];
+    },
 
-        this.tbar = [
-            {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 text: this.strings.reload,
                 iconCls: 'x-tbar-loading',
                 handler: function () {
                     this.store.reload();
                 },
                 scope: this
-            }
-        ];
+            }]
+        }]
+    },
 
+    initMyListeners: function() {
         this.on({
             selectionchange: function (sm) {
                 var records = sm.getSelection();
@@ -121,8 +138,8 @@ Ext.define('MediaTypesGrid', {
             itemdblclick: function (grid, r) {
                 var key = r.get('key');
 
-                var w = new Ext.Window({
-                    title: String.format(this.strings.icons_for, r.get('en')),
+                var w = Ext.create('Ext.window.Window', {
+                    title: Ext.String.format(this.strings.icons_for, r.get('en')),
                     width: 420,
                     height: 320,
                     bodyStyle: 'background: white; background: linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, lightgray; background-size: 30px 30px; padding: 5px;',
@@ -151,8 +168,6 @@ Ext.define('MediaTypesGrid', {
             },
             scope: this
         });
-
-        this.callParent(arguments);
     },
 
     iconRenderer: function (k) {

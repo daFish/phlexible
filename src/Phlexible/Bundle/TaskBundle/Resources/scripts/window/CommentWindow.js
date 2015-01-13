@@ -14,7 +14,13 @@ Ext.define('Phlexible.tasks.CommentWindow', {
     component_filter: null,
 
     initComponent: function () {
+        this.initMyItems();
+        this.initMyButtons();
 
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -51,7 +57,9 @@ Ext.define('Phlexible.tasks.CommentWindow', {
                 }
             }
         ];
+    },
 
+    initMyButtons: function() {
         this.buttons = [
             {
                 text: this.strings.cancel,
@@ -65,8 +73,6 @@ Ext.define('Phlexible.tasks.CommentWindow', {
                 scope: this
             }
         ];
-
-        this.callParent(arguments);
     },
 
     comment: function () {

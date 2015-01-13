@@ -1,44 +1,44 @@
-Ext.provide('Phlexible.queue.QueueStatsWindow');
+Ext.define('Phlexible.queue.QueueStatsWindow', {
+    extend: 'Ext.window.Window',
 
-Ext.require('Phlexible.queue.model.Job');
-Ext.require('Ext.grid.RowExpander');
-
-Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
     title: Phlexible.queue.Strings.queue,
     strings: Phlexible.queue.Strings,
     width: 900,
     height: 600,
-    iconCls: 'p-queue-stats-icon',
+    iconCls: Phlexible.Icon.get('application-task'),
     layout: 'fit',
     constrainHeader: true,
     maximizable: true,
     modal: true,
 
     initComponent: function () {
-        var expander = new Ext.grid.RowExpander({
-            dataIndex: 'output',
-            tpl: new Ext.Template(
-                '<p>{output}</p>'
-            )
-        });
+        this.initMyItems();
+        this.initMyDockedItems();
 
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = {
             xtype: 'grid',
             border: false,
-            autoExpandColumn: 2,
-            store: new Ext.data.JsonStore({
-                url: Phlexible.Router.generate('queue_list'),
-                root: 'data',
-                id: 'id',
-                fields: Phlexible.queue.model.Job,
+            emptyText: this.strings.no_jobs,
+            store: Ext.create('Ext.data.Store', {
+                model: 'Phlexible.queue.model.Job',
+                proxy: {
+                    type: 'ajax',
+                    url: Phlexible.Router.generate('queue_list'),
+                    simpleSortMode: true,
+                    reader: {
+                        type: 'json',
+                        rootProperty: 'data',
+                        idProperty: 'id'
+                    },
+                    extraParams: this.storeExtraParams
+                },
                 autoLoad: true
             }),
-            selModel: new Ext.grid.RowSelectionModel(),
-            viewConfig: {
-                emptyText: this.strings.no_jobs
-            },
             columns: [
-                expander,
                 {
                     header: this.strings.id,
                     dataIndex: 'id',
@@ -51,7 +51,8 @@ Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
                 }, {
                     header: this.strings.priority,
                     dataIndex: 'priority',
-                    width: 50
+                    width: 50,
+                    flex: 1
                 }, {
                     header: this.strings.status,
                     dataIndex: 'status',
@@ -68,24 +69,29 @@ Phlexible.queue.QueueStatsWindow = Ext.extend(Ext.Window, {
                     header: this.strings.end_time,
                     dataIndex: 'end_time',
                     width: 120
-                }],
-            plugins: [
-                expander
-            ]
+                }
+            ],
+            plugins: [{
+                ptype: 'rowexpander',
+                rowBodyTpl: [
+                    '<p>{output}</p>'
+                ]
+            }]
         };
+    },
 
-        this.tbar = [
-            {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 text: this.strings.reload,
-                iconCls: 'p-queue-reload-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
                 handler: function () {
                     this.getComponent(0).store.reload();
                 },
                 scope: this
-            }
-        ];
-
-        Phlexible.queue.QueueStatsWindow.superclass.initComponent.call(this);
+            }]
+        }];
     }
-
 });

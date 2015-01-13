@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.mediatemplates.BasePreviewPanel');
+Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
+    extend: 'Ext.panel.Panel',
 
-Phlexible.mediatemplates.BasePreviewPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.preview,
     strings: Phlexible.mediatemplates.Strings,
     cls: 'p-mediatemplates-preview-panel',
@@ -10,6 +10,12 @@ Phlexible.mediatemplates.BasePreviewPanel = Ext.extend(Ext.Panel, {
     disabled: true,
 
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(argument);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 border: false,
@@ -35,8 +41,6 @@ Phlexible.mediatemplates.BasePreviewPanel = Ext.extend(Ext.Panel, {
                 bodyStyle: 'padding: 10px;'
             }
         ];
-
-        Phlexible.mediatemplates.BasePreviewPanel.superclass.initComponent.call(this);
     },
 
     clear: function () {
@@ -45,7 +49,7 @@ Phlexible.mediatemplates.BasePreviewPanel = Ext.extend(Ext.Panel, {
         this.getComponent(2).body.update('&nbsp;');
     },
 
-    getCreateUrl: function () {
+    createUrl: function () {
         throw new Error('getCreateUrl() has to be implemented in Classes extending Phlexible.mediatemplates.BasePreviewPanel.');
     },
 

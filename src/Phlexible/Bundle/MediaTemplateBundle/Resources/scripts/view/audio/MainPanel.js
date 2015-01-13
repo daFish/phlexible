@@ -1,17 +1,21 @@
-Ext.provide('Phlexible.mediatemplates.audio.MainPanel');
+Ext.define('Phlexible.mediatemplates.audio.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediatypes-audio-main',
 
-Ext.require('Phlexible.mediatemplates.audio.FormPanel');
-Ext.require('Phlexible.mediatemplates.audio.PreviewPanel');
-
-Phlexible.mediatemplates.audio.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.audio_template,
     strings: Phlexible.mediatemplates.Strings,
     layout: 'border',
 
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
-                xtype: 'mediatemplates-audioformpanel',
+                xtype: 'mediatemplates-audio-form',
                 region: 'west',
                 width: 320,
                 header: false,
@@ -28,17 +32,15 @@ Phlexible.mediatemplates.audio.MainPanel = Ext.extend(Ext.Panel, {
                 }
             },
             {
-                xtype: 'mediatemplates-audiopreviewpanel',
+                xtype: 'mediatemplates-audio-preview',
                 region: 'center',
                 header: false
             }
         ];
-
-        Phlexible.mediatemplates.audio.MainPanel.superclass.initComponent.call(this);
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(String.format(this.strings.audio_template_title, template_key));
+        this.setTitle(Ext.String.format(this.strings.audio_template_title, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

@@ -1,11 +1,7 @@
-Ext.require('Phlexible.Handles');
-Ext.require('Phlexible.gui.menuhandle.handle.WindowHandle');
-Ext.require('Phlexible.queue.QueueStatsWindow');
-
 Phlexible.Handles.add('queue', function() {
-    return new Phlexible.gui.menuhandle.handle.WindowHandle({
+    return Ext.create('Phlexible.gui.menuhandle.handle.WindowHandle', {
         text: Phlexible.queue.Strings.queue,
-        iconCls: 'p-queue-stats-icon',
-        component: 'Phlexible.queue.QueueStatsWindow'
+        iconCls: Phlexible.Icon.get('application-task'),
+        window: 'Phlexible.queue.QueueStatsWindow'
     });
 });

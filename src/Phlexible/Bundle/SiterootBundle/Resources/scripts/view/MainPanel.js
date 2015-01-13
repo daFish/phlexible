@@ -21,6 +21,12 @@ Ext.define('Phlexible.siteroots.MainPanel', {
      *
      */
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [{
             xtype: 'siteroots-list',
             region: 'west',
@@ -69,8 +75,6 @@ Ext.define('Phlexible.siteroots.MainPanel', {
                 }
             ]
         }];
-
-        this.callParent(arguments);
     },
 
     loadParams: function () {

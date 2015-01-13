@@ -23,6 +23,17 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
 
         this.iconCls = Phlexible.Icon.get('dashboard');
 
+        this.initMyItems();
+        this.initMyTasks();
+
+        this.callParent(arguments);
+    },
+
+    initMyTasks: function() {
+        this.saveTask = new Ext.util.DelayedTask(this.doSave, this);
+    },
+
+    initMyItems: function() {
         this.items = [{
             xtype: 'dashboard-portalpanel',
             region: 'center',
@@ -46,10 +57,6 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
                 scope: this
             }
         }];
-
-        this.saveTask = new Ext.util.DelayedTask(this.doSave, this);
-
-        this.callParent(arguments);
     },
 
     onRender: function() {

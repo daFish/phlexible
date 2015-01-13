@@ -4,19 +4,32 @@ Ext.define('Phlexible.tasks.FilterPanel', {
 
     title: Phlexible.tasks.Strings.filter,
     strings: Phlexible.tasks.Strings,
-    bodyStyle: 'padding: 5px;',
-    cls: 'p-tasks-filter-panel',
-    iconCls: 'p-task-filter-icon',
+    cls: 'p-tasks-filter',
+    iconCls: Phlexible.Icon.get('funnel'),
+    bodyPadding: 5,
     autoScroll: true,
 
     initComponent: function () {
-        this.task = new Ext.util.DelayedTask(this.updateFilter, this);
+        this.initMyTasks();
+        this.initMyItems();
+        this.initMyDockedItems();
+        this.initMyListeners();
+        this.loadFilterValues();
 
+        this.callParent(arguments);
+    },
+
+    initMyTasks: function() {
+        this.task = new Ext.util.DelayedTask(this.updateFilter, this);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'panel',
                 title: this.strings.comments,
                 layout: 'form',
+                margin: '0 0 5 0',
                 frame: true,
                 collapsible: true,
                 labelAlign: 'top',
@@ -48,6 +61,7 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                 xtype: 'panel',
                 title: this.strings.tasks,
                 layout: 'form',
+                margin: '0 0 5 0',
                 frame: true,
                 collapsible: true,
                 defaults: {
@@ -117,6 +131,7 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                 xtype: 'panel',
                 title: this.strings.status,
                 layout: 'form',
+                margin: '0 0 5 0',
                 frame: true,
                 collapsible: true,
                 defaults: {
@@ -126,7 +141,7 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                     {
                         xtype: 'checkbox',
                         name: 'status_open',
-                        boxLabel: Phlexible.inlineIcon('p-task-status_open-icon') + ' ' + this.strings.open,
+                        boxLabel: Phlexible.Icon.inline(Phlexible.tasks.StatusIcons.open) + ' ' + this.strings.open,
                         checked: true,
                         listeners: {
                             check: this.updateFilter,
@@ -136,7 +151,7 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                     {
                         xtype: 'checkbox',
                         name: 'status_rejected',
-                        boxLabel: Phlexible.inlineIcon('p-task-status_rejected-icon') + ' ' + this.strings.rejected,
+                        boxLabel: Phlexible.Icon.inline(Phlexible.tasks.StatusIcons.rejected) + ' ' + this.strings.rejected,
                         checked: true,
                         listeners: {
                             check: this.updateFilter,
@@ -146,7 +161,7 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                     {
                         xtype: 'checkbox',
                         name: 'status_reopened',
-                        boxLabel: Phlexible.inlineIcon('p-task-status_reopened-icon') + ' ' + this.strings.reopened,
+                        boxLabel: Phlexible.Icon.inline(Phlexible.tasks.StatusIcons.reopened) + ' ' + this.strings.reopened,
                         checked: true,
                         listeners: {
                             check: this.updateFilter,
@@ -156,7 +171,7 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                     {
                         xtype: 'checkbox',
                         name: 'status_finished',
-                        boxLabel: Phlexible.inlineIcon('p-task-status_finished-icon') + ' ' + this.strings.finished,
+                        boxLabel: Phlexible.Icon.inline(Phlexible.tasks.StatusIcons.finished) + ' ' + this.strings.finished,
                         checked: true,
                         listeners: {
                             check: this.updateFilter,
@@ -166,7 +181,7 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                     {
                         xtype: 'checkbox',
                         name: 'status_closed',
-                        boxLabel: Phlexible.inlineIcon('p-task-status_closed-icon') + ' ' + this.strings.closed,
+                        boxLabel: Phlexible.Icon.inline(Phlexible.tasks.StatusIcons.closed) + ' ' + this.strings.closed,
                         listeners: {
                             check: this.updateFilter,
                             scope: this
@@ -175,7 +190,9 @@ Ext.define('Phlexible.tasks.FilterPanel', {
                 ]
             }
         ];
+    },
 
+    initMyDockedItems: function() {
         /*
          this.tbar = ['->',{
          text: this.strings.reset,
@@ -184,7 +201,9 @@ Ext.define('Phlexible.tasks.FilterPanel', {
          scope: this
          }];
          */
+    },
 
+    initMyListeners: function() {
         this.on('render', function () {
             var values = {
                 tasks: 'involved',
@@ -196,14 +215,14 @@ Ext.define('Phlexible.tasks.FilterPanel', {
 
             this.fireEvent('updateFilter', values);
         }, this);
+    },
 
+    loadFilterValues: function() {
 //        Ext.Ajax.request({
 //            url: Phlexible.Router.generate('tasks_filtervalues'),
 //            success: this.onLoadFilterValues,
 //            scope: this
 //        });
-
-        this.callParent(arguments);
     },
 
     onReset: function () {

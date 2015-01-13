@@ -113,6 +113,10 @@ class ScriptsBuilder
             'phlexibledashboard',
             'phlexiblegui',
             'phlexiblemediatype',
+            'phlexiblemetaset',
+            'phlexibleproblem',
+            'phlexiblequeue',
+            'phlexiblesearch',
             'phlexiblesiteroot',
             'phlexibletask',
         );
@@ -250,6 +254,7 @@ class ScriptsBuilder
                 'combo',
                 'combobox',
                 'checkboxgroup',
+                'pagingtoolbar',
             );
 
             if (!empty($file->requires)) {

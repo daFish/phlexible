@@ -8,11 +8,18 @@ Ext.define('Phlexible.siteroots.ContentChannelGrid', {
     border: false,
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyColumns();
+        this.callParent(arguments);
+    },
 
-        this.store = new Ext.data.SimpleStore({
-            fields: Phlexible.siteroots.model.Contentchannel,
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.siteroots.model.Contentchannel'
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.contentchannel_id,
@@ -34,14 +41,6 @@ Ext.define('Phlexible.siteroots.ContentChannelGrid', {
                 width: 50
             })
         ];
-
-        this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect: true
-        });
-
-        this.plugins = [this.cc1, this.cc2];
-
-        Phlexible.siteroots.ContentChannelGrid.superclass.initComponent.call(this);
     },
 
     /**

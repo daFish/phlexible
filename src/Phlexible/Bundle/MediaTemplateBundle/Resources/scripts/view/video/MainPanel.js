@@ -1,17 +1,21 @@
-Ext.provide('Phlexible.mediatemplates.video.MainPanel');
+Ext.define('Phlexible.mediatemplates.video.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'mediatemplates-video-main',
 
-Ext.require('Phlexible.mediatemplates.video.FormPanel');
-Ext.require('Phlexible.mediatemplates.video.PreviewPanel');
-
-Phlexible.mediatemplates.video.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.video_template,
     strings: Phlexible.mediatemplates.Strings,
     layout: 'border',
 
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
-                xtype: 'mediatemplates-videoformpanel',
+                xtype: 'mediatemplates-video-form',
                 region: 'west',
                 width: 320,
                 header: false,
@@ -28,17 +32,15 @@ Phlexible.mediatemplates.video.MainPanel = Ext.extend(Ext.Panel, {
                 }
             },
             {
-                xtype: 'mediatemplates-videopreviewpanel',
+                xtype: 'mediatemplates-video-preview',
                 region: 'center',
                 header: false
             }
         ];
-
-        Phlexible.mediatemplates.video.MainPanel.superclass.initComponent.call(this);
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(String.format(this.strings.video_template_title, template_key));
+        this.setTitle(Ext.String.format(this.strings.video_template_title, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

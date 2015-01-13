@@ -15,6 +15,13 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
     component_filter: null,
 
     initComponent: function () {
+        this.initMyItems();
+        this.initMyButtons();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -110,7 +117,9 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
                 }
             }
         ];
+    },
 
+    initMyButtons: function() {
         this.buttons = [
             {
                 text: this.strings.cancel,
@@ -124,8 +133,6 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
                 scope: this
             }
         ];
-
-        this.callParent(arguments);
     },
 
     onSend: function () {

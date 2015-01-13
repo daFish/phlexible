@@ -22,6 +22,12 @@ Ext.define('Phlexible.dashboard.view.ListWindow', {
      *
      */
     initComponent: function() {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [{
             xtype: 'panel',
             itemId: 'portletPanel',
@@ -61,7 +67,5 @@ Ext.define('Phlexible.dashboard.view.ListWindow', {
                 }
             }]
         }];
-
-        this.callParent(arguments);
     }
 });

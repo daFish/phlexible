@@ -1,53 +1,47 @@
-Ext.provide('Phlexible.mediatemplates.image.MainPanel');
+Ext.define('Phlexible.mediatemplates.image.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediatemplates-image-main',
 
-Ext.require('Phlexible.mediatemplates.image.FormPanel');
-Ext.require('Phlexible.mediatemplates.image.PreviewPanel');
-
-Phlexible.mediatemplates.image.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.image_template,
     strings: Phlexible.mediatemplates.Strings,
     layout: 'border',
 
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function () {
         this.items = [
             {
-                xtype: 'mediatemplates-imageformpanel',
+                xtype: 'mediatemplates-image-form',
                 region: 'west',
                 width: 320,
                 header: false,
                 listeners: {
-                    paramsload: {
-                        fn: function () {
+                    paramsload: function () {
 
-                        },
-                        scope: this
                     },
-                    paramssave: {
-                        fn: function () {
-                            this.fireEvent('paramssave');
-                        },
-                        scope: this
+                    paramssave: function () {
+                        this.fireEvent('paramssave');
                     },
-                    preview: {
-                        fn: function (params, debug) {
-                            this.getComponent(1).createPreview(params, debug);
-                        },
-                        scope: this
-                    }
+                    preview: function (params, debug) {
+                        this.getComponent(1).createPreview(params, debug);
+                    },
+                    scope: this
                 }
             },
             {
-                xtype: 'mediatemplates-imagepreviewpanel',
+                xtype: 'mediatemplates-image-preview',
                 region: 'center',
                 header: false
             }
         ];
-
-        Phlexible.mediatemplates.image.MainPanel.superclass.initComponent.call(this);
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(String.format(this.strings.image_template_title, template_key));
+        this.setTitle(Ext.String.format(this.strings.image_template_title, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

@@ -11,6 +11,14 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
     initComponent: function () {
         this.values = this.record.get('additional').split(',');
 
+        this.initMyItems();
+        this.initMyButtons();
+        this.loadSiteroots();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'grid',
@@ -105,8 +113,9 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                 }
             }
         ];
+    },
 
-
+    initMyButtons: function() {
         this.buttons = [
             {
                 text: this.strings.cancel,
@@ -132,9 +141,9 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                 scope: this
             }
         ];
+    },
 
-        Phlexible.siteroots.SiterootNavigationWindow.superclass.initComponent.call(this);
-
+    loadSiteroots: function() {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('siteroots_siteroots_list'),
             baseParams: {

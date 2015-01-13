@@ -14,6 +14,13 @@ Ext.define('Phlexible.dashboard.view.ColumnsWindow', {
     saveText: '_save',
 
     initComponent: function() {
+        this.initMyItems();
+        this.initMyButtons();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [{
             xtype: 'form',
             bodyPadding: 5,
@@ -29,7 +36,9 @@ Ext.define('Phlexible.dashboard.view.ColumnsWindow', {
                 value: Phlexible.App.getConfig().get('dashboard.columns')
             }]
         }];
+    },
 
+    initMyButtons: function() {
         this.buttons = [{
             text: this.cancelText,
             handler: this.close,
@@ -39,8 +48,6 @@ Ext.define('Phlexible.dashboard.view.ColumnsWindow', {
             handler: this.submit,
             scope: this
         }];
-
-        this.callParent(arguments);
     },
 
     submit: function() {

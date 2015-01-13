@@ -29,25 +29,33 @@ Ext.define('Phlexible.dashboard.view.PortalPanel', {
      *
      */
     initComponent: function() {
-        var items = [],
-            poller = Phlexible.App.getPoller();
+        var poller = Phlexible.App.getPoller();
 
         if (poller) {
             poller.on('message', this.processMessage, this);
         }
 
-        for (i=0; i<this.cols; i+=1) {
-            items.push({
+        this.initMyItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
+        this.items = [];
+
+        for (var i = 0; i < this.cols; i += 1) {
+            this.items.push({
                 id: 'col' + i,
                 col: i,
-                columnWidth: 1/this.cols,
+                columnWidth: 1 / this.cols,
                 padding: 10
                 //,items: [{title: 'Column' + (i+1), html: 'test'}]
             });
         }
+    },
 
-        this.items = items;
-
+    initMyListeners: function() {
         this.on({
             render: function() {
                 Ext.DomHelper.append(this.el, {
@@ -67,8 +75,6 @@ Ext.define('Phlexible.dashboard.view.PortalPanel', {
             },
             scope: this
         });
-
-        this.callParent(arguments);
     },
 
     updatePanels: function() {

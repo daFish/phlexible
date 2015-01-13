@@ -8,6 +8,14 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
     emptyText: Phlexible.siteroots.Strings.no_special_tids,
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.siteroots.model.SpecialTid',
             sorters: [{
@@ -15,7 +23,9 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
                 direction: 'asc'
             }]
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.key,
@@ -59,7 +69,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
                     xtype: 'numberfield',
                     allowBlank: false
                 }
-            },{
+            }, {
                 xtype: 'actioncolumn',
                 width: 30,
                 items: [
@@ -80,17 +90,19 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
                 ]
             }
         ];
+    },
 
-        this.tbar = [
-            {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 text: this.strings.add_specialtid,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddSpecialTid,
                 scope: this
-            }
-        ];
-
-        this.callParent(arguments);
+            }]
+        }]
     },
 
     /**

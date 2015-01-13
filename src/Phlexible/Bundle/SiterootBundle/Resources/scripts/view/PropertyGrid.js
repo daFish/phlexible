@@ -5,10 +5,7 @@ Ext.define('Phlexible.siteroots.PropertyGrid', {
     title: Phlexible.siteroots.Strings.properties,
     strings: Phlexible.siteroots.Strings,
     border: false,
-    viewConfig: {
-        forceFit: true,
-        emptyText: Phlexible.siteroots.Strings.no_properties
-    },
+    emptyText: Phlexible.siteroots.Strings.no_properties,
 
     /**
      * After the siteroot selection changes load the siteroot data.

@@ -17,6 +17,13 @@ Ext.define('Phlexible.siteroots.NavigationFlagsWindow', {
         this.flags = parseInt(this.record.get('flags'), 10);
         this.supports = parseInt(this.record.get('supports'), 10);
 
+        this.initMyItems();
+        this.initMyButtons();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -104,7 +111,9 @@ Ext.define('Phlexible.siteroots.NavigationFlagsWindow', {
                 ]
             }
         ];
+    },
 
+    initMyButtons: function() {
         this.buttons = [
             {
                 text: this.strings.store,
@@ -130,7 +139,5 @@ Ext.define('Phlexible.siteroots.NavigationFlagsWindow', {
                 scope: this
             }
         ];
-
-        this.callParent(arguments);
     }
 });

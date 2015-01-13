@@ -3,14 +3,21 @@ Ext.define('Phlexible.tasks.TasksGrid', {
     alias: 'widget.tasks-list',
 
     strings: Phlexible.tasks.Strings,
-    cls: 'p-tasks-task-grid',
-    viewConfig: {
-        deferEmptyText: false,
-        emptyText: Phlexible.tasks.Strings.no_tasks_found
-    },
+    cls: 'p-tasks-list',
+    deferEmptyText: false,
+    emptyText: Phlexible.tasks.Strings.no_tasks_found,
     loadMask: true,
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.tasks.model.Task',
             proxy: {
@@ -42,7 +49,9 @@ Ext.define('Phlexible.tasks.TasksGrid', {
                 scope: this
             }
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.id,
@@ -93,7 +102,28 @@ Ext.define('Phlexible.tasks.TasksGrid', {
                 width: 120,
                 hidden: true
             }];
+    },
 
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                text: this.strings.reload,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
+                handler: function () {
+                    this.store.reload();
+                },
+                scope: this
+            }]
+        },{
+            xtype: 'pagingtoolbar',
+            dock: 'bottom',
+            store: this.store
+        }];
+    },
+
+    initMyListeners: function() {
         this.on({
             selectionchange: function (sm) {
                 var r = sm.getSelected();
@@ -104,21 +134,6 @@ Ext.define('Phlexible.tasks.TasksGrid', {
             },
             scope: this
         });
-
-        this.tbar = [{
-            text: this.strings.reload,
-            iconCls: 'p-task-reset-icon',
-            handler: function () {
-                this.store.reload();
-            },
-            scope: this
-        }];
-
-        this.bbar = new Ext.PagingToolbar({
-            store: this.store
-        });
-
-        this.callParent(arguments);
     },
 
     setStatus: function (task_id, new_status, comment) {

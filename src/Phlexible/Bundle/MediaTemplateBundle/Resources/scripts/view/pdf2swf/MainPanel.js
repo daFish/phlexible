@@ -1,17 +1,21 @@
-Ext.provide('Phlexible.mediatemplates.pdf2swf.MainPanel');
+Ext.define('Phlexible.mediatemplates.pdf2swf.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'mediatemplates-pdf2swf-main',
 
-Ext.require('Phlexible.mediatemplates.pdf2swf.FormPanel');
-Ext.require('Phlexible.mediatemplates.pdf2swf.PreviewPanel');
-
-Phlexible.mediatemplates.pdf2swf.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.pdf2swf_template,
     strings: Phlexible.mediatemplates.Strings,
     layout: 'border',
 
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
-                xtype: 'mediatemplates-pdf2swfformpanel',
+                xtype: 'mediatemplates-pdf2swf-form',
                 region: 'west',
                 width: 320,
                 header: false,
@@ -29,17 +33,15 @@ Phlexible.mediatemplates.pdf2swf.MainPanel = Ext.extend(Ext.Panel, {
                 }
             },
             {
-                xtype: 'mediatemplates-pdf2swfpreviewpanel',
+                xtype: 'mediatemplates-pdf2swf-preview',
                 region: 'center',
                 header: false
             }
         ];
-
-        Phlexible.mediatemplates.pdf2swf.MainPanel.superclass.initComponent.call(this);
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(String.format(this.strings.pdf2swf_template_title, template_key));
+        this.setTitle(Ext.String.format(this.strings.pdf2swf_template_title, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

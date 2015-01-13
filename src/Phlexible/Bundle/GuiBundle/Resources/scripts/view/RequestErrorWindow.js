@@ -32,6 +32,12 @@ Ext.define('Phlexible.gui.view.RequestErrorWindow', {
     initComponent: function() {
         this.title = this.responseStatus + ' ' + this.responseStatusText;
 
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [{
             xtype: 'form',
             region: 'north',
@@ -92,8 +98,6 @@ Ext.define('Phlexible.gui.view.RequestErrorWindow', {
             border: false,
             items: this.getExceptionTabs(this.exception)
         }];
-
-        this.callParent(arguments);
     },
 
     getExceptionTabs: function(exception) {

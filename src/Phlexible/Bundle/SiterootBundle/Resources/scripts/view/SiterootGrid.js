@@ -23,7 +23,16 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
      *
      */
     initComponent: function () {
-        this.store = new Ext.data.Store({
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.siteroots.model.Siteroot',
             proxy: {
                 type: 'ajax',
@@ -48,24 +57,26 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
                 scope: this
             }
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.id,
                 hidden: true,
                 dataIndex: 'id'
-            },{
+            }, {
                 header: this.strings.siteroots,
                 dataIndex: 'title',
                 flex: 1,
                 sortable: true
-            },{
+            }, {
                 xtype: 'actioncolumn',
                 width: 30,
                 items: [{
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                     tooltip: this.strings.remove,
-                    handler: function(grid, rowIndex, colIndex) {
+                    handler: function (grid, rowIndex, colIndex) {
                         var r = grid.getStore().getAt(rowIndex);
 
                         Ext.MessageBox.confirm(
@@ -78,23 +89,27 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
                 }]
             }
         ];
+    },
 
-        this.tbar = [
-            {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 text: this.strings.add_siteroot,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddSiteroot,
                 scope: this
-            }
-        ];
+            }]
+        }]
+    },
 
+    initMyListeners: function() {
         this.on({
             select: this.onSelectSiteroot,
             siterootDataChange: this.onSiterootDataChange,
             scope: this
         });
-
-        this.callParent(arguments);
     },
 
     /**

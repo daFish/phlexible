@@ -10,8 +10,19 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
     autoScroll: true,
 
     initComponent: function () {
-        this.task = new Ext.util.DelayedTask(this.updateFilter, this);
+        this.initMyTasks();
+        this.initMyItems();
+        this.initMyDockedItems();
+        this.loadFilterValues();
 
+        this.callParent(arguments);
+    },
+
+    initMyTasks: function() {
+        this.task = new Ext.util.DelayedTask(this.updateFilter, this);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'panel',
@@ -61,14 +72,16 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
                 }]
             }
         ];
+    },
 
+    initMyDockedItems: function() {
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
             ui: 'footer',
             items: [{
                 xtype: 'component', flex: 1
-            },{
+            }, {
                 xtype: 'button',
                 text: this.strings.reset,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
@@ -77,14 +90,14 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
                 scope: this
             }]
         }];
+    },
 
+    loadFilterValues: function() {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('gui_bundles_filtervalues'),
             success: this.onLoadFilterValues,
             scope: this
         });
-
-        this.callParent(arguments);
     },
 
     getPackagesForm: function() {

@@ -5,17 +5,23 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
     title: Phlexible.siteroots.Strings.navigations,
     strings: Phlexible.siteroots.Strings,
     border: false,
-
-    viewConfig: {
-        forceFit: true,
-        emptyText: Phlexible.siteroots.Strings.no_navigations
-    },
+    emptyText: Phlexible.siteroots.Strings.no_navigations,
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.siteroots.model.Navigation'
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.title,
@@ -111,17 +117,19 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
                 ]
             }
         ];
+    },
 
-        this.tbar = [
-            {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 text: this.strings.add_navigation,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddNavigation,
                 scope: this
-            }
-        ];
-
-        this.callParent(arguments);
+            }]
+        }];
     },
 
     /**

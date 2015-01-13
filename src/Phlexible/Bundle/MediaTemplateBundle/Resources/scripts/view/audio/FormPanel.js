@@ -1,6 +1,7 @@
-Ext.provide('Phlexible.mediatemplates.audio.FormPanel');
+Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
+    extend: 'Ext.form.FormPanel',
+    alias: 'widget.mediatemplates-audio-form',
 
-Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
     title: Phlexible.mediatemplates.Strings.audio_template,
     strings: Phlexible.mediatemplates.Strings,
 //    labelWidth: 80,
@@ -12,6 +13,12 @@ Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
     debugPreview: false,
 
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'panel',
@@ -24,7 +31,7 @@ Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
                 items: [
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'bitrate'],
                             data: Phlexible.mediatemplates.AudioBitrates
                         }),
@@ -44,7 +51,7 @@ Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'samplerate'],
                             data: Phlexible.mediatemplates.AudioSamplerates
                         }),
@@ -64,7 +71,7 @@ Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'samplebits'],
                             data: Phlexible.mediatemplates.AudioSamplebits
                         }),
@@ -84,7 +91,7 @@ Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'combo',
-                        store: new Ext.data.SimpleStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'channels'],
                             data: Phlexible.mediatemplates.AudioChannels
                         }),
@@ -105,46 +112,57 @@ Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
                 ]
             }
         ];
+    },
 
-        this.tbar = [
-            {
-                text: this.strings.save,
-                iconCls: 'p-mediatemplate-save-icon',
-                handler: this.saveParameters,
-                scope: this
-            },
-            '->',
-            {
-                xtype: 'tbsplit',
-                text: this.strings.preview,
-                iconCls: 'p-mediatemplate-preview-icon',
-                handler: function () {
-                    var values = this.getForm().getValues();
-
-                    values.template = this.template_key;
-                    values.debug = this.debugPreview;
-
-                    this.fireEvent('preview', values, this.debugPreview);
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            itemId: 'tbar',
+            items: [
+                {
+                    text: this.strings.save,
+                    iconCls: 'p-mediatemplate-save-icon',
+                    itemId: 'saveBtn',
+                    handler: this.saveParameters,
+                    scope: this
                 },
-                scope: this,
-                menu: [
-                    {
-                        text: this.strings.debug,
-                        checked: this.debugPreview,
-                        checkHandler: function (checkItem, checked) {
-                            this.debugPreview = checked;
-                        },
-                        scope: this
-                    }
-                ]
-            }
-        ];
+                '->',
+                {
+                    xtype: 'tbsplit',
+                    text: this.strings.preview,
+                    iconCls: 'p-mediatemplate-preview-icon',
+                    handler: function () {
+                        var values = this.getForm().getValues();
 
-        this.on('clientvalidation', function (f, valid) {
-            this.getTopToolbar().items.items[0].setDisabled(!valid);
-        }, this);
+                        values.template = this.template_key;
+                        values.debug = this.debugPreview;
 
-        Phlexible.mediatemplates.audio.FormPanel.superclass.initComponent.call(this);
+                        this.fireEvent('preview', values, this.debugPreview);
+                    },
+                    scope: this,
+                    menu: [
+                        {
+                            text: this.strings.debug,
+                            checked: this.debugPreview,
+                            checkHandler: function (checkItem, checked) {
+                                this.debugPreview = checked;
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+            ]
+        }]
+    },
+
+    initMyListeners: function() {
+        this.on({
+            clientvalidation: function (f, valid) {
+                this.getDockedComponent('tbar').getComponent('saveBtn').setDisabled(!valid);
+            },
+            scope: this
+        });
     },
 
     loadParameters: function (template_key) {
@@ -188,5 +206,3 @@ Phlexible.mediatemplates.audio.FormPanel = Ext.extend(Ext.form.FormPanel, {
     }
 
 });
-
-Ext.reg('mediatemplates-audioformpanel', Phlexible.mediatemplates.audio.FormPanel);

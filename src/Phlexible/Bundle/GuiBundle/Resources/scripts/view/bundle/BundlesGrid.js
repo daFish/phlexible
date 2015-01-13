@@ -8,6 +8,13 @@ Ext.define('Phlexible.gui.bundles.BundlesGrid', {
     cls: 'p-gui-bundles-list',
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyColumns();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.gui.model.Bundle',
             proxy: {
@@ -30,7 +37,7 @@ Ext.define('Phlexible.gui.bundles.BundlesGrid', {
                 direction: 'ASC'
             }],
             listeners: {
-                load: function() {
+                load: function () {
                     if (this.filterData) {
                         this.setFilterData(this.filterData);
                     }
@@ -38,7 +45,9 @@ Ext.define('Phlexible.gui.bundles.BundlesGrid', {
                 scope: this
             }
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: this.strings.bundle,
@@ -67,8 +76,6 @@ Ext.define('Phlexible.gui.bundles.BundlesGrid', {
                 resizable: false
             }
         ];
-
-        this.callParent(arguments);
     },
 
     setFilterData: function (data) {

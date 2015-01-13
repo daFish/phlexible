@@ -8,10 +8,21 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
     emptyText: Phlexible.siteroots.Strings.no_url_mappings,
 
     initComponent: function () {
-        this.store = new Ext.data.Store({
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.siteroots.model.Url'
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
                 header: 'ID',
@@ -65,16 +76,16 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
                 dataIndex: 'target',
                 sortable: true,
                 width: 200/*,
-                TODO: enable
-                editor: Ext.reate('Phlexible.elements.EidSelector', {
-                    labelSeparator: '',
-                    element: {
-                        siteroot_id: this.siterootId
-                    },
-                    width: 300,
-                    listWidth: 283,
-                    treeWidth: 283
-                })*/
+             TODO: enable
+             editor: Ext.reate('Phlexible.elements.EidSelector', {
+             labelSeparator: '',
+             element: {
+             siteroot_id: this.siterootId
+             },
+             width: 300,
+             listWidth: 283,
+             treeWidth: 283
+             })*/
             },
             {
                 xtype: 'actioncolumn',
@@ -94,7 +105,9 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
                 }]
             }
         ];
+    },
 
+    initMyDockedItems: function() {
         this.tbar = [
             {
                 text: this.strings.add_mapping,
@@ -103,13 +116,13 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
                 scope: this
             }
         ];
+    },
 
+    initMyListeners: function() {
         this.on({
             afterEdit: this.onValidateEdit,
             scope: this
         });
-
-        this.callParent(arguments);
     },
 
     renderLanguage: function (v, md, r, ri, ci, store) {

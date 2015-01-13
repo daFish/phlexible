@@ -1,12 +1,7 @@
-Ext.provide('Phlexible.mediatemplates.MainPanel');
+Ext.define('Phlexible.mediatemplates.MainPanel', {
+    extend: 'Ext.Panel',
+    alias: 'widget.mediatemplates-main',
 
-Ext.require('Phlexible.mediatemplates.TemplatesGrid');
-Ext.require('Phlexible.mediatemplates.image.MainPanel');
-Ext.require('Phlexible.mediatemplates.audio.MainPanel');
-Ext.require('Phlexible.mediatemplates.video.MainPanel');
-Ext.require('Phlexible.mediatemplates.pdf2swf.MainPanel');
-
-Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediatemplates.Strings.mediatemplates,
     strings: Phlexible.mediatemplates.Strings,
     iconCls: 'p-mediatemplate-component-icon',
@@ -17,30 +12,38 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     initComponent: function () {
-        this.templatesGrid = new Phlexible.mediatemplates.TemplatesGrid({
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
+        this.items = [{
+            xtype: 'mediatemplates-list',
             region: 'west',
+            itemId: 'list',
             width: '200',
             listeners: {
                 templatechange: function (r) {
                     switch (r.get('type')) {
                         case 'image':
-                            this.cardPanel.getLayout().setActiveItem(0);
-                            this.imagePanel.loadParameters(r.get('key'));
+                            this.getCardPanel().getLayout().setActiveItem(0);
+                            this.getImagePanel().loadParameters(r.get('key'));
                             break;
 
                         case 'video':
-                            this.cardPanel.getLayout().setActiveItem(1);
-                            this.videoFormPanel.loadParameters(r.get('key'));
+                            this.getCardPanel().getLayout().setActiveItem(1);
+                            this.getVideoPanel().loadParameters(r.get('key'));
                             break;
 
                         case 'audio':
-                            this.cardPanel.getLayout().setActiveItem(2);
-                            this.audioFormPanel.loadParameters(r.get('key'));
+                            this.getCardPanel().getLayout().setActiveItem(2);
+                            this.getAudioPanel().loadParameters(r.get('key'));
                             break;
 
                         case 'pdf':
-                            this.cardPanel.getLayout().setActiveItem(3);
-                            this.pdfFormPanel.loadParameters(r.get('key'));
+                            this.getCardPanel().getLayout().setActiveItem(3);
+                            this.getPdf2swfPanel().loadParameters(r.get('key'));
                             break;
 
                         default:
@@ -76,76 +79,73 @@ Phlexible.mediatemplates.MainPanel = Ext.extend(Ext.Panel, {
                 },
                 scope: this,
             }
-        });
-
-        this.imagePanel = new Phlexible.mediatemplates.image.MainPanel({
-            listeners: {
-                paramsload: function () {
-
-                },
-                paramssave: function () {
-                    this.templatesGrid.getStore().reload();
-                },
-                scope: this
-            }
-        });
-
-        this.videoFormPanel = new Phlexible.mediatemplates.video.MainPanel({
-            listeners: {
-                paramsload: function () {
-
-                },
-                paramssave: function () {
-                    this.templatesGrid.getStore().reload();
-                },
-                scope: this
-            }
-        });
-
-        this.audioFormPanel = new Phlexible.mediatemplates.audio.MainPanel({
-            listeners: {
-                paramsload: function () {
-
-                },
-                paramssave: function () {
-                    this.templatesGrid.getStore().reload();
-                },
-                scope: this
-            }
-        });
-
-        this.pdfFormPanel = new Phlexible.mediatemplates.pdf2swf.MainPanel({
-            listeners: {
-                paramsload: function () {
-
-                },
-                paramssave: function () {
-                    this.templatesGrid.getStore().reload();
-                },
-                scope: this
-            }
-        });
-
-        this.cardPanel = new Ext.Panel({
+        }, {
             region: 'center',
             layout: 'card',
+            itemId: 'cards',
             activeItem: 0,
             border: false,
-            items: [
-                this.imagePanel,
-                this.videoFormPanel,
-                this.audioFormPanel,
-                this.pdfFormPanel
-            ]
-        });
+            items: [{
+                xtype: 'mediatemplates-image-main',
+                itemId: 'image',
+                listeners: {
+                    paramsload: function () {},
+                    paramssave: this.reloadStore,
+                    scope: this
+                }
+            }, {
+                xtype: 'mediatemplates-video-main',
+                itemId: 'video',
+                listeners: {
+                    paramsload: function () {},
+                    paramssave: this.reloadStore,
+                    scope: this
+                }
+            }, {
+                xtype: 'mediatemplates-audio-main',
+                itemId: 'audio',
+                listeners: {
+                    paramsload: function () {},
+                    paramssave: this.reloadStore,
+                    scope: this
+                }
+            }, {
+                xtype: 'mediatemplates-pdf2swf-main',
+                itemId: 'pdf2swf',
+                listeners: {
+                    paramsload: function () {},
+                    paramssave: this.reloadStore,
+                    scope: this
+                }
+            }]
+        }];
+    },
 
-        this.items = [
-            this.templatesGrid,
-            this.cardPanel
-        ];
+    reloadStore: function() {
+        this.getListPanel().getStore().reload();
+    },
 
-        Phlexible.mediatemplates.MainPanel.superclass.initComponent.call(this);
+    getListPanel: function() {
+        return this.getComponent('list');
+    },
+
+    getCardPanel: function() {
+        return this.getComponent('cards');
+    },
+
+    getImagePanel: function() {
+        return this.getCardPanel().getComponent('image');
+    },
+
+    getVideoPanel: function() {
+        return this.getCardPanel().getComponent('video');
+    },
+
+    getAudioPanel: function() {
+        return this.getCardPanel().getComponent('audio');
+    },
+
+    getPdf2swfPanel: function() {
+        return this.getCardPanel().getComponent('pdf2swf');
     }
 });
-
-Ext.reg('mediatemplates-main', Phlexible.mediatemplates.MainPanel);

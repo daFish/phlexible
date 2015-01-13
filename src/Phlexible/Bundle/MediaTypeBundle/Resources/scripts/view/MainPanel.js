@@ -8,6 +8,12 @@ Ext.define('Phlexible.mediatype.MainPanel', {
     border: false,
 
     initComponent: function () {
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'mediatype-list',
@@ -33,8 +39,6 @@ Ext.define('Phlexible.mediatype.MainPanel', {
                 width: 400
             }
         ];
-
-        this.callParent(arguments);
     },
 
     loadParams: function () {

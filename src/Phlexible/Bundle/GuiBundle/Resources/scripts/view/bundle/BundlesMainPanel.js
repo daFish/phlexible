@@ -13,6 +13,12 @@ Ext.define('Phlexible.gui.bundles.MainPanel', {
     initComponent: function () {
         this.iconCls = Phlexible.Icon.get('resource-monitor');
 
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'gui-bundles-filter',
@@ -35,8 +41,6 @@ Ext.define('Phlexible.gui.bundles.MainPanel', {
                 padding: 5
             }
         ];
-
-        this.callParent(arguments);
     },
 
     loadParams: function () {

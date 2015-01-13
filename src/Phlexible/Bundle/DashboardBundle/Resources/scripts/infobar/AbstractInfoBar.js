@@ -11,6 +11,7 @@ Ext.define('Phlexible.dashboard.infobar.AbstractInfoBar', {
     border: true,
     padding: 10,
     style: 'border-bottom: 1px solid #99bce8 !important; background-color: #dfe9f6;',
+    iconCls: null,
 
     type: null,
 

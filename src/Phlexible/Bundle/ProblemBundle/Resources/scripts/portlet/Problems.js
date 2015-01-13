@@ -1,22 +1,21 @@
-Ext.provide('Phlexible.problems.portlet.Problems');
-Ext.provide('Phlexible.problems.portlet.ProblemRecord');
+Ext.define('Phlexible.problems.portlet.Problems', {
+    extend: 'Portal.view.Portlet',
+    alias: 'widget.problems-portlet-problems',
 
-Phlexible.problems.portlet.ProblemRecord = Ext.data.Record.create([
-    {name: 'id', type: 'string'},
-    {name: 'iconCls', type: 'string'},
-    {name: 'severity', type: 'string'},
-    {name: 'msg', type: 'string'},
-    {name: 'hint', type: 'string'},
-    {name: 'link'}
-]);
-
-Phlexible.problems.portlet.Problems = Ext.extend(Ext.ux.Portlet, {
     title: Phlexible.problems.Strings.problems,
     strings: Phlexible.problems.Strings,
     bodyStyle: 'padding: 5px 5px 5px 5px',
-    iconCls: 'p-problem-component-icon',
+    iconCls: Phlexible.Icon.get('exclamation'),
 
     initComponent: function () {
+        this.initMyTemplate();
+        this.initMyStore();
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyTemplate: function() {
         this.tpl = new Ext.XTemplate(
             '<tpl for=".">',
             '<div id="portal_problems_{id}" class="portlet-problem">',
@@ -34,9 +33,11 @@ Phlexible.problems.portlet.Problems = Ext.extend(Ext.ux.Portlet, {
             '</tpl>',
             '<div><hr />' + this.strings.menu_hint + '</div>'
         );
+    },
 
-        this.store = new Ext.data.SimpleStore({
-            fields: Phlexible.problems.portlet.ProblemRecord,
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.SimpleStore', {
+            model: 'Phlexible.problems.model.Problem',
             id: 'id',
             sortInfo: {field: 'severity', username: 'ASC'}
         });
@@ -47,7 +48,9 @@ Phlexible.problems.portlet.Problems = Ext.extend(Ext.ux.Portlet, {
                 this.add(new Phlexible.problems.portlet.ProblemRecord(item, item.id));
             }, this.store);
         }
+    },
 
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'dataview',
@@ -60,27 +63,23 @@ Phlexible.problems.portlet.Problems = Ext.extend(Ext.ux.Portlet, {
                 store: this.store,
                 tpl: this.tpl,
                 listeners: {
-                    click: {
-                        fn: function (view, index) {
-                            var r = view.store.getAt(index);
+                    click: function (view, index) {
+                        var r = view.store.getAt(index);
 
-                            var link = r.get('link');
+                        var link = r.get('link');
 
-                            if (link && link.handler) {
-                                var handler = link.handler;
-                                if (typeof handler == 'string') {
-                                    handler = Phlexible.evalClassString(handler);
-                                }
-                                handler(link);
+                        if (link && link.handler) {
+                            var handler = link.handler;
+                            if (typeof handler == 'string') {
+                                handler = Phlexible.evalClassString(handler);
                             }
-                        },
-                        scope: this
-                    }
+                            handler(link);
+                        }
+                    },
+                    scope: this
                 }
             }
         ];
-
-        Phlexible.problems.portlet.Problems.superclass.initComponent.call(this);
     },
 
     updateData: function (data) {
@@ -112,5 +111,3 @@ Phlexible.problems.portlet.Problems = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('type', 'ASC');
     }
 });
-
-Ext.reg('problems-portlet-problems', Phlexible.problems.portlet.Problems);

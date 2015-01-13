@@ -1,79 +1,11 @@
-Phlexible.tasks.ViewTemplate = new Ext.XTemplate(
-    '<div class="p-tasks-view">',
-    '<table cellpadding="0" cellspacing="5">',
-    '<colgroup>',
-    '<col width="100" />',
-    '<col width="240" />',
-    '</colgroup>',
-    '<tr>',
-    '<th>{[Phlexible.tasks.Strings.task]}</th>',
-    '<td>{title}</td>',
-    '</tr>',
-    '<tr>',
-    '<th>{[Phlexible.tasks.Strings.task]}</th>',
-    '<td>{text}</td>',
-    '</tr>',
-    '<tr>',
-    '<th>{[Phlexible.tasks.Strings.status]}</th>',
-    '<td>{[Phlexible.inlineIcon(\"p-task-status_\"+values.status+\"-icon\")]} {[Phlexible.tasks.Strings.get(values.status)]}</td>',
-    '</tr>',
-    '<tr>',
-    '<th colspan="2">{[Phlexible.tasks.Strings.description]}</th>',
-    '</tr>',
-    '<tr>',
-    '<td colspan="2">{description}</td>',
-    '</tr>',
-    '<tr>',
-    '<th>{[Phlexible.tasks.Strings.assigned_to]}</th>',
-    '<td>{assigned_user}</td>',
-    '</tr>',
-    '<tr>',
-    '<th>{[Phlexible.tasks.Strings.create_user]}</th>',
-    '<td>{create_user}</td>',
-    '</tr>',
-    '<tr>',
-    '<th>{[Phlexible.tasks.Strings.create_date]}</th>',
-    '<td>{create_date}</td>',
-    '</tr>',
-    '</table>',
-    '</div>'
-);
-
-Phlexible.tasks.CommentsTemplate = new Ext.XTemplate(
-    '<div class="p-tasks-comments">',
-    '<tpl for=".">',
-    '<div class="p-tasks-comment">',
-    '<div class="p-tasks-by">{create_user} kommentierte - {create_date}</div>',
-    '<div class="p-tasks-text">{comment}</div>',
-    '</div>',
-    '</tpl>',
-    '</div>'
-);
-
-Phlexible.tasks.TransitionsTemplate = new Ext.XTemplate(
-    '<div class="p-tasks-transitions">',
-    '<tpl for=".">',
-    '<div class="p-tasks-transition">',
-    '<div class="p-tasks-by">{create_user} änderte - {create_date}</div>',
-    '<div class="p-tasks-text">' +
-    '<div style="float: left;">{[Phlexible.inlineIcon(\"p-task-status_\" + values.old_state + \"-icon\")]} {old_state}</div>' +
-    '<div style="margin-left: 120px;">{[Phlexible.inlineIcon(\"p-task-goto-icon\")]} ' +
-    '{[Phlexible.inlineIcon(\"p-task-status_\" + values.new_state + \"-icon\")]} {new_state}</div>' +
-    '<div style="clear: left; "></div>' +
-    '</div>',
-    '</div>',
-    '</tpl>',
-    '</div>'
-);
-
 Ext.define('Phlexible.tasks.MainPanel', {
     extend: 'Ext.Panel',
     alias: 'widget.tasks-main',
 
     title: Phlexible.tasks.Strings.tasks,
     strings: Phlexible.tasks.Strings,
-    cls: 'p-tasks-main-panel',
-    iconCls: 'p-task-component-icon',
+    cls: 'p-tasks-main',
+    iconCls: Phlexible.Icon.get('clipboard-task'),
     layout: 'border',
     border: false,
 
@@ -88,11 +20,19 @@ Ext.define('Phlexible.tasks.MainPanel', {
     },
 
     initComponent: function () {
+        this.initMyItems();
+        this.initMyTemplates();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'tasks-filter',
                 region: 'west',
                 width: 200,
+                padding: '5 0 5 5',
                 collapsible: true,
                 listeners: {
                     updateFilter: function (values) {
@@ -110,22 +50,23 @@ Ext.define('Phlexible.tasks.MainPanel', {
                 items: [{
                     xtype: 'tasks-list',
                     region: 'center',
+                    padding: 5,
                     taskId: this.params.id || false,
                     listeners: {
                         taskchange: function(r) {
                             var taskView = this.getTaskView(),
                                 statusMenu = taskView.getTopToolbar().items.items[0].menu;
-                            Phlexible.tasks.ViewTemplate.overwrite(taskView.body, r.data);
+                            this.viewTemplate.overwrite(taskView.body, r.data);
                             statusMenu.removeAll();
                             Ext.each(r.get('states'), function(state) {
                                 statusMenu.add({
                                     text: state,
-                                    iconCls: 'p-task-transition_' + state + '-icon'
+                                    iconCls: Phlexible.tasks.TransitionIcons[state]
                                 });
                             });
 
-                            Phlexible.tasks.CommentsTemplate.overwrite(this.getCommentsView().body, r.data.comments);
-                            Phlexible.tasks.TransitionsTemplate.overwrite(this.getTransitionsView().body, r.data.transitions);
+                            this.commentsTemplate.overwrite(this.getCommentsView().body, r.data.comments);
+                            this.transitionsTemplate.overwrite(this.getTransitionsView().body, r.data.transitions);
                         },
                         scope: this
                     }
@@ -137,13 +78,14 @@ Ext.define('Phlexible.tasks.MainPanel', {
                     items: [{
                         region: 'north',
                         height: 230,
+                        padding: '5 5 0 0',
                         html: '&nbsp;',
                         tbar: [{
                             text: '_status',
                             menu: []
                         },{
                             text: '_comment',
-                            iconCls: 'p-task-comment-icon',
+                            iconCls: Phlexible.Icon.get('balloon'),
                             handler: function() {
                                 var w = new Phlexible.tasks.CommentWindow();
                                 w.show();
@@ -167,23 +109,92 @@ Ext.define('Phlexible.tasks.MainPanel', {
                     },{
                         xtype: 'tabpanel',
                         region: 'center',
+                        padding: '5 5 5 0',
                         activeTab: 0,
                         deferredRender: false,
                         items: [{
                             title: this.strings.comments,
-                            iconCls: 'p-task-comment-icon',
+                            iconCls: Phlexible.Icon.get('balloon'),
                             html: '&nbsp;'
                         },{
                             title: this.strings.transitions,
-                            iconCls: 'p-task-transition-icon',
+                            iconCls: Phlexible.Icon.get('arrow-switch'),
                             html: '&nbsp;'
                         }]
                     }]
                 }]
             }
         ];
+    },
 
-        Phlexible.tasks.MainPanel.superclass.initComponent.call(this);
+    initMyTemplates: function() {
+        this.viewTemplate = new Ext.XTemplate(
+            '<div class="p-tasks-view">',
+            '<table cellpadding="0" cellspacing="5">',
+            '<colgroup>',
+            '<col width="100" />',
+            '<col width="240" />',
+            '</colgroup>',
+            '<tr>',
+            '<th>{[Phlexible.tasks.Strings.task]}</th>',
+            '<td>{title}</td>',
+            '</tr>',
+            '<tr>',
+            '<th>{[Phlexible.tasks.Strings.task]}</th>',
+            '<td>{text}</td>',
+            '</tr>',
+            '<tr>',
+            '<th>{[Phlexible.tasks.Strings.status]}</th>',
+            '<td>{[Phlexible.inlineIcon(\"p-task-status_\"+values.status+\"-icon\")]} {[Phlexible.tasks.Strings.get(values.status)]}</td>',
+            '</tr>',
+            '<tr>',
+            '<th colspan="2">{[Phlexible.tasks.Strings.description]}</th>',
+            '</tr>',
+            '<tr>',
+            '<td colspan="2">{description}</td>',
+            '</tr>',
+            '<tr>',
+            '<th>{[Phlexible.tasks.Strings.assigned_to]}</th>',
+            '<td>{assigned_user}</td>',
+            '</tr>',
+            '<tr>',
+            '<th>{[Phlexible.tasks.Strings.create_user]}</th>',
+            '<td>{create_user}</td>',
+            '</tr>',
+            '<tr>',
+            '<th>{[Phlexible.tasks.Strings.create_date]}</th>',
+            '<td>{create_date}</td>',
+            '</tr>',
+            '</table>',
+            '</div>'
+        );
+
+        this.commentsTemplate = new Ext.XTemplate(
+            '<div class="p-tasks-comments">',
+            '<tpl for=".">',
+            '<div class="p-tasks-comment">',
+            '<div class="p-tasks-by">{create_user} kommentierte - {create_date}</div>',
+            '<div class="p-tasks-text">{comment}</div>',
+            '</div>',
+            '</tpl>',
+            '</div>'
+        );
+
+        this.transitionsTemplate = new Ext.XTemplate(
+            '<div class="p-tasks-transitions">',
+            '<tpl for=".">',
+            '<div class="p-tasks-transition">',
+            '<div class="p-tasks-by">{create_user} änderte - {create_date}</div>',
+            '<div class="p-tasks-text">' +
+            '<div style="float: left;">{[Phlexible.inlineIcon(\"p-task-status_\" + values.old_state + \"-icon\")]} {old_state}</div>' +
+            '<div style="margin-left: 120px;">{[Phlexible.inlineIcon(\"p-task-goto-icon\")]} ' +
+            '{[Phlexible.inlineIcon(\"p-task-status_\" + values.new_state + \"-icon\")]} {new_state}</div>' +
+            '<div style="clear: left; "></div>' +
+            '</div>',
+            '</div>',
+            '</tpl>',
+            '</div>'
+        );
     },
 
     getFilterPanel: function() {

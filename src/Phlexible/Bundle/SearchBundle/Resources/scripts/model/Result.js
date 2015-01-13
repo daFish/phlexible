@@ -1,11 +1,12 @@
-Ext.provide('Phlexible.search.model.Result');
-
-Phlexible.search.model.Result = Ext.data.Record.create([
-    'id',
-    'image',
-    'title',
-    'author',
-    {name: 'date', type: 'date', dateFormat: 'timestamp'},
-    'component',
-    'menu'
-]);
+Ext.define('Phlexible.search.model.Result', {
+    extend: 'Ext.data.Model',
+    fields: [
+        'id',
+        'image',
+        'title',
+        'author',
+        {name: 'date', type: 'date', dateFormat: 'timestamp'},
+        'component',
+        'menu'
+    ]
+});
