@@ -1,7 +1,7 @@
 /**
  * Request error window
  */
-Ext.define('Phlexible.gui.view.RequestErrorWindow', {
+Ext.define('Phlexible.gui.RequestErrorWindow', {
     extend: 'Ext.window.Window',
     requires: [
         'Ext.container.Container',
@@ -10,7 +10,6 @@ Ext.define('Phlexible.gui.view.RequestErrorWindow', {
     ],
 
     title: '_error_window',
-    iconCls: Phlexible.Icon.get('lightning'),
     cls: 'p-request-error',
     width: 900,
     minWidth: 900,
@@ -31,6 +30,7 @@ Ext.define('Phlexible.gui.view.RequestErrorWindow', {
 
     initComponent: function() {
         this.title = this.responseStatus + ' ' + this.responseStatusText;
+        this.iconCls = Phlexible.Icon.get('lightning');
 
         this.initMyItems();
 

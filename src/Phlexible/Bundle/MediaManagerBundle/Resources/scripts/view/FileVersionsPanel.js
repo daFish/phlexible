@@ -1,6 +1,3 @@
-Ext.provide('Phlexible.mediamanager.FileVersionsTemplate');
-Ext.provide('Phlexible.mediamanager.FileVersionsPanel');
-
 /**
  * Create a DragZone instance for our JsonView
  */
@@ -101,7 +98,10 @@ Phlexible.mediamanager.FileVersionsTemplate = new Ext.XTemplate(
     '</tpl>'
 );
 
-Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
+Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediamanager-file-versions',
+
     title: Phlexible.mediamanager.Strings.versions,
     strings: Phlexible.mediamanager.Strings,
     iconCls: 'p-mediamanager-version-icon',
@@ -111,25 +111,40 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
     file_id: null,
     file_version: null,
 
-    initComponent: function () {
-        this.addEvents(
-            'versionChange',
-            'versionSelect'
-        );
+    /**
+     * @event versionChange
+     */
+    /**
+     * @event versionSelect
+     */
 
+    /**
+     *
+     */
+    initComponent: function () {
+        this.initMyItems();
+        this.initMyContextMenu();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyContextMenu: function() {
         this.contextMenu = new Ext.menu.Menu({
             items: [
                 {
                     text: this.strings.download_file_version,
                     iconCls: 'p-mediamanager-download-icon',
                     handler: function (btn) {
-                        this.fireEvent('versionDownload', btn.parentMenu.file_id, btn.parentMenu.file_version);
+                        this.fireEvent('versionDownload', btn.parentMenu.fileId, btn.parentMenu.fileVersion);
                     },
                     scope: this
                 }
             ]
         });
+    },
 
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'dataview',
@@ -158,8 +173,8 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
                             }
                             else {
                                 this.setTitle(this.strings.versions + ' [' + records.length + ']');
-                                if (this.file_version) {
-                                    var index = store.find('version', this.file_version);
+                                if (this.fileVersion) {
+                                    var index = store.find('version', this.fileVersion);
                                     this.getComponent(0).select(index);
                                 } else {
                                     this.getComponent(0).select(0);
@@ -189,7 +204,9 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
                 }
             }
         ];
+    },
 
+    initMyListeners: function() {
         this.on({
             destroy: function () {
                 this.contextMenu.destroy();
@@ -197,8 +214,6 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
             },
             scope: this
         });
-
-        Phlexible.mediamanager.FileVersionsPanel.superclass.initComponent.call(this);
     },
 
     versionSelect: function (view, rowIndex, node, e) {
@@ -210,7 +225,7 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
         var file_version = r.data.version;
         var file_name = r.data.name;
         var folder_id = r.data.folder_id;
-        var document_type_key = r.data.document_type_key;
+        var document_type_key = r.data.documenttypeKey;
         var asset_type = r.data.asset_type;
 
         this.fireEvent('versionSelect', file_id, file_version, file_name, folder_id, document_type_key, asset_type);
@@ -243,5 +258,3 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
         this.showAt([coords[0], coords[1]]);
     }
 });
-
-Ext.reg('fileversionspanel', Phlexible.mediamanager.FileVersionsPanel);

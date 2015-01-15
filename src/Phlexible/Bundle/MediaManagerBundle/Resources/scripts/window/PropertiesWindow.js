@@ -1,52 +1,6 @@
-Ext.provide('Phlexible.mediamanager.PropertiesTemplate');
-Ext.provide('Phlexible.mediamanager.PropertiesWindow');
+Ext.define('Phlexible.mediamanager.PropertiesWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.mediamanager.PropertiesTemplate = new Ext.XTemplate(
-    '<div style="padding: 10px;">',
-    '<div style="padding: 3px;">',
-    '<img style="vertical-align: middle;" src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/folderdialog.gif') + '" width="60" height="60" />',
-    '{title}',
-    '</div>',
-    '<hr />',
-    '<div style="padding: 3px;">',
-    '<div style="float: left; width:90px;">{[this.strings.type]}:</div>',
-    '<div style="float: left;">{[this.strings[values.type]]}</div>',
-    '<div style="clear: left;"></div>',
-    '</div>',
-    '<div style="padding: 3px;">',
-    '<div style="float: left; width:90px;">{[this.strings.path]}:</div>',
-    '<div style="float: left;">{path}</div>',
-    '<div style="clear: left;"></div>',
-    '</div>',
-    '<div style="padding: 3px;">',
-    '<div style="float: left; width:90px;">{[this.strings.size]}:</div>',
-    '<div style="float: left;">{[Phlexible.Format.size(values.size)]} ({size} Bytes)</div>',
-    '<div style="clear: left;"></div>',
-    '</div>',
-    '<div style="padding: 3px;">',
-    '<div style="float: left; width:90px;">{[this.strings.contents]}:</div>',
-    '<div style="float: left;">{folders} {[values.folders == 1 ? this.strings.folder : this.strings.folders]}, {files} {[values.files == 1 ? this.strings.file : this.strings.files]}</div>',
-    '<div style="clear: left;"></div>',
-    '</div>',
-    '<hr />',
-    '<div style="padding: 3px;">',
-    '<div style="float: left; width:90px;">{[this.strings.create_date]}:</div>',
-    '<div style="float: left;">{[Phlexible.Format.date(values.create_time)]}</div>',
-    '<div style="clear: left;"></div>',
-    '</div>',
-    '<tpl if="values.modify_date">',
-    '<div style="padding: 3px;">',
-    '<div style="float: left; width:90px;">{[this.strings.modify_date]}:</div>',
-    '<div style="float: left;">{[Phlexible.Format.date(values.modify_time)]}</div>',
-    '<div style="clear: left;"></div>',
-    '</div>',
-    '</tpl>',
-    '</div>',
-    {
-        strings: Phlexible.mediamanager.Strings
-    }
-);
-Phlexible.mediamanager.PropertiesWindow = Ext.extend(Ext.Window, {
     title: Phlexible.mediamanager.Strings.properties,
     strings: Phlexible.mediamanager.Strings,
     cls: 'p-mediamanager-properties-window',
@@ -57,21 +11,28 @@ Phlexible.mediamanager.PropertiesWindow = Ext.extend(Ext.Window, {
     constrainHeader: true,
 
     initComponent: function () {
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 html: '_',
                 bodyStyle: 'padding: 5px',
                 listeners: {
-                    render: {
-                        fn: function (c) {
-                            Phlexible.mediamanager.PropertiesTemplate.overwrite(c.el, this.data);
-                        },
-                        scope: this
-                    }
+                    render: function (c) {
+                        this.propertiesTemplate.overwrite(c.el, this.data);
+                    },
+                    scope: this
                 }
             }
         ];
+    },
 
+    initMyDockedItems: function() {
         this.buttons = [
             {
                 text: this.strings.close,
@@ -79,8 +40,54 @@ Phlexible.mediamanager.PropertiesWindow = Ext.extend(Ext.Window, {
                 scope: this
             }
         ];
+    },
 
-        Phlexible.mediamanager.PropertiesWindow.superclass.initComponent.call(this);
+    initMyTemplates: function() {
+        this.propertiesTemplate = new Ext.XTemplate(
+            '<div style="padding: 10px;">',
+            '<div style="padding: 3px;">',
+            '<img style="vertical-align: middle;" src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/folderdialog.gif') + '" width="60" height="60" />',
+            '{title}',
+            '</div>',
+            '<hr />',
+            '<div style="padding: 3px;">',
+            '<div style="float: left; width:90px;">{[this.strings.type]}:</div>',
+            '<div style="float: left;">{[this.strings[values.type]]}</div>',
+            '<div style="clear: left;"></div>',
+            '</div>',
+            '<div style="padding: 3px;">',
+            '<div style="float: left; width:90px;">{[this.strings.path]}:</div>',
+            '<div style="float: left;">{path}</div>',
+            '<div style="clear: left;"></div>',
+            '</div>',
+            '<div style="padding: 3px;">',
+            '<div style="float: left; width:90px;">{[this.strings.size]}:</div>',
+            '<div style="float: left;">{[Phlexible.Format.size(values.size)]} ({size} Bytes)</div>',
+            '<div style="clear: left;"></div>',
+            '</div>',
+            '<div style="padding: 3px;">',
+            '<div style="float: left; width:90px;">{[this.strings.contents]}:</div>',
+            '<div style="float: left;">{folders} {[values.folders == 1 ? this.strings.folder : this.strings.folders]}, {files} {[values.files == 1 ? this.strings.file : this.strings.files]}</div>',
+            '<div style="clear: left;"></div>',
+            '</div>',
+            '<hr />',
+            '<div style="padding: 3px;">',
+            '<div style="float: left; width:90px;">{[this.strings.create_date]}:</div>',
+            '<div style="float: left;">{[Phlexible.Format.date(values.create_time)]}</div>',
+            '<div style="clear: left;"></div>',
+            '</div>',
+            '<tpl if="values.modify_date">',
+            '<div style="padding: 3px;">',
+            '<div style="float: left; width:90px;">{[this.strings.modify_date]}:</div>',
+            '<div style="float: left;">{[Phlexible.Format.date(values.modify_time)]}</div>',
+            '<div style="clear: left;"></div>',
+            '</div>',
+            '</tpl>',
+            '</div>',
+            {
+                strings: Phlexible.mediamanager.Strings
+            }
+        );
     },
 
     show: function () {
@@ -93,7 +100,7 @@ Phlexible.mediamanager.PropertiesWindow = Ext.extend(Ext.Window, {
             success: function (response) {
                 this.data = Ext.decode(response.responseText);
 
-                Phlexible.mediamanager.PropertiesWindow.superclass.show.call(this);
+                this.callParent(arguments);
             },
             scope: this
         });

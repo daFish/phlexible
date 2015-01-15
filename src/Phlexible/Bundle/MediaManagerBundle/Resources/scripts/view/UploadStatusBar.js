@@ -1,6 +1,7 @@
-Ext.provide('Phlexible.mediamanager.UploadStatusBar');
+Ext.define('Phlexible.mediamanager.UploadStatusBar', {
+    extend: 'Ext.toolbar.Toolbar',
+    alias: 'widget.mediamanager-upload-statusbar',
 
-Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
     height: 26,
 
     queued: 0,
@@ -12,6 +13,12 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
     initComponent: function () {
         this.files = new Ext.util.MixedCollection();
 
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 iconCls: 'm-mediamanager-upload_clear-icon',
@@ -27,14 +34,16 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
             },
             ' ',
             {
-                xtype: 'progress',
+                xtype: 'progressbar',
                 width: 100,
                 value: 0,
                 text: '',
                 hidden: true
             }
         ];
+    },
 
+    initMyListeners: function() {
         this.on({
             render: function (c) {
                 c.listLayer = new Ext.Layer({
@@ -55,12 +64,10 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
                 c.listPanel.setWidth(300);
                 c.listPanel.setHeight(100);
 
-                c.listTpl = new Ext.XTemplate('<tpl for="."><div>{file_name}</div></tpl>');
+                c.listTpl = new Ext.XTemplate('<tpl for="."><div>{fileName}</div></tpl>');
             },
             scope: this
         });
-
-        Phlexible.mediamanager.UploadStatusBar.superclass.initComponent.call(this);
     },
 
     addFile: function (id, name, size, removeFn) {
@@ -203,5 +210,3 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
 
     }
 });
-
-Ext.reg('mediamanager-uploadstatusbar', Phlexible.mediamanager.UploadStatusBar);

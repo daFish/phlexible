@@ -62,6 +62,11 @@ services:
         tags:
             - {name: phlexible_gui.compressor.css, priority: -100}
 
+    phlexible_gui.listener.exception:
+        class: Phlexible\Bundle\GuiBundle\EventListener\ExceptionListener
+        tags:
+            - {name: kernel.event_listener, event: kernel.exception, method: onKernelException}
+
     # portlets
     phlexible_gui.portlet.load:
         class: Phlexible\Bundle\GuiBundle\Portlet\LoadPortlet

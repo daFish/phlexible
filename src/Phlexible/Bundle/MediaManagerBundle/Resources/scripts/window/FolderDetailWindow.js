@@ -1,17 +1,13 @@
-Ext.provide('Phlexible.mediamanager.FolderDetailWindow');
+Phlexible.define('Phlexible.mediamanager.FolderDetailWindow', {
+    extend: 'Ext.window.Window',
 
-Ext.require('Phlexible.mediamanager.FolderMeta');
-Ext.require('Phlexible.mediamanager.FolderPropertiesPanel');
-Ext.require('Phlexible.accesscontrol.RightsGrid');
-
-Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
     title: 'Folder Details',
-    iconCls: 'p-mediamanager-folder-icon',
+    iconCls: Phlexible.Icon.get('folder'),
     strings: Phlexible.mediamanager.Strings,
     width: 840,
     height: 495,
     layout: 'fit',
-    cls: 'p-mediamanager-detail-window',
+    cls: 'p-mediamanager-folder-detail-window',
     modal: true,
     constrainHeader: true,
     maximizable: true,
@@ -26,7 +22,8 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
     initComponent: function () {
         this.title = this.folder_name;
 
-        this.populateTabs();
+        this.initMyTabs();
+        this.initMyItems();
 
         var activeTab = 0;
         if (this.activeTabId) {
@@ -39,17 +36,19 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
             }
         }
 
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [{
             xtype: 'tabpanel',
             deferredRender: false,
             activeTab: activeTab,
             items: this.tabs
         }];
-
-        Phlexible.mediamanager.FolderDetailWindow.superclass.initComponent.call(this);
     },
 
-    populateTabs: function () {
+    initMyTabs: function() {
         this.tabs = [{
             xtype: 'mediamanager-folderproperties',
             tabId: 'properties',
@@ -78,7 +77,7 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
             title: this.strings.folder_rights,
             iconCls: 'p-mediamanager-folder_rights-icon',
             disabled: this.folder_rights.indexOf(Phlexible.mediamanager.Rights.FOLDER_RIGHTS) === -1,
-            hidden: Phlexible.User.isGranted('ROLE_MEDIA_ACCESS_CONTROL'),
+            hidden: Phlexible.App.isGranted('ROLE_MEDIA_ACCESS_CONTROL'),
             rightType: 'internal',
             contentType: 'folder',
             strings: {

@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.mediamanager.MediamanagerWindow');
+Ext.define('Phlexible.mediamanager.MediamanagerWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.mediamanager.MediamanagerWindow = Ext.extend(Ext.Window, {
     title: 'Mediamanager',
     iconCls: 'p-mediamanager-component-icon',
     width: 800,
@@ -13,17 +13,26 @@ Phlexible.mediamanager.MediamanagerWindow = Ext.extend(Ext.Window, {
     mode: '',
     params: {},
 
+    /**
+     * @event fileSelectWindow
+     */
+    /**
+     *
+     */
     initComponent: function () {
-        this.addEvents(
-            'fileSelectWindow'
-        );
-
         if (!this.params.start_folder_path && Phlexible.mediamanager.lastParams && Phlexible.mediamanager.lastParams.start_folder_path) {
             this.params.start_folder_path = Phlexible.mediamanager.lastParams.start_folder_path;
         }
 
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
-            new Phlexible.mediamanager.MediamanagerPanel({
+            {
+                xtype: 'mediamanager-main',
                 noTitle: true,
                 mode: this.mode,
                 params: this.params,
@@ -33,9 +42,7 @@ Phlexible.mediamanager.MediamanagerWindow = Ext.extend(Ext.Window, {
                     },
                     scope: this
                 }
-            })
+            }
         ];
-
-        Phlexible.mediamanager.MediamanagerWindow.superclass.initComponent.call(this);
     }
 });

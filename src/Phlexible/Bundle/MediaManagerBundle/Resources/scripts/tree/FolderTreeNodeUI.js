@@ -1,6 +1,5 @@
-Ext.provide('Phlexible.mediamanager.FolderTreeNodeUI');
-
-Phlexible.mediamanager.FolderTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
+Ext.define('Phlexible.mediamanager.FolderTreeNodeUI', {
+    extend: 'Ext.tree.TreeNodeUI',
 
     // private
     renderElements: function (n, a, targetNode, bulkRender) {

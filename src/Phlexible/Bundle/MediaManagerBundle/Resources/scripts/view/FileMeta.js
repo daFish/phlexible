@@ -1,19 +1,26 @@
-Ext.provide('Phlexible.mediamanager.FileMeta');
+Ext.define('Phlexible.mediamanager.FileMeta', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediamanager-file-meta',
 
-Ext.require('Phlexible.mediamanager.FileMetaGrid');
-
-Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.file_meta,
     cls: 'p-mediamanager-meta',
-    iconCls: 'p-metaset-component-icon',
+    iconCls: Phlexible.Icon.get('weather-cloud'),
 
     small: false,
-    right: Phlexible.mediamanager.Rights.FILE_MODIFY,
+    checkRight: Phlexible.mediamanager.Rights.FILE_MODIFY,
     key: 'key',
     params: {},
 
-    initUrls: function () {
+    initComponent: function () {
+        this.initMyUrls();
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyUrls: function () {
         this.urls = {
             load: Phlexible.Router.generate('mediamanager_file_meta'),
             save: Phlexible.Router.generate('mediamanager_file_meta_save')
@@ -26,21 +33,15 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
         };
     },
 
-    initComponent: function () {
-        this.initUrls();
-
-        this.items = [];
-
-        this.populateTbar();
-
-        Phlexible.mediamanager.FileMeta.superclass.initComponent.call(this);
+    initMyItems: function() {
+        this.items = [{
+            html: 'empty'
+        }];
     },
 
-    populateTbar: function () {
-        var toggleId = Ext.id();
-
+    initMyDockedItems: function () {
         var languageBtns = [];
-        Ext.each(Phlexible.Config.get('set.language.meta'), function (item) {
+        Ext.each(Phlexible.App.getConfig().get('set.language.meta'), function (item) {
             var language = item[0];
             var t9n = item[1];
             var flag = item[2];
@@ -48,45 +49,54 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
                 text: t9n,
                 iconCls: flag,
                 language: language,
-                checked: Phlexible.Config.get('language.metasets') === language
+                checked: Phlexible.App.getConfig().get('language.metasets') === language
             });
         }, this);
 
-        var cycleBtn = {
-            xtype: 'cycle',
-            showText: !this.small,
-            items: languageBtns,
-            hidden: !this.small,
-            changeHandler: function (btn, item) {
-                this.changeLanguage(item.language);
-            },
-            scope: this
-        };
-
-        this.tbar = [{
-            text: this.strings.save,
-            iconCls: 'p-mediamanager-meta_save-icon',
-            handler: this.save,
-            scope: this
-        },
-        '->',
-        cycleBtn,
-        '-',
-        {
-            text: this.strings.metasets,
-            iconCls: 'p-metaset-component-icon',
-            handler: function () {
-                var w = new Phlexible.metasets.MetaSetsWindow({
-                    baseParams: this.params,
-                    urls: this.metasetUrls,
-                    listeners: {
-                        savesets: this.reloadMeta,
-                        scope: this
-                    }
-                });
-                w.show();
-            },
-            scope: this
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'tbar',
+            dock: 'top',
+            border: false,
+            items: [
+                {
+                    text: this.strings.save,
+                    itemId: 'saveBtn',
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
+                    handler: this.save,
+                    scope: this
+                },
+                '->',
+                {
+                    xtype: 'cycle',
+                    itemId: 'languageBtn',
+                    showText: !this.small,
+                    menu: languageBtns,
+                    hidden: !this.small,
+                    changeHandler: function (btn, item) {
+                        this.changeLanguage(item.language);
+                    },
+                    scope: this
+                },
+                '-',
+                {
+                    text: this.strings.metasets,
+                    itemId: 'metasetsBtn',
+                    iconCls: Phlexible.Icon.get('weather-clouds'),
+                    handler: function () {
+                        var w = Ext.create('Phlexible.metasets.MetaSetsWindow', {
+                            baseParams: this.params,
+                            urls: this.metasetUrls,
+                            listeners: {
+                                savesets: this.reloadMeta,
+                                scope: this
+                            }
+                        });
+                        w.show();
+                    },
+                    scope: this
+                }
+            ]
         }];
     },
 
@@ -96,23 +106,22 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
             url: this.urls.load,
             params: params,
             success: function (response) {
-                var data = Ext.decode(response.responseText);
+                var data = Ext.decode(response.responseText), items = [];
 
                 this.removeAll();
                 if (data.meta && data.meta.length) {
                     Ext.each(data.meta, function (meta) {
-                        this.add(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
+                        items.push(this.createMetaGridConfig(meta.set_id, meta.title, meta.fields, this.small));
                     }, this);
                 } else {
-                    this.add({
+                    items.push({
                         border: false,
-                        xbodyStyle: 'padding: 5px;',
                         ctCls: 'x-grid-empty',
                         html: this.strings.no_meta_values
                     });
                 }
 
-                this.doLayout();
+                this.add(items);
             },
             scope: this
         });
@@ -122,15 +131,15 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
         this.loadMeta(this.params);
     },
 
-    createMetaGridConfig: function(setId, title, fields, small) {
+    createMetaGridConfig: function(setId, title, fieldData, small) {
         return {
-            xtype: 'mediamanager-filemetagrid',
+            xtype: 'mediamanager-file-metas',
             setId: setId,
             title: title,
             height: 180,
             border: false,
             small: small,
-            data: fields
+            fieldData: fieldData
         };
     },
 
@@ -158,12 +167,12 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
     },
 
     setRights: function (rights) {
-        if (rights.indexOf(this.right) != -1) {
-            this.getTopToolbar().items.items[0].show();
-            this.getTopToolbar().items.items[4].show();
+        if (rights.indexOf(this.checkRight) != -1) {
+            this.getDockedComponent('tbar').getComponent('saveBtn').show();
+            this.getDockedComponent('tbar').getComponent('metasetsBtn').show();
         } else {
-            this.getTopToolbar().items.items[0].hide();
-            this.getTopToolbar().items.items[4].hide();
+            this.getDockedComponent('tbar').getComponent('saveBtn').hide();
+            this.getDockedComponent('tbar').getComponent('metasetsBtn').hide();
         }
     },
 
@@ -176,7 +185,7 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
 
         var sources = {};
         this.items.each(function(p) {
-            sources[p.setId] = p.getData();
+            sources[p.setId] = p.getFieldData();
         })
         var params = this.params;
         params.data = Ext.encode(sources);
@@ -195,7 +204,7 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
         });
     },
 
-    getData: function () {
+    getFieldData: function () {
         var data = {};
         var records = this.store.getRange();
 
@@ -215,5 +224,3 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
         return data;
     }
 });
-
-Ext.reg('mediamanager-filemeta', Phlexible.mediamanager.FileMeta);

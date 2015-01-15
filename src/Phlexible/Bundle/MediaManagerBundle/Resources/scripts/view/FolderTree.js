@@ -1,16 +1,7 @@
-Ext.provide('Phlexible.mediamanager.FolderTreeLoader');
-Ext.provide('Phlexible.mediamanager.FolderTree');
+/*
+Ext.define('Phlexible.mediamanager.FolderTreeLoader', {
+    extend: 'Ext.tree.TreeLoader',
 
-Ext.require('Phlexible.mediamanager.FolderTreeNodeUI');
-Ext.require('Phlexible.mediamanager.NewFolderWindow');
-Ext.require('Phlexible.mediamanager.FolderDetailWindow');
-Ext.require('Phlexible.mediamanager.RenameFolderWindow');
-Ext.require('Phlexible.mediamanager.PropertiesWindow');
-
-Phlexible.mediamanager.FolderTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
-    /**
-     * Override this function for custom TreeNode node implementation
-     */
     createNode: function (attr) {
         // apply baseAttrs, nice idea Corey!
         if (this.baseAttrs) {
@@ -46,8 +37,12 @@ Phlexible.mediamanager.FolderTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
         return buf.join("");
     }
 });
+*/
 
-Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
+Ext.define('Phlexible.mediamanager.FolderTree', {
+    extend: 'Ext.tree.TreePanel',
+    alias: 'widget.mediamanager-folders',
+
     strings: Phlexible.mediamanager.Strings,
     cls: 'p-foldertree',
     enableDD: true,
@@ -60,53 +55,50 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
     useArrows: true,
     lines: false,
 
+    /**
+     * @event folderChange
+     * Fires after a Folder has been selected
+     * @param {Number} folderId The ID of the selected Folder.
+     * @param {String} folderName The Name of the selected Folder.
+     * @param {Ext.data.TreeModel} node The TreeNode of the selected Folder.
+     */
+
+    /**
+     * @event reload
+     */
+
     // private
     initComponent: function () {
-        //this.title = this.strings.folders;
+        this.initMyStore();
+        this.initMyFolderContextMenuItems();
+        this.initMyContextMenus();
+        this.initMyListeners();
 
-        this.addEvents(
-            /**
-             * @event folderChange
-             * Fires after a Folder has been selected
-             * @param {Number} folder_id The ID of the selected Folder.
-             * @param {String} folder_name The Name of the selected Folder.
-             * @param {Ext.tree.AsyncTreeNode} node The TreeNode of the selected Folder.
-             */
-            'folderChange',
-            'reload'
-        );
+        this.callParent(arguments);
+    },
 
-        this.loader = new Phlexible.mediamanager.FolderTreeLoader({
-            dataUrl: Phlexible.Router.generate('mediamanager_folder_list'),
-            baseAttrs: {
-                uiProvider: Phlexible.mediamanager.FolderTreeNodeUI
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.TreeStore', {
+            model: 'Phlexible.mediamanager.model.Folder',
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('mediamanager_folder_list'),
+                reader: {
+                    type: 'json'
+                }
+            },
+            root: {
+                id: 'root',
+                text: 'root',
+                expanded: true,
+                iconCls: Phlexible.Icon.get('folder')
             },
             preloadChildren: true,
             listeners: {
                 load: function (loader, node) {
-                    if (this.start_folder_path) {
-                        this.selectPath(this.start_folder_path);
+                    if (this.startFolderPath) {
+                        this.selectPath(this.startFolderPath);
                     }
-                },
-                scope: this
-            }
-        });
-
-        this.root = new Ext.tree.AsyncTreeNode({
-            text: 'Home',
-            draggable: false,
-            id: 'root',
-            expanded: true,
-            iconCls: 't-mediamanager-home-icon'
-        });
-
-        this.selModel = new Ext.tree.DefaultSelectionModel({
-            listeners: {
-                selectionchange: function (sm, node) {
-                    if (!node) {
-                        return;
-                    }
-                    this.onClick(node);
                 },
                 scope: this
             }
@@ -127,32 +119,34 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
          expanded: true
          }));
          */
+    },
 
-        this.populateContextMenuItems();
-
-        this.contextMenu = new Ext.menu.Menu({
+    initMyContextMenus: function() {
+        this.folderContextMenu = new Ext.menu.Menu({
             items: this.contextMenuItems
         });
+    },
 
-        this.addListener({
+    initMyListeners: function() {
+        this.on({
             load: this.onLoad,
-            contextmenu: this.onContextMenu,
+            rowcontextmenu: this.onContextMenu,
             movenode: this.onMove,
             nodedragover: function (e) {
                 // target node is no site
-                if (!e.target.attributes.site_id) {
+                if (!e.target.data.volumeId) {
                     return false;
                 }
 
                 // from grid
                 if (e.data.selections) {
-                    if (e.data.selections[0].data.site_id != e.target.attributes.site_id) {
+                    if (e.data.selections[0].data.volumeId != e.target.attributes.volumeId) {
                         return false;
                     }
                 }
                 // from tree
                 else if (e.dropNode) {
-                    if (!e.dropNode.attributes.site_id || e.dropNode.attributes.site_id != e.target.attributes.site_id) {
+                    if (!e.dropNode.attributes.volumeId || e.dropNode.attributes.volumeId != e.target.attributes.volumeId) {
                         return false;
                     }
                 }
@@ -160,180 +154,185 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
                 console.log('nodedragover ok');
                 return true;
             },
+            selectionchange: function (grid, selected) {
+                if (!selected.length) {
+                    return;
+                }
+                this.onClick(selected[0]);
+            },
             scope: this
         });
-
-        Phlexible.mediamanager.FolderTree.superclass.initComponent.call(this);
     },
 
-    populateContextMenuItems: function () {
-        var contextMenuItems = [
+    initMyFolderContextMenuItems: function () {
+        this.contextMenuItems = [
             {
-                cls: 'x-btn-text-icon-bold',
+                itemId: 'nameBtn',
+                iconCls: Phlexible.Icon.get('folder'),
                 text: '.',
                 canActivate: false
             },
             '-',
             {
-                cls: 'x-btn-text-icon',
+                itemId: 'reloadBtn',
                 text: this.strings.reload,
-                iconCls: 'p-mediamanager-folder_reload-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
                 handler: this.onReload,
                 scope: this
             },
             {
-                cls: 'x-btn-text-icon',
+                itemId: 'expandBtn',
                 text: this.strings.expand_all,
-                iconCls: 'p-mediamanager-folder_expand-icon',
+                iconCls: Phlexible.Icon.get('chevron-expand'),
                 handler: this.onExpandAll,
                 scope: this
             },
             {
-                cls: 'x-btn-text-icon',
+                itemId: 'collapseBtn',
                 text: this.strings.collapse_all,
-                iconCls: 'p-mediamanager-folder_collapse-icon',
+                iconCls: Phlexible.Icon.get('chevron'),
                 handler: this.onCollapseAll,
                 scope: this
             },
             '-',
             {
-                cls: 'x-btn-text-icon',
+                itemId: 'createBtn',
+                text: this.strings.new_folder,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                handler: this.showNewFolderWindow,
+                scope: this
+            },
+            {
+                itemId: 'renameBtn',
                 text: this.strings.rename_folder,
-                iconCls: 'p-mediamanager-folder_rename-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
                 handler: this.showRenameFolderWindow,
                 scope: this
             },
             {
-                cls: 'x-btn-text-icon',
-                text: this.strings.new_folder,
-                iconCls: 'p-mediamanager-folder_add-icon',
-                handler: this.showNewFolderWindow,
-                scope: this
-            },
-            '-',
-            {
-                cls: 'x-btn-text-icon',
+                itemId: 'deleteBtn',
                 text: this.strings.delete_folder,
-                iconCls: 'p-mediamanager-folder_delete-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                 handler: this.showDeleteFolderWindow,
                 scope: this
             },
             '-',
             {
-                cls: 'x-btn-text-icon',
+                itemId: 'rightsBtn',
                 text: this.strings.folder_rights,
-                iconCls: 'p-mediamanager-folder_rights-icon',
+                iconCls: Phlexible.Icon.get('folder-share'),
                 handler: this.showRightsWindow,
                 scope: this
             },
             {
-                cls: 'x-btn-text-icon',
+                itemId: 'propertiesBtn',
                 text: this.strings.properties,
-                iconCls: 'p-mediamanager-folder_properties-icon',
+                iconCls: Phlexible.Icon.get('property'),
                 handler: this.showPropertiesWindow,
                 scope: this
             }
         ];
+    },
 
-        this.contextMenuIndex = {
-            header: 0,
-            reload: 2,
-            expand: 3,
-            collapse: 4,
-            rename: 6,
-            create: 7,
-            'delete': 9,
-            rights: 11,
-            properties: 12
-        };
-        this.contextMenuItems = contextMenuItems;
+    onDestroy: function() {
+        this.folderContextMenu.destroy();
+
+        this.callParent(arguments);
     },
 
     checkRights: function (right) {
-        var node = this.getSelectionModel().getSelectedNode();
+        var selection = this.getSelectionModel().getSelection();
 
-        if (!node) return false;
+        if (!selection.length) {
+            return false;
+        }
 
-        if (node.attributes.rights && node.attributes.rights.indexOf(right) !== -1) return true;
+        if (selection[0].data.rights && selection[0].data.rights.indexOf(right) !== -1) {
+            return true;
+        }
 
         return false;
     },
 
     onLoad: function (node) {
-        //if(this.start_folder_id) {
-        // do nothing
-        //} else
-        if (!this.start_folder_path && this.getSelectionModel().getSelectedNode() === null) {
-            if (this.root.firstChild) {
-                this.root.firstChild.select();
+        var selection = this.getSelectionModel().getSelection();
+
+        if (!this.startFolderPath && !selection.length) {
+            if (this.getRootNode().firstChild) {
+                //this.getRootNode().firstChild.select();
             }
-            //this.onClick(this.root.firstChild);
         }
     },
 
     onClick: function (node) {
-        this.selID = node.id;
-
-        var path = [];
-        var pNode = node;
-        do {
-            path.unshift({
-                text: pNode.attributes.text,
-                node: pNode
-            });
-        } while ((pNode = pNode.parentNode) && pNode.id != 'root')
-
-        var folder = {
-            path: path,
-            id: node.id,
-            title: node.text
-        };
-
-        this.fireEvent('folderChange', node.id, node.text, node);
+        this.fireEvent('folderChange', node);
     },
 
     onCreateFolder: function () {
-        var selModel = this.getSelectionModel();
-        selModel.suspendEvents();
-        var node = this.getSelectionModel().getSelectedNode();
-        var id = node.id;
-        var parentNode = node; //.parentNode;
-        if (parentNode && parentNode.reload) {
-            parentNode.attributes.children = false;
-            parentNode.reload(function () {
-                this.getSelectionModel().resumeEvents();
-//                var newNode = parentNode.findChild('id', id);
-                this.onClick(parentNode);
-            }.createDelegate(this));
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
         }
+        folder = nodes[0];
+
+        this.store.load({
+            node: folder,
+            callback: function () {
+                this.onClick(folder);
+            },
+            scope: this
+        });
     },
 
     onReload: function () {
-        var node = this.getSelectionModel().getSelectedNode();
-        if (node && node.reload) {
-            node.attributes.children = false;
-            node.reload(function () {
-                this.fireEvent('folderChange', node.id, node.text, node);
-            }.createDelegate(this));
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
         }
+        folder = nodes[0];
+
+        this.store.load({
+            node: folder,
+            callback: function () {
+                this.onClick(folder);
+            },
+            scope: this
+        });
     },
 
     onRename: function (dialog, result) {
-        var node = this.getSelectionModel().getSelectedNode();
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
 
-        node.setText(result.data.folder_name);
+        folder.setText(result.data.folder_name);
     },
 
     onExpandAll: function () {
-        var node = this.getSelectionModel().getSelectedNode();
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
 
-        node.expand(true);
+        folder.expand(true);
     },
 
     onCollapseAll: function () {
-        var node = this.getSelectionModel().getSelectedNode();
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
 
-        node.collapse();
+        folder.collapse();
     },
 
     onMove: function (tree, node, oldParent, newParent, index) {
@@ -343,9 +342,9 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_folder_move'),
             params: {
-                site_id: node.attributes.site_id,
-                target_id: targetID,
-                source_id: sourceID
+                volumeId: node.data.volumeId,
+                targetId: targetID,
+                id: sourceID
             },
             method: 'post',
             success: this.onMoveSuccess.createDelegate(this, [node], true),
@@ -363,41 +362,18 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
         }
     },
 
-    showRightsWindow: function () {
-        this.showPropertiesWindow('rights');
-    },
-
-    showPropertiesWindow: function (activeTabId) {
-        var selFolder = this.getSelectionModel().getSelectedNode();
-
-        if (!selFolder) return;
-
-        var w = new Phlexible.mediamanager.FolderDetailWindow({
-            folder_id: selFolder.id,
-            folder_name: selFolder.text,
-            folder_rights: selFolder.attributes.rights,
-            activeTabId: activeTabId
-        });
-        w.show();
-        return;
-
-        var w = new Phlexible.mediamanager.PropertiesWindow({
-            site_id: selFolder.attributes.site_id,
-            folder_id: selFolder.id
-        });
-
-        w.show();
-    },
-
     showNewFolderWindow: function () {
-        var selFolder = this.getSelectionModel().getSelectedNode();
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
 
-        if (!selFolder) return;
-
-        var w = new Phlexible.mediamanager.NewFolderWindow({
+        var w = Ext.create('Phlexible.mediamanager.NewFolderWindow', {
             submitParams: {
-                site_id: selFolder.attributes.site_id,
-                parent_id: selFolder.id
+                volumeId: folder.data.volumeId,
+                parentId: folder.id
             },
             listeners: {
                 success: this.onCreateFolder,
@@ -409,17 +385,20 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     showRenameFolderWindow: function () {
-        var selFolder = this.getSelectionModel().getSelectedNode();
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
 
-        if (!selFolder) return;
-
-        var w = new Phlexible.mediamanager.RenameFolderWindow({
+        var w = Ext.create('Phlexible.mediamanager.RenameFolderWindow', {
             values: {
-                folder_name: selFolder.text
+                folder_name: folder.text
             },
             submitParams: {
-                site_id: selFolder.attributes.site_id,
-                folder_id: selFolder.id
+                volumeId: folder.data.volumeId,
+                id: folder.id
             },
             listeners: {
                 success: this.onRename,
@@ -430,22 +409,63 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
         w.show();
     },
 
+    showDeleteFolderWindow: function () {
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
+
+        Ext.MessageBox.confirm(
+            'Confirm',
+            'Do you really want to delete the folder "' + folder.text + '" with all files and subfolders?',
+            function (btn) {
+                if (btn == 'yes') {
+                    this.deleteFolder(folder.data.volumeId, folder.id);
+                }
+            },
+            this
+        );
+    },
+
+    showRightsWindow: function () {
+        this.showPropertiesWindow('rights');
+    },
+
+    showPropertiesWindow: function (activeTabId) {
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
+
+        var w = Ext.create('Phlexible.mediamanager.FolderDetailWindow', {
+            folder_id: folder.id,
+            folder_name: folder.data.text,
+            folder_rights: folder.data.rights,
+            activeTabId: activeTabId
+        });
+        w.show();
+    },
+
     showFolderRightsWindow: function () {
-        var selFolder = this.getSelectionModel().getSelectedNode();
+        var nodes = this.getSelectionModel().getSelection(),
+            folder;
+        if (!nodes.length) {
+            return;
+        }
+        folder = nodes[0];
 
-        if (!selFolder) return;
-
-        var w = new Phlexible.mediamanager.FolderRightsWindow({
-            site_id: selFolder.attributes.site_id,
-            folder_id: selFolder.id,
-            folder_title: selFolder.text,
+        var w = Ext.create('Phlexible.mediamanager.FolderRightsWindow', {
+            volumeId: folder.data.volumeId,
+            folderId: folder.id,
+            folderTitle: folder.data.text,
             listeners: {
                 updateRights: function () {
                     return;
-                    node = selFolder.parentNode;
-                    node.reload(function () {
-                        this.fireEvent('folderChange', node.id, node.text, node);
-                    }.createDelegate(this));
+                    this.onClick(folder.parentNode);
                 },
                 scope: this
             }
@@ -454,24 +474,12 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
         w.show();
     },
 
-    showDeleteFolderWindow: function () {
-        var selFolder = this.getSelectionModel().getSelectedNode();
-
-        if (!selFolder) return;
-
-        Ext.MessageBox.confirm('Confirm', 'Do you really want to delete the folder "' + selFolder.text + '" with all files and subfolders?', function (btn, e, x, site_id, folder_id) {
-            if (btn == 'yes') {
-                this.deleteFolder(site_id, folder_id);
-            }
-        }.createDelegate(this, [selFolder.attributes.site_id, selFolder.id], true));
-    },
-
-    deleteFolder: function (site_id, folder_id) {
+    deleteFolder: function (volumeId, folderId) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_folder_delete'),
             params: {
-                site_id: site_id,
-                folder_id: folder_id
+                volumeId: volumeId,
+                folderId: folderId
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
@@ -497,13 +505,12 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
         });
     },
 
-    onContextMenu: function (node, event) {
+    onContextMenu: function (grid, record, tr, rowIndex, event) {
         event.stopEvent();
 
-        var coords = event.getXY();
-
-        if (node.attributes.slot) {
-            if (node.attributes.slot == 'search') {
+        /*
+        if (record.data.slot) {
+            if (record.data.slot == 'search') {
                 var cm = new Ext.menu.Menu({
                     items: [
                         {
@@ -512,7 +519,7 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
                                 Ext.Ajax.request({
                                     url: Phlexible.Router.generate('extendedsearch_data_delete'),
                                     params: {
-                                        id: node.attributes.slot_id
+                                        id: node.data.slotId
                                     },
                                     success: function (response) {
                                         var node = this.getRootNode().findChild('slot', 'searches');
@@ -544,83 +551,84 @@ Phlexible.mediamanager.FolderTree = Ext.extend(Ext.tree.TreePanel, {
 
             return;
         }
+        */
 
-        var contextmenu = this.contextMenu;
+        var contextmenu = this.folderContextMenu;
 
-        if (!node.isSelected()) {
-            node.select();
-            //this.onClick(node);
+        /*
+        if (!record.isSelected()) {
+            record.select();
+            //this.onClick(record);
         }
+        */
 
-        contextmenu.items.items[this.contextMenuIndex.header].setText(node.text);
-        contextmenu.items.items[this.contextMenuIndex.header].setIconClass('p-mediamanager-folder-icon');
+        contextmenu.getComponent('nameBtn').setText(record.get('text'));
+        contextmenu.getComponent('nameBtn').setIconCls(Phlexible.Icon.get('folder'));
 
-        var isRoot = node.parentNode.id == 'root';
+        var isRoot = record.parentNode.id == 'root';
 
         // collapse
-        if (!node.isLeaf()) {
-            contextmenu.items.items[this.contextMenuIndex.expand].enable();
+        if (!record.isLeaf()) {
+            contextmenu.getComponent('expandBtn').enable();
         }
         else {
-            contextmenu.items.items[this.contextMenuIndex.expand].disable();
+            contextmenu.getComponent('expandBtn').disable();
         }
 
         // expand
-        if (!node.isLeaf() && node.isExpanded()) {
-            contextmenu.items.items[this.contextMenuIndex.collapse].enable();
+        if (!record.isLeaf() && record.isExpanded()) {
+            contextmenu.getComponent('collapseBtn').enable();
         }
         else {
-            contextmenu.items.items[this.contextMenuIndex.collapse].disable();
+            contextmenu.getComponent('collapseBtn').disable();
         }
 
         // rename
         if (!this.checkRights(Phlexible.mediamanager.Rights.FOLDER_MODIFY)) {
-            contextmenu.items.items[this.contextMenuIndex.rename].disable();
+            contextmenu.getComponent('renameBtn').disable();
         }
         else {
-            contextmenu.items.items[this.contextMenuIndex.rename].enable();
+            contextmenu.getComponent('renameBtn').enable();
         }
 
         // create
         if (!this.checkRights(Phlexible.mediamanager.Rights.FOLDER_CREATE)) {
-            contextmenu.items.items[this.contextMenuIndex.create].disable();
+            contextmenu.getComponent('createBtn').disable();
         }
         else {
-            contextmenu.items.items[this.contextMenuIndex.create].enable();
+            contextmenu.getComponent('createBtn').enable();
         }
 
         // delete
-        var deletePolicy = Phlexible.Config.get('mediamanager.delete_policy');
-        var used = node.attributes.used;
+        var deletePolicy = Phlexible.App.getConfig().get('mediamanager.delete_policy');
+        var used = record.data.used;
 
         if (isRoot || !this.checkRights(Phlexible.mediamanager.Rights.FOLDER_DELETE)) {
-            contextmenu.items.items[this.contextMenuIndex['delete']].disable();
+            contextmenu.getComponent('deleteBtn').disable();
         }
         else {
             if (deletePolicy == Phlexible.mediamanager.DeletePolicy.HIDE_OLD && !used) {
-                contextmenu.items.items[this.contextMenuIndex['delete']].enable();
+                contextmenu.getComponent('deleteBtn').enable();
             }
             else if (deletePolicy == Phlexible.mediamanager.DeletePolicy.DELETE_OLD && used < 4) {
-                contextmenu.items.items[this.contextMenuIndex['delete']].enable();
+                contextmenu.getComponent('deleteBtn').enable();
             }
             else if (deletePolicy == Phlexible.mediamanager.DeletePolicy.DELETE_ALL) {
-                contextmenu.items.items[this.contextMenuIndex['delete']].enable();
+                contextmenu.getComponent('deleteBtn').enable();
             }
             else {
-                contextmenu.items.items[this.contextMenuIndex['delete']].disable();
+                contextmenu.getComponent('deleteBtn').disable();
             }
         }
 
         // rights
         if (!this.checkRights(Phlexible.mediamanager.Rights.FOLDER_RIGHTS)) {
-            contextmenu.items.items[this.contextMenuIndex.rights].disable();
+            contextmenu.getComponent('rightsBtn').disable();
         }
         else {
-            contextmenu.items.items[this.contextMenuIndex.rights].enable();
+            contextmenu.getComponent('rightsBtn').enable();
         }
 
-        contextmenu.showAt([coords[0], coords[1]]);
+        contextmenu.showAt(event.getXY());
     }
 });
-
-Ext.reg('mediamanager-foldertree', Phlexible.mediamanager.FolderTree);

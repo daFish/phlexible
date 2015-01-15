@@ -154,7 +154,7 @@ class FolderController extends Controller
                     [
                         [
                             'id'        => $rootFolder->getId(),
-                            'site_id'   => $volume->getId(),
+                            'volumeId'  => $volume->getId(),
                             'text'      => $rootFolder->getName(),
                             'cls'       => 't-mediamanager-root',
                             'leaf'      => !$volume->countFoldersByParentFolder($rootFolder),
@@ -225,7 +225,7 @@ class FolderController extends Controller
 
                     $tmp = [
                         'id'        => $subFolder->getId(),
-                        'site_id'   => $volume->getId(),
+                        'volumeId'  => $volume->getId(),
                         'text'      => $subFolder->getName(),
                         'leaf'      => false,
                         'numChilds' => $volume->countFilesByFolder($subFolder),
@@ -234,7 +234,7 @@ class FolderController extends Controller
                         'isTarget' => true,
                         'versions'  => $volume->hasFeature('versions'),
                         'rights'    => $userRights,
-                        'used_in'   => $usedIn,
+                        'usedIn'    => $usedIn,
                         'used'      => $usage,
                     ];
 
@@ -303,9 +303,9 @@ class FolderController extends Controller
      */
     public function renameAction(Request $request)
     {
-        $volumeId = $request->get('site_id');
-        $folderId = $request->get('folder_id');
-        $folderName = $request->get('folder_name');
+        $volumeId = $request->get('volumeId');
+        $folderId = $request->get('id');
+        $folderName = $request->get('name');
 
         $volume = $this->getVolume($volumeId);
         $folder = $volume->findFolder($folderId);
@@ -327,8 +327,8 @@ class FolderController extends Controller
      */
     public function deleteAction(Request $request)
     {
-        $volumeId = $request->get('site_id');
-        $folderId = $request->get('folder_id');
+        $volumeId = $request->get('volumeId');
+        $folderId = $request->get('id');
 
         $volume = $this->getVolume($volumeId);
         $folder = $volume->findFolder($folderId);
@@ -352,9 +352,9 @@ class FolderController extends Controller
      */
     public function moveAction(Request $request)
     {
-        $volumeId = $request->get('site_id');
-        $targetId = $request->get('target_id');
-        $sourceId = $request->get('source_id');
+        $volumeId = $request->get('volumeId');
+        $targetId = $request->get('targetId');
+        $sourceId = $request->get('id');
 
         $volume = $this->getVolume($volumeId);
         $folder = $volume->findFolder($sourceId);

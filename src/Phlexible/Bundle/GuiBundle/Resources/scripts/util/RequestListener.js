@@ -121,7 +121,7 @@ Ext.define('Phlexible.gui.util.RequestListener', {
             return;
         }
 
-        window = Ext.create('Phlexible.gui.view.RequestErrorWindow', {
+        window = Ext.create('Phlexible.gui.RequestErrorWindow', {
             responseStatus: response.status,
             responseStatusText: response.statusText,
             requestUrl: options.url,

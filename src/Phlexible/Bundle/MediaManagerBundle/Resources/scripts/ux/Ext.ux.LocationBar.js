@@ -5,10 +5,6 @@
  * http://www.brainbits.net/
  */
 
-Ext.ns('Ext.ux');
-
-Ext.provide('Ext.ux.LocationBar');
-
 /**
  * LocationBar class
  * Version:  0.1
@@ -19,7 +15,9 @@ Ext.provide('Ext.ux.LocationBar');
  * Creates a new LocationBar
  * @param {Object/Array} config A config object or an array of buttons to add
  */
-Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
+Ext.define('Ext.ux.LocationBar', {
+    extend: 'Ext.toolbar.Toolbar',
+    alias: 'widget.locationbar',
 
     /**
      * @cfg {Array} strings Translations for different strings
@@ -135,7 +133,7 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
 
         //this.addListener('render', this.repaint, this);
 
-        Ext.ux.LocationBar.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     bindTree: function (tree) {
@@ -155,8 +153,8 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     },
 
     // private
-    onRender: function (ct, position) {
-        Ext.ux.LocationBar.superclass.onRender.call(this, ct, position);
+    xonRender: function (ct, position) {
+        this.callParent(arguments);
 
         this.repaint();
     },
@@ -437,9 +435,10 @@ Ext.ux.LocationBar = Ext.extend(Ext.Toolbar, {
     }
 });
 
-Ext.reg('locationbar', Ext.ux.LocationBar);
+Ext.define('Ext.ux.LocationBar.Fill', {
+    extend: 'Ext.toolbar.Fill',
 
-Ext.ux.LocationBar.Fill = Ext.extend(Ext.Toolbar.Fill, {
+    alias: 'widget.lbfile',
     // private
     render: function (td) {
         td.className = 'x-locationbar-location';
@@ -448,17 +447,18 @@ Ext.ux.LocationBar.Fill = Ext.extend(Ext.Toolbar.Fill, {
         var data = document.createTextNode('\u00a0');
         this.el.appendChild(data);
 
-        Ext.ux.LocationBar.Fill.superclass.render.call(this, td);
+        this.callParent(arguments);
     }
 });
-Ext.reg('lbfill', Ext.ux.LocationBar.Fill);
 
-Ext.ux.LocationBar.TextItem = Ext.extend(Ext.Toolbar.TextItem, {
+Ext.define('Ext.ux.LocationBar.TextItem', {
+    extend: 'Ext.toolbar.TextItem',
+    alias: 'widget.lbtext',
+
     // private
     render: function (td) {
         td.className = 'x-locationbar-location';
 
-        Ext.ux.LocationBar.Fill.superclass.render.call(this, td);
+        this.callParent(arguments);
     }
 });
-Ext.reg('lbtext', Ext.ux.LocationBar.TextItem);

@@ -1,6 +1,3 @@
-Ext.provide('Phlexible.mediamanager.FolderPropertiesTemplate');
-Ext.provide('Phlexible.mediamanager.FolderPropertiesPanel');
-
 Phlexible.mediamanager.FolderPropertiesTemplate = new Ext.XTemplate(
     '<div style="padding: 10px;">',
     '<table border="0" cellpadding="0" cellspacing="7">',
@@ -46,18 +43,21 @@ Phlexible.mediamanager.FolderPropertiesTemplate = new Ext.XTemplate(
         strings: Phlexible.mediamanager.Strings
     }
 );
-Phlexible.mediamanager.FolderPropertiesPanel = Ext.extend(Ext.Panel, {
+Ext.define('Phlexible.mediamanager.FolderPropertiesPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediamanager-folderproperties',
+
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.properties,
-    iconCls: 'p-mediamanager-folder_properties-icon',
-    cls: 'p-mediamanager-properties-panel',
+    iconCls: Phlexible.Icon.get('property'),
+    cls: 'p-mediamanager-folder-properties',
     disabled: true,
     bodyStyle: 'padding: 10px',
 
     initComponent: function () {
         this.html = 'Loading...';
 
-        Phlexible.mediamanager.FolderPropertiesPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadData: function (folder_id) {
@@ -82,5 +82,3 @@ Phlexible.mediamanager.FolderPropertiesPanel = Ext.extend(Ext.Panel, {
         Phlexible.mediamanager.FolderPropertiesTemplate.overwrite(this.el, data);
     }
 });
-
-Ext.reg('mediamanager-folderproperties', Phlexible.mediamanager.FolderPropertiesPanel);

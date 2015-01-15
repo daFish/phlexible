@@ -83,7 +83,7 @@ Phlexible.mediamanager.TagsPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.mediamanager.TagsPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadTags: function (file_id, file_version) {

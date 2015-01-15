@@ -32,7 +32,7 @@ Phlexible.mediamanager.JavaUploadWindow = Ext.extend(Ext.Window, {
 
         this.html = html;
 
-        Phlexible.mediamanager.JavaUploadWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     show: function (btn, siteID, folderID, folderTitle) {
@@ -43,7 +43,7 @@ Phlexible.mediamanager.JavaUploadWindow = Ext.extend(Ext.Window, {
                 this.setTitle(this.strings.upload_file);
             }
 //            this.swfPanel.addPostParam('folder_id', folderID);
-            Phlexible.mediamanager.JavaUploadWindow.superclass.show.call(this, btn);
+            this.callParent(arguments);
         }
     }
 });
@@ -127,7 +127,7 @@ Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
             })
         ];
 
-        Phlexible.mediamanager.FileUploadWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     show: function (btn, siteID, folderID, folderTitle) {
@@ -139,7 +139,7 @@ Phlexible.mediamanager.FileUploadWindow = Ext.extend(Ext.Window, {
             }
             this.swfPanel.addPostParam('site_id', siteID);
             this.swfPanel.addPostParam('folder_id', folderID);
-            Phlexible.mediamanager.FileUploadWindow.superclass.show.call(this);
+            this.callParent(arguments);
         }
     },
 

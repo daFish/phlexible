@@ -112,7 +112,7 @@ Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
         Ext.DomHelper.overwrite(this.getPreviewPanel().body, this.createPreviewDomHelperConfig(data));
 
         this.getPreviewPanel().setHeight(data.height);
-        
+
         this.enable();
     }
 });

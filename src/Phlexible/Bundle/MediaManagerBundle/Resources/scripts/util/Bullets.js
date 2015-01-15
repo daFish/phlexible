@@ -1,10 +1,8 @@
-Ext.provide('Phlexible.mediamanager.util.Bullets');
-Ext.provide('Phlexible.mediamanager.Bullets');
+Ext.define('Phlexible.mediamanager.util.Bullets', {
+    extend: 'Ext.util.Observable',
 
-Phlexible.mediamanager.util.Bullets = function () {
-    bullets = '';
-}
-Ext.extend(Phlexible.mediamanager.util.Bullets, Ext.util.Observable, {
+    bullets: '',
+
     presentBullet: function (values) {
         if (!values.present) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_cross.gif') + '" width="8" height="12" style="vertical-align: middle;" />';

@@ -1,81 +1,78 @@
-Ext.provide('Phlexible.mediamanager.FilePreviewPanel');
+Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediamanager-file-preview',
 
-Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.preview,
     cls: 'p-mediamanager-preview-panel',
     height: 270,
 
-    file_id: null,
-    file_version: null,
+    fileId: null,
+    fileVersion: null,
+    fileName: null,
+    documenttypeKey: null,
+    cache: null,
 
     // private
     initComponent: function () {
-        if (this.file_id && this.file_version && this.file_name && this.document_type_key && this.cache) {
-            this.html = this.getHtml(this.file_id, this.file_version, this.file_name, this.document_type_key, this.asset_type, this.cache);
+        if (this.fileId && this.fileVersion && this.fileName && this.documenttypeKey && this.cache) {
+            this.html = this.getHtml(this.fileId, this.fileVersion, this.fileName, this.documenttypeKey, this.asset_type, this.cache);
         }
         else {
             this.html = this.createNoPreview();
         }
 
-        Phlexible.mediamanager.FilePreviewPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     loadRecord: function (r) {
-        var file_id = r.get('id');
-        var file_name = r.get('name');
-        var file_version = r.get('version');
-        var document_type_key = r.get('document_type_key');
-        var asset_type = r.get('asset_type');
-        var cache = r.get('cache');
-
-        this.load(file_id, file_version, file_name, document_type_key, asset_type, cache);
+        this.load(r.get('id'), r.get('version'), r.get('name'), r.get('document_type_key'), r.get('assetType'), r.get('cache'));
     },
 
-    load: function (file_id, file_version, file_name, document_type_key, asset_type, cache) {
-        if (this.file_id != file_id || this.file_version != file_version) {
-            this.file_id = file_id;
-            this.file_version = file_version;
+    load: function (fileId, fileVersion, fileName, documenttypeKey, assetType, cache) {
+        if (this.fileId != fileId || this.fileVersion != fileVersion) {
+            this.fileId = fileId;
+            this.fileVersion = fileVersion;
             this.body.update('');
-            this.body.insertFirst(this.getHtml(file_id, file_version, file_name, document_type_key, asset_type, cache));
+            this.body.insertFirst(this.getHtml(fileId, fileVersion, fileName, documenttypeKey, assetType, cache));
         }
     },
 
-    getHtml: function (file_id, file_version, file_name, document_type_key, asset_type, cache) {
-        switch (asset_type.toUpperCase()) {
+    getHtml: function (fileId, fileVersion, fileName, documenttypeKey, assetType, cache) {
+        switch (assetType.toUpperCase()) {
             case Phlexible.mediamanager.AUDIO:
-                return this.createAudioPlayer(256, 256, file_id, file_version, file_name, cache);
+                return this.createAudioPlayer(256, 256, fileId, fileVersion, fileName, cache);
                 break;
 
             case Phlexible.mediamanager.VIDEO:
-                return this.createVideoPlayer(256, 256, file_id, file_version, file_name, cache);
+                return this.createVideoPlayer(256, 256, fileId, fileVersion, fileName, cache);
                 break;
 
             case Phlexible.mediamanager.FLASH:
-                return this.createFlashPlayer(256, 256, file_id, file_version, file_name, cache);
+                return this.createFlashPlayer(256, 256, fileId, fileVersion, fileName, cache);
                 break;
 
             case Phlexible.mediamanager.IMAGE:
             default:
-                return this.createImage(256, 256, file_id, file_version, file_name, cache);
+                return this.createImage(256, 256, fileId, fileVersion, fileName, cache);
                 break;
         }
     },
 
-    getLink: function (file_id, template_key, file_version, cache) {
-        if (cache && template_key && cache[template_key]) {
-            return cache[template_key];
+    getLink: function (fileId, templateKey, fileVersion, cache) {
+        if (cache && templateKey && cache[templateKey]) {
+            return cache[templateKey];
         }
 
         var parameters = {
-            file_id: file_id,
-            template_key: template_key
+            fileId: fileId,
+            template_key: templateKey
         };
-        if (file_version) {
-            parameters['file_version'] = file_version;
+        if (fileVersion) {
+            parameters['file_version'] = fileVersion;
         }
-        if (cache && cache[template_key]) {
-            parameters['cache'] = cache[template_key];
+        if (cache && cache[templateKey]) {
+            parameters['cache'] = cache[templateKey];
         } else if (cache !== false) {
             parameters['waiting'] = 1;
         }
@@ -201,5 +198,3 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
 
     }
 });
-
-Ext.reg('mediamanager-filepreviewpanel', Phlexible.mediamanager.FilePreviewPanel);

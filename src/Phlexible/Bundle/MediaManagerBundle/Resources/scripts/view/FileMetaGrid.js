@@ -1,66 +1,45 @@
-Ext.provide('Phlexible.mediamanager.FileMetaGrid');
+Ext.define('Phlexible.mediamanager.FileMetaGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.mediamanager-file-metas',
 
-Ext.require('Phlexible.metasets.util.Fields');
-Ext.require('Phlexible.gui.grid.TypeColumnModel');
-
-Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.mediamanager.Strings,
     title: Phlexible.mediamanager.Strings.meta,
     cls: 'p-mediamanager-meta-grid',
     //iconCls: 'p-metaset-component-icon',
     stripeRows: true,
-    emptyText: Phlexible.metasets.Strings.no_meta_values,
     enableColumnMove: false,
-    viewConfig: {
-        emptyText: Phlexible.metasets.Strings.no_meta_values,
-        deferEmptyText: true,
-        forceFit: false
-    },
+    enableColumnHide: true,
+    emptyText: Phlexible.metasets.Strings.no_meta_values,
+    deferEmptyText: true,
 
     small: false,
-    right: Phlexible.mediamanager.Rights.FILE_MODIFY,
-    key: 'key',
-    params: {},
 
     initComponent: function () {
         if (this.small) {
             this.enableColumnHide = false;
-            this.viewConfig.forceFit = true;
         }
 
-        var columns = [
-            {
-                header: this.strings.key,
-                dataIndex: 'key',
-                width: 100
-            },
-            {
-                header: '&nbsp;',
-                dataIndex: 'required',
-                width: 30,
-                renderer: function (v) {
-                    return 1 == v ? Phlexible.inlineIcon('p-mediamanager-wizard_required-icon') : '';
-                }
-            }
-        ];
+        this.initMyStore();
+        this.initMyColumns();
+        //this.initMySelectionModel();
+        this.initMyPlugins();
+        this.initMyListeners();
 
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
         var fields = ['key', 'type', 'options', 'required', 'synchronized', 'readonly'];
 
-        Ext.each(Phlexible.Config.get('set.language.meta'), function (language) {
+        Ext.each(Phlexible.App.getConfig().get('set.language.meta'), function (language) {
             fields.push('value_' + language[0]);
-            columns.push({
-                header: this.strings.value + ' ' + Phlexible.inlineIcon(language[2]) + ' ' + language [1],
-                dataIndex: 'value_' + language[0],
-                language: language[0],
-                width: 200,
-                editable: true,
-                hidden: this.small && language[0] !== Phlexible.Config.get('language.metasets'),
-                renderer: this.formatField.createDelegate(this)
-            });
         }, this);
 
-        this.store = new Ext.data.JsonStore({
+        this.fieldData = this.fieldData || [];
+
+        this.store = Ext.create('Ext.data.Store', {
             fields: fields,
+            data: this.fieldData,
             listeners: {
                 load: function (store, records) {
                     // if no required fields are present for a file
@@ -80,9 +59,60 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             }
         });
 
-        this.sm = new Ext.grid.CellSelectionModel();
+        delete this.fieldData;
+    },
 
-        var metaFields = new Phlexible.metasets.util.Fields();
+    initMyColumns: function() {
+        this.columns = [
+            {
+                header: this.strings.key,
+                dataIndex: 'key',
+                width: 100
+            },
+            {
+                header: '&nbsp;',
+                dataIndex: 'required',
+                width: 30,
+                renderer: function (v) {
+                    return 1 == v ? Phlexible.inlineIcon('p-mediamanager-wizard_required-icon') : '';
+                }
+            }
+        ];
+
+        Ext.each(Phlexible.App.getConfig().get('set.language.meta'), function (language) {
+            this.columns.push({
+                header: this.strings.value + ' ' + Phlexible.inlineIcon(language[2]) + ' ' + language [1],
+                dataIndex: 'value_' + language[0],
+                language: language[0],
+                flex: 1,
+                hidden: false,//this.small && language[0] !== Phlexible.App.getConfig().get('language.metasets'),
+                xrenderer: this.formatField,
+                xgetEditor: function(record) {
+                    var type = record.get('editType');
+
+                    if (type === 'text') {
+                        return Ext.create('Ext.grid.CellEditor', {
+                            field: Ext.create('Ext.form.field.Text')
+                        });
+                    } else if (type === 'combo') {
+                        return Ext.create('Ext.grid.CellEditor', {
+                            field: combo
+                        });
+                    }
+                }
+            });
+        }, this);
+    },
+
+    initMyPlugins: function() {
+        this.plugins = [{
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        }];
+    },
+
+    initMySelectionModel: function() {
+        var metaFields = Ext.create('Phlexible.metasets.util.Fields');
 
         this.cm = new Phlexible.gui.grid.TypeColumnModel({
             columns: columns,
@@ -93,16 +123,10 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             beforeEditCallbacks: metaFields.getBeforeEditCallbacks(),
             afterEditCallbacks: metaFields.getAfterEditCallbacks()
         });
+    },
 
-        Phlexible.mediamanager.FileMetaGrid.superclass.initComponent.call(this);
-
+    initMyListeners: function() {
         this.on({
-            render: function () {
-                if (this.data) {
-                    this.setData(this.data);
-                    delete this.data;
-                }
-            },
             beforeedit: function (e) {
                 // skip editing english values if language is synchronized
                 var record = e.record;
@@ -110,7 +134,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 var isSynchronized = (1 == record.get('synchronized'));
                 var cm = this.getColumnModel();
                 var column = cm.getColumnById(cm.getColumnId(ci));
-                if (isSynchronized && (!column.language || column.language !== Phlexible.Config.get('language.metasets'))) {
+                if (isSynchronized && (!column.language || column.language !== Phlexible.App.getConfig().get('language.metasets'))) {
                     return false;
                 }
                 if (e.record.data.readonly) {
@@ -125,11 +149,11 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     },
 
-    setData: function (data) {
-        this.store.loadData(data);
+    setFieldData: function (fieldData) {
+        this.getStore().loadData(fieldData);
     },
 
-    getData: function () {
+    getFieldData: function () {
         var data = {};
         var records = this.store.getRange();
 
@@ -173,7 +197,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             var cm = this.getColumnModel();
             var language = cm.getColumnById(cm.getColumnId(ci)).language;
             if (language) {
-                if (language === Phlexible.Config.get('language.metasets')) {
+                if (language === Phlexible.App.getConfig().get('language.metasets')) {
                     md.attr = 'style="border:1px solid green;"';
                 }
                 else {
@@ -199,9 +223,9 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     validateMeta: function () {
         var valid = true;
-        var languages = Phlexible.Config.get('set.language.meta');
+        var languages = Phlexible.App.getConfig().get('set.language.meta');
         var language;
-        var defaultLanguage = Phlexible.Config.get('language.metasets');
+        var defaultLanguage = Phlexible.App.getConfig().get('language.metasets');
 
         var metaRecords = this.getStore().getRange();
 
@@ -236,7 +260,7 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     isRequiredFieldFilled: function (data) {
         var code, field;
-        var languages = Phlexible.Config.get('set.language.meta');
+        var languages = Phlexible.App.getConfig().get('set.language.meta');
 
         for (var i = 0; i < languages.length; ++i) {
             code = languages[i][0];
@@ -251,5 +275,3 @@ Phlexible.mediamanager.FileMetaGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     }
 
 });
-
-Ext.reg('mediamanager-filemetagrid', Phlexible.mediamanager.FileMetaGrid);

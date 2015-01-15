@@ -20,6 +20,7 @@ mediamanager:
     no_preview_available: 'No Preview available'
     preview: Preview
     no_file_selected: 'No file selected'
+    no_folder_selected: 'No folder selected'
     properties: Properties
     administration: Administration
     scan_folders_added: 'folders added'

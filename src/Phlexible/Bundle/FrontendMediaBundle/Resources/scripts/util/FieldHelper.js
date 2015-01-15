@@ -115,7 +115,7 @@ Phlexible.frontendmedia.FieldHelper = {
                             this.el.addClass('p-fields-synchronized-synched');
                             this.disable();
                             if (this.masterValue) {
-                                this.setFile(this.masterValue.file_id, this.masterValue.file_version, this.masterValue.name, this.masterValue.folder_id);
+                                this.setFile(this.masterValue.fileId, this.masterValue.fileVersion, this.masterValue.name, this.masterValue.folder_id);
                             }
                             else {
                                 this.reset();

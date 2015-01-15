@@ -1,14 +1,12 @@
-Ext.provide('Phlexible.mediamanager.FolderMeta');
+Ext.define('Phlexible.mediamanager.FolderMeta', {
+    extend: 'Phlexible.mediamanager.FileMeta',
+    alias: 'widget.mediamanager-folder-meta',
 
-Ext.require('Phlexible.mediamanager.FileMeta');
-Ext.require('Phlexible.mediamanager.FolderMetaGrid');
-
-Phlexible.mediamanager.FolderMeta = Ext.extend(Phlexible.mediamanager.FileMeta, {
     title: Phlexible.mediamanager.Strings.folder_meta,
 
-    right: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
+    checkRight: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
 
-    initUrls: function () {
+    initMyUrls: function () {
         this.urls = {
             load: Phlexible.Router.generate('mediamanager_folder_meta'),
             save: Phlexible.Router.generate('mediamanager_folder_meta_save')
@@ -23,7 +21,7 @@ Phlexible.mediamanager.FolderMeta = Ext.extend(Phlexible.mediamanager.FileMeta, 
 
     createMetaGridConfig: function(setId, title, fields, small) {
         return {
-            xtype: 'mediamanager-foldermetagrid',
+            xtype: 'mediamanager-folder-metas',
             setId: setId,
             title: title,
             height: 180,
@@ -33,5 +31,3 @@ Phlexible.mediamanager.FolderMeta = Ext.extend(Phlexible.mediamanager.FileMeta, 
         };
     }
 });
-
-Ext.reg('mediamanager-foldermeta', Phlexible.mediamanager.FolderMeta);

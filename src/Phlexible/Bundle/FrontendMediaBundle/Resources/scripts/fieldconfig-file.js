@@ -14,7 +14,7 @@ Phlexible.fields.Registry.addFactory('file', function (parentConfig, item, value
         xtype: 'filefield',
         data_id: item.data_id,
 
-        file_id: item.media.file_id || false,
+        fileId: item.media.fileId || false,
         folder_id: item.media.folder_id || false,
         folder_path: item.media.folder_path || false,
         fileTitle: item.media.name,

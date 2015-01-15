@@ -50,7 +50,7 @@ class FileController extends Controller
      */
     public function listAction(Request $request)
     {
-        $folderId = $request->get('folder_id');
+        $folderId = $request->get('folderId');
         $start = $request->get('start', 0);
         $limit = $request->get('limit', 25);
         $sort = $request->get('sort', 'name');
@@ -104,7 +104,7 @@ class FileController extends Controller
             $data = $this->filesToArray($volume, $files);
         }
 
-        return new JsonResponse(['files' => $data, 'totalCount' => $total]);
+        return new JsonResponse(['files' => $data, 'total' => $total]);
     }
 
     /**
@@ -210,31 +210,31 @@ class FileController extends Controller
 
             $folder = $volume->findFolder($file->getFolderId());
             $data[] = [
-                'id'                => $file->getID(),
-                'name'              => $file->getName(),
-                'site_id'           => $volume->getId(),
-                'folder_id'         => $file->getFolderID(),
-                'folder'            => '/Root/' . $folder->getPath(),
-                'asset_type'        => strtolower($file->getMediaCategory()),
-                'mime_type'         => $file->getMimetype(),
-                'document_type'     => $mediaTypeTitle,
-                'document_type_key' => strtolower($file->getMediaType()),
-                'present'           => file_exists($file->getPhysicalPath()),
-                'size'              => $file->getSize(),
-                'hidden'            => $file->isHidden() ? 1 : 0,
-                'version'           => $version,
-                'create_user'       => $createUserName,
-                'create_user_id'    => $file->getCreateUserId(),
-                'create_time'       => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-                'modify_user'       => $modifyUserName,
-                'modify_user_id'    => $file->getModifyUserId(),
-                'modify_time'       => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
-                'cache'             => $cache,
-                'properties'        => $properties,
-                'used_in'           => $usedIn,
-                'used'              => $usage,
-                'focal'             => $focal,
-                'attributes'        => $attributes,
+                'id'              => $file->getID(),
+                'name'            => $file->getName(),
+                'volumeId'        => $volume->getId(),
+                'folderId'        => $file->getFolderID(),
+                'folder'          => '/Root/' . $folder->getPath(),
+                'assetType'       => strtolower($file->getMediaCategory()),
+                'mimeType'        => $file->getMimetype(),
+                'documentType'    => $mediaTypeTitle,
+                'documentTypeKey' => strtolower($file->getMediaType()),
+                'present'         => file_exists($file->getPhysicalPath()),
+                'size'            => $file->getSize(),
+                'hidden'          => $file->isHidden() ? 1 : 0,
+                'version'         => $version,
+                'createUser'      => $createUserName,
+                'createUserId'    => $file->getCreateUserId(),
+                'createTime'      => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+                'modifyUser'      => $modifyUserName,
+                'modifyUserId'    => $file->getModifyUserId(),
+                'modifyTime'      => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
+                'cache'           => $cache,
+                'properties'      => $properties,
+                'usedIn'          => $usedIn,
+                'used'            => $usage,
+                'focal'           => $focal,
+                'attributes'      => $attributes,
             ];
         }
 
@@ -373,15 +373,15 @@ class FileController extends Controller
         ];
 
         $properties['detail'] = [
-            'id'                => $file->getId(),
-            'folder_id'         => $file->getFolderId(),
-            'name'              => $file->getName(),
-            'size'              => $file->getSize(),
-            'version'           => $file->getVersion(),
-            'document_type_key' => strtolower($file->getMediaType()),
-            'asset_type'        => strtolower($file->getMediaCategory()),
-            'create_user_id'    => $file->getCreateUserId(),
-            'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
+            'id'              => $file->getId(),
+            'folderId'        => $file->getFolderId(),
+            'name'            => $file->getName(),
+            'size'            => $file->getSize(),
+            'version'         => $file->getVersion(),
+            'documentTypeKey' => strtolower($file->getMediaType()),
+            'assetType'       => strtolower($file->getMediaCategory()),
+            'createUserId'    => $file->getCreateUserId(),
+            'createTime'      => $file->getCreatedAt()->format('Y-m-d'),
         ];
 
         /*
@@ -423,15 +423,15 @@ class FileController extends Controller
         $detail = [];
         foreach ($volume->findFileVersions($id) as $file) {
             $detail[] = [
-                'id'                => $file->getId(),
-                'folder_id'         => $file->getFolderId(),
-                'name'              => $file->getName(),
-                'size'              => $file->getSize(),
-                'version'           => $file->getVersion(),
-                'document_type_key' => strtolower($file->getMediaType()),
-                'asset_type'        => strtolower($file->getMediaCategory()),
-                'create_user_id'    => $file->getCreateUserId(),
-                'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
+                'id'              => $file->getId(),
+                'folderId'        => $file->getFolderId(),
+                'name'            => $file->getName(),
+                'size'            => $file->getSize(),
+                'version'         => $file->getVersion(),
+                'documentTypeKey' => strtolower($file->getMediaType()),
+                'assetType'       => strtolower($file->getMediaCategory()),
+                'createUserId'    => $file->getCreateUserId(),
+                'createTime'      => $file->getCreatedAt()->format('Y-m-d'),
             ];
         }
 

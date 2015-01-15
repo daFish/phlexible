@@ -1,22 +1,19 @@
-Ext.provide('Phlexible.mediamanager.UploadChecker');
+Ext.define('Phlexible.mediamanager.UploadChecker', {
+    extend: 'Ext.util.Observable',
 
-Ext.require('Phlexible.mediamanager.FileReplaceWindow');
+    /**
+     * @event reload
+     */
 
-Phlexible.mediamanager.UploadChecker = function(config) {
-    config = config || {};
+    /**
+     * @param {Object} config
+     */
+    constructor: function(config) {
+        this.running = false;
 
-    this.running = false;
+        this.callParent(arguments);
+    },
 
-    this.addEvents({
-        "reload": true
-    });
-
-    if (config.listeners) {
-        this.listeners = config.listeners;
-        Phlexible.mediamanager.UploadChecker.superclass.constructor.call(this);
-    }
-};
-Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
     check: function() {
         if (this.isRunning()) {
             return;

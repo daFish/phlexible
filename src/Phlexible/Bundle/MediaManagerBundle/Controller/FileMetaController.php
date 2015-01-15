@@ -32,8 +32,8 @@ class FileMetaController extends Controller
      */
     public function metaAction(Request $request)
     {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
+        $fileId = $request->get('fileId');
+        $fileVersion = $request->get('fileVersion', 1);
 
         $file = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
 
@@ -87,8 +87,8 @@ class FileMetaController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
+        $fileId = $request->get('fileId');
+        $fileVersion = $request->get('fileVersion', 1);
         $data = $request->get('data');
         $data = json_decode($data, true);
 
@@ -161,8 +161,8 @@ class FileMetaController extends Controller
      */
     public function listsetsAction(Request $request)
     {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
+        $fileId = $request->get('fileId');
+        $fileVersion = $request->get('fileVersion', 1);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
@@ -189,8 +189,8 @@ class FileMetaController extends Controller
      */
     public function savesetsAction(Request $request)
     {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
+        $fileId = $request->get('fileId');
+        $fileVersion = $request->get('fileVersion', 1);
         $joinedIds = $request->get('ids');
         if ($joinedIds) {
             $ids = explode(',', $joinedIds);

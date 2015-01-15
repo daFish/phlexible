@@ -80,7 +80,7 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.mediamanager.FileReplaceWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     getDataView: function() {

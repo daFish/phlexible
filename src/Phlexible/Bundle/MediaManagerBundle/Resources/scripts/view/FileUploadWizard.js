@@ -28,7 +28,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                 this.files[i].alternative_name,
                 this.files[i].parsed,
                 this.files[i].versions || 0,
-                this.files[i].file_id || null
+                this.files[i].fileId || null
             ]);
         }
 
@@ -346,7 +346,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.mediamanager.FileUploadWizard.superclass.initComponent.call(this);
+        this.callParent(arguments);
 
         this.on('render', this.doFirstSelect, this);
         this.on('show', this.doFirstSelect, this);
@@ -465,7 +465,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
             this.getComponent(1).getComponent(0).getComponent(1).hide();
             bbar.items.items[4].hide();
             bbar.items.items[5].hide();
-            if (this.currentRecord.data.versions && this.currentRecord.data.file_id) {
+            if (this.currentRecord.data.versions && this.currentRecord.data.fileId) {
                 bbar.items.items[6].show();
                 bbar.items.items[7].hide();
             }
@@ -645,7 +645,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
 
     isRequiredFieldFilled: function (data) {
         var code, field;
-        var languages = Phlexible.Config.get('set.language.frontend');
+        var languages = Phlexible.App.getConfig().get('set.language.frontend');
 
         for (var i = 0; i < languages.length; ++i) {
             code = languages[i][0];

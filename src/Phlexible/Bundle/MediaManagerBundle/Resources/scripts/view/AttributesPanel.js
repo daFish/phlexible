@@ -1,56 +1,44 @@
-Ext.provide('Phlexible.mediamanager.templates.Details');
-Ext.provide('Phlexible.mediamanager.AttributesPanel');
+Ext.define('Phlexible.mediamanager.AttributesPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediamanager-attributes',
 
-Ext.require('Phlexible.mediamanager.FilePreviewPanel');
-Ext.require('Phlexible.mediamanager.FileVersionsPanel');
-Ext.require('Phlexible.mediamanager.FileMeta');
-Ext.require('Phlexible.mediamanager.FolderMeta');
-
-Phlexible.mediamanager.templates.Details = new Ext.XTemplate(
-    '<div style="padding: 4px;">',
-    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.version]}:</div> {[values.version]}</div>',
-    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {[values.document_type]}</div>',
-    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
-    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {[values.create_user]}</div>',
-    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
-    '</div>'
-);
-
-Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
     title: Phlexible.mediamanager.Strings.no_file_selected,
     strings: Phlexible.mediamanager.Strings,
-//    collapsible: true,
+    iconCls: Phlexible.Icon.get('document'),
     autoScroll: true,
-    /*layout: 'accordion',
-     layoutConfig: {
-     // layout-specific configs go here
-     titleCollapse: true,
-     fill: false
-     },*/
 
-    folder_rights: {},
+    folderRights: {},
     mode: '',
 
     initComponent: function () {
-        this.initAccordionPanels();
+        this.initMyAccordions();
+        this.initMyItems();
+        this.initMyTemplates();
 
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
-                xtype: 'mediamanager-filepreviewpanel',
+                xtype: 'mediamanager-file-preview',
+                itemId: 'preview',
                 header: false,
                 border: false
             },
             {
+                itemId: 'details',
                 header: false,
                 border: false,
                 autoHeight: true
             },
             {
                 xtype: 'panel',
-                layout: 'accordion',
+                itemId: 'accordions',
                 header: false,
                 border: false,
-                layoutConfig: {
+                layout: {
+                    type: 'accordion',
                     titleCollapse: true,
                     fill: true
                 },
@@ -59,16 +47,24 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
         ];
 
         delete this.accordionPanels;
-
-        Phlexible.mediamanager.AttributesPanel.superclass.initComponent.call(this);
     },
 
-    initAccordionPanels: function() {
-        this.accordionPanels = [];
+    initMyTemplates: function() {
+        this.detailsTpl = new Ext.XTemplate(
+            '<div style="padding: 4px;">',
+            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.version]}:</div> {[values.version]}</div>',
+            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {[values.document_type]}</div>',
+            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
+            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {[values.create_user]}</div>',
+            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
+            '</div>'
+        )
+    },
 
-        this.fileVersionsIndex = this.accordionPanels.length;
-        this.accordionPanels.push({
-            xtype: 'fileversionspanel',
+    initMyAccordions: function() {
+        this.accordionPanels = [{
+            xtype: 'mediamanager-file-versions',
+            itemId: 'versions',
             border: false,
             autoHeight: true,
             collapsed: true,
@@ -81,12 +77,10 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
 //                },
                 scope: this
             }
-        });
-
-        this.fileAttributesIndex = this.accordionPanels.length;
-        this.accordionPanels.push({
+        },{
             xtype: 'propertygrid',
-            iconCls: 'p-mediamanager-properties-icon',
+            itemId: 'attributes',
+            iconCls: Phlexible.Icon.get('property'),
             title: this.strings.attributes,
             viewConfig: {
                 emptyText: this.strings.no_attribute_values,
@@ -96,65 +90,179 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
             border: false,
             autoHeight: true,
             collapsed: true
-        });
-
-        this.folderMetaIndex = this.accordionPanels.length;
-        this.accordionPanels.push({
-            xtype: 'mediamanager-foldermeta',
+        },{
+            xtype: 'mediamanager-folder-meta',
+            itemId: 'folder-meta',
             border: false,
             autoHeight: true,
             collapsed: true,
             small: true
-        });
-
-        this.fileMetaIndex = this.accordionPanels.length;
-        this.accordionPanels.push({
-            xtype: 'mediamanager-filemeta',
+        },{
+            xtype: 'mediamanager-file-meta',
+            itemId: 'file-meta',
             border: false,
-            autoHeight: true,
+            //autoHeight: true,
+            height: 200,
             collapsed: true,
             small: true
-        });
+        },{
+            xtype: 'grid',
+            itemId: 'folder-usage',
+            title: 'Folder used by',
+            iconCls: Phlexible.Icon.get('folder-bookmark'),
+            border: false,
+            stripeRows: true,
+            autoHeight: true,
+            //autoExpandColumn: 'value',
+            hidden: true,
+            collapsed: true,
+            store: Ext.create('Ext.data.Store', {
+                fields: ['usageType', 'usageId', 'status', 'link']
+            }),
+            columns: [
+                {
+                    header: 'usage_type',
+                    dataIndex: 'usageType'
+                },
+                {
+                    header: 'usage_id',
+                    dataIndex: 'usageId'
+                },
+                {
+                    header: 'status',
+                    dataIndex: 'status',
+                    renderer: function (v) {
+                        var out = '';
+                        if (v & 8) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        if (v & 4) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        if (v & 2) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        if (v & 1) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        return out;
+                    }
+                }
+            ]
+        },{
+            xtype: 'grid',
+            itemId: 'file-usage',
+            title: 'File used by',
+            iconCls: Phlexible.Icon.get('document-bookmark'),
+            border: false,
+            stripeRows: true,
+            autoHeight: true,
+            //autoExpandColumn: 'value',
+            hidden: true,
+            collapsed: true,
+            store: Ext.create('Ext.data.Store', {
+                fields: ['usageType', 'usageId', 'status', 'link']
+            }),
+            columns: [
+                {
+                    header: 'usage_type',
+                    dataIndex: 'usageType'
+                },
+                {
+                    header: 'usage_id',
+                    dataIndex: 'usageId'
+                },
+                {
+                    header: 'status',
+                    dataIndex: 'status',
+                    renderer: function (v) {
+                        var out = '';
+                        if (v & 8) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        if (v & 4) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        if (v & 2) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        if (v & 1) {
+                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
+                        }
+                        return out;
+                    }
+                }
+            ]
+        }];
 
-        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
-            this.debugFileIndex = this.accordionPanels.length;
+        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
             this.accordionPanels.push({
-                xtype: 'editorgrid',
+                xtype: 'grid',
+                itemId: 'file-debug',
                 title: 'Debug File',
-                iconCls: 'p-gui-menu_debug-icon',
+                iconCls: Phlexible.Icon.get('bug'),
                 border: false,
                 stripeRows: true,
                 autoHeight: true,
                 autoExpandColumn: 'value',
                 collapsed: true,
-                store: new Ext.data.SimpleStore({
+                store: Ext.create('Ext.data.Store', {
                     fields: ['key', 'value']
                 }),
                 columns: [
                     {
                         header: 'key',
-                        dataIndex: 'key'
+                        dataIndex: 'key',
+                        width: 100
                     },
                     {
-                        id: 'value',
                         header: 'value',
                         dataIndex: 'value',
-                        editor: new Ext.form.TextField()
+                        editor: 'textfield',
+                        flex: 1
                     }
                 ]
             });
 
-            this.debugCacheIndex = this.accordionPanels.length;
             this.accordionPanels.push({
-                xtype: 'editorgrid',
+                xtype: 'grid',
+                itemId: 'folder-debug',
+                title: 'Debug Folder',
+                iconCls: Phlexible.Icon.get('bug'),
+                border: false,
+                stripeRows: true,
+                autoHeight: true,
+                autoExpandColumn: 'value',
+                collapsed: true,
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['key', 'value']
+                }),
+                columns: [
+                    {
+                        header: 'key',
+                        dataIndex: 'key',
+                        width: 100
+                    },
+                    {
+                        header: 'value',
+                        dataIndex: 'value',
+                        editor: 'textfield',
+                        flex: 1
+                    }
+                ]
+            });
+
+            this.accordionPanels.push({
+                xtype: 'grid',
+                itemId: 'cache-debug',
                 title: 'Debug Cache',
-                iconCls: 'p-gui-menu_debug-icon',
+                iconCls: Phlexible.Icon.get('bug'),
                 border: false,
                 stripeRows: true,
                 autoHeight: true,
                 autoExpandColumn: 'link',
                 collapsed: true,
-                store: new Ext.data.SimpleStore({
+                store: Ext.create('Ext.data.Store', {
                     fields: ['key', 'status', 'link']
                 }),
                 columns: [
@@ -173,9 +281,6 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
                         dataIndex: 'link'
                     }
                 ],
-                sm: new Ext.grid.RowSelectionModel({
-                    singleSelect: true
-                }),
                 listeners: {
                     rowdblclick: function (grid, rowIndex) {
                         var r = grid.store.getAt(rowIndex);
@@ -184,242 +289,110 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
                     }
                 }
             });
-        }
-
-        this.usedFolderIndex = this.accordionPanels.length;
-        this.accordionPanels.push({
-            xtype: 'editorgrid',
-            title: 'Folder used by',
-            iconCls: 'p-mediamanager-used_by-icon',
-            border: false,
-            stripeRows: true,
-            autoHeight: true,
-            //autoExpandColumn: 'value',
-            hidden: true,
-            collapsed: true,
-            store: new Ext.data.JsonStore({
-                fields: ['usage_type', 'usage_id', 'status', 'link']
-            }),
-            columns: [
-                {
-                    header: 'usage_type',
-                    dataIndex: 'usage_type'
-                },
-                {
-                    header: 'usage_id',
-                    dataIndex: 'usage_id'
-                },
-                {
-                    header: 'status',
-                    dataIndex: 'status',
-                    renderer: function (v) {
-                        var out = '';
-                        if (v & 8) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        if (v & 4) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        if (v & 2) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        if (v & 1) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        return out;
-                    }
-                }
-            ]
-        });
-
-        this.usedFileIndex = this.accordionPanels.length;
-        this.accordionPanels.push({
-            xtype: 'editorgrid',
-            title: 'File used by',
-            iconCls: 'p-mediamanager-used_by-icon',
-            border: false,
-            stripeRows: true,
-            autoHeight: true,
-            //autoExpandColumn: 'value',
-            hidden: true,
-            collapsed: true,
-            store: new Ext.data.JsonStore({
-                fields: ['usage_type', 'usage_id', 'status', 'link']
-            }),
-            columns: [
-                {
-                    header: 'usage_type',
-                    dataIndex: 'usage_type'
-                },
-                {
-                    header: 'usage_id',
-                    dataIndex: 'usage_id'
-                },
-                {
-                    header: 'status',
-                    dataIndex: 'status',
-                    renderer: function (v) {
-                        var out = '';
-                        if (v & 8) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        if (v & 4) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        if (v & 2) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        if (v & 1) {
-                            out += '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-                        }
-                        return out;
-                    }
-                }
-            ]
-        });
+        };
     },
 
     getPreviewPanel: function () {
-        return this.getComponent(0);
+        return this.getComponent('preview');
     },
 
     getDetailsPanel: function () {
-        return this.getComponent(1);
+        return this.getComponent('details');
     },
 
     getAccordionPanel: function () {
-        return this.getComponent(2);
+        return this.getComponent('accordions');
     },
 
     getFileVersionsPanel: function () {
-        return this.getAccordionPanel().getComponent(this.fileVersionsIndex);
+        return this.getAccordionPanel().getComponent('versions');
     },
 
     getFileAttributesPanel: function () {
-        return this.getAccordionPanel().getComponent(this.fileAttributesIndex);
+        return this.getAccordionPanel().getComponent('attributes');
     },
 
     getFolderMetaPanel: function () {
-        return this.getAccordionPanel().getComponent(this.folderMetaIndex);
+        return this.getAccordionPanel().getComponent('folder-meta');
     },
 
     getFileMetaPanel: function () {
-        return this.getAccordionPanel().getComponent(this.fileMetaIndex);
+        return this.getAccordionPanel().getComponent('file-meta');
     },
 
     getFolderUsedPanel: function () {
-        return this.getAccordionPanel().getComponent(this.usedFileIndex);
+        return this.getAccordionPanel().getComponent('folder-usage');
     },
 
     getFileUsedPanel: function () {
-        return this.getAccordionPanel().getComponent(this.usedFolderIndex);
+        return this.getAccordionPanel().getComponent('file-usage');
     },
 
     getFileDebugPanel: function () {
-        return this.getAccordionPanel().getComponent(this.debugFileIndex);
+        return this.getAccordionPanel().getComponent('file-debug');
+    },
+
+    getFolderDebugPanel: function () {
+        return this.getAccordionPanel().getComponent('folder-debug');
     },
 
     getCacheDebugPanel: function () {
-        return this.getAccordionPanel().getComponent(this.debugCacheIndex);
+        return this.getAccordionPanel().getComponent('cache-debug');
     },
 
-    setFolderRights: function (folder_rights) {
-        this.folder_rights = folder_rights;
+    setFolderRights: function (folderRights) {
+        this.folderRights = folderRights;
 
-        this.getFileMetaPanel().setRights(folder_rights);
-        this.getFolderMetaPanel().setRights(folder_rights);
+        this.getFileMetaPanel().setRights(folderRights);
+        this.getFolderMetaPanel().setRights(folderRights);
     },
 
-    setFolderUsage: function (used_in) {
+    loadFolderMeta: function (folderId) {
+        this.getFolderMetaPanel().loadMeta({folderId: folderId});
+    },
+
+    emptyFolder: function() {
+        // folder meta
+        this.getFolderMetaPanel().empty();
+
         // folder usage
-        this.getFolderUsedPanel().store.loadData(used_in);
-        this.getFolderUsedPanel().setTitle('Folder used by [' + this.getFolderUsedPanel().store.getCount() + ']');
-        if (this.getFolderUsedPanel().store.getCount()) {
-            this.getFolderUsedPanel().show();
+        this.getFolderUsedPanel().getStore().removeAll();
+
+        // debug
+        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+            this.getFileDebugPanel().getStore().removeAll();
+            this.getCacheDebugPanel().getStore().removeAll();
         }
-        else {
+    },
+
+    loadFolder: function(folder) {
+        this.setFolderRights(folder.data.rights);
+        this.loadFolderMeta(folder.id);
+
+        // folder usage
+        if (folder.get('usedId')) {
+            this.getFolderUsedPanel().store.loadData(folder.get('usedId'));
+            this.getFolderUsedPanel().setTitle('Folder used by [' + this.getFolderUsedPanel().getStore().getCount() + ']');
+        } else {
+            this.getFolderUsedPanel().getStore().removeAll();
+        }
+        if (this.getFolderUsedPanel().getStore().getCount()) {
+            this.getFolderUsedPanel().show();
+        } else {
             this.getFolderUsedPanel().hide();
         }
-    },
 
-    loadFolderMeta: function (folder_id) {
-        this.getFolderMetaPanel().loadMeta({folder_id: folder_id});
-    },
-
-    load: function (r) {
-        this.setTitle(r.get('name').shorten(40));
-
-        this.getPreviewPanel().loadRecord(r);
-
-        var properties = r.get('properties');
-        this.file_id = r.get('id');
-        this.file_version = r.get('version');
-
-//        this.attributesPanel.setTitle(this.strings.attributes + ' [' + properties.attributesCnt + ']');
-//        this.attributesPanel.setSource(properties.attributes);
-        var details = {
-            document_type: r.get('document_type'),
-            version: r.get('version'),
-            size: r.get('size'),
-            create_time: r.get('create_time'),
-            create_user: r.get('create_user')
-        };
-
-        Phlexible.mediamanager.templates.Details.overwrite(this.getDetailsPanel().body, details);
-
-//        this.doLayout();
-
-        if (properties.versions) {
-            this.getFileVersionsPanel().loadFile(this.file_id);
-        }
-        else {
-            this.getFileVersionsPanel().empty();
-        }
-
-        this.getFileAttributesPanel().setSource(r.get('attributes'));
-
-        this.getFileMetaPanel().loadMeta({
-            file_id: this.file_id,
-            file_version: this.file_version
-        });
-
-        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
-            var debugData = [
-                ['fileId', this.file_id],
-                ['fileVersion', this.file_version],
-                ['fileSize', r.get('size')],
-                ['folderId', r.get('folder_id')],
-                ['folder', r.get('folder')],
-                ['mimeType', r.get('mime_type')],
-                ['documentTypeKey', r.get('document_type_key')],
-                ['documentType', r.get('document_type')],
-                ['assetType', r.get('asset_type')]
-            ];
-            this.getFileDebugPanel().store.loadData(debugData);
-
-            var cacheData = [];
-            for (var i in r.data.cache) {
-                cacheData.push([
-                    i,
-                    r.data.cache[i],
-                    r.data.cache[i]
-                ]);
-            }
-            this.getCacheDebugPanel().store.loadData(cacheData);
-        }
-
-        // file usage
-        this.getFileUsedPanel().store.loadData(r.data.used_in);
-        this.getFileUsedPanel().setTitle('File used by [' + this.getFileUsedPanel().getStore().getCount() + ']');
-        if (this.getFileUsedPanel().store.getCount()) {
-            this.getFileUsedPanel().show();
-        }
-        else {
-            this.getFileUsedPanel().hide();
+        // debug
+        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+            var debugData = [];
+            Ext.Object.each(folder.data, function(key, value) {
+                debugData.push({key: key, value: value});
+            });
+            this.getFolderDebugPanel().getStore().loadData(debugData);
         }
     },
 
-    empty: function () {
+    emptyFile: function() {
         this.setTitle(this.strings.no_file_selected);
 
         // preview
@@ -431,24 +404,94 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
         // file attributes
         this.getFileAttributesPanel().setSource({});
 
-        // folder meta
-        this.getFolderMetaPanel().empty();
-
         // file meta
         this.getFileMetaPanel().empty();
-
-        // debug
-        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
-            this.getFileDebugPanel().getStore().removeAll();
-            this.getCacheDebugPanel().getStore().removeAll();
-        }
 
         // file usage
         this.getFileUsedPanel().getStore().removeAll();
 
-        // folder usage
-        this.getFolderUsedPanel().getStore().removeAll();
+        // debug
+        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+            this.getFileDebugPanel().getStore().removeAll();
+            this.getCacheDebugPanel().getStore().removeAll();
+        }
+    },
+
+    loadFile: function (file) {
+        this.setTitle(Ext.String.ellipsis(file.get('name'), 40));
+        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(file.get('documentTypeKey')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
+        this.setIconCls(documentTypeClass + '-small');
+
+        this.getPreviewPanel().loadRecord(file);
+
+        var properties = file.get('properties');
+        this.fileId = file.get('id');
+        this.fileVersion = file.get('version');
+
+//        this.attributesPanel.setTitle(this.strings.attributes + ' [' + properties.attributesCnt + ']');
+//        this.attributesPanel.setSource(properties.attributes);
+        var details = {
+            document_type: file.get('documentType'),
+            version: file.get('version'),
+            size: file.get('size'),
+            create_time: file.get('createTime'),
+            create_user: file.get('createUser')
+        };
+
+        this.detailsTpl.overwrite(this.getDetailsPanel().body, details);
+
+        if (properties.versions) {
+            this.getFileVersionsPanel().loadFile(this.fileId);
+        }
+        else {
+            this.getFileVersionsPanel().empty();
+        }
+
+        this.getFileAttributesPanel().setSource(file.get('attributes'));
+
+        this.getFileMetaPanel().loadMeta({
+            fileId: this.fileId,
+            fileVersion: this.fileVersion
+        });
+
+        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+            var debugData = [];
+            Ext.Object.each(file.data, function(key, value) {
+                debugData.push({key: key, value: value});
+            });
+            this.getFileDebugPanel().store.loadData(debugData);
+
+            var cacheData = [];
+            if (file.get('cache')) {
+                for (var i in file.get('cache')) {
+                    cacheData.push([
+                        i,
+                        file.data.cache[i],
+                        file.data.cache[i]
+                    ]);
+                }
+                this.getCacheDebugPanel().getStore().loadData(cacheData);
+            } else {
+                this.getCacheDebugPanel().getStore().removeAll();
+            }
+        }
+
+        // file usage
+        if (file.get('usedId')) {
+            this.getFileUsedPanel().store.loadData(file.get('usedId'));
+            this.getFileUsedPanel().setTitle('File used by [' + this.getFileUsedPanel().getStore().getCount() + ']');
+        } else {
+            this.getFileUsedPanel().getStore().removeAll();
+        }
+        if (this.getFileUsedPanel().getStore().getCount()) {
+            this.getFileUsedPanel().show();
+        } else {
+            this.getFileUsedPanel().hide();
+        }
+    },
+
+    empty: function () {
+        this.emptyFile();
+        this.emptyFolder();
     }
 });
-
-Ext.reg('mediamanager-attributespanel', Phlexible.mediamanager.AttributesPanel);

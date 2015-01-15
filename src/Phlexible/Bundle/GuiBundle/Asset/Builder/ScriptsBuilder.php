@@ -112,6 +112,7 @@ class ScriptsBuilder
         $allowedEntry = array(
             'phlexibledashboard',
             'phlexiblegui',
+            'phlexiblemediamanager',
             'phlexiblemediatemplate',
             'phlexiblemediatype',
             'phlexiblemetaset',
@@ -202,7 +203,6 @@ class ScriptsBuilder
             }
 
             if (preg_match_all('/requires:\s*\[(["\'].+["\'])\]/m', $body, $matches)) {
-                $file->requires = array();
                 foreach ($matches[1] as $require) {
                     $parts = explode(', ', $require);
                     foreach ($parts as $part) {
@@ -259,11 +259,20 @@ class ScriptsBuilder
                 'splitbutton',
                 'fieldset',
                 'tbtext',
+                'propertygrid',
+                'cycle',
+                'progressbar',
+                'slider',
+                'breadcrumb',
+                'container',
+                'label',
+                'textarea',
+                'datecolumn',
             );
 
             if (!empty($file->requires)) {
                 foreach ($file->requires as $require) {
-                    if ((substr($require, 0, 4) === 'Ext.' && substr($require, 0, 8) !== 'Ext.app.') || in_array($require, $skip)) {
+                    if ((substr($require, 0, 4) === 'Ext.' && substr($require, 0, 7) !== 'Ext.ux.') || in_array($require, $skip)) {
                         continue;
                     }
                     if (!isset($symbols[$require])) {
@@ -280,6 +289,10 @@ class ScriptsBuilder
         //foreach ($files as $file) {
             addToResult($file, $results, $symbols);
         }
+
+        $file = $files['/phlexible/scripts/phlexiblemediamanager/ux/plupload.full.min.js'];
+        $file->added = true;
+        $results->set($file->path, $file->file);
 
         $unusedPaths = array();
         foreach ($files as $path => $file) {

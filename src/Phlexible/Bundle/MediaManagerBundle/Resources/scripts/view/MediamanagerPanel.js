@@ -1,21 +1,13 @@
-Ext.provide('Phlexible.mediamanager.MediamanagerPanel');
+Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.mediamanager-main',
 
-Ext.require('Ext.ux.LocationBar');
-Ext.require('Phlexible.mediamanager.UploadStatusBar');
-Ext.require('Phlexible.mediamanager.FolderTree');
-Ext.require('Phlexible.mediamanager.AttributesPanel');
-Ext.require('Phlexible.mediamanager.FilesGrid');
-Ext.require('Phlexible.mediamanager.FileDetailWindow');
-Ext.require('Phlexible.mediamanager.UploadChecker');
-Ext.require('plupload');
-
-Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
     layout: 'border',
     closable: true,
-    cls: 'p-mediamanager-main-panel',
-    iconCls: 'p-mediamanager-component-icon',
+    cls: 'p-mediamanager-main',
+    iconCls: Phlexible.Icon.get('images'),
     strings: Phlexible.mediamanager.Strings,
-    border: true,
+    border: false,
 
     mode: '',
     params: {},
@@ -32,8 +24,8 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 params.start_folder_path = '/root' + params.start_folder_path;
             }
 
-            var n = this.getFolderTree().getSelectionModel().getSelectedNode();
-            if (!n || n.getPath() !== params.start_folder_path) {
+            var folder = this.getFolderTree().getSelectionModel().getSelection()[0];
+            if (!folder || folder.getPath() !== params.start_folder_path) {
                 this.getFolderTree().selectPath(params.start_folder_path);
             } else if (params.start_file_id) {
                 var i = this.getFilesGrid().getStore().find('id', params.start_file_id);
@@ -77,447 +69,18 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
          });
          */
 
-        this.tbarIndex = {
-            newFolder: 0,
-            upload: 2,
-            download: 4,
-            view: 6,
-            filter: 8
-        };
+        this.initMyItems();
+        this.initMyDockedItems();
 
-        this.items = [
-            {
-                xtype: 'locationbar',
-                region: 'north',
-                height: 28,
-                border: false,
-                stopNodeId: 'root',
-                noHome: true
-                //handler: function(node) {
-                //    node.select();
-                //    node.getOwnerTree().onClick(node);
-                //}
-            },
-            {
-                region: 'center',
-                layout: 'border',
-                border: false,
-
-                items: [
-                    this.createFolderTreeConfig(),
-                    this.createFilesGridConfig(),
-                    this.createAttributesPanelConfig()
-                ],
-                tbar: [
-                    {
-                        // 0
-                        text: this.strings.new_folder,
-                        iconCls: 'p-mediamanager-folder_add-icon',
-                        handler: this.onNewFolder,
-                        scope: this
-                    },
-                    ' ',
-                    // 2
-                    {
-                        text: this.strings.upload_files,
-                        iconCls: 'p-mediamanager-upload-icon'
-                    },
-                    ' ',
-                    {
-                        // 4
-                        text: this.strings.download,
-                        iconCls: 'p-mediamanager-download-icon',
-                        menu: [
-                            {
-                                text: this.strings.download_folder,
-                                iconCls: 'p-mediamanager-download_folder-icon',
-                                handler: this.onDownloadFolder,
-                                scope: this
-                            },
-                            {
-                                text: this.strings.download_files,
-                                iconCls: 'p-mediamanager-download_files-icon',
-                                handler: this.onDownloadFiles,
-                                scope: this
-                            }
-                        ]
-                    },
-                    '->',
-                    {
-                        // 6
-                        xtype: 'splitbutton',
-                        text: this.strings.views,
-                        iconCls: 'p-mediamanager-view_tile-icon',
-                        handler: function (button) {
-                            this.getFilesGrid().view.nextViewMode();
-                        },
-                        scope: this,
-                        menu: [
-                            {
-                                text: this.strings.view_extralarge,
-                                iconCls: 'p-mediamanager-view_extralarge-icon',
-                                handler: function () {
-                                    this.getFilesGrid().view.extraLargeThumbnails();
-                                },
-                                scope: this
-                            },
-                            {
-                                text: this.strings.view_large,
-                                iconCls: 'p-mediamanager-view_large-icon',
-                                handler: function () {
-                                    this.getFilesGrid().view.largeThumbnails();
-                                },
-                                scope: this
-                            },
-                            {
-                                text: this.strings.view_medium,
-                                iconCls: 'p-mediamanager-view_medium-icon',
-                                handler: function () {
-                                    this.getFilesGrid().view.mediumThumbnails();
-                                },
-                                scope: this
-                            },
-                            {
-                                text: this.strings.view_small,
-                                iconCls: 'p-mediamanager-view_small-icon',
-                                handler: function () {
-                                    this.getFilesGrid().view.smallThumbnails();
-                                },
-                                scope: this
-                            },
-                            {
-                                text: this.strings.view_tiles,
-                                iconCls: 'p-mediamanager-view_tile-icon',
-                                handler: function () {
-                                    this.getFilesGrid().view.tileView();
-                                },
-                                scope: this
-                            },
-                            {
-                                text: this.strings.view_details,
-                                iconCls: 'p-mediamanager-view_detail-icon',
-                                handler: function () {
-                                    this.getFilesGrid().view.detailView();
-                                },
-                                scope: this
-                            },
-                            /*{
-                             text: 'Timeline',
-                             iconCls: 'p-mediamanager-view_timeline-icon',
-                             handler: function(){
-                             this.getFilesGrid().view.timelineView();
-                             },
-                             scope: this
-                             },*/
-                            '-',
-                            {
-                                xtype: 'checkbox',
-                                text: this.strings.show_hidden_files,
-                                checked: false,
-                                handler: function () {
-                                    this.getFilesGrid().getStore().baseParams.show_hidden = !this.getFilesGrid().getStore().baseParams.show_hidden ? 1 : 0;
-                                    this.getFilesGrid().getStore().reload();
-                                },
-                                scope: this
-                            }
-                        ]
-                    },
-                    ' ',
-                    {
-                        // 8
-                        xtype: 'button',
-                        text: this.strings.filters,
-                        iconCls: 'p-mediamanager-filter_no-icon',
-                        hidden: this.hideFilter,
-                        //handler: function() {
-                        //Ext.getCmp('mediamanager-files-grid').view.nextViewMode();
-                        //},
-                        menu: [
-                            {
-                                text: this.strings.filter_no,
-                                iconCls: 'p-mediamanager-filter_no-icon',
-                                handler: function () {
-                                    this.getFilesGrid().clearFilter();
-                                },
-                                scope: this
-                            },
-                            '-',
-                            {
-                                text: this.strings.filter_by_user,
-                                iconCls: 'p-mediamanager-filter_mine-icon',
-                                menu: [
-                                    {
-                                        text: this.strings.filter_my_created,
-                                        checked: false,
-                                        group: 'user',
-                                        handler: function () {
-                                            this.getFilesGrid().setFilter('createUserId', Phlexible.Config.get('user.id'));
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_my_modified,
-                                        checked: false,
-                                        group: 'user',
-                                        handler: function () {
-                                            this.getFilesGrid().setFilter('modifyUserId', Phlexible.Config.get('user.id'));
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_other_created,
-                                        checked: false,
-                                        group: 'user',
-                                        handler: function () {
-                                            this.getFilesGrid().setFilter('notCreateUserId', Phlexible.Config.get('user.id'));
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_other_modified,
-                                        checked: false,
-                                        group: 'user',
-                                        handler: function () {
-                                            this.getFilesGrid().setFilter('notModifyUserId', Phlexible.Config.get('user.id'));
-                                        },
-                                        scope: this
-                                    }
-                                ]
-                            },
-                            {
-                                text: this.strings.filter_by_age_created,
-                                iconCls: 'p-mediamanager-filter_age-icon',
-                                menu: [
-                                    {
-                                        text: this.strings.filter_age_one_day,
-                                        checked: false,
-                                        group: 'ageCreated',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeCreated', '1day');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_two_days,
-                                        checked: false,
-                                        group: 'ageCreated',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeCreated', '2days');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_one_week,
-                                        checked: false,
-                                        group: 'ageCreated',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeCreated', '1week');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_one_month,
-                                        checked: false,
-                                        group: 'ageCreated',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeCreated', '1month');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_six_months,
-                                        checked: false,
-                                        group: 'ageCreated',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeCreated', '6months');
-                                        },
-                                        scope: this
-                                    }
-                                ]
-                            },
-                            {
-                                text: this.strings.filter_by_age_modified,
-                                iconCls: 'p-mediamanager-filter_age_modified-icon',
-                                menu: [
-                                    {
-                                        text: this.strings.filter_age_one_day,
-                                        checked: false,
-                                        group: 'ageModified',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeModified', '1day');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_two_days,
-                                        checked: false,
-                                        group: 'ageModified',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeModified', '2days');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_one_week,
-                                        checked: false,
-                                        group: 'ageModified',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeModified', '1week');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_one_month,
-                                        checked: false,
-                                        group: 'ageModified',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeModified', '1month');
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_age_six_months,
-                                        checked: false,
-                                        group: 'ageModified',
-                                        handler: function () {
-                                            this.getFilesGrid().setTimeFilter('timeModified', '6months');
-                                        },
-                                        scope: this
-                                    }
-                                ]
-                            },
-                            {
-                                text: this.strings.filter_by_type,
-                                iconCls: 'p-mediamanager-filter_document-icon',
-                                menu: [
-                                    {
-                                        text: this.strings.filter_type_image,
-                                        iconCls: 'p-mediamanager-filter_image-icon',
-                                        checked: false,
-                                        group: 'type',
-                                        handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.IMAGE);
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_type_video,
-                                        iconCls: 'p-mediamanager-filter_video-icon',
-                                        checked: false,
-                                        group: 'type',
-                                        handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.VIDEO);
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_type_audio,
-                                        iconCls: 'p-mediamanager-filter_audio-icon',
-                                        checked: false,
-                                        group: 'type',
-                                        handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.AUDIO);
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_type_flash,
-                                        iconCls: 'p-mediamanager-filter_flash-icon',
-                                        checked: false,
-                                        group: 'type',
-                                        handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.FLASH);
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_type_document,
-                                        iconCls: 'p-mediamanager-filter_document-icon',
-                                        checked: false,
-                                        group: 'type',
-                                        handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.DOCUMENT);
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_type_archive,
-                                        iconCls: 'p-mediamanager-filter_archive-icon',
-                                        checked: false,
-                                        group: 'type',
-                                        handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.ARCHIVE);
-                                        },
-                                        scope: this
-                                    },
-                                    {
-                                        text: this.strings.filter_type_other,
-                                        iconCls: 'p-mediamanager-filter_other-icon',
-                                        checked: false,
-                                        group: 'type',
-                                        handler: function () {
-                                            this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.OTHER);
-                                        },
-                                        scope: this
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                xtype: 'mediamanager-uploadstatusbar',
-                region: 'south'
-            }/*,new Teamstorage.extendedsearch.ExtendedSearch({
-             region: 'south',
-             height: 200,
-             minHeight: 200,
-             collapsible: true,
-             collapsed: true,
-             split: true,
-             floatable: false,
-             titleCollapse: true,
-             listeners: {
-             search: {
-             fn: this.onSearch,
-             scope: this
-             }
-             }
-             })*/
-        ];
-
-        Phlexible.mediamanager.MediamanagerPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
-    getLocationBar: function () {
-        return this.getComponent(0);
-    },
-
-    getMainPanel: function () {
-        return this.getComponent(1);
-    },
-
-    getFolderTree: function () {
-        return this.getMainPanel().getComponent(0);
-    },
-
-    getAttributesPanel: function () {
-        return this.getMainPanel().getComponent(2);
-    },
-
-    getFilesGrid: function () {
-        return this.getMainPanel().getComponent(1);
-    },
-
-    getStatusBar: function () {
-        return this.getComponent(2);
-    },
-
-    createFolderTreeConfig: function () {
-        return {
-            xtype: 'mediamanager-foldertree',
+    initMyItems: function() {
+        this.items = [{
+            xtype: 'mediamanager-folders',
+            itemId: 'folders',
             region: 'west',
+            margin: '5 0 5 5',
             width: 200,
             start_folder_path: this.params.start_folder_path || false,
             split: true,
@@ -525,12 +88,12 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             maxWidth: 400,
             listeners: {
                 render: function (c) {
-                    this.getLocationBar().bindTree(c);
+                    //this.getLocationBar().setStore(c.getStore());
+                    //this.getLocationBar().updateSelection(c.getStore().getRoot().childNodes[0]);
                 },
                 reload: this.onReload,
                 folderChange: this.onFolderChange,
                 nodedragover: function (e) {
-                    console.log('nodedragover');
                     if (e.target.id == 'root') {
                         // root node can not be dragged
                         return false;
@@ -556,30 +119,21 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                             }
                         }
                     }
-                    console.log('true');
                     return true;
                 },
                 beforenodedrop: this.onMove,
                 scope: this
             }
-        };
-    },
-
-    createFilesGridConfig: function () {
-        return {
-            xtype: 'mediamanager-filesgrid',
+        },{
+            xtype: 'mediamanager-files',
+            itemId: 'files',
             region: 'center',
+            margin: '5 5 5 0',
             border: true,
             viewMode: this.params.file_view || false,
             assetType: this.params.assetType || false,
             documenttypes: this.params.documenttypes || false,
             start_file_id: this.params.start_file_id || false,
-            viewConfig: {
-                modeChange: function (e, mode) {
-                    this.getMainPanel().getTopToolbar().items.get(this.tbarIndex.view).setIconClass('p-mediamanager-view_' + mode + '-icon');
-                },
-                scope: this
-            },
             listeners: {
                 fileChange: this.onFileChange,
                 rowdblclick: this.onFileDblClick,
@@ -589,7 +143,465 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 render: this.initUploader,
                 scope: this
             }
-        };
+        },{
+            xtype: 'mediamanager-attributes',
+            itemId: 'attributes',
+            region: 'east',
+            margin: '5 5 5 0',
+            width: 290,
+            collapsible: true,
+            collapsed: this.params.hide_properties || false,
+            mode: this.mode,
+            listeners: {
+                versionSelect: function (file_id, file_version, file_name, folder_id, document_type_key, asset_type) {
+                    if (this.mode == 'select') {
+                        this.fireEvent('fileSelect', file_id, file_version, file_name, folder_id);
+                    }
+                    else {
+                        var w = new Phlexible.mediamanager.FileDetailWindow({
+                            iconCls: document_type_key,
+                            file_id: file_id,
+                            file_version: file_version,
+                            file_name: file_name,
+                            document_type_key: document_type_key,
+                            asset_type: asset_type
+                        });
+                        w.show();
+                    }
+                },
+                versionDownload: this.onDownloadFile,
+                scope: this
+            }
+        }];
+    },
+
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'location',
+            dock: 'top',
+            items: [{
+                xtype: 'breadcrumb',
+                itemId: 'breadcrumb',
+                dock: 'top',
+                //height: 28,
+                showIcons: true,
+                showMenuIcons: true,
+                useSplitButtons: false,
+                //border: false,
+                //stopNodeId: 'root',
+                //noHome: true
+                //handler: function(node) {
+                //    node.select();
+                //    node.getOwnerTree().onClick(node);
+                //}
+                listeners: {
+                    selectionchange: function(c, node) {
+                        if (node) {
+                            this.onFolderChange(node);
+                        }
+                    },
+                    scope: this
+                }
+            }]
+        },{
+            xtype: 'toolbar',
+            itemId: 'tbar',
+            dock: 'top',
+            items: [
+                {
+                    // 0
+                    text: this.strings.new_folder,
+                    itemId: 'createFolderBtn',
+                    iconCls: Phlexible.Icon.get('folder--plus'),
+                    handler: this.onNewFolder,
+                    scope: this
+                },
+                ' ',
+                // 2
+                {
+                    text: this.strings.upload_files,
+                    itemId: 'uploadBtn',
+                    iconCls: Phlexible.Icon.get('drive-upload')
+                },
+                ' ',
+                {
+                    // 4
+                    text: this.strings.download,
+                    itemId: 'downloadBtn',
+                    iconCls: Phlexible.Icon.get('drive-download'),
+                    menu: [
+                        {
+                            text: this.strings.download_folder,
+                            iconCls: Phlexible.Icon.get('folder'),
+                            handler: this.onDownloadFolder,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.download_files,
+                            iconCls: Phlexible.Icon.get('documents'),
+                            handler: this.onDownloadFiles,
+                            scope: this
+                        }
+                    ]
+                },
+                '->',
+                {
+                    // 6
+                    xtype: 'splitbutton',
+                    itemId: 'viewBtn',
+                    text: this.strings.views,
+                    iconCls: Phlexible.Icon.get('application-tile'),
+                    handler: this.nextViewMode,
+                    scope: this,
+                    menu: [
+                        {
+                            text: this.strings.view_extralarge,
+                            iconCls: Phlexible.Icon.get('application-icon-large'),
+                            itemId: 'extra',
+                            handler: this.updateViewMode,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.view_large,
+                            iconCls: Phlexible.Icon.get('application-icon-large'),
+                            itemId: 'large',
+                            handler: this.updateViewMode,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.view_medium,
+                            iconCls: Phlexible.Icon.get('application-icon'),
+                            itemId: 'medium',
+                            handler: this.updateViewMode,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.view_small,
+                            iconCls: Phlexible.Icon.get('application-icon'),
+                            itemId: 'small',
+                            handler: this.updateViewMode,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.view_tiles,
+                            iconCls: Phlexible.Icon.get('application-tile'),
+                            itemId: 'tile',
+                            handler: this.updateViewMode,
+                            scope: this
+                        },
+                        {
+                            text: this.strings.view_details,
+                            iconCls: Phlexible.Icon.get('application-list'),
+                            itemId: 'list',
+                            handler: this.updateViewMode,
+                            scope: this
+                        },
+                        '-',
+                        {
+                            xtype: 'checkbox',
+                            text: this.strings.show_hidden_files,
+                            checked: false,
+                            handler: function () {
+                                this.getFilesGrid().getStore().baseParams.show_hidden = !this.getFilesGrid().getStore().baseParams.show_hidden ? 1 : 0;
+                                this.getFilesGrid().getStore().reload();
+                            },
+                            scope: this
+                        }
+                    ]
+                },
+                ' ',
+                {
+                    // 8
+                    xtype: 'button',
+                    itemId: 'filterBtn',
+                    text: this.strings.filters,
+                    iconCls: Phlexible.Icon.get('funnel'),
+                    hidden: this.hideFilter,
+                    menu: [
+                        {
+                            text: this.strings.filter_no,
+                            iconCls: Phlexible.Icon.get('funnel'),
+                            handler: function () {
+                                this.getFilesGrid().clearFilter();
+                            },
+                            scope: this
+                        },
+                        '-',
+                        {
+                            text: this.strings.filter_by_user,
+                            iconCls: Phlexible.Icon.get('user'),
+                            menu: [
+                                {
+                                    text: this.strings.filter_my_created,
+                                    checked: false,
+                                    group: 'user',
+                                    handler: function () {
+                                        this.getFilesGrid().setFilter('createUserId', Phlexible.App.getUser().getId());
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_my_modified,
+                                    checked: false,
+                                    group: 'user',
+                                    handler: function () {
+                                        this.getFilesGrid().setFilter('modifyUserId', Phlexible.App.getUser().getId());
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_other_created,
+                                    checked: false,
+                                    group: 'user',
+                                    handler: function () {
+                                        this.getFilesGrid().setFilter('notCreateUserId', Phlexible.App.getUser().getId());
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_other_modified,
+                                    checked: false,
+                                    group: 'user',
+                                    handler: function () {
+                                        this.getFilesGrid().setFilter('notModifyUserId', Phlexible.App.getUser().getId());
+                                    },
+                                    scope: this
+                                }
+                            ]
+                        },
+                        {
+                            text: this.strings.filter_by_age_created,
+                            iconCls: Phlexible.Icon.get('clock'),
+                            menu: [
+                                {
+                                    text: this.strings.filter_age_one_day,
+                                    checked: false,
+                                    group: 'ageCreated',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeCreated', '1day');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_two_days,
+                                    checked: false,
+                                    group: 'ageCreated',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeCreated', '2days');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_one_week,
+                                    checked: false,
+                                    group: 'ageCreated',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeCreated', '1week');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_one_month,
+                                    checked: false,
+                                    group: 'ageCreated',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeCreated', '1month');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_six_months,
+                                    checked: false,
+                                    group: 'ageCreated',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeCreated', '6months');
+                                    },
+                                    scope: this
+                                }
+                            ]
+                        },
+                        {
+                            text: this.strings.filter_by_age_modified,
+                            iconCls: Phlexible.Icon.get('clock'),
+                            menu: [
+                                {
+                                    text: this.strings.filter_age_one_day,
+                                    checked: false,
+                                    group: 'ageModified',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeModified', '1day');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_two_days,
+                                    checked: false,
+                                    group: 'ageModified',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeModified', '2days');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_one_week,
+                                    checked: false,
+                                    group: 'ageModified',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeModified', '1week');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_one_month,
+                                    checked: false,
+                                    group: 'ageModified',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeModified', '1month');
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_age_six_months,
+                                    checked: false,
+                                    group: 'ageModified',
+                                    handler: function () {
+                                        this.getFilesGrid().setTimeFilter('timeModified', '6months');
+                                    },
+                                    scope: this
+                                }
+                            ]
+                        },
+                        {
+                            text: this.strings.filter_by_type,
+                            iconCls: Phlexible.Icon.get('document'),
+                            menu: [
+                                {
+                                    text: this.strings.filter_type_image,
+                                    iconCls: Phlexible.Icon.get('image'),
+                                    checked: false,
+                                    group: 'type',
+                                    handler: function () {
+                                        this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.IMAGE);
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_type_video,
+                                    iconCls: Phlexible.Icon.get('film'),
+                                    checked: false,
+                                    group: 'type',
+                                    handler: function () {
+                                        this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.VIDEO);
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_type_audio,
+                                    iconCls: Phlexible.Icon.get('music'),
+                                    checked: false,
+                                    group: 'type',
+                                    handler: function () {
+                                        this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.AUDIO);
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_type_flash,
+                                    iconCls: Phlexible.Icon.get('document-flash-movie'),
+                                    checked: false,
+                                    group: 'type',
+                                    handler: function () {
+                                        this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.FLASH);
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_type_document,
+                                    iconCls: Phlexible.Icon.get('document'),
+                                    checked: false,
+                                    group: 'type',
+                                    handler: function () {
+                                        this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.DOCUMENT);
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_type_archive,
+                                    iconCls: Phlexible.Icon.get('document-zipper'),
+                                    checked: false,
+                                    group: 'type',
+                                    handler: function () {
+                                        this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.ARCHIVE);
+                                    },
+                                    scope: this
+                                },
+                                {
+                                    text: this.strings.filter_type_other,
+                                    iconCls: Phlexible.Icon.get('document'),
+                                    checked: false,
+                                    group: 'type',
+                                    handler: function () {
+                                        this.getFilesGrid().setAssetTypeFilter(Phlexible.mediamanager.OTHER);
+                                    },
+                                    scope: this
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },{
+            xtype: 'mediamanager-upload-statusbar',
+            itemId: 'updatestatus',
+            dock: 'bottom'
+        }];
+    },
+
+    getLocationBar: function () {
+        return this.getDockedComponent('location').getComponent('breadcrumb');
+    },
+
+    getFolderTree: function () {
+        return this.getComponent('folders');
+    },
+
+    getAttributesPanel: function () {
+        return this.getComponent('attributes');
+    },
+
+    getFilesGrid: function () {
+        return this.getComponent('files');
+    },
+
+    getStatusBar: function () {
+        return this.getDockedComponent('updatestatus');
+    },
+
+    updateViewMode: function(btn) {
+        this.getDockedComponent('tbar').getComponent('viewBtn').setIconCls(btn.iconCls);
+        this.getDockedComponent('tbar').getComponent('viewBtn').setText(btn.text);
+        this.getFilesGrid().features[0].setViewMode(btn.itemId);
+    },
+
+    nextViewMode: function(btn) {
+        var currentViewMode = this.getFilesGrid().features[0].getViewMode();
+
+        if (!currentViewMode || currentViewMode === 'list') {
+            this.updateViewMode(btn.getMenu().getComponent('extra'));
+        } else if (currentViewMode === 'extra') {
+            this.updateViewMode(btn.getMenu().getComponent('large'));
+        } else if (currentViewMode === 'large') {
+            this.updateViewMode(btn.getMenu().getComponent('medium'));
+        } else if (currentViewMode === 'medium') {
+            this.updateViewMode(btn.getMenu().getComponent('small'));
+        } else if (currentViewMode === 'small') {
+            this.updateViewMode(btn.getMenu().getComponent('tile'));
+        } else if (currentViewMode === 'tile') {
+            this.updateViewMode(btn.getMenu().getComponent('list'));
+        } else {
+            this.updateViewMode(btn.getMenu().getComponent('list'));
+        }
     },
 
     createDropper: function (c) {
@@ -628,47 +640,16 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         return div;
     },
 
-    createAttributesPanelConfig: function () {
-        return {
-            xtype: 'mediamanager-attributespanel',
-            region: 'east',
-            width: 290,
-            collapsible: true,
-            collapsed: this.params.hide_properties || false,
-            mode: this.mode,
-            listeners: {
-                versionSelect: function (file_id, file_version, file_name, folder_id, document_type_key, asset_type) {
-                    if (this.mode == 'select') {
-                        this.fireEvent('fileSelect', file_id, file_version, file_name, folder_id);
-                    }
-                    else {
-                        var w = new Phlexible.mediamanager.FileDetailWindow({
-                            iconCls: document_type_key,
-                            file_id: file_id,
-                            file_version: file_version,
-                            file_name: file_name,
-                            document_type_key: document_type_key,
-                            asset_type: asset_type
-                        });
-                        w.show();
-                    }
-                },
-                versionDownload: this.onDownloadFile,
-                scope: this
-            }
-        };
-    },
-
     initUploader: function () {
         //if (Phlexible.config.mediamanager.upload.disable_flash) {
         //    return;
         //}
-        var sessionID = Phlexible.Cookie.get('phlexible');
+        var sessionID = 'abc';//Phlexible.Cookie.get('phlexible'); // TODO
         if (!sessionID) {
             Phlexible.console.warn("No session ID, upload via flash _will_ fail!");
         }
 
-        var addBtn = this.getMainPanel().getTopToolbar().items.items[this.tbarIndex.upload];
+        var addBtn = this.getDockedComponent('tbar').getComponent('uploadBtn');
         /*
         var btn = addBtn.el.child('button');
         var suoID = Ext.id();
@@ -757,36 +738,37 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         this.getFilesGrid().getStore().reload();
     },
 
-    onFolderChange: function (folder_id, folder_name, node) {
-        this.folder_id = folder_id;
-        this.site_id = node.attributes.site_id;
+    onFolderChange: function (folder) {
+        this.folderId = folder.id;
+        this.volumeId = folder.data.volumeId;
 
-        if (node.id == 'root') return;
-        if (this.dndFormInput) document.getElementById('folder_id').value = folder_id;
+        if (folder.id == 'root') return;
+        if (this.dndFormInput) document.getElementById('folder_id').value = folder.id;
 
-        //this.locationBar.setNode(node);
+        var tbar = this.getDockedComponent('tbar');
+        //this.locationBar.setNode(folder);
         if (this.getFolderTree().checkRights(Phlexible.mediamanager.Rights.FOLDER_CREATE)) {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.newFolder).enable();
+            tbar.getComponent('createFolderBtn').enable();
         } else {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.newFolder).disable();
+            tbar.getComponent('createFolderBtn').disable();
         }
         if (this.getFolderTree().checkRights(Phlexible.mediamanager.Rights.FILE_CREATE)) {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.upload).enable();
+            tbar.getComponent('uploadBtn').enable();
         } else {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.upload).disable();
+            tbar.getComponent('uploadBtn').disable();
         }
 
-        if (node.attributes.versions) {
+        if (folder.data.versions) {
             this.getAttributesPanel().getComponent(2).getComponent(0).show();
         } else {
             this.getAttributesPanel().getComponent(2).getComponent(0).hide();
         }
 
         if (this.getFolderTree().checkRights(Phlexible.mediamanager.Rights.FILE_DOWNLOAD)) {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.download).enable();
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.download).menu.items.get(1).disable();
+            tbar.getComponent('downloadBtn').enable();
+            tbar.getComponent('downloadBtn').menu.items.get(1).disable();
         } else {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.download).disable();
+            tbar.getComponent('downloadBtn').disable();
         }
 
 //        if((!this.getFolderTree().checkRights('folder_modify') || !this.getFolderTree().checkRights('file_modify')) && (!this.getFolderTree().checkRights('folder_create') || !this.getFolderTree().checkRights('file_create'))) {
@@ -807,30 +789,22 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
 //            }
 //        }
 
-        var folder_rights = node.attributes.rights;
-
-        this.getFilesGrid().loadFiles(node.attributes.site_id, folder_id, folder_name, folder_rights);
+        this.getFilesGrid().loadFolder(folder.data.volumeId, folder.id, folder.data.text, folder.data.rights);
 
         this.getAttributesPanel().empty();
-        this.getAttributesPanel().setFolderRights(folder_rights);
-        this.getAttributesPanel().loadFolderMeta(folder_id);
-
-        if (node && node.attributes && node.attributes.used_in) {
-            this.getAttributesPanel().setFolderUsage(node.attributes.used_in);
-        }
+        this.getAttributesPanel().loadFolder(folder);
 
         Phlexible.mediamanager.lastParams = {
-            start_folder_path: node.getPath()
+            start_folder_path: folder.getPath()
         };
     },
 
-    onFileChange: function (r, sm) {
-        this.getAttributesPanel().load(r);
-
-        if (sm.getSelections().length >= 1 && this.getFolderTree().checkRights(Phlexible.mediamanager.Rights.FILE_DOWNLOAD)) {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.download).menu.items.get(1).enable();
+    onFileChange: function (grid, selection) {
+        if (selection.length >= 1 && this.getFolderTree().checkRights(Phlexible.mediamanager.Rights.FILE_DOWNLOAD)) {
+            this.getAttributesPanel().loadFile(selection[0]);
+            this.getDockedComponent('tbar').getComponent('downloadBtn').menu.items.get(1).enable();
         } else {
-            this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.download).menu.items.get(1).disable();
+            this.getDockedComponent('tbar').getComponent('downloadBtn').menu.items.get(1).disable();
         }
     },
 
@@ -847,7 +821,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 file_id: r.data.id,
                 file_version: r.data.version,
                 file_name: r.data.name,
-                document_type_key: r.data.document_type_key,
+                document_type_key: r.data.documenttypeKey,
                 asset_type: r.data.asset_type,
                 cache: r.data.cache,
                 rights: grid.folder_rights
@@ -884,7 +858,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             default:
                 s = 'no';
         }
-        this.getComponent(1).getTopToolbar().items.get(this.tbarIndex.filter).setIconClass('p-mediamanager-filter_' + s + '-icon');
+        this.getDockedComponent('tbar').getComponent('filterBtn').setIconCls('p-mediamanager-filter_' + s + '-icon');
     },
 
     onNewFolder: function () {
@@ -949,7 +923,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
 
     reloadFilesSortedLatest: function() {
         var store = this.getFilesGrid().getStore();
-        if (Phlexible.Config.get('mediamanager.upload.enable_upload_sort')) {
+        if (Phlexible.App.getConfig().get('mediamanager.upload.enable_upload_sort')) {
             if (!store.lastOptions) store.lastOptions = {};
             if (!store.lastOptions.params) store.lastOptions.params = {};
             store.lastOptions.params.start = 0;
@@ -972,12 +946,12 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
     },
 
     onDownloadFolder: function () {
-        var selFolder = this.getFolderTree().getSelectionModel().getSelectedNode();
-        var folder_id = selFolder.id;
+        var folder = this.getFolderTree().getSelectionModel().getSelection()[0];
+        var folderId = folder.id;
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_download_folder_zip'),
             params: {
-                folder_id: folder_id
+                folderId: folderId
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
@@ -1030,5 +1004,3 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         document.location.href = href;
     }
 });
-
-Ext.reg('mediamanager-mainpanel', Phlexible.mediamanager.MediamanagerPanel);

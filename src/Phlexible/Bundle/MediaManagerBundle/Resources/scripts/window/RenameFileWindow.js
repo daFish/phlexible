@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.mediamanager.RenameFileWindow');
+Ext.define('Phlexible.mediamanager.RenameFileWindow', {
+    extend: 'Phlexible.gui.util.Dialog',
 
-Phlexible.mediamanager.RenameFileWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.mediamanager.Strings.rename_file,
     width: 400,
     minWidth: 400,

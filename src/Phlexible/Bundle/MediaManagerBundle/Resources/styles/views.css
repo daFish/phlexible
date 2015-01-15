@@ -1,0 +1,128 @@
+.tpl-view {
+    table-layout: fixed;
+}
+
+.tpl-view .x-grid-row-alt {
+    background-color: transparent;
+}
+
+.tpl-view .x-grid-row {
+    margin: 8px 0 0 8px;
+    /* display: inline-block; */
+}
+
+.tpl-view .x-grid-cell {
+    border: none;
+    background: transparent;
+}
+
+/* extra */
+
+.extra-view {
+    float: left;
+}
+.extra-view .x-grid-cell {
+    width: 270px;
+    height: 278px;
+}
+.extra-view .extra-image img {
+    width: 256px;
+    height: 256px;
+}
+.extra-view .extra-text {
+    text-align: center;
+    text-overflow: ellipsis;
+    width: 270px;
+}
+
+/* large */
+
+.large-view {
+    float: left;
+}
+.large-view .x-grid-cell {
+    width: 114px;
+    height: 118px;
+}
+.large-view .large-image img {
+    width: 96px;
+    height: 96px;
+}
+.large-view .large-text {
+    text-align: center;
+    text-overflow: ellipsis;
+    width: 114px;
+}
+
+/* medium */
+
+.medium-view {
+    float: left;
+}
+.medium-view .x-grid-cell {
+    width: 114px;
+    height: 70px;
+}
+.medium-view .medium-image img {
+    width: 48px;
+    height: 48px;
+}
+.medium-view .medium-text {
+    text-align: center;
+    text-overflow: ellipsis;
+    width: 114px;
+}
+
+/* small */
+
+.small-view {
+    float: left;
+}
+.small-view .x-grid-cell {
+    width: 200px;
+    height: 18px;
+}
+.small-view img {
+    width: 16px;
+    height: 16px;
+}
+.small-view .x-grid-cell-inner {
+    text-overflow: ellipsis;
+    width: 200px;
+}
+
+/* tile */
+
+.tile-view {
+    float: left;
+}
+.tile-view .x-grid-cell {
+    width: 219px;
+    height: 52px;
+}
+.tile-view .tile-image {
+    float: left;
+}
+.tile-view .tile-image img {
+    width: 48px;
+    height: 48px;
+}
+.tile-view .tile-text {
+    float: left;
+    width: 150px;
+}
+.tile-view .tile-text-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+}
+.tile-view .type {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+}
+.tile-view .tile-text-size {
+    color: grey;
+}

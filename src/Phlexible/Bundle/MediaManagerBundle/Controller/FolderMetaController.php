@@ -32,7 +32,7 @@ class FolderMetaController extends Controller
      */
     public function metaAction(Request $request)
     {
-        $folderId = $request->get('folder_id');
+        $folderId = $request->get('folderId');
 
         $folder = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($folderId)->findFolder($folderId);
 
@@ -86,7 +86,7 @@ class FolderMetaController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $folderId = $request->get('folder_id');
+        $folderId = $request->get('folderId');
         $data = $request->get('data');
         $data = json_decode($data, true);
 
@@ -159,7 +159,7 @@ class FolderMetaController extends Controller
      */
     public function listsetsAction(Request $request)
     {
-        $folderId = $request->get('folder_id');
+        $folderId = $request->get('folderId');
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
@@ -186,7 +186,7 @@ class FolderMetaController extends Controller
      */
     public function savesetsAction(Request $request)
     {
-        $folderId = $request->get('folder_id');
+        $folderId = $request->get('folderId');
         $joinedIds = $request->get('ids');
         if ($joinedIds) {
             $ids = explode(',', $joinedIds);

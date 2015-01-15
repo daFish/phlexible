@@ -22,7 +22,9 @@
 
 /*global mOxie:true */
 
+/*
 Ext.provide('plupload');
+*/
 
 ;(function(window, o, undef) {
 

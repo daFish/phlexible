@@ -1,6 +1,8 @@
 Ext.provide('Phlexible.mediamanager.NewFolderWindow');
 
-Phlexible.mediamanager.NewFolderWindow = Ext.extend(Phlexible.gui.util.Dialog, {
+Ext.define('Phlexible.mediamanager.NewFolderWindow', {
+    extend: 'Phlexible.gui.util.Dialog',
+
     title: Phlexible.mediamanager.Strings.new_folder,
     width: 400,
     height: 210,
