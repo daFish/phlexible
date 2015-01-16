@@ -11,6 +11,8 @@ namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
+use Puli\Discovery\Api\Binding\ResourceBinding;
+use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\ResourceCollection;
 use Puli\Repository\Api\ResourceRepository;
 use Puli\Repository\Resource\DirectoryResource;
@@ -30,9 +32,9 @@ class ScriptsBuilder
     private $kernel;
 
     /**
-     * @var ResourceRepository
+     * @var ResourceDiscovery
      */
-    private $puliRepository;
+    private $puliDiscovery;
 
     /**
      * @var CompressorInterface
@@ -50,18 +52,18 @@ class ScriptsBuilder
     private $debug;
 
     /**
-     * @param ResourceRepository  $puliRepository
+     * @param ResourceDiscovery   $puliDiscovery
      * @param CompressorInterface $compressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        ResourceRepository $puliRepository,
+        ResourceDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
         $debug)
     {
-        $this->puliRepository = $puliRepository;
+        $this->puliDiscovery = $puliDiscovery;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -76,10 +78,10 @@ class ScriptsBuilder
     {
         $cache = new ResourceCollectionCache($this->cacheDir . '/gui.js', $this->debug);
 
-        $resources = $this->find();
+        $bindings = $this->findBindings();
 
-        if (!$cache->isFresh($resources)) {
-            $content = $this->buildScripts($resources);
+        if (!$cache->isFresh($bindings)) {
+            $content = $this->buildScripts($bindings);
 
             $cache->write($content);
 
@@ -93,126 +95,121 @@ class ScriptsBuilder
     }
 
     /**
-     * @return ResourceCollection
+     * @return ResourceBinding[]
      */
-    private function find()
+    private function findBindings()
     {
-        return $this->puliRepository->find('/phlexible/scripts/*/*.js');
+        return $this->puliDiscovery->find('phlexible/scripts');
     }
 
     /**
-     * @param ResourceCollection $resources
+     * @param ResourceBinding[] $bindings
      *
      * @return string
      */
-    private function buildScripts(ResourceCollection $resources)
+    private function buildScripts(array $bindings)
     {
         $entryPoints = array();
 
-        $allowedEntry = array(
-            'phlexibledashboard',
-            'phlexiblegui',
-            'phlexiblemediamanager',
-            'phlexiblemediatemplate',
-            'phlexiblemediatype',
-            'phlexiblemetaset',
-            'phlexibleproblem',
-            'phlexiblequeue',
-            'phlexiblesearch',
-            'phlexiblesiteroot',
-            'phlexibletask',
-        );
-
-        $dir = $this->puliRepository->get('/phlexible/scripts');
-        /* @var $dir DirectoryResource */
-        foreach ($dir->listChildren() as $dir) {
-            if (!in_array($dir->getName(), $allowedEntry)) {
-                continue;
+        foreach ($bindings as $binding) {
+            foreach ($binding->getResources() as $resource) {
+                if (preg_match('#^/phlexible/[a-z0-9\-_.]+/scripts/[A-Za-z0-9\-_.]+\.js$#', $resource->getPath())) {
+                    $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
+                }
             }
+        }
+
+        /*
+        $dir = $this->puliRepository->get('/phlexible/scripts');
+        foreach ($dir->listChildren() as $dir) {
+            //if ($dir->getName() !== 'phlexiblegui') continue;
             foreach ($dir->listChildren() as $resource) {
                 if ($resource instanceof FileResource && substr($resource->getName(), -3) === '.js') {
                     $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
                 }
             }
         }
+        */
 
         $files = array();
-        foreach ($resources as $resource) {
-            /* @var $resource FileResource */
+        foreach ($bindings as $binding) {
+            foreach ($binding->getResources() as $resource) {
+                /* @var $resource FileResource */
 
-            $body = $resource->getBody();
+                $body = $resource->getBody();
 
-            $file = new \stdClass();
-            $file->path = $resource->getPath();
-            $file->file = $resource->getFilesystemPath();
-            $file->requires = array();
-            $file->provides = array();
+                $file = new \stdClass();
+                $file->path = $resource->getPath();
+                $file->file = $resource->getFilesystemPath();
+                $file->requires = array();
+                $file->provides = array();
 
-            if (preg_match_all('/Ext\.define\(\s*["\'](.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $provide) {
-                    $file->provides[] = $provide;
-                }
-            }
-
-            if (preg_match_all('/alias:\s*["\']widget\.(.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $provide) {
-                    $file->provides[] = $provide;
-                }
-            }
-
-            if (preg_match_all('/Ext\.require\(["\'](.+)["\']\)/', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-            }
-
-            if (preg_match_all('/Ext\.create\(\s*["\'](.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-            }
-
-            if (preg_match_all('/extend:\s*["\'](.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-            }
-
-            if (preg_match_all('/xtype:\s*["\'](.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-            }
-
-            if (preg_match_all('/window:\s*["\'](.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-            }
-
-            if (preg_match_all('/model:\s*["\'](.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-            }
-
-            if (preg_match_all('/defaultType:\s*["\'](.+)["\']/', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $file->requires[] = $require;
-                }
-            }
-
-            if (preg_match_all('/requires:\s*\[(["\'].+["\'])\]/m', $body, $matches)) {
-                foreach ($matches[1] as $require) {
-                    $parts = explode(', ', $require);
-                    foreach ($parts as $part) {
-                        $file->requires[] = trim($part, " \t\n\r\0\"'");
+                if (preg_match_all('/Ext\.define\(\s*["\'](.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $provide) {
+                        $file->provides[] = $provide;
                     }
-
                 }
-            }
 
-            $files[$resource->getPath()] = $file;
+                if (preg_match_all('/alias:\s*["\']widget\.(.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $provide) {
+                        $file->provides[] = $provide;
+                    }
+                }
+
+                if (preg_match_all('/Ext\.require\(["\'](.+)["\']\)/', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $file->requires[] = $require;
+                    }
+                }
+
+                if (preg_match_all('/Ext\.create\(\s*["\'](.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $file->requires[] = $require;
+                    }
+                }
+
+                if (preg_match_all('/extend:\s*["\'](.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $file->requires[] = $require;
+                    }
+                }
+
+                if (preg_match_all('/xtype:\s*["\'](.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $file->requires[] = $require;
+                    }
+                }
+
+                if (preg_match_all('/window:\s*["\'](.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $file->requires[] = $require;
+                    }
+                }
+
+                if (preg_match_all('/model:\s*["\'](.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $file->requires[] = $require;
+                    }
+                }
+
+                if (preg_match_all('/defaultType:\s*["\'](.+)["\']/', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $file->requires[] = $require;
+                    }
+                }
+
+                if (preg_match_all('/requires:\s*\[(["\'].+["\'])\]/m', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $parts = explode(', ', $require);
+                        foreach ($parts as $part) {
+                            $file->requires[] = trim($part, " \t\n\r\0\"'");
+                        }
+
+                    }
+                }
+
+                $files[$resource->getPath()] = $file;
+            }
         }
 
         $entryPointFiles = array_intersect_key($files, $entryPoints);

@@ -1,83 +1,577 @@
 {
     "version": "1.0",
+    "name": "phlexible/phlexible",
     "resources": {
-        "/phlexible/icons/phlexiblephlexibleaccesscontrol": "src/Phlexible/Bundle/AccessControlBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblephlexiblecms": "src/Phlexible/Bundle/CmsBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblecontentchannel": "src/Phlexible/Bundle/ContentchannelBundle/Resources/public/icons",
-        "/phlexible/icons/phlexibledashboard": "src/Phlexible/Bundle/DashboardBundle/Resources/public/icons",
-        "/phlexible/icons/phlexibleelement": "src/Phlexible/Bundle/ElementBundle/Resources/public/icons",
-        "/phlexible/icons/phlexibleelementtype": "src/Phlexible/Bundle/ElementtypeBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblefrontendmedia": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblegui": "src/Phlexible/Bundle/GuiBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblemediacache": "src/Phlexible/Bundle/MediaCacheBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblemediamanager": "src/Phlexible/Bundle/MediaManagerBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblemediatemplate": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblemediatype": "src/Phlexible/Bundle/MediaTypeBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblemessage": "src/Phlexible/Bundle/MessageBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblemetaset": "src/Phlexible/Bundle/MetaSetBundle/Resources/public/icons",
-        "/phlexible/icons/phlexibleproblem": "src/Phlexible/Bundle/ProblemBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblequeue": "src/Phlexible/Bundle/QueueBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblesearch": "src/Phlexible/Bundle/SearchBundle/Resources/public/icons",
-        "/phlexible/icons/phlexiblesiteroot": "src/Phlexible/Bundle/SiterootBundle/Resources/public/icons",
-        "/phlexible/icons/phlexibletask": "src/Phlexible/Bundle/TaskBundle/Resources/public/icons",
-        "/phlexible/icons/phlexibleteaser": "src/Phlexible/Bundle/TeaserBundle/Resources/public/icons",
-        "/phlexible/icons/phlexibleuser": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
-
-        "/phlexible/mediatypes/phlexiblemediatype": "src/Phlexible/Bundle/MediaTypeBundle/Resources/mediatypes",
-
-        "/phlexible/menu/phlexiblecms": "src/Phlexible/Bundle/CmsBundle/Resources/menu",
-        "/phlexible/menu/phlexiblecontentchannel": "src/Phlexible/Bundle/ContentchannelBundle/Resources/menu",
-        "/phlexible/menu/phlexibleelement": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
-        "/phlexible/menu/phlexibleelementtype": "src/Phlexible/Bundle/ElementtypeBundle/Resources/menu",
-        "/phlexible/menu/phlexiblegui": "src/Phlexible/Bundle/GuiBundle/Resources/menu",
-        "/phlexible/menu/phlexiblemediamanager": "src/Phlexible/Bundle/MediaManagerBundle/Resources/menu",
-        "/phlexible/menu/phlexiblemediatemplate": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/menu",
-        "/phlexible/menu/phlexiblemediatype": "src/Phlexible/Bundle/MediaTypeBundle/Resources/menu",
-        "/phlexible/menu/phlexiblemessage": "src/Phlexible/Bundle/MessageBundle/Resources/menu",
-        "/phlexible/menu/phlexiblemetaset": "src/Phlexible/Bundle/MetaSetBundle/Resources/menu",
-        "/phlexible/menu/phlexibleproblem": "src/Phlexible/Bundle/ProblemBundle/Resources/menu",
-        "/phlexible/menu/phlexiblequeue": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
-        "/phlexible/menu/phlexiblesearch": "src/Phlexible/Bundle/SearchBundle/Resources/menu",
-        "/phlexible/menu/phlexiblesiteroot": "src/Phlexible/Bundle/SiterootBundle/Resources/menu",
-        "/phlexible/menu/phlexibletask": "src/Phlexible/Bundle/TaskBundle/Resources/menu",
-        "/phlexible/menu/phlexibleuser": "src/Phlexible/Bundle/UserBundle/Resources/menu",
-
-        "/phlexible/scripts/phlexibleaccesscontrol": "src/Phlexible/Bundle/AccessControlBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblecms": "src/Phlexible/Bundle/CmsBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblecontentchannel": "src/Phlexible/Bundle/ContentchannelBundle/Resources/scripts",
-        "/phlexible/scripts/phlexibledashboard": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
-        "/phlexible/scripts/phlexibleelement": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
-        "/phlexible/scripts/phlexibleelementtype": "src/Phlexible/Bundle/ElementtypeBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblefrontendmedia": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblegui": "src/Phlexible/Bundle/GuiBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblemediacache": "src/Phlexible/Bundle/MediaCacheBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblemediamanager": "src/Phlexible/Bundle/MediaManagerBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblemediatemplate": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblemediatype": "src/Phlexible/Bundle/MediaTypeBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblemessage": "src/Phlexible/Bundle/MessageBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblemetaset": "src/Phlexible/Bundle/MetaSetBundle/Resources/scripts",
-        "/phlexible/scripts/phlexibleproblem": "src/Phlexible/Bundle/ProblemBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblequeue": "src/Phlexible/Bundle/QueueBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblesearch": "src/Phlexible/Bundle/SearchBundle/Resources/scripts",
-        "/phlexible/scripts/phlexiblesiteroot": "src/Phlexible/Bundle/SiterootBundle/Resources/scripts",
-        "/phlexible/scripts/phlexibletask": "src/Phlexible/Bundle/TaskBundle/Resources/scripts",
-        "/phlexible/scripts/phlexibleteaser": "src/Phlexible/Bundle/TeaserBundle/Resources/scripts",
-        "/phlexible/scripts/phlexibleuser": "src/Phlexible/Bundle/UserBundle/Resources/scripts",
-
-        "/phlexible/styles/phlexibleaccesscontrol": "src/Phlexible/Bundle/AccessControlBundle/Resources/styles",
-        "/phlexible/styles/phlexiblecms": "src/Phlexible/Bundle/CmsBundle/Resources/styles",
-        "/phlexible/styles/phlexibledashboard": "src/Phlexible/Bundle/DashboardBundle/Resources/styles",
-        "/phlexible/styles/phlexibleelement": "src/Phlexible/Bundle/ElementBundle/Resources/styles",
-        "/phlexible/styles/phlexibleelementtype": "src/Phlexible/Bundle/ElementtypeBundle/Resources/styles",
-        "/phlexible/styles/phlexiblefrontendmedia": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/styles",
-        "/phlexible/styles/phlexiblegui": "src/Phlexible/Bundle/GuiBundle/Resources/styles",
-        "/phlexible/styles/phlexiblemediamanager": "src/Phlexible/Bundle/MediaManagerBundle/Resources/styles",
-        "/phlexible/styles/phlexiblemediatemplate": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/styles",
-        "/phlexible/styles/phlexiblemessage": "src/Phlexible/Bundle/MessageBundle/Resources/styles",
-        "/phlexible/styles/phlexibleproblem": "src/Phlexible/Bundle/ProblemBundle/Resources/styles",
-        "/phlexible/styles/phlexiblesearch": "src/Phlexible/Bundle/SearchBundle/Resources/styles",
-        "/phlexible/styles/phlexiblesiteroot": "src/Phlexible/Bundle/SiterootBundle/Resources/styles",
-        "/phlexible/styles/phlexibletask": "src/Phlexible/Bundle/TaskBundle/Resources/styles",
-        "/phlexible/styles/phlexibleuser": "src/Phlexible/Bundle/UserBundle/Resources/styles"
+        "/phlexible/phlexibleaccesscontrol/scripts": "src/Phlexible/Bundle/AccessControlBundle/Resources/scripts",
+        "/phlexible/phlexibleaccesscontrol/styles": "src/Phlexible/Bundle/AccessControlBundle/Resources/styles",
+        "/phlexible/phlexiblecms/menu": "src/Phlexible/Bundle/CmsBundle/Resources/menu",
+        "/phlexible/phlexiblecms/scripts": "src/Phlexible/Bundle/CmsBundle/Resources/scripts",
+        "/phlexible/phlexiblecms/styles": "src/Phlexible/Bundle/CmsBundle/Resources/styles",
+        "/phlexible/phlexiblecontentchannel/menu": "src/Phlexible/Bundle/ContentchannelBundle/Resources/menu",
+        "/phlexible/phlexiblecontentchannel/scripts": "src/Phlexible/Bundle/ContentchannelBundle/Resources/scripts",
+        "/phlexible/phlexibledashboard/scripts": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
+        "/phlexible/phlexibledashboard/styles": "src/Phlexible/Bundle/DashboardBundle/Resources/styles",
+        "/phlexible/phlexibleelement/menu": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
+        "/phlexible/phlexibleelement/scripts": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
+        "/phlexible/phlexibleelement/styles": "src/Phlexible/Bundle/ElementBundle/Resources/styles",
+        "/phlexible/phlexibleelementtype/menu": "src/Phlexible/Bundle/ElementtypeBundle/Resources/menu",
+        "/phlexible/phlexibleelementtype/scripts": "src/Phlexible/Bundle/ElementtypeBundle/Resources/scripts",
+        "/phlexible/phlexibleelementtype/styles": "src/Phlexible/Bundle/ElementtypeBundle/Resources/styles",
+        "/phlexible/phlexiblefrontendmedia/scripts": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/scripts",
+        "/phlexible/phlexiblefrontendmedia/styles": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/styles",
+        "/phlexible/phlexiblegui/menu": "src/Phlexible/Bundle/GuiBundle/Resources/menu",
+        "/phlexible/phlexiblegui/scripts": "src/Phlexible/Bundle/GuiBundle/Resources/scripts",
+        "/phlexible/phlexiblegui/styles": "src/Phlexible/Bundle/GuiBundle/Resources/styles",
+        "/phlexible/phlexiblemediacache/scripts": "src/Phlexible/Bundle/MediaCacheBundle/Resources/scripts",
+        "/phlexible/phlexiblemediamanager/menu": "src/Phlexible/Bundle/MediaManagerBundle/Resources/menu",
+        "/phlexible/phlexiblemediamanager/scripts": "src/Phlexible/Bundle/MediaManagerBundle/Resources/scripts",
+        "/phlexible/phlexiblemediamanager/styles": "src/Phlexible/Bundle/MediaManagerBundle/Resources/styles",
+        "/phlexible/phlexiblemediatemplate/menu": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/menu",
+        "/phlexible/phlexiblemediatemplate/scripts": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/scripts",
+        "/phlexible/phlexiblemediatemplate/styles": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/styles",
+        "/phlexible/phlexiblemediatype/mediatypes": "src/Phlexible/Bundle/MediaTypeBundle/Resources/mediatypes",
+        "/phlexible/phlexiblemediatype/menu": "src/Phlexible/Bundle/MediaTypeBundle/Resources/menu",
+        "/phlexible/phlexiblemediatype/scripts": "src/Phlexible/Bundle/MediaTypeBundle/Resources/scripts",
+        "/phlexible/phlexiblemessage/menu": "src/Phlexible/Bundle/MessageBundle/Resources/menu",
+        "/phlexible/phlexiblemessage/scripts": "src/Phlexible/Bundle/MessageBundle/Resources/scripts",
+        "/phlexible/phlexiblemessage/styles": "src/Phlexible/Bundle/MessageBundle/Resources/styles",
+        "/phlexible/phlexiblemetaset/menu": "src/Phlexible/Bundle/MetaSetBundle/Resources/menu",
+        "/phlexible/phlexiblemetaset/scripts": "src/Phlexible/Bundle/MetaSetBundle/Resources/scripts",
+        "/phlexible/phlexibleproblem/menu": "src/Phlexible/Bundle/ProblemBundle/Resources/menu",
+        "/phlexible/phlexibleproblem/scripts": "src/Phlexible/Bundle/ProblemBundle/Resources/scripts",
+        "/phlexible/phlexibleproblem/styles": "src/Phlexible/Bundle/ProblemBundle/Resources/styles",
+        "/phlexible/phlexiblequeue/menu": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
+        "/phlexible/phlexiblequeue/scripts": "src/Phlexible/Bundle/QueueBundle/Resources/scripts",
+        "/phlexible/phlexiblesearch/menu": "src/Phlexible/Bundle/SearchBundle/Resources/menu",
+        "/phlexible/phlexiblesearch/scripts": "src/Phlexible/Bundle/SearchBundle/Resources/scripts",
+        "/phlexible/phlexiblesearch/styles": "src/Phlexible/Bundle/SearchBundle/Resources/styles",
+        "/phlexible/phlexiblesiteroot/menu": "src/Phlexible/Bundle/SiterootBundle/Resources/menu",
+        "/phlexible/phlexiblesiteroot/scripts": "src/Phlexible/Bundle/SiterootBundle/Resources/scripts",
+        "/phlexible/phlexiblesiteroot/styles": "src/Phlexible/Bundle/SiterootBundle/Resources/styles",
+        "/phlexible/phlexibletask/menu": "src/Phlexible/Bundle/TaskBundle/Resources/menu",
+        "/phlexible/phlexibletask/scripts": "src/Phlexible/Bundle/TaskBundle/Resources/scripts",
+        "/phlexible/phlexibletask/styles": "src/Phlexible/Bundle/TaskBundle/Resources/styles",
+        "/phlexible/phlexibleteaser/scripts": "src/Phlexible/Bundle/TeaserBundle/Resources/scripts",
+        "/phlexible/phlexibleuser/menu": "src/Phlexible/Bundle/UserBundle/Resources/menu",
+        "/phlexible/phlexibleuser/scripts": "src/Phlexible/Bundle/UserBundle/Resources/scripts",
+        "/phlexible/phlexibleuser/styles": "src/Phlexible/Bundle/UserBundle/Resources/styles"
+    },
+    "bindings": {
+        "a9a07bc5-8d14-577a-9d2d-9dec96229d5e": {
+            "query": "/phlexible/phlexiblemediatype/mediatypes/*.xml",
+            "type": "phlexible/mediatypes"
+        },
+        "d8f515b6-d461-5835-852a-6b3e350e539c": {
+            "query": "/phlexible/phlexibleaccesscontrol/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "4081faff-9596-50ac-b357-7e4e954049d1": {
+            "query": "/phlexible/phlexiblecms/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "76c06cbf-3a4d-5c83-83d8-9f74942fd449": {
+            "query": "/phlexible/phlexiblecontentchannel/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "18aa998c-6dc3-5367-ac0b-2823440d623d": {
+            "query": "/phlexible/phlexibledashboard/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "ce977efd-2297-552a-9b80-fefe0f26ad6e": {
+            "query": "/phlexible/phlexibleelement/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "997e7153-0a1c-5562-95d8-df0a37463e40": {
+            "query": "/phlexible/phlexibleelementtype/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "b2d4128b-ca98-55b8-846e-e859adcf23a9": {
+            "query": "/phlexible/phlexiblefrontendmedia/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "f9f7ada2-dd12-571f-95c4-e5931a2e1f4a": {
+            "query": "/phlexible/phlexiblegui/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "1a26dab5-9ab4-56a9-8e48-f308b305c88c": {
+            "query": "/phlexible/phlexiblemediacache/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "b1a07433-4802-5203-9aa5-3ff68de552f0": {
+            "query": "/phlexible/phlexiblemediamanager/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "48e5ff67-324b-56e0-a75c-6a4492432063": {
+            "query": "/phlexible/phlexiblemediatemplate/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "c27a5af0-5a03-564d-a529-20e91a7543b4": {
+            "query": "/phlexible/phlexiblemediatype/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "6142a6e6-222b-5258-8d57-17e14837696b": {
+            "query": "/phlexible/phlexiblemessage/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "1655bba3-d229-5537-868d-663148150ab7": {
+            "query": "/phlexible/phlexiblemetaset/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "00dec2a9-c081-576c-8234-ac78afa6530c": {
+            "query": "/phlexible/phlexibleproblem/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
+            "query": "/phlexible/phlexiblequeue/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "96a4756b-b806-5ad2-9425-5c81a81e4e28": {
+            "query": "/phlexible/phlexiblesearch/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "b8391ee9-1b76-54f3-a4cd-ce149ba0a7c8": {
+            "query": "/phlexible/phlexiblesiteroot/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "0537382f-e1af-5e26-bc88-6eda5741fdf3": {
+            "query": "/phlexible/phlexibletask/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "12016c15-1fab-5ec7-bdc4-4551f2fcaea6": {
+            "query": "/phlexible/phlexibleteaser/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "be349132-be9f-519a-87be-bcb003bfc1e9": {
+            "query": "/phlexible/phlexibleuser/scripts/*.js",
+            "type": "phlexible/scripts"
+        },
+        "85d31772-1be8-52a9-9c78-c973e5e058e8": {
+            "query": "/phlexible/phlexibleaccesscontrol/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "7cdf0875-c25c-544e-8ba3-942991cb783e": {
+            "query": "/phlexible/phlexiblecms/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "275795b7-4d09-52ab-8895-e3b35bedfc97": {
+            "query": "/phlexible/phlexibledashboard/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "4a429cc8-7160-57b8-a5dd-288675714103": {
+            "query": "/phlexible/phlexibleelement/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "43a612f4-1059-5375-bace-94816dc79db8": {
+            "query": "/phlexible/phlexibleelementtype/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "a80bd044-07cc-5ed2-88f2-12756caf0e1c": {
+            "query": "/phlexible/phlexiblefrontendmedia/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "e48dfe29-6164-5df2-89ca-8b32ab717083": {
+            "query": "/phlexible/phlexiblegui/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "b0a91a6d-eceb-5b10-990f-51ba26135c63": {
+            "query": "/phlexible/phlexiblemediamanager/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "926ce685-3ecf-52d0-9b95-1898371c41e0": {
+            "query": "/phlexible/phlexiblemediatemplate/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "42ad3a40-538a-5743-9373-99b7a16578a9": {
+            "query": "/phlexible/phlexiblemessage/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "9554765c-b587-5408-b348-664a8b302336": {
+            "query": "/phlexible/phlexibleproblem/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "d6b01ef5-48f8-5a70-85c3-e60ccd125420": {
+            "query": "/phlexible/phlexiblesearch/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "2bf3ea39-6ddf-517d-977a-eb532937616d": {
+            "query": "/phlexible/phlexiblesiteroot/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "4f1ab77a-fb01-5410-95cf-477147e83d53": {
+            "query": "/phlexible/phlexibletask/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "21d5bc59-f1a3-5f15-a1b2-15c0d0d080b0": {
+            "query": "/phlexible/phlexibleuser/styles/*.css",
+            "type": "phlexible/styles"
+        },
+        "8516f780-b085-5682-9a83-a5858d170eb2": {
+            "query": "/phlexible/phlexiblecms/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "56a21981-fee8-51bd-b699-92a874e4a75e": {
+            "query": "/phlexible/phlexiblecontentchannel/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "f5ee43fe-44b1-593e-8c79-1cc51b4dd5dc": {
+            "query": "/phlexible/phlexibleelement/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "f5544b71-d3fb-5c0e-b5c5-cd89c074a24c": {
+            "query": "/phlexible/phlexibleelementtype/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "f8dedc99-e83b-5926-8eed-0aa7f0673429": {
+            "query": "/phlexible/phlexiblegui/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "97555c52-a360-57e8-892a-6ee99ad0b94c": {
+            "query": "/phlexible/phlexiblemediamanager/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "31c65700-6b94-5257-ad16-7fa0841d2357": {
+            "query": "/phlexible/phlexiblemediatemplate/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "c0c41cd8-59c7-55d2-9670-f7005b47e43b": {
+            "query": "/phlexible/phlexiblemediatype/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "8f166b00-fb9d-5dd5-8fba-619658dbdca2": {
+            "query": "/phlexible/phlexiblemessage/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "2edd03a2-a5a3-5d16-b13c-43e72841e082": {
+            "query": "/phlexible/phlexiblemetaset/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "55fdf06c-4a18-5764-952b-5386bca000f9": {
+            "query": "/phlexible/phlexibleproblem/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "12dca705-3701-5b44-8d03-81c7ebaf29b5": {
+            "query": "/phlexible/phlexiblequeue/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "a040e763-9ed1-582c-8185-d89ff8122ee2": {
+            "query": "/phlexible/phlexiblesearch/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "00f8801e-75dd-5eab-b938-c9431bb16b94": {
+            "query": "/phlexible/phlexiblesiteroot/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "3c16a1d5-c0e4-58e1-a418-282bd820f0de": {
+            "query": "/phlexible/phlexibletask/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "91e252eb-6da1-59c4-aef8-e6688ffac9a8": {
+            "query": "/phlexible/phlexibleuser/menu/*.yml",
+            "type": "phlexible/menu"
+        }
+    },
+    "binding-types": {
+        "phlexible/scripts": {
+            "description": "phlexible gui scripts"
+        },
+        "phlexible/styles": {
+            "description": "phlexible gui styles"
+        },
+        "phlexible/mediatypes": {
+            "description": "phlexible mediatypes"
+        },
+        "phlexible/menu": {
+            "description": "phlexible gui menu definitions"
+        }
+    },
+    "packages": {
+        "alchemy/binary-driver": {
+            "install-path": "vendor/alchemy/binary-driver",
+            "installer": "composer"
+        },
+        "alchemy/zippy": {
+            "install-path": "vendor/alchemy/zippy",
+            "installer": "composer"
+        },
+        "beberlei/assert": {
+            "install-path": "vendor/beberlei/assert",
+            "installer": "composer"
+        },
+        "brainbits/image-analyzer": {
+            "install-path": "vendor/brainbits/image-analyzer",
+            "installer": "composer"
+        },
+        "brainbits/mime": {
+            "install-path": "vendor/brainbits/mime",
+            "installer": "composer"
+        },
+        "cocur/slugify": {
+            "install-path": "vendor/cocur/slugify",
+            "installer": "composer"
+        },
+        "cogpowered/finediff": {
+            "install-path": "vendor/cogpowered/finediff",
+            "installer": "composer"
+        },
+        "doctrine/annotations": {
+            "install-path": "vendor/doctrine/annotations",
+            "installer": "composer"
+        },
+        "doctrine/cache": {
+            "install-path": "vendor/doctrine/cache",
+            "installer": "composer"
+        },
+        "doctrine/collections": {
+            "install-path": "vendor/doctrine/collections",
+            "installer": "composer"
+        },
+        "doctrine/common": {
+            "install-path": "vendor/doctrine/common",
+            "installer": "composer"
+        },
+        "doctrine/dbal": {
+            "install-path": "vendor/doctrine/dbal",
+            "installer": "composer"
+        },
+        "doctrine/inflector": {
+            "install-path": "vendor/doctrine/inflector",
+            "installer": "composer"
+        },
+        "doctrine/instantiator": {
+            "install-path": "vendor/doctrine/instantiator",
+            "installer": "composer"
+        },
+        "doctrine/lexer": {
+            "install-path": "vendor/doctrine/lexer",
+            "installer": "composer"
+        },
+        "evenement/evenement": {
+            "install-path": "vendor/evenement/evenement",
+            "installer": "composer"
+        },
+        "fluentdom/fluentdom": {
+            "install-path": "vendor/fluentdom/fluentdom",
+            "installer": "composer"
+        },
+        "friendsofsymfony/user-bundle": {
+            "install-path": "vendor/friendsofsymfony/user-bundle/FOS/UserBundle",
+            "installer": "composer"
+        },
+        "guzzle/guzzle": {
+            "install-path": "vendor/guzzle/guzzle",
+            "installer": "composer"
+        },
+        "igorw/file-serve-bundle": {
+            "install-path": "vendor/igorw/file-serve-bundle/Igorw/FileServeBundle",
+            "installer": "composer"
+        },
+        "imagine/imagine": {
+            "install-path": "vendor/imagine/imagine",
+            "installer": "composer"
+        },
+        "jms/cg": {
+            "install-path": "vendor/jms/cg",
+            "installer": "composer"
+        },
+        "justinrainbow/json-schema": {
+            "install-path": "vendor/justinrainbow/json-schema",
+            "installer": "composer"
+        },
+        "michelf/php-markdown": {
+            "install-path": "vendor/michelf/php-markdown",
+            "installer": "composer"
+        },
+        "mikey179/vfsstream": {
+            "install-path": "vendor/mikey179/vfsStream",
+            "installer": "composer"
+        },
+        "monolog/monolog": {
+            "install-path": "vendor/monolog/monolog",
+            "installer": "composer"
+        },
+        "nelmio/api-doc-bundle": {
+            "install-path": "vendor/nelmio/api-doc-bundle/Nelmio/ApiDocBundle",
+            "installer": "composer"
+        },
+        "neutron/temporary-filesystem": {
+            "install-path": "vendor/neutron/temporary-filesystem",
+            "installer": "composer"
+        },
+        "phansys/getid3": {
+            "install-path": "vendor/phansys/getid3/GetId3",
+            "installer": "composer"
+        },
+        "php-ffmpeg/extras": {
+            "install-path": "vendor/php-ffmpeg/extras",
+            "installer": "composer"
+        },
+        "php-ffmpeg/php-ffmpeg": {
+            "install-path": "vendor/php-ffmpeg/php-ffmpeg",
+            "installer": "composer"
+        },
+        "php-poppler/php-poppler": {
+            "install-path": "vendor/php-poppler/php-poppler",
+            "installer": "composer"
+        },
+        "phpunit/php-code-coverage": {
+            "install-path": "vendor/phpunit/php-code-coverage",
+            "installer": "composer"
+        },
+        "phpunit/php-file-iterator": {
+            "install-path": "vendor/phpunit/php-file-iterator",
+            "installer": "composer"
+        },
+        "phpunit/php-text-template": {
+            "install-path": "vendor/phpunit/php-text-template",
+            "installer": "composer"
+        },
+        "phpunit/php-timer": {
+            "install-path": "vendor/phpunit/php-timer",
+            "installer": "composer"
+        },
+        "phpunit/php-token-stream": {
+            "install-path": "vendor/phpunit/php-token-stream",
+            "installer": "composer"
+        },
+        "phpunit/phpunit": {
+            "install-path": "vendor/phpunit/phpunit",
+            "installer": "composer"
+        },
+        "phpunit/phpunit-mock-objects": {
+            "install-path": "vendor/phpunit/phpunit-mock-objects",
+            "installer": "composer"
+        },
+        "pimple/pimple": {
+            "install-path": "vendor/pimple/pimple",
+            "installer": "composer"
+        },
+        "psr/log": {
+            "install-path": "vendor/psr/log",
+            "installer": "composer"
+        },
+        "puli/cli": {
+            "install-path": "vendor/puli/cli",
+            "installer": "composer"
+        },
+        "puli/composer-plugin": {
+            "install-path": "vendor/puli/composer-plugin",
+            "installer": "composer"
+        },
+        "puli/discovery": {
+            "install-path": "vendor/puli/discovery",
+            "installer": "composer"
+        },
+        "puli/factory": {
+            "install-path": "vendor/puli/factory",
+            "installer": "composer"
+        },
+        "puli/repository": {
+            "install-path": "vendor/puli/repository",
+            "installer": "composer"
+        },
+        "puli/repository-manager": {
+            "install-path": "vendor/puli/repository-manager",
+            "installer": "composer"
+        },
+        "puli/symfony-bridge": {
+            "install-path": "vendor/puli/symfony-bridge",
+            "installer": "composer"
+        },
+        "puli/symfony-bundle": {
+            "install-path": "vendor/puli/symfony-bundle",
+            "installer": "composer"
+        },
+        "puli/twig-extension": {
+            "install-path": "vendor/puli/twig-extension",
+            "installer": "composer"
+        },
+        "rhumsaa/uuid": {
+            "install-path": "vendor/rhumsaa/uuid",
+            "installer": "composer"
+        },
+        "sebastian/comparator": {
+            "install-path": "vendor/sebastian/comparator",
+            "installer": "composer"
+        },
+        "sebastian/diff": {
+            "install-path": "vendor/sebastian/diff",
+            "installer": "composer"
+        },
+        "sebastian/environment": {
+            "install-path": "vendor/sebastian/environment",
+            "installer": "composer"
+        },
+        "sebastian/exporter": {
+            "install-path": "vendor/sebastian/exporter",
+            "installer": "composer"
+        },
+        "sebastian/global-state": {
+            "install-path": "vendor/sebastian/global-state",
+            "installer": "composer"
+        },
+        "sebastian/version": {
+            "install-path": "vendor/sebastian/version",
+            "installer": "composer"
+        },
+        "seld/jsonlint": {
+            "install-path": "vendor/seld/jsonlint",
+            "installer": "composer"
+        },
+        "swftools/swftools": {
+            "install-path": "vendor/swftools/swftools",
+            "installer": "composer"
+        },
+        "symfony-cmf/routing": {
+            "install-path": "vendor/symfony-cmf/routing",
+            "installer": "composer"
+        },
+        "symfony-cmf/routing-bundle": {
+            "install-path": "vendor/symfony-cmf/routing-bundle",
+            "installer": "composer"
+        },
+        "symfony/symfony": {
+            "install-path": "vendor/symfony/symfony",
+            "installer": "composer"
+        },
+        "twig/twig": {
+            "install-path": "vendor/twig/twig",
+            "installer": "composer"
+        },
+        "webmozart/glob": {
+            "install-path": "vendor/webmozart/glob",
+            "installer": "composer"
+        },
+        "webmozart/json": {
+            "install-path": "vendor/webmozart/json",
+            "installer": "composer"
+        },
+        "webmozart/key-value-store": {
+            "install-path": "vendor/webmozart/key-value-store",
+            "installer": "composer"
+        },
+        "webmozart/path-util": {
+            "install-path": "vendor/webmozart/path-util",
+            "installer": "composer"
+        },
+        "yohang/finite": {
+            "install-path": "vendor/yohang/finite",
+            "installer": "composer"
+        },
+        "zf1/zend-exception": {
+            "install-path": "vendor/zf1/zend-exception",
+            "installer": "composer"
+        },
+        "zf1/zend-search": {
+            "install-path": "vendor/zf1/zend-search",
+            "installer": "composer"
+        },
+        "zf1/zend-search-lucene": {
+            "install-path": "vendor/zf1/zend-search-lucene",
+            "installer": "composer"
+        },
+        "zf1/zend-xml": {
+            "install-path": "vendor/zf1/zend-xml",
+            "installer": "composer"
+        }
     }
 }
