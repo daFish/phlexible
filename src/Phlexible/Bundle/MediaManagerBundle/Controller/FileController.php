@@ -13,6 +13,7 @@ use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\Exception\NotFoundException;
 use Phlexible\Component\Volume\VolumeInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,24 +30,13 @@ use Symfony\Component\HttpFoundation\Request;
 class FileController extends Controller
 {
     /**
-     * @param string $folderId
-     *
-     * @return VolumeInterface
-     */
-    private function getVolumeByFolderId($folderId)
-    {
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-
-        return $volumeManager->getByFolderId($folderId);
-    }
-
-    /**
      * List files
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/list", name="mediamanager_file_list")
+     * @Route("", name="mediamanager_file_list")
+     * @Method("GET")
      */
     public function listAction(Request $request)
     {
@@ -101,157 +91,121 @@ class FileController extends Controller
                 $total = $volume->countFilesByFolder($folder, $showHidden);
             }
 
-            $data = $this->filesToArray($volume, $files);
+            $serializer = $this->get('phlexible_media_manager.file_serializer');
+
+            $data = [];
+            foreach ($files as $file) {
+                $data[] = $serializer->serialize($file, $request->getLocale());
+            }
         }
 
         return new JsonResponse(['files' => $data, 'total' => $total]);
     }
 
     /**
-     * Build file list
+     * Properties
      *
-     * @param VolumeInterface         $volume
-     * @param ExtendedFileInterface[] $files
+     * @param Request $request
+     * @param string  $fileId
      *
-     * @return array
+     * @return JsonResponse
+     * @Route("/{fileId}", name="mediamanager_file_detail")
+     * @Method("GET")
      */
-    private function filesToArray(VolumeInterface $volume, array $files)
+    public function propertiesAction(Request $request, $fileId)
     {
-        $data = [];
-        $userManager = $this->get('phlexible_user.user_manager');
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $fileVersion = $request->get('fileVersion', 1);
 
-        $hasVersions = $volume->hasFeature('versions');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        foreach ($files as $file) {
-            try {
-                $createUser = $userManager->find($file->getCreateUserId());
-                $createUserName = $createUser->getDisplayName();
-            } catch (\Exception $e) {
-                $createUserName = 'Unknown';
-            }
+        $volume = $volumeManager->getByFileId($fileId);
+        $file = $volume->findFile($fileId, $fileVersion);
+        $folder = $volume->findFolder($file->getFolderId());
 
-            try {
-                if ($file->getModifyUserId()) {
-                    $modifyUser = $userManager->find($file->getModifyUserId());
-                    $modifyUserName = $modifyUser->getDisplayName();
-                } else {
-                    $modifyUserName = 'Unknown';
-                }
-            } catch (\Exception $e) {
-                $modifyUserName = 'Unknown';
-            }
+        $attributes = $file->getAttributes();
 
-            $properties = [
-                //'attributes'    => array(),
-                //'attributesCnt' => 0,
-                'versions' => $hasVersions,
-                'debug'    => [
-                    'mimeType'      => $file->getMimeType(),
-                    'mediaCategory' => strtolower($file->getMediaCategory()),
-                    'mediaType'     => strtolower($file->getMediaType()),
-                    'fileId'        => $file->getID(),
-                    'folderId'      => $file->getFolderId(),
-                ]
-            ];
-
-            $meta = [];
-            // TODO: enable
-            //foreach ($asset->getMetas()->getAll() as $metaData) {
-            //    foreach ($metaData->getValues() as $key => $value) {
-            //        $meta[$metaData->getTitle()][$key] = $value;
-            //    }
-            //}
-            $properties['meta'] = $meta;
-            $properties['metaCnt'] = count($properties['meta']);
-
-            $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
-
-            if (!$mediaType) {
-                $mediaType = $mediaTypeManager->create();
-                $mediaType->setName('unknown');
-            }
-
-            $interfaceLanguage = $this->getUser()->getInterfaceLanguage('en');
-            $mediaTypeTitle = $mediaType->getTitle($interfaceLanguage);
-
-            $version = 1;
-            if ($hasVersions) {
-                $version = $file->getVersion();
-            }
-
-            $cacheItems = $this->get('phlexible_media_cache.cache_manager')->findByFile($file->getID(), $version);
-            $cache = [];
-            foreach ($cacheItems as $cacheItem) {
-                if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
-                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media', [
-                        'file_id'      => $file->getId(),
-                        'file_version' => $file->getVersion(),
-                        'template_key' => $cacheItem->getTemplateKey(),
-                    ]);
-                } else {
-                    $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', [
-                        'mediaTypeName' => $file->getMediaType(),
-                        'templateKey'   => $cacheItem->getTemplateKey(),
-                    ]);
-                }
-            }
-
-            $fileUsageManager = $this->get('phlexible_media_manager.file_usage_manager');
-            $usage = $fileUsageManager->getStatus($file);
-            $usedIn = $fileUsageManager->getUsedIn($file);
-
-            $focal = 0;
-            if ($file->getAttribute('focalpoint')) {
-                $focal = 1;
-            }
-
-            $attributes = $file->getAttributes();
-
-            $folder = $volume->findFolder($file->getFolderId());
-            $data[] = [
-                'id'              => $file->getID(),
+        $properties = [
+            'id'              => $fileId,
+            'version'         => $fileVersion,
+            'path'            => '/' . $folder->getPath(),
+            'name'            => $file->getName(),
+            'size'            => $file->getSize(),
+            'documentTypeKey' => $file->getMediaType(),
+            'assetType'       => $file->getMediaCategory(),
+            'createUserId'    => $file->getCreateUserId(),
+            'createTime'      => $file->getCreatedAt()->format('U'),
+            'attributes'      => $attributes,
+            'debug'           => [
+                'mimeType'     => $file->getMimeType(),
+                'documentType' => strtolower($file->getMediaType()),
+                'assetType'    => strtolower($file->getMediaCategory()),
+                'fileId'       => $fileId,
+                'folderId'     => $folder->getId(),
+            ],
+            'detail' => [
+                'id'              => $file->getId(),
+                'folderId'        => $file->getFolderId(),
                 'name'            => $file->getName(),
-                'volumeId'        => $volume->getId(),
-                'folderId'        => $file->getFolderID(),
-                'folder'          => '/Root/' . $folder->getPath(),
-                'assetType'       => strtolower($file->getMediaCategory()),
-                'mimeType'        => $file->getMimetype(),
-                'documentType'    => $mediaTypeTitle,
-                'documentTypeKey' => strtolower($file->getMediaType()),
-                'present'         => file_exists($file->getPhysicalPath()),
                 'size'            => $file->getSize(),
-                'hidden'          => $file->isHidden() ? 1 : 0,
-                'version'         => $version,
-                'createUser'      => $createUserName,
+                'version'         => $file->getVersion(),
+                'documentTypeKey' => strtolower($file->getMediaType()),
+                'assetType'       => strtolower($file->getMediaCategory()),
                 'createUserId'    => $file->getCreateUserId(),
-                'createTime'      => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-                'modifyUser'      => $modifyUserName,
-                'modifyUserId'    => $file->getModifyUserId(),
-                'modifyTime'      => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
-                'cache'           => $cache,
-                'properties'      => $properties,
-                'usedIn'          => $usedIn,
-                'used'            => $usage,
-                'focal'           => $focal,
-                'attributes'      => $attributes,
+                'createTime'      => $file->getCreatedAt()->format('Y-m-d'),
+            ],
+            'versions'        => array(),
+            'prev' => null,
+            'next' => null,
+        ];
+
+        /*
+        $previousFile = $site->findPreviousFile($file, 'name ASC');
+        $nextFile = $site->findNextFile($file, 'name ASC');
+        */
+
+        if (!empty($previousFile)) {
+            $properties['prev'] = [
+                'file_id'      => $previousFile->getId(),
+                'file_version' => $previousFile->getVersion(),
             ];
         }
 
-        return $data;
+        if (!empty($nextFile)) {
+            $properties['next'] = [
+                'file_id'      => $nextFile->getId(),
+                'file_version' => $nextFile->getVrsion(),
+            ];
+        }
+
+        foreach ($volume->findFileVersions($fileId) as $fileVersion) {
+            $properties['versions'] = [
+                'id'              => $fileVersion->getId(),
+                'folderId'        => $fileVersion->getFolderId(),
+                'name'            => $fileVersion->getName(),
+                'size'            => $fileVersion->getSize(),
+                'version'         => $fileVersion->getVersion(),
+                'documentTypeKey' => strtolower($fileVersion->getMediaType()),
+                'assetType'       => strtolower($fileVersion->getMediaCategory()),
+                'createUserId'    => $fileVersion->getCreateUserId(),
+                'createTime'      => $fileVersion->getCreatedAt()->format('Y-m-d'),
+            ];
+        }
+
+        return new JsonResponse($properties);
     }
 
     /**
      * Delete File
      *
      * @param Request $request
+     * @param string  $fileId
      *
      * @return ResultResponse
-     * @Route("/delete", name="mediamanager_file_delete")
+     * @Route("/{fileId}", name="mediamanager_file_delete")
+     * @Method("DELETE")
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request, $fileId)
     {
-        $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
@@ -271,14 +225,55 @@ class FileController extends Controller
     }
 
     /**
+     * Patch file
+     *
+     * @param Request $request
+     * @param string  $fileId
+     *
+     * @return ResultResponse
+     * @Route("/file/{fileId}", name="mediamanager_file_patch")
+     * @Method("PATCH")
+     */
+    public function patchAction(Request $request, $fileId)
+    {
+        $name = $request->get('name', false);
+        $hide = $request->get('hide', false);
+        $show = $request->get('show', false);
+        $folderId = $request->get('folderId', false);
+
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
+
+        $file = $volume->findFile($fileId);
+
+        if ($name) {
+            $volume->renameFile($file, $name, $this->getUser()->getId());
+        }
+        if ($hide) {
+            $volume->hideFile($file, $this->getUser()->getId());
+        }
+        if ($show) {
+            $volume->showFile($file, $this->getUser()->getId());
+        }
+        if ($folderId) {
+            $folder = $volume->findFolder($folderId);
+            $volume->moveFile($file, $folder, $this->getUser()->getId());
+        }
+
+        return new ResultResponse(true, 'File patched.');
+    }
+
+    /**
      * Hide File
      *
      * @param Request $request
+     * @param string  $fileId
      *
      * @return ResultResponse
-     * @Route("/hide", name="mediamanager_file_hide")
+     * @Route("/hide/{fileId}", name="mediamanager_file_hide")
+     * @Method("PUT")
+     * @deprecated
      */
-    public function hideAction(Request $request)
+    public function hideAction(Request $request, $fileId)
     {
         $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
@@ -298,13 +293,15 @@ class FileController extends Controller
      * Show file
      *
      * @param Request $request
+     * @param string  $fileId
      *
      * @return JsonResponse
-     * @Route("/show", name="mediamanager_file_show")
+     * @Route("/show/{fileId}", name="mediamanager_file_show")
+     * @Method("PUT")
+     * @deprecated
      */
-    public function showAction(Request $request)
+    public function showAction(Request $request, $fileId)
     {
-        $fileId = $request->get('file_id');
         $fileIds = explode(',', $fileId);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
@@ -319,127 +316,26 @@ class FileController extends Controller
     }
 
     /**
-     * Properties
+     * Rename file
      *
      * @param Request $request
+     * @param string  $fileId
      *
-     * @return JsonResponse
-     * @Route("/properties", name="mediamanager_file_properties")
+     * @return ResultResponse
+     * @Route("/rename/{fileId}", name="mediamanager_file_rename")
+     * @Method("PUT")
+     * @deprecated
      */
-    public function propertiesAction(Request $request)
+    public function renameAction(Request $request, $fileId)
     {
-        $fileId = $request->get('id');
-        $fileVersion = $request->get('version', 1);
+        $name = $request->get('file_name');
 
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
 
-        $volume = $volumeManager->getByFileId($fileId);
-        $file = $volume->findFile($fileId, $fileVersion);
-        $folder = $volume->findFolder($file->getFolderId());
+        $file = $volume->findFile($fileId);
+        $volume->renameFile($file, $name, $this->getUser()->getId());
 
-        $attributes = $file->getAttributes();
-
-        $versions = [];
-        if ($volume->hasFeature('versions')) {
-            $versions = $volume->findFileVersions($file);
-        }
-
-        $properties = [];
-        $properties['id'] = $fileId;
-        $properties['version'] = $fileVersion;
-        $properties['path'] = '/' . $folder->getPath();
-        $properties['name'] = $file->getName();
-        $properties['size'] = $file->getSize();
-        $properties['document_type_key'] = strtolower($file->getMediaType());
-        $properties['asset_type'] = strtolower($file->getMediaCategory());
-        $properties['create_user_id'] = $file->getCreateUserId();
-        $properties['create_time'] = $file->getCreatedAt()->format('U');
-
-        $properties['attributes'] = $attributes;
-        $properties['attributesCnt'] = count($properties['attributes']);
-
-        $properties['versions'] = $versions;
-        $properties['versionsCnt'] = count($properties['versions']);
-
-        $properties['keywords'] = [];
-        $properties['keywordsCnt'] = count($properties['keywords']);
-
-        $properties['debug'] = [
-            'mimeType'     => $file->getMimeType(),
-            'documentType' => strtolower($file->getMediaType()),
-            'assetType'    => strtolower($file->getMediaCategory()),
-            'fileId'       => $fileId,
-            'folderId'     => $folder->getId(),
-        ];
-
-        $properties['detail'] = [
-            'id'              => $file->getId(),
-            'folderId'        => $file->getFolderId(),
-            'name'            => $file->getName(),
-            'size'            => $file->getSize(),
-            'version'         => $file->getVersion(),
-            'documentTypeKey' => strtolower($file->getMediaType()),
-            'assetType'       => strtolower($file->getMediaCategory()),
-            'createUserId'    => $file->getCreateUserId(),
-            'createTime'      => $file->getCreatedAt()->format('Y-m-d'),
-        ];
-
-        /*
-        $previousFile = $site->findPreviousFile($file, 'name ASC');
-        $nextFile = $site->findNextFile($file, 'name ASC');
-        */
-
-        $properties['prev'] = null;
-        if (!empty($previousFile)) {
-            $properties['prev'] = [
-                'file_id'      => $previousFile->getId(),
-                'file_version' => $previousFile->getVersion(),
-            ];
-        }
-
-        $properties['next'] = null;
-        if (!empty($nextFile)) {
-            $properties['next'] = [
-                'file_id'      => $nextFile->getId(),
-                'file_version' => $nextFile->getVrsion(),
-            ];
-        }
-
-        return new JsonResponse($properties);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/detail", name="mediamanager_file_detail")
-     */
-    public function detailAction(Request $request)
-    {
-        $id = $request->get('id');
-
-        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($id);
-
-        $detail = [];
-        foreach ($volume->findFileVersions($id) as $file) {
-            $detail[] = [
-                'id'              => $file->getId(),
-                'folderId'        => $file->getFolderId(),
-                'name'            => $file->getName(),
-                'size'            => $file->getSize(),
-                'version'         => $file->getVersion(),
-                'documentTypeKey' => strtolower($file->getMediaType()),
-                'assetType'       => strtolower($file->getMediaCategory()),
-                'createUserId'    => $file->getCreateUserId(),
-                'createTime'      => $file->getCreatedAt()->format('Y-m-d'),
-            ];
-        }
-
-        return new JsonResponse(
-            [
-                'detail' => $detail
-            ]
-        );
+        return new ResultResponse(true, 'File(s) renamed.');
     }
 
     /**
@@ -449,11 +345,12 @@ class FileController extends Controller
      *
      * @return ResultResponse
      * @Route("/copy", name="mediamanager_file_copy")
+     * @Method("POST")
      */
     public function copyAction(Request $request)
     {
-        $folderId = $request->get('folderID');
-        $fileIDs = json_decode($request->get('fileIDs'));
+        $folderId = $request->get('folderId');
+        $fileIDs = json_decode($request->get('fileIds'));
 
         $volume = $this->getVolumeByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
@@ -473,11 +370,12 @@ class FileController extends Controller
      *
      * @return ResultResponse
      * @Route("/move", name="mediamanager_file_move")
+     * @deprecated
      */
     public function moveAction(Request $request)
     {
-        $folderId = $request->get('folderID');
-        $fileIds = json_decode($request->get('fileIDs'));
+        $folderId = $request->get('folderId');
+        $fileIds = json_decode($request->get('fileIds'));
 
         $volume = $this->getVolumeByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
@@ -497,23 +395,14 @@ class FileController extends Controller
     }
 
     /**
-     * Rename file
+     * @param string $folderId
      *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/rename", name="mediamanager_file_rename")
+     * @return VolumeInterface
      */
-    public function renameAction(Request $request)
+    private function getVolumeByFolderId($folderId)
     {
-        $fileId = $request->get('file_id');
-        $name = $request->get('file_name');
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
-        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId);
-
-        $file = $volume->findFile($fileId);
-        $volume->renameFile($file, $name, $this->getUser()->getId());
-
-        return new ResultResponse(true, 'File(s) renamed.');
+        return $volumeManager->getByFolderId($folderId);
     }
 }

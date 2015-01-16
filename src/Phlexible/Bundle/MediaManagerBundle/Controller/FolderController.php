@@ -17,6 +17,7 @@ use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFolderInterface;
 use Phlexible\Component\Volume\Exception\AlreadyExistsException;
 use Phlexible\Component\Volume\Folder\SizeCalculator;
 use Phlexible\Component\Volume\VolumeInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,88 +34,13 @@ use Symfony\Component\HttpFoundation\Request;
 class FolderController extends Controller
 {
     /**
-     * @param string $volumeId
-     *
-     * @return VolumeInterface
-     */
-    private function getVolume($volumeId = null)
-    {
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-
-        if ($volumeId) {
-            return $volumeManager->getById($volumeId);
-        }
-
-        return current($volumeManager->all());
-    }
-
-    /**
-     * @param ExtendedFolderInterface $folder
-     *
-     * @return array
-     */
-    private function recurseFolders(ExtendedFolderInterface $folder)
-    {
-        $volume = $folder->getVolume();
-        $subFolders = $volume->findFoldersByParentFolder($folder);
-
-        $securityContext = $this->get('security.context');
-        $permissions = $this->get('phlexible_access_control.permissions');
-
-        $user = $this->getUser();
-
-        $children = [];
-        foreach ($subFolders as $subFolder) {
-            /* @var $subFolder ExtendedFolderInterface */
-
-            if (!$securityContext->isGranted('FOLDER_READ', $folder)) {
-                continue;
-            }
-
-            // TODO: rights
-            /*
-            $userRights = $subFolder->getRights(MWF_Env::getUser());
-            if (null === $userRights) {
-                continue;
-            }
-            $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
-            */
-            $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
-
-            $tmp = [
-                'id'        => $subFolder->getId(),
-                'text'      => $subFolder->getName(),
-                'leaf'      => false,
-                'numChilds' => $volume->countFilesByFolder($subFolder),
-                'draggable' => true,
-                'expanded'  => true,
-                'allowDrop' => true,
-                'allowChildren' => true,
-                'isTarget'  => true,
-                'rights'    => $userRights,
-            ];
-
-            if ($volume->countFoldersByParentFolder($subFolder)) {
-                $tmp['children'] = $this->recurseFolders($subFolder);
-                $tmp['expanded'] = false;
-            } else {
-                $tmp['children'] = [];
-                $tmp['expanded'] = true;
-            }
-
-            $children[] = $tmp;
-        }
-
-        return $children;
-    }
-
-    /**
      * List folders
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/list", name="mediamanager_folder_list")
+     * @Route("", name="mediamanager_folder_list")
+     * @Method("GET")
      */
     public function listAction(Request $request)
     {
@@ -262,120 +188,18 @@ class FolderController extends Controller
     }
 
     /**
-     * Create new folder
+     * Folder size
      *
      * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/create", name="mediamanager_folder_create")
-     */
-    public function createAction(Request $request)
-    {
-        $parentId = $request->get('parent_id');
-        $name = $request->get('folder_name');
-
-        $volume = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($parentId);
-        $parentFolder = $volume->findFolder($parentId);
-
-        try {
-            $folder = $volume->createFolder($parentFolder, $name, array(), $this->getUser()->getId());
-
-            return new ResultResponse(true, 'Folder created.', [
-                'folder_id'   => $folder->getId(),
-                'folder_name' => $folder->getName()
-            ]);
-        } catch (AlreadyExistsException $e) {
-            return new ResultResponse(false, $e->getMessage(), [
-                'folder_name' => 'Folder already exists.'
-            ]);
-        } catch (\Exception $e) {
-            return new ResultResponse(false, $e->getMessage());
-        }
-    }
-
-    /**
-     * Rename folder
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/rename", name="mediamanager_folder_rename")
-     */
-    public function renameAction(Request $request)
-    {
-        $volumeId = $request->get('volumeId');
-        $folderId = $request->get('id');
-        $folderName = $request->get('name');
-
-        $volume = $this->getVolume($volumeId);
-        $folder = $volume->findFolder($folderId);
-
-        $volume->renameFolder($folder, $folderName, $this->getUser()->getId());
-
-        return new ResultResponse(true, 'Folder renamed.', [
-            'folder_name' => $folderName
-        ]);
-    }
-
-    /**
-     * Delete folder
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/delete", name="mediamanager_folder_delete")
-     */
-    public function deleteAction(Request $request)
-    {
-        $volumeId = $request->get('volumeId');
-        $folderId = $request->get('id');
-
-        $volume = $this->getVolume($volumeId);
-        $folder = $volume->findFolder($folderId);
-
-        if ($folder->isRoot()) {
-            return new ResultResponse(false, "Can't delete the root folder.");
-        }
-
-        $volume->deleteFolder($folder, $this->getUser()->getId());
-
-        return new ResultResponse(true, 'Folder deleted', ['parent_id' => $folder->getParentId()]);
-    }
-
-    /**
-     * Move folder
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/move", name="mediamanager_folder_move")
-     */
-    public function moveAction(Request $request)
-    {
-        $volumeId = $request->get('volumeId');
-        $targetId = $request->get('targetId');
-        $sourceId = $request->get('id');
-
-        $volume = $this->getVolume($volumeId);
-        $folder = $volume->findFolder($sourceId);
-        $targetFolder = $volume->findFolder($targetId);
-
-        $volume->moveFolder($folder, $targetFolder, $this->getUser()->getId());
-
-        return new ResultResponse(true);
-    }
-
-    /**
-     * Folder properties
-     *
-     * @param Request $request
+     * @param string  $folderId
      *
      * @return JsonResponse
-     * @Route("/properties", name="mediamanager_folder_properties")
+     * @Route("/{folderId}/size", name="mediamanager_folder_size")
+     * @Method("GET")
      */
-    public function propertiesAction(Request $request)
+    public function sizeAction(Request $request, $folderId)
     {
-        $folderId = $request->get('folder_id');
+        $folderId = $request->get('folderId');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $volume = $volumeManager->getByFolderId($folderId);
 
@@ -402,5 +226,196 @@ class FolderController extends Controller
         }
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * Create new folder
+     *
+     * @param Request $request
+     * @param string  $folderId
+     *
+     * @return ResultResponse
+     * @Route("/{folderId}", name="mediamanager_folder_create")
+     * @Method("POST")
+     */
+    public function createAction(Request $request, $folderId)
+    {
+        $name = $request->get('folderName');
+
+        $parentFolder = $this->getVolumeByFolderId($folderId);
+
+        try {
+            $folder = $parentFolder->getVolume()
+                ->createFolder($parentFolder, $name, array(), $this->getUser()->getId());
+
+            return new ResultResponse(true, 'Folder created.', [
+                'folderId'   => $folder->getId(),
+                'folderName' => $folder->getName()
+            ]);
+        } catch (AlreadyExistsException $e) {
+            return new ResultResponse(false, $e->getMessage(), [
+                'folderName' => 'Folder already exists.'
+            ]);
+        }
+    }
+
+    /**
+     * Rename folder
+     *
+     * @param Request $request
+     * @param string  $folderId
+     *
+     * @return ResultResponse
+     * @Route("/rename/{folderId}", name="mediamanager_folder_rename")
+     * @Method("PUT")
+     */
+    public function renameAction(Request $request, $folderId)
+    {
+        $folderName = $request->get('name');
+
+        $volume = $this->getVolumeByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
+
+        $volume->renameFolder($folder, $folderName, $this->getUser()->getId());
+
+        return new ResultResponse(true, 'Folder renamed.', [
+            'folderName' => $folderName
+        ]);
+    }
+
+    /**
+     * Move folder
+     *
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/move", name="mediamanager_folder_move")
+     * @Method("PUT")
+     */
+    public function moveAction(Request $request)
+    {
+        $volumeId = $request->get('volumeId');
+        $targetId = $request->get('targetId');
+        $sourceId = $request->get('id');
+
+        $volume = $this->getVolume($volumeId);
+        $folder = $volume->findFolder($sourceId);
+        $targetFolder = $volume->findFolder($targetId);
+
+        $volume->moveFolder($folder, $targetFolder, $this->getUser()->getId());
+
+        return new ResultResponse(true);
+    }
+
+    /**
+     * Delete folder
+     *
+     * @param Request $request
+     * @param string  $folderId
+     *
+     * @return ResultResponse
+     * @Route("/delete", name="mediamanager_folder_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $folderId)
+    {
+        $volume = $this->getVolumeByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
+
+        if ($folder->isRoot()) {
+            return new ResultResponse(false, "Can't delete the root folder.");
+        }
+
+        $volume->deleteFolder($folder, $this->getUser()->getId());
+
+        return new ResultResponse(true, 'Folder deleted', ['parent_id' => $folder->getParentId()]);
+    }
+
+    /**
+     * @param string $folderId
+     *
+     * @return VolumeInterface
+     */
+    private function getVolumeByFolderId($folderId)
+    {
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+
+        return $volumeManager->getByFolderId($folderId);
+    }
+
+    /**
+     * @param string $volumeId
+     *
+     * @return VolumeInterface
+     */
+    private function getVolume($volumeId = null)
+    {
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+
+        if ($volumeId) {
+            return $volumeManager->getById($volumeId);
+        }
+
+        return current($volumeManager->all());
+    }
+
+    /**
+     * @param ExtendedFolderInterface $folder
+     *
+     * @return array
+     */
+    private function recurseFolders(ExtendedFolderInterface $folder)
+    {
+        $volume = $folder->getVolume();
+        $subFolders = $volume->findFoldersByParentFolder($folder);
+
+        $securityContext = $this->get('security.context');
+        $permissions = $this->get('phlexible_access_control.permissions');
+
+        $user = $this->getUser();
+
+        $children = [];
+        foreach ($subFolders as $subFolder) {
+            /* @var $subFolder ExtendedFolderInterface */
+
+            if (!$securityContext->isGranted('FOLDER_READ', $folder)) {
+                continue;
+            }
+
+            // TODO: rights
+            /*
+            $userRights = $subFolder->getRights(MWF_Env::getUser());
+            if (null === $userRights) {
+                continue;
+            }
+            $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
+            */
+            $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
+
+            $tmp = [
+                'id'        => $subFolder->getId(),
+                'text'      => $subFolder->getName(),
+                'leaf'      => false,
+                'numChilds' => $volume->countFilesByFolder($subFolder),
+                'draggable' => true,
+                'expanded'  => true,
+                'allowDrop' => true,
+                'allowChildren' => true,
+                'isTarget'  => true,
+                'rights'    => $userRights,
+            ];
+
+            if ($volume->countFoldersByParentFolder($subFolder)) {
+                $tmp['children'] = $this->recurseFolders($subFolder);
+                $tmp['expanded'] = false;
+            } else {
+                $tmp['children'] = [];
+                $tmp['expanded'] = true;
+            }
+
+            $children[] = $tmp;
+        }
+
+        return $children;
     }
 }

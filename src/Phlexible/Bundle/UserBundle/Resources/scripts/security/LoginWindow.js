@@ -1,15 +1,15 @@
-Ext.namespace('Phlexible.users.security');
+Ext.define('Phlexible.users.security.LoginWindow', {
+    extend: 'Ext.Window',
 
-Phlexible.users.security.LoginWindow = Ext.extend(Ext.Window, {
     modal: false,
     closable: false,
     collapsible: false,
     draggable: false,
     resizable: false,
-    border: false,
+    border: true,
     shadow: true,
     width: 420,
-    height: 400,
+    height: 340,
     layout: 'border',
     cls: 'p-security-login-window',
 
@@ -17,32 +17,24 @@ Phlexible.users.security.LoginWindow = Ext.extend(Ext.Window, {
         this.items = [
             {
                 region: 'north',
-                height: 145,
                 frame: false,
-                border: true,
+                border: false,
                 style: 'text-align: center;',
                 html: '<img src="' + Phlexible.bundlePath + '/phlexiblegui/images/logo.gif" width="300" height="120" style="padding-top: 15px" />'
             },
             {
                 region: 'center',
                 xtype: 'form',
-                bodyStyle: 'padding: 10px;',
-                labelWidth: 100,
-                frame: true,
+                bodyPadding: 10,
+                frame: false,
+                border: false,
                 monitorValid: true,
-                url: this.checkPath,
                 standardSubmit: true,
-                listeners: {
-                    render: function (c) {
-                        c.form.el.dom.action = this.checkPath;
-                    },
-                    scope: this
-                },
+                url: this.checkPath,
                 items: [
                     {
                         frame: false,
                         border: false,
-                        bodyStyle: 'padding-bottom: 10px; text-align: center;',
                         html: this.enterUsernamePasswordText
                     },
                     {
@@ -58,7 +50,7 @@ Phlexible.users.security.LoginWindow = Ext.extend(Ext.Window, {
                     },
                     {
                         xtype: 'textfield',
-                        anchor: '100%',
+                        flex: 1,
                         fieldLabel: this.usernameText,
                         labelSeparator: "",
                         name: '_username',
@@ -69,7 +61,7 @@ Phlexible.users.security.LoginWindow = Ext.extend(Ext.Window, {
                     {
                         xtype: 'textfield',
                         inputType: 'password',
-                        anchor: '100%',
+                        flex: 1,
                         fieldLabel: this.passwordText,
                         labelSeparator: "",
                         name: '_password',
@@ -78,9 +70,9 @@ Phlexible.users.security.LoginWindow = Ext.extend(Ext.Window, {
                     },
                     {
                         xtype: 'checkbox',
-                        anchor: '100%',
+                        flex: 1,
                         labelSeparator: '',
-                        fieldLabel: '',
+                        fieldLabel: '&nbsp;',
                         boxLabel: this.rememberMeText,
                         name: '_remember_me',
                         msgTarget: 'under',
@@ -129,7 +121,7 @@ Phlexible.users.security.LoginWindow = Ext.extend(Ext.Window, {
             render: function (c) {
                 var keyMap = this.getKeyMap();
                 keyMap.addBinding({
-                    key: Ext.EventObject.ENTER,
+                    key: Ext.EventObjectImpl.ENTER,
                     fn: this.submit,
                     scope: this
                 });
@@ -140,7 +132,7 @@ Phlexible.users.security.LoginWindow = Ext.extend(Ext.Window, {
             scope: this
         });
 
-        Phlexible.users.security.LoginWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     focusField: function () {

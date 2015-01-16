@@ -10,7 +10,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
     small: false,
     checkRight: Phlexible.mediamanager.Rights.FILE_MODIFY,
     key: 'key',
-    params: {},
+    params: null,
 
     initComponent: function () {
         this.initMyUrls();
@@ -18,6 +18,13 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
         this.initMyDockedItems();
 
         this.callParent(arguments);
+
+        if (this.rights) {
+            this.setRights(this.rights);
+        }
+        if (this.params) {
+            this.loadMeta(this.params);
+        }
     },
 
     initMyUrls: function () {

@@ -52,7 +52,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
                 width: 280,
                 items: [
                     {
-                        xtype: 'mediamanager-filepreviewpanel',
+                        xtype: 'mediamanager-file-preview',
                         region: 'west',
                         height: 300,
                         border: false,

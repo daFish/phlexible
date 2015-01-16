@@ -310,7 +310,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
         folder = nodes[0];
 
-        folder.setText(result.data.folder_name);
+        folder.setText(result.data.folderName);
     },
 
     onExpandAll: function () {
@@ -394,7 +394,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
 
         var w = Ext.create('Phlexible.mediamanager.RenameFolderWindow', {
             values: {
-                folder_name: folder.text
+                folderName: folder.text
             },
             submitParams: {
                 volumeId: folder.data.volumeId,
@@ -442,9 +442,9 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         folder = nodes[0];
 
         var w = Ext.create('Phlexible.mediamanager.FolderDetailWindow', {
-            folder_id: folder.id,
-            folder_name: folder.data.text,
-            folder_rights: folder.data.rights,
+            folderId: folder.id,
+            folderName: folder.data.text,
+            folderRights: folder.data.rights,
             activeTabId: activeTabId
         });
         w.show();
