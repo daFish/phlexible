@@ -287,7 +287,7 @@ class ScriptsBuilder
             addToResult($file, $results, $symbols);
         }
 
-        $file = $files['/phlexible/scripts/phlexiblemediamanager/ux/plupload.full.min.js'];
+        $file = $files['/phlexible/phlexiblemediamanager/scripts/ux/plupload.full.min.js'];
         $file->added = true;
         $results->set($file->path, $file->file);
 

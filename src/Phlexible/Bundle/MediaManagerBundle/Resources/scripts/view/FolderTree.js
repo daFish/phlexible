@@ -450,30 +450,6 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         w.show();
     },
 
-    showFolderRightsWindow: function () {
-        var nodes = this.getSelectionModel().getSelection(),
-            folder;
-        if (!nodes.length) {
-            return;
-        }
-        folder = nodes[0];
-
-        var w = Ext.create('Phlexible.mediamanager.FolderRightsWindow', {
-            volumeId: folder.data.volumeId,
-            folderId: folder.id,
-            folderTitle: folder.data.text,
-            listeners: {
-                updateRights: function () {
-                    return;
-                    this.onClick(folder.parentNode);
-                },
-                scope: this
-            }
-        });
-
-        w.show();
-    },
-
     deleteFolder: function (volumeId, folderId) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_folder_delete'),

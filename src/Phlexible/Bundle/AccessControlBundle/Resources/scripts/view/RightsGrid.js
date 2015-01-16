@@ -1,8 +1,7 @@
-Ext.provide('Phlexible.accesscontrol.RightsGrid');
-Ext.require('Ext.ux.IconCombo');
-Ext.require('Ext.ux.grid.RowActions');
+Ext.define('Phlexible.accesscontrol.RightsGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.accesscontrol-rights',
 
-Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.accesscontrol.Strings.access,
     strings: Phlexible.accesscontrol.Strings,
     border: false,
@@ -685,5 +684,3 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
     }
 });
-
-Ext.reg('accesscontrol-rightsgrid', Phlexible.accesscontrol.RightsGrid);

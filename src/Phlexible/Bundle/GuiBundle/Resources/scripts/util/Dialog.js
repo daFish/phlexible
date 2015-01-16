@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.gui.util.Dialog');
+Ext.define('Phlexible.gui.util.Dialog', {
+    extend: 'Ext.window.Window',
 
-Phlexible.gui.util.Dialog = Ext.extend(Ext.Window, {
     title: 'Dialog',
     width: 400,
     height: 250,

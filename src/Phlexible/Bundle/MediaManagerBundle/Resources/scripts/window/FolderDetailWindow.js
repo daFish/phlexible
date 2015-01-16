@@ -1,4 +1,4 @@
-Phlexible.define('Phlexible.mediamanager.FolderDetailWindow', {
+Ext.define('Phlexible.mediamanager.FolderDetailWindow', {
     extend: 'Ext.window.Window',
 
     title: 'Folder Details',
@@ -59,7 +59,7 @@ Phlexible.define('Phlexible.mediamanager.FolderDetailWindow', {
                 scope: this
             }
         },{
-            xtype: 'mediamanager-foldermeta',
+            xtype: 'mediamanager-folder-meta',
             border: false,
             stripeRows: true,
             listeners: {
@@ -72,7 +72,7 @@ Phlexible.define('Phlexible.mediamanager.FolderDetailWindow', {
                 scope: this
             }
         },{
-            xtype: 'accesscontrol-rightsgrid',
+            xtype: 'accesscontrol-rights',
             tabId: 'rights',
             title: this.strings.folder_rights,
             iconCls: 'p-mediamanager-folder_rights-icon',
