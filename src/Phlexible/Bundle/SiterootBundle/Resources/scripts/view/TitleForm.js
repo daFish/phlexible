@@ -24,6 +24,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
                 xtype: 'form',
                 itemId: 'titles',
                 border: false,
+                padding: 5,
                 xlabelAlign: 'top',
                 items: []
             },
@@ -31,7 +32,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
                 xtype: 'grid',
                 itemId: 'patterns',
                 title: this.strings.custom_titles,
-                style: 'padding-top: 5px;',
+                padding: 5,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'pattern', 'example'],
                     data: [{name: 'bla', pattern: 'bla', example:'bla'}]
@@ -69,7 +70,8 @@ Ext.define('Phlexible.siteroots.TitleForm', {
             {
                 xtype: 'panel',
                 title: this.strings.legend,
-                bodyStyle: 'padding: 5px;',
+                padding: 5,
+                bodyPadding: 5,
                 items: [
                     {
                         xtype: 'dataview',
@@ -77,7 +79,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
                             fields: ['placeholder', 'title'],
                             proxy: {
                                 type: 'ajax',
-                                url: Phlexible.Router.generate('siteroots_customtitle_placeholders'),
+                                url: Phlexible.Router.generate('siteroots_pattern_placeholders'),
                                 simpleSortMode: true,
                                 reader: {
                                     type: 'json',

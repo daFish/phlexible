@@ -1,5 +1,3 @@
-Ext.provide('Phlexible.mediamanager.NewFolderWindow');
-
 Ext.define('Phlexible.mediamanager.NewFolderWindow', {
     extend: 'Phlexible.gui.util.Dialog',
 

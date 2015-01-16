@@ -119,6 +119,7 @@ class ScriptsBuilder
             }
         }
 
+        //ldd($entryPoints);
         /*
         $dir = $this->puliRepository->get('/phlexible/scripts');
         foreach ($dir->listChildren() as $dir) {
