@@ -10,11 +10,11 @@ img.m-inline-icon {
     vertical-align: middle;
 }
 
-img.p-inline-icon {
-    vertical-align: middle;
-}
-
 .p-tab-dirty .x-tab-strip-text {
     color: red !important;
 }
 */
+
+img.p-inline-icon {
+    vertical-align: middle;
+}

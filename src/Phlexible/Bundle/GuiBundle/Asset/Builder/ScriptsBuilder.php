@@ -266,6 +266,7 @@ class ScriptsBuilder
                 'label',
                 'textarea',
                 'datecolumn',
+                'displayfield',
             );
 
             if (!empty($file->requires)) {

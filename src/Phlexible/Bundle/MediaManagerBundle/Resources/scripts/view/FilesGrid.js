@@ -45,7 +45,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     alias: 'widget.mediamanager-files',
 
     title: Phlexible.mediamanager.Strings.no_folder_selected,
-    iconCls: Phlexible.Icon.get('folder'),
+    iconCls: Phlexible.Icon.get('folder-open-document'),
     cls: 'p-mediamanager-files-grid',
     strings: Phlexible.mediamanager.Strings,
     enableDragDrop: true,
@@ -661,7 +661,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
         var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(r.data.documentTypeKey) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
         documentTypeClass += "-small";
 
-        var prefix = '';
+        var prefix = ' ';
         var style = '';
 
         prefix += Phlexible.mediamanager.Bullets.getWithTrailingSpace(r.data);
@@ -669,7 +669,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
         if (r.data.hidden) {
             style += 'text-decoration: line-through;';
         }
-        return '<span class="m-mimetype ' + documentTypeClass + '" style="' + style + '"><div>' + prefix + name + '<\/div><\/span>';
+        return Phlexible.Icon.inlineDirect(documentTypeClass) + prefix + name;
     },
 
     showRenameFileWindow: function () {

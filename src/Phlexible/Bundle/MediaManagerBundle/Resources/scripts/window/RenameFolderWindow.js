@@ -1,36 +1,70 @@
 Ext.define('Phlexible.mediamanager.RenameFolderWindow', {
-    extend: 'Phlexible.gui.util.Dialog',
+    extend: 'Ext.window.Window',
 
     title: Phlexible.mediamanager.Strings.rename_folder,
-    width: 400,
-    minWidth: 400,
-    height: 220,
-    minHeight: 220,
-    iconCls: 'p-mediamanager-folder_rename-icon',
+    strings: Phlexible.mediamanager.Strings,
+    iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
+    layout: 'form',
+    width: 300,
+    height: 150,
+    modal: true,
+    resizable: false,
 
-    textHeader: Phlexible.mediamanager.Strings.rename_folder_header,
-    textDescription: Phlexible.mediamanager.Strings.rename_folder_desc,
-    textOk: Phlexible.mediamanager.Strings.rename,
-    textCancel: Phlexible.mediamanager.Strings.cancel,
+    initComponent: function() {
+        this.items = [{
+            xtype: 'displayfield',
+            hideLabel: true,
+            value: this.strings.rename_folder_desc
+        },{
+            xtype: 'textfield',
+            flex: 1,
+            fieldLabel: this.strings.name,
+            value: this.folderName
+        }];
 
-    extraCls: 'p-mediamanager-renamefolder',
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                '->',
+                {
+                    xtype: 'button',
+                    text: this.strings.cancel,
+                    handler: this.close,
+                    scope: this
+                },{
+                    xtype: 'button',
+                    text: this.strings.rename,
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
+                    handler: this.submit,
+                    scope: this
+                }
+            ]
+        }];
 
-    labelWidth: 70,
+        this.callParent(arguments);
+    },
 
-    formItems: [
-        {
-            fieldLabel: Phlexible.mediamanager.Strings.name,
-            name: 'folder_name',
-            msgTarget: 'under',
-            anchor: '-70'
-        }
-    ],
+    submit: function() {
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('mediamanager_folder_patch', {folderId: this.folderId}),
+            method: 'PATCH',
+            params: {
+                name: this.getComponent(1).getValue()
+            },
+            success: function(response) {
+                var data = Ext.decode(response.responseText);
 
-    /**
-     * Return the Submit URL
-     * @return string
-     */
-    getSubmitUrl: function () {
-        return Phlexible.Router.generate('mediamanager_folder_rename');
+                if (data.success) {
+                    Phlexible.Notify.success(data.msg);
+                    this.fireEvent('success', data.data)
+                    this.close();
+                } else {
+                    Phlexible.Notify.failure('Failure', data.msg);
+                }
+            },
+            scope: this
+        })
     }
 });

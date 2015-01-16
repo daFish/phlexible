@@ -53,6 +53,7 @@ class FolderController extends Controller
         $dispatcher = $this->get('event_dispatcher');
         $securityContext = $this->get('security.context');
         $permissions = $this->get('phlexible_access_control.permissions');
+        $folderSerializer = $this->get('phlexible_media_manager.folder_serializer');
 
         $user = $this->getUser();
 
@@ -75,22 +76,15 @@ class FolderController extends Controller
                 */
                 $userRights = array_keys($permissions->getByContentClass(get_class($rootFolder)));
 
+                $data = $folderSerializer->serialize($rootFolder, $request->getLocale());
+                $data['rights'] = $userRights;
+                $data['text'] = $data['name'];
+                $data['expanded'] = true;
+
                 $slot = new SiteSlot();
                 $slot->setData(
                     [
-                        [
-                            'id'        => $rootFolder->getId(),
-                            'volumeId'  => $volume->getId(),
-                            'text'      => $rootFolder->getName(),
-                            'cls'       => 't-mediamanager-root',
-                            'leaf'      => !$volume->countFoldersByParentFolder($rootFolder),
-                            'numChilds' => $volume->countFilesByFolder($rootFolder),
-                            'draggable' => false,
-                            'expanded'  => true,
-                            'allowDrop' => true,
-                            'versions'  => $volume->hasFeature('versions'),
-                            'rights'    => $userRights,
-                        ]
+                        $data
                     ]
                 );
 
@@ -149,25 +143,16 @@ class FolderController extends Controller
                     $usedIn = $folderUsageService->getUsedIn($folder);
                     // TODO: also files in folder!
 
-                    $tmp = [
-                        'id'        => $subFolder->getId(),
-                        'volumeId'  => $volume->getId(),
-                        'text'      => $subFolder->getName(),
-                        'leaf'      => false,
-                        'numChilds' => $volume->countFilesByFolder($subFolder),
-                        'allowDrop' => true,
-                        'allowChildren' => true,
-                        'isTarget' => true,
-                        'versions'  => $volume->hasFeature('versions'),
-                        'rights'    => $userRights,
-                        'usedIn'    => $usedIn,
-                        'used'      => $usage,
-                    ];
+                    $tmp = $folderSerializer->serialize($subFolder, $request->getLocale());
 
-                    if (!$volume->countFoldersByParentFolder($subFolder)) {
+                    $tmp['rights'] = $userRights;
+                    $tmp['text'] = $tmp['name'];
+                    $tmp['expanded'] = false;
+                    $tmp['expandable'] = false;
+                    if ($volume->countFoldersByParentFolder($subFolder)) {
                         //$tmp['leaf'] = true;
-                        $tmp['expanded'] = true;
-                        $tmp['children'] = [];
+                        $tmp['expandable'] = true;
+                        //$tmp['children'] = [];
                     }
 
                     $data[] = $tmp;
@@ -232,17 +217,18 @@ class FolderController extends Controller
      * Create new folder
      *
      * @param Request $request
-     * @param string  $folderId
      *
      * @return ResultResponse
-     * @Route("/{folderId}", name="mediamanager_folder_create")
+     * @Route("", name="mediamanager_folder_create")
      * @Method("POST")
      */
-    public function createAction(Request $request, $folderId)
+    public function createAction(Request $request)
     {
-        $name = $request->get('folderName');
+        $name = $request->get('name');
+        $parentId = $request->get('parentId');
 
-        $parentFolder = $this->getVolumeByFolderId($folderId);
+        $volume = $this->getVolumeByFolderId($parentId);
+        $parentFolder = $volume->findFolder($parentId);
 
         try {
             $folder = $parentFolder->getVolume()
@@ -254,9 +240,41 @@ class FolderController extends Controller
             ]);
         } catch (AlreadyExistsException $e) {
             return new ResultResponse(false, $e->getMessage(), [
-                'folderName' => 'Folder already exists.'
+                'name' => 'Folder already exists.'
             ]);
         }
+    }
+
+    /**
+     * Path folder
+     *
+     * @param Request $request
+     * @param string  $folderId
+     *
+     * @return ResultResponse
+     * @Route("/{folderId}", name="mediamanager_folder_patch")
+     * @Method("PATCH")
+     */
+    public function patchAction(Request $request, $folderId)
+    {
+        $name = $request->get('name', false);
+        $parentId = $request->get('targetId', false);
+
+        $volume = $this->getVolumeByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
+
+        if ($name) {
+            $volume->renameFolder($folder, $name, $this->getUser()->getId());
+        }
+
+        if ($parentId) {
+            $targetFolder = $volume->findFolder($parentId);
+            $volume->moveFolder($folder, $targetFolder, $this->getUser()->getId());
+        }
+
+        return new ResultResponse(true, 'Folder patched.', [
+            'name' => $folder->getName(),
+        ]);
     }
 
     /**

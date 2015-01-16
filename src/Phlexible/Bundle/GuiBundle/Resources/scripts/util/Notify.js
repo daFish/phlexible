@@ -4,6 +4,7 @@
 Ext.define('Phlexible.gui.util.Notify', {
     successText: '_success',
     failureText: '_failure',
+    require: ['Ext.ux.window.Notification'],
 
     /**
      * Notify
@@ -13,7 +14,8 @@ Ext.define('Phlexible.gui.util.Notify', {
      * @param {Object} extraParams
      */
     notify: function(title, text, extraParams){
-        Ext.create('uxNotification', {
+        Ext.create({
+            xtype: 'uxnotification',
             corner: 't',
             //manager: 'demo1panel3',
             iconCls: Phlexible.Icon.get('information'),

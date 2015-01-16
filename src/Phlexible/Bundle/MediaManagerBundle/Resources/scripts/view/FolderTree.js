@@ -44,7 +44,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
     alias: 'widget.mediamanager-folders',
 
     strings: Phlexible.mediamanager.Strings,
-    cls: 'p-foldertree',
+    cls: 'p-mediamanager-folders',
     enableDD: true,
     containerScroll: true,
     ddGroup: 'mediamanager',
@@ -60,7 +60,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
      * Fires after a Folder has been selected
      * @param {Number} folderId The ID of the selected Folder.
      * @param {String} folderName The Name of the selected Folder.
-     * @param {Ext.data.TreeModel} node The TreeNode of the selected Folder.
+     * @param {Phlexible.mediamanager.model.Folder} node The TreeNode of the selected Folder.
      */
 
     /**
@@ -199,7 +199,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
                 itemId: 'createBtn',
                 text: this.strings.new_folder,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
-                handler: this.showNewFolderWindow,
+                handler: this.showCreateFolderWindow,
                 scope: this
             },
             {
@@ -302,17 +302,6 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         });
     },
 
-    onRename: function (dialog, result) {
-        var nodes = this.getSelectionModel().getSelection(),
-            folder;
-        if (!nodes.length) {
-            return;
-        }
-        folder = nodes[0];
-
-        folder.setText(result.data.folderName);
-    },
-
     onExpandAll: function () {
         var nodes = this.getSelectionModel().getSelection(),
             folder;
@@ -362,7 +351,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
     },
 
-    showNewFolderWindow: function () {
+    showCreateFolderWindow: function () {
         var nodes = this.getSelectionModel().getSelection(),
             folder;
         if (!nodes.length) {
@@ -370,9 +359,8 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
         folder = nodes[0];
 
-        var w = Ext.create('Phlexible.mediamanager.NewFolderWindow', {
+        var w = Ext.create('Phlexible.mediamanager.CreateFolderWindow', {
             submitParams: {
-                volumeId: folder.data.volumeId,
                 parentId: folder.id
             },
             listeners: {
@@ -393,15 +381,13 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         folder = nodes[0];
 
         var w = Ext.create('Phlexible.mediamanager.RenameFolderWindow', {
-            values: {
-                folderName: folder.text
-            },
-            submitParams: {
-                volumeId: folder.data.volumeId,
-                id: folder.id
-            },
+            folderId: folder.id,
+            folderName: folder.data.name,
             listeners: {
-                success: this.onRename,
+                success: function (data) {
+                    folder.set('text', data.name);
+                    folder.set('name', data.name);
+                },
                 scope: this
             }
         });

@@ -1,11 +1,11 @@
-Ext.define('Phlexible.mediamanager.NewFolderWindow', {
+Ext.define('Phlexible.mediamanager.CreateFolderWindow', {
     extend: 'Phlexible.gui.util.Dialog',
 
     title: Phlexible.mediamanager.Strings.new_folder,
     width: 400,
     height: 210,
     modal: true,
-    iconCls: 'p-mediamanager-folder_add-icon',
+    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
 
     textHeader: Phlexible.mediamanager.Strings.create_new_folder_header,
     textDescription: Phlexible.mediamanager.Strings.create_new_folder_desc,
@@ -20,7 +20,7 @@ Ext.define('Phlexible.mediamanager.NewFolderWindow', {
         {
             xtype: 'textfield',
             fieldLabel: Phlexible.mediamanager.Strings.name,
-            name: 'folder_name',
+            name: 'name',
             anchor: '-70',
             msgTarget: 'under'
         }

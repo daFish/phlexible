@@ -1,4 +1,4 @@
-/* 
+/*
  *	Notification extension for Ext JS 4.x
  *	Version: 2.1
  *
@@ -6,14 +6,14 @@
  *
  *	Follow project on GitHub: https://github.com/EirikLorentsen/Ext.ux.window.Notification
  *
- *	Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) 
+ *	Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  *	and GPL (http://opensource.org/licenses/GPL-3.0) licenses.
  *
  */
 
 Ext.define('Ext.ux.window.Notification', {
     extend: 'Ext.window.Window',
-    alias: 'widget.uxNotification',
+    alias: 'widget.uxnotification',
 
     cls: 'ux-notification-window',
     autoClose: true,

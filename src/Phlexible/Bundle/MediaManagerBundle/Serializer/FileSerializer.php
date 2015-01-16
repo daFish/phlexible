@@ -101,19 +101,6 @@ class FileSerializer
             $modifyUserName = 'Unknown';
         }
 
-        $properties = [
-            //'attributes'    => array(),
-            //'attributesCnt' => 0,
-            'versions' => $hasVersions,
-            'debug'    => [
-                'mimeType'      => $file->getMimeType(),
-                'mediaCategory' => strtolower($file->getMediaCategory()),
-                'mediaType'     => strtolower($file->getMediaType()),
-                'fileId'        => $file->getID(),
-                'folderId'      => $file->getFolderId(),
-            ]
-        ];
-
         $meta = [];
         // TODO: enable
         //foreach ($asset->getMetas()->getAll() as $metaData) {
@@ -121,7 +108,6 @@ class FileSerializer
         //        $meta[$metaData->getTitle()][$key] = $value;
         //    }
         //}
-        $properties['meta'] = $meta;
 
         $mediaType = $this->mediaTypeManager->find(strtolower($file->getMediaType()));
 
@@ -168,9 +154,11 @@ class FileSerializer
         $data = [
             'id'              => $file->getID(),
             'name'            => $file->getName(),
+            'path'            => '/' . $folder->getPath() . $file->getName(),
             'volumeId'        => $volume->getId(),
             'folderId'        => $file->getFolderID(),
-            'folder'          => '/Root/' . $folder->getPath(),
+            'folderPath'      => '/' . $folder->getPath(),
+            'hasVersions'     => $hasVersions,
             'assetType'       => strtolower($file->getMediaCategory()),
             'mimeType'        => $file->getMimetype(),
             'documentType'    => $mediaTypeTitle,
@@ -186,7 +174,7 @@ class FileSerializer
             'modifyUserId'    => $file->getModifyUserId(),
             'modifyTime'      => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
             'cache'           => $cache,
-            'properties'      => $properties,
+            'meta'            => $meta,
             'usedIn'          => $usedIn,
             'used'            => $usage,
             'focal'           => $focal,

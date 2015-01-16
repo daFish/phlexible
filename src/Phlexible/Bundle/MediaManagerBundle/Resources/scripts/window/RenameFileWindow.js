@@ -6,7 +6,7 @@ Ext.define('Phlexible.mediamanager.RenameFileWindow', {
     minWidth: 400,
     height: 220,
     minHeight: 220,
-    iconCls: 'p-mediamanager-file_rename-icon',
+    iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
 
     textHeader: Phlexible.mediamanager.Strings.rename_file_header,
     textDescription: Phlexible.mediamanager.Strings.rename_file_desc,
@@ -20,9 +20,8 @@ Ext.define('Phlexible.mediamanager.RenameFileWindow', {
     formItems: [
         {
             fieldLabel: Phlexible.mediamanager.Strings.name,
-            name: 'file_name',
-            msgTarget: 'under',
-            anchor: '-70'
+            name: 'name',
+            msgTarget: 'under'
         }
     ],
 

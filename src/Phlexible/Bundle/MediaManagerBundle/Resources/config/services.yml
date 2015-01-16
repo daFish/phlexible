@@ -22,6 +22,12 @@ services:
             - @phlexible_media_manager.file_usage_manager
             - @router
 
+    phlexible_media_manager.folder_serializer:
+        class: Phlexible\Bundle\MediaManagerBundle\Serializer\FolderSerializer
+        arguments:
+            - @phlexible_user.user_manager
+            - @phlexible_media_manager.folder_usage_manager
+
     phlexible_media_manager.delete_file_checker:
         class: Phlexible\Bundle\MediaManagerBundle\Volume\DeleteFileChecker
         arguments: [@doctrine.orm.entity_manager, @security.context, %phlexible_media_manager.delete_policy%]

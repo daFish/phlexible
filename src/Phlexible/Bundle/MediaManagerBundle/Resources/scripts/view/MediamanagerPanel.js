@@ -862,7 +862,7 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
     },
 
     onNewFolder: function () {
-        this.getFolderTree().showNewFolderWindow();
+        this.getFolderTree().showCreateFolderWindow();
     },
 
     onMove: function (e) {
