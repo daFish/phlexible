@@ -160,7 +160,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             },
             {
                 header: this.strings.created_by,
-                dataIndex: 'createUserId',
+                dataIndex: 'createUser',
                 sortable: true,
                 width: 100
             },

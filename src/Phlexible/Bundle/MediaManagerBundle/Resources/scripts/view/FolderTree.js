@@ -420,9 +420,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         folder = nodes[0];
 
         var w = Ext.create('Phlexible.mediamanager.FolderDetailWindow', {
-            folderId: folder.id,
-            folderName: folder.data.text,
-            folderRights: folder.data.rights,
+            folder: folder,
             activeTabId: activeTabId
         });
         w.show();

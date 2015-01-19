@@ -15,12 +15,14 @@ Ext.define('Phlexible.mediamanager.FolderDetailWindow', {
 
     activeTabId: 'properties',
 
-    folderId: null,
-    folderName: null,
-    folderRights: [],
+    folder: null,
 
     initComponent: function () {
-        this.title = this.folderName;
+        if (!this.folder) {
+            throw new Error('Folder ID missing.');
+        }
+
+        this.title = this.folder.get('name');
 
         this.initMyTabs();
 
@@ -53,15 +55,15 @@ Ext.define('Phlexible.mediamanager.FolderDetailWindow', {
         this.tabs = [{
             xtype: 'mediamanager-folder-properties',
             itemId: 'properties',
-            folderId: this.folderId
+            folder: this.folder
         },{
             xtype: 'mediamanager-folder-meta',
             itemId: 'meta',
             border: false,
             stripeRows: true,
-            rights: this.folderRights,
+            rights: this.folder.get('rights'),
             params: {
-                folderId: this.folderId
+                folderId: this.folder.get('id')
             }
         }/*,{
             xtype: 'accesscontrol-rights',

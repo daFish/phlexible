@@ -31,7 +31,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
     },
 
     initMyTemplates: function() {
-        this.fileDetailAttributesTemplate = new Ext.XTemplate(
+        this.fileDetailTemplate = new Ext.XTemplate(
             '<div>',
                 '<div style="color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div>',
                 '<div>{[Ext.String.ellipsis(values.name, 40)]}</div>',
@@ -81,7 +81,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
                         border: false,
                         autoHeight: true,
                         padding: 5,
-                        tpl: this.fileDetailAttributesTemplate,
+                        tpl: this.fileDetailTemplate,
                         data: this.file.data
                     }
                 ]

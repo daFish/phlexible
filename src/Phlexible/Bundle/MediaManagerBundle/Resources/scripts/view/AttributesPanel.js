@@ -11,9 +11,9 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
     mode: '',
 
     initComponent: function () {
+        this.initMyTemplates();
         this.initMyAccordions();
         this.initMyItems();
-        this.initMyTemplates();
 
         this.callParent(arguments);
     },
@@ -30,7 +30,9 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
                 itemId: 'details',
                 header: false,
                 border: false,
-                autoHeight: true
+                autoHeight: true,
+                tpl: this.detailsTpl,
+                data: {}
             },
             {
                 xtype: 'panel',
@@ -396,7 +398,7 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
         this.getPreviewPanel().empty();
 
         // info
-        this.getDetailsPanel().body.update('');
+        this.getDetailsPanel().setData({});
 
         // file attributes
         this.getFileAttributesPanel().setSource({});
@@ -435,7 +437,7 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
             create_user: file.get('createUser')
         };
 
-        this.detailsTpl.overwrite(this.getDetailsPanel().body, details);
+        this.getDetailsPanel().setData(details);
 
         if (file.get('hasVersions')) {
             this.getFileVersionsPanel().loadFile(this.fileId);
