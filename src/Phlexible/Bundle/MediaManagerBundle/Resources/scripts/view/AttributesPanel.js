@@ -55,7 +55,7 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
         this.detailsTpl = new Ext.XTemplate(
             '<div style="padding: 4px;">',
             '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.version]}:</div> {[values.version]}</div>',
-            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {[values.document_type]}</div>',
+            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {[values.mediaTypeTitle]}</div>',
             '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
             '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {[values.create_user]}</div>',
             '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
@@ -369,8 +369,8 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
         this.loadFolderMeta(folder.id);
 
         // folder usage
-        if (folder.get('usedId')) {
-            this.getFolderUsedPanel().store.loadData(folder.get('usedId'));
+        if (folder.get('usedIn')) {
+            this.getFolderUsedPanel().store.loadData(folder.get('usedIn'));
             this.getFolderUsedPanel().setTitle('Folder used by [' + this.getFolderUsedPanel().getStore().getCount() + ']');
         } else {
             this.getFolderUsedPanel().getStore().removeAll();
@@ -418,7 +418,7 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
 
     loadFile: function (file) {
         this.setTitle(Ext.String.ellipsis(file.get('name'), 40));
-        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(file.get('documentTypeKey')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
+        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(file.get('mediaType')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
         this.setIconCls(documentTypeClass + '-small');
 
         this.getPreviewPanel().loadRecord(file);
@@ -430,11 +430,11 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
 //        this.attributesPanel.setTitle(this.strings.attributes + ' [' + properties.attributesCnt + ']');
 //        this.attributesPanel.setSource(properties.attributes);
         var details = {
-            document_type: file.get('documentType'),
+            mediaType: file.get('mediaTypeTitle'),
             version: file.get('version'),
             size: file.get('size'),
-            create_time: file.get('createTime'),
-            create_user: file.get('createUser')
+            createTime: file.get('createTime'),
+            createUser: file.get('createUser')
         };
 
         this.getDetailsPanel().setData(details);
@@ -476,8 +476,8 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
         }
 
         // file usage
-        if (file.get('usedId')) {
-            this.getFileUsedPanel().store.loadData(file.get('usedId'));
+        if (file.get('usedIn')) {
+            this.getFileUsedPanel().store.loadData(file.get('usedIn'));
             this.getFileUsedPanel().setTitle('File used by [' + this.getFileUsedPanel().getStore().getCount() + ']');
         } else {
             this.getFileUsedPanel().getStore().removeAll();

@@ -48,12 +48,12 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     initComponent: function () {
         this.activeFilter = {};
 
-        if (this.assetType) {
-            this.activeFilter['assetType'] = this.assetType;
+        if (this.mediaCategory) {
+            this.activeFilter['mediaCategory'] = this.mediaCategory;
         }
 
-        if (this.documenttypes) {
-            this.activeFilter['documenttypes'] = this.documenttypes;
+        if (this.mediaTypes) {
+            this.activeFilter['mediaTypes'] = this.mediaTypes;
         }
 
         this.initMyView();
@@ -136,12 +136,12 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             },
             {
                 header: this.strings.type,
-                dataIndex: 'documentType',
+                dataIndex: 'mediaType',
                 sortable: true,
                 width: 120
             },{
                 header: this.strings.asset,
-                dataIndex: 'assetType',
+                dataIndex: 'mediaCategory',
                 sortable: true,
                 hidden: true,
                 width: 120
@@ -350,7 +350,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                                             '</div>',
                                             '<div class="tile-text">',
                                                 '<div class="tile-text-name">{[columnValues.name]}</div>',
-                                                '<div class="tile-text-type">{[columnValues.documentType]}</div>',
+                                                '<div class="tile-text-type">{[columnValues.mediaType]}</div>',
                                                 '<div class="tile-text-size">{[columnValues.size]}</div>',
                                             '</div>',
                                             '<div class="x-clear"></div>',
@@ -561,8 +561,8 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
         this.setTitle(this.strings.search_results);
     },
 
-    setAssetTypeFilter: function(assetType) {
-        this.setFilter('assetType', assetType);
+    setAssetTypeFilter: function(mediaCategory) {
+        this.setFilter('mediaCategory', mediaCategory);
     },
 
     setUserFilter: function(key, value) {
@@ -622,7 +622,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     },
 
     nameRenderer: function (name, e, r) {
-        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(r.data.documentTypeKey) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
+        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(r.get('mediaType')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
         documentTypeClass += "-small";
 
         var prefix = ' ';
@@ -673,8 +673,8 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             fileId: file.id,
             fileVersion: file.get('version'),
             fileName: file.get('name'),
-            documentTypeKey: file.get('documentTypeKey'),
-            assetType: file.get('assetType'),
+            mediaType: file.get('mediaType'),
+            mediaCategory: file.get('mediaCategory'),
             cache: file.get('cache'),
             folderRights: this.folderRights
         });
@@ -811,15 +811,15 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             //    contextmenu.getComponent('renameBtn').disable();
             //}
 
-            var used = 0;
+            var usageStatus = 0;
             var hasHidden = false;
             var allHidden = true;
             var hasPresent = false;
             var allPresent = true;
 
             for (var i = 0; i < selections.length; i++) {
-                if (selections[i].data.used) {
-                    used |= selections[i].data.used;
+                if (selections[i].data.usageStatus) {
+                    usageStatus |= selections[i].data.usageStatus;
                 }
                 if (selections[i].data.hidden) {
                     hasHidden = true;
@@ -839,8 +839,8 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             contextmenu.getComponent('showBtn').setText(this.strings.show_files);
 
             if (this.checkRights(Phlexible.mediamanager.Rights.FILE_DELETE) &&
-                (!used ||
-                    (deletePolicy === Phlexible.mediamanager.DeletePolicy.DELETE_OLD && (used == 1 || used == 2 || used == 3)) ||
+                (!usageStatus ||
+                    (deletePolicy === Phlexible.mediamanager.DeletePolicy.DELETE_OLD && (usageStatus == 1 || usageStatus == 2 || usageStatus == 3)) ||
                     (deletePolicy === Phlexible.mediamanager.DeletePolicy.DELETE_ALL))) {
                 contextmenu.getComponent('deleteBtn').enable();
                 contextmenu.getComponent('deleteBtn').show();
@@ -848,7 +848,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 contextmenu.getComponent('hideBtn').hide();
             }
             else if (this.checkRights(Phlexible.mediamanager.Rights.FILE_DELETE) == '1' &&
-                (deletePolicy === Phlexible.mediamanager.DeletePolicy.HIDE_OLD && (used == 1 || used == 2 || used == 3))) {
+                (deletePolicy === Phlexible.mediamanager.DeletePolicy.HIDE_OLD && (usageStatus == 1 || usageStatus == 2 || usageStatus == 3))) {
                 contextmenu.getComponent('deleteBtn').disable();
                 contextmenu.getComponent('deleteBtn').hide();
                 if (!allHidden) {
@@ -884,7 +884,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
         }
         else {
             contextmenu.getComponent('nameBtn').setText(record.get('name'));
-            var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(record.get('documentTypeKey')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
+            var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(record.get('mediaType')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
             contextmenu.getComponent('nameBtn').setIconCls(documentTypeClass + '-small');
 
             if (this.checkRights(Phlexible.mediamanager.Rights.FILE_MODIFY) == '1') {
@@ -893,7 +893,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 contextmenu.getComponent('renameBtn').disable();
             }
 
-            var used = record.get('used');
+            var usageStatus = record.get('usageStatus');
             var deletePolicy = Phlexible.App.getConfig().get('mediamanager.delete_policy');
 
             contextmenu.getComponent('deleteBtn').setText(this.strings.delete_file);
@@ -901,8 +901,8 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             contextmenu.getComponent('showBtn').setText(this.strings.show_file);
 
             if (this.checkRights(Phlexible.mediamanager.Rights.FILE_DELETE) == '1' &&
-                (!used ||
-                    (deletePolicy === Phlexible.mediamanager.DeletePolicy.DELETE_OLD && (used == 1 || used == 2 || used == 3)) ||
+                (!usageStatus ||
+                    (deletePolicy === Phlexible.mediamanager.DeletePolicy.DELETE_OLD && (usageStatus == 1 || usageStatus == 2 || usageStatus == 3)) ||
                     (deletePolicy === Phlexible.mediamanager.DeletePolicy.DELETE_ALL))) {
                 contextmenu.getComponent('deleteBtn').enable();
                 contextmenu.getComponent('deleteBtn').show();
@@ -910,7 +910,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 contextmenu.getComponent('hideBtn').hide();
             }
             else if (this.checkRights(Phlexible.mediamanager.Rights.FILE_DELETE) == '1' &&
-                (deletePolicy === Phlexible.mediamanager.DeletePolicy.HIDE_OLD && (used == 1 || used == 2 || used == 3))) {
+                (deletePolicy === Phlexible.mediamanager.DeletePolicy.HIDE_OLD && (usageStatus == 1 || usageStatus == 2 || usageStatus == 3))) {
                 contextmenu.getComponent('deleteBtn').disable();
                 contextmenu.getComponent('deleteBtn').hide();
                 if (!record.get('hidden')) {

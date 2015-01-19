@@ -11,7 +11,7 @@ Ext.define('Phlexible.mediamanager.model.Folder', {
         {name: 'modifyTime', type: 'date', dateFormat: 'Y-m-d H:i:s'},
         {name: 'modifyUser', type: 'string'},
         {name: 'modifyUserId', type: 'string'},
-        {name: 'used', type: 'int'},
+        {name: 'usageStatus', type: 'int'},
         {name: 'usedIn'},
         {name: 'attributes'},
         {name: 'rights'}

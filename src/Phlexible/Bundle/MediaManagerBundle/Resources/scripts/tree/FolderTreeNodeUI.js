@@ -6,22 +6,22 @@ Ext.define('Phlexible.mediamanager.FolderTreeNodeUI', {
 
         //prefix = '';
 
-        if (a.used & 8) {
+        if (a.usageStatus & 8) {
             if (!a.cls) a.cls = '';
             a.cls += ' x-tree-node-green';
             //prefix += '<img src="'+Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_green.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
         }
-        if (a.used & 4) {
+        if (a.usageStatus & 4) {
             if (!a.cls) a.cls = '';
             a.cls += ' x-tree-node-orange';
             //prefix += '<img src="'+Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_yellow.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
         }
-        if (a.used & 2) {
+        if (a.usageStatus & 2) {
             if (!a.cls) a.cls = '';
             a.cls += ' x-tree-node-black';
             //prefix += '<img src="'+Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_gray.gif')+'" width="8" height="12" style="vertical-align: middle;" />';
         }
-        if (a.used & 1) {
+        if (a.usageStatus & 1) {
             if (!a.cls) a.cls = '';
             a.cls += ' x-tree-node-gray';
             //prefix += '<img src="'+Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_black.gif')+'" width="8" height="12" style="vertical-align: middle;" />';

@@ -8,10 +8,10 @@ Ext.define('Phlexible.mediamanager.model.File', {
         {name: 'folderId', type: 'string'},
         {name: 'folderPath', type: 'string'},
         {name: 'hasVersions', type: 'bool'},
-        {name: 'assetType', type: 'string'},
         {name: 'mimeType', type: 'string'},
-        {name: 'documentType', type: 'string'},
-        {name: 'documentTypeKey', type: 'string'},
+        {name: 'mediaCategory', type: 'string'},
+        {name: 'mediaType', type: 'string'},
+        {name: 'mediaTypeTitle', type: 'string'},
         {name: 'size', type: 'int'},
         {name: 'hidden', type: 'bool'},
         {name: 'present', type: 'bool'},
@@ -26,7 +26,7 @@ Ext.define('Phlexible.mediamanager.model.File', {
         {name: 'meta'},
         {name: 'properties'},
         {name: 'usedIn'},
-        {name: 'used', type: 'int'},
+        {name: 'usageStatus', type: 'int'},
         {name: 'focal'},
         {name: 'attributes'}
     ]

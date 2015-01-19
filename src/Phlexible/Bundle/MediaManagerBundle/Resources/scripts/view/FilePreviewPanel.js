@@ -11,14 +11,14 @@ Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
     fileId: null,
     fileVersion: null,
     fileName: null,
-    documentTypeKey: null,
-    assetType: null,
+    mediaType: null,
+    mediaCategory: null,
     cache: null,
 
     // private
     initComponent: function () {
-        if (this.fileId && this.fileVersion && this.fileName && this.documentTypeKey && this.assetType && this.cache) {
-            this.html = this.getHtml(this.fileId, this.fileVersion, this.fileName, this.documentTypeKey, this.assetType, this.cache);
+        if (this.fileId && this.fileVersion && this.fileName && this.mediaType && this.mediaCategory && this.cache) {
+            this.html = this.getHtml(this.fileId, this.fileVersion, this.fileName, this.mediaType, this.mediaCategory, this.cache);
         }
         else {
             this.html = this.createNoPreview();
@@ -28,25 +28,25 @@ Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
     },
 
     loadRecord: function (r) {
-        this.load(r.get('id'), r.get('version'), r.get('name'), r.get('document_type_key'), r.get('assetType'), r.get('cache'));
+        this.load(r.get('id'), r.get('version'), r.get('name'), r.get('mediaType'), r.get('mediaCategory'), r.get('cache'));
     },
 
-    load: function (fileId, fileVersion, fileName, documentTypeKey, assetType, cache) {
+    load: function (fileId, fileVersion, fileName, mediaType, mediaCategory, cache) {
         if (this.fileId != fileId || this.fileVersion != fileVersion) {
             this.fileId = fileId;
             this.fileVersion = fileVersion;
             this.fileName = fileName;
-            this.documentTypeKey = documentTypeKey;
-            this.assetType = assetType;
+            this.mediaType = mediaType;
+            this.mediaCategory = mediaCategory;
             this.cache = cache;
 
             this.body.update('');
-            this.body.insertFirst(this.getHtml(fileId, fileVersion, fileName, documentTypeKey, assetType, cache));
+            this.body.insertFirst(this.getHtml(fileId, fileVersion, fileName, mediaType, mediaCategory, cache));
         }
     },
 
-    getHtml: function (fileId, fileVersion, fileName, documentTypeKey, assetType, cache) {
-        switch (assetType.toUpperCase()) {
+    getHtml: function (fileId, fileVersion, fileName, mediaType, mediaCategory, cache) {
+        switch (mediaCategory.toUpperCase()) {
             case Phlexible.mediamanager.AUDIO:
                 return this.createAudioPlayer(256, 256, fileId, fileVersion, fileName, cache);
                 break;

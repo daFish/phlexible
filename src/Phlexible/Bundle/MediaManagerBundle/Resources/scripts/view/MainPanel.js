@@ -47,7 +47,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
             }
         }
 
-        if (this.params.assetType || this.params.documenttypes) {
+        if (this.params.mediaCategory || this.params.mediaTypes) {
             this.hideFilter = true;
         }
 
@@ -85,8 +85,8 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
             margin: '5 5 5 0',
             border: true,
             viewMode: this.params.file_view || false,
-            assetType: this.params.assetType || false,
-            documenttypes: this.params.documenttypes || false,
+            mediaCategory: this.params.mediaCategory || false,
+            mediaTypes: this.params.mediaTypes || false,
             start_file_id: this.params.start_file_id || false,
             listeners: {
                 fileChange: this.onFileChange,
@@ -793,7 +793,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                 s = 'age_modified';
                 break;
 
-            case 'asset_type':
+            case 'mediaCategory':
                 s = value.toLowerCase();
                 break;
 

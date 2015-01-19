@@ -20,7 +20,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
 
     initComponent: function () {
         this.title = this.file.get('name');
-        this.iconCls = Phlexible.documenttypes.DocumentTypes.getClass(this.file.get('documenttypeKey')) + "-small";
+        this.iconCls = Phlexible.documenttypes.DocumentTypes.getClass(this.file.get('mediaType')) + "-small";
 
         this.initMyTemplates();
         this.initMyTabs();
@@ -36,7 +36,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
                 '<div style="color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div>',
                 '<div>{[Ext.String.ellipsis(values.name, 40)]}</div>',
                 '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.type]}:</div>',
-                '<div>{documentType}</div>',
+                '<div>{mediaType}</div>',
                 '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.size]}:</div>',
                 '<div>{[Phlexible.Format.size(values.size)]}</div>',
                 '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.created_by]}:</div>',
@@ -69,8 +69,8 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
                         fileId: this.file.get('id'),
                         fileVersion: this.file.get('version'),
                         fileName: this.file.get('name'),
-                        documentTypeKey: this.file.get('documentTypeKey'),
-                        assetType: this.file.get('assetType'),
+                        mediaType: this.file.get('mediaType'),
+                        mediaCategory: this.file.get('mediaCategory'),
                         cache: this.file.get('cache')
                     },
                     {
@@ -241,8 +241,8 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
         return this.getTabPanel().getComponent('meta');
     },
 
-    onVersionSelect: function (fileId, fileVersion, fileName, folderId, documentTypeKey, assetType) {
-        //this.getPreviewPanel().load(fileId, fileVersion, fileName, documentTypeKey, assetType);
+    onVersionSelect: function (fileId, fileVersion, fileName, folderId, mediaType, mediaCategory) {
+        //this.getPreviewPanel().load(fileId, fileVersion, fileName, mediaType, mediaCategory);
         this.load(fileId, fileVersion);
     },
 
@@ -259,14 +259,14 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
 
     setFile: function(file) {
         this.setTitle(file.get('name'));
-        this.setIconCls(Phlexible.documenttypes.DocumentTypes.getClass(file.get('documentTypeKey')) + "-small");
+        this.setIconCls(Phlexible.documenttypes.DocumentTypes.getClass(file.get('mediaType')) + "-small");
 
         this.getPreviewPanel().load(
             file.get('fileId'),
             file.get('version'),
             file.get('name'),
-            file.get('documentTypeKey'),
-            file.get('assetType'),
+            file.get('mediaType'),
+            file.get('mediaCategory'),
             file.get('cache')
         );
 

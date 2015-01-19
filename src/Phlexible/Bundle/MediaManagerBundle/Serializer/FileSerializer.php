@@ -78,9 +78,12 @@ class FileSerializer
      *
      * @return array
      */
-    public function serialize(ExtendedFileInterface $file, $language)
+    public function serialize(ExtendedFileInterface $file, $language, array $fields = array())
     {
+        $all = in_array('all', $fields);
+
         $volume = $file->getVolume();
+        $folder = $volume->findFolder($file->getFolderId());
         $hasVersions = $volume->hasFeature('versions');
 
         try {
@@ -101,14 +104,6 @@ class FileSerializer
             $modifyUserName = 'Unknown';
         }
 
-        $meta = [];
-        // TODO: enable
-        //foreach ($asset->getMetas()->getAll() as $metaData) {
-        //    foreach ($metaData->getValues() as $key => $value) {
-        //        $meta[$metaData->getTitle()][$key] = $value;
-        //    }
-        //}
-
         $mediaType = $this->mediaTypeManager->find(strtolower($file->getMediaType()));
 
         if (!$mediaType) {
@@ -123,68 +118,82 @@ class FileSerializer
             $version = $file->getVersion();
         }
 
-        $cacheItems = $this->cacheManager->findByFile($file->getID(), $version);
+        $usageStatus = $this->fileUsageManager->getStatus($file);
+
+        $meta = [];
+        if ($all || in_array('meta', $fields)) {
+            // TODO: enable
+            //foreach ($asset->getMetas()->getAll() as $metaData) {
+            //    foreach ($metaData->getValues() as $key => $value) {
+            //        $meta[$metaData->getTitle()][$key] = $value;
+            //    }
+            //}
+        }
+
         $cache = [];
-        foreach ($cacheItems as $cacheItem) {
-            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
-                $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media', [
-                    'file_id'      => $file->getId(),
-                    'file_version' => $file->getVersion(),
-                    'template_key' => $cacheItem->getTemplateKey(),
-                ]);
-            } else {
-                $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media_delegate', [
-                    'mediaTypeName' => $file->getMediaType(),
-                    'templateKey'   => $cacheItem->getTemplateKey(),
-                ]);
+        if ($all || in_array('cache', $fields)) {
+            $cacheItems = $this->cacheManager->findByFile($file->getID(), $version);
+            foreach ($cacheItems as $cacheItem) {
+                if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+                    $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media', [
+                        'file_id'      => $file->getId(),
+                        'file_version' => $file->getVersion(),
+                        'template_key' => $cacheItem->getTemplateKey(),
+                    ]);
+                } else {
+                    $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media_delegate', [
+                        'mediaTypeName' => $file->getMediaType(),
+                        'templateKey'   => $cacheItem->getTemplateKey(),
+                    ]);
+                }
             }
         }
 
-        $usage = $this->fileUsageManager->getStatus($file);
-        $usedIn = $this->fileUsageManager->getUsedIn($file);
-
-        $focal = 0;
-        if ($file->getAttribute('focalpoint')) {
-            $focal = 1;
+        $usedIn = array();
+        if ($all || in_array('usedIn', $fields)) {
+            $usedIn = $this->fileUsageManager->getUsedIn($file);
         }
 
-        $attributes = $file->getAttributes();
+        $attributes = array();
+        if ($all || in_array('attributes', $fields)) {
+            $attributes = $file->getAttributes();
+        }
 
         $versions = array();
-        foreach ($volume->findFileVersions($file->getId()) as $fileVersion) {
-            $versions[] = [
-                'id'              => $fileVersion->getId(),
-                'folderId'        => $fileVersion->getFolderId(),
-                'name'            => $fileVersion->getName(),
-                'size'            => $fileVersion->getSize(),
-                'version'         => $fileVersion->getVersion(),
-                'documentTypeKey' => $fileVersion->getMediaType(),
-                'assetType'       => $fileVersion->getMediaCategory(),
-                'createUserId'    => $fileVersion->getCreateUserId(),
-                'createTime'      => $fileVersion->getCreatedAt()->format('Y-m-d'),
-            ];
+        if ($all || in_array('versions', $fields)) {
+            foreach ($volume->findFileVersions($file->getId()) as $fileVersion) {
+                $versions[] = [
+                    'id'              => $fileVersion->getId(),
+                    'folderId'        => $fileVersion->getFolderId(),
+                    'name'            => $fileVersion->getName(),
+                    'size'            => $fileVersion->getSize(),
+                    'version'         => $fileVersion->getVersion(),
+                    'documentTypeKey' => $fileVersion->getMediaType(),
+                    'assetType'       => $fileVersion->getMediaCategory(),
+                    'createUserId'    => $fileVersion->getCreateUserId(),
+                    'createTime'      => $fileVersion->getCreatedAt()->format('Y-m-d'),
+                ];
+            }
         }
 
-        /*
-        $previousFile = $site->findPreviousFile($file, 'name ASC');
-        $nextFile = $site->findNextFile($file, 'name ASC');
-        */
+        $navigation = array();
+        if ($all || in_array('navigation', $fields)) {
+            /*
+            $previousFile = $site->findPreviousFile($file, 'name ASC');
+            $nextFile = $site->findNextFile($file, 'name ASC');
+            */
 
-        $prevId = null;
-        $prevVersion = null;
-        if (!empty($previousFile)) {
-            $prevId = $previousFile->getId();
-            $prevVersion = $previousFile->getVersion();
+            if (!empty($previousFile)) {
+                $navigation['prevId'] = $previousFile->getId();
+                $navigation['prevVersion'] = $previousFile->getVersion();
+            }
+
+            if (!empty($nextFile)) {
+                $navigation['nextId'] = $nextFile->getId();
+                $navigation['nextVersion'] = $nextFile->getVrsion();
+            }
         }
 
-        $nextId = null;
-        $nextVersion = null;
-        if (!empty($nextFile)) {
-            $nextId = $nextFile->getId();
-            $nextVersion = $nextFile->getVrsion();
-        }
-
-        $folder = $volume->findFolder($file->getFolderId());
         $data = [
             'id'              => $file->getID(),
             'name'            => $file->getName(),
@@ -193,14 +202,15 @@ class FileSerializer
             'folderId'        => $file->getFolderID(),
             'folderPath'      => '/' . $folder->getPath(),
             'hasVersions'     => $hasVersions,
-            'assetType'       => strtolower($file->getMediaCategory()),
             'mimeType'        => $file->getMimetype(),
-            'documentType'    => $mediaTypeTitle,
-            'documentTypeKey' => strtolower($file->getMediaType()),
+            'mediaCategory'   => $file->getMediaCategory(),
+            'mediaType'       => $file->getMediaType(),
+            'mediaTypeTitle'  => $mediaTypeTitle,
             'present'         => file_exists($file->getPhysicalPath()),
             'size'            => $file->getSize(),
             'hidden'          => $file->isHidden() ? 1 : 0,
             'version'         => $version,
+            'usageStatus'     => $usageStatus,
             'createUser'      => $createUserName,
             'createUserId'    => $file->getCreateUserId(),
             'createTime'      => $file->getCreatedAt()->format('Y-m-d H:i:s'),
@@ -210,14 +220,9 @@ class FileSerializer
             'cache'           => $cache,
             'meta'            => $meta,
             'usedIn'          => $usedIn,
-            'used'            => $usage,
-            'focal'           => $focal,
             'attributes'      => $attributes,
             'versions'        => $versions,
-            'nextId'          => $nextId,
-            'nextVersion'     => $nextVersion,
-            'prevId'          => $prevId,
-            'prevVersion'     => $prevVersion,
+            'navigation'      => $navigation,
         ];
 
         return $data;

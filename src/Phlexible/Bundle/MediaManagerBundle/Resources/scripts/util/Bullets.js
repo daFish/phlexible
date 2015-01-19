@@ -10,16 +10,16 @@ Ext.define('Phlexible.mediamanager.util.Bullets', {
         return '';
     },
     usageBullet: function (values) {
-        if (!values.used) {
+        if (!values.usageStatus) {
             return '';
         }
-        if (values.used && 8) {
+        if (values.usageStatus && 8) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-        } else if (values.used && 4) {
+        } else if (values.usageStatus && 4) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-        } else if (values.used && 2) {
+        } else if (values.usageStatus && 2) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-        } else if (values.used && 1) {
+        } else if (values.usageStatus && 1) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
         }
         return '';

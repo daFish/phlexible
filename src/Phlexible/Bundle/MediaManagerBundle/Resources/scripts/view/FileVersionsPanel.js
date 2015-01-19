@@ -79,7 +79,7 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
             '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.id, templateKey: \"_mm_medium\", fileVersion: values.version})]}" width="48" height="48"></div>',
             '<div class="text">',
             '<span><b qtip="{name}">{[values.name.shorten(25)]}</b></span><br />',
-            //'<span>[v{version}] {[Phlexible.documenttypes.DocumentTypes.getText(values.document_type_key)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
+            //'<span>[v{version}] {[Phlexible.documenttypes.DocumentTypes.getText(values.mediaType)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
             //'<span>Create User: {create_user_id}</span><br />',
             '<span>{create_time}</span><br />',
             '</div>',

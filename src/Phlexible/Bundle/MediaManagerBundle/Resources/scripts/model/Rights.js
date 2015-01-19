@@ -1,6 +1,3 @@
-/**
- * TODO: not used?
- */
 Ext.define('Phlexible.mediamanager.model.Rights', {
     extend: 'Ext.data.Model',
     fields: [

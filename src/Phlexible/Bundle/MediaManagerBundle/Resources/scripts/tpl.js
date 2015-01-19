@@ -13,19 +13,19 @@ Phlexible.mediamanager.templates.UsedString =
      '<tpl if="!values.record.data.present">' +
      '<img src="' + Phlexible.bundleAsset('/mediamanager/images/bullet_cross.gif')+'" width="8" height="12" style="vertical-align: middle;" />' +
      '</tpl>' +
-     '<tpl if="values.record.data.used&8">' +
+     '<tpl if="values.record.data.usageStatus&8">' +
      '<img src="' + Phlexible.bundleAsset('/mediamanager/images/bullet_green.gif')+'" width="8" height="12" style="vertical-align: middle;" />' +
      '</tpl>' +
-     '<tpl if="values.record.data.used&4">' +
+     '<tpl if="values.record.data.usageStatus&4">' +
      '<img src="' + Phlexible.bundleAsset('/mediamanager/images/bullet_yellow.gif')+'" width="8" height="12" style="vertical-align: middle;" />' +
      '</tpl>' +
-     '<tpl if="values.record.data.used&2">' +
+     '<tpl if="values.record.data.usageStatus&2">' +
      '<img src="' + Phlexible.bundleAsset('/mediamanager/images/bullet_gray.gif')+'" width="8" height="12" style="vertical-align: middle;" />' +
      '</tpl>' +
-     '<tpl if="values.record.data.used&1">' +
+     '<tpl if="values.record.data.usageStatus&1">' +
      '<img src="' + Phlexible.bundleAsset('/mediamanager/images/bullet_black.gif')+'" width="8" height="12" style="vertical-align: middle;" />' +
      '</tpl>' +
-     '<tpl if="values.record.data.used"> </tpl>' +
+     '<tpl if="values.record.data.usageStatus"> </tpl>' +
      '<tpl if="values.record.data.focal">' +
      '<img src="' + Phlexible.bundleAsset('/focalpoint/images/bullet_focal.gif')+'" width="8" height="12" style="vertical-align: middle;" />' +
      ' ' +

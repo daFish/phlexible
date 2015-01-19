@@ -553,16 +553,16 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
 
         // delete
         var deletePolicy = Phlexible.App.getConfig().get('mediamanager.delete_policy');
-        var used = record.data.used;
+        var usageStatus = record.data.usageStatus;
 
         if (isRoot || !this.checkRights(Phlexible.mediamanager.Rights.FOLDER_DELETE)) {
             contextmenu.getComponent('deleteBtn').disable();
         }
         else {
-            if (deletePolicy == Phlexible.mediamanager.DeletePolicy.HIDE_OLD && !used) {
+            if (deletePolicy == Phlexible.mediamanager.DeletePolicy.HIDE_OLD && !usageStatus) {
                 contextmenu.getComponent('deleteBtn').enable();
             }
-            else if (deletePolicy == Phlexible.mediamanager.DeletePolicy.DELETE_OLD && used < 4) {
+            else if (deletePolicy == Phlexible.mediamanager.DeletePolicy.DELETE_OLD && usageStatus < 4) {
                 contextmenu.getComponent('deleteBtn').enable();
             }
             else if (deletePolicy == Phlexible.mediamanager.DeletePolicy.DELETE_ALL) {
