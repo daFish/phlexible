@@ -55,7 +55,7 @@ Ext.define('Phlexible.tasks.MainPanel', {
                     listeners: {
                         taskchange: function(r) {
                             var taskView = this.getTaskView(),
-                                statusMenu = taskView.getTopToolbar().items.items[0].menu;
+                                statusMenu = taskView.getDockedItem('tbar').getComponent('statusBtn').getMenu();
                             this.viewTemplate.overwrite(taskView.body, r.data);
                             statusMenu.removeAll();
                             Ext.each(r.get('states'), function(state) {
@@ -80,31 +80,37 @@ Ext.define('Phlexible.tasks.MainPanel', {
                         height: 230,
                         padding: '5 5 0 0',
                         html: '&nbsp;',
-                        tbar: [{
-                            text: '_status',
-                            menu: []
-                        },{
-                            text: '_comment',
-                            iconCls: Phlexible.Icon.get('balloon'),
-                            handler: function() {
-                                var w = new Phlexible.tasks.CommentWindow();
-                                w.show();
-                            },
-                            scope: this
-                        },{
-                            text: '_assign_to_me',
-                            handler: function() {
-                                var w = new Phlexible.tasks.AssignWindow();
-                                w.show();
-                            },
-                            scope: this
-                        },{
-                            text: '_assign',
-                            handler: function() {
-                                var w = new Phlexible.tasks.AssignWindow();
-                                w.show();
-                            },
-                            scope: this
+                        dockedItems: [{
+                            xtype: 'toolbar',
+                            itemId: 'tbar',
+                            dock: 'top',
+                            items: [{
+                                text: '_status',
+                                itemId: 'statusBtn',
+                                menu: []
+                            },{
+                                text: '_comment',
+                                iconCls: Phlexible.Icon.get('balloon'),
+                                handler: function() {
+                                    var w = Ext.create('Phlexible.tasks.CommentWindow');
+                                    w.show();
+                                },
+                                scope: this
+                            },{
+                                text: '_assign_to_me',
+                                handler: function() {
+                                    var w = Ext.create('Phlexible.tasks.AssignWindow');
+                                    w.show();
+                                },
+                                scope: this
+                            },{
+                                text: '_assign',
+                                handler: function() {
+                                    var w = Ext.create('Phlexible.tasks.AssignWindow');
+                                    w.show();
+                                },
+                                scope: this
+                            }]
                         }]
                     },{
                         xtype: 'tabpanel',

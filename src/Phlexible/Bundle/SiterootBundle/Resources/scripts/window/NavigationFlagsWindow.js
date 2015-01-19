@@ -18,7 +18,7 @@ Ext.define('Phlexible.siteroots.NavigationFlagsWindow', {
         this.supports = parseInt(this.record.get('supports'), 10);
 
         this.initMyItems();
-        this.initMyButtons();
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -113,9 +113,12 @@ Ext.define('Phlexible.siteroots.NavigationFlagsWindow', {
         ];
     },
 
-    initMyButtons: function() {
-        this.buttons = [
-            {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
                 text: this.strings.store,
                 handler: function () {
                     var flags = 0;
@@ -137,7 +140,7 @@ Ext.define('Phlexible.siteroots.NavigationFlagsWindow', {
                     this.close();
                 },
                 scope: this
-            }
-        ];
+            }]
+        }];
     }
 });

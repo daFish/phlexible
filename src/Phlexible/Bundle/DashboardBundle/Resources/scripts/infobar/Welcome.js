@@ -5,14 +5,14 @@ Ext.define('Phlexible.dashboard.infobar.Welcome', {
     extend: 'Phlexible.dashboard.infobar.AbstractInfoBar',
     alias: 'widget.dashboard-infobar-welcome',
 
-    welcomeToText: '_welcome_to_{title}_{values.version}',
+    welcomeToText: '_welcome_to_{title}_{version}',
     addPortletText: '_add_portlet',
     changeLayoutText: '_change_layout',
 
     initComponent: function() {
         this.data = {
-            title: Phlexible.App.getConfig().get('app.title'),
-            version: Phlexible.App.getConfig().get('app.version')
+            title: Phlexible.title,
+            version: Phlexible.version
         };
 
         this.callParent(arguments);

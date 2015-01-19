@@ -82,10 +82,7 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
             itemId: 'attributes',
             iconCls: Phlexible.Icon.get('property'),
             title: this.strings.attributes,
-            viewConfig: {
-                emptyText: this.strings.no_attribute_values,
-                forceFit: true
-            },
+            emptyText: this.strings.no_attribute_values,
             source: {},
             border: false,
             autoHeight: true,
@@ -440,7 +437,7 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
 
         this.detailsTpl.overwrite(this.getDetailsPanel().body, details);
 
-        if (properties.versions) {
+        if (file.get('hasVersions')) {
             this.getFileVersionsPanel().loadFile(this.fileId);
         }
         else {

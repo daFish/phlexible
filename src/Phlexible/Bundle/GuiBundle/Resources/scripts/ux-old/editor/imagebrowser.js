@@ -71,14 +71,14 @@ Ext.ux.ImageBrowser = function (config) {
         if (response.success == 'true') {
             this.reset();
         } else {
-            Ext.window.MessageBox.alert("Upload Error", response.msg);
+            Ext.MessageBox.alert("Upload Error", response.msg);
         }
     };
 
     // called if image was not uploaded successfully
     var uploadFailure = function (response, options) {
         indicatorOff();
-        Ext.window.MessageBox.alert("Upload Failed", response.responseText);
+        Ext.MessageBox.alert("Upload Failed", response.responseText);
     };
 
     // upload a new image file
@@ -87,7 +87,7 @@ Ext.ux.ImageBrowser = function (config) {
         // this has been disabled for demo purposes.
         // remove these lines and uncomment the lines below
         // for live server environment
-        Ext.window.MessageBox.alert("Upload Disabled",
+        Ext.MessageBox.alert("Upload Disabled",
             "Uploading of files has been disabled as this is only a demo environment.");
 
         // indicatorOn();
@@ -109,7 +109,7 @@ Ext.ux.ImageBrowser = function (config) {
         // this has been disabled for demo purposes.
         // remove these lines and uncomment the lines below
         // for live server environment
-        Ext.window.MessageBox.alert("Delete Disabled",
+        Ext.MessageBox.alert("Delete Disabled",
             "Deleting of files has been disabled as this is only a demo environment.");
 
         // indicatorOn();
@@ -129,7 +129,7 @@ Ext.ux.ImageBrowser = function (config) {
 
     // confirm if ok to delete image
     var confirmDelete = function () {
-        Ext.window.MessageBox.confirm("Delete Image",
+        Ext.MessageBox.confirm("Delete Image",
             "Are you sure that you wish to delete " + data.name + "?", deleteImage, this);
     };
 

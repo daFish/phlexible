@@ -61,6 +61,6 @@ Ext.define('Phlexible.gui.util.Notify', {
         if (!headerText) {
             headerText = this.failureText;
         }
-        Ext.window.MessageBox.alert(headerText, msg);
+        Ext.MessageBox.alert(headerText, msg);
     }
 });

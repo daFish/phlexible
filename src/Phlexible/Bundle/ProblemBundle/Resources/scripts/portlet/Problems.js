@@ -1,6 +1,6 @@
 Ext.define('Phlexible.problems.portlet.Problems', {
     extend: 'Portal.view.Portlet',
-    alias: 'widget.problems-portlet-problems',
+    alias: 'widget.problems-portlet',
 
     title: Phlexible.problems.Strings.problems,
     strings: Phlexible.problems.Strings,

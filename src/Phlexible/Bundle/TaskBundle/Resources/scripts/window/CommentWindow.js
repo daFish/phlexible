@@ -15,7 +15,7 @@ Ext.define('Phlexible.tasks.CommentWindow', {
 
     initComponent: function () {
         this.initMyItems();
-        this.initMyButtons();
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -59,20 +59,25 @@ Ext.define('Phlexible.tasks.CommentWindow', {
         ];
     },
 
-    initMyButtons: function() {
-        this.buttons = [
-            {
-                text: this.strings.cancel,
-                handler: this.close,
-                scope: this
-            },
-            {
-                text: this.strings.comment,
-                handler: this.comment,
-                formBind: true,
-                scope: this
-            }
-        ];
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                {
+                    text: this.strings.cancel,
+                    handler: this.close,
+                    scope: this
+                },
+                {
+                    text: this.strings.comment,
+                    handler: this.comment,
+                    formBind: true,
+                    scope: this
+                }
+            ]
+        }];
     },
 
     comment: function () {

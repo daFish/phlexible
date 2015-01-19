@@ -1,0 +1,6 @@
+.p-mediamanager-folders .x-tree-icon {
+    background-image: url(/COMPONENTSPATH/brainbitsfugueicons/icons/fugue/16/folder.png);
+}
+.p-mediamanager-folders .x-grid-tree-node-expanded .x-tree-icon {
+    background-image: url(/COMPONENTSPATH/brainbitsfugueicons/icons/fugue/16/folder-open.png);
+}

@@ -21,24 +21,30 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
     initMyItems: function() {
         this.items = [
             {
-                iconCls: 'm-mediamanager-upload_clear-icon',
-                handler: this.clear,
-                scope: this,
-                hidden: true
-            },
-            ' ',
-            {
-                xtype: 'tbtext',
-                text: ' ',
-                hidden: true
-            },
-            ' ',
-            {
                 xtype: 'progressbar',
+                itemId: 'progress',
                 width: 100,
                 value: 0,
                 text: '',
                 hidden: true
+            },
+            {
+                itemId: 'pauseBtn',
+                iconCls: Phlexible.Icon.get('control-pause'),
+                handler: Ext.emptyFn,
+                scope: this,
+                hidden: true
+            },
+            {
+                itemId: 'clearBtn',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                handler: this.clear,
+                scope: this,
+                hidden: true
+            },
+            {
+                xtype: 'tbseparator',
+                itemId: 'separator'
             }
         ];
     },
@@ -72,7 +78,7 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
 
     addFile: function (id, name, size, removeFn) {
         Phlexible.console.log('UploadStatusBar::addFile(' + id + ')');
-        var iconCls = 'm-mediamanager-file-icon';
+        var iconCls = Phlexible.Icon.get('document');
         var ext = name.split('.').pop();
         if (Phlexible.documenttypes.DocumentTypes.classMap[ext]) {
             iconCls = Phlexible.documenttypes.DocumentTypes.classMap[ext].cls + '-small';
@@ -81,8 +87,8 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
         if (size) {
             text += ' (' + Phlexible.Format.size(size) + ')';
         }
-        var btn = this.insertButton(5 + this.files.getCount(), {
-            xtype: 'tbtext',
+        var btn = this.add({
+            //xtype: 'tbtext',
             iconCls: iconCls,
             text: text,
             handler: function () {
@@ -93,14 +99,13 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
             removeFn: removeFn
         });
         this.files.add(id, btn);
-        this.getComponent(0).show();
+        this.getComponent('pauseBtn').show();
     },
 
     clear: function () {
         Phlexible.console.log('UploadStatusBar::clear()');
-        this.files.each(function (btn) {
-            btn.removeFn(btn.id);
-            this.removeButton(btn);
+        this.files.each(function (file) {
+            this.removeFile(file.fileId);
         }, this);
     },
 
@@ -110,7 +115,10 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
         this.files.remove(btn);
 
         if (!this.files.getCount()) {
-            this.getComponent(0).hide();
+            this.getComponent('clearBtn').hide();
+            this.getComponent('pauseBtn').hide();
+            this.getComponent('progress').hide();
+            this.getComponent('separator').hide();
         }
     },
 
@@ -120,67 +128,72 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
         this.removeButton(btn);
     },
 
-    start: function () {
-        Phlexible.console.log('UploadStatusBar::start()');
-        this.getComponent(0).setIconClass('m-mediamanager-upload_cancel-icon');
-        this.getComponent(0).handler = this.stopFn;
-        this.getComponent(4).show();
-    },
-
     setActive: function (id) {
         Phlexible.console.log('UploadStatusBar::setActive(' + id + ')');
-        this.getComponent(4).updateProgress(0, '');
-        this.files.get(id).getEl().child('button').setStyle('font-weight', 'bold');
+        this.getComponent('progress').updateProgress(0, '');
+        this.files.get(id).el.down('span.x-btn-inner').setStyle('font-weight', 'bold');
     },
 
     setProgress: function (id, percent) {
-        Phlexible.console.log('UploadStatusBar::setProgress(' + id + ', ' + percent + ')');
-        this.getComponent(4).updateProgress(parseInt(percent / 100, 10), percent + '%');
+        Phlexible.console.debug('UploadStatusBar::setProgress(' + id + ', ' + percent + ')');
+        this.getComponent('progress').updateProgress(parseInt(percent / 100, 10), percent + '%');
     },
 
     setFinished: function (id) {
         Phlexible.console.log('UploadStatusBar::setFinished(' + id + ')');
-        this.getComponent(4).updateProgress(1, '');
+        this.getComponent('progress').updateProgress(1, '');
         this.removeFile(id);
     },
 
     setError: function (code, msg, id, name) {
         Phlexible.console.log('UploadStatusBar::setError(' + id + ', ' + code + ', ' + msg + ', ' + name + ')');
-        this.getComponent(4).updateProgress(1, '');
+        this.getComponent('progress').updateProgress(1, '');
         this.removeFile(id);
+    },
+
+    start: function () {
+        Phlexible.console.log('UploadStatusBar::start()');
+        this.getComponent('clearBtn').hide();
+        this.getComponent('pauseBtn').setIconCls(Phlexible.Icon.get('control-pause'));
+        this.getComponent('pauseBtn').handler = this.stopFn;
+        this.getComponent('progress').show();
     },
 
     stop: function () {
         Phlexible.console.log('UploadStatusBar::stop()');
-        this.getComponent(4).hide();
-        this.getComponent(0).setIconClass('m-mediamanager-upload-icon');
-        this.getComponent(0).handler = this.startFn;
-    },
-
-    getComponent: function (index) {
-        return this.items.items[index];
+        //this.getComponent('progress').hide();
+        this.getComponent('progress').updateProgress(0, '');
+        this.getComponent('pauseBtn').setIconCls(Phlexible.Icon.get('control'));
+        this.getComponent('pauseBtn').handler = this.startFn;
+        if (this.files.getCount()) {
+            this.getComponent('clearBtn').show();
+        } else {
+            this.getComponent('clearBtn').hide();
+        }
     },
 
     bindUploader: function(uploader) {
         this.startFn = function () {
+            Phlexible.console.log('UploadStatusBar::startFn()');
             uploader.start();
         };
 
         this.stopFn = function () {
+            Phlexible.console.log('UploadStatusBar::stopFn()');
             uploader.stop();
         };
 
         uploader.bind('FilesAdded', function (up, files) {
             Ext.each(files, function (file) {
-                this.addFile(file.id, file.name, file.size, function (up, file) {
+                this.addFile(file.id, file.name, file.size, function () {
                     up.removeFile(file);
-                }.createDelegate(this, [up, file], false));
+                });
                 Phlexible.console.debug('uploader::FilesAdded', 'id:' + file.id, 'name:' + file.name, 'size:' + plupload.formatSize(file.size));
             }, this);
         }, this);
 
         uploader.bind('StateChanged', function (up) {
-            Phlexible.console.debug('uploader::StateChanged', 'state:' + up.state);
+            Phlexible.console.log('uploader::StateChanged', 'state:' + up.state);
             if (up.state == plupload.STARTED) {
                 this.start();
             } else if (up.state == plupload.STOPPED) {
@@ -190,7 +203,7 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
 
         uploader.bind('BeforeUpload', function (up, file) {
             this.setActive(file.id);
-            Phlexible.console.debug('uploader::BeforeUpload', 'id:' + file.id, file);
+            Phlexible.console.log('uploader::BeforeUpload', 'id:' + file.id, file);
         }, this);
 
         uploader.bind('UploadProgress', function (up, file) {
@@ -200,12 +213,12 @@ Ext.define('Phlexible.mediamanager.UploadStatusBar', {
 
         uploader.bind('Error', function (up, err) {
             this.setError(err.code, err.message, err.file ? err.file.id : "", err.file ? err.file.name : "");
-            Phlexible.console.debug('uploader::Error', 'code:' + err.code, 'message:' + err.message, 'file:' + (err.file ? err.file.name : ""));
+            Phlexible.console.error('uploader::Error', 'code:' + err.code, 'message:' + err.message, 'file:' + (err.file ? err.file.name : ""));
         }, this);
 
         uploader.bind('FileUploaded', function (up, file, info) {
             this.setFinished(file.id);
-            Phlexible.console.debug('uploader::FileUploaded', 'id:' + file.id, 'info:', info);
+            Phlexible.console.log('uploader::FileUploaded', 'id:' + file.id, 'info:', info);
         }, this);
 
     }

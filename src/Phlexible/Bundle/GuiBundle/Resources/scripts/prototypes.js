@@ -1,34 +1,3 @@
-String.prototype.ellipse = function (maxLength) {
-    if (this.length > maxLength) {
-        return this.substr(0, maxLength - 3) + '...';
-    }
-    return this;
-};
-String.prototype.shorten = function (maxLength) {
-    if (this.length > maxLength) {
-        var l = Math.ceil((maxLength - 3) / 2);
-        var r = this.length - Math.floor((maxLength - 3) / 2);
-        return this.substr(0, l) + '...' + this.substr(r, this.length);
-    }
-    return this;
-};
-String.prototype.ucfirst = function () {
-    if (!this.length) return '';
-    var r = this.substr(0, 1).toUpperCase();
-    if (this.length > 1) {
-        r += this.substring(1);
-    }
-    return r;
-};
-String.prototype.lcfirst = function () {
-    if (!this.length) return '';
-    var r = this.substr(0, 1).toLowerCase();
-    if (this.length > 1) {
-        r += this.substring(1);
-    }
-    return r;
-};
-
 /*
  Ext.tree.TreeNodeUI.prototype.initEvents = Ext.tree.TreeNodeUI.prototype.initEvents.createSequence(function(){
  if(this.node.attributes.tipCfg){

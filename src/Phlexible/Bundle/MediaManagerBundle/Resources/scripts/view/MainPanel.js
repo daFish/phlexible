@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
+Ext.define('Phlexible.mediamanager.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediamanager-main',
 
@@ -13,26 +13,24 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
     params: {},
     hideFilter: false,
 
-    dndFormInput: false,
-
     loadParams: function (params) {
-        if (params.start_folder_path) {
-            if (params.start_file_id) {
-                this.getFilesGrid().start_file_id = params.start_file_id;
+        if (params.startFolderPath) {
+            if (params.startFileId) {
+                this.getFilesGrid().startFileId = params.startFileId;
             }
-            if (params.start_folder_path.substr(0, 5) !== '/root') {
-                params.start_folder_path = '/root' + params.start_folder_path;
+            if (params.startFolderPath.substr(0, 5) !== '/root') {
+                params.startFolderPath = '/root' + params.startFolderPath;
             }
 
             var folder = this.getFolderTree().getSelectionModel().getSelection()[0];
-            if (!folder || folder.getPath() !== params.start_folder_path) {
-                this.getFolderTree().selectPath(params.start_folder_path);
-            } else if (params.start_file_id) {
-                var i = this.getFilesGrid().getStore().find('id', params.start_file_id);
+            if (!folder || folder.getPath() !== params.startFolderPath) {
+                this.getFolderTree().selectPath(params.startFolderPath);
+            } else if (params.startFolderId) {
+                var i = this.getFilesGrid().getStore().find('id', params.startFileId);
                 if (i !== false) {
                     this.getFilesGrid().getSelectionModel().selectRow([i]);
                 }
-                this.getFilesGrid().start_file_id = params.start_file_id;
+                this.getFilesGrid().startFileId = params.startFileId;
             }
         }
     },
@@ -43,9 +41,9 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
             this.title = this.strings.media;
         }
 
-        if (this.params.start_folder_path) {
-            if (this.params.start_folder_path.substr(0, 5) !== '/root') {
-                this.params.start_folder_path = '/root' + this.params.start_folder_path;
+        if (this.params.startFolderPath) {
+            if (this.params.startFolderPath.substr(0, 5) !== '/root') {
+                this.params.startFolderPath = '/root' + this.params.startFolderPath;
             }
         }
 
@@ -114,7 +112,7 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
                         var selections = e.data.selections;
 
                         for (var i = 0; i < selections.length; i++) {
-                            if (selections[i].data.folder_id == e.target.id) {
+                            if (selections[i].data.folderId == e.target.id) {
                                 return false;
                             }
                         }
@@ -153,18 +151,14 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
             collapsed: this.params.hide_properties || false,
             mode: this.mode,
             listeners: {
-                versionSelect: function (file_id, file_version, file_name, folder_id, document_type_key, asset_type) {
+                versionSelect: function (file, fileVersion) {
                     if (this.mode == 'select') {
-                        this.fireEvent('fileSelect', file_id, file_version, file_name, folder_id);
+                        this.fireEvent('fileSelect', file, fileVersion);
                     }
                     else {
-                        var w = new Phlexible.mediamanager.FileDetailWindow({
-                            iconCls: document_type_key,
-                            file_id: file_id,
-                            file_version: file_version,
-                            file_name: file_name,
-                            document_type_key: document_type_key,
-                            asset_type: asset_type
+                        var w = Ext.create('Phlexible.mediamanager.FileDetailWindow', {
+                            file: file,
+                            folderRights: this.folderRights
                         });
                         w.show();
                     }
@@ -689,7 +683,7 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
         });
 
         uploader.bind('Init', function (up, params) {
-            Phlexible.console.debug('uploader::Init', 'runtime:' + params.runtime, 'features:', up.features, 'caps:', up.caps);
+            Phlexible.console.info('uploader::Init', 'runtime:' + params.runtime, 'features:', up.features, 'caps:', up.caps);
 
             if (!up.features.dragdrop) {
                 dropper.style.visibility = 'hidden';
@@ -703,11 +697,11 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
         uploader.bind('FilesAdded', function (up, files) {
             up.refresh(); // Reposition Flash/Silverlight
 
-            up.settings.multipart_params.folder_id = this.folder_id;
+            up.settings.multipart_params.folderId = this.folderId;
         }, this);
 
         uploader.bind('QueueChanged', function (up) {
-            Phlexible.console.debug('uploader::QueueChanged');
+            Phlexible.console.log('uploader::QueueChanged');
             if (up.state == plupload.STOPPED) {
                 up.start();
             }
@@ -719,7 +713,7 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
         }, this);
 
         uploader.bind('ChunkUploaded', function (up, file, info) {
-            Phlexible.console.debug('uploader::ChunkUploaded', 'id:' + file.id, 'info:', info);
+            Phlexible.console.log('uploader::ChunkUploaded', 'id:' + file.id, 'info:', info);
         }, this);
 
         uploader.bind('FileUploaded', function (up, file, info) {
@@ -742,8 +736,9 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
         this.folderId = folder.id;
         this.volumeId = folder.data.volumeId;
 
-        if (folder.id == 'root') return;
-        if (this.dndFormInput) document.getElementById('folder_id').value = folder.id;
+        if (folder.id == 'root') {
+            return;
+        }
 
         var tbar = this.getDockedComponent('tbar');
         //this.locationBar.setNode(folder);
@@ -795,7 +790,7 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
         this.getAttributesPanel().loadFolder(folder);
 
         Phlexible.mediamanager.lastParams = {
-            start_folder_path: folder.getPath()
+            startFolderPath: folder.getPath()
         };
     },
 
@@ -808,24 +803,15 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
         }
     },
 
-    onFileDblClick: function (grid, rowIndex) {
-        var r = grid.getStore().getAt(rowIndex);
+    onFileDblClick: function (grid, file) {
         if (this.mode == 'select') {
-            var file_id = r.data.id;
-            var file_version = r.data.version;
-            var file_name = r.data.name;
-            var folder_id = r.data.folder_id;
-            this.fireEvent('fileSelect', file_id, file_version, file_name, folder_id);
+            this.fireEvent('fileSelect', file);
         } else {
-            var w = new Phlexible.mediamanager.FileDetailWindow({
-                file_id: r.data.id,
-                file_version: r.data.version,
-                file_name: r.data.name,
-                document_type_key: r.data.documenttypeKey,
-                asset_type: r.data.asset_type,
-                cache: r.data.cache,
-                rights: grid.folder_rights
+            var w = Ext.create('Phlexible.mediamanager.FileDetailWindow', {
+                file: file,
+                folderRights: grid.folderRights
             });
+
             w.show();
         }
     },
@@ -909,7 +895,7 @@ Ext.define('Phlexible.mediamanager.MediamanagerPanel', {
     onUploadComplete: function () {
         this.reloadFilesSortedLatest();
         if (!this.uploadChecker) {
-            this.uploadChecker = new Phlexible.mediamanager.UploadChecker({
+            this.uploadChecker = Ext.create('Phlexible.mediamanager.UploadChecker', {
                 listeners: {
                     reload: function() {
                         this.reloadFilesSortedLatest();

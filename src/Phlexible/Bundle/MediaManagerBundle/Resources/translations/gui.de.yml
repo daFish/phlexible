@@ -12,6 +12,7 @@ mediamanager:
     file_meta: Datei-Meta
     folder_meta: Ordner-Meta
     no_meta_values: 'Keine Metadaten'
+    no_files: 'Keine Dateien'
     key: Schlüssel
     value: Wert
     versions: Versionen
@@ -132,7 +133,7 @@ mediamanager:
     replace_existing_file_desc: 'Die vorhandene Datei wird duch diese Datei ersetzt:'
     keep_both_files: 'Beide Dateien behalten.'
     keep_both_files_desc: 'Die neue Datei wird in "{0}" umbenannt.'
-    apply_to_remaining_files: 'Für alle nachfolgenden Dateien übernehmen'
+    apply_to_remaining_files: 'Für {0} nachfolgende Dateien übernehmen'
     folder_read: 'Ordner lesen'
     folder_create: 'Ordner anlegen'
     folder_modify: 'Ordner verändern'

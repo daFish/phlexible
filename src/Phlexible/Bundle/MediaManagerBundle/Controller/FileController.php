@@ -112,86 +112,19 @@ class FileController extends Controller
      * @Route("/{fileId}", name="mediamanager_file_detail")
      * @Method("GET")
      */
-    public function propertiesAction(Request $request, $fileId)
+    public function detailsAction(Request $request, $fileId)
     {
         $fileVersion = $request->get('fileVersion', 1);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $serializer = $this->get('phlexible_media_manager.file_serializer');
 
         $volume = $volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId, $fileVersion);
-        $folder = $volume->findFolder($file->getFolderId());
 
-        $attributes = $file->getAttributes();
+        $data = $serializer->serialize($file, $request->getLocale());
 
-        $properties = [
-            'id'              => $fileId,
-            'version'         => $fileVersion,
-            'path'            => '/' . $folder->getPath(),
-            'name'            => $file->getName(),
-            'size'            => $file->getSize(),
-            'documentTypeKey' => $file->getMediaType(),
-            'assetType'       => $file->getMediaCategory(),
-            'createUserId'    => $file->getCreateUserId(),
-            'createTime'      => $file->getCreatedAt()->format('U'),
-            'attributes'      => $attributes,
-            'debug'           => [
-                'mimeType'     => $file->getMimeType(),
-                'documentType' => strtolower($file->getMediaType()),
-                'assetType'    => strtolower($file->getMediaCategory()),
-                'fileId'       => $fileId,
-                'folderId'     => $folder->getId(),
-            ],
-            'detail' => [
-                'id'              => $file->getId(),
-                'folderId'        => $file->getFolderId(),
-                'name'            => $file->getName(),
-                'size'            => $file->getSize(),
-                'version'         => $file->getVersion(),
-                'documentTypeKey' => strtolower($file->getMediaType()),
-                'assetType'       => strtolower($file->getMediaCategory()),
-                'createUserId'    => $file->getCreateUserId(),
-                'createTime'      => $file->getCreatedAt()->format('Y-m-d'),
-            ],
-            'versions'        => array(),
-            'prev' => null,
-            'next' => null,
-        ];
-
-        /*
-        $previousFile = $site->findPreviousFile($file, 'name ASC');
-        $nextFile = $site->findNextFile($file, 'name ASC');
-        */
-
-        if (!empty($previousFile)) {
-            $properties['prev'] = [
-                'file_id'      => $previousFile->getId(),
-                'file_version' => $previousFile->getVersion(),
-            ];
-        }
-
-        if (!empty($nextFile)) {
-            $properties['next'] = [
-                'file_id'      => $nextFile->getId(),
-                'file_version' => $nextFile->getVrsion(),
-            ];
-        }
-
-        foreach ($volume->findFileVersions($fileId) as $fileVersion) {
-            $properties['versions'] = [
-                'id'              => $fileVersion->getId(),
-                'folderId'        => $fileVersion->getFolderId(),
-                'name'            => $fileVersion->getName(),
-                'size'            => $fileVersion->getSize(),
-                'version'         => $fileVersion->getVersion(),
-                'documentTypeKey' => strtolower($fileVersion->getMediaType()),
-                'assetType'       => strtolower($fileVersion->getMediaCategory()),
-                'createUserId'    => $fileVersion->getCreateUserId(),
-                'createTime'      => $fileVersion->getCreatedAt()->format('Y-m-d'),
-            ];
-        }
-
-        return new JsonResponse($properties);
+        return new JsonResponse($data);
     }
 
     /**

@@ -1,10 +1,4 @@
-.p-mediamanager-folders .x-tree-icon {
-    background-image: url(/COMPONENTSPATH/brainbitsfugueicons/icons/fugue/16/folder.png);
-}
-.p-mediamanager-folders .x-grid-tree-node-expanded .x-tree-icon {
-    background-image: url(/COMPONENTSPATH/brainbitsfugueicons/icons/fugue/16/folder-open.png);
-}
-
+/* old */
 
 .x-panel-tbar {
     line-height: 0;
@@ -610,39 +604,6 @@
     margin: 1px;
 }
 
-.p-filereplace-wrap {
-    padding: 5px 10px 20px 10px;
-    cursor: pointer;
-    border: 1px solid transparent;
-}
-
-.p-filereplace-wrap-over {
-    background-color: #EAF8FF;
-    border: 1px solid lightblue;
-}
-
-.p-filereplace-header {
-    font-size: 13px;
-    font-weight: bolder;
-}
-
-.p-filereplace-img {
-    float: left;
-    padding: 5px;
-}
-
-.p-filereplace-desc {
-    padding: 5px 5px 5px 50px;
-}
-
-.p-filereplace-name {
-    font-weight: bold;
-}
-
-.p-filereplace .x-form-check-wrap {
-    padding-top: 10px;
-}
-
 .p-mediamanager-check-col {
     background-color: transparent;
     background-image: url(/COMPONENTSPATH/phlexiblemediamanager/images/checkbox-off.gif);
@@ -678,40 +639,3 @@
     height: 16px;
     width: 100%;
 }
-
-/* Preview Panel */
-
-.p-mediamanager-preview-panel .x-panel-body {
-    padding: 5px;
-}
-
-/* File Detail Window */
-
-.p-mediamanager-versions-view {
-    padding: 3px;
-}
-
-.p-mediamanager-versions-view .version-wrap {
-    padding: 2px;
-    margin: 2px;
-    border: 1px solid transparent;
-    cursor: pointer;
-}
-
-.p-mediamanager-versions-view .x-view-over {
-    border: 1px solid #bbb;
-}
-
-.p-mediamanager-versions-view .x-view-selected {
-    border: 1px solid #888;
-}
-
-.p-mediamanager-versions-view .version-wrap .thumb {
-    float: left;
-}
-
-.p-mediamanager-versions-view .version-wrap .text {
-    float: left;
-    padding: 5px;
-}
-

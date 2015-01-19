@@ -1,45 +1,3 @@
-/*
-Phlexible.mediamanager.ToolbarHidePlugin = Ext.extend(Object, {
-    init: function (panel) {
-        this.panel = panel;
-        panel.on('render', this.onPanelRender, this);
-    },
-
-    onPanelRender: function (panel) {
-        var b = panel.getTopToolbar();
-        if (b) {
-            b.on({
-                beforehide: this.onToolbarBeforeChange,
-                beforeshow: this.onToolbarBeforeChange,
-                hide: this.onToolbarChange,
-                show: this.onToolbarChange,
-                scope: this
-            });
-        }
-        b = panel.getBottomToolbar();
-        if (b) {
-            b.on({
-                beforehide: this.onToolbarBeforeChange,
-                beforeshow: this.onToolbarBeforeChange,
-                hide: this.onToolbarChange,
-                show: this.onToolbarChange,
-                scope: this
-            });
-        }
-    },
-
-    onToolbarBeforeChange: function (b) {
-        var height = this.panel.body.getSize().height;
-        this.height = height + b.getSize().height;
-    },
-
-    onToolbarChange: function (b) {
-        this.panel.body.setHeight(this.height);
-        this.panel.doLayout();
-    }
-});
-*/
-
 Ext.define('Phlexible.mediamanager.FilesGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.mediamanager-files',
@@ -48,26 +6,42 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     iconCls: Phlexible.Icon.get('folder-open-document'),
     cls: 'p-mediamanager-files-grid',
     strings: Phlexible.mediamanager.Strings,
-    enableDragDrop: true,
-    ddGroup: 'mediamanager',
+    emptyText: Phlexible.mediamanager.Strings.no_files,
+
+    multiSelect: true,
 
     folderRights: {},
 
     /**
-     * @event fileChange
      * Fires when a File is selected
-     * @param {Phlexible.mediamanager.FilesGrid} grid      This grid.
-     * @param {Array}                            selection The selected file records.
+     *
+     * @event fileChange
+     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Phlexible.mediamanager.model.File} file
      */
+
     /**
-     * @event filterChange
      * Fires when a Filter is changed / cleard
-     * @param {string} filterKey The key of the filter
-     * @param {string} filterValue The value of the filter
+     *
+     * @event filterChange
+     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Object} filter
      */
+
     /**
+     * Fires when one needs to be downloaded
+     *
+     * @event downloadFile
+     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Phlexible.mediamanager.model.File} files
+     */
+
+    /**
+     * Fires when at least two files need to be downloaded
+     *
      * @event downloadFiles
-     * Fires when one or more Files need to be downloaded
+     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Array} files
      */
 
     // private
@@ -82,6 +56,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             this.activeFilter['documenttypes'] = this.documenttypes;
         }
 
+        this.initMyView();
         this.initMyStore();
         this.initMyColumns();
         this.initMyFeatures();
@@ -91,6 +66,16 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
         this.initMyListeners();
 
         this.callParent(arguments);
+    },
+
+    initMyView: function() {
+        this.viewConfig = {
+            plugins: {
+                ptype: 'gridviewdragdrop',
+                containerScroll: false,
+                dragGroup: 'p-mediamanager-folders'
+            }
+        };
     },
 
     initMyStore: function() {
@@ -107,7 +92,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                     totalProperty: 'total'
                 },
                 extraParams: {
-                    limit: Phlexible.App.getConfig().get('mediamanager.files.num_files'),
+                    limit: Phlexible.App.getConfig().get('mediamanager.files.num_files', 10),
                     filter: Ext.encode(this.activeFilter)
                 }
             },
@@ -388,57 +373,63 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     },
 
     initMyDockedItems: function() {
-        this.bbar = new Ext.PagingToolbar({
-            store: this.store,
-            border: false,
-            pageSize: this.store.proxy.extraParams.limit,
-            displayInfo: true,
-            items: [
-                '-',
-            {
-                xtype: 'slider',
-                width: 104,
-                value: this.store.proxy.extraParams.limit,
-                increment: 5,
-                minValue: 5,
-                maxValue: 250,
-                listeners: {
-                    drag: function (slider) {
-                        this.getBottomToolbar().items.items[13].setText(slider.getValue());
-                    },
-                    changecomplete: function (slider, value) {
-                        var pager = this.getBottomToolbar();
-                        pager.pageSize = value;
-                        pager.items.items[13].setText(value);
-                        this.store.proxy.extraParams.limit = value;
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            items: [{
+                xtype: 'pagingtoolbar',
+                border: false,
+                pageSize: this.store.proxy.extraParams.limit,
+                displayInfo: true,
+                store: this.store,
+                items: [
+                    '-',
+                    {
+                        xtype: 'slider',
+                        width: 104,
+                        value: this.store.proxy.extraParams.limit,
+                        increment: 5,
+                        minValue: 5,
+                        maxValue: 250,
+                        listeners: {
+                            drag: function (slider) {
+                                this.getBottomToolbar().items.items[13].setText(slider.getValue());
+                            },
+                            changecomplete: function (slider, value) {
+                                var pager = this.getBottomToolbar();
+                                pager.pageSize = value;
+                                pager.items.items[13].setText(value);
+                                this.store.proxy.extraParams.limit = value;
 
-                        if (this.store.totalLength < value) {
-                            this.store.reload({
-                                params: {
-                                    start: 0
+                                if (this.store.totalLength < value) {
+                                    this.store.reload({
+                                        params: {
+                                            start: 0
+                                        }
+                                    });
+                                    return;
+                                } else if (pager.cursor % value !== 0) {
+                                    this.store.reload({
+                                        params: {
+                                            start: Math.floor(pager.cursor / value) * value
+                                        }
+                                    });
+                                    return;
                                 }
-                            });
-                            return;
-                        } else if (pager.cursor % value !== 0) {
-                            this.store.reload({
-                                params: {
-                                    start: Math.floor(pager.cursor / value) * value
-                                }
-                            });
-                            return;
+                                this.store.reload();
+                            },
+                            scope: this
                         }
-                        this.store.reload();
-                    },
-                    scope: this
-                }
-            }, {
-                text: this.store.proxy.extraParams.limit
+                    }, {
+                        text: this.store.proxy.extraParams.limit
+                    }
+                ]
             }]
-        });
+        }];
     },
 
     initMyContextMenu: function() {
-        this.contextMenu = new Ext.menu.Menu({
+        this.contextMenu = Ext.create('Ext.menu.Menu', {
             items: this.contextMenuItems
         });
     },
@@ -446,45 +437,17 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     initMyListeners: function() {
         this.on({
             selectionchange: this.onSelectionChange,
-            xrender: function (c) {
-                // TODO
-                var firstGridDropTargetEl = c.getView().scroller.dom;
-                var firstGridDropTarget = new Ext.dd.DropTarget(firstGridDropTargetEl, {
-                    ddGroup: 'versions',
-                    notifyDrop: function (ddSource, e, data) {
-                        Phlexible.console.log(arguments);
-                        return true;
-//                                var records =  ddSource.dragData.selections;
-//                                Ext.each(records, ddSource.grid.store.remove, ddSource.grid.store);
-//                                firstGrid.store.add(records);
-//                                firstGrid.store.sort('name', 'ASC');
-//                                return true
-                    }
-                });
-            },
-            rowcontextmenu: this.onRowContextMenu,
+            rowcontextmenu: this.onContextMenu,
             scope: this
         });
     },
 
     initMyContextMenuItems: function () {
-        this.contextMenuItemIndex = {
-            name: 0,
-            rename: 2,
-            'delete': 4,
-            hide: 5,
-            show: 6,
-            download: 8,
-            properties: 10,
-            _last: 10
-        };
-
         this.contextMenuItems = [
             {
                 // 0
-                cls: 'x-btn-text-icon-bold',
                 itemId: 'nameBtn',
-                iconCls: 'p-mediamanager-file-icon',
+                iconCls: Phlexible.Icon.get('document'),
                 text: '.'
             },
             '-',
@@ -492,7 +455,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 // 2
                 text: this.strings.rename_file,
                 itemId: 'renameBtn',
-                iconCls: 'p-mediamanager-file_edit-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
                 handler: this.showRenameFileWindow,
                 scope: this
             },
@@ -501,14 +464,15 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 // 4
                 text: this.strings.delete_file,
                 itemId: 'deleteBtn',
-                iconCls: 'p-mediamanager-file_delete-icon',
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                 handler: this.showDeleteFileWindow,
                 scope: this
             },
             {
                 // 5
                 text: this.strings.hide_file,
-                iconCls: 'p-mediamanager-file_delete-icon',
+                itemId: 'hideBtn',
+                iconCls: Phlexible.Icon.get('eye-close'),
                 handler: this.showHideFileWindow,
                 scope: this,
                 hidden: true
@@ -517,7 +481,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 // 6
                 text: this.strings.show_file,
                 itemId: 'showBtn',
-                iconCls: 'p-mediamanager-file_delete-icon',
+                iconCls: Phlexible.Icon.get('eye'),
                 handler: this.showFiles,
                 scope: this,
                 hidden: true
@@ -527,7 +491,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 // 8
                 text: this.strings.download_file,
                 itemId: 'downloadBtn',
-                iconCls: 'p-mediamanager-download-icon',
+                iconCls: Phlexible.Icon.get('drive-download'),
                 handler: this.download,
                 scope: this
             },
@@ -536,7 +500,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 // 10
                 text: this.strings.properties,
                 itemId: 'propertiesBtn',
-                iconCls: 'p-mediamanager-file_properties-icon',
+                iconCls: Phlexible.Icon.get('property'),
                 handler: this.showDetailWindow,
                 scope: this
             }
@@ -673,17 +637,20 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     },
 
     showRenameFileWindow: function () {
-        var selFile = this.selModel.getSelected();
+        var nodes = this.getSelectionModel().getSelection(),
+            file;
+        if (!nodes.length) {
+            return;
+        }
+        file = nodes[0];
 
-        var w = new Phlexible.mediamanager.RenameFileWindow({
-            values: {
-                file_name: selFile.data.name
-            },
-            submitParams: {
-                fileId: selFile.data.id
-            },
+        var w = Ext.create('Phlexible.mediamanager.FileRenameWindow', {
+            fileId: file.id,
+            fileName: file.data.name,
             listeners: {
-                success: this.onRename,
+                success: function (data) {
+                    file.set('name', data.name);
+                },
                 scope: this
             }
         });
@@ -692,34 +659,43 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
     },
 
     showDetailWindow: function () {
-        var selFile = this.selModel.getSelected();
+        var selections = this.selModel.getSelection(),
+            file;
 
-        var w = new Phlexible.mediamanager.FileDetailWindow({
-            fileId: selFile.data.id,
-            fileVersion: selFile.data.version,
-            fileName: selFile.data.name,
-            documentTypeKey: selFile.data.documentTypeKey,
-            assetType: selFile.data.assetType,
-            cache: selFile.data.cache,
-            rights: this.folderRights
+        if (!selections.length) {
+            return;
+        }
+
+        file = selections[0];
+
+        var w = Ext.create('Phlexible.mediamanager.FileDetailWindow', {
+            file: file,
+            fileId: file.id,
+            fileVersion: file.get('version'),
+            fileName: file.get('name'),
+            documentTypeKey: file.get('documentTypeKey'),
+            assetType: file.get('assetType'),
+            cache: file.get('cache'),
+            folderRights: this.folderRights
         });
         w.show();
     },
 
     showDeleteFileWindow: function () {
-        var fileArr = this.getSelectionModel().getSelections();
+        var files = this.getSelectionModel().getSelections(),
+            text;
 
         if (fileArr.length > 1) {
-            var txt = this.strings.delete_files_warning;
+            text = this.strings.delete_files_warning;
         } else {
-            var txt = this.strings.delete_file_warning;
+            text = this.strings.delete_file_warning;
         }
 
-        Ext.MessageBox.confirm(this.strings.confirm, txt, function (btn, e, x, fileArr) {
+        Ext.MessageBox.confirm(this.strings.confirm, text, function (btn) {
             if (btn == 'yes') {
-                this.deleteFiles(fileArr);
+                this.deleteFiles(files);
             }
-        }.createDelegate(this, [fileArr], true));
+        }, this);
     },
 
     deleteFiles: function (file) {
@@ -818,28 +794,21 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
         this.fireEvent('fileChange', grid, selected);
     },
 
-    onRowContextMenu: function (grid, rowIndex, event) {
+    onContextMenu: function (grid, record, tr, rowIndex, event) {
         event.stopEvent();
 
         var contextmenu = this.contextMenu;
+        var selections = [record];
 
-        var r = grid.getStore().getAt(rowIndex);
-        var sm = grid.getSelectionModel();
-//        Phlexible.console.log(this.folderRights);
-        if (!sm.isSelected(r)) {
-            sm.selectRow(rowIndex);
-        }
-        var selections = sm.getSelections();
-        if (selections.length < 1) {
-            return;
-        } else if (selections.length > 1) {
+        if (selections.length > 1) {
             contextmenu.getComponent('nameBtn').setText('[' + String.format(this.strings.x_files, selections.length) + ']');
+            contextmenu.getComponent('nameBtn').setIconCls('documents');
 
             contextmenu.getComponent('renameBtn').disable();
             //if(this.folderRights.file_modify == '1') {
-            //    contextmenu.items.items[this.contextMenuItemIndex.rename].enable();
+            //    contextmenu.getComponent('renameBtn').enable();
             //} else {
-            //    contextmenu.items.items[this.contextMenuItemIndex.rename].disable();
+            //    contextmenu.getComponent('renameBtn').disable();
             //}
 
             var used = 0;
@@ -914,7 +883,9 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
             }
         }
         else {
-            contextmenu.getComponent('nameBtn').setText(r.get('name'));
+            contextmenu.getComponent('nameBtn').setText(record.get('name'));
+            var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(record.get('documentTypeKey')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
+            contextmenu.getComponent('nameBtn').setIconCls(documentTypeClass + '-small');
 
             if (this.checkRights(Phlexible.mediamanager.Rights.FILE_MODIFY) == '1') {
                 contextmenu.getComponent('renameBtn').enable();
@@ -922,7 +893,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 contextmenu.getComponent('renameBtn').disable();
             }
 
-            var used = r.data.used;
+            var used = record.get('used');
             var deletePolicy = Phlexible.App.getConfig().get('mediamanager.delete_policy');
 
             contextmenu.getComponent('deleteBtn').setText(this.strings.delete_file);
@@ -942,7 +913,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 (deletePolicy === Phlexible.mediamanager.DeletePolicy.HIDE_OLD && (used == 1 || used == 2 || used == 3))) {
                 contextmenu.getComponent('deleteBtn').disable();
                 contextmenu.getComponent('deleteBtn').hide();
-                if (!r.data.hidden) {
+                if (!record.get('hidden')) {
                     contextmenu.getComponent('hideBtn').enable();
                     contextmenu.getComponent('hideBtn').show();
                 }
@@ -958,7 +929,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 contextmenu.getComponent('hideBtn').hide();
             }
 
-            if (r.data.hidden) {
+            if (record.get('hidden')) {
                 contextmenu.getComponent('showBtn').enable();
                 contextmenu.getComponent('showBtn').show();
             } else {
@@ -966,7 +937,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
                 contextmenu.getComponent('showBtn').hide();
             }
 
-            contextmenu.items.items[this.contextMenuItemIndex.download].setText(this.strings.download_file);
+            contextmenu.getComponent('downloadBtn').setText(this.strings.download_file);
             if (this.checkRights(Phlexible.mediamanager.Rights.FILE_DOWNLOAD) == '1' && selections[0].data.present) {
                 contextmenu.getComponent('showBtn').enable();
             } else {

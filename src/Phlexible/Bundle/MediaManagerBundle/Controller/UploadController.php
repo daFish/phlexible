@@ -12,6 +12,7 @@ use Brainbits\Mime\MimeDetector;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,10 +37,11 @@ class UploadController extends Controller
      *
      * @return ResultResponse
      * @Route("", name="mediamanager_upload")
+     * @Method("POST")
      */
     public function uploadAction(Request $request)
     {
-        $folderId = $request->get('folder_id', null);
+        $folderId = $request->get('folderId', null);
 
         try {
             $volumeManager = $this->get('phlexible_media_manager.volume_manager');
@@ -114,6 +116,7 @@ class UploadController extends Controller
     /**
      * @return JsonResponse
      * @Route("/check", name="mediamanager_upload_check")
+     * @Method("GET")
      */
     public function checkAction()
     {
@@ -138,12 +141,12 @@ class UploadController extends Controller
 
             $data = [
                 'versions' => $supportsVersions,
-                'temp_key' => $tempFile->getId(),
-                'temp_id'  => $tempFile->getId(),
-                'new_id'   => $tempFile->getFileId(),
-                'new_name' => $newName,
-                'new_type' => $newType->getName(),
-                'new_size' => $tempFile->getSize(),
+                'tempKey' => $tempFile->getId(),
+                'tempId'  => $tempFile->getId(),
+                'newId'   => $tempFile->getFileId(),
+                'newName' => $newName,
+                'newType' => $newType->getName(),
+                'newSize' => $tempFile->getSize(),
                 'wizard'   => false,
                 'total'    => $tempStorage->count(),
             ];
@@ -153,15 +156,15 @@ class UploadController extends Controller
 
                 $alternativeName = $tempHandler->createAlternateFilename($tempFile, $volume);
 
-                $data['old_name'] = $tempFile->getName();
-                $data['old_id']   = $tempFile->getFileId();
-                $data['old_type'] = $oldFile->getMediaType();
-                $data['old_size'] = $oldFile->getSize();
-                $data['alternative_name'] = $alternativeName;
+                $data['oldName'] = $tempFile->getName();
+                $data['oldId']   = $tempFile->getFileId();
+                $data['oldType'] = $oldFile->getMediaType();
+                $data['oldSize'] = $oldFile->getSize();
+                $data['alternativeName'] = $alternativeName;
             }
 
             if ($tempFile->getFileId()) {
-                $data['file_id'] = $tempFile->getFileId();
+                $data['fileId'] = $tempFile->getFileId();
             }
 
             if ($tempFile->getUseWizard()) {
@@ -182,6 +185,7 @@ class UploadController extends Controller
     /**
      * @return JsonResponse
      * @Route("/clear", name="mediamanager_upload_clear")
+     * @Method("POST")
      */
     public function clearAction()
     {
@@ -196,12 +200,13 @@ class UploadController extends Controller
      *
      * @return ResultResponse
      * @Route("/save", name="mediamanager_upload_save")
+     * @Method("POST")
      */
     public function saveAction(Request $request)
     {
         $all = $request->get('all');
-        $action = $request->get('do');
-        $tempId = $request->get('temp_id');
+        $action = $request->get('action');
+        $tempId = $request->get('tempId');
 
         $metaSetId = $request->get('metaset', null);
         $metaData = $request->get('meta', null);
@@ -217,7 +222,7 @@ class UploadController extends Controller
             $tempHandler->handle($action, $tempId);
         }
 
-        return new ResultResponse(true, ($all ? 'All' : 'File') . ' saved with action ' . $action);
+        return new ResultResponse(true, ($all ? 'All' : 'File') . ' saved with action ' . $action, array('action' => $action));
     }
 
     /**
@@ -225,6 +230,7 @@ class UploadController extends Controller
      *
      * @return Response
      * @Route("/preview", name="mediamanager_upload_preview")
+     * @Method("GET")
      */
     public function previewAction(Request $request)
     {
@@ -250,6 +256,7 @@ class UploadController extends Controller
     /**
      * @return JsonResponse
      * @Route("/metasets", name="mediamanager_upload_metasets")
+     * @Method("GET")
      */
     public function metasetsAction()
     {
@@ -269,6 +276,7 @@ class UploadController extends Controller
     /**
      * @return JsonResponse
      * @Route("/meta", name="mediamanager_upload_meta")
+     * @Method("GET")
      */
     public function metaAction()
     {

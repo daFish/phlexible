@@ -1,86 +1,110 @@
-Ext.provide('Phlexible.mediamanager.FileReplaceWindowTemplate');
-Ext.provide('Phlexible.mediamanager.FileReplaceWindow');
+Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.mediamanager.FileReplaceWindowTemplate = new Ext.XTemplate(
-    '<tpl for=".">',
-    '<div class="p-filereplace-wrap">',
-        '<div style="float: left;">',
-        Phlexible.inlineIcon('p-mediamanager-arrow_right-icon'),
-        '</div>',
-        '<div style="padding-left: 20px;">',
-            '<div class="p-filereplace-header">',
-                '{header}',
-            '</div>',
-                '<div class="p-filereplace-text">',
-            '{text}',
-            '</div>',
-            '<tpl if="src">',
-            '<div>',
-                '<div class="p-filereplace-img">',
-                    '<img src="{src}" width="48" height="48">',
-                '</div>',
-                '<div class="p-filereplace-desc">',
-                    '<div class="p-filereplace-name" style="font-weight: bold">{[values.name.shorten(50)]}</div>',
-                    '<div class="p-filereplace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
-                    '<div class="p-filereplace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
-                '</div>',
-            '</div>',
-            '</tpl>',
-        '</div>',
-    '</div>',
-    '</tpl>'
-);
-
-Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
     title: Phlexible.mediamanager.Strings.uploaded_file_conflict,
     strings: Phlexible.mediamanager.Strings,
+    iconCls: Phlexible.Icon.get('document--exclamation'),
     width: 500,
     minWidth: 500,
     height: 400,
     minHeight: 400,
-    bodyStyle: 'padding: 10px;',
-    cls: 'p-filereplace',
+    bodyPadding: 5,
+    cls: 'p-mediamanager-file-replace',
     modal: true,
     closable: false,
 
     initComponent: function () {
+        this.initMyTemplates();
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyTemplates: function() {
+        this.fileReplaceTpl = new Ext.XTemplate(
+            '<tpl for=".">',
+            '<div class="p-mediamanager-file-replace-wrap">',
+            '<div style="float: left;">',
+            '<img src="/bundles/phlexiblegui/images/blank.gif" width="16" height="16" class="p-inline-icon {iconCls}">',
+            '</div>',
+            '<div style="padding-left: 20px;">',
+            '<div class="p-mediamanager-file-replace-header">',
+            '{header}',
+            '</div>',
+            '<div class="p-mediamanager-file-replace-text">',
+            '{text}',
+            '</div>',
+            '<tpl if="src">',
+            '<div>',
+            '<div class="p-mediamanager-file-replace-img">',
+            '<img src="{src}" width="48" height="48">',
+            '</div>',
+            '<div class="p-mediamanager-file-replace-desc">',
+            '<div class="p-mediamanager-file-replace-name">{[Ext.String.ellipsis(values.name, 50)]}</div>',
+            '<tpl if="values.type">',
+            //'<div class="p-mediamanager-file-replace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
+            '</tpl>',
+            '<div class="p-mediamanager-file-replace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
+            '</div>',
+            '</div>',
+            '</tpl>',
+            '</div>',
+            '</div>',
+            '</tpl>'
+        );
+    },
+
+    initMyItems: function() {
         this.items = [
             {
-                xtype: 'panel',
+                xtype: 'container',
                 border: false,
                 plain: true,
-                bodyStyle: 'font-size: 13px; font-weight: bold;',
+                cls: 'p-mediamanager-file-replace-win-header',
                 html: this.strings.uploaded_file_conflict_text
             },
             {
-                xtype: 'panel',
+                xtype: 'container',
                 border: false,
                 plain: true,
-                bodyStyle: 'padding-bottom: 10px;',
+                padding: "0 0 10 0",
+                cls: 'p-mediamanager-file-replace-win-desc',
                 html: this.strings.uploaded_file_conflict_desc
             },
             {
                 xtype: 'dataview',
-                itemSelector: 'div.p-filereplace-wrap',
-                overClass: 'p-filereplace-wrap-over',
-                style: 'overflow:auto',
+                itemSelector: 'div.p-mediamanager-file-replace-wrap',
+                cls: 'p-mediamanager-file-replace-view',
+                overItemCls: 'p-mediamanager-file-replace-wrap-over',
                 singleSelect: true,
-                store: new Ext.data.JsonStore({
-                    fields: ['action', 'header', 'text', 'id', 'name', 'type', 'size', 'src']
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['action', 'header', 'text', 'fileId', 'name', 'type', 'size', 'src']
                 }),
-                tpl: Phlexible.mediamanager.FileReplaceWindowTemplate,
+                tpl: this.fileReplaceTpl,
                 listeners: {
-                    click: this.saveFile,
+                    select: this.saveFile,
                     scope: this
                 }
-            },
-            {
-                xtype: 'checkbox',
-                boxLabel: this.strings.apply_to_remaining_files
             }
         ];
+    },
 
-        this.callParent(arguments);
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'buttons',
+            dock: 'bottom',
+            ui: 'footer',
+            hidden: true,
+            items: [
+                '->',
+            {
+                xtype: 'checkbox',
+                itemId: 'all',
+                boxLabel: this.strings.apply_to_remaining_files
+            }]
+        }];
     },
 
     getDataView: function() {
@@ -89,61 +113,69 @@ Phlexible.mediamanager.FileReplaceWindow = Ext.extend(Ext.Window, {
 
     loadFile: function () {
         var file = this.uploadChecker.getCurrent(),
-            data = [];
+            actions = [];
 
-        data.push({
+        actions.push({
             action: 'discard',
+            iconCls: Phlexible.Icon.get('document-shred'),
             header: this.strings.delete_uploaded_file,
             text: this.strings.delete_uploaded_file_desc,
-            id: file.old_id,
-            name: file.old_name,
-            type: file.old_type,
-            size: file.old_size,
-            src: Phlexible.Router.generate('mediamanager_media', {file_id: file.old_id, template_key: '_mm_medium'})
+            fileId: file.oldId,
+            name: file.oldName,
+            type: file.oldType,
+            size: file.oldSize,
+            src: Phlexible.Router.generate('mediamanager_media', {file_id: file.oldId, template_key: '_mm_medium'})
         });
 
         if (!file.versions) {
-            data.push({
+            actions.push({
                 action: 'replace',
+                iconCls: Phlexible.Icon.get('document-break'),
                 header: this.strings.replace_existing_file,
                 text: this.strings.replace_existing_file_desc,
-                id: file.new_id,
-                name: file.old_name,
-                type: file.new_type,
-                size: file.new_size,
-                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
+                fileId: file.newId,
+                name: file.oldName,
+                type: file.newType,
+                size: file.newSize,
+                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.tempKey, id: file.tempId, template: '_mm_medium'})
             });
         } else {
-            data.push({
+            actions.push({
                 action: 'add_version',
+                iconCls: Phlexible.Icon.get('document--plus'),
                 header: 'Als neue Version der bestehenden Datei speichern.',
                 text: 'Es werden keine Daten verändert. Die vorhandene Datei wird um diese Datei ergänzt:',
-                id: file.new_id,
-                name: file.new_name,
-                type: file.new_type,
-                size: file.new_size,
-                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.temp_key, id: file.temp_id, template: '_mm_medium'})
+                fileId: file.newId,
+                name: file.newName,
+                type: file.newType,
+                size: file.newSize,
+                src: Phlexible.Router.generate('mediamanager_upload_preview', {key: file.tempKey, id: file.tempId, template: '_mm_medium'})
             });
         }
 
-        data.push({
+        actions.push({
             action: 'keep',
+            iconCls: Phlexible.Icon.get('plus-circle'),
             header: this.strings.keep_both_files,
-            text: String.format(this.strings.keep_both_files_desc, file.alternative_name.shorten(60)),
-            id: '',
+            text: Ext.String.format(this.strings.keep_both_files_desc, Ext.String.ellipsis(file.alternativeName, 60)),
+            fileId: '',
             name: '',
             type: '',
             size: '',
             src: ''
         });
 
-        this.getDataView().getStore().loadData(data);
+        this.getDataView().getStore().loadData(actions);
+
+        if (this.uploadChecker.count() > 1) {
+            this.getDockedComponent('buttons').getComponent('all').setBoxLabel(Ext.String.format(this.strings.apply_to_remaining_files, this.uploadChecker.count()));
+            this.getDockedComponent('buttons').show();
+        }
     },
 
-    saveFile: function (view, index) {
-        var all = this.getComponent(3).getValue() ? true : false,
-            r = this.getDataView().getStore().getAt(index),
-            action = r.get('action');
+    saveFile: function (view, record) {
+        var all = this.getDockedComponent('buttons').getComponent('all').getValue() ? true : false,
+            action = record.get('action');
 
         this.fireEvent('save', action, all);
     }

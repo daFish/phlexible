@@ -254,7 +254,7 @@ Ext.define('Phlexible.gui.util.Dialog', {
         this.fireEvent('submitFailure', this, action.result);
 
         if (action.result.msg) {
-            Ext.window.MessageBox.alert('Failure', action.result.msg);
+            Ext.MessageBox.alert('Failure', action.result.msg);
         }
     }
 });

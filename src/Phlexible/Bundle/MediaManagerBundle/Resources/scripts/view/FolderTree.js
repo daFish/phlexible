@@ -1,44 +1,3 @@
-/*
-Ext.define('Phlexible.mediamanager.FolderTreeLoader', {
-    extend: 'Ext.tree.TreeLoader',
-
-    createNode: function (attr) {
-        // apply baseAttrs, nice idea Corey!
-        if (this.baseAttrs) {
-            Ext.applyIf(attr, this.baseAttrs);
-        }
-        if (this.applyLoader !== false) {
-            attr.loader = this;
-        }
-        if (typeof attr.uiProvider == 'string') {
-            attr.uiProvider = this.uiProviders[attr.uiProvider] || eval(attr.uiProvider);
-        }
-        if (typeof attr.uiProvider == 'string') {
-            attr.uiProvider = this.uiProviders[attr.uiProvider] || eval(attr.uiProvider);
-        }
-
-        return new Ext.tree.AsyncTreeNode(attr);
-    },
-
-    getParams: function (node) {
-        var buf = [], bp = this.baseParams;
-        for (var key in bp) {
-            if (typeof bp[key] != "function") {
-                buf.push(encodeURIComponent(key), "=", encodeURIComponent(bp[key]), '&');
-            }
-        }
-        buf.push("node=", encodeURIComponent(node.id));
-        if (node.attributes.site_id) {
-            buf.push('&', "site_id=", encodeURIComponent(node.attributes.site_id));
-        }
-        if (node.attributes.slot) {
-            buf.push('&', "slot=", encodeURIComponent(node.attributes.slot));
-        }
-        return buf.join("");
-    }
-});
-*/
-
 Ext.define('Phlexible.mediamanager.FolderTree', {
     extend: 'Ext.tree.TreePanel',
     alias: 'widget.mediamanager-folders',
@@ -47,9 +6,6 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
     cls: 'p-mediamanager-folders',
     enableDD: true,
     containerScroll: true,
-    ddGroup: 'mediamanager',
-    ddAppendOnly: true,
-    ddScroll: true,
     rootVisible: false,
     autoScroll: true,
     useArrows: true,
@@ -69,12 +25,29 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
 
     // private
     initComponent: function () {
+        this.initMyView();
         this.initMyStore();
         this.initMyFolderContextMenuItems();
         this.initMyContextMenus();
         this.initMyListeners();
 
         this.callParent(arguments);
+    },
+
+    initMyView: function() {
+        this.viewConfig = {
+            plugins: {
+                ptype: 'treeviewdragdrop',
+                containerScroll: true,
+                ddGroup: 'p-mediamanager-folders',
+                appendOnly: true
+            },
+            listeners: {
+                beforedrop: this.onBeforeFileDrop,
+                drop: this.onFileDrop,
+                scope: this
+            }
+        };
     },
 
     initMyStore: function() {
@@ -93,7 +66,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
                 expanded: true,
                 iconCls: Phlexible.Icon.get('folder')
             },
-            preloadChildren: true,
+            folderSort: true,
             listeners: {
                 load: function (loader, node) {
                     if (this.startFolderPath) {
@@ -122,7 +95,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
     },
 
     initMyContextMenus: function() {
-        this.folderContextMenu = new Ext.menu.Menu({
+        this.folderContextMenu = Ext.create('Ext.menu.Menu', {
             items: this.contextMenuItems
         });
     },
@@ -131,29 +104,14 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         this.on({
             load: this.onLoad,
             rowcontextmenu: this.onContextMenu,
-            movenode: this.onMove,
-            nodedragover: function (e) {
-                // target node is no site
-                if (!e.target.data.volumeId) {
-                    return false;
-                }
-
-                // from grid
-                if (e.data.selections) {
-                    if (e.data.selections[0].data.volumeId != e.target.attributes.volumeId) {
-                        return false;
-                    }
-                }
-                // from tree
-                else if (e.dropNode) {
-                    if (!e.dropNode.attributes.volumeId || e.dropNode.attributes.volumeId != e.target.attributes.volumeId) {
-                        return false;
-                    }
-                }
-
-                console.log('nodedragover ok');
-                return true;
+            beforedrop: function() {
+                debugger;
             },
+            drop: function() {
+                debugger;
+            },
+            itemmove: this.onFolderMove,
+            beforeitemmove: this.onBeforeFolderMove,
             selectionchange: function (grid, selected) {
                 if (!selected.length) {
                     return;
@@ -324,30 +282,66 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         folder.collapse();
     },
 
-    onMove: function (tree, node, oldParent, newParent, index) {
-        var targetID = newParent.id;
-        var sourceID = node.id;
+    onBeforeFileDrop: function() {
+        return true;
+    },
+
+    onFileDrop: function() {
+        console.log(arguments);
+        debugger;
+
+        return false;
+    },
+
+    onBeforeFolderMove: function (node, oldParent, newParent) {
+        // target node is no site
+        if (!node.data.volumeId) {
+            return false;
+        }
+        if (!newParent.data.volumeId) {
+            return false;
+        }
+
+        // from grid
+        // TODO:
+        /*
+         if (e.data.selections) {
+         if (e.data.selections[0].data.volumeId != e.target.attributes.volumeId) {
+         return false;
+         }
+         }
+         // from tree
+         else if (e.dropNode) {*/
+        if (node.data.volumeId != newParent.data.volumeId) {
+            return false;
+        }
+        //}
+
+        return true;
+    },
+
+    onFolderMove: function (node, oldParent, newParent) {
+        var targetId = newParent.id;
+        var folderId = node.id;
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_move'),
+            url: Phlexible.Router.generate('mediamanager_folder_patch', {folderId: folderId}),
+            method: 'PATCH',
             params: {
-                volumeId: node.data.volumeId,
-                targetId: targetID,
-                id: sourceID
+                targetId: targetId
             },
-            method: 'post',
-            success: this.onMoveSuccess.createDelegate(this, [node], true),
+            success: this.onMoveSuccess,
             scope: this
         });
     },
 
-    onMoveSuccess: function (response, e, node) {
+    onMoveSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         if (data.success) {
-            node.select();
+            Phlexible.Notify.success(data.msg);
         } else {
-            Ext.Msg.alert('Failure', data.msg);
+            Phlexible.Notify.failure(data.msg);
         }
     },
 
@@ -380,7 +374,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
         folder = nodes[0];
 
-        var w = Ext.create('Phlexible.mediamanager.RenameFolderWindow', {
+        var w = Ext.create('Phlexible.mediamanager.FolderRenameWindow', {
             folderId: folder.id,
             folderName: folder.data.name,
             listeners: {

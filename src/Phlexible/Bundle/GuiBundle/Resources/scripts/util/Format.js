@@ -27,7 +27,10 @@ Ext.define('Phlexible.gui.util.Format', {
     date: function (date) {
         var newDate = "";
         if (date) {
-            newDate = new Date(date).format('Y-m-d H:i:s');
+            if (!Ext.isDate(date)) {
+                date = new Date(date);
+            }
+            newDate = Ext.Date.format(date, 'Y-m-d H:i:s');
         }
         return newDate;
     },

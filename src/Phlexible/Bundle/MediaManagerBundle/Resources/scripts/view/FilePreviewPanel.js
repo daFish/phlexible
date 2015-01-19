@@ -6,17 +6,19 @@ Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
     title: Phlexible.mediamanager.Strings.preview,
     cls: 'p-mediamanager-preview-panel',
     height: 270,
+    padding: 5,
 
     fileId: null,
     fileVersion: null,
     fileName: null,
-    documenttypeKey: null,
+    documentTypeKey: null,
+    assetType: null,
     cache: null,
 
     // private
     initComponent: function () {
-        if (this.fileId && this.fileVersion && this.fileName && this.documenttypeKey && this.cache) {
-            this.html = this.getHtml(this.fileId, this.fileVersion, this.fileName, this.documenttypeKey, this.asset_type, this.cache);
+        if (this.fileId && this.fileVersion && this.fileName && this.documentTypeKey && this.assetType && this.cache) {
+            this.html = this.getHtml(this.fileId, this.fileVersion, this.fileName, this.documentTypeKey, this.assetType, this.cache);
         }
         else {
             this.html = this.createNoPreview();
@@ -29,16 +31,21 @@ Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
         this.load(r.get('id'), r.get('version'), r.get('name'), r.get('document_type_key'), r.get('assetType'), r.get('cache'));
     },
 
-    load: function (fileId, fileVersion, fileName, documenttypeKey, assetType, cache) {
+    load: function (fileId, fileVersion, fileName, documentTypeKey, assetType, cache) {
         if (this.fileId != fileId || this.fileVersion != fileVersion) {
             this.fileId = fileId;
             this.fileVersion = fileVersion;
+            this.fileName = fileName;
+            this.documentTypeKey = documentTypeKey;
+            this.assetType = assetType;
+            this.cache = cache;
+
             this.body.update('');
-            this.body.insertFirst(this.getHtml(fileId, fileVersion, fileName, documenttypeKey, assetType, cache));
+            this.body.insertFirst(this.getHtml(fileId, fileVersion, fileName, documentTypeKey, assetType, cache));
         }
     },
 
-    getHtml: function (fileId, fileVersion, fileName, documenttypeKey, assetType, cache) {
+    getHtml: function (fileId, fileVersion, fileName, documentTypeKey, assetType, cache) {
         switch (assetType.toUpperCase()) {
             case Phlexible.mediamanager.AUDIO:
                 return this.createAudioPlayer(256, 256, fileId, fileVersion, fileName, cache);

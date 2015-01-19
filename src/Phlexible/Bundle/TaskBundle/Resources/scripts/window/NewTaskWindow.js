@@ -16,7 +16,7 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
 
     initComponent: function () {
         this.initMyItems();
-        this.initMyButtons();
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -36,14 +36,21 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
                         anchor: '100%',
                         allowBlank: false,
                         emptyText: this.strings.please_choose,
-                        store: new Ext.data.JsonStore({
-                            url: Phlexible.Router.generate('tasks_types'),
-                            baseParams: {
-                                component: this.component_filter
-                            },
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'task'],
-                            id: 'id',
-                            root: 'tasks'
+                            proxy: {
+                                type: 'ajax',
+                                url: Phlexible.Router.generate('tasks_types'),
+                                simpleSortMode: true,
+                                reader: {
+                                    type: 'json',
+                                    rootProperty: 'tasks',
+                                    idProperty: 'id'
+                                },
+                                extraParams: {
+                                    component: this.component_filter
+                                }
+                            }
                         }),
                         editable: false,
                         displayField: 'task',
@@ -72,14 +79,20 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
                         allowBlank: false,
                         disabled: true,
                         emptyText: this.strings.please_choose,
-                        store: new Ext.data.JsonStore({
-                            url: Phlexible.Router.generate('tasks_recipients'),
-                            baseParams: {
-                                task_class: false
-                            },
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['uid', 'username'],
-                            id: 'uid',
-                            root: 'users'
+                            proxy: {
+                                type: 'ajax',
+                                url: Phlexible.Router.generate('tasks_recipients'),
+                                reader: {
+                                    type: 'json',
+                                    rootProperty: 'users',
+                                    idProperty: 'uid'
+                                },
+                                extraParams: {
+                                    task_class: false
+                                }
+                            }
                         }),
                         editable: false,
                         displayField: 'username',
@@ -119,20 +132,25 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
         ];
     },
 
-    initMyButtons: function() {
-        this.buttons = [
-            {
-                text: this.strings.cancel,
-                handler: this.close,
-                scope: this
-            },
-            {
-                text: this.strings.send,
-                handler: this.onSend,
-                formBind: true,
-                scope: this
-            }
-        ];
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                {
+                    text: this.strings.cancel,
+                    handler: this.close,
+                    scope: this
+                },
+                {
+                    text: this.strings.send,
+                    handler: this.onSend,
+                    formBind: true,
+                    scope: this
+                }
+            ]
+        }];
     },
 
     onSend: function () {

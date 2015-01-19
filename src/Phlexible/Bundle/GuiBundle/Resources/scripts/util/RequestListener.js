@@ -2,7 +2,7 @@
  * Error request listener
  */
 Ext.define('Phlexible.gui.util.RequestListener', {
-    requires: ['Ext.window.MessageBox'],
+    //requires: ['Ext.MessageBox'],
 
     requestIdleText: '_request_idle',
     requestBusyText: '_request_busy',
@@ -117,7 +117,7 @@ Ext.define('Phlexible.gui.util.RequestListener', {
         }
 
         if (!result || !result.message) {
-            Ext.window.MessageBox.alert('Error', 'The last request resulted in an error.');
+            Ext.MessageBox.alert('Error', 'The last request resulted in an error.');
             return;
         }
 

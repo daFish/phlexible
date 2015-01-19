@@ -267,6 +267,7 @@ class ScriptsBuilder
                 'textarea',
                 'datecolumn',
                 'displayfield',
+                'tbseparator',
             );
 
             if (!empty($file->requires)) {

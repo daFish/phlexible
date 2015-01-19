@@ -5,23 +5,23 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
     strings: Phlexible.mediamanager.Strings,
     iconCls: Phlexible.Icon.get('document'),
     width: 900,
+    minWidth: 900,
     height: 600,
-    layout: 'fit',
+    minHeight: 600,
+    layout: 'border',
     cls: 'p-mediamanager-file-detail-window',
-    bodyStyle: 'padding: 5px',
     modal: true,
     constrainHeader: true,
     maximizable: true,
+    resizable: true,
 
-    file_id: null,
-    file_version: null,
-    file_name: null,
-    document_type_key: null,
-    asset_type: null,
-    cache: null,
-    rights: [],
+    file: null,
+    folderRights: [],
 
     initComponent: function () {
+        this.title = this.file.get('name');
+        this.iconCls = Phlexible.documenttypes.DocumentTypes.getClass(this.file.get('documenttypeKey')) + "-small";
+
         this.initMyTemplates();
         this.initMyTabs();
         this.initMyItems();
@@ -32,104 +32,129 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
 
     initMyTemplates: function() {
         this.fileDetailAttributesTemplate = new Ext.XTemplate(
-            '<div style="padding: 4px 4px 8px 4px;">',
             '<div>',
-            '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div> {[values.name.shorten(80)]}</div>',
-            '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {document_type_key}</div>',
-            '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
-            '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {create_user_id}</div>',
-            '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
-            '</div>',
+                '<div style="color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div>',
+                '<div>{[Ext.String.ellipsis(values.name, 40)]}</div>',
+                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.type]}:</div>',
+                '<div>{documentType}</div>',
+                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.size]}:</div>',
+                '<div>{[Phlexible.Format.size(values.size)]}</div>',
+                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.created_by]}:</div>',
+                '<div>{createUser}</div>',
+                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.create_date]}:</div>',
+                '<div>{[Phlexible.Format.date(values.createTime)]}</div>',
             '</div>'
         );
     },
 
     initMyItems: function() {
+        this.plain = true;
+
         this.items = [
             {
                 region: 'west',
-                border: false,
-                width: 280,
+                itemId: 'previewWrap',
+                border: true,
+                width: 274,
+                layout: 'border',
+                padding: '5 0 5 5',
+                bodyStyle: 'background-color: white;',
                 items: [
                     {
                         xtype: 'mediamanager-file-preview',
-                        region: 'west',
-                        height: 300,
+                        itemId: 'preview',
+                        region: 'north',
                         border: false,
-                        file_id: this.file_id,
-                        file_version: this.file_version,
-                        file_name: this.file_name,
-                        document_type_key: this.document_type_key,
-                        asset_type: this.asset_type,
-                        cache: this.cache
+                        header: false,
+                        fileId: this.file.get('id'),
+                        fileVersion: this.file.get('version'),
+                        fileName: this.file.get('name'),
+                        documentTypeKey: this.file.get('documentTypeKey'),
+                        assetType: this.file.get('assetType'),
+                        cache: this.file.get('cache')
                     },
                     {
+                        xtype: 'panel',
+                        itemId: 'details',
+                        region: 'center',
                         header: false,
                         border: false,
-                        autoHeight: true
+                        autoHeight: true,
+                        padding: 5,
+                        tpl: this.fileDetailAttributesTemplate,
+                        data: this.file.data
                     }
                 ]
             },
             {
-                region: 'center',
                 xtype: 'tabpanel',
+                region: 'center',
+                itemId: 'tabs',
                 deferredRender: false,
+                padding: 5,
                 activeTab: 1,
                 items: this.tabs
             }
         ];
+
+        delete this.tabs;
     },
 
     initMyDockedItems: function() {
         this.dockedItems = [{
             xtype: 'toolbar',
+            itemId: 'tbar',
             dock: 'top',
             items: [
                 this.strings.folder,
                 {
                     xtype: 'textfield',
-                    value: '/test/bla/',
-                    width: 250
+                    itemId: 'pathField',
+                    value: this.file.get('folderPath'),
+                    width: 200
                 },
-                ' ',
                 ' ',
                 this.strings.name,
                 {
                     xtype: 'textfield',
-                    value: 'blubb.png',
-                    width: 310
+                    itemId: 'nameField',
+                    value: this.file.get('name'),
+                    width: 326
                 },
-                ' ',
                 ' ',
                 this.strings.id,
                 {
                     xtype: 'textfield',
-                    value: '123123abc123123',
-                    width: 220
+                    itemId: 'idField',
+                    value: this.file.get('id'),
+                    width: 240
                 }
             ]
         },{
             xtype: 'toolbar',
+            itemId: 'bbar',
             dock: 'bottom',
+            hidden: !this.file.get('prevId') && !this.file.get('nextId'),
             items: [
-                '->',
                 {
                     text: 'Previous file',
+                    itemId: 'prevBtn',
                     iconCls: Phlexible.Icon.get('arrow-180'),
-                    hidden: true,
+                    hidden: !this.file.get('prevId'),
                     handler: function () {
-                        this.file_id = this.prev.fileId;
-                        this.file_version = this.prev.fileVersion;
+                        this.fileId = this.file.get('prevId');
+                        this.fileVersion = this.file.get('prevVersion');
                         this.load();
                     },
                     scope: this
-                }, ' ', {
+                }, '->', {
                     text: 'Next file',
+                    itemId: 'nextBtn',
                     iconCls: Phlexible.Icon.get('arrow'),
-                    hidden: true,
+                    hidden: !this.file.get('nextId'),
                     handler: function () {
-                        this.file_id = this.next.fileId;
-                        this.file_version = this.next.fileVersion;
+                        this.fileId = this.file.get('nextId');
+                        this.fileVersion = this.file.get('nextVersion');
                         this.load();
                     },
                     scope: this
@@ -141,17 +166,20 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
     initMyTabs: function () {
         this.tabs = [
             {
-                xtype: 'fileversionspanel',
+                xtype: 'mediamanager-file-versions',
+                itemId: 'versions',
                 region: 'center',
-                file_id: this.file_id,
-                file_version: this.file_version,
+                fileId: this.file.get('id'),
+                fileVersion: this.file.get('version'),
+                fileVersions: this.file.get('versions'),
+                hidden: !this.file.get('hasVersions'),
                 listeners: {
                     versionSelect: this.onVersionSelect,
-                    versionDownload: function (file_id, file_version) {
-                        var href = Phlexible.Router.generate('mediamanager_download_file', {id: file_id})
+                    versionDownload: function (fileId, fileVersion) {
+                        var href = Phlexible.Router.generate('mediamanager_download_file', {id: fileId})
 
-                        if (file_version) {
-                            href += '/' + file_version;
+                        if (fileVersion) {
+                            href += '/' + fileVersion;
                         }
 
                         document.location.href = href;
@@ -161,130 +189,131 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
             },
             {
                 xtype: 'propertygrid',
+                itemId: 'attributes',
                 title: this.strings.attributes,
                 iconCls: Phlexible.Icon.get('property'),
-                source: {},
-                viewConfig: {
-                    emptyText: this.strings.no_attribute_values,
-                    forceFit: true
-                },
-                hidden: true
+                source: this.file.get('attributes'),
+                emptyText: this.strings.no_attribute_values,
+                hidden: false
             },
             {
-                xtype: 'mediamanager-filemeta',
+                xtype: 'mediamanager-file-meta',
+                itemId: 'meta',
                 border: false,
-                listeners: {
-                    render: function (c) {
-                        c.setRights(this.rights);
-                    },
-                    scope: this
-                }
+                params: {
+                    fileId: this.file.get('id'),
+                    fileVersion: this.file.get('version'),
+                },
+                rights: this.folderRights
             }/*,{
-             title: 'Rights',
-             iconCls: 'p-mediamanager-file_rights-icon',
-             hidden: true
-             },{
-             title: 'Preview',
-             iconCls: 'p-mediamanager-file_preview-icon',
-             hidden: true
+                title: 'Rights',
+                iconCls: 'p-mediamanager-file_rights-icon',
+                hidden: true
              }*/
         ];
     },
 
-    getToolbar: function() {
-        return this.getComponent(0);
-    },
-
-    getLeft: function () {
-        return this.getComponent(1);
+    getPreviewWrap: function () {
+        return this.getComponent('previewWrap');
     },
 
     getPreviewPanel: function () {
-        return this.getLeft().getComponent(0);
+        return this.getPreviewWrap().getComponent('preview');
     },
 
     getDetailsPanel: function () {
-        return this.getLeft().getComponent(1);
+        return this.getPreviewWrap().getComponent('details');
     },
 
     getTabPanel: function () {
-        return this.getComponent(2);
+        return this.getComponent('tabs');
     },
 
     getVersionsPanel: function () {
-        return this.getTabPanel().getComponent(0);
+        return this.getTabPanel().getComponent('versions');
     },
 
     getAttributesPanel: function () {
-        return this.getTabPanel().getComponent(1);
+        return this.getTabPanel().getComponent('attributes');
     },
 
     getMetaGrid: function () {
-        return this.getTabPanel().getComponent(2);
+        return this.getTabPanel().getComponent('meta');
     },
 
-    onVersionSelect: function (file_id, file_version, file_name, folder_id, document_type_key, asset_type) {
-        this.getPreviewPanel().load(file_id, file_version, file_name, document_type_key, asset_type);
-        this.loadProperties(file_id, file_version);
+    onVersionSelect: function (fileId, fileVersion, fileName, folderId, documentTypeKey, assetType) {
+        //this.getPreviewPanel().load(fileId, fileVersion, fileName, documentTypeKey, assetType);
+        this.load(fileId, fileVersion);
     },
 
-    loadProperties: function (file_id, file_version) {
-        this.getMetaGrid().loadMeta({
-            file_id: file_id,
-            file_version: file_version
-        });
-
+    load: function (fileId, fileVersion) {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_file_properties', {id: file_id, version: file_version}),
-            success: function (response) {
+            url: Phlexible.Router.generate('mediamanager_file_detail', {fileId: fileId, fileVersion: fileVersion}),
+            success: function(response) {
                 var data = Ext.decode(response.responseText);
-                this.setTitle(data.name);
-                this.setIconClass(Phlexible.documenttypes.DocumentTypes.getClass(data.documenttypeKey) + "-small");
-                this.getPreviewPanel().load(data.id, data.version, data.name, data.documenttypeKey);
-                this.fileDetailAttributesTemplate.overwrite(this.getDetailsPanel().body, data.detail);
-                this.getAttributesPanel().setSource(data.attributes);
-                //var html = Phlexible.mediamanager.FileDetailAttributesTemplate.applyTemplate(data);
-                //this.getAccordionPanel().body.update(html);
-                this.getToolbar().items.items[1].setValue(data.path);
-                this.getToolbar().items.items[5].setValue(data.name);
-                this.getToolbar().items.items[9].setValue(data.id);
 
-                var bbar = this.getBottomToolbar();
-                if (data.prev) {
-                    this.prev = data.prev;
-                    bbar.items.items[1].show();
-                    bbar.items.items[2].show();
-                } else {
-                    this.prev = null;
-                    bbar.items.items[1].hide();
-                    bbar.items.items[2].hide();
-                }
-                if (data.next) {
-                    this.next = data.next;
-                    bbar.items.items[3].show();
-                    bbar.items.items[2].show();
-                } else {
-                    this.next = null;
-                    bbar.items.items[3].hide();
-                    bbar.items.items[2].hide();
-                }
             },
             scope: this
-        });
+        })
     },
 
-    load: function () {
-        // properties
-        this.loadProperties(this.file_id, this.file_version);
+    setFile: function(file) {
+        this.setTitle(file.get('name'));
+        this.setIconCls(Phlexible.documenttypes.DocumentTypes.getClass(file.get('documentTypeKey')) + "-small");
+
+        this.getPreviewPanel().load(
+            file.get('fileId'),
+            file.get('version'),
+            file.get('name'),
+            file.get('documentTypeKey'),
+            file.get('assetType'),
+            file.get('cache')
+        );
+
+        //this.fileDetailAttributesTemplate.overwrite(this.getDetailsPanel().body, this.file.data);
+
+        this.getAttributesPanel().setSource(file.get('attributes'));
+
+        var tbar = this.getDockedComponent('tbar'),
+            bbar = this.getDockedComponent('bbar');
+
+        tbar.getComponent('pathField').setValue(file.get('folderPath'));
+        tbar.getComponent('nameField').setValue(file.get('name'));
+        tbar.getComponent('idField').setValue(file.get('id'));
+
+        if (file.get('prevId')) {
+            this.prev = {
+                fileId: file.get('prevId'),
+                fileVersion: file.get('prevVersion')
+            };
+            bbar.getComponent('prevBtn').show();
+        } else {
+            this.prev = null;
+            bbar.getComponent('prevBtn').hide();
+        }
+
+        if (file.get('nextId')) {
+            this.next = {
+                fileId: file.get('nextId'),
+                fileVersion: file.get('nextVersion')
+            };;
+            bbar.getComponent('nextBtn').show();
+        } else {
+            this.next = null;
+            bbar.getComponent('nextBtn').hide();
+        }
 
         // versions
-        this.getVersionsPanel().loadFile(this.file_id, this.file_version);
+        if (file.hasVersions()) {
+            this.getVersionsPanel().loadVersions(file.get('versions'));
+            this.getVersionsPanel().show();
+        } else {
+            this.getVersionsPanel().hide();
+        }
 
-        if (this.rendered) this.getComponent(1).getComponent(1).setRights(this.rights);
-    },
-
-    show: function () {
-        this.load();
-        this.callParent(arguments);
+        this.getMetaGrid().loadMeta({
+            fileId: file.get('id'),
+            fileVersion: file.get('version')
+        });
     }
 });

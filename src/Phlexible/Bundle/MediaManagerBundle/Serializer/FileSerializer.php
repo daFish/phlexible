@@ -150,6 +150,40 @@ class FileSerializer
 
         $attributes = $file->getAttributes();
 
+        $versions = array();
+        foreach ($volume->findFileVersions($file->getId()) as $fileVersion) {
+            $versions[] = [
+                'id'              => $fileVersion->getId(),
+                'folderId'        => $fileVersion->getFolderId(),
+                'name'            => $fileVersion->getName(),
+                'size'            => $fileVersion->getSize(),
+                'version'         => $fileVersion->getVersion(),
+                'documentTypeKey' => $fileVersion->getMediaType(),
+                'assetType'       => $fileVersion->getMediaCategory(),
+                'createUserId'    => $fileVersion->getCreateUserId(),
+                'createTime'      => $fileVersion->getCreatedAt()->format('Y-m-d'),
+            ];
+        }
+
+        /*
+        $previousFile = $site->findPreviousFile($file, 'name ASC');
+        $nextFile = $site->findNextFile($file, 'name ASC');
+        */
+
+        $prevId = null;
+        $prevVersion = null;
+        if (!empty($previousFile)) {
+            $prevId = $previousFile->getId();
+            $prevVersion = $previousFile->getVersion();
+        }
+
+        $nextId = null;
+        $nextVersion = null;
+        if (!empty($nextFile)) {
+            $nextId = $nextFile->getId();
+            $nextVersion = $nextFile->getVrsion();
+        }
+
         $folder = $volume->findFolder($file->getFolderId());
         $data = [
             'id'              => $file->getID(),
@@ -179,6 +213,11 @@ class FileSerializer
             'used'            => $usage,
             'focal'           => $focal,
             'attributes'      => $attributes,
+            'versions'        => $versions,
+            'nextId'          => $nextId,
+            'nextVersion'     => $nextVersion,
+            'prevId'          => $prevId,
+            'prevVersion'     => $prevVersion,
         ];
 
         return $data;

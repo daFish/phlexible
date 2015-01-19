@@ -1,6 +1,6 @@
 Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     extend: 'Portal.view.Portlet',
-    alias: 'widget.mediamanager-portlet-latestfiles',
+    alias: 'widget.mediamanager-latest-files-portlet',
 
     title: Phlexible.mediamanager.Strings.latest_files,
     strings: Phlexible.mediamanager.Strings,
@@ -53,7 +53,7 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
             {
                 xtype: 'dataview',
                 itemSelector: 'div.thumb-wrap',
-                overClass: 'thumb-wrap-over',
+                overItemCls: 'thumb-wrap-over',
                 style: 'overflow: auto',
                 singleSelect: true,
                 emptyText: this.strings.no_recent_files,

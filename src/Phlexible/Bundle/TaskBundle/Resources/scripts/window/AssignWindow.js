@@ -15,7 +15,7 @@ Ext.define('Phlexible.tasks.AssignWindow', {
 
     initComponent: function () {
         this.initMyItems();
-        this.initMyButtons();
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -35,14 +35,21 @@ Ext.define('Phlexible.tasks.AssignWindow', {
                         anchor: '100%',
                         allowBlank: false,
                         emptyText: this.strings.please_choose,
-                        store: new Ext.data.JsonStore({
-                            url: Phlexible.Router.generate('tasks_recipients'),
-                            baseParams: {
-                                task_class: false
-                            },
+                        store: Ext.create('Ext.data.JsonStore', {
                             fields: ['uid', 'username'],
-                            id: 'uid',
-                            root: 'users'
+                            proxy: {
+                                type: 'ajax',
+                                url: Phlexible.Router.generate('tasks_recipients'),
+                                simpleSortMode: true,
+                                reader: {
+                                    type: 'json',
+                                    rootProperty: 'users',
+                                    idProperty: 'uid'
+                                },
+                                extraParams: {
+                                    task_class: false
+                                }
+                            }
                         }),
                         editable: false,
                         displayField: 'username',
@@ -82,20 +89,25 @@ Ext.define('Phlexible.tasks.AssignWindow', {
         ];
     },
 
-    initMyButtons: function() {
-        this.buttons = [
-            {
-                text: this.strings.cancel,
-                handler: this.close,
-                scope: this
-            },
-            {
-                text: this.strings.assign,
-                handler: this.assign,
-                formBind: true,
-                scope: this
-            }
-        ];
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                {
+                    text: this.strings.cancel,
+                    handler: this.close,
+                    scope: this
+                },
+                {
+                    text: this.strings.assign,
+                    handler: this.assign,
+                    formBind: true,
+                    scope: this
+                }
+            ]
+        }];
     },
 
     assign: function () {

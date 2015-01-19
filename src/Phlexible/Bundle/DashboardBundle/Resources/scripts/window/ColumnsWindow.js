@@ -15,7 +15,7 @@ Ext.define('Phlexible.dashboard.view.ColumnsWindow', {
 
     initComponent: function() {
         this.initMyItems();
-        this.initMyButtons();
+        this.initDockedItems();
 
         this.callParent(arguments);
     },
@@ -38,15 +38,20 @@ Ext.define('Phlexible.dashboard.view.ColumnsWindow', {
         }];
     },
 
-    initMyButtons: function() {
-        this.buttons = [{
-            text: this.cancelText,
-            handler: this.close,
-            scope: this
-        },{
-            text: this.saveText,
-            handler: this.submit,
-            scope: this
+    initDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                text: this.cancelText,
+                handler: this.close,
+                scope: this
+            },{
+                text: this.saveText,
+                handler: this.submit,
+                scope: this
+            }]
         }];
     },
 

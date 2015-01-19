@@ -1,11 +1,11 @@
-Ext.define('Phlexible.mediamanager.RenameFolderWindow', {
+Ext.define('Phlexible.mediamanager.FileRenameWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.mediamanager.Strings.rename_folder,
+    title: Phlexible.mediamanager.Strings.rename_file,
     strings: Phlexible.mediamanager.Strings,
     iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
     layout: 'form',
-    width: 300,
+    width: 400,
     height: 150,
     modal: true,
     resizable: false,
@@ -14,12 +14,12 @@ Ext.define('Phlexible.mediamanager.RenameFolderWindow', {
         this.items = [{
             xtype: 'displayfield',
             hideLabel: true,
-            value: this.strings.rename_folder_desc
+            value: this.strings.rename_file_desc
         },{
             xtype: 'textfield',
             flex: 1,
             fieldLabel: this.strings.name,
-            value: this.folderName
+            value: this.fileName
         }];
 
         this.dockedItems = [{
@@ -48,7 +48,7 @@ Ext.define('Phlexible.mediamanager.RenameFolderWindow', {
 
     submit: function() {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_patch', {folderId: this.folderId}),
+            url: Phlexible.Router.generate('mediamanager_file_patch', {fileId: this.fileId}),
             method: 'PATCH',
             params: {
                 name: this.getComponent(1).getValue()

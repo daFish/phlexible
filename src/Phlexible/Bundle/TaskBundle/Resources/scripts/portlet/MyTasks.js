@@ -1,6 +1,6 @@
 Ext.define('Phlexible.tasks.portlet.MyTasks', {
     extend: 'Portal.view.Portlet',
-    alias: 'widget.tasks-portlet-mytasks',
+    alias: 'widget.tasks-my-tasks-portlet',
 
     bodyStyle: 'padding: 5px 5px 5px 5px',
     iconCls: 'p-task-portlet-icon',

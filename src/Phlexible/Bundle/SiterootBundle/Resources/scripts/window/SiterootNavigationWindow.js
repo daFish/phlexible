@@ -12,7 +12,7 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
         this.values = this.record.get('additional').split(',');
 
         this.initMyItems();
-        this.initMyButtons();
+        this.initMyDockedItems();
         this.loadSiteroots();
 
         this.callParent(arguments);
@@ -33,18 +33,16 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                 sm: new Ext.grid.RowSelectionModel({
                     singleSelect: true,
                     listeners: {
-                        selectionchange: {
-                            fn: function (sm) {
-                                var sel = sm.getSelected();
+                        selectionchange: function (sm) {
+                            var sel = sm.getSelected();
 
-                                if (sel) {
-                                    this.getComponent(0).getTopToolbar().items.items[4].enable();
-                                } else {
-                                    this.getComponent(0).getTopToolbar().items.items[4].disable();
-                                }
-                            },
-                            scope: this
-                        }
+                            if (sel) {
+                                this.getComponent(0).getTopToolbar().items.items[4].enable();
+                            } else {
+                                this.getComponent(0).getTopToolbar().items.items[4].disable();
+                            }
+                        },
+                        scope: this
                     }
                 }),
                 columns: [
@@ -75,17 +73,15 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                         displayField: 'title',
                         valueField: 'id',
                         listeners: {
-                            select: {
-                                fn: function (combo, r) {
-                                    combo.store.remove(r);
+                            select: function (combo, r) {
+                                combo.store.remove(r);
 
-                                    var c = this.getComponent(0);
-                                    c.store.add(r);
+                                var c = this.getComponent(0);
+                                c.store.add(r);
 
-                                    combo.setValue('');
-                                },
-                                scope: this
-                            }
+                                combo.setValue('');
+                            },
+                            scope: this
                         }
                     }, '-', {
                         text: 'Remove',
@@ -102,45 +98,48 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                         scope: this
                     }],
                 listeners: {
-                    render: {
-                        fn: function (grid) {
-                            this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
-                                copy: false
-                            });
-                        },
-                        scope: this
-                    }
+                    render: function (grid) {
+                        this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
+                            copy: false
+                        });
+                    },
+                    scope: this
                 }
             }
         ];
     },
 
-    initMyButtons: function() {
-        this.buttons = [
-            {
-                text: this.strings.cancel,
-                handler: function () {
-                    var records = this.getComponent(0).store.getRange();
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                {
+                    text: this.strings.cancel,
+                    handler: function () {
+                        var records = this.getComponent(0).store.getRange();
 
-                    var data = '';
-                    for (var i = 0; i < records.length; i++) {
-                        data += (data ? ',' : '') + records[i].get('id');
-                    }
+                        var data = '';
+                        for (var i = 0; i < records.length; i++) {
+                            data += (data ? ',' : '') + records[i].get('id');
+                        }
 
-                    this.record.set('additional', data);
+                        this.record.set('additional', data);
 
-                    this.close();
+                        this.close();
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            {
-                text: this.strings.cancel,
-                handler: function () {
-                    this.close();
-                },
-                scope: this
-            }
-        ];
+                {
+                    text: this.strings.cancel,
+                    handler: function () {
+                        this.close();
+                    },
+                    scope: this
+                }
+            ]
+        }];
     },
 
     loadSiteroots: function() {

@@ -65,7 +65,7 @@ Ext.define('Phlexible.gui.menu.Menu', {
             url: Phlexible.Router.generate('gui_menu'),
             success: this.onLoadSuccess,
             failure: function () {
-                Ext.window.MessageBox.alert('Load error', 'Error loading menu.');
+                Ext.MessageBox.alert('Load error', 'Error loading menu.');
             },
             scope: this
         });

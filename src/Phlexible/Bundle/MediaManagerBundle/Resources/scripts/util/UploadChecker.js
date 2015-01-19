@@ -37,6 +37,10 @@ Ext.define('Phlexible.mediamanager.UploadChecker', {
         return this.running;
     },
 
+    count: function() {
+        return this.current.total;
+    },
+
     getCurrent: function() {
         return this.current;
     },
@@ -55,7 +59,7 @@ Ext.define('Phlexible.mediamanager.UploadChecker', {
 
         var data = Ext.decode(response.responseText);
 
-        if (!data || !data.temp_id) {
+        if (!data || !data.tempId) {
             this.running = false;
             if (this.replace) {
                 this.replace.hide();
@@ -91,23 +95,27 @@ Ext.define('Phlexible.mediamanager.UploadChecker', {
                 this.wizard.hide();
             }
             if (!this.replace) {
-                this.replace = new Phlexible.mediamanager.FileReplaceWindow({
+                this.replace = Ext.create('Phlexible.mediamanager.FileReplaceWindow', {
                     uploadChecker: this,
                     listeners: {
                         save: function(action, all) {
                             var file = this.getCurrent(),
                                 params = {
                                     all: all ? 1 : 0,
-                                    temp_key: file.temp_key,
-                                    temp_id: file.temp_id,
-                                    'do': action
+                                    tempKey: file.tempKey,
+                                    tempId: file.tempId,
+                                    action: action
                                 };
 
                             var request = {
                                 url: Phlexible.Router.generate('mediamanager_upload_save'),
                                 params: params,
                                 success: function (response) {
-                                    this.fireEvent('reload');
+                                    var data = Ext.decode(response.responseText);
+
+                                    if (data.data.action !== 'discard') {
+                                        this.fireEvent('reload');
+                                    }
                                     this.next();
                                 },
                                 failure: function (response) {

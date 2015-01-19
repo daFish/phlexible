@@ -4,7 +4,7 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
 
     title: Phlexible.mediamanager.Strings.versions,
     strings: Phlexible.mediamanager.Strings,
-    iconCls: 'p-mediamanager-version-icon',
+    iconCls: Phlexible.Icon.get('edit-number'),
     layout: 'fit',
     autoScroll: true,
 
@@ -23,25 +23,52 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
      */
     initComponent: function () {
         this.initMyTemplates();
+        this.initMyStore();
         this.initMyItems();
         this.initMyContextMenu();
-        this.initMyListeners();
 
         this.callParent(arguments);
     },
 
-    initMyContextMenu: function() {
-        this.contextMenu = new Ext.menu.Menu({
-            items: [
-                {
-                    text: this.strings.download_file_version,
-                    iconCls: 'p-mediamanager-download-icon',
-                    handler: function (btn) {
-                        this.fireEvent('versionDownload', btn.parentMenu.fileId, btn.parentMenu.fileVersion);
-                    },
-                    scope: this
-                }
-            ]
+    onDestroy: function() {
+        this.contextMenu.destroy();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.mediamanager.FileVersion',
+            data: this.fileVersions || [],
+            proxy: {
+                type: 'ajax',
+                url: '',
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'detail',
+                    idProperty: 'uid',
+                    totalProperty: 'count'
+                },
+                extraParams: this.storeExtraParams
+            },
+            listeners: {
+                load: function (store, records) {
+                    if (!records.length) {
+                        this.setTitle(this.strings.versions);
+                    }
+                    else {
+                        this.setTitle(this.strings.versions + ' [' + records.length + ']');
+                        if (this.fileVersion) {
+                            var index = store.find('version', this.fileVersion);
+                            this.getComponent(0).select(index);
+                        } else {
+                            this.getComponent(0).select(0);
+                        }
+                    }
+                },
+                scope: this
+            }
         });
     },
 
@@ -52,7 +79,7 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
             '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.id, templateKey: \"_mm_medium\", fileVersion: values.version})]}" width="48" height="48"></div>',
             '<div class="text">',
             '<span><b qtip="{name}">{[values.name.shorten(25)]}</b></span><br />',
-            '<span>[v{version}] {[Phlexible.documenttypes.DocumentTypes.getText(values.document_type_key)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
+            //'<span>[v{version}] {[Phlexible.documenttypes.DocumentTypes.getText(values.document_type_key)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
             //'<span>Create User: {create_user_id}</span><br />',
             '<span>{create_time}</span><br />',
             '</div>',
@@ -66,53 +93,12 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
         this.items = [
             {
                 xtype: 'dataview',
-                cls: 'p-mediamanager-versions-view',
-                store: Ext.create('Ext.data.JsonStore', {
-                    fields: [
-                        'id',
-                        'folderId',
-                        'name',
-                        'size',
-                        'version',
-                        'documentTypeKey',
-                        'assetType',
-                        'createUserId',
-                        'createTime'
-                    ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '',
-                        simpleSortMode: true,
-                        reader: {
-                            type: 'json',
-                            rootProperty: 'detail',
-                            idProperty: 'uid',
-                            totalProperty: 'count'
-                        },
-                        extraParams: this.storeExtraParams
-                    },
-                    listeners: {
-                        load: function (store, records) {
-                            if (!records.length) {
-                                this.setTitle(this.strings.versions);
-                            }
-                            else {
-                                this.setTitle(this.strings.versions + ' [' + records.length + ']');
-                                if (this.fileVersion) {
-                                    var index = store.find('version', this.fileVersion);
-                                    this.getComponent(0).select(index);
-                                } else {
-                                    this.getComponent(0).select(0);
-                                }
-                            }
-                        },
-                        scope: this
-                    }
-                }),
+                cls: 'p-mediamanager-file-versions',
+                store: this.store,
                 tpl: this.fileVersionsTpl,
                 autoHeight: true,
                 singleSelect: true,
-                overClass: 'x-view-over',
+                overItemCls: 'x-view-over',
                 itemSelector: 'div.version-wrap',
                 emptyText: 'No versions to display',
                 listeners: {
@@ -125,14 +111,25 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
         ];
     },
 
-    initMyListeners: function() {
-        this.on({
-            destroy: function () {
-                this.contextMenu.destroy();
-                delete this.contextMenu;
-            },
-            scope: this
+    initMyContextMenu: function() {
+        this.contextMenu = Ext.create('Ext.menu.Menu', {
+            items: [
+                {
+                    text: this.strings.download_file_version,
+                    iconCls: Phlexible.Icon.get('drive-download'),
+                    handler: function (btn) {
+                        this.fireEvent('versionDownload', btn.parentMenu.fileId, btn.parentMenu.fileVersion);
+                    },
+                    scope: this
+                }
+            ]
         });
+    },
+
+    onDestroy: function() {
+        this.contextMenu.destroy();
+
+        this.callParent(arguments);
     },
 
     versionSelect: function (view, rowIndex, node, e) {
@@ -140,15 +137,11 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
 
         var record = view.store.getAt(rowIndex);
 
-        this.fireEvent(
-            'versionSelect',
-            r.data.id,
-            r.data.version,
-            r.data.name,
-            r.data.folderId,
-            r.data.documenttypeKey,
-            r.data.asset_type
-        );
+        this.fireEvent('versionSelect', record);
+    },
+
+    loadVersions: function(versions) {
+        this.getComponent(0).getStore().loadData(versions);
     },
 
     loadFile: function (fileId, fileVersion) {
