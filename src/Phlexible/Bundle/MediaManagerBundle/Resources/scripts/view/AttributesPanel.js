@@ -53,12 +53,17 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
 
     initMyTemplates: function() {
         this.detailsTpl = new Ext.XTemplate(
-            '<div style="padding: 4px;">',
-            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.version]}:</div> {[values.version]}</div>',
-            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {[values.mediaTypeTitle]}</div>',
-            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
-            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {[values.create_user]}</div>',
-            '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
+            '<div>',
+            '<div style="color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div>',
+            '<div>{[Ext.String.ellipsis(values.name, 40)]}</div>',
+            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.type]}:</div>',
+            '<div>{mediaType}</div>',
+            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.size]}:</div>',
+            '<div>{[Phlexible.Format.size(values.size)]}</div>',
+            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.created_by]}:</div>',
+            '<div>{createUser}</div>',
+            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.create_date]}:</div>',
+            '<div>{[Phlexible.Format.date(values.createTime)]}</div>',
             '</div>'
         )
     },
