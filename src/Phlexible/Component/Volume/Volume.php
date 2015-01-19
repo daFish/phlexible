@@ -374,7 +374,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         }
 
         $file
-            ->setFolderId($targetFolder->getId())
+            ->setFolder($targetFolder)
             ->setModifiedAt(new \DateTime())
             ->setModifyUserId($userId);
 
@@ -405,7 +405,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setCreateUserId($userId)
             ->setModifiedAt($file->getCreatedAt())
             ->setModifyUserId($file->getCreateUserId())
-            ->setFolderId($targetFolder->getId());
+            ->setFolder($targetFolder);
 
         $this->driver->validateCopyFile($file);
 

@@ -17,7 +17,7 @@ Ext.define('Phlexible.mediamanager.FilesGrid', {
      *
      * @event fileChange
      * @param {Phlexible.mediamanager.FilesGrid} grid
-     * @param {Phlexible.mediamanager.model.File} file
+     * @param {Phlexible.mediamanager.model.File[]} selection
      */
 
     /**

@@ -44,7 +44,6 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
             },
             listeners: {
                 beforedrop: this.onBeforeFileDrop,
-                drop: this.onFileDrop,
                 scope: this
             }
         };
@@ -112,12 +111,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
             },
             itemmove: this.onFolderMove,
             beforeitemmove: this.onBeforeFolderMove,
-            selectionchange: function (grid, selected) {
-                if (!selected.length) {
-                    return;
-                }
-                this.onClick(selected[0]);
-            },
+            selectionchange: this.onSelectionChange,
             scope: this
         });
     },
@@ -222,8 +216,15 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
     },
 
-    onClick: function (node) {
+    folderChange: function(node) {
         this.fireEvent('folderChange', node);
+    },
+
+    onSelectionChange: function (grid, selected) {
+        if (!selected.length) {
+            return;
+        }
+        this.folderChange(selected[0]);
     },
 
     onCreateFolder: function () {
@@ -237,7 +238,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         this.store.load({
             node: folder,
             callback: function () {
-                this.onClick(folder);
+                this.folderChange(folder);
             },
             scope: this
         });
@@ -254,7 +255,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         this.store.load({
             node: folder,
             callback: function () {
-                this.onClick(folder);
+                this.folderChange(folder);
             },
             scope: this
         });
@@ -282,15 +283,12 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         folder.collapse();
     },
 
-    onBeforeFileDrop: function() {
+    onBeforeFileDrop: function(node, data, overModel, dropPosition, dropHandlers, eOpts) {
+        dropHandlers.wait = true;
+
+        this.fireEvent('fileMove', overModel, data.records);
+
         return true;
-    },
-
-    onFileDrop: function() {
-        console.log(arguments);
-        debugger;
-
-        return false;
     },
 
     onBeforeFolderMove: function (node, oldParent, newParent) {
@@ -330,12 +328,12 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
             params: {
                 targetId: targetId
             },
-            success: this.onMoveSuccess,
+            success: this.onFolderMoveSuccess,
             scope: this
         });
     },
 
-    onMoveSuccess: function (response) {
+    onFolderMoveSuccess: function (response) {
         var data = Ext.decode(response.responseText);
 
         if (data.success) {
@@ -451,7 +449,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
                     if (!node) return;
                     node.select();
                     node.attributes.children = false;
-                    //this.onClick(node);
+                    //this.folderChange(node);
                     node.reload();
                 } else {
                     Ext.MessageBox.alert('Status', 'Delete failed: ' + data.msg);
@@ -514,7 +512,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         /*
         if (!record.isSelected()) {
             record.select();
-            //this.onClick(record);
+            //this.folderChange(record);
         }
         */
 

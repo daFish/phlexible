@@ -51,22 +51,6 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
             this.hideFilter = true;
         }
 
-        /*
-         this.searchPanel = new Phlexible.mediamanager.FilesSearchPanel({
-         height: 200,
-         collapsible: true,
-         collapsed: true,
-         border: true,
-         bodyStyle: 'padding: 3px;',
-         listeners: {
-         xsearch: {
-         fn: this.onSearch,
-         scope: this
-         }
-         }
-         });
-         */
-
         this.initMyItems();
         this.initMyDockedItems();
 
@@ -91,35 +75,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                 },
                 reload: this.onReload,
                 folderChange: this.onFolderChange,
-                nodedragover: function (e) {
-                    if (e.target.id == 'root') {
-                        // root node can not be dragged
-                        return false;
-                    }
-                    if (e.data.node) {
-                        // tree -> tree move (folder -> folder)
-                        if (e.target.id == 'trash') {
-                            console.warn('id is trash')
-                            return false;
-                        }
-                        if (e.target.id == e.data.node.parentNode.id) {
-                            console.log(e.target.id == e.data.node.parentNode.id, e.target.id, e.data.node.parentNode.id, e.target, e.data.node.parentNode);
-                            return false;
-                        }
-                    }
-                    else {
-                        // list -> tree move (file -> folder)
-                        var selections = e.data.selections;
-
-                        for (var i = 0; i < selections.length; i++) {
-                            if (selections[i].data.folderId == e.target.id) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                },
-                beforenodedrop: this.onMove,
+                fileMove: this.onMoveFile,
                 scope: this
             }
         },{
@@ -851,24 +807,18 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
         this.getFolderTree().showCreateFolderWindow();
     },
 
-    onMove: function (e) {
-        if (e.data.selections) {
-            this.onMoveFile(e);
-        }
-    },
-
-    onMoveFile: function (e) {
-        var fileIDs = [];
-        for (var i = 0; i < e.data.selections.length; i++) {
-            fileIDs.push(e.data.selections[i].data.id);
-        }
+    onMoveFile: function (folder, files) {
+        var fileIds = [];
+        Ext.each(files, function(file) {
+            fileIds.push(file.get('id'));
+        });
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_file_move'),
-            method: 'post',
+            method: 'POST',
             params: {
-                folderID: e.target.id,
-                fileIDs: Ext.encode(fileIDs)
+                folderId: folder.get('id'),
+                fileId: fileIds.join(',')
             },
             success: this.onMoveFileSuccess,
             scope: this

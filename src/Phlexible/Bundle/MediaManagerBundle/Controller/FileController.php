@@ -9,8 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\Volume\Exception\AlreadyExistsException;
 use Phlexible\Component\Volume\Exception\NotFoundException;
 use Phlexible\Component\Volume\VolumeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -308,7 +307,7 @@ class FileController extends Controller
     public function moveAction(Request $request)
     {
         $folderId = $request->get('folderId');
-        $fileIds = json_decode($request->get('fileIds'));
+        $fileIds = explode(',', $request->get('fileId'));
 
         $volume = $this->getVolumeByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
@@ -324,7 +323,7 @@ class FileController extends Controller
             }
         }
 
-        return new ResultResponse(true, 'File(s) moved.', $skippedFiles);
+        return new ResultResponse(true, 'File(s) moved.', array('skipped' => $skippedFiles));
     }
 
     /**
