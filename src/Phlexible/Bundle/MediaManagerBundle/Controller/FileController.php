@@ -207,7 +207,7 @@ class FileController extends Controller
      */
     public function hideAction(Request $request, $fileId)
     {
-        $fileId = $request->get('file_id');
+        $fileId = $request->get('fileId');
         $fileIds = explode(',', $fileId);
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');

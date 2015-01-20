@@ -123,8 +123,8 @@ class MetaSearch implements SearchProviderInterface
                 [
                     'xtype'      => 'Phlexible.mediamanager.menuhandle.MediaHandle',
                     'parameters' => [
-                        'start_file_id'     => $file->getId(),
-                        'start_folder_path' => $folderPath
+                        'startFile_id'    => $file->getId(),
+                        'startFolderPath' => $folderPath
                     ],
                 ]
             );

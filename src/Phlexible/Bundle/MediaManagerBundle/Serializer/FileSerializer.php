@@ -136,9 +136,9 @@ class FileSerializer
             foreach ($cacheItems as $cacheItem) {
                 if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                     $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media', [
-                        'file_id'      => $file->getId(),
-                        'file_version' => $file->getVersion(),
-                        'template_key' => $cacheItem->getTemplateKey(),
+                        'fileId'      => $file->getId(),
+                        'fileVersion' => $file->getVersion(),
+                        'templateKey' => $cacheItem->getTemplateKey(),
                     ]);
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media_delegate', [

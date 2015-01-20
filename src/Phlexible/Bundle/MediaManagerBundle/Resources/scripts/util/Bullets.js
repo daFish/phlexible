@@ -28,12 +28,10 @@ Ext.define('Phlexible.mediamanager.util.Bullets', {
         var bullets = '';
         bullets += this.presentBullet(values);
         bullets += this.usageBullet(values);
-        this.bullets = bullets;
+        return bullets;
     },
-    getWithTrailingSpace: function (value) {
-        this.buildBullets(value);
-        var bullets = this.bullets;
-        this.bullets = '';
+    getWithTrailingSpace: function (values) {
+        var bullets = this.buildBullets(values);
         if (bullets) {
             bullets += ' ';
         }

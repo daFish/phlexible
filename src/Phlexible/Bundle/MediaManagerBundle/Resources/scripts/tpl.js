@@ -40,14 +40,14 @@ Phlexible.mediamanager.templates.NameString =
 
 Phlexible.mediamanager.templates.DragSingle = new Ext.XTemplate(
     '<div class="p-dragsingleThumbnails">',
-    '<img class="thumb" src="{[Phlexible.Router.generate(\"mediamanager_media\", {file_id: values[0].data.id, template_key: \"_mm_large\"})]}" />',
+    '<img class="thumb" src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values[0].data.id, templateKey: \"_mm_large\"})]}" />',
     '</div>'
 );
 
 Phlexible.mediamanager.templates.DragMulti = new Ext.XTemplate(
     '<div class="p-dragmultiThumbnails">',
     '<tpl for="values">',
-    '<img class="thumb" src="{[Phlexible.Router.generate(\"mediamanager_media\", {file_id: values.data.id, template_key: \"_mm_medium\"})]}" />',
+    '<img class="thumb" src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.data.id, templateKey: \"_mm_medium\"})]}" />',
     '</tpl>',
     '</div>'
 );

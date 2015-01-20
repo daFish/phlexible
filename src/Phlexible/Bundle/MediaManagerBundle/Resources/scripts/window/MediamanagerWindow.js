@@ -37,8 +37,8 @@ Ext.define('Phlexible.mediamanager.MediamanagerWindow', {
                 mode: this.mode,
                 params: this.params,
                 listeners: {
-                    fileSelect: function (file_id, file_version, file_name, folder_id) {
-                        this.fireEvent('fileSelectWindow', this, file_id, file_version, file_name, folder_id);
+                    fileSelect: function (fileId, fileVersion, fileName, folderId) {
+                        this.fireEvent('fileSelectWindow', this, fileId, fileVersion, fileName, folderId);
                     },
                     scope: this
                 }

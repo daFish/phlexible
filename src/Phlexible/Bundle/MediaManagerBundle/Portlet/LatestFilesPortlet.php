@@ -117,15 +117,15 @@ class LatestFilesPortlet extends Portlet
                 }
 
                 $data[] = [
-                    'id'                => sprintf('%s___%s', $file->getId(), $file->getVersion()),
-                    'file_id'           => $file->getId(),
-                    'file_version'      => $file->getVersion(),
-                    'folder_id'         => $file->getFolderId(),
-                    'folder_path'       => $folder->getIdPath(),
-                    'document_type_key' => strtolower($file->getMediaType()),
-                    'time'              => $file->getCreatedAt()->format('U'),
-                    'title'             => $file->getName(),
-                    'cache'             => $cacheStatus
+                    'id'          => sprintf('%s___%s', $file->getId(), $file->getVersion()),
+                    'fileId'      => $file->getId(),
+                    'fileVersion' => $file->getVersion(),
+                    'folderId'    => $file->getFolderId(),
+                    'folderPath'  => $folder->getIdPath(),
+                    'mediaType'   => strtolower($file->getMediaType()),
+                    'time'        => $file->getCreatedAt()->format('U'),
+                    'title'       => $file->getName(),
+                    'cache'       => $cacheStatus
                 ];
             }
         } catch (\Exception $e) {

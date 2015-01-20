@@ -35,9 +35,9 @@ class MediaController extends Controller
      */
     public function mediaAction(Request $request)
     {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
-        $templateKey = $request->get('template_key');
+        $fileId = $request->get('fileId');
+        $fileVersion = $request->get('fileVersion', 1);
+        $templateKey = $request->get('templateKey');
 
         $cacheManager = $this->get('phlexible_media_cache.cache_manager');
         $storageManager = $this->get('phlexible_media_cache.storage_manager');

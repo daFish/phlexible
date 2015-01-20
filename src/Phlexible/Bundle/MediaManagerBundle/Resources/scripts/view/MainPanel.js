@@ -87,7 +87,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
             viewMode: this.params.file_view || false,
             mediaCategory: this.params.mediaCategory || false,
             mediaTypes: this.params.mediaTypes || false,
-            start_file_id: this.params.start_file_id || false,
+            startFileId: this.params.startFileId || false,
             listeners: {
                 fileChange: this.onFileChange,
                 rowdblclick: this.onFileDblClick,
@@ -904,14 +904,14 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
 
     onDownloadFiles: function () {
         var selections = this.getFilesGrid().getSelectionModel().getSelections();
-        var file_ids = [];
+        var fileIds = [];
         for (var i = 0; i < selections.length; i++) {
-            file_ids.push(selections[i].data.id);
+            fileIds.push(selections[i].data.id);
         }
         Ext.Ajax.request({
             url: Phlexible.Router.generate('mediamanager_download_file_zip'),
             params: {
-                data: Ext.encode(file_ids)
+                data: Ext.encode(fileIds)
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
@@ -926,15 +926,15 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
         });
     },
 
-    onDownloadFile: function (file_id, file_version) {
-        if (!file_id) {
-            file_id = this.getFilesGrid().getSelectionModel().getSelected().data.id;
+    onDownloadFile: function (fileId, fileVersion) {
+        if (!fileId) {
+            fileId = this.getFilesGrid().getSelectionModel().getSelected().data.id;
         }
 
-        var href = Phlexible.Router.generate('mediamanager_download_file', {id: file_id});
+        var href = Phlexible.Router.generate('mediamanager_download_file', {id: fileId});
 
-        if (file_version) {
-            href += '/' + file_version;
+        if (fileVersion) {
+            href += '/' + fileVersion;
         }
 
         document.location.href = href;

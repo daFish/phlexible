@@ -110,8 +110,8 @@ class FileSearch implements SearchProviderInterface
                 [
                     'xtype'      => 'Phlexible.mediamanager.menuhandle.MediaHandle',
                     'parameters' => [
-                        'start_file_id'     => $file->getId(),
-                        'start_folder_path' => $folderPath
+                        'startFileId'     => $file->getId(),
+                        'startFolderPath' => $folderPath
                     ],
                 ]
             );

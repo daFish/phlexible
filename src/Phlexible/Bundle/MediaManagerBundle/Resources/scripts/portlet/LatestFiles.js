@@ -69,8 +69,8 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
                             'Media_manager_MediamanagerPanel',
                             Phlexible.mediamanager.MediamanagerPanel,
                             {
-                                start_file_id: r.get('file_id'),
-                                start_folder_path: r.get('folder_path')
+                                startFileId: r.get('fileId'),
+                                startFolderPath: r.get('folderPath')
                             }
                         );
                     },
@@ -127,7 +127,7 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
         return new Ext.XTemplate(
             '<tpl for=".">',
             '<div class="thumb-wrap" id="media_last_{id}">',
-            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {file_id: values.file_id, template_key: \"_mm_large\", file_version: values.file_version})]}<tpl if="!cache._mm_large">?waiting</tpl><tpl if="cache._mm_large">?{[values.cache._mm_large]}</tpl>" width="96" height="96" title="{title}" /></div>',
+            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.fileId, templateKey: \"_mm_large\", fileVersion: values.fileVersion})]}<tpl if="!cache._mm_large">?waiting</tpl><tpl if="cache._mm_large">?{[values.cache._mm_large]}</tpl>" width="96" height="96" title="{title}" /></div>',
             '<span>{[values.title.shorten(20)]}</span>',
             '<span class="thumb-date">{time:date("Y-m-d H:i:s")}</span>',
             '</div>',
@@ -140,7 +140,7 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
         return new Ext.XTemplate(
             '<tpl for=".">',
             '<div class="thumb-wrap" id="media_last_{id}">',
-            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {file_id: values.file_id, template_key: \"_mm_small\", file_version: values.file_version})]}<tpl if="!cache._mm_small">?waiting</tpl><tpl if="cache._mm_small">?{[values.cache._mm_small]}</tpl>" width="32" height="32" /></div>',
+            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.fileId, templateKey: \"_mm_small\", fileVersion: values.fileVersion})]}<tpl if="!cache._mm_small">?waiting</tpl><tpl if="cache._mm_small">?{[values.cache._mm_small]}</tpl>" width="32" height="32" /></div>',
             '<div class="text">',
             '<span>{[values.title.shorten(20)]}</span>',
             '<span class="thumb-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.mediaType)]}</span>',

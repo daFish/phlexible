@@ -124,7 +124,7 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
             name: file.oldName,
             type: file.oldType,
             size: file.oldSize,
-            src: Phlexible.Router.generate('mediamanager_media', {file_id: file.oldId, template_key: '_mm_medium'})
+            src: Phlexible.Router.generate('mediamanager_media', {fileId: file.oldId, templateKey: '_mm_medium'})
         });
 
         if (!file.versions) {
