@@ -4,8 +4,9 @@ Ext.define('Phlexible.tasks.portlet.MyTasks', {
 
     bodyStyle: 'padding: 5px 5px 5px 5px',
     iconCls: 'p-task-portlet-icon',
-    strings: Phlexible.tasks.Strings,
     title: Phlexible.tasks.Strings.my_tasks,
+
+    noActiveTasksText: Phlexible.tasks.Strings.no_active_tasks,
 
     initComponent: function () {
 
@@ -28,7 +29,7 @@ Ext.define('Phlexible.tasks.portlet.MyTasks', {
                 itemSelector: 'div.portlet-task',
                 style: 'overflow: auto',
                 singleSelect: true,
-                emptyText: this.strings.no_active_tasks,
+                emptyText: this.noActiveTasksText,
                 deferEmptyText: false,
                 autoHeight: true,
                 store: this.store,

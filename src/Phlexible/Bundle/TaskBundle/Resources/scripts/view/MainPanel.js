@@ -3,7 +3,6 @@ Ext.define('Phlexible.tasks.MainPanel', {
     alias: 'widget.tasks-main',
 
     title: Phlexible.tasks.Strings.tasks,
-    strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-main',
     iconCls: Phlexible.Icon.get('clipboard-task'),
     layout: 'border',
@@ -11,11 +10,14 @@ Ext.define('Phlexible.tasks.MainPanel', {
 
     params: {},
 
+    commentsText: Phlexible.tasks.Strings.comments,
+    transitionsText: Phlexible.tasks.Strings.transitions,
+
     loadParams: function (params) {
         if (params.id) {
             this.getComponent(1).getComponent(0).taskId = params.id;
-            this.getComponent(0).onReset();
-            this.getComponent(0).updateFilter();
+            this.getComponent('filter').onReset();
+            this.getComponent('filter').updateFilter();
         }
     },
 
@@ -30,6 +32,7 @@ Ext.define('Phlexible.tasks.MainPanel', {
         this.items = [
             {
                 xtype: 'tasks-filter',
+                itemdId: 'filter',
                 region: 'west',
                 width: 200,
                 padding: '5 0 5 5',
@@ -119,11 +122,11 @@ Ext.define('Phlexible.tasks.MainPanel', {
                         activeTab: 0,
                         deferredRender: false,
                         items: [{
-                            title: this.strings.comments,
+                            title: this.commentsText,
                             iconCls: Phlexible.Icon.get('balloon'),
                             html: '&nbsp;'
                         },{
-                            title: this.strings.transitions,
+                            title: this.transitionsText,
                             iconCls: Phlexible.Icon.get('arrow-switch'),
                             html: '&nbsp;'
                         }]

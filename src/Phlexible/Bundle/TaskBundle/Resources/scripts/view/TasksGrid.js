@@ -2,11 +2,22 @@ Ext.define('Phlexible.tasks.TasksGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.tasks-list',
 
-    strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-list',
     deferEmptyText: false,
     emptyText: Phlexible.tasks.Strings.no_tasks_found,
     loadMask: true,
+
+    idText: Phlexible.tasks.Strings.id,
+    typeText: Phlexible.tasks.Strings.type,
+    componentText: Phlexible.tasks.Strings.component,
+    statusText: Phlexible.tasks.Strings.status,
+    titleText: Phlexible.tasks.Strings.title,
+    taskText: Phlexible.tasks.Strings.task,
+    descriptionText: Phlexible.tasks.Strings.description,
+    assignedToText: Phlexible.tasks.Strings.assigned_to,
+    createUserText: Phlexible.tasks.Strings.create_user,
+    createDateText: Phlexible.tasks.Strings.create_date,
+    reloadText: Phlexible.tasks.Strings.reload,
 
     initComponent: function () {
         this.initMyStore();
@@ -54,50 +65,50 @@ Ext.define('Phlexible.tasks.TasksGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.id,
+                header: this.idText,
                 dataIndex: 'id',
                 width: 220,
                 hidden: true
             }, {
-                header: this.strings.type,
+                header: this.typeText,
                 dataIndex: 'type',
                 width: 200,
                 hidden: true
             }, {
-                header: this.strings.component,
+                header: this.componentText,
                 dataIndex: 'component',
                 width: 100,
                 hidden: true
             }, {
-                header: this.strings.status,
+                header: this.statusText,
                 dataIndex: 'status',
                 width: 120,
                 renderer: function (s) {
                     return Phlexible.inlineIcon('p-task-status_' + s + '-icon') + ' ' + Phlexible.tasks.Strings[s];
                 }
             }, {
-                header: this.strings.title,
+                header: this.titleText,
                 dataIndex: 'title',
                 width: 140
             }, {
-                header: this.strings.task,
+                header: this.taskText,
                 dataIndex: 'text',
                 width: 150
             }, {
-                header: this.strings.description,
+                header: this.descriptionText,
                 dataIndex: 'description',
                 width: 150,
                 flex: 1
             }, {
-                header: this.strings.assigned_to,
+                header: this.assignedToText,
                 dataIndex: 'assigned_user',
                 width: 100
             }, {
-                header: this.strings.create_user,
+                header: this.createUserText,
                 dataIndex: 'create_user',
                 width: 100
             }, {
-                header: this.strings.create_date,
+                header: this.createDateText,
                 dataIndex: 'create_date',
                 width: 120,
                 hidden: true
@@ -109,7 +120,7 @@ Ext.define('Phlexible.tasks.TasksGrid', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: this.strings.reload,
+                text: this.reloadText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
                 handler: function () {
                     this.store.reload();

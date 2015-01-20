@@ -2,7 +2,6 @@ Ext.define('Phlexible.tasks.CommentWindow', {
     extend: 'Ext.window.Window',
 
     title: Phlexible.tasks.Strings.comment,
-    strings: Phlexible.tasks.Strings,
     width: 400,
     minWidth: 400,
     height: 270,
@@ -11,7 +10,10 @@ Ext.define('Phlexible.tasks.CommentWindow', {
     modal: true,
 
     payload: {},
-    component_filter: null,
+    componentFilter: null,
+
+    cancelText: Phlexible.tasks.Strings.cancel,
+    commentText: Phlexible.tasks.Strings.comment,
 
     initComponent: function () {
         this.initMyItems();
@@ -66,12 +68,12 @@ Ext.define('Phlexible.tasks.CommentWindow', {
             ui: 'footer',
             items: [
                 {
-                    text: this.strings.cancel,
+                    text: this.cancelText,
                     handler: this.close,
                     scope: this
                 },
                 {
-                    text: this.strings.comment,
+                    text: this.commentText,
                     handler: this.comment,
                     formBind: true,
                     scope: this

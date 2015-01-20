@@ -1,11 +1,10 @@
-Ext.provide('Phlexible.mediacache.portlet.CacheStatus');
+Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
+    extend: 'Portal.view.Portlet',
+    alias: 'widget.mediacache-portlet-cachestatus',
 
-Ext.require('Ext.ux.Portlet');
-
-Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
     title: Phlexible.mediacache.Strings.cache_status,
     strings: Phlexible.mediacache.Strings,
-    iconCls: 'p-mediacache-portlet-icon',
+    iconCls: Phlexible.Icon.get('images-stack'),
     bodyStyle: 'padding: 5px 5px 5px 5px',
 
     firstData: null,
@@ -23,7 +22,7 @@ Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
             this.html = '<span id="media_cache_status">' + this.strings.cache_status_empty + '</span>';
         }
 
-        Phlexible.mediacache.portlet.CacheStatus.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     updateData: function (itemsLeft) {
@@ -59,5 +58,3 @@ Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
         }
     }
 });
-
-Ext.reg('mediacache-portlet-cachestatus', Phlexible.mediacache.portlet.CacheStatus);

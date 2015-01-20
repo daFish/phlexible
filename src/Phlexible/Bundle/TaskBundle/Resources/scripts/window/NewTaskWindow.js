@@ -2,7 +2,6 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
     extend: 'Ext.window.Window',
 
     title: Phlexible.tasks.Strings.new_task,
-    strings: Phlexible.tasks.Strings,
     iconCls: 'p-task-component-icon',
     width: 400,
     minWidth: 400,
@@ -13,6 +12,14 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
 
     payload: {},
     component_filter: null,
+
+    taskText: Phlexible.tasks.Strings.task,
+    taskEmptyText: Phlexible.tasks.Strings.please_choose,
+    recipientText: Phlexible.tasks.Strings.recipient,
+    recipientEmptyText: Phlexible.tasks.Strings.please_choose,
+    commentText: Phlexible.tasks.Strings.comment,
+    cancelText: Phlexible.tasks.Strings.cancel,
+    sendText: Phlexible.tasks.Strings.send,
 
     initComponent: function () {
         this.initMyItems();
@@ -31,11 +38,11 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
                 items: [
                     {
                         xtype: 'combo',
-                        fieldLabel: this.strings.task,
+                        fieldLabel: this.taskText,
                         hiddenName: 'task',
                         anchor: '100%',
                         allowBlank: false,
-                        emptyText: this.strings.please_choose,
+                        emptyText: this.taskEmptyText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'task'],
                             proxy: {
@@ -73,12 +80,12 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
                     },
                     {
                         xtype: 'combo',
-                        fieldLabel: this.strings.recipient,
+                        fieldLabel: this.recipientText,
                         hiddenName: 'recipient',
                         anchor: '100%',
                         allowBlank: false,
                         disabled: true,
-                        emptyText: this.strings.please_choose,
+                        emptyText: this.recipientEmptyText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['uid', 'username'],
                             proxy: {
@@ -106,7 +113,7 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
                         anchor: '100%',
                         height: 140,
                         allowBlank: false,
-                        fieldLabel: this.strings.comment,
+                        fieldLabel: this.commentText,
                         name: 'comment'
                     }
                 ],
@@ -139,12 +146,12 @@ Ext.define('Phlexible.tasks.NewTaskWindow', {
             ui: 'footer',
             items: [
                 {
-                    text: this.strings.cancel,
+                    text: this.cancelText,
                     handler: this.close,
                     scope: this
                 },
                 {
-                    text: this.strings.send,
+                    text: this.sendText,
                     handler: this.onSend,
                     formBind: true,
                     scope: this

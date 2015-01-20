@@ -4,7 +4,7 @@ Ext.define('Phlexible.mediatemplates.MainPanel', {
 
     title: Phlexible.mediatemplates.Strings.mediatemplates,
     strings: Phlexible.mediatemplates.Strings,
-    iconCls: Phlexible.Icon.get('document-template'),
+    iconCls: Phlexible.Icon.get('image-select'),
     layout: 'border',
     border: false,
 

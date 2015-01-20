@@ -2,7 +2,6 @@ Ext.define('Phlexible.tasks.AssignWindow', {
     extend: 'Ext.window.Window',
 
     title: Phlexible.tasks.Strings.assign,
-    strings: Phlexible.tasks.Strings,
     width: 400,
     minWidth: 400,
     height: 270,
@@ -20,6 +19,12 @@ Ext.define('Phlexible.tasks.AssignWindow', {
         this.callParent(arguments);
     },
 
+    recipientText: Phlexible.tasks.Strings.recipient,
+    recipientEmptyText: Phlexible.tasks.Strings.please_choose,
+    commentText: Phlexible.tasks.Strings.comment,
+    cancelText: Phlexible.tasks.Strings.cancel,
+    assignText: Phlexible.tasks.Strings.assign,
+
     initMyItems: function() {
         this.items = [
             {
@@ -30,11 +35,11 @@ Ext.define('Phlexible.tasks.AssignWindow', {
                 items: [
                     {
                         xtype: 'combo',
-                        fieldLabel: this.strings.recipient,
+                        fieldLabel: this.recipientText,
                         hiddenName: 'recipient',
                         anchor: '100%',
                         allowBlank: false,
-                        emptyText: this.strings.please_choose,
+                        emptyText: this.recipientEmptyText,
                         store: Ext.create('Ext.data.JsonStore', {
                             fields: ['uid', 'username'],
                             proxy: {
@@ -63,7 +68,7 @@ Ext.define('Phlexible.tasks.AssignWindow', {
                         anchor: '100%',
                         height: 140,
                         allowBlank: false,
-                        fieldLabel: this.strings.comment,
+                        fieldLabel: this.commentText,
                         name: 'comment'
                     }
                 ],
@@ -96,12 +101,12 @@ Ext.define('Phlexible.tasks.AssignWindow', {
             ui: 'footer',
             items: [
                 {
-                    text: this.strings.cancel,
+                    text: this.cancelText,
                     handler: this.close,
                     scope: this
                 },
                 {
-                    text: this.strings.assign,
+                    text: this.assignText,
                     handler: this.assign,
                     formBind: true,
                     scope: this
