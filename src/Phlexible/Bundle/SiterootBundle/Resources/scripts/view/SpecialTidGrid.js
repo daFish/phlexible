@@ -1,11 +1,19 @@
-Ext.define('Phlexible.siteroots.SpecialTidGrid', {
+Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroots-specialtids',
+    alias: 'widget.siteroot-specialtids',
 
-    title: Phlexible.siteroots.Strings.special_tids,
-    strings: Phlexible.siteroots.Strings,
+    title: '_SpecialTidGrid',
     border: false,
-    emptyText: Phlexible.siteroots.Strings.no_special_tids,
+    emptyText: '_emptyText',
+
+    keyText: '_keyText',
+    languageText: '_languageText',
+    tidText: '_tidText',
+    deleteText: '_deleteText',
+    removeText: '_removeText',
+    removeDescriptionText: '_removeDescriptionText',
+    addSpecialTidText: '_addSpecialTidText',
+    emptyKeyText: '_emptyKeyText',
 
     initComponent: function () {
         this.initMyStore();
@@ -17,7 +25,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroots.model.SpecialTid',
+            model: 'Phlexible.siteroot.model.SpecialTid',
             sorters: [{
                 property: 'key',
                 direction: 'asc'
@@ -28,7 +36,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.key,
+                header: this.keyText,
                 dataIndex: 'key',
                 flex: 1,
                 sortable: true,
@@ -38,7 +46,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
                 }
             },
             {
-                header: this.strings.language,
+                header: this.languageText,
                 dataIndex: 'language',
                 sortable: true,
                 renderer: this.renderLanguage,
@@ -61,7 +69,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
                 }
             },
             {
-                header: this.strings.tid,
+                header: this.tidText,
                 dataIndex: 'tid',
                 width: 200,
                 sortable: true,
@@ -75,11 +83,11 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
                 items: [
                     {
                         iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                        tooltip: this.strings.delete,
+                        tooltip: this.removeText,
                         handler: function (grid, rowIndex, colIndex) {
                             var r = grid.store.getAt(rowIndex);
 
-                            Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
+                            Ext.MessageBox.confirm(this.removeText, this.removeDescriptionText, function (btn) {
                                 if (btn === 'yes') {
                                     this.onDeleteSpecialTid(r);
                                 }
@@ -97,7 +105,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: this.strings.add_specialtid,
+                text: this.addSpecialTidText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddSpecialTid,
                 scope: this
@@ -111,7 +119,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
     onAddSpecialTid: function () {
 
         // create new empty record
-        var newRecord = new Phlexible.siteroots.model.SpecialTid({
+        var newRecord = new Phlexible.siteroot.model.SpecialTid({
             id: '',
             siteroot_id: this.siterootId,
             key: '',
@@ -201,7 +209,7 @@ Ext.define('Phlexible.siteroots.SpecialTidGrid', {
         Ext.each(this.store.getModifiedRecords() || [], function (r) {
 
             if (r.data.key.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_key_empty);
+                Phlexible.Notify.failure(this.emptyKeyText);
                 valid = false;
                 return false;
             }

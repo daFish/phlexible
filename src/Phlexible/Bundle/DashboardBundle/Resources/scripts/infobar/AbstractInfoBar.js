@@ -15,7 +15,7 @@ Ext.define('Phlexible.dashboard.infobar.AbstractInfoBar', {
 
     type: null,
 
-    infoText: '_no_text',
+    infoText: Phlexible.dashboard.Strings.infobar.AbstractInfoBar.infoText,
 
     initComponent: function(){
         this.cls = 'p-dashboard-infobar';

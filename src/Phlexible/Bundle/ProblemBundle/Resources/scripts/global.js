@@ -1,6 +1,6 @@
-Ext.namespace('Phlexible.problems');
+Ext.namespace('Phlexible.problem');
 
-Phlexible.problems.ProblemIcons = {
+Phlexible.problem.ProblemIcons = {
     critical: Phlexible.Icon.get('exclamation-red'),
     info: Phlexible.Icon.get('information-white'),
     notice: Phlexible.Icon.get('exclamation-white'),

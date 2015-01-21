@@ -1,5 +1,5 @@
-Ext.define('Phlexible.mediatemplates.video.PreviewPanel', {
-    extend: 'Phlexible.mediatemplates.BasePreviewPanel',
+Ext.define('Phlexible.mediatemplates.view.video.PreviewPanel', {
+    extend: 'Phlexible.mediatemplates.view.BasePreviewPanel',
     alias: 'widget.mediatemplates-video-preview',
 
     createUrl: function () {

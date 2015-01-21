@@ -1,4 +1,4 @@
-Ext.define('Phlexible.metasets.util.Fields', {
+Ext.define('Phlexible.metaset.util.Fields', {
     constructor: function () {
         this.initFields();
         this.initEditors();
@@ -95,7 +95,7 @@ Ext.define('Phlexible.metasets.util.Fields', {
                     }
                 }
 
-                var w = new Phlexible.metasets.MetaSuggestWindow({
+                var w = Ext.create('Phlexible.metaset.window.MetaSuggestWindow', {
                     record: record,
                     valueField: field,
                     metaLanguage: grid.language,

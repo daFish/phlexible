@@ -1,12 +1,33 @@
-Ext.define('Phlexible.metasets.MainPanel', {
+Ext.define('Phlexible.metaset.view.MainPanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.metasets-main',
+    alias: 'widget.metaset-main',
 
-    title: Phlexible.metasets.Strings.metasets,
-    strings: Phlexible.metasets.Strings,
+    title: '_MainPanel',
     layout: 'border',
     border: false,
     iconCls: Phlexible.Icon.get('weather-clouds'),
+
+    idText: '_idText',
+    nameText: '_nameText',
+    actionsText: '_actionsText',
+    renameText: '_renameText',
+    addText: '_addText',
+    noFieldsText: '_noFieldsText',
+    typeText: '_typeText',
+    requiredText: '_requiredText',
+    synchronizedText: '_synchronizedText',
+    readonlyText: '_readonlyText',
+    optionsText: '_optionsText',
+    configureText: '_configureText',
+    removeFieldText: '_removeFieldText',
+    addFieldText: '_addFieldText',
+    saveText: '_saveText',
+    addSetText: '_addSetText',
+    addSetDescriptionText: '_addSetDescriptionText',
+    renameSetText: '_renameSetText',
+    renameSetDescriptionText: '_renameSetDescriptionText',
+    selectNeedsOptionsText: '_selectNeedsOptionsText',
+    suggestNeedsOptionsText: '_suggestNeedsOptionsText',
 
     initComponent: function () {
         this.initMyItems();
@@ -15,7 +36,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
     },
 
     initMyItems: function() {
-        var metaFields = Ext.create('Phlexible.metasets.util.Fields');
+        var metaFields = Ext.create('Phlexible.metaset.util.Fields');
 
         this.items = [
             {
@@ -28,7 +49,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
                     fields: ['id', 'name'],
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('metasets_sets_list'),
+                        url: Phlexible.Router.generate('metaset_sets_list'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',
@@ -46,23 +67,23 @@ Ext.define('Phlexible.metasets.MainPanel', {
                 }),
                 columns: [
                     {
-                        header: this.strings.id,
+                        header: this.idText,
                         dataIndex: 'id',
                         hidden: true
                     },
                     {
-                        header: this.strings.name,
+                        header: this.nameText,
                         dataIndex: 'name',
                         flex: 1
                     },
                     {
                         xtype: 'actioncolumn',
-                        header: this.strings.actions,
+                        header: this.actionsText,
                         width: 30,
                         items: [
                             {
                                 iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
-                                tooltip: this.strings.rename,
+                                tooltip: this.renameText,
                                 handler: this.renameSet,
                                 scope: this
                             }
@@ -74,7 +95,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
                     dock: 'top',
                     items: [
                         {
-                            text: this.strings.add,
+                            text: this.addText,
                             iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                             handler: this.createSet,
                             scope: this
@@ -103,7 +124,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
                     text: 'blubb'
                 },
                 deferEmptyText: false,
-                emptyText: this.strings.no_fields,
+                emptyText: this.noFieldsText,
                 stripeRows: true,
                 viewConfig: {
                     plugins: {
@@ -119,7 +140,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
                     fields: ['id', 'key', 'type', 'required', 'synchronized', 'readonly', 'options'],
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('metasets_sets_fields'),
+                        url: Phlexible.Router.generate('metaset_sets_fields'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',
@@ -132,13 +153,13 @@ Ext.define('Phlexible.metasets.MainPanel', {
                 }),
                 columns: [
                     {
-                        header: this.strings.id,
+                        header: this.idText,
                         dataIndex: 'id',
                         width: 100,
                         hidden: true
                     },
                     {
-                        header: this.strings.name,
+                        header: this.nameText,
                         dataIndex: 'key',
                         width: 200,
                         editor: {
@@ -147,7 +168,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
                         }
                     },
                     {
-                        header: this.strings.type,
+                        header: this.typeText,
                         dataIndex: 'type',
                         width: 200,
                         editor: {
@@ -176,37 +197,37 @@ Ext.define('Phlexible.metasets.MainPanel', {
                     },
                     {
                         xtype: 'checkcolumn',
-                        header: this.strings.required,
+                        header: this.requiredText,
                         dataIndex: 'required',
                         width: 85
                     },
                     {
                         xtype: 'checkcolumn',
-                        header: this.strings.synchronized,
+                        header: this.synchronizedText,
                         dataIndex: 'synchronized',
                         width: 85
                     },
                     {
                         xtype: 'checkcolumn',
-                        header: this.strings.readonly,
+                        header: this.readonlyText,
                         dataIndex: 'readonly',
                         width: 85
                     },
                     {
-                        header: this.strings.options,
+                        header: this.optionsText,
                         dataIndex: 'options',
                         width: 200,
                         hidden: true
                     },
                     {
                         xtype: 'actioncolumn',
-                        header: this.strings.actions,
+                        header: this.actionsText,
                         dataIndex: 'type',
                         width: 40,
                         items: [
                             {
                                 iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
-                                tooltip: this.strings.configure,
+                                tooltip: this.configureText,
                                 isDisabled: function(view, rowIndex, colIndex, item, record) {
                                     console.log(record.get('type'));
                                     return record.get('type') !== 'select' && record.get('type') !== 'suggest';
@@ -216,8 +237,8 @@ Ext.define('Phlexible.metasets.MainPanel', {
                             },
                             {
                                 iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                                tooltip: this.strings.remove_field,
-                                handler: this.deleteField,
+                                tooltip: this.removeFieldText,
+                                handler: this.removeField,
                                 scope: this
                             }
                         ]
@@ -228,14 +249,14 @@ Ext.define('Phlexible.metasets.MainPanel', {
                     dock: 'top',
                     items: [
                         {
-                            text: this.strings.add_field,
+                            text: this.addFieldText,
                             iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                             handler: this.addField,
                             scope: this
                         },
                         '-',
                         {
-                            text: this.strings.save,
+                            text: this.saveText,
                             iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                             handler: this.save,
                             scope: this
@@ -247,12 +268,12 @@ Ext.define('Phlexible.metasets.MainPanel', {
     },
 
     createSet: function() {
-        Ext.MessageBox.prompt(this.strings.add_set, this.strings.add_set_desc, function(btn, name) {
+        Ext.MessageBox.prompt(this.addSetText, this.addSetDescriptionText, function(btn, name) {
             if (btn !== 'ok') {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('metasets_sets_create'),
+                url: Phlexible.Router.generate('metaset_sets_create'),
                 params: {
                     name: name
                 },
@@ -273,12 +294,12 @@ Ext.define('Phlexible.metasets.MainPanel', {
     },
 
     renameSet: function(grid, record) {
-        Ext.MessageBox.prompt(this.strings.rename_set, this.strings.rename_set_desc, function(btn, name) {
+        Ext.MessageBox.prompt(this.renameSetText, this.renameSetDescriptionText, function(btn, name) {
             if (btn !== 'ok') {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('metasets_sets_rename'),
+                url: Phlexible.Router.generate('metaset_sets_rename'),
                 params: {
                     name: name,
                     id: record.get('id')
@@ -313,7 +334,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
 
     configureField: function(view, rowIndex, colIndex, item, e, record) {
         if (record.get('type') === 'suggest') {
-            var w = Ext.create('Phlexible.metasets.SuggestConfigurationWindow', {
+            var w = Ext.create('Phlexible.metaset.window.SuggestConfigurationWindow', {
                 options: record.get('options'),
                 listeners: {
                     select: function(options) {
@@ -325,7 +346,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
             w.show();
         }
         else if (record.get('type') === 'select') {
-            var w = Ext.create('Phlexible.metasets.SelectConfigurationWindow', {
+            var w = Ext.create('Phlexible.metaset.window.SelectConfigurationWindow', {
                 options: record.get('options'),
                 listeners: {
                     store: function(options) {
@@ -338,7 +359,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
         }
     },
 
-    deleteField: function (grid, record) {
+    removeField: function (grid, record) {
         grid.getStore().remove(record);
     },
 
@@ -349,11 +370,11 @@ Ext.define('Phlexible.metasets.MainPanel', {
             var r = this.getComponent(1).store.getAt(i);
 
             if (r.get('type') === 'select' && !r.get('options')) {
-                Ext.MessageBox.alert(this.strings.failure, this.strings.select_needs_options);
+                Phlexible.Notify.failure(this.selectNeedsOptionsText);
                 return;
             }
             if (r.get('type') === 'suggest' && !r.get('options')) {
-                Ext.MessageBox.alert(this.strings.failure, this.strings.suggest_needs_options);
+                Phlexible.Notify.failure(this.suggestNeedsOptionsText);
                 return;
             }
 
@@ -369,7 +390,7 @@ Ext.define('Phlexible.metasets.MainPanel', {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('metasets_sets_save'),
+            url: Phlexible.Router.generate('metaset_sets_save'),
             params: {
                 id: this.getComponent(1).setId,
                 data: Ext.encode(params)

@@ -1,11 +1,21 @@
-Ext.define('Phlexible.siteroots.NavigationGrid', {
+Ext.define('Phlexible.siteroot.view.NavigationGrid', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroots-navigations',
+    alias: 'widget.siteroot-navigations',
 
-    title: Phlexible.siteroots.Strings.navigations,
-    strings: Phlexible.siteroots.Strings,
+    title: '_NavigationGrid',
     border: false,
-    emptyText: Phlexible.siteroots.Strings.no_navigations,
+    emptyText: '_emptyText',
+
+    titleText: '_titleText',
+    handlerText: '_handlerText',
+    startTidText: '_startTidText',
+    maxDepthText: '_maxDepthText',
+    flagsText: '_flagsText',
+    additionalText: '_additionalText',
+    removeText: '_removeText',
+    removeDescriptionText: '_removeDescriptionText',
+    addNavigationText: '_addNavigationText',
+    emptyTitleText: '_emptyTitleText',
 
     initComponent: function () {
         this.initMyStore();
@@ -17,47 +27,47 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroots.model.Navigation'
+            model: 'Phlexible.siteroot.model.Navigation'
         });
     },
 
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.title,
+                header: this.titleText,
                 dataIndex: 'title',
                 editor: new Ext.form.TextField(),
                 flex: 1
             },
             {
-                header: this.strings.handler,
+                header: this.handlerText,
                 dataIndex: 'handler',
                 width: 150,
                 hidden: true
             },
             {
-                header: this.strings.start_tid,
+                header: this.startTidText,
                 dataIndex: 'start_tid',
-                editor: new Ext.form.TextField(),
+                editor: 'textfield',
                 width: 80
             },
             {
-                header: this.strings.max_depth,
+                header: this.maxDepthText,
                 dataIndex: 'max_depth',
-                editor: new Ext.form.NumberField(),
+                editor: 'numberfield',
                 width: 80
             },
             {
-                header: this.strings.flags,
+                header: this.flagsText,
                 dataIndex: 'flags',
-                editor: new Ext.form.NumberField(),
+                editor: 'numberfield',
                 width: 80,
                 hidden: true
             },
             {
-                header: this.strings.additional,
+                header: this.additionalText,
                 dataIndex: 'additional',
-                editor: new Ext.form.TextField(),
+                editor: 'textfield',
                 width: 100,
                 hidden: true
             },
@@ -74,7 +84,7 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
 
                             switch (r.get('handler')) {
                                 case 'Siteroot':
-                                    var w = Ext.create('Phlexible.siteroots.SiterootNavigationWindow', {
+                                    var w = Ext.create('Phlexible.siteroot.window.SiterootNavigationWindow', {
                                         record: r,
                                         siterootId: this.siterootId
                                     });
@@ -88,11 +98,11 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
                     },
                     {
                         iconCls: Phlexible.Icon.get('flag'),
-                        tooltip: this.strings.flags,
+                        tooltip: this.flagsText,
                         handle: function (grid, rowIndex, colIndex) {
                             var r = grid.store.getAt(rowIndex);
 
-                            var w = Ext.create('Phlexible.siteroots.NavigationFlagsWindow', {
+                            var w = Ext.create('Phlexible.siteroot.window.NavigationFlagsWindow', {
                                 record: r
                             });
 
@@ -102,11 +112,11 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
                     },
                     {
                         iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                        tooltip: this.strings.delete,
+                        tooltip: this.removeText,
                         handler: function (grid, rowIndex, colIndex) {
                             var r = grid.store.getAt(rowIndex);
 
-                            Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
+                            Ext.MessageBox.confirm(this.removeText, this.removeDescriptionText, function (btn) {
                                 if (btn === 'yes') {
                                     this.onDeleteNavigation(r);
                                 }
@@ -124,7 +134,7 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: this.strings.add_navigation,
+                text: this.addNavigationText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddNavigation,
                 scope: this
@@ -137,7 +147,7 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
      */
     onAddNavigation: function () {
         // create new empty record
-        var newRecord = Ext.create('Phlexible.siteroots.model.Navigation', {
+        var newRecord = Ext.create('Phlexible.siteroot.model.Navigation', {
             id: '',
             siteroot_id: this.siterootId,
             title: '',
@@ -198,7 +208,7 @@ Ext.define('Phlexible.siteroots.NavigationGrid', {
         var valid = true;
         Ext.each(this.store.getModifiedRecords() || [], function (r) {
             if (r.data.title.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_title_empty);
+                Phlexible.Notify.failure(this.emptyTitleText);
                 valid = false;
                 return false;
             }

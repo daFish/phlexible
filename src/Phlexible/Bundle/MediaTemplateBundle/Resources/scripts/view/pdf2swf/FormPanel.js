@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.pdf2swf.FormPanel', {
+Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.mediatemplates-pdf2swf-form',
 

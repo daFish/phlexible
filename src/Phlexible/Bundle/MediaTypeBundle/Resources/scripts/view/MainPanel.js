@@ -1,8 +1,8 @@
-Ext.define('Phlexible.mediatype.MainPanel', {
+Ext.define('Phlexible.mediatype.view.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediatype-main',
 
-    title: Phlexible.mediatype.Strings.media_types,
+    title: Phlexible.mediatype.Strings.view.MainPanel.title,
     iconCls: Phlexible.Icon.get('image-share'),
     layout: 'border',
     border: false,

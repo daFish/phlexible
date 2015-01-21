@@ -1,4 +1,4 @@
-Ext.define('Phlexible.problems.model.Problem', {
+Ext.define('Phlexible.problem.model.Problem', {
     extend: 'Ext.data.Model',
     fields: [
         'id',

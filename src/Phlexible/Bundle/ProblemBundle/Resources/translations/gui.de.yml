@@ -1,12 +1,21 @@
-problems:
-    problems: Probleme
-    problem: Problem
-    no_problems: 'Keine Probleme gefunden.'
-    new_problem: 'Neues Problem'
-    solve: Lösen
-    solution: Lösung
-    id: ID
-    severity: Schwere
-    source: Quelle
-    link: Link
-    menu_hint: 'Hiding problems of severity notice and lower, open Menu / Administration / Problems for a full list.'
+Phlexible:
+    problems:
+        view:
+            ProblemsGrid:
+                title: Probleme
+                idtext: ID
+                problemText: Problem
+                severityText: Schwere
+                sourceText: Quelle
+                createdAtText: 'Erstellt an'
+                lastCheckedAtText: 'Zuletzt überprüft an'
+                linkText: Link
+                solutionText: Lösung
+
+        portlet:
+            Problems:
+                title: Probleme
+                solutionText: Lösung
+                menuHintText: 'Probleme mit Schwere notice und darunter sind versteckt, öffnen Sie Menu / Administration / Probleme für eine vollständige Liste.'
+                noProblemsText: 'Keine Probleme'
+                newProblemText: 'Neues Problem'

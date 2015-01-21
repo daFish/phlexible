@@ -1,9 +1,25 @@
 dashboard:
-    start: Dashboard
-    portlets: Portlets
-    available_portlets: 'Verfügbare Portlets'
-    no_available_portlets: 'Keine weiteren Portlets'
-    save_layout: 'Ansicht speichern'
-    save: Speichern
-    use_defaults: 'Standwerte benutzen'
-    close: Schliessen
+    window:
+        ListWindow:
+            title: 'Verfügbare Portlets'
+            noAvailablePortletsText: 'Keine weiteren Portlets'
+
+        ColumnsWindow:
+            title: Spalten
+            columns: Spalten
+            save: Speichern
+
+    view:
+        dashboard:
+            title: Dashboard
+            noTitleText: 'Kein Titel'
+            noDescriptionText: 'Keine Beschreibung'
+
+    infobar:
+        AbstractInfoBar:
+            infoText: 'Keine Text'
+
+        Welcome:
+            welcomeToText: '{title} {version}'
+            addPortletText: 'Portlet hinzufügen'
+            change_layout: 'Layout ändern'

@@ -5,7 +5,7 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.dashboard-dashboard',
 
-    title: '_dashboard',
+    title: Phlexible.dashboard.Strings.view.Dashboard.title,
     cls: 'p-dashboard-main-panel',
     header: false,
     border: false,
@@ -13,8 +13,8 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
 
     cols: 3,
 
-    noTitleText: '_no_title',
-    noDescriptionText: '_no_description',
+    noTitleText: Phlexible.dashboard.Strings.view.Dashboard.noTitleText,
+    noDescriptionText: Phlexible.dashboard.Strings.view.Dashboard.noDescriptionText,
 
     initComponent: function() {
         if (Phlexible.App.getConfig().has('dashboard.columns')) {
@@ -81,7 +81,7 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
             data: {},
             listeners: {
                 addPortlet: function() {
-                    Ext.create('Phlexible.dashboard.view.ListWindow', {
+                    Ext.create('Phlexible.dashboard.window.ListWindow', {
                         listeners: {
                             portletOpen: function(item){
                                 this.getComponent('portalPanel').addPortlet(item);
@@ -91,7 +91,7 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
                     }).show();
                 },
                 editColumns: function() {
-                    Ext.create('Phlexible.dashboard.view.ColumnsWindow').show();
+                    Ext.create('Phlexible.dashboard.window.ColumnsWindow').show();
                 },
                 scope: this
             }

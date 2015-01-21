@@ -1,13 +1,17 @@
-mediatype:
-    media_types: Media types
-    mimetypes: Mime types
-    mimetype: Mime type
-    mimetypes_for: 'Mime types for "{0}"'
-    icons_for: 'Icons for "{0}"'
-    id: ID
-    key: Key
-    reload: Reload
-    add: Add
-    save: Save
-    save_and_close: 'Save and close'
-    delete: Delete
+Phlexible:
+    mediatype:
+        view:
+            MainPanel:
+                title: Media types
+
+            MediaTypesGrid:
+                title: Media types
+                idText: ID
+                keyText: Key
+                mimetypesText: Mimetypes
+                reloadText: Reload
+                iconsForText: 'Icons for "{0}"'
+
+            MimetypesGrid:
+                title: Mimetypes
+                mimetypeText: Mimetype

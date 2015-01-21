@@ -1,4 +1,4 @@
-Ext.define('Phlexible.siteroots.grid.LanguageCheckColumn', {
+Ext.define('Phlexible.siteroot.grid.LanguageCheckColumn', {
     constructor: function (config) {
         Ext.apply(this, config);
         if (!this.id) {
@@ -38,7 +38,6 @@ Ext.define('Phlexible.siteroots.grid.LanguageCheckColumn', {
                     }
                 }
             }
-
         }
     },
 

@@ -1,9 +1,15 @@
-Ext.define('Phlexible.siteroots.SiterootGrid', {
+Ext.define('Phlexible.siteroot.view.SiterootGrid', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroots-list',
+    alias: 'widget.siteroot-list',
 
-    title: Phlexible.siteroots.Strings.siteroot,
-    strings: Phlexible.siteroots.Strings,
+    title: '_SiterootGrid',
+
+    idText: '_idText',
+    siterootsText: '_siterootsText',
+    removeText: '_removeText',
+    removeDescriptionText: '_removeDescriptionText',
+    addSiterootText: '_addSiterootText',
+    titleText: '_titleText',
 
     /**
      * Fires after the active Siteroot has been changed
@@ -33,10 +39,10 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroots.model.Siteroot',
+            model: 'Phlexible.siteroot.model.Siteroot',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('siteroots_siteroot_list'),
+                url: Phlexible.Router.generate('siteroot_list'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -62,11 +68,11 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.id,
+                header: this.idText,
                 hidden: true,
                 dataIndex: 'id'
             }, {
-                header: this.strings.siteroots,
+                header: this.siterootsText,
                 dataIndex: 'title',
                 flex: 1,
                 sortable: true
@@ -75,13 +81,13 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
                 width: 30,
                 items: [{
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                    tooltip: this.strings.remove,
+                    tooltip: this.removeText,
                     handler: function (grid, rowIndex, colIndex) {
                         var r = grid.getStore().getAt(rowIndex);
 
                         Ext.MessageBox.confirm(
-                            this.strings.remove,
-                            this.strings.sure,
+                            this.removeText,
+                            this.removeDescriptionText,
                             this.onDeleteSiteroot.createDelegate(this, [r], true)
                         );
                     },
@@ -96,7 +102,7 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: this.strings.add_siteroot,
+                text: this.addSiterootText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddSiteroot,
                 scope: this
@@ -148,13 +154,13 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
      * Action if site
      */
     onAddSiteroot: function () {
-        Ext.MessageBox.prompt(this.strings.new_siteroot, this.strings.siteroot_title, function (btn, text) {
+        Ext.MessageBox.prompt(this.addSiterootText, this.titleText, function (btn, text) {
             if (btn !== 'ok') {
                 return;
             }
 
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('siteroots_siteroot_create'),
+                url: Phlexible.Router.generate('siteroot_create'),
                 params: {
                     title: text
                 },
@@ -164,7 +170,7 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
                         this.fireEvent('siterootDataChange');
                     }
                     else {
-                        Ext.Msg.alert(this.strings.failure, data.msg);
+                        Phlexible.Notify.failure(data.msg);
                     }
                 },
                 scope: this
@@ -183,7 +189,7 @@ Ext.define('Phlexible.siteroots.SiterootGrid', {
 
         if (btn == 'yes') {
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('siteroots_siteroot_delete'),
+                url: Phlexible.Router.generate('siteroot_delete'),
                 params: {
                     id: r.id
                 },

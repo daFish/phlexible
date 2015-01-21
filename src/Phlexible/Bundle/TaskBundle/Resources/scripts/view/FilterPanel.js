@@ -1,25 +1,25 @@
-Ext.define('Phlexible.tasks.FilterPanel', {
+Ext.define('Phlexible.tasks.view.FilterPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.tasks-filter',
 
-    title: Phlexible.tasks.Strings.filter,
+    title: Phlexible.tasks.Strings.view.FilterPanel.title,
     cls: 'p-tasks-filter',
     iconCls: Phlexible.Icon.get('funnel'),
     bodyPadding: 5,
     autoScroll: true,
 
-    commentsText: Phlexible.tasks.Strings.comments,
-    tasksText: Phlexible.tasks.Strings.tasks,
-    assignedToMeText: Phlexible.tasks.Strings.assigned_to_me,
-    createdByMeText: Phlexible.tasks.Strings.created_by_me,
-    involvedText: Phlexible.tasks.Strings.involved,
-    allTasksText: Phlexible.tasks.Strings.all_tasks,
-    statusText: Phlexible.tasks.Strings.status,
-    openText: Phlexible.tasks.Strings.open,
-    rejectedText: Phlexible.tasks.Strings.rejected,
-    reopenedText: Phlexible.tasks.Strings.reopened,
-    finishedText: Phlexible.tasks.Strings.finished,
-    closedText: Phlexible.tasks.Strings.closed,
+    commentsText: Phlexible.tasks.Strings.view.FilterPanel.commentsText,
+    tasksText: Phlexible.tasks.Strings.view.FilterPanel.tasksText,
+    assignedToMeText: Phlexible.tasks.Strings.view.FilterPanel.assignedToMeText,
+    createdByMeText: Phlexible.tasks.Strings.view.FilterPanel.createdByMeText,
+    involvedText: Phlexible.tasks.Strings.view.FilterPanel.involvedText,
+    allTasksText: Phlexible.tasks.Strings.view.FilterPanel.allTasksText,
+    statusText: Phlexible.tasks.Strings.view.FilterPanel.statusText,
+    openText: Phlexible.tasks.Strings.view.FilterPanel.openText,
+    rejectedText: Phlexible.tasks.Strings.view.FilterPanel.rejectedText,
+    reopenedText: Phlexible.tasks.Strings.view.FilterPanel.reopenedText,
+    finishedText: Phlexible.tasks.Strings.view.FilterPanel.finishedText,
+    closedText: Phlexible.tasks.Strings.view.FilterPanel.closedText,
 
     initComponent: function () {
         this.initMyTasks();

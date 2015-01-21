@@ -1,4 +1,4 @@
-Ext.define('Phlexible.siteroots.model.SpecialTid', {
+Ext.define('Phlexible.siteroot.model.SpecialTid', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'key'},

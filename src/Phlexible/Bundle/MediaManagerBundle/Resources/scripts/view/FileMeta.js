@@ -36,7 +36,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
         this.metasetUrls = {
             list: Phlexible.Router.generate('mediamanager_file_meta_sets_list'),
             save: Phlexible.Router.generate('mediamanager_file_meta_sets_save'),
-            available: Phlexible.Router.generate('metasets_sets_list')
+            available: Phlexible.Router.generate('metaset_sets_list')
         };
     },
 
@@ -91,7 +91,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
                     itemId: 'metasetsBtn',
                     iconCls: Phlexible.Icon.get('weather-clouds'),
                     handler: function () {
-                        var w = Ext.create('Phlexible.metasets.MetaSetsWindow', {
+                        var w = Ext.create('Phlexible.metaset.window.MetaSetsWindow', {
                             baseParams: this.params,
                             urls: this.metasetUrls,
                             listeners: {

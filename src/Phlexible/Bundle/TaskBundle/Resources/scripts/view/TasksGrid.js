@@ -1,23 +1,23 @@
-Ext.define('Phlexible.tasks.TasksGrid', {
+Ext.define('Phlexible.tasks.view.TasksGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.tasks-list',
 
     cls: 'p-tasks-list',
     deferEmptyText: false,
-    emptyText: Phlexible.tasks.Strings.no_tasks_found,
     loadMask: true,
 
-    idText: Phlexible.tasks.Strings.id,
-    typeText: Phlexible.tasks.Strings.type,
-    componentText: Phlexible.tasks.Strings.component,
-    statusText: Phlexible.tasks.Strings.status,
-    titleText: Phlexible.tasks.Strings.title,
-    taskText: Phlexible.tasks.Strings.task,
-    descriptionText: Phlexible.tasks.Strings.description,
-    assignedToText: Phlexible.tasks.Strings.assigned_to,
-    createUserText: Phlexible.tasks.Strings.create_user,
-    createDateText: Phlexible.tasks.Strings.create_date,
-    reloadText: Phlexible.tasks.Strings.reload,
+    emptyText: Phlexible.tasks.Strings.view.TasksGrid.emptyText,
+    idText: Phlexible.tasks.Strings.view.TasksGrid.idText,
+    typeText: Phlexible.tasks.Strings.view.TasksGrid.typeText,
+    componentText: Phlexible.tasks.Strings.view.TasksGrid.componentText,
+    statusText: Phlexible.tasks.Strings.view.TasksGrid.statusText,
+    titleText: Phlexible.tasks.Strings.view.TasksGrid.titleText,
+    taskText: Phlexible.tasks.Strings.view.TasksGrid.taskText,
+    descriptionText: Phlexible.tasks.Strings.view.TasksGrid.descriptionText,
+    assignedToText: Phlexible.tasks.Strings.view.TasksGrid.assignedToText,
+    createUserText: Phlexible.tasks.Strings.view.TasksGrid.createUserText,
+    createDateText: Phlexible.tasks.Strings.view.TasksGrid.createDateText,
+    reloadText: Phlexible.tasks.Strings.view.TasksGrid.reloadText,
 
     initComponent: function () {
         this.initMyStore();

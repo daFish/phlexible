@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.audio.FormPanel', {
+Ext.define('Phlexible.mediatemplates.view.audio.FormPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.mediatemplates-audio-form',
 

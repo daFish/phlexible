@@ -1,17 +1,17 @@
 /**
  * Columns window
  */
-Ext.define('Phlexible.dashboard.view.ColumnsWindow', {
+Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
     extend: 'Ext.Window',
 
-    title: '_columns',
+    title: Phlexible.dashboard.Strings.columns.title,
     width: 180,
     height: 100,
     modal: true,
     layout: 'fit',
 
-    closeText: '_close',
-    saveText: '_save',
+    closeText: Phlexible.dashboard.Strings.window.ColumnsWindow.closeText,
+    saveText: Phlexible.dashboard.Strings.window.ColumnsWindow.saveText,
 
     initComponent: function() {
         this.initMyItems();

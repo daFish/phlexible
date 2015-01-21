@@ -1,11 +1,21 @@
-Ext.define('Phlexible.siteroots.UrlGrid', {
+Ext.define('Phlexible.siteroot.view.UrlGrid', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroots-urls',
+    alias: 'widget.siteroot-urls',
 
-    title: Phlexible.siteroots.Strings.url_mappings,
-    strings: Phlexible.siteroots.Strings,
+    title: '_UrlGrid',
     border: false,
-    emptyText: Phlexible.siteroots.Strings.no_url_mappings,
+    emptyText: '_emptyText',
+
+    defaultText: '_defaultText',
+    hostnameText: '_hostnameText',
+    languageText: '_languageText',
+    targetText: '_targetText',
+    removeText: '_removeText',
+    removeDescriptionText: '_removeDescriptionText',
+    addMappingText: '_addMappingText',
+    emptyUrlText: '_emptyUrlText',
+    emptyTargetText: '_emptyTargetText',
+    emptyLanguageText: '_emptyLanguageText',
 
     initComponent: function () {
         this.initMyStore();
@@ -18,7 +28,7 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroots.model.Url'
+            model: 'Phlexible.siteroot.model.Url'
         });
     },
 
@@ -31,14 +41,14 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
             },
             {
                 xtype: 'checkcolumn',
-                header: this.strings['default'],
+                header: this.defaultText,
                 dataIndex: 'default',
                 languageIndex: 'language',
                 width: 50
             },
             {
                 id: 'hostname',
-                header: this.strings.hostname,
+                header: this.hostnameText,
                 dataIndex: 'hostname',
                 sortable: true,
                 vtype: 'url',
@@ -49,7 +59,7 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
                 }
             },
             {
-                header: this.strings.language,
+                header: this.languageText,
                 dataIndex: 'language',
                 sortable: true,
                 renderer: this.renderLanguage,
@@ -72,7 +82,7 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
                 }
             },
             {
-                header: this.strings.target,
+                header: this.targetText,
                 dataIndex: 'target',
                 sortable: true,
                 width: 200/*,
@@ -91,11 +101,11 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
                 xtype: 'actioncolumn',
                 items: [{
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                    tooltip: this.strings.delete,
+                    tooltip: this.removeText,
                     handler: function (grid, rowIndex, colIndex) {
                         var r = grid.getStore().getAt(rowIndex);
 
-                        Ext.MessageBox.confirm(this.strings.remove, this.strings.sure, function (btn) {
+                        Ext.MessageBox.confirm(this.removeText, this.removeDescriptionText, function (btn) {
                             if (btn === 'yes') {
                                 this.onDeleteUrl(r);
                             }
@@ -110,7 +120,7 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
     initMyDockedItems: function() {
         this.tbar = [
             {
-                text: this.strings.add_mapping,
+                text: this.addMappingText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddUrl,
                 scope: this
@@ -154,7 +164,7 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
     onAddUrl: function () {
 
         // create new empty record
-        var newRecord = new Phlexible.siteroots.model.Url({
+        var newRecord = Ext.create('Phlexible.siteroot.model.Url', {
             id: '',
             hostname: '',
             language: '',
@@ -235,19 +245,19 @@ Ext.define('Phlexible.siteroots.UrlGrid', {
         var valid = true;
         Ext.each(this.store.getModifiedRecords() || [], function(r) {
             if (r.data.hostname.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_url_empty);
+                Phlexible.Notify.failure(this.emptyUrlText);
                 valid = false;
                 return false;
             }
 
             if (r.data.target.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_target_empty);
+                Phlexible.Notify.failure(this.emptyTargetText);
                 valid = false;
                 return false;
             }
 
             if (r.data.language.length <= 0) {
-                Ext.Msg.alert(this.strings.failure, this.strings.err_language_empty);
+                Phlexible.Notify.failure(this.emptyLanguageText);
                 valid = false;
                 return false;
             }

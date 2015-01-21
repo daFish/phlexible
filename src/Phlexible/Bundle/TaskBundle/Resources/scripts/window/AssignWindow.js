@@ -1,7 +1,7 @@
-Ext.define('Phlexible.tasks.AssignWindow', {
+Ext.define('Phlexible.tasks.window.AssignWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.tasks.Strings.assign,
+    title: Phlexible.tasks.Strings.window.AssignWindow.title,
     width: 400,
     minWidth: 400,
     height: 270,
@@ -19,11 +19,11 @@ Ext.define('Phlexible.tasks.AssignWindow', {
         this.callParent(arguments);
     },
 
-    recipientText: Phlexible.tasks.Strings.recipient,
-    recipientEmptyText: Phlexible.tasks.Strings.please_choose,
-    commentText: Phlexible.tasks.Strings.comment,
-    cancelText: Phlexible.tasks.Strings.cancel,
-    assignText: Phlexible.tasks.Strings.assign,
+    recipientText: Phlexible.tasks.Strings.window.AssignWindow.recipient,
+    recipientEmptyText: Phlexible.tasks.Strings.window.AssignWindow.recipientEmptyText,
+    commentText: Phlexible.tasks.Strings.window.AssignWindow.commentText,
+    cancelText: Phlexible.tasks.Strings.window.AssignWindow.cancelText,
+    assignText: Phlexible.tasks.Strings.window.AssignWindow.assignText,
 
     initMyItems: function() {
         this.items = [

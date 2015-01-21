@@ -52,13 +52,57 @@ class TranslationsBuilder
     /**
      * Get all Translations for the given section
      *
-     * @param string $language
+     * @param string $locale
+     * @param string $fallbackLanguage
      * @param string $domain
      *
      * @return string
      */
-    public function build($language, $domain = 'gui')
+    public function build($locale, $fallbackLocale = 'en', $domain = 'gui')
     {
+        $fallbackCatalogue = $this->catalogAccessor->getCatalogues($fallbackLocale);
+        $catalogue = $this->catalogAccessor->getCatalogues($locale);
+
+        $t = array();
+
+        if ($locale !== $fallbackLocale) {
+            $all = $fallbackCatalogue->all($domain);
+            foreach ($all as $key => $value) {
+                $explodedKey = explode('.', $key);
+                $key = array_pop($explodedKey);
+                $class = implode('.', $explodedKey);
+                $t[$class][$key] = $value;
+            }
+        }
+
+        $all = $catalogue->all('gui');
+        foreach ($all as $key => $value) {
+            $explodedKey = explode('.', $key);
+            $key = array_pop($explodedKey);
+            $class = implode('.', $explodedKey);
+            $t[$class][$key] = $value;
+        }
+
+        $template = 'Ext.define("%s", %s);';
+
+        $content = '';
+        foreach ($t as $class => $values) {
+            $values = array('override' => $class) + $values;
+            $className = sprintf('Ext.locale.%s.%s', $locale, $class);
+            $content .= sprintf($template, $className, json_encode($values, JSON_PRETTY_PRINT)) . PHP_EOL;
+        }
+
+        $cacheFilename = $this->cacheDir . '/translations-' . $locale . '.js';
+
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists(dirname($cacheFilename))) {
+            $filesystem->mkdir(dirname($cacheFilename));
+        }
+
+        file_put_contents($cacheFilename, $content);
+
+        return $content;
+
         $translations = [];
         $catalogue = $this->catalogAccessor->getCatalogues($language);
         $namespaces = [];

@@ -1,11 +1,15 @@
-Ext.define('Phlexible.problems.portlet.Problems', {
+Ext.define('Phlexible.problem.portlet.Problems', {
     extend: 'Portal.view.Portlet',
-    alias: 'widget.problems-portlet',
+    alias: 'widget.problem-portlet',
 
-    title: Phlexible.problems.Strings.problems,
-    strings: Phlexible.problems.Strings,
+    title: '_Problems',
     bodyStyle: 'padding: 5px 5px 5px 5px',
     iconCls: Phlexible.Icon.get('exclamation'),
+
+    solutionText: '_solutionText',
+    menuHintText: '_menuHintText',
+    noProblemsText: '_noProblemsText',
+    newProblemText: '_newProblemText',
 
     initComponent: function () {
         this.initMyTemplate();
@@ -19,25 +23,25 @@ Ext.define('Phlexible.problems.portlet.Problems', {
         this.tpl = new Ext.XTemplate(
             '<tpl for=".">',
             '<div id="portal_problems_{id}" class="portlet-problem">',
-            '<div class="p-problems-icon {iconCls}"></div>',
-            '<div class="p-problems-severity p-problems-severity_{severity}-icon" ></div>',
-            '<div class="p-problems-text">',
-            '<span class="p-problems-message">{msg}</span>',
+            '<div class="p-problem-icon {iconCls}"></div>',
+            '<div class="p-problem-severity p-problem-severity_{severity}-icon" ></div>',
+            '<div class="p-problem-text">',
+            '<span class="p-problem-message">{msg}</span>',
             '<tpl if="hint">',
             '<br />',
-            '<span class="p-problems-solve">' + this.strings.solution + ': {hint}</span>',
+            '<span class="p-problem-solve">' + this.solutionText + ': {hint}</span>',
             '</tpl>',
             '</div>',
             '<div class="x-clear-both"></div>',
             '</div>',
             '</tpl>',
-            '<div><hr />' + this.strings.menu_hint + '</div>'
+            '<div><hr />' + this.menuHintText + '</div>'
         );
     },
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.SimpleStore', {
-            model: 'Phlexible.problems.model.Problem',
+            model: 'Phlexible.problem.model.Problem',
             id: 'id',
             sortInfo: {field: 'severity', username: 'ASC'}
         });
@@ -45,7 +49,7 @@ Ext.define('Phlexible.problems.portlet.Problems', {
         var data = this.record.get('data');
         if (data) {
             Ext.each(data, function (item) {
-                this.add(new Phlexible.problems.portlet.ProblemRecord(item, item.id));
+                this.add(new Phlexible.problem.portlet.ProblemRecord(item, item.id));
             }, this.store);
         }
     },
@@ -57,7 +61,7 @@ Ext.define('Phlexible.problems.portlet.Problems', {
                 itemSelector: 'div.portlet-problem',
                 style: 'overflow: auto',
                 singleSelect: true,
-                emptyText: this.strings.no_problems,
+                emptyText: this.noProblemsText,
                 deferEmptyText: false,
                 autoHeight: true,
                 store: this.store,
@@ -90,9 +94,9 @@ Ext.define('Phlexible.problems.portlet.Problems', {
             problemsMap.push(row.id);
             var r = this.store.getById(row.id);
             if (!r) {
-                this.store.add(new Phlexible.problems.portlet.ProblemRecord(row, row.id));
+                this.store.add(new Phlexible.problem.portlet.ProblemRecord(row, row.id));
 
-                Phlexible.msg('Problem', this.strings.new_problem + ' "' + row.msg + '".');
+                Phlexible.msg('Problem', this.newProblemText + ' "' + row.msg + '".');
                 Ext.fly('portal_problems_' + row.id).frame('#8db2e3', 1);
             }
         }

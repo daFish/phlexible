@@ -1,4 +1,4 @@
-Ext.define('Phlexible.metasets.MetaSuggestWindow', {
+Ext.define('Phlexible.metaset.window.MetaSuggestWindow', {
     extend: 'Ext.window.Window',
 
     width: 400,
@@ -66,7 +66,7 @@ Ext.define('Phlexible.metasets.MetaSuggestWindow', {
                         suggestLanguage: this.metaLanguage,
                         store: new Ext.data.JsonStore({
                             fields: ['key', 'value'],
-                            url: Phlexible.Router.generate('metasets_values'),
+                            url: Phlexible.Router.generate('metaset_values'),
                             root: 'values',
                             autoLoad: true,
                             id: 'key',

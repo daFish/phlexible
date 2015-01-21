@@ -1,8 +1,8 @@
-Ext.define('Phlexible.search.SearchPanel', {
+Ext.define('Phlexible.search.view.SearchPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.searchpanel',
 
-    title: 'Search',
+    title: Phlexible.search.Strings.view.SearchPanel.title,
     cls: 'p-searchpanel',
     iconCls: 'p-search-search-icon',
     layout: 'fit',

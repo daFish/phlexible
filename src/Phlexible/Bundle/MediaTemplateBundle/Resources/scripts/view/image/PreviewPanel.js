@@ -1,5 +1,5 @@
-Ext.define('Phlexible.mediatemplates.image.PreviewPanel', {
-    extend: 'Phlexible.mediatemplates.BasePreviewPanel',
+Ext.define('Phlexible.mediatemplates.view.image.PreviewPanel', {
+    extend: 'Phlexible.mediatemplates.view.BasePreviewPanel',
     alias: 'widget.mediatemplates-image-preview',
 
     createUrl: function () {

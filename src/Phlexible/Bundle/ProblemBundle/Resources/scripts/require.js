@@ -1,1 +1,1 @@
-Ext.require('Phlexible.problems.portlet.Problems');
+Ext.require('Phlexible.problem.portlet.Problems');

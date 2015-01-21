@@ -1,10 +1,15 @@
-Ext.define('Phlexible.siteroots.TitleForm', {
+Ext.define('Phlexible.siteroot.view.TitleForm', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.siteroots-titles',
+    alias: 'widget.siteroot-titles',
 
-    title: Phlexible.siteroots.Strings.titles,
-    strings: Phlexible.siteroots.Strings,
+    title: '_TitleForm',
     border: false,
+
+    customTitlesText: '_customTitlesText',
+    nameText: '_nameText',
+    patternText: '_patternText',
+    exampleText: '_exampleText',
+    legendText: '_legendText',
 
     initComponent: function () {
         this.initMyTasks();
@@ -31,14 +36,14 @@ Ext.define('Phlexible.siteroots.TitleForm', {
             {
                 xtype: 'grid',
                 itemId: 'patterns',
-                title: this.strings.custom_titles,
+                title: this.customTitlesText,
                 padding: 5,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'pattern', 'example'],
                     data: [{name: 'bla', pattern: 'bla', example:'bla'}]
                 }),
                 columns: [{
-                    header: this.strings.name,
+                    header: this.nameText,
                     dataIndex: 'name',
                     width: 50,
                     editor: {
@@ -46,7 +51,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
                         allowBlank: false
                     }
                 },{
-                    header: this.strings.pattern,
+                    header: this.patternText,
                     dataIndex: 'pattern',
                     width: 300,
                     editor: {
@@ -54,7 +59,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
                         allowBlank: false
                     }
                 },{
-                    header: this.strings.example,
+                    header: this.exampleText,
                     dataIndex: 'example',
                     width: 300
                 }],
@@ -69,7 +74,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
             },
             {
                 xtype: 'panel',
-                title: this.strings.legend,
+                title: this.legendText,
                 padding: 5,
                 bodyPadding: 5,
                 items: [
@@ -79,7 +84,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
                             fields: ['placeholder', 'title'],
                             proxy: {
                                 type: 'ajax',
-                                url: Phlexible.Router.generate('siteroots_pattern_placeholders'),
+                                url: Phlexible.Router.generate('siteroot_pattern_placeholders'),
                                 simpleSortMode: true,
                                 reader: {
                                     type: 'json',
@@ -149,7 +154,7 @@ Ext.define('Phlexible.siteroots.TitleForm', {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroots_pattern_example'),
+            url: Phlexible.Router.generate('siteroot_pattern_example'),
             params: {
                 siteroot_id: this.siterootId,
                 pattern: pattern

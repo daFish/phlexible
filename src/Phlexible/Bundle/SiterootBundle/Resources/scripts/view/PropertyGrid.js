@@ -1,11 +1,10 @@
-Ext.define('Phlexible.siteroots.PropertyGrid', {
+Ext.define('Phlexible.siteroot.view.PropertyGrid', {
     extend: 'Ext.grid.PropertyGrid',
-    alias: 'widget.siteroots-properties',
+    alias: 'widget.siteroot-properties',
 
-    title: Phlexible.siteroots.Strings.properties,
-    strings: Phlexible.siteroots.Strings,
+    title: '_PropertyGrid',
     border: false,
-    emptyText: Phlexible.siteroots.Strings.no_properties,
+    emptyText: '_emptyText',
 
     /**
      * After the siteroot selection changes load the siteroot data.
@@ -19,9 +18,7 @@ Ext.define('Phlexible.siteroots.PropertyGrid', {
     },
 
     isValid: function () {
-        var valid = true;
-
-        return valid;
+        return true;
     },
 
     /**

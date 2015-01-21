@@ -112,7 +112,7 @@ Ext.define('Phlexible.mediamanager.FileMetaGrid', {
     },
 
     initMySelectionModel: function() {
-        var metaFields = Ext.create('Phlexible.metasets.util.Fields');
+        var metaFields = Ext.create('Phlexible.metaset.util.Fields');
 
         this.cm = new Phlexible.gui.grid.TypeColumnModel({
             columns: columns,

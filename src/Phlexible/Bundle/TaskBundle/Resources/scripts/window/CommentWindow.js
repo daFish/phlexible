@@ -1,4 +1,4 @@
-Ext.define('Phlexible.tasks.CommentWindow', {
+Ext.define('Phlexible.tasks.window.CommentWindow', {
     extend: 'Ext.window.Window',
 
     title: Phlexible.tasks.Strings.comment,
@@ -12,8 +12,8 @@ Ext.define('Phlexible.tasks.CommentWindow', {
     payload: {},
     componentFilter: null,
 
-    cancelText: Phlexible.tasks.Strings.cancel,
-    commentText: Phlexible.tasks.Strings.comment,
+    cancelText: Phlexible.tasks.Strings.window.CommentWindow.cancelText,
+    commentText: Phlexible.tasks.Strings.window.CommentWindow.commentText,
 
     initComponent: function () {
         this.initMyItems();

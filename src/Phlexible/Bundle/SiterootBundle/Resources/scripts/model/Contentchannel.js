@@ -1,4 +1,4 @@
-Ext.define('Phlexible.siteroots.model.Contentchannel', {
+Ext.define('Phlexible.siteroot.model.Contentchannel', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'contentchannel_id'},

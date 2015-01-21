@@ -1,12 +1,17 @@
-Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
+Ext.define('Phlexible.siteroot.window.SiterootNavigationWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.siteroots.Strings.siteroot_navigation,
-    strings: Phlexible.siteroots.Strings,
+    title: '_SiterootNavigationWindow',
     width: 400,
     height: 300,
     modal: true,
     layout: 'fit',
+
+    idText: '_id',
+    titleText: '_title',
+    selectSiterootText: '_selectSiterootText',
+    storeText: '_storeText',
+    cancelText: '_cancelText',
 
     initComponent: function () {
         this.values = this.record.get('additional').split(',');
@@ -27,7 +32,7 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                 viewConfig: {
                     forceFit: true
                 },
-                store: new Ext.data.SimpleStore({
+                store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'title']
                 }),
                 sm: new Ext.grid.RowSelectionModel({
@@ -47,13 +52,13 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                 }),
                 columns: [
                     {
-                        header: this.strings.id,
+                        header: this.idText,
                         dataIndex: 'id',
                         width: 150,
                         hidden: true
                     },
                     {
-                        header: this.strings.title,
+                        header: this.titleText,
                         width: 150,
                         dataIndex: 'title'
                     }
@@ -67,7 +72,7 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                         store: new Ext.data.SimpleStore({
                             fields: ['id', 'title']
                         }),
-                        emptyText: this.strings.select_siteroot,
+                        emptyText: this.selectSiterootText,
                         editable: false,
                         mode: 'local',
                         displayField: 'title',
@@ -116,7 +121,7 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
             ui: 'footer',
             items: [
                 {
-                    text: this.strings.cancel,
+                    text: this.storeText,
                     handler: function () {
                         var records = this.getComponent(0).store.getRange();
 
@@ -132,7 +137,7 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
                     scope: this
                 },
                 {
-                    text: this.strings.cancel,
+                    text: this.cancelText,
                     handler: function () {
                         this.close();
                     },
@@ -144,7 +149,7 @@ Ext.define('Phlexible.siteroots.SiterootNavigationWindow', {
 
     loadSiteroots: function() {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroots_siteroots_list'),
+            url: Phlexible.Router.generate('siteroot_list'),
             baseParams: {
                 key: this.navigationKey,
                 id: this.siterootId

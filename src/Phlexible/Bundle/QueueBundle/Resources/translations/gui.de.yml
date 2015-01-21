@@ -1,11 +1,14 @@
-queue:
-    queue: Warteschlange
-    no_jobs: 'Keine Jobs'
-    reload: 'Neu laden'
-    id: ID
-    command: Kommando
-    priority: Priorität
-    status: Status
-    create_time: 'Angelegt an'
-    start_time: 'Gestartet an'
-    end_time: 'Beendet an'
+Phlexible:
+    queue:
+        window:
+            QueueStatsWindow:
+                title: Warteschlange
+                noJobsText: 'Keine Jobs'
+                idText: Id
+                commandText: Kommando
+                priorityText: Priorität
+                statusText: Status
+                createdAtText: 'Angelegt an'
+                startedAtText: 'Gestartet an'
+                finishedAtText: 'Beendet an'
+                reloadText: 'Neu laden'

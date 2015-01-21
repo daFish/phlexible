@@ -1,4 +1,4 @@
-Ext.define('Phlexible.siteroots.grid.SingleCheckColumn', {
+Ext.define('Phlexible.siteroot.grid.SingleCheckColumn', {
     constructor: function (config) {
         Ext.apply(this, config);
         if (!this.id) {
@@ -34,7 +34,6 @@ Ext.define('Phlexible.siteroots.grid.SingleCheckColumn', {
                     }
                 }
             }
-
         }
     },
 

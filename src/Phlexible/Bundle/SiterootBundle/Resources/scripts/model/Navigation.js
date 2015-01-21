@@ -1,4 +1,4 @@
-Ext.define('Phlexible.siteroots.model.Navigation', {
+Ext.define('Phlexible.siteroot.model.Navigation', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id'},

@@ -1,8 +1,8 @@
-Ext.define('Phlexible.tasks.MainPanel', {
+Ext.define('Phlexible.tasks.view.MainPanel', {
     extend: 'Ext.Panel',
     alias: 'widget.tasks-main',
 
-    title: Phlexible.tasks.Strings.tasks,
+    title: Phlexible.tasks.Strings.MainPanel.title,
     cls: 'p-tasks-main',
     iconCls: Phlexible.Icon.get('clipboard-task'),
     layout: 'border',
@@ -10,8 +10,8 @@ Ext.define('Phlexible.tasks.MainPanel', {
 
     params: {},
 
-    commentsText: Phlexible.tasks.Strings.comments,
-    transitionsText: Phlexible.tasks.Strings.transitions,
+    commentsText: Phlexible.tasks.Strings.view.MainPanel.commentsText,
+    transitionsText: Phlexible.tasks.Strings.view.MainPanel.transitionsText,
 
     loadParams: function (params) {
         if (params.id) {
@@ -95,21 +95,21 @@ Ext.define('Phlexible.tasks.MainPanel', {
                                 text: '_comment',
                                 iconCls: Phlexible.Icon.get('balloon'),
                                 handler: function() {
-                                    var w = Ext.create('Phlexible.tasks.CommentWindow');
+                                    var w = Ext.create('Phlexible.tasks.window.CommentWindow');
                                     w.show();
                                 },
                                 scope: this
                             },{
                                 text: '_assign_to_me',
                                 handler: function() {
-                                    var w = Ext.create('Phlexible.tasks.AssignWindow');
+                                    var w = Ext.create('Phlexible.tasks.window.AssignWindow');
                                     w.show();
                                 },
                                 scope: this
                             },{
                                 text: '_assign',
                                 handler: function() {
-                                    var w = Ext.create('Phlexible.tasks.AssignWindow');
+                                    var w = Ext.create('Phlexible.tasks.window.AssignWindow');
                                     w.show();
                                 },
                                 scope: this

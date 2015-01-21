@@ -1,12 +1,19 @@
-Ext.define('Phlexible.problems.ProblemsGrid', {
+Ext.define('Phlexible.problem.view.ProblemsGrid', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.problems-list',
+    alias: 'widget.problem-list',
 
-    title: Phlexible.problems.Strings.problems,
-    strings: Phlexible.problems.Strings,
+    title: '_ProblemsGrid',
     iconCls: Phlexible.Icon.get('exclamation'),
-
     loadMask: true,
+
+    idtext: '_idtext',
+    problemText: '_problemText',
+    severityText: '_severityText',
+    sourceText: '_sourceText',
+    createdAtText: '_createdAtText',
+    lastCheckedAtText: '_lastCheckedAtText',
+    linkText: '_linkText',
+    solutionText: '_solutionText',
 
     initComponent: function () {
         this.initMyStore();
@@ -17,10 +24,10 @@ Ext.define('Phlexible.problems.ProblemsGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.problems.model.Problem',
+            model: 'Phlexible.problem.model.Problem',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('problems_list'),
+                url: Phlexible.Router.generate('problem_list'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -34,33 +41,33 @@ Ext.define('Phlexible.problems.ProblemsGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.id,
+                header: this.idText,
                 dataIndex: 'id',
                 hidden: true
             }, {
-                header: this.strings.problem,
+                header: this.problemText,
                 dataIndex: 'msg',
                 width: 400
             }, {
-                header: this.strings.severity,
+                header: this.severityText,
                 dataIndex: 'severity',
                 width: 80,
                 renderer: function (v) {
-                    return Phlexible.Icon.inline(Phlexible.problems.ProblemIcons[v]) + ' ' + v;
+                    return Phlexible.Icon.inline(Phlexible.problem.ProblemIcons[v]) + ' ' + v;
                 }
             }, {
-                header: this.strings.source,
+                header: this.sourceText,
                 dataIndex: 'source'
             }, {
-                header: 'createdAt',
+                header: this.createdAtText,
                 dataIndex: 'createdAt',
                 width: 160
             }, {
-                header: 'lastCheckedAt',
+                header: this.lastCheckedAtText,
                 dataIndex: 'lastCheckedAt',
                 width: 160
             }, {
-                header: this.strings.link,
+                header: this.linkText,
                 dataIndex: 'link',
                 hidden: true
             }];
@@ -69,7 +76,7 @@ Ext.define('Phlexible.problems.ProblemsGrid', {
             ptype: 'rowexpander',
             dataIndex: 'hint',
             rowBodyTpl: [
-                this.strings.solution + ': {hint}'
+                this.solutionText + ': {hint}'
             ]
         }];
     }

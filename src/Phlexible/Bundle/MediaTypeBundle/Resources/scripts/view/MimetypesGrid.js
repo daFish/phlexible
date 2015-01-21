@@ -1,12 +1,13 @@
-Ext.define('Phlexible.mediatype.MimetypesGrid', {
+Ext.define('Phlexible.mediatype.view.MimetypesGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.mediatype-mimetypes',
 
-    title: Phlexible.mediatype.Strings.mimetypes,
-    strings: Phlexible.mediatype.Strings,
+    title: Phlexible.mediatype.Strings.view.MimetypesGrid.title,
     iconCls: Phlexible.Icon.get('image-share'),
     loadMask: true,
     stripeRows: true,
+
+    mimetypeText: Phlexible.mediatype.Strings.view.MimetypesGrid.mimetypeText,
 
     initComponent: function () {
         this.store = new Ext.data.Store({
@@ -19,7 +20,7 @@ Ext.define('Phlexible.mediatype.MimetypesGrid', {
 
         this.columns = [
             {
-                header: this.strings.mimetype,
+                header: this.mimetypeText,
                 dataIndex: 'mimetype',
                 sortable: true,
                 flex: 1

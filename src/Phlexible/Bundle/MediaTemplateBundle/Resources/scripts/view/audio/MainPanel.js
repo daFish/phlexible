@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.audio.MainPanel', {
+Ext.define('Phlexible.mediatemplates.view.audio.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediatemplates-audio-main',
 

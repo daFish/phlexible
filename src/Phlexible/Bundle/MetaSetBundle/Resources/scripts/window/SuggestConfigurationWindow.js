@@ -1,12 +1,17 @@
-Ext.define('Phlexible.metasets.SuggestConfigurationWindow', {
+Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.metasets.Strings.configure_suggest,
-    strings: Phlexible.metasets.Strings,
+    title: '_SuggestConfigurationWindow',
     width: 300,
     height: 400,
     layout: 'fit',
     modal: true,
+
+    datasourceText: '_datasourceText',
+    createDatasourceText: '_createDatasourceText',
+    createDatasourceDescriptionText: '_createDatasourceDescriptionText',
+    cancelText: '_cancelText',
+    selectText: '_selectText',
 
     initComponent: function() {
         this.initMyItems();
@@ -52,7 +57,7 @@ Ext.define('Phlexible.metasets.SuggestConfigurationWindow', {
                 }
             }),
             columns: [{
-                header: this.strings.datasource,
+                header: this.datasourceText,
                 dataIndex: 'title',
                 flex: 1
             }],
@@ -60,10 +65,10 @@ Ext.define('Phlexible.metasets.SuggestConfigurationWindow', {
                 xtype: 'toolbar',
                 dock: 'top',
                 items: [{
-                    text: this.strings.create_datasource,
+                    text: this.createDatasourceText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                     handler: function () {
-                        Ext.MessageBox.prompt(this.strings.create_datasource, this.strings.create_datasource_text, function (btn, title) {
+                        Ext.MessageBox.prompt(this.createDatasourceText, this.createDatasourceDescriptionText, function (btn, title) {
                             if (btn !== 'ok') {
                                 return;
                             }
@@ -100,11 +105,11 @@ Ext.define('Phlexible.metasets.SuggestConfigurationWindow', {
             items: [
                 '->',
             {
-                text: this.strings.cancel,
+                text: this.cancelText,
                 handler: this.close,
                 scope: this
             },{
-                text: this.strings.select,
+                text: this.selectText,
                 handler: function() {
                     var options = this.getComponent(0).getSelectionModel().getSelected().get('id');
                     this.fireEvent('select', options);

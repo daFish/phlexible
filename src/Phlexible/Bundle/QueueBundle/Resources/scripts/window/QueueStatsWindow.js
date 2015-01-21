@@ -1,8 +1,7 @@
-Ext.define('Phlexible.queue.QueueStatsWindow', {
+Ext.define('Phlexible.queue.window.QueueStatsWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.queue.Strings.queue,
-    strings: Phlexible.queue.Strings,
+    title: Phlexible.queue.Strings.window.QueueStatsWindow.queue,
     width: 900,
     height: 600,
     iconCls: Phlexible.Icon.get('application-task'),
@@ -10,6 +9,16 @@ Ext.define('Phlexible.queue.QueueStatsWindow', {
     constrainHeader: true,
     maximizable: true,
     modal: true,
+
+    noJobsText: Phlexible.queue.Strings.window.QueueStatsWindow.noJobsText,
+    idText: Phlexible.queue.Strings.window.QueueStatsWindow.idText,
+    commandText: Phlexible.queue.Strings.window.QueueStatsWindow.commandText,
+    priorityText: Phlexible.queue.Strings.window.QueueStatsWindow.priorityText,
+    statusText: Phlexible.queue.Strings.window.QueueStatsWindow.statusText,
+    createdAtText: Phlexible.queue.Strings.window.QueueStatsWindow.createdAtText,
+    startedAtText: Phlexible.queue.Strings.window.QueueStatsWindow.startedAtText,
+    finishedAtText: Phlexible.queue.Strings.window.QueueStatsWindow.finishedAtText,
+    reloadText: Phlexible.queue.Strings.window.QueueStatsWindow.reloadText,
 
     initComponent: function () {
         this.initMyItems();
@@ -22,7 +31,7 @@ Ext.define('Phlexible.queue.QueueStatsWindow', {
         this.items = {
             xtype: 'grid',
             border: false,
-            emptyText: this.strings.no_jobs,
+            emptyText: this.noJobsText,
             store: Ext.create('Ext.data.Store', {
                 model: 'Phlexible.queue.model.Job',
                 proxy: {
@@ -40,33 +49,33 @@ Ext.define('Phlexible.queue.QueueStatsWindow', {
             }),
             columns: [
                 {
-                    header: this.strings.id,
+                    header: this.idText,
                     dataIndex: 'id',
                     width: 250,
                     hidden: true
                 }, {
-                    header: this.strings.command,
+                    header: this.commandText,
                     dataIndex: 'command',
                     width: 250
                 }, {
-                    header: this.strings.priority,
+                    header: this.priorityText,
                     dataIndex: 'priority',
                     width: 50,
                     flex: 1
                 }, {
-                    header: this.strings.status,
+                    header: this.statusText,
                     dataIndex: 'status',
                     width: 60
                 }, {
-                    header: this.strings.create_time,
+                    header: this.createdAtText,
                     dataIndex: 'create_time',
                     width: 120
                 }, {
-                    header: this.strings.start_time,
+                    header: this.startedAtText,
                     dataIndex: 'start_time',
                     width: 120
                 }, {
-                    header: this.strings.end_time,
+                    header: this.finishedAtText,
                     dataIndex: 'end_time',
                     width: 120
                 }
@@ -85,7 +94,7 @@ Ext.define('Phlexible.queue.QueueStatsWindow', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: this.strings.reload,
+                text: this.reloadText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
                 handler: function () {
                     this.getComponent(0).store.reload();

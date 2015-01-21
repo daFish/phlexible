@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.image.FormPanel', {
+Ext.define('Phlexible.mediatemplates.view.image.FormPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.mediatemplates-image-form',
 

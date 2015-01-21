@@ -1,7 +1,7 @@
 Phlexible.Handles.add('problems', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.XtypeHandle', {
-        text: Phlexible.problems.Strings.problems,
+        text: Phlexible.problem.view.ProblemsGrid.prototype.title,
         iconCls: Phlexible.Icon.get('exclamation'),
-        xtype: 'problems-list'
+        xtype: 'problem-list'
     });
 });

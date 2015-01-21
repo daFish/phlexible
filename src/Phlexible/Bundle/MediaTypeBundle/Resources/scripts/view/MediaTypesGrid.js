@@ -1,12 +1,17 @@
-Ext.define('MediaTypesGrid', {
+Ext.define('Phlexible.mediatype.view.MediaTypesGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.mediatype-list',
 
-    title: Phlexible.mediatype.Strings.media_types,
-    strings: Phlexible.mediatype.Strings,
+    title: Phlexible.mediatype.Strings.view.MediaTypesGrid.title,
     iconCls: 'p-mediatype-component-icon',
     loadMask: true,
     stripeRows: true,
+
+    idText: Phlexible.mediatype.Strings.view.MediaTypesGrid.idText,
+    keyText: Phlexible.mediatype.Strings.view.MediaTypesGrid.keyText,
+    mimetypesText: Phlexible.mediatype.Strings.view.MediaTypesGrid.mimetypesText,
+    reloadText: Phlexible.mediatype.Strings.view.MediaTypesGrid.reloadText,
+    iconsForText: Phlexible.mediatype.Strings.view.MediaTypesGrid.iconsForText,
 
     initComponent: function () {
         this.initMyStore();
@@ -42,7 +47,7 @@ Ext.define('MediaTypesGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.id,
+                header: this.idText,
                 dataIndex: 'id',
                 sortable: false,
                 hidden: true,
@@ -50,7 +55,7 @@ Ext.define('MediaTypesGrid', {
             },
             {
                 id: 'key',
-                header: this.strings.key,
+                header: this.keyText,
                 dataIndex: 'key',
                 sortable: true,
                 width: 100
@@ -68,7 +73,7 @@ Ext.define('MediaTypesGrid', {
                 width: 250
             },
             {
-                header: this.strings.mimetypes,
+                header: this.mimetypesText,
                 dataIndex: 'mimetypes',
                 sortable: false,
                 width: 100,
@@ -116,7 +121,7 @@ Ext.define('MediaTypesGrid', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: this.strings.reload,
+                text: this.reloadText,
                 iconCls: 'x-tbar-loading',
                 handler: function () {
                     this.store.reload();
@@ -139,7 +144,7 @@ Ext.define('MediaTypesGrid', {
                 var key = r.get('key');
 
                 var w = Ext.create('Ext.window.Window', {
-                    title: Ext.String.format(this.strings.icons_for, r.get('en')),
+                    title: Ext.String.format(this.iconsForText, r.get('en')),
                     width: 420,
                     height: 320,
                     bodyStyle: 'background: white; background: linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, lightgray; background-size: 30px 30px; padding: 5px;',

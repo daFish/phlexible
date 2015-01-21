@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.MainPanel', {
+Ext.define('Phlexible.mediatemplates.view.MainPanel', {
     extend: 'Ext.Panel',
     alias: 'widget.mediatemplates-main',
 

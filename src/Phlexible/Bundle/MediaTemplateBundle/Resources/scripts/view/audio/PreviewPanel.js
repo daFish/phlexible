@@ -1,5 +1,5 @@
-Ext.define('Phlexible.mediatemplates.audio.PreviewPanel', {
-    extend: 'Phlexible.mediatemplates.BasePreviewPanel',
+Ext.define('Phlexible.mediatemplates.view.audio.PreviewPanel', {
+    extend: 'Phlexible.mediatemplates.view.BasePreviewPanel',
     alias: 'widget.mediatemplates-audio-preview',
 
     createUrl: function () {

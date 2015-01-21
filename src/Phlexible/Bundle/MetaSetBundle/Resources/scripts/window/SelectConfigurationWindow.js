@@ -1,12 +1,20 @@
-Ext.define('Phlexible.metasets.SelectConfigurationWindow', {
+Ext.define('Phlexible.metaset.window.SelectConfigurationWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.metasets.Strings.configure_select,
-    strings: Phlexible.metasets.Strings,
+    title: '_SelectConfigurationWindow',
     width: 300,
     height: 400,
     layout: 'fit',
     modal: true,
+
+    useAddText: '_useAddText',
+    valueText: '_valueText',
+    actionsText: '_actionsText',
+    removeValueText: '_removeValueText',
+    addValueText: '_addValueText',
+    cancelText: '_cancelText',
+    storeText: '_storeText',
+    addAtLeastOneValueText: '_addAtLeastOneValueText',
 
     initComponent: function() {
         this.initMyItems();
@@ -28,7 +36,7 @@ Ext.define('Phlexible.metasets.SelectConfigurationWindow', {
             border: false,
             autoExpandColumn: 'value',
             deferEmptyText: false,
-            emptyText: this.strings.use_add,
+            emptyText: this.useAddText,
             stripeRows: true,
             store: Ext.create('Ext.data.Store', {
                 fields: ['value'],
@@ -36,18 +44,18 @@ Ext.define('Phlexible.metasets.SelectConfigurationWindow', {
             }),
             columns: [{
                 id: 'value',
-                header: this.strings.value,
+                header: this.valueText,
                 dataIndex: 'value',
                 flex: 1,
                 editor: 'textfield'
             }, {
                 xtype: 'actioncolumn',
-                header: this.strings.actions,
+                header: this.actionsText,
                 width: 30,
                 items: [
                     {
                         iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                        tooltip: this.strings.remove_value,
+                        tooltip: this.removeValueText,
                         handler: this.deleteValue,
                         scope: this
                     }
@@ -58,7 +66,7 @@ Ext.define('Phlexible.metasets.SelectConfigurationWindow', {
                 dock: 'top',
                 items: [
                     {
-                        text: this.strings.add_value,
+                        text: this.addValueText,
                         iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                         handler: this.addValue,
                         scope: this
@@ -76,16 +84,16 @@ Ext.define('Phlexible.metasets.SelectConfigurationWindow', {
             items: [
                 '->',
             {
-                text: this.strings.cancel,
+                text: this.cancelText,
                 handler: this.close,
                 scope: this
             },{
-                text: this.strings.store,
+                text: this.storeText,
                 handler: function() {
                     var options = [],
                         records = this.getComponent(0).getStore().getRange();
                     if (!records.length) {
-                        Ext.MessageBox.alert(this.strings.failure, this.strings.add_at_least_one_value);
+                        Phlexible.Notify.failure(this.addAtLeastOneValueText);
                         return;
                     }
                     Ext.each(records, function(r) {

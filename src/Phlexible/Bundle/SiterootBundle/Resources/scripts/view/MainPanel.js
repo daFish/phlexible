@@ -1,13 +1,15 @@
-Ext.define('Phlexible.siteroots.MainPanel', {
+Ext.define('Phlexible.siteroot.view.MainPanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.siteroots-main',
+    alias: 'widget.siteroot-main',
 
-    strings: Phlexible.siteroots.Strings,
-    title: Phlexible.siteroots.Strings.siteroots,
+    title: '_MainPanel',
     iconCls: Phlexible.Icon.get('globe'),
-    cls: 'p-siteroots-main-panel',
+    cls: 'p-siteroot-main-panel',
     border: false,
     layout: 'border',
+
+    saveSiterootDataText: '_saveSiterootDataText',
+    checkAccordionsForErrorsText: '_checkAccordionsForErrorsText',
 
     /**
      * Fires after the active Siteroot has been changed
@@ -28,7 +30,7 @@ Ext.define('Phlexible.siteroots.MainPanel', {
 
     initMyItems: function() {
         this.items = [{
-            xtype: 'siteroots-list',
+            xtype: 'siteroot-list',
             region: 'west',
             itemId: 'list',
             width: 250,
@@ -51,7 +53,7 @@ Ext.define('Phlexible.siteroots.MainPanel', {
             padding: 5,
             tbar: [
                 {
-                    text: this.strings.save_siteroot_data,
+                    text: this.saveSiterootDataText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                     handler: this.onSaveData,
                     scope: this
@@ -59,19 +61,19 @@ Ext.define('Phlexible.siteroots.MainPanel', {
             ],
             items: [
                 {
-                    xtype: 'siteroots-urls'
+                    xtype: 'siteroot-urls'
                 },
                 {
-                    xtype: 'siteroots-titles'
+                    xtype: 'siteroot-titles'
                 },
                 {
-                    xtype: 'siteroots-properties'
+                    xtype: 'siteroot-properties'
                 },
                 {
-                    xtype: 'siteroots-specialtids'
+                    xtype: 'siteroot-specialtids'
                 },
                 {
-                    xtype: 'siteroots-navigations'
+                    xtype: 'siteroot-navigations'
                 }
             ]
         }];
@@ -90,7 +92,7 @@ Ext.define('Phlexible.siteroots.MainPanel', {
         this.getComponent(0).enable();
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroots_siteroot_load', {id: id}),
+            url: Phlexible.Router.generate('siteroot_siteroot_load', {id: id}),
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
@@ -145,14 +147,14 @@ Ext.define('Phlexible.siteroots.MainPanel', {
         }, this);
 
         if (!valid) {
-            Ext.MessageBox.alert(this.strings.failure, this.strings.err_check_accordions_for_errors);
+            Phlexible.Notify.failure(this.checkAccordionsForErrorsText);
             return;
         }
 
         // save data
         Ext.Ajax.request({
             method: 'POST',
-            url: Phlexible.Router.generate('siteroots_siteroot_save'),
+            url: Phlexible.Router.generate('siteroot_save'),
             params: {
                 id: this.siterootId,
                 data: Ext.encode(saveData)

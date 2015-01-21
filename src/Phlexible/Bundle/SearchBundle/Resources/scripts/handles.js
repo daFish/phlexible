@@ -1,7 +1,7 @@
 Phlexible.Handles.add('searchbox', function() {
     return Ext.create('Phlexible.gui.menuhandle.handle.Handle', {
         createConfig: function() {
-            return Ext.create('Phlexible.search.field.SearchBox', {
+            return Ext.create('Phlexible.search.form.SearchBox', {
                 width: 150
             });
         }

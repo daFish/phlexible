@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.pdf2swf.MainPanel', {
+Ext.define('Phlexible.mediatemplates.view.pdf2swf.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediatemplates-pdf2swf-main',
 

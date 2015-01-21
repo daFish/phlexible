@@ -1,11 +1,15 @@
-Ext.define('Phlexible.siteroots.ContentChannelGrid', {
+Ext.define('Phlexible.siteroot.view.ContentChannelGrid', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroots-contentchannels',
+    alias: 'widget.siteroot-contentchannels',
 
-    title: Phlexible.siteroots.Strings.contentchannels,
-    strings: Phlexible.siteroots.Strings,
+    title: '_ContentChannelGrid',
     iconCls: 'p-contentchannels-component-icon',
     border: false,
+
+    contentchannelIdText: '_contentchannelIdText',
+    contentchannelText: '_contentchannelText',
+    activeText: '_activeText',
+    defaultText: '_defaultText',
 
     initComponent: function () {
         this.initMyStore();
@@ -15,28 +19,28 @@ Ext.define('Phlexible.siteroots.ContentChannelGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroots.model.Contentchannel'
+            model: 'Phlexible.siteroot.model.Contentchannel'
         });
     },
 
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.contentchannel_id,
+                header: this.contentchannelIdText,
                 hidden: true,
                 dataIndex: 'contentchannel_id'
             },
             {
-                header: this.strings.contentchannel,
+                header: this.contentchannelText,
                 dataIndex: 'contentchannel'
             },
             this.cc1 = new Ext.grid.CheckColumn({
-                header: this.strings.active,
+                header: this.activeText,
                 dataIndex: 'used',
                 width: 50
             }),
             this.cc2 = new Ext.grid.CheckColumn({
-                header: this.strings['default'],
+                header: this.defaultText,
                 dataIndex: 'default',
                 width: 50
             })

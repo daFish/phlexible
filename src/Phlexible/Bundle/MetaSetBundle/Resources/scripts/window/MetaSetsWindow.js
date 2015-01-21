@@ -1,16 +1,22 @@
-Ext.define('Phlexible.metasets.MetaSetsWindow', {
+Ext.define('Phlexible.metaset.window.MetaSetsWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.metasets.Strings.metasets,
-    strings: Phlexible.metasets.Strings,
+    title: '_MetaSetsWindow',
     iconCls: 'p-metaset-component-icon',
     width: 400,
     height: 300,
     layout: 'fit',
 
     baseParams: {},
-
     urls: {},
+
+    metasetText: '_metasetText',
+    actionsText: '_actionsText',
+    removeText: '_removeText',
+    selectText: '_selectText',
+    addText: '_addText',
+    cancelText: '_cancelText',
+    saveText: '_saveText',
 
     initComponent: function () {
         if (!this.urls.list || !this.urls.available || !this.urls.save) {
@@ -50,16 +56,16 @@ Ext.define('Phlexible.metasets.MetaSetsWindow', {
                 }),
                 columns: [
                     {
-                        header: this.strings.metaset,
+                        header: this.metasetText,
                         dataIndex: 'name'
                     },
                     {
-                        header: this.strings.actions,
+                        header: this.actionsText,
                         width: 40,
                         actions: [
                             {
                                 iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                                tooltip: this.strings.remove_metaset,
+                                tooltip: this.removeText,
                                 handler: this.removeMetaSet,
                                 scope: this
                             }
@@ -94,7 +100,7 @@ Ext.define('Phlexible.metasets.MetaSetsWindow', {
                         scope: this
                     }
                 }),
-                emptyText: this.strings.select_metaset,
+                emptyText: this.selectText,
                 valueField: 'id',
                 displayField: 'name',
                 mode: 'remote',
@@ -102,7 +108,7 @@ Ext.define('Phlexible.metasets.MetaSetsWindow', {
                 editable: false
             },
             {
-                text: this.strings.add,
+                text: this.addText,
                 iconCls: 'p-metaset-add-icon',
                 handler: this.addMetaSet,
                 scope: this
@@ -112,11 +118,11 @@ Ext.define('Phlexible.metasets.MetaSetsWindow', {
             dock: 'bottom',
             ui: 'footer',
             items: [{
-                text: this.strings.cancel,
+                text: this.cancelText,
                 handler: this.close,
                 scope: this
             },{
-                text: this.strings.save,
+                text: this.saveText,
                 iconCls: 'p-metaset-save-icon',
                 handler: this.save,
                 scope: this

@@ -1,11 +1,14 @@
-queue:
-    queue: Queue
-    no_jobs: 'No jobs'
-    reload: Reload
-    id: ID
-    command: Command
-    priority: Priority
-    status: Status
-    create_time: 'Create time'
-    start_time: 'Start time'
-    end_time: 'End time'
+Phlexible:
+    queue:
+        window:
+            QueueStatsWindow:
+                title: Queue
+                noJobsText: 'No jobs'
+                idText: Id
+                commandText: Command
+                priorityText: Priority
+                statusText: Status
+                createdAtText: 'Created at'
+                startedAtText: 'Stated at'
+                finishedAtText: 'Finished at'
+                reloadText: Reload

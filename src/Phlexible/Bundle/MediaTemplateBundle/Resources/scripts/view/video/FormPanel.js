@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.video.FormPanel', {
+Ext.define('Phlexible.mediatemplates.view.video.FormPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.mediatemplates-video-form',
 

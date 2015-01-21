@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.BasePreviewPanel', {
+Ext.define('Phlexible.mediatemplates.view.BasePreviewPanel', {
     extend: 'Ext.panel.Panel',
 
     title: Phlexible.mediatemplates.Strings.preview,

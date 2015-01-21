@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediatemplates.TemplatesGrid', {
+Ext.define('Phlexible.mediatemplates.view.TemplatesGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.mediatemplates-list',
 

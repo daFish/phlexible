@@ -1,11 +1,11 @@
-Ext.define('Phlexible.search.field.SearchBox', {
+Ext.define('Phlexible.search.form.SearchBox', {
     extend: 'Ext.form.ComboBox',
     alias: 'widget.searchbox',
 
     displayField: 'title',
     cls: 'p-searchbox',
     typeAhead: false,
-    loadingText: Phlexible.search.Strings.searching,
+    loadingText: Phlexible.search.Strings.form.SearchBox.loadingText,
     width: 150,
     growWidth: false,
     listWidth: 500,
