@@ -1,10 +1,11 @@
-Ext.define('Phlexible.mediatemplates.view.audio.MainPanel', {
+Ext.define('Phlexible.mediatemplate.view.audio.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediatemplates-audio-main',
 
-    title: Phlexible.mediatemplates.Strings.audio_template,
-    strings: Phlexible.mediatemplates.Strings,
+    title: '_MainPanel',
     layout: 'border',
+
+    audioTemplateTitleText: '_audioTemplateTitleText',
 
     initComponent: function () {
         this.initMyItems();
@@ -40,7 +41,7 @@ Ext.define('Phlexible.mediatemplates.view.audio.MainPanel', {
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(Ext.String.format(this.strings.audio_template_title, template_key));
+        this.setTitle(Ext.String.format(this.audioTemplateTitleText, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

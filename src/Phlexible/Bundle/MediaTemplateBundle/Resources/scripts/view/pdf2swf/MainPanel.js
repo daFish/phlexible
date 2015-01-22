@@ -1,9 +1,8 @@
-Ext.define('Phlexible.mediatemplates.view.pdf2swf.MainPanel', {
+Ext.define('Phlexible.mediatemplate.view.pdf2swf.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediatemplates-pdf2swf-main',
 
-    title: Phlexible.mediatemplates.Strings.pdf2swf_template,
-    strings: Phlexible.mediatemplates.Strings,
+    title: '_MainPanel',
     layout: 'border',
 
     initComponent: function () {
@@ -41,7 +40,7 @@ Ext.define('Phlexible.mediatemplates.view.pdf2swf.MainPanel', {
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(Ext.String.format(this.strings.pdf2swf_template_title, template_key));
+        this.setTitle(Ext.String.format(this.pdf2swfTemplateTitleText, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

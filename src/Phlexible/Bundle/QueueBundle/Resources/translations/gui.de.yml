@@ -1,5 +1,9 @@
 Phlexible:
     queue:
+        handler:
+            Stats:
+                text: Queue Status
+
         window:
             QueueStatsWindow:
                 title: Warteschlange

@@ -1,4 +1,4 @@
-Ext.define('Phlexible.tasks.util.TaskManager', {
+Ext.define('Phlexible.task.util.TaskManager', {
     comment: function (task_id, comment, callback, scope) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('tasks_create_comment'),
@@ -16,11 +16,11 @@ Ext.define('Phlexible.tasks.util.TaskManager', {
         });
     },
 
-    assignToMe: function (task_id, callback, scope) {
+    assignToMe: function (taskId, callback, scope) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('tasks_assign'),
             params: {
-                id: task_id,
+                id: taskId,
                 recipient: Phlexible.Config.get('user.id'),
                 comment: encodeURIComponent(comment)
             },
@@ -34,11 +34,11 @@ Ext.define('Phlexible.tasks.util.TaskManager', {
         });
     },
 
-    assign: function (task_id, recipient, comment, callback, scope) {
+    assign: function (taskId, recipient, comment, callback, scope) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('tasks_assign'),
             params: {
-                id: task_id,
+                id: taskId,
                 recipient: recipient,
                 comment: encodeURIComponent(comment)
             },
@@ -52,11 +52,11 @@ Ext.define('Phlexible.tasks.util.TaskManager', {
         });
     },
 
-    setStatus: function (task_id, new_status, comment, callback, scope) {
+    setStatus: function (taskId, new_status, comment, callback, scope) {
         Ext.Ajax.request({
             url: Phlexible.Router.generate('tasks_create_transition'),
             params: {
-                id: task_id,
+                id: taskId,
                 new_status: new_status,
                 comment: encodeURIComponent(comment)
             },

@@ -302,7 +302,7 @@ Ext.define('Phlexible.gui.util.Application', {
      */
     addPanelByHandle: function(menuitem, noCloseButton) {
         var identifier = menuitem.getIdentifier(),
-            xtype      = menuitem.getXtype(),
+            xtype      = menuitem.getName(),
             parameters = menuitem.getParameters(),
             panel      = this.getMainPanel().getComponent(identifier);
 

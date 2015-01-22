@@ -1,11 +1,11 @@
 /**
  * PHP info window
  */
-Ext.define('Phlexible.gui.PhpInfoWindow', {
+Ext.define('Phlexible.gui.window.PhpInfoWindow', {
     extend: 'Ext.window.Window',
-    requires: ['Ext.window.Window', 'Phlexible.gui.IframePanel'],
+    requires: ['Ext.window.Window', 'Phlexible.gui.panel.IframePanel'],
 
-    title: '_php_info',
+    title: '_PhpInfoWindow',
     iconCls: 'p-gui-php-icon',
     width: 940,
     height: 600,
@@ -14,7 +14,7 @@ Ext.define('Phlexible.gui.PhpInfoWindow', {
     maximizable: true,
     layout: 'border',
 
-    modulesText: '_modules',
+    modulesText: '_modulesText',
 
     initComponent: function() {
         this.items = [{
@@ -30,7 +30,7 @@ Ext.define('Phlexible.gui.PhpInfoWindow', {
             padding: 5,
             items: []
         },{
-            xtype: 'gui-iframepanel',
+            xtype: 'gui-iframe-panel',
             region: 'center',
             src: Phlexible.Router.generate('gui_status_php'),
             enableReload: true,

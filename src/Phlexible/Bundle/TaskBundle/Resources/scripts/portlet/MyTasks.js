@@ -1,17 +1,17 @@
-Ext.define('Phlexible.tasks.portlet.MyTasks', {
+Ext.define('Phlexible.task.portlet.MyTasks', {
     extend: 'Portal.view.Portlet',
     alias: 'widget.tasks-my-tasks-portlet',
 
     bodyStyle: 'padding: 5px 5px 5px 5px',
     iconCls: 'p-task-portlet-icon',
-    title: Phlexible.tasks.Strings.my_tasks,
+    title: '_MyTasks',
 
-    noActiveTasksText: Phlexible.tasks.Strings.no_active_tasks,
+    noActiveTasksText: '_noActiveTasksText',
 
     initComponent: function () {
 
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.tasks.model.MyTask',
+            model: 'Phlexible.task.model.MyTask',
             id: 'id'
             //sortInfo: {field: 'type', username: 'ASC'},
         });
@@ -19,7 +19,7 @@ Ext.define('Phlexible.tasks.portlet.MyTasks', {
         var data = this.record.get('data');
         if (data) {
             Ext.each(data, function (item) {
-                this.add(new Phlexible.tasks.model.MyTask(item, item.id));
+                this.add(new Phlexible.task.model.MyTask(item, item.id));
             }, this.store);
         }
 
@@ -37,14 +37,14 @@ Ext.define('Phlexible.tasks.portlet.MyTasks', {
                     '<tpl for=".">',
                     '<div id="portal_tasks_{id}" class="portlet-task" style="cursor: pointer; padding-bottom: 5px;">',
                     '<div>',
-                    '<b><img src="{[Phlexible.bundleAsset("/tasks/icons/status_"+values.status+".png")]} width="16" height="16" style="vertical-align: middle;"> {[Phlexible.tasks.Strings.get(values.status)]}</b>, von<b> {create_user}</b>, <b>{create_date}</b>',
+                    '<b><img src="{[Phlexible.bundleAsset("/tasks/icons/status_"+values.status+".png")]} width="16" height="16" style="vertical-align: middle;"> {[Phlexible.task.Strings.get(values.status)]}</b>, von<b> {create_user}</b>, <b>{create_date}</b>',
                     '</div>',
                     '<div style="padding-left: 20px;">',
                     '{text}',
                     '</div>',
                     '<tpl if="comment">',
                     '<div style="padding-left: 20px;">',
-                    '{[Phlexible.tasks.Strings.comment]}: {comment}',
+                    '{[Phlexible.task.Strings.comment]}: {comment}',
                     '</div>',
                     '</tpl>',
                     '</div>',
@@ -59,8 +59,8 @@ Ext.define('Phlexible.tasks.portlet.MyTasks', {
                         }
 
                         Phlexible.Frame.loadPanel(
-                            'Phlexible_tasks_MainPanel',
-                            Phlexible.tasks.MainPanel,
+                            'Phlexible_task_MainPanel',
+                            Phlexible.task.MainPanel,
                             {
                                 id: r.get('id')
                             }
@@ -93,7 +93,7 @@ Ext.define('Phlexible.tasks.portlet.MyTasks', {
                 }
             } else {
                 update = true;
-                this.store.add(new Phlexible.tasks.portlet.TaskRecord(row, row.id));
+                this.store.add(new Phlexible.task.portlet.TaskRecord(row, row.id));
 
 //                Phlexible.msg('Task', this.strings.new_task + ' "' + row.text + '".');
             }

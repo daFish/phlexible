@@ -19,7 +19,7 @@ Ext.define('Phlexible.metaset.window.MetaSuggestWindow', {
             this.metaKey = this.record.data.key;
         }
         if (this.record && !this.metaSourceId) {
-            this.metaSourceId = this.record.data.options.source_id;
+            this.metaSourceId = this.record.data.options.sourceId;
         }
         if (this.record && !this.metaValue) {
             this.metaValue = this.record.data[this.valueField];
@@ -57,23 +57,30 @@ Ext.define('Phlexible.metaset.window.MetaSuggestWindow', {
                 disabled: true,
                 items: [
                     {
-                        xtype: 'superboxselect',
+                        xtype: 'tagfield',
                         hideLabel: true,
-                        source_id: this.metaSourceId,
+                        sourceId: this.metaSourceId,
                         emptyText: 'No tag selected',
                         anchor: '-20',
                         value: this.metaValue,
                         suggestLanguage: this.metaLanguage,
-                        store: new Ext.data.JsonStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['key', 'value'],
-                            url: Phlexible.Router.generate('metaset_values'),
-                            root: 'values',
-                            autoLoad: true,
-                            id: 'key',
-                            baseParams: {
-                                source_id: this.metaSourceId,
-                                language: this.metaLanguage
+                            proxy: {
+                                type: 'ajax',
+                                url: Phlexible.Router.generate('metaset_values'),
+                                simpleSortMode: true,
+                                reader: {
+                                    type: 'json',
+                                    rootProperty: 'values',
+                                    idProperty: 'key'
+                                },
+                                extraParams: {
+                                    sourceId: this.metaSourceId,
+                                    language: this.metaLanguage
+                                }
                             },
+                            autoLoad: true,
                             listeners: {
                                 load: function (store) {
                                     if (this.metaValue !== undefined) {

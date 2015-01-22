@@ -5,9 +5,9 @@ Ext.define('Phlexible.dashboard.infobar.Welcome', {
     extend: 'Phlexible.dashboard.infobar.AbstractInfoBar',
     alias: 'widget.dashboard-infobar-welcome',
 
-    welcomeToText: Phlexible.dashboard.Strings.infobar.Welcome.welcomeToText,
-    addPortletText: Phlexible.dashboard.Strings.infobar.Welcome.addPortletText,
-    changeLayoutText: Phlexible.dashboard.Strings.infobar.Welcome.changeLayoutText,
+    welcomeToText: '_welcomeToText',
+    addPortletText: '_addPortletText',
+    changeLayoutText: '_changeLayoutText',
 
     initComponent: function() {
         this.data = {

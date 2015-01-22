@@ -3,15 +3,20 @@ Ext.define('Phlexible.gui.menuhandle.handle.BubbleMenu', {
 
     createConfig: function (data) {
         if (data.menu && Ext.isArray(data.menu) && data.menu.length === 1) {
-            var handleFactory, handler;
+            var handleName, handler;
 
             if (!Phlexible.Handles.has(data.menu[0].handle)) {
                 console.error('Invalid handle in:', data.menu[0]);
                 return;
             }
 
-            handleFactory = Phlexible.Handles.get(data.menu[0].handle);
-            handler = handleFactory();
+            handleName = Phlexible.Handles.get(data.menu[0].handle);
+            handleName = Phlexible.Handles.get(menuItem.handle);
+            if (Ext.isFunction(handleName)) {
+                handler = handleName();
+            } else {
+                handler = Ext.create(handleName);
+            }
 
             if (data.menu[0].parameters) {
                 handler.setParameters(data.menu[0].parameters);

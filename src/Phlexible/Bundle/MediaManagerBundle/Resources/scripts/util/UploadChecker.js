@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediamanager.UploadChecker', {
+Ext.define('Phlexible.mediamanager.util.UploadChecker', {
     extend: 'Ext.util.Observable',
 
     /**
@@ -77,7 +77,7 @@ Ext.define('Phlexible.mediamanager.UploadChecker', {
                 this.replace.hide();
             }
             if (!this.wizard) {
-                this.wizard = new Phlexible.mediamanager.FileUploadWizard({
+                this.wizard = Ext.xcreate('Phlexible.mediamanager.window.FileUploadWizard', {
                     uploadChecker: this,
                     listeners: {
                         update: function () {
@@ -95,7 +95,7 @@ Ext.define('Phlexible.mediamanager.UploadChecker', {
                 this.wizard.hide();
             }
             if (!this.replace) {
-                this.replace = Ext.create('Phlexible.mediamanager.FileReplaceWindow', {
+                this.replace = Ext.create('Phlexible.mediamanager.window.FileReplaceWindow', {
                     uploadChecker: this,
                     listeners: {
                         save: function(action, all) {

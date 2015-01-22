@@ -1,7 +1,7 @@
-Ext.define('Phlexible.tasks.window.AssignWindow', {
+Ext.define('Phlexible.task.window.AssignWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.tasks.Strings.window.AssignWindow.title,
+    title: '_AssignWindow',
     width: 400,
     minWidth: 400,
     height: 270,
@@ -19,11 +19,11 @@ Ext.define('Phlexible.tasks.window.AssignWindow', {
         this.callParent(arguments);
     },
 
-    recipientText: Phlexible.tasks.Strings.window.AssignWindow.recipient,
-    recipientEmptyText: Phlexible.tasks.Strings.window.AssignWindow.recipientEmptyText,
-    commentText: Phlexible.tasks.Strings.window.AssignWindow.commentText,
-    cancelText: Phlexible.tasks.Strings.window.AssignWindow.cancelText,
-    assignText: Phlexible.tasks.Strings.window.AssignWindow.assignText,
+    recipientText: '_recipientText',
+    recipientEmptyText: '_recipientEmptyText',
+    commentText: '_commentText',
+    cancelText: '_cancelText',
+    assignText: '_assignText',
 
     initMyItems: function() {
         this.items = [
@@ -121,7 +121,7 @@ Ext.define('Phlexible.tasks.window.AssignWindow', {
         }
 
         var values = this.getComponent(0).getForm().getValues();
-        Phlexible.tasks.TaskManager.assign(this.taskId, values.recipient, values.comment, function(success, result) {
+        Phlexible.task.TaskManager.assign(this.taskId, values.recipient, values.comment, function(success, result) {
             if (success && result.success) {
                 this.fireEvent('success');
                 this.close();

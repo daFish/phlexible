@@ -1,5 +1,5 @@
-Ext.define('Phlexible.mediatemplates.view.pdf2swf.PreviewPanel', {
-    extend: 'Phlexible.mediatemplates.view.BasePreviewPanel',
+Ext.define('Phlexible.mediatemplate.view.pdf2swf.PreviewPanel', {
+    extend: 'Phlexible.mediatemplate.view.BasePreviewPanel',
     alias: 'widget.mediatemplates-pdf2swf-preview',
 
     createUrl: function () {

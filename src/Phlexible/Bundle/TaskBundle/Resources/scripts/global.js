@@ -1,7 +1,7 @@
-Ext.namespace('Phlexible.tasks');
+Ext.namespace('Phlexible.task');
 
-Phlexible.tasks.TaskManager = Ext.create('Phlexible.tasks.util.TaskManager');
-Phlexible.tasks.StatusIcons = {
+Phlexible.task.TaskManager = Ext.create('Phlexible.task.util.TaskManager');
+Phlexible.task.StatusIcons = {
     closed: Phlexible.Icon.get('star'),
     finished: Phlexible.Icon.get('tick'),
     open: Phlexible.Icon.get('new-text'),
@@ -9,10 +9,10 @@ Phlexible.tasks.StatusIcons = {
     reopened: Phlexible.Icon.get('arrow-repeat')
 };
 
-Phlexible.tasks.TransitionIcons = {
-    close: Phlexible.tasks.StatusIcons.closed,
-    finish: Phlexible.tasks.StatusIcons.finished,
-    open: Phlexible.tasks.StatusIcons.open,
-    reject: Phlexible.tasks.StatusIcons.rejected,
-    reopen: Phlexible.tasks.StatusIcons.reopened
+Phlexible.task.TransitionIcons = {
+    close: Phlexible.task.StatusIcons.closed,
+    finish: Phlexible.task.StatusIcons.finished,
+    open: Phlexible.task.StatusIcons.open,
+    reject: Phlexible.task.StatusIcons.rejected,
+    reopen: Phlexible.task.StatusIcons.reopened
 }

@@ -1,7 +1,7 @@
-Ext.define('Phlexible.mediamanager.MediamanagerWindow', {
+Ext.define('Phlexible.mediamanager.window.MediamanagerWindow', {
     extend: 'Ext.window.Window',
 
-    title: 'Mediamanager',
+    title: '_MediamanagerWindow',
     iconCls: 'p-mediamanager-component-icon',
     width: 800,
     height: 600,
@@ -20,8 +20,8 @@ Ext.define('Phlexible.mediamanager.MediamanagerWindow', {
      *
      */
     initComponent: function () {
-        if (!this.params.start_folder_path && Phlexible.mediamanager.lastParams && Phlexible.mediamanager.lastParams.start_folder_path) {
-            this.params.start_folder_path = Phlexible.mediamanager.lastParams.start_folder_path;
+        if (!this.params.startFolderPath && Phlexible.mediamanager.lastParams && Phlexible.mediamanager.lastParams.startFolderPath) {
+            this.params.startFolderPath = Phlexible.mediamanager.lastParams.startFolderPath;
         }
 
         this.initMyItems();

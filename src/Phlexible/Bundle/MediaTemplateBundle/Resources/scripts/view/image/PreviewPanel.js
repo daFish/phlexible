@@ -1,6 +1,11 @@
-Ext.define('Phlexible.mediatemplates.view.image.PreviewPanel', {
-    extend: 'Phlexible.mediatemplates.view.BasePreviewPanel',
+Ext.define('Phlexible.mediatemplate.view.image.PreviewPanel', {
+    extend: 'Phlexible.mediatemplate.view.BasePreviewPanel',
     alias: 'widget.mediatemplates-image-preview',
+
+    changeBackgroundColorToText: '_changeBackgroundColorToText',
+    whiteText: '_whiteText',
+    blackText: '_blackText',
+    randomText: '_randomText',
 
     createUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_image');
@@ -15,58 +20,60 @@ Ext.define('Phlexible.mediatemplates.view.image.PreviewPanel', {
     initMyDockedItems: function() {
         this.dockedItems = [{
             xtype: 'toolbar',
+            itemId: 'tbar',
             dock: 'top',
             items: [{
                 xtype: 'tbtext',
-                text: this.strings.change_background_color_to
+                text: this.changeBackgroundColorToText
             },
-                {
-                    text: this.strings.white,
-                    handler: function () {
-                        this.getPreviewFieldSet().body.setStyle('background-color', '#FFFFFF');
-                        this.getTopToolbar().items.items[4].setValue('#FFFFFF');
+            {
+                text: this.whiteText,
+                handler: function () {
+                    this.body.setStyle('background-color', '#FFFFFF');
+                    this.getDockedComponent('tbar').getComponent('color').setValue('#FFFFFF');
+                },
+                scope: this
+            },
+            {
+                text: this.blackText,
+                handler: function () {
+                    this.body.setStyle('background-color', '#000000');
+                    this.getDockedComponent('tbar').getComponent('color').setValue('#000000');
+                },
+                scope: this
+            },
+            {
+                text: this.randomText,
+                handler: function () {
+                    var red = Math.floor(Math.random() * 255);
+                    var green = Math.floor(Math.random() * 255);
+                    var blue = Math.floor(Math.random() * 255);
+                    var color = this.toColor(red, green, blue);
+                    this.body.setStyle('background-color', color);
+                    this.getDockedComponent('tbar').getComponent('color').setValue(color);
+                },
+                scope: this
+            },
+            {
+                type: 'colorfield', // TODO: colorfield
+                itemId: 'color',
+                xtype: 'textfield',
+                value: '#FFFFFF',
+                enableKeyEvents: true,
+                listeners: {
+                    keyup: function (f, e) {
+                        if (e.keyCode === 13) {
+                            this.body.setStyle('background-color', f.getValue());
+                        }
+                    },
+                    select: function (f, v) {
+                        if (this.rendered) {
+                            this.body.setStyle('background-color', v);
+                        }
                     },
                     scope: this
-                },
-                {
-                    text: this.strings.black,
-                    handler: function () {
-                        this.getPreviewFieldSet().body.setStyle('background-color', '#000000');
-                        this.getTopToolbar().items.items[4].setValue('#000000');
-                    },
-                    scope: this
-                },
-                {
-                    text: this.strings.random,
-                    handler: function () {
-                        var red = Math.floor(Math.random() * 255);
-                        var green = Math.floor(Math.random() * 255);
-                        var blue = Math.floor(Math.random() * 255);
-                        var color = this.toColor(red, green, blue);
-                        this.getPreviewFieldSet().body.setStyle('background-color', color);
-                        this.getTopToolbar().items.items[4].setValue(color);
-                    },
-                    scope: this
-                },
-                {
-                    type: 'colorfield', // TODO: colorfield
-                    xtype: 'textfield',
-                    value: '#FFFFFF',
-                    enableKeyEvents: true,
-                    listeners: {
-                        keyup: function (f, e) {
-                            if (e.keyCode === 13) {
-                                this.getPreviewFieldSet().body.setStyle('background-color', f.getValue());
-                            }
-                        },
-                        select: function (f, v) {
-                            if (this.getPreviewFieldSet().rendered) {
-                                this.getPreviewFieldSet().body.setStyle('background-color', v);
-                            }
-                        },
-                        scope: this
-                    }
-                }]
+                }
+            }]
         }]
     },
 
@@ -104,7 +111,7 @@ Ext.define('Phlexible.mediatemplates.view.image.PreviewPanel', {
             delete params['method'];
         }
 
-        Phlexible.mediatemplates.image.PreviewPanel.superclass.createPreview.call(this, params, debug);
+        this.callParent(arguments);
     },
 
     getResult: function (data) {

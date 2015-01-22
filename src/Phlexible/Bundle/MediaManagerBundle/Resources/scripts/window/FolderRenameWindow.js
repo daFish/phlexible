@@ -1,8 +1,7 @@
-Ext.define('Phlexible.mediamanager.FolderRenameWindow', {
+Ext.define('Phlexible.mediamanager.window.FolderRenameWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.mediamanager.Strings.rename_folder,
-    strings: Phlexible.mediamanager.Strings,
+    title: '_FolderRenameWindow',
     iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
     layout: 'form',
     width: 400,
@@ -10,15 +9,20 @@ Ext.define('Phlexible.mediamanager.FolderRenameWindow', {
     modal: true,
     resizable: false,
 
+    renameDescriptionText: '_renameDescriptionText',
+    nameText: '_nameText',
+    cancelText: '_cancelText',
+    renameText: '_renameText',
+
     initComponent: function() {
         this.items = [{
             xtype: 'displayfield',
             hideLabel: true,
-            value: this.strings.rename_folder_desc
+            value: this.renameDescriptionText
         },{
             xtype: 'textfield',
             flex: 1,
-            fieldLabel: this.strings.name,
+            fieldLabel: this.nameText,
             value: this.folderName
         }];
 
@@ -30,12 +34,12 @@ Ext.define('Phlexible.mediamanager.FolderRenameWindow', {
                 '->',
                 {
                     xtype: 'button',
-                    text: this.strings.cancel,
+                    text: this.cancelText,
                     handler: this.close,
                     scope: this
                 },{
                     xtype: 'button',
-                    text: this.strings.rename,
+                    text: this.renameText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                     handler: this.submit,
                     scope: this

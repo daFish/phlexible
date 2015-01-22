@@ -1,8 +1,7 @@
-Ext.define('Phlexible.mediamanager.FileDetailWindow', {
+Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
     extend: 'Ext.window.Window',
 
-    title: 'File Details',
-    strings: Phlexible.mediamanager.Strings,
+    title: '_FileDetailWindow',
     iconCls: Phlexible.Icon.get('document'),
     width: 900,
     minWidth: 900,
@@ -17,6 +16,12 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
 
     file: null,
     folderRights: [],
+
+    folderText: '_folderText',
+    idText: '_idText',
+    nameText: '_nameText',
+    attributesText: '_attributesText',
+    noAttributesText: '_noAttributesText',
 
     initComponent: function () {
         this.title = this.file.get('name');
@@ -106,7 +111,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
             itemId: 'tbar',
             dock: 'top',
             items: [
-                this.strings.folder,
+                this.folderText,
                 {
                     xtype: 'textfield',
                     itemId: 'pathField',
@@ -114,7 +119,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
                     width: 200
                 },
                 ' ',
-                this.strings.name,
+                this.nameText,
                 {
                     xtype: 'textfield',
                     itemId: 'nameField',
@@ -122,7 +127,7 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
                     width: 326
                 },
                 ' ',
-                this.strings.id,
+                this.idText,
                 {
                     xtype: 'textfield',
                     itemId: 'idField',
@@ -190,10 +195,10 @@ Ext.define('Phlexible.mediamanager.FileDetailWindow', {
             {
                 xtype: 'propertygrid',
                 itemId: 'attributes',
-                title: this.strings.attributes,
+                title: this.attributesText,
                 iconCls: Phlexible.Icon.get('property'),
                 source: this.file.get('attributes'),
-                emptyText: this.strings.no_attribute_values,
+                emptyText: this.noAttributeValuesText,
                 hidden: false
             },
             {

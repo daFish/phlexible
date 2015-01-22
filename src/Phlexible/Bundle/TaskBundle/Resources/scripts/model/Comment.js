@@ -1,4 +1,4 @@
-Ext.define('Phlexible.tasks.model.Comment', {
+Ext.define('Phlexible.task.model.Comment', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id'},

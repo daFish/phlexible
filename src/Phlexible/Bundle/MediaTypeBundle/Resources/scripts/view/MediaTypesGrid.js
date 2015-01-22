@@ -2,16 +2,16 @@ Ext.define('Phlexible.mediatype.view.MediaTypesGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.mediatype-list',
 
-    title: Phlexible.mediatype.Strings.view.MediaTypesGrid.title,
+    title: '_MediaTypesGrid',
     iconCls: 'p-mediatype-component-icon',
     loadMask: true,
     stripeRows: true,
 
-    idText: Phlexible.mediatype.Strings.view.MediaTypesGrid.idText,
-    keyText: Phlexible.mediatype.Strings.view.MediaTypesGrid.keyText,
-    mimetypesText: Phlexible.mediatype.Strings.view.MediaTypesGrid.mimetypesText,
-    reloadText: Phlexible.mediatype.Strings.view.MediaTypesGrid.reloadText,
-    iconsForText: Phlexible.mediatype.Strings.view.MediaTypesGrid.iconsForText,
+    idText: '_idText',
+    keyText: '_keyText',
+    mimetypesText: '_mimetypesText',
+    reloadText: '_reloadText',
+    iconsForText: '_iconsForText',
 
     initComponent: function () {
         this.initMyStore();

@@ -134,7 +134,7 @@ Ext.define('Phlexible.gui.menu.Menu', {
         var items = [];
 
         Ext.each(data, function (dataItem) {
-            var handleFactory, handler, config;
+            var handleName, handler, config;
 
             if (!Phlexible.Handles.has(dataItem.handle)) {
                 console.error('Invalid handle in: ', dataItem);
@@ -154,8 +154,12 @@ Ext.define('Phlexible.gui.menu.Menu', {
                 }
             }
 
-            handleFactory = Phlexible.Handles.get(dataItem.handle);
-            handler = handleFactory();
+            handleName = Phlexible.Handles.get(dataItem.handle);
+            if (Ext.isFunction(handleName)) {
+                handler = handleName();
+            } else {
+                handler = Ext.create(handleName);
+            }
 
             if (dataItem.parameters) {
                 dataItem.setParameters(dataItem.parameters);

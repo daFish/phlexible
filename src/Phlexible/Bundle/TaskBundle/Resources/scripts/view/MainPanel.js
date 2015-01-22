@@ -1,8 +1,7 @@
-Ext.define('Phlexible.tasks.view.MainPanel', {
+Ext.define('Phlexible.task.view.MainPanel', {
     extend: 'Ext.Panel',
     alias: 'widget.tasks-main',
 
-    title: Phlexible.tasks.Strings.MainPanel.title,
     cls: 'p-tasks-main',
     iconCls: Phlexible.Icon.get('clipboard-task'),
     layout: 'border',
@@ -10,8 +9,12 @@ Ext.define('Phlexible.tasks.view.MainPanel', {
 
     params: {},
 
-    commentsText: Phlexible.tasks.Strings.view.MainPanel.commentsText,
-    transitionsText: Phlexible.tasks.Strings.view.MainPanel.transitionsText,
+    commentsText: '_commentsText',
+    transitionsText: '_transitionsText',
+    statusText: '_statusText',
+    commentText: '_commentText',
+    assignToMeText: '_assignToMeText',
+    assignText: '_assignText',
 
     loadParams: function (params) {
         if (params.id) {
@@ -64,7 +67,7 @@ Ext.define('Phlexible.tasks.view.MainPanel', {
                             Ext.each(r.get('states'), function(state) {
                                 statusMenu.add({
                                     text: state,
-                                    iconCls: Phlexible.tasks.TransitionIcons[state]
+                                    iconCls: Phlexible.task.TransitionIcons[state]
                                 });
                             });
 
@@ -88,28 +91,28 @@ Ext.define('Phlexible.tasks.view.MainPanel', {
                             itemId: 'tbar',
                             dock: 'top',
                             items: [{
-                                text: '_status',
+                                text: this.statusText,
                                 itemId: 'statusBtn',
                                 menu: []
                             },{
-                                text: '_comment',
+                                text: this.commentText,
                                 iconCls: Phlexible.Icon.get('balloon'),
                                 handler: function() {
-                                    var w = Ext.create('Phlexible.tasks.window.CommentWindow');
+                                    var w = Ext.create('Phlexible.task.window.CommentWindow');
                                     w.show();
                                 },
                                 scope: this
                             },{
-                                text: '_assign_to_me',
+                                text: this.assignToMeText,
                                 handler: function() {
-                                    var w = Ext.create('Phlexible.tasks.window.AssignWindow');
+                                    var w = Ext.create('Phlexible.task.window.AssignWindow');
                                     w.show();
                                 },
                                 scope: this
                             },{
-                                text: '_assign',
+                                text: this.assignText,
                                 handler: function() {
-                                    var w = Ext.create('Phlexible.tasks.window.AssignWindow');
+                                    var w = Ext.create('Phlexible.task.window.AssignWindow');
                                     w.show();
                                 },
                                 scope: this
@@ -145,33 +148,33 @@ Ext.define('Phlexible.tasks.view.MainPanel', {
             '<col width="240" />',
             '</colgroup>',
             '<tr>',
-            '<th>{[Phlexible.tasks.Strings.task]}</th>',
+            '<th>{[Phlexible.task.Strings.task]}</th>',
             '<td>{title}</td>',
             '</tr>',
             '<tr>',
-            '<th>{[Phlexible.tasks.Strings.task]}</th>',
+            '<th>{[Phlexible.task.Strings.task]}</th>',
             '<td>{text}</td>',
             '</tr>',
             '<tr>',
-            '<th>{[Phlexible.tasks.Strings.status]}</th>',
-            '<td>{[Phlexible.inlineIcon(\"p-task-status_\"+values.status+\"-icon\")]} {[Phlexible.tasks.Strings.get(values.status)]}</td>',
+            '<th>{[Phlexible.task.Strings.status]}</th>',
+            '<td>{[Phlexible.inlineIcon(\"p-task-status_\"+values.status+\"-icon\")]} {[Phlexible.task.Strings.get(values.status)]}</td>',
             '</tr>',
             '<tr>',
-            '<th colspan="2">{[Phlexible.tasks.Strings.description]}</th>',
+            '<th colspan="2">{[Phlexible.task.Strings.description]}</th>',
             '</tr>',
             '<tr>',
             '<td colspan="2">{description}</td>',
             '</tr>',
             '<tr>',
-            '<th>{[Phlexible.tasks.Strings.assigned_to]}</th>',
+            '<th>{[Phlexible.task.Strings.assigned_to]}</th>',
             '<td>{assigned_user}</td>',
             '</tr>',
             '<tr>',
-            '<th>{[Phlexible.tasks.Strings.create_user]}</th>',
+            '<th>{[Phlexible.task.Strings.create_user]}</th>',
             '<td>{create_user}</td>',
             '</tr>',
             '<tr>',
-            '<th>{[Phlexible.tasks.Strings.create_date]}</th>',
+            '<th>{[Phlexible.task.Strings.create_date]}</th>',
             '<td>{create_date}</td>',
             '</tr>',
             '</table>',

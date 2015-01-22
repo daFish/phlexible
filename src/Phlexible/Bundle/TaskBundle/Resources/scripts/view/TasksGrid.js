@@ -1,23 +1,26 @@
-Ext.define('Phlexible.tasks.view.TasksGrid', {
+Ext.define('Phlexible.task.view.TasksGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.tasks-list',
 
     cls: 'p-tasks-list',
     deferEmptyText: false,
     loadMask: true,
+    viewConfig: {
+        deferEmptyText: false
+    },
 
-    emptyText: Phlexible.tasks.Strings.view.TasksGrid.emptyText,
-    idText: Phlexible.tasks.Strings.view.TasksGrid.idText,
-    typeText: Phlexible.tasks.Strings.view.TasksGrid.typeText,
-    componentText: Phlexible.tasks.Strings.view.TasksGrid.componentText,
-    statusText: Phlexible.tasks.Strings.view.TasksGrid.statusText,
-    titleText: Phlexible.tasks.Strings.view.TasksGrid.titleText,
-    taskText: Phlexible.tasks.Strings.view.TasksGrid.taskText,
-    descriptionText: Phlexible.tasks.Strings.view.TasksGrid.descriptionText,
-    assignedToText: Phlexible.tasks.Strings.view.TasksGrid.assignedToText,
-    createUserText: Phlexible.tasks.Strings.view.TasksGrid.createUserText,
-    createDateText: Phlexible.tasks.Strings.view.TasksGrid.createDateText,
-    reloadText: Phlexible.tasks.Strings.view.TasksGrid.reloadText,
+    emptyText: '_emptyText',
+    idText: '_idText',
+    typeText: '_typeText',
+    componentText: '_componentText',
+    statusText: '_statusText',
+    titleText: '_titleText',
+    taskText: '_taskText',
+    descriptionText: '_descriptionText',
+    assignedToText: '_assignedToText',
+    createUserText: '_createUserText',
+    createDateText: '_createDateText',
+    reloadText: '_reloadText',
 
     initComponent: function () {
         this.initMyStore();
@@ -30,7 +33,7 @@ Ext.define('Phlexible.tasks.view.TasksGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.tasks.model.Task',
+            model: 'Phlexible.task.model.Task',
             proxy: {
                 type: 'ajax',
                 url: Phlexible.Router.generate('tasks_list'),
@@ -84,7 +87,7 @@ Ext.define('Phlexible.tasks.view.TasksGrid', {
                 dataIndex: 'status',
                 width: 120,
                 renderer: function (s) {
-                    return Phlexible.inlineIcon('p-task-status_' + s + '-icon') + ' ' + Phlexible.tasks.Strings[s];
+                    return Phlexible.inlineIcon('p-task-status_' + s + '-icon') + ' ' + Phlexible.task.Strings[s];
                 }
             }, {
                 header: this.titleText,

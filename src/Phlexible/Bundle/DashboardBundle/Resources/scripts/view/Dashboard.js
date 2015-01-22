@@ -5,7 +5,6 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.dashboard-dashboard',
 
-    title: Phlexible.dashboard.Strings.view.Dashboard.title,
     cls: 'p-dashboard-main-panel',
     header: false,
     border: false,
@@ -13,8 +12,8 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
 
     cols: 3,
 
-    noTitleText: Phlexible.dashboard.Strings.view.Dashboard.noTitleText,
-    noDescriptionText: Phlexible.dashboard.Strings.view.Dashboard.noDescriptionText,
+    noTitleText: '_noTitleText',
+    noDescriptionText: '_noDescriptionText',
 
     initComponent: function() {
         if (Phlexible.App.getConfig().has('dashboard.columns')) {

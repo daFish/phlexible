@@ -1,5 +1,9 @@
 Phlexible:
-    metasets:
+    metaset:
+        handler:
+            MetaSets:
+                text: Meta Sets
+
         view:
             MainPanel:
                 title: 'Meta Sets'

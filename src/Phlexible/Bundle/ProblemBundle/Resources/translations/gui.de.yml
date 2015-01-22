@@ -1,5 +1,17 @@
 Phlexible:
-    problems:
+    problem:
+        handler:
+            Problems:
+                text: Problems
+
+        portlet:
+            Problems:
+                title: Probleme
+                solutionText: Lösung
+                menuHintText: 'Probleme mit Schwere notice und darunter sind versteckt, öffnen Sie Menu / Administration / Probleme für eine vollständige Liste.'
+                noProblemsText: 'Keine Probleme'
+                newProblemText: 'Neues Problem'
+
         view:
             ProblemsGrid:
                 title: Probleme
@@ -11,11 +23,3 @@ Phlexible:
                 lastCheckedAtText: 'Zuletzt überprüft an'
                 linkText: Link
                 solutionText: Lösung
-
-        portlet:
-            Problems:
-                title: Probleme
-                solutionText: Lösung
-                menuHintText: 'Probleme mit Schwere notice und darunter sind versteckt, öffnen Sie Menu / Administration / Probleme für eine vollständige Liste.'
-                noProblemsText: 'Keine Probleme'
-                newProblemText: 'Neues Problem'

@@ -3,6 +3,7 @@ Phlexible:
         view:
             SearchPanel:
                 title: Suche
+
         form:
             SearchBox:
                 loadingText: Suche...

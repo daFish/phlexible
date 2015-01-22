@@ -4,14 +4,14 @@
 Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
     extend: 'Ext.Window',
 
-    title: Phlexible.dashboard.Strings.columns.title,
+    title: '_ColumnsWindow',
     width: 180,
     height: 100,
     modal: true,
     layout: 'fit',
 
-    closeText: Phlexible.dashboard.Strings.window.ColumnsWindow.closeText,
-    saveText: Phlexible.dashboard.Strings.window.ColumnsWindow.saveText,
+    closeText: '_closeText',
+    saveText: '_saveText',
 
     initComponent: function() {
         this.initMyItems();

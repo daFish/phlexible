@@ -8,6 +8,4 @@ Phlexible.Handles.add('searchbox', function() {
     });
 });
 
-Phlexible.Handles.add('searchboxseparator', function() {
-    return Ext.create('Phlexible.gui.menuhandle.handle.SeparatorHandle');
-});
+Phlexible.Handles.add('searchboxseparator', 'Phlexible.gui.menuhandle.handle.SeparatorHandle');

@@ -1,7 +1,7 @@
 Ext.define('Phlexible.gui.Actions', {
-    extend: 'Ext.Window',
+    extend: 'Ext.window.Window',
 
-    title: Phlexible.gui.Strings.menu,
+    title: '_Actions',
     width: 400,
     height: 72,
     resizable: false,
@@ -12,7 +12,7 @@ Ext.define('Phlexible.gui.Actions', {
         {
             xtype: 'combo',
             width: 360,
-            store: new Ext.data.SimpleStore({
+            store: Ext.create('Ext.data.Store', {
                 fields: ['text', 'iconCls', 'handler', 'menu'],
                 sortInfo: {field: 'text', direction: 'ASC'}
             }),

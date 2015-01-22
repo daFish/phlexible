@@ -1,28 +1,25 @@
-dashboard:
-    start: Dashboard
-    portlets: Portlets
-    save_layout: 'Save layout'
-    use_defaults: 'Use defaults'
-    close: Close
-
-    list:
-        title: 'Available Portlets'
-        noAvailablePortletsText: 'No available Portlets'
-
-    columns:
-        title: Columns
-        columnsText: Columns
-        saveText: Save
-
+Phlexible:
     dashboard:
-        title: Dashboard
-        noTitleText: 'No title'
-        noDescriptionText: 'No description'
+        infobar:
+            AbstractInfoBar:
+                infoText: 'No text'
 
-    AbstractInfoBar:
-        infoText: 'No text'
+            Welcome:
+                welcomeToText: '{title} {version}'
+                addPortletText: 'Add portlet'
+                changeLayoutText: 'Change layout'
+        view:
+            Dashboard:
+                title: Dashboard
+                noTitleText: 'No title'
+                noDescriptionText: 'No description'
 
-    welcome:
-        welcomeToText: '{title} {version}'
-        addPortletText: 'Add portlet'
-        changeLayoutText: 'Change layout'
+        window:
+            ListWindow:
+                title: 'Available portlets'
+                noAvailablePortletsText: 'No available portlets'
+
+            ColumnsWindow:
+                title: Columns
+                columns: Columns
+                save: Save

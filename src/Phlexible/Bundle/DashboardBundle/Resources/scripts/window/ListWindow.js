@@ -4,7 +4,7 @@
 Ext.define('Phlexible.dashboard.window.ListWindow', {
     extend: 'Ext.Window',
 
-    title: Phlexible.dashboard.Strings.window.ListWindow.title,
+    title: '_ListWindow',
     width: 600,
     height: 400,
     layout: 'fit',
@@ -12,7 +12,7 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
     constrainHeader: true,
     cls: 'p-dashboard-list-window',
 
-    noAvailablePortletsText: Phlexible.dashboard.Strings.window.ListWindow.noAvailablePortletsText,
+    noAvailablePortletsText: '_noAvailablePortletsText',
 
     /**
      * @event portletOpen

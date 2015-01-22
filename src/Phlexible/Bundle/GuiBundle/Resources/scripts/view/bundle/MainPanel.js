@@ -1,9 +1,7 @@
-Ext.define('Phlexible.gui.bundles.MainPanel', {
+Ext.define('Phlexible.gui.view.bundle.MainPanel', {
     extend: 'Ext.Panel',
     alias: 'widget.gui-bundles',
 
-    title: Phlexible.gui.Strings.bundles,
-    strings: Phlexible.gui.Strings,
     iconCls: 'p-gui-manager-icon',
     cls: 'p-gui-bundles',
     closable: true,
@@ -34,7 +32,7 @@ Ext.define('Phlexible.gui.bundles.MainPanel', {
                 }
             },
             {
-                xtype: 'gui-bundles-grid',
+                xtype: 'gui-bundles-list',
                 itemId: 'list',
                 region: 'center',
                 border: true,

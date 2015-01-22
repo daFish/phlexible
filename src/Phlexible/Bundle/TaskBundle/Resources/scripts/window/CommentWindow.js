@@ -1,7 +1,7 @@
-Ext.define('Phlexible.tasks.window.CommentWindow', {
+Ext.define('Phlexible.task.window.CommentWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.tasks.Strings.comment,
+    title: '_CommentWindow',
     width: 400,
     minWidth: 400,
     height: 270,
@@ -12,8 +12,8 @@ Ext.define('Phlexible.tasks.window.CommentWindow', {
     payload: {},
     componentFilter: null,
 
-    cancelText: Phlexible.tasks.Strings.window.CommentWindow.cancelText,
-    commentText: Phlexible.tasks.Strings.window.CommentWindow.commentText,
+    cancelText: '_cancelText',
+    commentText: '_commentText',
 
     initComponent: function () {
         this.initMyItems();
@@ -88,7 +88,7 @@ Ext.define('Phlexible.tasks.window.CommentWindow', {
         }
 
         var values = this.getComponent(0).getForm().getValues();
-        Phlexible.tasks.TaskManager.comment(this.taskId, values.comment, function(success, result) {
+        Phlexible.task.TaskManager.comment(this.taskId, values.comment, function(success, result) {
             if (success && result.success) {
                 this.fireEvent('success');
                 this.close();

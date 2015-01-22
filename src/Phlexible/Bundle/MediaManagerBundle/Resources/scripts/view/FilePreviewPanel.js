@@ -1,9 +1,8 @@
-Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
+Ext.define('Phlexible.mediamanager.view.FilePreviewPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediamanager-file-preview',
 
-    strings: Phlexible.mediamanager.Strings,
-    title: Phlexible.mediamanager.Strings.preview,
+    title: '_FilePreviewPanel',
     cls: 'p-mediamanager-preview-panel',
     height: 270,
     padding: 5,
@@ -14,6 +13,8 @@ Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
     mediaType: null,
     mediaCategory: null,
     cache: null,
+
+    noPreviewAvailableText: '_noPreviewAvailableText',
 
     // private
     initComponent: function () {
@@ -106,13 +107,13 @@ Ext.define('Phlexible.mediamanager.FilePreviewPanel', {
                             tag: 'td',
                             align: 'center',
                             valign: 'middle',
-                            html: this.strings.no_preview_available
+                            html: this.noPreviewAvailableText
                         }
                     ]
                 }
             ]
         };
-        return '<table border="0" width="100%" height="100%"><tr><td align="center" valign="middle">' + this.strings.no_preview_available + '</td></tr></table>';
+        return '<table border="0" width="100%" height="100%"><tr><td align="center" valign="middle">' + this.noPreviewAvailableText + '</td></tr></table>';
     },
 
     createFlashPlayer: function (width, height, fileId, fileVersion, fileName, cache) {

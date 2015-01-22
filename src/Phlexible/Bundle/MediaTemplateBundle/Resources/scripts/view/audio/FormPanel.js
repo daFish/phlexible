@@ -1,9 +1,8 @@
-Ext.define('Phlexible.mediatemplates.view.audio.FormPanel', {
+Ext.define('Phlexible.mediatemplate.view.audio.FormPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.mediatemplates-audio-form',
 
-    title: Phlexible.mediatemplates.Strings.audio_template,
-    strings: Phlexible.mediatemplates.Strings,
+    title: '_FormPanel',
 //    labelWidth: 80,
     autoScroll: true,
     labelAlign: 'top',
@@ -11,6 +10,19 @@ Ext.define('Phlexible.mediatemplates.view.audio.FormPanel', {
     layout: 'accordion',
 
     debugPreview: false,
+
+    audioText: '_audioText',
+    bitrateText: '_bitrateText',
+    bitrateHelpText: '_bitrateHelpText',
+    samplerateText: '_samplerateText',
+    samplerateHelpText: '_samplerateHelpText',
+    samplebitsText: '_samplebitsText',
+    samplebitsHelpText: '_samplebitsHelpText',
+    channelsText: '_channelsText',
+    channelsHelpText: '_channelsHelpText',
+    saveText: '_saveText',
+    previewText: '_previewText',
+    debugText: '_debugText',
 
     initComponent: function () {
         this.initMyItems();
@@ -21,91 +33,7 @@ Ext.define('Phlexible.mediatemplates.view.audio.FormPanel', {
     initMyItems: function() {
         this.items = [
             {
-                xtype: 'panel',
-                layout: 'form',
-                title: this.strings.audio,
-                iconCls: Phlexible.mediatemplates.TemplateIcons.audio,
-                bodyStyle: 'padding: 5px',
-                border: false,
-                autoScroll: true,
-                items: [
-                    {
-                        xtype: 'combo',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: ['id', 'bitrate'],
-                            data: Phlexible.mediatemplates.AudioBitrates
-                        }),
-                        valueField: 'id',
-                        displayField: 'bitrate',
-                        typeAhead: false,
-                        mode: 'local',
-                        triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.strings.bitrate,
-                        name: 'audio_bitrate',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.strings.help_bitrate
-                    },
-                    {
-                        xtype: 'combo',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: ['id', 'samplerate'],
-                            data: Phlexible.mediatemplates.AudioSamplerates
-                        }),
-                        valueField: 'id',
-                        displayField: 'samplerate',
-                        typeAhead: false,
-                        mode: 'local',
-                        triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.strings.samplerate,
-                        name: 'audio_samplerate',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.strings.help_samplerate
-                    },
-                    {
-                        xtype: 'combo',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: ['id', 'samplebits'],
-                            data: Phlexible.mediatemplates.AudioSamplebits
-                        }),
-                        valueField: 'id',
-                        displayField: 'samplebits',
-                        typeAhead: false,
-                        mode: 'local',
-                        triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.strings.samplebits,
-                        name: 'audio_samplebits',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.strings.help_samplebits
-                    },
-                    {
-                        xtype: 'combo',
-                        store: Ext.create('Ext.data.Store', {
-                            fields: ['id', 'channels'],
-                            data: Phlexible.mediatemplates.AudioChannels
-                        }),
-                        valueField: 'id',
-                        displayField: 'channels',
-                        typeAhead: false,
-                        mode: 'local',
-                        triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.strings.channels,
-                        name: 'audio_channels',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.strings.help_channels
-                    }
-                ]
+                xtype: 'mediatemplates-audio-fields'
             }
         ];
     },
@@ -117,7 +45,7 @@ Ext.define('Phlexible.mediatemplates.view.audio.FormPanel', {
             itemId: 'tbar',
             items: [
                 {
-                    text: this.strings.save,
+                    text: this.saveText,
                     iconCls: Phlexible.Icons.get(Phlexible.Icon.SAVE),
                     itemId: 'saveBtn',
                     handler: this.saveParameters,
@@ -126,7 +54,7 @@ Ext.define('Phlexible.mediatemplates.view.audio.FormPanel', {
                 '->',
                 {
                     xtype: 'splitbutton',
-                    text: this.strings.preview,
+                    text: this.previewText,
                     iconCls: Phlexible.Icons.get(Phlexible.Icon.PREVIEW),
                     handler: function () {
                         var values = this.getForm().getValues();
@@ -139,7 +67,7 @@ Ext.define('Phlexible.mediatemplates.view.audio.FormPanel', {
                     scope: this,
                     menu: [
                         {
-                            text: this.strings.debug,
+                            text: this.debugText,
                             checked: this.debugPreview,
                             checkHandler: function (checkItem, checked) {
                                 this.debugPreview = checked;

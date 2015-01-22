@@ -1,8 +1,7 @@
-Ext.define('Phlexible.gui.Help', {
-    extend: 'Phlexible.gui.IframePanel',
+Ext.define('Phlexible.gui.view.Help', {
+    extend: 'Phlexible.gui.panel.IframePanel',
     alias: 'widget.gui-help',
 
-    title: Phlexible.gui.Strings.help,
     iconCls: Phlexible.Icon.get('book-question'),
     closable: false,
 

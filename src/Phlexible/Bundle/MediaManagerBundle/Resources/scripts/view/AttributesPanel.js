@@ -1,14 +1,16 @@
-Ext.define('Phlexible.mediamanager.AttributesPanel', {
+Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediamanager-attributes',
 
-    title: Phlexible.mediamanager.Strings.no_file_selected,
-    strings: Phlexible.mediamanager.Strings,
     iconCls: Phlexible.Icon.get('document'),
     autoScroll: true,
 
     folderRights: {},
     mode: '',
+
+    noFileSelectedText: '_noFileSelected',
+    attributesText: '_attributesText',
+    noAttributesText: '_noAttributesText',
 
     initComponent: function () {
         this.initMyTemplates();
@@ -19,6 +21,8 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
     },
 
     initMyItems: function() {
+        this.setTitle(this.noFileSelectedText);
+
         this.items = [
             {
                 xtype: 'mediamanager-file-preview',
@@ -88,8 +92,8 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
             xtype: 'propertygrid',
             itemId: 'attributes',
             iconCls: Phlexible.Icon.get('property'),
-            title: this.strings.attributes,
-            emptyText: this.strings.no_attribute_values,
+            title: this.attributesText,
+            emptyText: this.noAttributesText,
             source: {},
             border: false,
             autoHeight: true,
@@ -397,7 +401,7 @@ Ext.define('Phlexible.mediamanager.AttributesPanel', {
     },
 
     emptyFile: function() {
-        this.setTitle(this.strings.no_file_selected);
+        this.setTitle(this.noFileSelectedText);
 
         // preview
         this.getPreviewPanel().empty();

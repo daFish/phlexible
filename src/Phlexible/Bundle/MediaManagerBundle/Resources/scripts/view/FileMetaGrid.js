@@ -1,18 +1,20 @@
-Ext.define('Phlexible.mediamanager.FileMetaGrid', {
+Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.mediamanager-file-metas',
 
-    strings: Phlexible.mediamanager.Strings,
-    title: Phlexible.mediamanager.Strings.meta,
+    title: '_FileMetaGrid',
     cls: 'p-mediamanager-meta-grid',
     //iconCls: 'p-metaset-component-icon',
     stripeRows: true,
     enableColumnMove: false,
     enableColumnHide: true,
-    emptyText: Phlexible.metasets.Strings.no_meta_values,
     deferEmptyText: true,
 
     small: false,
+
+    emptyText: '_emptyText',
+    keyText: '_keyText',
+    valueText: '_valueText',
 
     initComponent: function () {
         if (this.small) {
@@ -65,7 +67,7 @@ Ext.define('Phlexible.mediamanager.FileMetaGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.key,
+                header: this.keyText,
                 dataIndex: 'key',
                 width: 100
             },
@@ -81,7 +83,7 @@ Ext.define('Phlexible.mediamanager.FileMetaGrid', {
 
         Ext.each(Phlexible.App.getConfig().get('set.language.meta'), function (language) {
             this.columns.push({
-                header: this.strings.value + ' ' + Phlexible.inlineIcon(language[2]) + ' ' + language [1],
+                header: this.valueText + ' ' + Phlexible.inlineIcon(language[2]) + ' ' + language [1],
                 dataIndex: 'value_' + language[0],
                 language: language[0],
                 flex: 1,

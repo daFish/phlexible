@@ -1,8 +1,7 @@
-Ext.define('Phlexible.mediamanager.FolderTree', {
+Ext.define('Phlexible.mediamanager.view.FolderTree', {
     extend: 'Ext.tree.TreePanel',
     alias: 'widget.mediamanager-folders',
 
-    strings: Phlexible.mediamanager.Strings,
     cls: 'p-mediamanager-folders',
     enableDD: true,
     containerScroll: true,
@@ -10,6 +9,15 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
     autoScroll: true,
     useArrows: true,
     lines: false,
+
+    reloadText: '_reloadText',
+    expandAllText: '_expandAllText',
+    collapseAllText: '_collapseAllText',
+    createFolderText: '_createFolderText',
+    renameFolderText: '_renameFolderText',
+    deleteFolderText: '_deleteFolderText',
+    folderRightsText: '_folderRightsText',
+    propertiesText: '_propertiesText',
 
     /**
      * @event folderChange
@@ -127,21 +135,21 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
             '-',
             {
                 itemId: 'reloadBtn',
-                text: this.strings.reload,
+                text: this.reloadText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
                 handler: this.onReload,
                 scope: this
             },
             {
                 itemId: 'expandBtn',
-                text: this.strings.expand_all,
+                text: this.expandAllText,
                 iconCls: Phlexible.Icon.get('chevron-expand'),
                 handler: this.onExpandAll,
                 scope: this
             },
             {
                 itemId: 'collapseBtn',
-                text: this.strings.collapse_all,
+                text: this.collapseAllText,
                 iconCls: Phlexible.Icon.get('chevron'),
                 handler: this.onCollapseAll,
                 scope: this
@@ -149,21 +157,21 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
             '-',
             {
                 itemId: 'createBtn',
-                text: this.strings.new_folder,
+                text: this.createFolderText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.showCreateFolderWindow,
                 scope: this
             },
             {
                 itemId: 'renameBtn',
-                text: this.strings.rename_folder,
+                text: this.renameFolderText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
                 handler: this.showRenameFolderWindow,
                 scope: this
             },
             {
                 itemId: 'deleteBtn',
-                text: this.strings.delete_folder,
+                text: this.deleteFolderText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                 handler: this.showDeleteFolderWindow,
                 scope: this
@@ -171,14 +179,14 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
             '-',
             {
                 itemId: 'rightsBtn',
-                text: this.strings.folder_rights,
+                text: this.folderRightsText,
                 iconCls: Phlexible.Icon.get('folder-share'),
                 handler: this.showRightsWindow,
                 scope: this
             },
             {
                 itemId: 'propertiesBtn',
-                text: this.strings.properties,
+                text: this.propertiesText,
                 iconCls: Phlexible.Icon.get('property'),
                 handler: this.showPropertiesWindow,
                 scope: this
@@ -351,7 +359,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
         folder = nodes[0];
 
-        var w = Ext.create('Phlexible.mediamanager.CreateFolderWindow', {
+        var w = Ext.create('Phlexible.mediamanager.window.FolderCreateWindow', {
             submitParams: {
                 parentId: folder.id
             },
@@ -372,7 +380,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
         folder = nodes[0];
 
-        var w = Ext.create('Phlexible.mediamanager.FolderRenameWindow', {
+        var w = Ext.create('Phlexible.mediamanager.window.FolderRenameWindow', {
             folderId: folder.id,
             folderName: folder.data.name,
             listeners: {
@@ -419,7 +427,7 @@ Ext.define('Phlexible.mediamanager.FolderTree', {
         }
         folder = nodes[0];
 
-        var w = Ext.create('Phlexible.mediamanager.FolderDetailWindow', {
+        var w = Ext.create('Phlexible.mediamanager.window.FolderDetailWindow', {
             folder: folder,
             activeTabId: activeTabId
         });

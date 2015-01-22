@@ -1,7 +1,7 @@
-Ext.define('Phlexible.tasks.window.NewTaskWindow', {
+Ext.define('Phlexible.task.window.NewTaskWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.tasks.Strings.window.NewTaskWindow.title,
+    title: '_NewTaskWindow',
     iconCls: 'p-task-component-icon',
     width: 400,
     minWidth: 400,
@@ -13,13 +13,13 @@ Ext.define('Phlexible.tasks.window.NewTaskWindow', {
     payload: {},
     component_filter: null,
 
-    taskText: Phlexible.tasks.Strings.window.NewTaskWindow.taskText,
-    taskEmptyText: Phlexible.tasks.Strings.window.NewTaskWindow.taskEmptyText,
-    recipientText: Phlexible.tasks.Strings.window.NewTaskWindow.recipientText,
-    recipientEmptyText: Phlexible.tasks.Strings.window.NewTaskWindow.recipientEmptyText,
-    commentText: Phlexible.tasks.Strings.window.NewTaskWindow.commentText,
-    cancelText: Phlexible.tasks.Strings.window.NewTaskWindow.cancelText,
-    sendText: Phlexible.tasks.Strings.window.NewTaskWindow.sendText,
+    taskText: '_taskText',
+    taskEmptyText: '_taskEmptyText',
+    recipientText: '_recipientText',
+    recipientEmptyText: '_recipientEmptyText',
+    commentText: '_commentText',
+    cancelText: '_cancelText',
+    sendText: '_sendText',
 
     initComponent: function () {
         this.initMyItems();

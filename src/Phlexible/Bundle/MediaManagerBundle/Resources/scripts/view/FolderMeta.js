@@ -1,8 +1,8 @@
-Ext.define('Phlexible.mediamanager.FolderMeta', {
-    extend: 'Phlexible.mediamanager.FileMeta',
+Ext.define('Phlexible.mediamanager.view.FolderMeta', {
+    extend: 'Phlexible.mediamanager.view.FileMeta',
     alias: 'widget.mediamanager-folder-meta',
 
-    title: Phlexible.mediamanager.Strings.folder_meta,
+    title: '_FolderMeta',
 
     checkRight: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
 

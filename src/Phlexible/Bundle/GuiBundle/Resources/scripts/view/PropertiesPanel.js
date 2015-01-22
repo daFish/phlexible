@@ -1,7 +1,8 @@
-Ext.define('Phlexible.gui.PropertiesPanel', {
-    extend: 'Ext.grid.PropertyPanel',
+Ext.define('Phlexible.gui.view.PropertiesPanel', {
+    extend: 'Ext.grid.property.Grid',
+    alias: 'widget.gui-properties',
 
-    title: 'Properties',
+    title: '_PropertiesPanel',
     iconCls: 'p-gui-properties-icon',
     tableKey: 'properties'
 });

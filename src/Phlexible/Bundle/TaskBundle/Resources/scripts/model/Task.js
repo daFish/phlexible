@@ -1,4 +1,4 @@
-Ext.define('Phlexible.tasks.model.Task', {
+Ext.define('Phlexible.task.model.Task', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id'},

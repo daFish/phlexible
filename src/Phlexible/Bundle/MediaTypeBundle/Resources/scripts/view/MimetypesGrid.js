@@ -2,12 +2,15 @@ Ext.define('Phlexible.mediatype.view.MimetypesGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.mediatype-mimetypes',
 
-    title: Phlexible.mediatype.Strings.view.MimetypesGrid.title,
     iconCls: Phlexible.Icon.get('image-share'),
     loadMask: true,
     stripeRows: true,
+    viewConfig: {
+        deferEmptyText: false
+    },
 
-    mimetypeText: Phlexible.mediatype.Strings.view.MimetypesGrid.mimetypeText,
+    emptyText: '_emptyText',
+    mimetypeText: '_mimetypeText',
 
     initComponent: function () {
         this.store = new Ext.data.Store({

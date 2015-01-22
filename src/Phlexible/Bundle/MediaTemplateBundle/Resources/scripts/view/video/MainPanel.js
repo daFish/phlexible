@@ -1,9 +1,8 @@
-Ext.define('Phlexible.mediatemplates.view.video.MainPanel', {
+Ext.define('Phlexible.mediatemplate.view.video.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediatemplates-video-main',
 
-    title: Phlexible.mediatemplates.Strings.video_template,
-    strings: Phlexible.mediatemplates.Strings,
+    title: '_MainPanel',
     layout: 'border',
 
     initComponent: function () {
@@ -40,7 +39,7 @@ Ext.define('Phlexible.mediatemplates.view.video.MainPanel', {
     },
 
     loadParameters: function (template_key) {
-        this.setTitle(Ext.String.format(this.strings.video_template_title, template_key));
+        this.setTitle(Ext.String.format(this.videoTemplateTitleText, template_key));
 
         this.getComponent(0).loadParameters(template_key);
     }

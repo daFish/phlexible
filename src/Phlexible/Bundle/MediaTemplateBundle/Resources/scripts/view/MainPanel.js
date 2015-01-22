@@ -1,9 +1,7 @@
-Ext.define('Phlexible.mediatemplates.view.MainPanel', {
+Ext.define('Phlexible.mediatemplate.view.MainPanel', {
     extend: 'Ext.Panel',
     alias: 'widget.mediatemplates-main',
 
-    title: Phlexible.mediatemplates.Strings.mediatemplates,
-    strings: Phlexible.mediatemplates.Strings,
     iconCls: Phlexible.Icon.get('image-select'),
     layout: 'border',
     border: false,

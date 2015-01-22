@@ -1,17 +1,52 @@
-Ext.define('Phlexible.mediamanager.MainPanel', {
+Ext.define('Phlexible.mediamanager.view.MainPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediamanager-main',
 
+    iconCls: Phlexible.Icon.get('images'),
     layout: 'border',
     closable: true,
     cls: 'p-mediamanager-main',
-    iconCls: Phlexible.Icon.get('images'),
-    strings: Phlexible.mediamanager.Strings,
     border: false,
 
     mode: '',
     params: {},
     hideFilter: false,
+
+    createFolderText: '_createFolderText',
+    uploadText: '_uploadText',
+    downloadText: '_downloadText',
+    downloadFolderText: '_downloadFolderText',
+    downloadFilesText: '_downloadFilesText',
+    viewsText: '_viewsText',
+    viewExtralargeText: '_viewExtralargeText',
+    viewLargeText: '_viewLargeText',
+    viewMediumText: '_viewMediumText',
+    viewSmallText: '_viewSmallText',
+    viewTilesText: '_viewTilesText',
+    viewDetailsText: '_viewDetailsText',
+    showHiddenFiles: '_showHiddenFiles',
+    filterText: '_filterText',
+    filterNoneText: '_filterNoneText',
+    filterByUserText: '_filterByUser',
+    filterCreatedByMeText: '_filterCreatedByMeText',
+    filterModifiedByMeText: '_filterModifiedByMeText',
+    filterCreatedByOtherText: '_filterCreatedByOtherText',
+    filterModifiedByOther: '_filterModifiedByOther',
+    filterByAgeCreateText: '_filterByAgeCreateText',
+    filterAgeOneDayText: '_filterAgeOneDayText',
+    filterAgeTwoDaysText: '_filterAgeTwoDaysText',
+    filterAgeOneWeekText: '_filterAgeOneWeekText',
+    filterAgeOneMonthText: '_filterAgeOneMonthText',
+    filterAgeSixMonthText: '_filterAgeSixMonthText',
+    filterByAgeModifiedText: '_filterByAgeModifiedText',
+    filterByTypeText: '_filterByTypeText',
+    filterTypeImageText: '_filterTypeImageText',
+    filterTypeVideoText: '_filterTypeVideoText',
+    filterTypeAudioText: '_filterTypeAudioText',
+    filterTypeFlashText: '_filterTypeFlash',
+    filterTypeDocumentText: '_filterTypeDocumentText',
+    filterTypeArchiveText: '_filterTypeArchiveText',
+    filterTypeOtherText: '_filterTypeOtherText',
 
     loadParams: function (params) {
         if (params.startFolderPath) {
@@ -38,7 +73,8 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
     // private
     initComponent: function () {
         if (!this.noTitle) {
-            this.title = this.strings.media;
+            this.header = false;
+            //title = this.mediaText;
         }
 
         if (this.params.startFolderPath) {
@@ -112,7 +148,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                         this.fireEvent('fileSelect', file, fileVersion);
                     }
                     else {
-                        var w = Ext.create('Phlexible.mediamanager.FileDetailWindow', {
+                        var w = Ext.create('Phlexible.mediamanager.window.FileDetailWindow', {
                             file: file,
                             folderRights: this.folderRights
                         });
@@ -161,7 +197,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
             items: [
                 {
                     // 0
-                    text: this.strings.new_folder,
+                    text: this.createFolderText,
                     itemId: 'createFolderBtn',
                     iconCls: Phlexible.Icon.get('folder--plus'),
                     handler: this.onNewFolder,
@@ -170,25 +206,25 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                 ' ',
                 // 2
                 {
-                    text: this.strings.upload_files,
+                    text: this.uploadText,
                     itemId: 'uploadBtn',
                     iconCls: Phlexible.Icon.get('drive-upload')
                 },
                 ' ',
                 {
                     // 4
-                    text: this.strings.download,
+                    text: this.downloadText,
                     itemId: 'downloadBtn',
                     iconCls: Phlexible.Icon.get('drive-download'),
                     menu: [
                         {
-                            text: this.strings.download_folder,
+                            text: this.downloadFolderText,
                             iconCls: Phlexible.Icon.get('folder'),
                             handler: this.onDownloadFolder,
                             scope: this
                         },
                         {
-                            text: this.strings.download_files,
+                            text: this.downloadFilesText,
                             iconCls: Phlexible.Icon.get('documents'),
                             handler: this.onDownloadFiles,
                             scope: this
@@ -200,48 +236,48 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                     // 6
                     xtype: 'splitbutton',
                     itemId: 'viewBtn',
-                    text: this.strings.views,
+                    text: this.viewsText,
                     iconCls: Phlexible.Icon.get('application-tile'),
                     handler: this.nextViewMode,
                     scope: this,
                     menu: [
                         {
-                            text: this.strings.view_extralarge,
+                            text: this.viewExtralargeText,
                             iconCls: Phlexible.Icon.get('application-icon-large'),
                             itemId: 'extra',
                             handler: this.updateViewMode,
                             scope: this
                         },
                         {
-                            text: this.strings.view_large,
+                            text: this.viewLargeText,
                             iconCls: Phlexible.Icon.get('application-icon-large'),
                             itemId: 'large',
                             handler: this.updateViewMode,
                             scope: this
                         },
                         {
-                            text: this.strings.view_medium,
+                            text: this.viewMediumText,
                             iconCls: Phlexible.Icon.get('application-icon'),
                             itemId: 'medium',
                             handler: this.updateViewMode,
                             scope: this
                         },
                         {
-                            text: this.strings.view_small,
+                            text: this.viewSmallText,
                             iconCls: Phlexible.Icon.get('application-icon'),
                             itemId: 'small',
                             handler: this.updateViewMode,
                             scope: this
                         },
                         {
-                            text: this.strings.view_tiles,
+                            text: this.viewTilesText,
                             iconCls: Phlexible.Icon.get('application-tile'),
                             itemId: 'tile',
                             handler: this.updateViewMode,
                             scope: this
                         },
                         {
-                            text: this.strings.view_details,
+                            text: this.viewDetailsText,
                             iconCls: Phlexible.Icon.get('application-list'),
                             itemId: 'list',
                             handler: this.updateViewMode,
@@ -250,7 +286,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                         '-',
                         {
                             xtype: 'checkbox',
-                            text: this.strings.show_hidden_files,
+                            text: this.showHiddenFiles,
                             checked: false,
                             handler: function () {
                                 this.getFilesGrid().getStore().baseParams.show_hidden = !this.getFilesGrid().getStore().baseParams.show_hidden ? 1 : 0;
@@ -265,12 +301,12 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                     // 8
                     xtype: 'button',
                     itemId: 'filterBtn',
-                    text: this.strings.filters,
+                    text: this.filterText,
                     iconCls: Phlexible.Icon.get('funnel'),
                     hidden: this.hideFilter,
                     menu: [
                         {
-                            text: this.strings.filter_no,
+                            text: this.filterNoneText,
                             iconCls: Phlexible.Icon.get('funnel'),
                             handler: function () {
                                 this.getFilesGrid().clearFilter();
@@ -279,11 +315,11 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                         },
                         '-',
                         {
-                            text: this.strings.filter_by_user,
+                            text: this.filterByUserText,
                             iconCls: Phlexible.Icon.get('user'),
                             menu: [
                                 {
-                                    text: this.strings.filter_my_created,
+                                    text: this.filterCreatedByMeText,
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
@@ -292,7 +328,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_my_modified,
+                                    text: this.filterModifiedByMeText,
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
@@ -301,7 +337,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_other_created,
+                                    text: this.filterCreatedByOtherText,
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
@@ -310,7 +346,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_other_modified,
+                                    text: this.filterModifiedByOther,
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
@@ -321,11 +357,11 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                             ]
                         },
                         {
-                            text: this.strings.filter_by_age_created,
+                            text: this.filterByAgeCreateText,
                             iconCls: Phlexible.Icon.get('clock'),
                             menu: [
                                 {
-                                    text: this.strings.filter_age_one_day,
+                                    text: this.filterAgeOneDayText,
                                     checked: false,
                                     group: 'ageCreated',
                                     handler: function () {
@@ -334,7 +370,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_two_days,
+                                    text: this.filterAgeTwoDaysText,
                                     checked: false,
                                     group: 'ageCreated',
                                     handler: function () {
@@ -343,7 +379,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_one_week,
+                                    text: this.filterAgeOneWeekText,
                                     checked: false,
                                     group: 'ageCreated',
                                     handler: function () {
@@ -352,7 +388,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_one_month,
+                                    text: this.filterAgeOneMonthText,
                                     checked: false,
                                     group: 'ageCreated',
                                     handler: function () {
@@ -361,7 +397,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_six_months,
+                                    text: this.filterAgeSixMonthText,
                                     checked: false,
                                     group: 'ageCreated',
                                     handler: function () {
@@ -372,11 +408,11 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                             ]
                         },
                         {
-                            text: this.strings.filter_by_age_modified,
+                            text: this.filterByAgeModifiedText,
                             iconCls: Phlexible.Icon.get('clock'),
                             menu: [
                                 {
-                                    text: this.strings.filter_age_one_day,
+                                    text: this.filterAgeOneDayText,
                                     checked: false,
                                     group: 'ageModified',
                                     handler: function () {
@@ -385,7 +421,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_two_days,
+                                    text: this.filterAgeTwoDaysText,
                                     checked: false,
                                     group: 'ageModified',
                                     handler: function () {
@@ -394,7 +430,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_one_week,
+                                    text: this.filterAgeOneWeekText,
                                     checked: false,
                                     group: 'ageModified',
                                     handler: function () {
@@ -403,7 +439,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_one_month,
+                                    text: this.filterAgeOneMonthText,
                                     checked: false,
                                     group: 'ageModified',
                                     handler: function () {
@@ -412,7 +448,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_age_six_months,
+                                    text: this.filterAgeSixMonthText,
                                     checked: false,
                                     group: 'ageModified',
                                     handler: function () {
@@ -423,11 +459,11 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                             ]
                         },
                         {
-                            text: this.strings.filter_by_type,
+                            text: this.filterByTypeText,
                             iconCls: Phlexible.Icon.get('document'),
                             menu: [
                                 {
-                                    text: this.strings.filter_type_image,
+                                    text: this.filterTypeImageText,
                                     iconCls: Phlexible.Icon.get('image'),
                                     checked: false,
                                     group: 'type',
@@ -437,7 +473,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_type_video,
+                                    text: this.filterTypeVideoText,
                                     iconCls: Phlexible.Icon.get('film'),
                                     checked: false,
                                     group: 'type',
@@ -447,7 +483,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_type_audio,
+                                    text: this.filterTypeAudioText,
                                     iconCls: Phlexible.Icon.get('music'),
                                     checked: false,
                                     group: 'type',
@@ -457,7 +493,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_type_flash,
+                                    text: this.filterTypeFlashText,
                                     iconCls: Phlexible.Icon.get('document-flash-movie'),
                                     checked: false,
                                     group: 'type',
@@ -467,7 +503,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_type_document,
+                                    text: this.filterTypeDocumentText,
                                     iconCls: Phlexible.Icon.get('document'),
                                     checked: false,
                                     group: 'type',
@@ -477,7 +513,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_type_archive,
+                                    text: this.filterTypeArchiveText,
                                     iconCls: Phlexible.Icon.get('document-zipper'),
                                     checked: false,
                                     group: 'type',
@@ -487,7 +523,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
                                     scope: this
                                 },
                                 {
-                                    text: this.strings.filter_type_other,
+                                    text: this.filterTypeOtherText,
                                     iconCls: Phlexible.Icon.get('document'),
                                     checked: false,
                                     group: 'type',
@@ -763,7 +799,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
         if (this.mode == 'select') {
             this.fireEvent('fileSelect', file);
         } else {
-            var w = Ext.create('Phlexible.mediamanager.FileDetailWindow', {
+            var w = Ext.create('Phlexible.mediamanager.window.FileDetailWindow', {
                 file: file,
                 folderRights: grid.folderRights
             });
@@ -845,7 +881,7 @@ Ext.define('Phlexible.mediamanager.MainPanel', {
     onUploadComplete: function () {
         this.reloadFilesSortedLatest();
         if (!this.uploadChecker) {
-            this.uploadChecker = Ext.create('Phlexible.mediamanager.UploadChecker', {
+            this.uploadChecker = Ext.create('Phlexible.mediamanager.util.UploadChecker', {
                 listeners: {
                     reload: function() {
                         this.reloadFilesSortedLatest();

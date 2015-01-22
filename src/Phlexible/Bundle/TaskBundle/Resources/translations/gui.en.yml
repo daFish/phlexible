@@ -1,5 +1,48 @@
 Phlexible:
-    tasks:
+    task:
+        handler:
+            Tasks:
+                text: Tasks
+
+        view:
+            FilterPanel:
+                title: Filter
+                commentsText: Comments
+                tasksText: Tasks
+                assignedToMeText: 'Assigned to me'
+                createdByMeText: 'Created by me'
+                involvedText: 'I am involved'
+                allTasksText: All
+                statusText: Status
+                openText: Open
+                rejectedText: Rejected
+                reopenedText: Reopened
+                finishedText: Finished
+                closedText: Closed
+
+            MainPanel:
+                title: Tasks
+                commentsText: Comments
+                transitionsText: Transitions
+                statusText: Change status
+                commentText: Comment
+                assignToMeText: Assign to me
+                assignText: Assign
+
+            TasksGrid:
+                emptyText: 'No tasks found.'
+                idText: ID
+                typeText: Type
+                componentText: Component
+                statusText: Status
+                titleText: Title
+                taskText: Task
+                descriptionText: Description
+                assignedToText: Assigned to
+                createUserText: Author
+                createDateText: Created
+                reloadText: Reload
+
         window:
             AssignWindow:
                 title: Assign
@@ -23,38 +66,3 @@ Phlexible:
                 commentText: Comment
                 cancelText: Cancel
                 sendText: Send
-
-        view:
-            FilterPanel:
-                title: Filter
-                commentsText: Comments
-                tasksText: Tasks
-                assignedToMeText: 'Assigned to me'
-                createdByMeText: 'Created by me'
-                involvedText: 'I am involved'
-                allTasksText: All
-                statusText: Status
-                openText: Open
-                rejectedText: Rejected
-                reopenedText: Reopened
-                finishedText: Finished
-                closedText: Closed
-
-            MainPanel:
-                title: Tasks
-                commentsText: Comments
-                transitionsText: Transitions
-
-            TasksGrid:
-                emptyText: 'No tasks found.'
-                idText: ID
-                typeText: Type
-                componentText: Component
-                statusText: Status
-                titleText: Title
-                taskText: Task
-                descriptionText: Description
-                assignedToText: Assigned to
-                createUserText: Author
-                createDateText: Created
-                reloadText: Reload

@@ -1,7 +1,7 @@
 Ext.define('Phlexible.queue.window.QueueStatsWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.queue.Strings.window.QueueStatsWindow.queue,
+    title: '_QueueStatsWindow',
     width: 900,
     height: 600,
     iconCls: Phlexible.Icon.get('application-task'),
@@ -10,15 +10,15 @@ Ext.define('Phlexible.queue.window.QueueStatsWindow', {
     maximizable: true,
     modal: true,
 
-    noJobsText: Phlexible.queue.Strings.window.QueueStatsWindow.noJobsText,
-    idText: Phlexible.queue.Strings.window.QueueStatsWindow.idText,
-    commandText: Phlexible.queue.Strings.window.QueueStatsWindow.commandText,
-    priorityText: Phlexible.queue.Strings.window.QueueStatsWindow.priorityText,
-    statusText: Phlexible.queue.Strings.window.QueueStatsWindow.statusText,
-    createdAtText: Phlexible.queue.Strings.window.QueueStatsWindow.createdAtText,
-    startedAtText: Phlexible.queue.Strings.window.QueueStatsWindow.startedAtText,
-    finishedAtText: Phlexible.queue.Strings.window.QueueStatsWindow.finishedAtText,
-    reloadText: Phlexible.queue.Strings.window.QueueStatsWindow.reloadText,
+    noJobsText: '_noJobsText',
+    idText: '_idText',
+    commandText: '_commandText',
+    priorityText: '_priorityText',
+    statusText: '_statusText',
+    createdAtText: '_createdAtText',
+    startedAtText: '_startedAtText',
+    finishedAtText: '_finishedAtText',
+    reloadText: '_reloadText',
 
     initComponent: function () {
         this.initMyItems();

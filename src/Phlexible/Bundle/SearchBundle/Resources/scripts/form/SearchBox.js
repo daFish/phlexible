@@ -5,7 +5,7 @@ Ext.define('Phlexible.search.form.SearchBox', {
     displayField: 'title',
     cls: 'p-searchbox',
     typeAhead: false,
-    loadingText: Phlexible.search.Strings.form.SearchBox.loadingText,
+    loadingText: '_loadingText',
     width: 150,
     growWidth: false,
     listWidth: 500,

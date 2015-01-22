@@ -1,29 +1,8 @@
 Phlexible:
     siteroot:
-        window:
-            NavigationFlagsWindow:
-                title: Flags
-                flagsText: Flags
-                noPrependHomeText: '"Home"-Knoten nicht als ersten Eintrag einfügen'
-                appendActiveText: 'Aktiven Knoten anhängen'
-                includeNoNavigationText: 'Knoten die nicht in der Navigation stehen einbeziehen'
-                includeRestrictedText: 'Eingeschränkte Knoten einbeziehen'
-                includeNotPublishedText: 'Nicht veröffentlichte Knoten einbeziehen'
-                includeTypeFullText: 'Vollelemente einbeziehen'
-                includeTypeStructureText: 'Strukturelemente einbeziehen'
-                includeTypeLayoutText: 'Layoutelemente einbeziehen'
-                includeTypeTeaserText: 'Teilelemente einbeziehen'
-                includeUniqueIdText: 'Unique IDs benutzen'
-                storeText: Übernehmen
-                cancelText: Abbrechen
-
-            SiterootNavigationWindow:
-                title: Navigation
-                idText: ID
-                titleText: Titel
-                selectSiterootText: Siteroot auswählen
-                storeText: Übernehmen
-                cancelText: Abbrechen
+        handler:
+            Siteroots:
+                text: Siteroots
 
         view:
             ContentChannelGrid:
@@ -94,3 +73,28 @@ Phlexible:
                 emptyUrlText: 'Sie müssen eine URL angeben.'
                 emptyTargetText: 'Sie müssen ein Ziel angeben.'
                 emptyLanguageText: 'Sie müssen eine Sprache angeben.'
+
+        window:
+            NavigationFlagsWindow:
+                title: Flags
+                flagsText: Flags
+                noPrependHomeText: '"Home"-Knoten nicht als ersten Eintrag einfügen'
+                appendActiveText: 'Aktiven Knoten anhängen'
+                includeNoNavigationText: 'Knoten die nicht in der Navigation stehen einbeziehen'
+                includeRestrictedText: 'Eingeschränkte Knoten einbeziehen'
+                includeNotPublishedText: 'Nicht veröffentlichte Knoten einbeziehen'
+                includeTypeFullText: 'Vollelemente einbeziehen'
+                includeTypeStructureText: 'Strukturelemente einbeziehen'
+                includeTypeLayoutText: 'Layoutelemente einbeziehen'
+                includeTypeTeaserText: 'Teilelemente einbeziehen'
+                includeUniqueIdText: 'Unique IDs benutzen'
+                storeText: Übernehmen
+                cancelText: Abbrechen
+
+            SiterootNavigationWindow:
+                title: Navigation
+                idText: ID
+                titleText: Titel
+                selectSiterootText: Siteroot auswählen
+                storeText: Übernehmen
+                cancelText: Abbrechen

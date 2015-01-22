@@ -1,9 +1,8 @@
-Ext.define('Phlexible.mediamanager.FileMeta', {
+Ext.define('Phlexible.mediamanager.view.FileMeta', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediamanager-file-meta',
 
-    strings: Phlexible.mediamanager.Strings,
-    title: Phlexible.mediamanager.Strings.file_meta,
+    title: '_FileMeta',
     cls: 'p-mediamanager-meta',
     iconCls: Phlexible.Icon.get('weather-cloud'),
 
@@ -11,6 +10,11 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
     checkRight: Phlexible.mediamanager.Rights.FILE_MODIFY,
     key: 'key',
     params: null,
+
+    saveText: '_saveText',
+    metasetsText: '_metasetsText',
+    noValuesText: '_noValuesText',
+    fillRequiredFieldsText: '_fillRequiredFieldsText',
 
     initComponent: function () {
         this.initMyUrls();
@@ -67,7 +71,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
             border: false,
             items: [
                 {
-                    text: this.strings.save,
+                    text: this.saveText,
                     itemId: 'saveBtn',
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                     handler: this.save,
@@ -87,7 +91,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
                 },
                 '-',
                 {
-                    text: this.strings.metasets,
+                    text: this.metasetsText,
                     itemId: 'metasetsBtn',
                     iconCls: Phlexible.Icon.get('weather-clouds'),
                     handler: function () {
@@ -124,7 +128,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
                     items.push({
                         border: false,
                         ctCls: 'x-grid-empty',
-                        html: this.strings.no_meta_values
+                        html: this.noValuesText
                     });
                 }
 
@@ -153,7 +157,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
     validateMeta: function() {
         this.items.each(function(p) {
             if (!p.validateMeta()) {
-                Ext.MessageBox.alert(this.strings.error, this.strings.fill_required_fields);
+                Phlexible.Notify.failure(this.fillRequiredFieldsText);
                 return false;
             }
         }, this);
@@ -203,7 +207,7 @@ Ext.define('Phlexible.mediamanager.FileMeta', {
             success: function (response) {
                 var result = Ext.decode(response.responseText);
                 if (result.success === false) {
-                    Ext.MessageBox.alert(this.strings.error, result.msg);
+                    Phlexible.Notify.failure(result.msg);
                 }
                 this.reloadMeta();
             },

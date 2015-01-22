@@ -2,7 +2,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.XtypeHandle', {
     extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
     /**
-     * @cfg {String} xtype
+     * @cfg {String} name
      */
 
     /**
@@ -10,16 +10,16 @@ Ext.define('Phlexible.gui.menuhandle.handle.XtypeHandle', {
      */
 
     /**
-     * Return xtype
+     * Return name
      *
      * @return {String}
      */
-    getXtype: function () {
-        return this.xtype;
+    getName: function () {
+        return this.name;
     },
 
     getIdentifier: function () {
-        return this.getXtype();
+        return this.getName();
     },
 
     getParameters: function () {
@@ -31,7 +31,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.XtypeHandle', {
     },
 
     handle: function () {
-        Phlexible.console.debug('XtypeHandle.handle(' + this.getXtype() + ', ' + this.getIdentifier() + ')', this.getParameters());
+        Phlexible.console.debug('XtypeHandle.handle(' + this.getName() + ', ' + this.getIdentifier() + ')', this.getParameters());
 
         Phlexible.App.addPanelByHandle(this);
     }

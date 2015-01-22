@@ -2,12 +2,13 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     extend: 'Portal.view.Portlet',
     alias: 'widget.mediamanager-latest-files-portlet',
 
-    title: Phlexible.mediamanager.Strings.latest_files,
-    strings: Phlexible.mediamanager.Strings,
+    title: '_LatestFiles',
     iconCls: 'p-mediamanager-portlet-icon',
     bodyStyle: 'padding: 5px 5px 5px 5px',
 
     type: 'small',
+
+    noRecentFilesText: '_noRecentFilesText',
 
     initComponent: function () {
         if (this.record.data.settings.style) {
@@ -56,7 +57,7 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
                 overItemCls: 'thumb-wrap-over',
                 style: 'overflow: auto',
                 singleSelect: true,
-                emptyText: this.strings.no_recent_files,
+                emptyText: this.noRecentFilesText,
                 deferEmptyText: false,
                 autoHeight: true,
                 store: this.store,

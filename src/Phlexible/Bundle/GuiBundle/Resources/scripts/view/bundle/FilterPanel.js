@@ -1,13 +1,15 @@
-Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
+Ext.define('Phlexible.gui.view.bundle.FilterPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.gui-bundles-filter',
 
-    title: Phlexible.gui.Strings.filter,
-    strings: Phlexible.gui.Strings,
     bodyPadding: 5,
     cls: 'p-gui-bundles-filter',
     iconCls: 'p-gui-filter-icon',
     autoScroll: true,
+
+    packageText: '_packageText',
+    filterText: '_filterText',
+    resetText: '_resetTest',
 
     initComponent: function () {
         this.initMyTasks();
@@ -26,7 +28,7 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
         this.items = [
             {
                 xtype: 'panel',
-                title: this.strings.filter,
+                title: this.filterText,
                 layout: 'form',
                 frame: true,
                 defaults: {
@@ -56,7 +58,7 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
             {
                 xtype: 'panel',
                 itemId: 'packages',
-                title: this.strings['package'],
+                title: this.packageText,
                 margin: '5 0 0 0',
                 layout: 'form',
                 frame: true,
@@ -83,7 +85,7 @@ Ext.define('Phlexible.gui.bundles.BundlesFilterPanel', {
                 xtype: 'component', flex: 1
             }, {
                 xtype: 'button',
-                text: this.strings.reset,
+                text: this.resetText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.RELOAD),
                 disabled: true,
                 handler: this.resetFilter,

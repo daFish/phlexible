@@ -1,13 +1,15 @@
-Ext.define('Phlexible.mediatemplates.view.BasePreviewPanel', {
+Ext.define('Phlexible.mediatemplate.view.BasePreviewPanel', {
     extend: 'Ext.panel.Panel',
 
-    title: Phlexible.mediatemplates.Strings.preview,
-    strings: Phlexible.mediatemplates.Strings,
+    title: '_BasePreviewPanel',
     cls: 'p-mediatemplates-preview-panel',
     border: true,
     bodyStyle: 'padding: 5px',
     autoScroll: true,
     disabled: true,
+
+    noPreviewAvailableText: '_noPreviewAvailableText',
+    debugText: '_debugText',
 
     initComponent: function () {
         this.initMyItems();
@@ -20,13 +22,13 @@ Ext.define('Phlexible.mediatemplates.view.BasePreviewPanel', {
             {
                 itemId: 'empty',
                 border: false,
-                html: this.strings.no_preview_available,
+                html: this.noPreviewAvailableText,
                 bodyPadding: '0 0 10 0'
             },
             {
                 itemId: 'debug',
                 xtype: 'fieldset',
-                title: this.strings.debug,
+                title: this.debugText,
                 collapsible: true,
                 autoHeight: true,
                 hidden: true,
@@ -69,7 +71,7 @@ Ext.define('Phlexible.mediatemplates.view.BasePreviewPanel', {
     },
 
     createUrl: function () {
-        throw new Error('createUrl() has to be implemented in Classes extending Phlexible.mediatemplates.BasePreviewPanel.');
+        throw new Error('createUrl() has to be implemented in Classes extending Phlexible.mediatemplate.BasePreviewPanel.');
     },
 
     createPreview: function (params, debug) {

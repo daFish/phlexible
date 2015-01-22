@@ -1,4 +1,4 @@
-Ext.define('Phlexible.tasks.model.Transition', {
+Ext.define('Phlexible.task.model.Transition', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id'},

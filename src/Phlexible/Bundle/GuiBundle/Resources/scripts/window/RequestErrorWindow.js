@@ -9,7 +9,7 @@ Ext.define('Phlexible.gui.RequestErrorWindow', {
         'Ext.window.Window'
     ],
 
-    title: '_error_window',
+    title: 'Request error',
     cls: 'p-request-error',
     width: 900,
     minWidth: 900,

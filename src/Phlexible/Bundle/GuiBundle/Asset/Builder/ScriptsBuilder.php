@@ -149,6 +149,18 @@ class ScriptsBuilder
                     }
                 }
 
+                if (preg_match_all('/alias:\s*\[(["\'].+["\'])\]/m', $body, $matches)) {
+                    foreach ($matches[1] as $require) {
+                        $parts = explode(', ', $require);
+                        foreach ($parts as $part) {
+                            $part = trim($part, " \t\n\r\0\"'");
+                            if (substr($part, 0, 7) === 'widget.') {
+                                $file->provides[] = substr($part, 7);
+                            }
+                        }
+                    }
+                }
+
                 if (preg_match_all('/Ext\.require\(["\'](.+)["\']\)/', $body, $matches)) {
                     foreach ($matches[1] as $require) {
                         $file->requires[] = $require;
@@ -197,7 +209,6 @@ class ScriptsBuilder
                         foreach ($parts as $part) {
                             $file->requires[] = trim($part, " \t\n\r\0\"'");
                         }
-
                     }
                 }
 
@@ -260,6 +271,7 @@ class ScriptsBuilder
                 'datecolumn',
                 'displayfield',
                 'tbseparator',
+                'tagfield',
             );
 
             if (!empty($file->requires)) {

@@ -2,7 +2,6 @@ Ext.define('Phlexible.problem.view.ProblemsGrid', {
     extend: 'Ext.grid.GridPanel',
     alias: 'widget.problem-list',
 
-    title: '_ProblemsGrid',
     iconCls: Phlexible.Icon.get('exclamation'),
     loadMask: true,
 

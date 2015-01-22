@@ -1,1 +1,1 @@
-Ext.require('Phlexible.tasks.portlet.MyTasks');
+Ext.require('Phlexible.task.portlet.MyTasks');

@@ -1,25 +1,25 @@
-dashboard:
-    window:
-        ListWindow:
-            title: 'Verfügbare Portlets'
-            noAvailablePortletsText: 'Keine weiteren Portlets'
+Phlexible:
+    dashboard:
+        infobar:
+            AbstractInfoBar:
+                infoText: 'Keine Text'
 
-        ColumnsWindow:
-            title: Spalten
-            columns: Spalten
-            save: Speichern
+            Welcome:
+                welcomeToText: '{title} {version}'
+                addPortletText: 'Portlet hinzufügen'
+                changeLayoutText: 'Layout ändern'
+        view:
+            Dashboard:
+                title: Dashboard
+                noTitleText: 'Kein Titel'
+                noDescriptionText: 'Keine Beschreibung'
 
-    view:
-        dashboard:
-            title: Dashboard
-            noTitleText: 'Kein Titel'
-            noDescriptionText: 'Keine Beschreibung'
+        window:
+            ListWindow:
+                title: 'Verfügbare Portlets'
+                noAvailablePortletsText: 'Keine weiteren Portlets'
 
-    infobar:
-        AbstractInfoBar:
-            infoText: 'Keine Text'
-
-        Welcome:
-            welcomeToText: '{title} {version}'
-            addPortletText: 'Portlet hinzufügen'
-            change_layout: 'Layout ändern'
+            ColumnsWindow:
+                title: Spalten
+                columns: Spalten
+                save: Speichern

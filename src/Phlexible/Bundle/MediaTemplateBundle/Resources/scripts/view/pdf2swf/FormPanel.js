@@ -1,15 +1,33 @@
-Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
+Ext.define('Phlexible.mediatemplate.view.pdf2swf.FormPanel', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.mediatemplates-pdf2swf-form',
 
-    title: Phlexible.mediatemplates.Strings.pdf2swf_template,
-    strings: Phlexible.mediatemplates.Strings,
+    title: '_FormPanel',
 //    labelWidth: 80,
     labelAlign: 'top',
     disabled: true,
     layout: 'accordion',
 
     debugPreview: false,
+
+    pdf2swfText: '_pdf2swf',
+    resolutionText: '_resolutionText',
+    resolutionHelpText: '_resolutionHelpText',
+    framerateText: '_framerateText',
+    framerateHelpText: '_framerateHelpText',
+    qualityText: '_qualityText',
+    qualityHelpText: '_qualityHelpText',
+    linksText: '_linksText',
+    enabledText: '_enabledText',
+    disabledText: '_disabledText',
+    linksDisabledHelpText: '_linksDisabledHelpText',
+    newWindowText: '_newWindowText',
+    linksnewWindowHelpText: '_linksnewWindowHelpText',
+    zlibText: '_zlibText',
+    zlibHelpText: '_zlibHelpText',
+    saveText: '_saveText',
+    previewText: '_previewText',
+    debugText: '_debugText',
 
     initComponent: function () {
         this.initMyItems();
@@ -23,9 +41,9 @@ Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
             {
                 xtype: 'panel',
                 layout: 'form',
-                title: this.strings.pdf2swf,
-                iconCls: Phlexible.mediatemplates.TemplateIcons.pdf2swf,
-                bodyStyle: 'padding: 5px',
+                title: this.pdf2swfText,
+                iconCls: Phlexible.mediatemplate.TemplateIcons.pdf2swf,
+                bodyPadding: 5,
                 border: false,
                 autoScroll: true,
                 items: [
@@ -33,24 +51,24 @@ Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
                         xtype: 'numberfield',
                         width: 280,
                         name: 'resolution',
-                        fieldLabel: this.strings.resolution,
-                        helpText: this.strings.help_resolution,
+                        fieldLabel: this.resolutionText,
+                        helpText: this.resolutionHelpText,
                         minValue: 1
                     },
                     {
                         xtype: 'numberfield',
                         width: 280,
                         name: 'framerate',
-                        fieldLabel: this.strings.framerate,
-                        helpText: this.strings.help_framerate,
+                        fieldLabel: this.framerateText,
+                        helpText: this.framerateHelpText,
                         minValue: 1
                     },
                     {
                         xtype: 'numberfield',
                         width: 280,
                         name: 'jpeg_quality',
-                        fieldLabel: this.strings.quality,
-                        helpText: this.strings.help_quality,
+                        fieldLabel: this.qualityText,
+                        helpText: this.qualityHelpText,
                         minValue: 0,
                         maxValue: 100
                     },
@@ -58,25 +76,25 @@ Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
                         xtype: 'checkbox',
                         width: 280,
                         name: 'links_disable',
-                        fieldLabel: this.strings.links,
-                        boxLabel: this.strings.disable,
-                        helpText: this.strings.help_links_disable
+                        fieldLabel: this.linksText,
+                        boxLabel: this.disabledText,
+                        helpText: this.linksDisabledHelpText
                     },
                     {
                         xtype: 'checkbox',
                         width: 280,
                         name: 'links_new_window',
-                        fieldLabel: this.strings.links,
-                        boxLabel: this.strings.new_window,
-                        helpText: this.strings.help_links_new_window
+                        fieldLabel: this.linksText,
+                        boxLabel: this.newWindowText,
+                        helpText: this.linksnewWindowHelpText
                     },
                     {
                         xtype: 'checkbox',
                         width: 280,
                         name: 'zlib_enable',
-                        fieldLabel: this.strings.zlib,
-                        boxLabel: this.strings.enable,
-                        helpText: this.strings.help_zlib_enable
+                        fieldLabel: this.zlibText,
+                        boxLabel: this.enabledText,
+                        helpText: this.zlibHelpText
                     }
                 ]
             }
@@ -90,7 +108,7 @@ Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
             itemId: 'tbar',
             items: [
                 {
-                    text: this.strings.save,
+                    text: this.saveText,
                     itemId: 'saveBtn',
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                     handler: this.saveParameters,
@@ -99,7 +117,7 @@ Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
                 '->',
                 {
                     xtype: 'splitbutton',
-                    text: this.strings.preview,
+                    text: this.previewText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.PREVIEW),
                     handler: function () {
                         var values = this.getForm().getValues();
@@ -116,7 +134,7 @@ Ext.define('Phlexible.mediatemplates.view.pdf2swf.FormPanel', {
                     scope: this,
                     menu: [
                         {
-                            text: this.strings.debug,
+                            text: this.debugText,
                             checked: this.debugPreview,
                             checkHandler: function (checkItem, checked) {
                                 this.debugPreview = checked;

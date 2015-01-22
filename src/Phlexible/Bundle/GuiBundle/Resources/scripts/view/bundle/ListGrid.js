@@ -1,11 +1,15 @@
-Ext.define('Phlexible.gui.bundles.BundlesGrid', {
+Ext.define('Phlexible.gui.view.bundle.ListGrid', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.gui-bundles-grid',
+    alias: 'widget.gui-bundles-list',
 
-    strings: Phlexible.gui.Strings,
     loadMask: true,
     hint: false,
     cls: 'p-gui-bundles-list',
+
+    bundleText: '_bundleText',
+    packageText: '_packageText',
+    classnameText: '_classnameText',
+    pathText: '_pathText',
 
     initComponent: function () {
         this.initMyStore();
@@ -50,26 +54,26 @@ Ext.define('Phlexible.gui.bundles.BundlesGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.bundle,
+                header: this.bundleText,
                 width: 250,
                 dataIndex: 'id',
                 resizable: false
             },
             {
-                header: this.strings.package,
+                header: this.packageText,
                 width: 100,
                 dataIndex: 'package',
                 resizable: false
             },
             {
-                header: this.strings.classname,
+                header: this.classnameText,
                 width: 400,
                 dataIndex: 'classname',
                 resizable: false,
                 flex: 1
             },
             {
-                header: this.strings.path,
+                header: this.pathText,
                 width: 500,
                 dataIndex: 'path',
                 hidden: true,

@@ -1,29 +1,8 @@
 Phlexible:
     siteroot:
-        window:
-            NavigationFlagsWindow:
-                title: Flags
-                flagsText: Flags
-                noPrependHomeText: 'Add "home"-node as first item'
-                appendActiveText: 'Add active node'
-                includeNoNavigationText: 'Include nodes that are not viewable'
-                includeRestrictedText: 'Include restricted nodes'
-                includeNotPublishedText: 'Include not published nodes'
-                includeTypeFullText: 'Include full elements'
-                includeTypeStructureText: 'Include structure elements'
-                includeTypeLayoutText: 'Include layout elements'
-                includeTypeTeaserText: 'Include part elements'
-                includeUniqueIdText: 'Use Unique IDs'
-                storeText: Store
-                cancelText: Cancel
-
-            SiterootNavigationWindow:
-                title: Navigation
-                idText: ID
-                titleText: Title
-                selectSiterootText: Choose siteroot
-                storeText: Store
-                cancelText: Cancel
+        handler:
+            Siteroots:
+                text: Siteroots
 
         view:
             ContentChannelGrid:
@@ -94,3 +73,28 @@ Phlexible:
                 emptyUrlText: 'Please enter a URL.'
                 emptyTargetText: 'Please enter a target.'
                 emptyLanguageText: 'Please enter a language.'
+
+        window:
+            NavigationFlagsWindow:
+                title: Flags
+                flagsText: Flags
+                noPrependHomeText: 'Add "home"-node as first item'
+                appendActiveText: 'Add active node'
+                includeNoNavigationText: 'Include nodes that are not viewable'
+                includeRestrictedText: 'Include restricted nodes'
+                includeNotPublishedText: 'Include not published nodes'
+                includeTypeFullText: 'Include full elements'
+                includeTypeStructureText: 'Include structure elements'
+                includeTypeLayoutText: 'Include layout elements'
+                includeTypeTeaserText: 'Include part elements'
+                includeUniqueIdText: 'Use Unique IDs'
+                storeText: Store
+                cancelText: Cancel
+
+            SiterootNavigationWindow:
+                title: Navigation
+                idText: ID
+                titleText: Title
+                selectSiterootText: Choose siteroot
+                storeText: Store
+                cancelText: Cancel

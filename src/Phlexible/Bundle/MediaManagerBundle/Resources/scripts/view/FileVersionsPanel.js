@@ -1,15 +1,17 @@
-Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
+Ext.define('Phlexible.mediamanager.view.FileVersionsPanel', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.mediamanager-file-versions',
 
-    title: Phlexible.mediamanager.Strings.versions,
-    strings: Phlexible.mediamanager.Strings,
+    title: '_FileVersionsPanel',
     iconCls: Phlexible.Icon.get('edit-number'),
     layout: 'fit',
     autoScroll: true,
 
     fileId: null,
     fileVersion: null,
+
+    versionsText: '_versionsText',
+    downloadFileVersionText: '_downloadFileVersionText',
 
     /**
      * @event versionChange
@@ -55,10 +57,10 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
             listeners: {
                 load: function (store, records) {
                     if (!records.length) {
-                        this.setTitle(this.strings.versions);
+                        this.setTitle(this.versionsText);
                     }
                     else {
-                        this.setTitle(this.strings.versions + ' [' + records.length + ']');
+                        this.setTitle(this.versionsText + ' [' + records.length + ']');
                         if (this.fileVersion) {
                             var index = store.find('version', this.fileVersion);
                             this.getComponent(0).select(index);
@@ -115,7 +117,7 @@ Ext.define('Phlexible.mediamanager.FileVersionsPanel', {
         this.contextMenu = Ext.create('Ext.menu.Menu', {
             items: [
                 {
-                    text: this.strings.download_file_version,
+                    text: this.downloadFileVersionText,
                     iconCls: Phlexible.Icon.get('drive-download'),
                     handler: function (btn) {
                         this.fireEvent('versionDownload', btn.parentMenu.fileId, btn.parentMenu.fileVersion);

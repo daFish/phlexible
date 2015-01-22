@@ -1,9 +1,9 @@
 /**
  * Iframe panel
  */
-Ext.define('Phlexible.gui.IframePanel', {
+Ext.define('Phlexible.gui.panel.IframePanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.gui-iframepanel',
+    alias: 'widget.gui-iframe-panel',
     requires: ['Ext.panel.Panel', 'Ext.toolbar.*'],
 
     border: false,

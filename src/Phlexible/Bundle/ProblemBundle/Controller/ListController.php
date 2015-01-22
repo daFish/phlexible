@@ -28,7 +28,7 @@ class ListController extends Controller
      * List problems
      *
      * @return JsonResponse
-     * @Route("/list", name="problems_list")
+     * @Route("/list", name="problem_list")
      * @Method({"GET", "POST"})
      * @ApiDoc(
      *   description="Return problems"

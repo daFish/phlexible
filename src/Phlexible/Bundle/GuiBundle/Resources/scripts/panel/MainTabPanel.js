@@ -1,4 +1,4 @@
-Ext.define('Phlexible.gui.MainTabPanel', {
+Ext.define('Phlexible.gui.panel.MainTabPanel', {
     extend: 'Ext.tab.TabPanel',
 
     plain: false,

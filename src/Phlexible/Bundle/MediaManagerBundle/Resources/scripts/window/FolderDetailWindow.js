@@ -1,9 +1,8 @@
-Ext.define('Phlexible.mediamanager.FolderDetailWindow', {
+Ext.define('Phlexible.mediamanager.window.FolderDetailWindow', {
     extend: 'Ext.window.Window',
 
-    title: 'Folder Details',
+    title: '_FolderDetailWindow',
     iconCls: Phlexible.Icon.get('folder'),
-    strings: Phlexible.mediamanager.Strings,
     width: 840,
     height: 495,
     layout: 'fit',

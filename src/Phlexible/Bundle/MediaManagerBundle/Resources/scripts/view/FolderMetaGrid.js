@@ -1,8 +1,8 @@
-Ext.define('Phlexible.mediamanager.FolderMetaGrid', {
-    extend: 'Phlexible.mediamanager.FileMetaGrid',
+Ext.define('Phlexible.mediamanager.view.FolderMetaGrid', {
+    extend: 'Phlexible.mediamanager.view.FileMetaGrid',
     alias: 'widget.mediamanager-folder-metas',
 
-    title: Phlexible.metasets.Strings.folder_meta,
+    title: '_FolderMetaGrid',
 
     right: Phlexible.mediamanager.Rights.FOLDER_MODIFY
 });

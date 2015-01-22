@@ -1,8 +1,7 @@
-Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
+Ext.define('Phlexible.mediamanager.window.FileReplaceWindow', {
     extend: 'Ext.window.Window',
 
-    title: Phlexible.mediamanager.Strings.uploaded_file_conflict,
-    strings: Phlexible.mediamanager.Strings,
+    title: '_FileReplaceWindow',
     iconCls: Phlexible.Icon.get('document--exclamation'),
     width: 500,
     minWidth: 500,
@@ -12,6 +11,17 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
     cls: 'p-mediamanager-file-replace',
     modal: true,
     closable: false,
+
+    sizeText: '_sizeText',
+    fileConflictText: '_fileConflictText',
+    fileConflictDescriptionText: '_fileConflictDescriptionText',
+    applyToRemainingConflictsText: '_applyToRemainingConflictsText',
+    deleteUploadedFileText: '_deleteUploadedFileText',
+    deleteUploadedFileDescriptionText: '_deleteUploadedFileDescriptionText',
+    replaceUploadedFileText: '_replaceUploadedFileText',
+    replaceUploadedFileDescriptionText: '_replaceUploadedFileDescriptionText',
+    keepBothFilesText: '_keepBothFilesText',
+    keepBothFilesDescriptionText: '_keepBothFilesDescriptionText',
 
     initComponent: function () {
         this.initMyTemplates();
@@ -45,7 +55,7 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
             '<tpl if="values.type">',
             //'<div class="p-mediamanager-file-replace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
             '</tpl>',
-            '<div class="p-mediamanager-file-replace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
+            '<div class="p-mediamanager-file-replace-size">' + this.sizeText + ': {[Phlexible.Format.size(values.size)]}</div>',
             '</div>',
             '</div>',
             '</tpl>',
@@ -62,7 +72,7 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
                 border: false,
                 plain: true,
                 cls: 'p-mediamanager-file-replace-win-header',
-                html: this.strings.uploaded_file_conflict_text
+                html: this.fileConflictText
             },
             {
                 xtype: 'container',
@@ -70,7 +80,7 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
                 plain: true,
                 padding: "0 0 10 0",
                 cls: 'p-mediamanager-file-replace-win-desc',
-                html: this.strings.uploaded_file_conflict_desc
+                html: this.fileConflictDescriptionText
             },
             {
                 xtype: 'dataview',
@@ -102,7 +112,7 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
             {
                 xtype: 'checkbox',
                 itemId: 'all',
-                boxLabel: this.strings.apply_to_remaining_files
+                boxLabel: Ext.String.format(this.applyToRemainingConflictsText, 0)
             }]
         }];
     },
@@ -118,8 +128,8 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
         actions.push({
             action: 'discard',
             iconCls: Phlexible.Icon.get('document-shred'),
-            header: this.strings.delete_uploaded_file,
-            text: this.strings.delete_uploaded_file_desc,
+            header: this.deleteUploadedFileText,
+            text: this.deleteUploadedFileDescriptionText,
             fileId: file.oldId,
             name: file.oldName,
             type: file.oldType,
@@ -131,8 +141,8 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
             actions.push({
                 action: 'replace',
                 iconCls: Phlexible.Icon.get('document-break'),
-                header: this.strings.replace_existing_file,
-                text: this.strings.replace_existing_file_desc,
+                header: this.replaceUploadedFileText,
+                text: this.replaceUploadedFileDescriptionText,
                 fileId: file.newId,
                 name: file.oldName,
                 type: file.newType,
@@ -156,8 +166,8 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
         actions.push({
             action: 'keep',
             iconCls: Phlexible.Icon.get('plus-circle'),
-            header: this.strings.keep_both_files,
-            text: Ext.String.format(this.strings.keep_both_files_desc, Ext.String.ellipsis(file.alternativeName, 60)),
+            header: this.keepBothFilesText,
+            text: Ext.String.format(this.keepBothFilesDescriptionText, Ext.String.ellipsis(file.alternativeName, 60)),
             fileId: '',
             name: '',
             type: '',
@@ -168,7 +178,7 @@ Ext.define('Phlexible.mediamanager.FileReplaceWindow', {
         this.getDataView().getStore().loadData(actions);
 
         if (this.uploadChecker.count() > 1) {
-            this.getDockedComponent('buttons').getComponent('all').setBoxLabel(Ext.String.format(this.strings.apply_to_remaining_files, this.uploadChecker.count()));
+            this.getDockedComponent('buttons').getComponent('all').setBoxLabel(Ext.String.format(this.applyToRemainingConflictsText, this.uploadChecker.count()));
             this.getDockedComponent('buttons').show();
         }
     },

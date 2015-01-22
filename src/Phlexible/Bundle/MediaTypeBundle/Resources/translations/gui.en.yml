@@ -1,5 +1,9 @@
 Phlexible:
     mediatype:
+        handler:
+            MediaTypes:
+                text: Media Types
+
         view:
             MainPanel:
                 title: Media types
@@ -14,4 +18,5 @@ Phlexible:
 
             MimetypesGrid:
                 title: Mimetypes
+                emptyText: No mimetypes
                 mimetypeText: Mimetype

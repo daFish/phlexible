@@ -1,167 +1,187 @@
-mediatemplates:
-    mediatemplates: 'Media Templates'
-    vars: 'Extended Properties'
-    preview: Preview
-    image_template: 'Image template'
-    image_template_title: 'Image template "{0}"'
-    video_template: 'Video template'
-    video_template_title: 'Video template "{0}"'
-    audio_template: 'Audio template'
-    audio_template_title: 'Audio template "{0}"'
-    filmstrip_template: 'Filmstrip template'
-    filmstrip_template_title: 'Filmstrip template "{0}"'
-    pdf2swf_template: 'PDF to SWF template'
-    pdf2swf_template_title: 'PDF to SWF template "{0}"'
-    base: Base
-    image: Image
-    video: Video
-    audio: Audio
-    filmstrip: 'Film Strip'
-    pdf2swf: 'PDF to SWF'
-    add: Add
-    save: Save
-    save_hint: 'Please note that saving will result in regenerating all images stored in the media manager based on this media template. This can result in heavy server load. If you want to test your settings use the preview button. Saving is not necessary for previewing.'
-    reset: Reset
-    remove: Delete
-    title: Title
-    key: Key
-    type: Type
-    value: Value
-    rename: Rename
-    name: Name
-    ok: Ok
-    cancel: Cancel
-    yes: Yes
-    no: No
-    sure: 'Are you sure?'
-    enterName: 'Please enter a new Name'
-    width: Width
-    height: Height
-    method: Method
-    deliver: Deliver
-    scale: Scale
-    for_web: 'For web.'
-    match_format: 'Change format only if necessary'
-    format: 'Output format'
-    colorspace: Colorspace
-    quality: Quality
-    compression: 'Compression level'
-    filtertype: 'Filter type'
-    backgroundcolor: 'Background color'
-    deinterlace: Deinterlace
-    bitrate: Bitrate
-    framerate: Framerate
-    samplerate: Samplerate
-    samplebits: 'Audio bit depth'
-    channels: Channels
-    cols: Columns
-    rows: Rows
-    no_info: 'No info'
-    no_timestamp: 'No timeline'
-    text: Text
-    flash_version: 'Flash version'
-    select_method: 'Please select a resize method'
-    select_deliver: 'Please select a delivery method'
-    select_scale: 'Please select a scale method'
-    select_format: 'Please select an output format'
-    select_compression: 'Please select a compression level'
-    select_filtertype: 'Please select a filter type'
-    help_width_image: 'Width of the generated image.'
-    help_width_video: 'Width of the generated video.'
-    help_height_image: 'Height of the generated image.'
-    help_height_video: 'Height of the generated video.'
-    help_method: 'Defines the method for scaling and cropping of the image.'
-    help_deliver: 'Defines how the image is delivered.'
-    help_scale: 'Defines the allowed scaling direction.'
-    help_for_web_image: 'Limits output format to GIF, JPG and PNG. Limits colorspace to RGB and grayscale.'
-    help_for_web_video: 'Limits output format to FLV.'
-    help_match_format: 'Don''t change format if it matches the chosen format.'
-    help_format: 'Defines the format of the image.'
-    help_colorspace: 'Defines the colorspace of the image.'
-    help_quality: 'Quality of the generated image.'
-    help_compression: 'Compression level of the generated image.'
-    help_filtertype: 'Filter type of the generated image.'
-    help_backgroundcolor: 'Background color for padded regions, leave empty for transparent background.'
-    help_deinterlace: 'Activate deinterlacing. Converts interlaced in non-interlaced videos.'
-    help_bitrate: 'Defines the average bitrate per second of the video.'
-    help_framerate: 'Defines the framerate of the video.'
-    help_samplerate: 'Defines the samplerate of the audio file.'
-    help_samplebits: 'Defines the audio bit depth of the audio file.'
-    help_channels: 'Defines whether the audio file is converted to mono or stereo. '
-    help_cols: 'Number of columns'
-    help_rows: 'Number of rows'
-    help_no_info: 'Don''t show additional movie information'
-    help_no_timestamp: 'Don''t show timestamps'
-    help_text: 'Text that will be shown at the top of the image'
-    help_flash_version: 'Version of the generated Flash file'
-    method_width: 'Fixed width'
-    method_height: 'Fixed height'
-    method_exact: 'Exact fit without padding'
-    method_exactFit: 'Exact fit with padding'
-    method_fit: 'Simple fit'
-    method_crop: Crop
-    method_focal: 'Crop with focal point'
-    method_width_help: 'Image has fixed width and variable height'
-    method_height_help: 'Image has fixed height and variable width'
-    method_exact_help: 'Image has fixed width and height, image might be distorted'
-    method_exactFit_help: 'Image has fixed width and height, image will not be distorted, border area is padded with background color'
-    method_fit_help: 'Image will have either given width or height'
-    method_crop_help: 'Image is resized to width or height and afterwards cropped around the center point'
-    method_focal_help: 'Image is resized to width or height and afterwards cropped around the defined focal point'
-    deliver_thumb: 'Deliver as resized image'
-    deliver_icon: 'Deliver document type icon'
-    deliver_download: 'Deliver as download'
-    scale_up: 'Only enlarge smaller images'
-    scale_up_and_down: 'No restriction'
-    scale_down: 'Only shrink larger images'
-    colorspace_rgb: RGB
-    colorspace_cmyk: CMYK
-    colorspace_gray: Grayscale
-    compression_huffman: 'Huffman compression (fast, good for photos)'
-    compression_fastest: 'Fastest compression'
-    compression_best: 'Best compression'
-    channels_no: 'Disable sound'
-    channels_mono: Mono
-    channels_stereo: Stereo
-    keep_format: '[Keep format]'
-    keep_colorspace: '[Keep colorspace]'
-    keep_bitrate: '[Keep bitrate]'
-    keep_framerate: '[Keep framerate]'
-    keep_samplerate: '[Keep samplerate]'
-    keep_samplebits: '[Keep samplebits]'
-    keep_channels: '[Keep channels]'
-    empty_backgroundcolor: Transparent
-    tiffcompression: Compression
-    tiffcompression_none: none
-    tiffcompression_zip: zip
-    tiffcompression_lzw: lzw
-    tiffcompression_help: 'algorithm for compression of TIF-file'
-    depth: 'Color depth'
-    keep_depth: '[Keep color depth]'
-    eight_bit_per_channel: '8 Bit per channel'
-    sixteen_bit_per_channel: '16 Bit per channel'
-    help_depth: 'Defines color depth in bits per channel'
-    required_values: 'Please check the form for required values.'
-    debug: Debug
-    no_preview_available: 'No preview available'
-    change_background_color_to: 'Change background color to:'
-    white: White
-    black: Black
-    random: Random
-    framerate: 'framerate'
-    help_framerate: 'help_framerate'
-    resolution: 'resolution'
-    help_resolution: 'help_resolution'
-    jpeg_quality: 'jpeg_quality'
-    help_jpeg_quality: 'help_jpeg_quality'
-    links: 'Links'
-    disable: 'disable'
-    new_window: 'new_window'
-    help_links_disable: 'help_links_disable'
-    help_links_new_window: 'help_links_new_window'
-    zlib: 'zlib'
-    enable: 'enable'
-    help_zlib_enable: 'help_zlib_enable'
+Phlexible:
+    mediatemplate:
+        handler:
+            MediaTemplates:
+                text: Media Templates
 
-    filter: Filter
-    no_filter: No filter
+        view:
+            BasePreviewPanel:
+                title: Preview
+                noPreviewAvailableText: No preview available
+                debugText: Debug
+
+            MainPanel:
+                title: Media templates
+
+            TemplatesGrid:
+                title: Templates
+                titleText: Title
+                addText: Add
+                imageText: Image
+                videoText: Video
+                audioText: Audio
+                pdf2swfText: pdf2swf
+                noFilterText: All
+
+            audio:
+                MainPanel:
+                    title: Audio template
+                    audioTemplateTitleText: 'Audio templatevorlage "{0}"'
+
+                FormPanel:
+                    title: Audio template
+                    audioText: Audio
+                    saveText: Save
+                    previewText: Preview
+                    debugText: Debug
+
+                FieldsPanel:
+                    title: Audio
+                    keepBitrateText: 'Keep bitrate'
+                    bitrateText: Bitrate
+                    bitrateHelpText: 'Definiert die durchschnittliche Bitrate pro Sekunde (Datenmenge pro Sekunde) der Tondatei.'
+                    keepSamplerateText: 'Keep samplerate'
+                    samplerateText: Samplerate
+                    samplerateHelpText: 'Definiert die Samplerate (Abtastrate) der Tondatei.'
+                    keepSamplebitsText: 'Keep samplebits'
+                    samplebitsText: Samplebits
+                    samplebitsHelpText: 'Definiert die bit depth der Tondatei.'
+                    channelsText: Channels
+                    channelsHelpText: 'Definiert, ob die Tondatei in Mono oder Stereo konvertiert wird.'
+                    keepChannelsText: 'Keep channels'
+                    noChannelsText: 'No audio'
+                    channelsMonoText: 'Mono'
+                    channelsStereoText: 'Stereo'
+
+            image:
+                MainPanel:
+                    title: Image template
+                    imageTemplateTitleText: 'Image template "{0}"'
+
+                FormPanel:
+                    title: Image template
+                    imageText: Image
+                    selectMethodText: 'Please select a resize method'
+                    methodText: Method
+                    methodHelpText: 'Defines the method for scaling and cropping of the image.'
+                    widthText: Width
+                    widthHelpText: 'Width of the generated image.'
+                    heighText: Height
+                    heightHelpText: 'Height of the generated image.'
+                    selectScaleText: 'Please select a scale method'
+                    scaleText: Scale
+                    scaleHelpText: 'Defines the allowed scaling direction.'
+                    forWebText: 'Optimize for browser display.'
+                    forWebHelpText: 'Limits output format to GIF, JPG and PNG. Limits colorspace to RGB and grayscale.'
+                    selectFormatText: 'Please select an output format'
+                    formatText: Format
+                    formatHelpText: 'Please select an output format'
+                    colorspaceText: Colorspace
+                    colorspaceHelpText: 'Defines the colorspace of the image.'
+                    depthText: Colordepth
+                    depthHelpText: 'Defines color depth in bits per channel'
+                    tiffCompressionText: Tiff compression
+                    tiffCompressionHelpText: 'Algorithm for compression of TIF files'
+                    qualityText: Quality
+                    qualityHelpText: 'Quality of the generated image.'
+                    selectCompressionText: 'Please select a compression level'
+                    compressionText: 'Bitte wählen Sie einen Kompressionsgrad'
+                    compressionHelpText: 'Compression level of the generated image.'
+                    selectFilterTypeText: 'Please select a filter type'
+                    filterTypeText: Filtertype
+                    filterTypeHelpText: 'Filter type of the generated image.'
+                    emptyBackgroundColorText: Transparent
+                    backgroundColorText: 'Background color'
+                    backgroundColorHelpText: 'Background color for padded regions, leave empty for transparent background.'
+                    colorspaceRgbText: RGB
+                    colorspaceCmykText: CMYK
+                    colorspaceGrayText: Grayscale
+                    methodWidthText: 'Fixed Breite'
+                    methodWidthHelpText: 'Image has fixed width and variable height.'
+                    methodHeightText: 'Fixed Höhe'
+                    methodHeightHelpText: 'Image has fixed height and variable width.'
+                    methodExactText: 'Exact fit without padding'
+                    methodExactHelpText: 'Image has fixed width and height, image might be distorted.'
+                    methodExactFitText: 'Ext fit with padding'
+                    methodExactFitHelpText: 'Image has fixed width and height, image will not be distorted, border area is padded with background color.'
+                    methodFitText: 'Simple fit'
+                    methodFitHelpText: 'Image will have either given width or height.'
+                    methodCropText: Crop
+                    methodCropHelpText: 'Image is resized to width or height and afterwards cropped around the center point.'
+                    scaleUpDownText: 'No restriction'
+                    scaleUpText: 'Only enlarge smaller'
+                    scaleDownText: 'Only shrink larger'
+                    depth8BitPerChannelText: '8 bit per channel'
+                    depth16BitPerChannelText: '16 bit per channel'
+                    debugText: Debug
+                    saveText: Save
+                    previewText: Preview
+                    keepFormatText: Keep format
+                    colorspaceRgbText: RGB
+                    colorspaceCmykText: CMYK
+                    colorspaceGrayText: Gray
+                    keepColorspaceText: Keep colorspace
+                    requiredValuesText: 'Please check the form for required fields.'
+                    saveDescriptionText: 'Please note that saving will result in regenerating all images stored in the media manager based on this media template. This can result in heavy server load. If you want to test your settings use the preview button. Saving is not necessary for previewing.'
+
+                PreviewPanel:
+                    changeBackgroundColorToText: Change background color:
+                    whiteText: White
+                    blackText: Black
+                    randomText: Random
+
+            pdf2swf:
+                FormPanel:
+                    title: pdf2swf template
+                    pdf2swfText: pdf2swf
+                    resolutionText: Resolution
+                    resolutionHelpText: 'Resolution of the generated SWF'
+                    framerateText: Framerate
+                    framerateHelpText: 'Framerate for automatic paging.'
+                    qualityText: Quality
+                    qualityHelpText: 'Quality of JPGs in the generated SWF.'
+                    linksText: Links
+                    enabledText: Enabled
+                    disabledText: Disabled
+                    linksDisabledHelpText: 'Links are deactivated.'
+                    newWindowText: 'Open in new window'
+                    linksnewWindowHelpText: 'Open links in new window.'
+                    zlibText: Zlib
+                    zlibHelpText: 'Use Zlib to compress the generated SWF.'
+                    saveText: Save
+                    previewText: Preview
+                    debugText: Debug
+
+                MainPanel:
+                    title: pdf2swf template
+                    pdf2swfTemplateTitleText: 'pdf2swf template "{0}"'
+
+            video:
+                FormPanel:
+                    title: Video template
+
+                MainPanel:
+                    title: Video template
+                    videoTemplateTitleText: 'Video template "{0}"'
+                    videoText: Video
+                    widthText: Width
+                    widthHelpText: 'Width of the generated video.'
+                    heightText: Height
+                    heightHelpText: 'Height of the generated video.'
+                    forWebText: 'Optimize for browser display.'
+                    forWebHelpText: 'Limits output format to FLV, MP4 und OGV.'
+                    formatText: Format
+                    formatHelpText: 'Defines the format of the video.'
+                    matchFormatText: 'Change format only if necessary'
+                    matchFormatHelpText: 'Don''t reencode if format of the file matches the chosen format.'
+                    keepBitrateText: 'Keep bitrate'
+                    bitrateText: Bitrate
+                    bitrateHelpText: 'Defines the average bitrate per second of the video.'
+                    keepFramerateText: 'Keep framerate'
+                    framerateText: Framerate
+                    framerateHelpText: 'Defines the framerate of the video.'
+                    deinterlaceText: Deinterlace
+                    deinterlaceHelpText: 'Activate deinterlacing. Converts interlaced in non-interlaced videos.'
+                    saveText: Speichern
+                    previewText: Vorschau
+                    debugText: Debug
