@@ -24,10 +24,6 @@ Ext.define('Phlexible.message.view.list.MainPanel', {
                 listeners: {
                     updateFilter: function (values) {
                         this.getComponent('list').setFilter(values);
-                        var toolBarObject = this.getComponent('list').getDockedComponent('pager');
-                        if ((toolBarObject !== 'undefined') && (typeof toolBarObject.changePage === 'function')) {
-                            toolBarObject.changePage(1);
-                        }
                     },
                     scope: this
                 }
@@ -38,7 +34,7 @@ Ext.define('Phlexible.message.view.list.MainPanel', {
                 region: 'center',
                 padding: 5,
                 listeners: {
-                    messages: function (data) {
+                    messages: function (p, data) {
                         this.getComponent('filter').updateFacets(data.facets);
                     },
                     scope: this

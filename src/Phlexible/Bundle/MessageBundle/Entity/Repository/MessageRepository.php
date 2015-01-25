@@ -218,6 +218,14 @@ class MessageRepository extends EntityRepository
                 $composite->add($qb->expr()->notLike("$prefix.body", $qb->expr()->literal("%$value%")));
                 break;
 
+            case Criteria::CRITERIUM_USER_LIKE:
+                $composite->add($qb->expr()->like("$prefix.user", $qb->expr()->literal("%$value%")));
+                break;
+
+            case Criteria::CRITERIUM_USER_NOT_LIKE:
+                $composite->add($qb->expr()->notLike("$prefix.user", $qb->expr()->literal("%$value%")));
+                break;
+
             case Criteria::CRITERIUM_PRIORITY_IS:
                 $composite->add($qb->expr()->eq("$prefix.priority", $value));
                 break;
@@ -310,6 +318,9 @@ class MessageRepository extends EntityRepository
                     )
                 );
                 break;
+
+            default:
+                throw new \InvalidArgumentException("Unknown criterium type $type");
         }
     }
 }

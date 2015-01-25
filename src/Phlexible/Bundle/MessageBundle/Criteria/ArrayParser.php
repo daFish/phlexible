@@ -22,14 +22,9 @@ class ArrayParser
      */
     public function parse(array $data)
     {
-        $mode = Criteria::MODE_OR;
-        if (isset($data['mode'])) {
-            $mode = $data['mode'];
-        }
-        $criteria = new Criteria(array(), $mode);
-
-        if (isset($data['criteria'])) {
-            foreach ($data['criteria'] as $criteriumData) {
+        $collection = array();
+        if (isset($data['value'])) {
+            foreach ($data['value'] as $criteriumData) {
                 $type = $criteriumData['type'];
                 $value = $criteriumData['value'];
                 if ($type === 'collection') {
@@ -42,10 +37,14 @@ class ArrayParser
                     $criterium = new Criterium($type, $value);
                 }
 
-                $criteria->add($criterium);
+                $collection[] = $criterium;
             }
         }
 
-        return $criteria;
+        $mode = Criteria::MODE_OR;
+        if (isset($data['mode'])) {
+            $mode = $data['mode'];
+        }
+        return new Criteria($collection, $mode);
     }
 }

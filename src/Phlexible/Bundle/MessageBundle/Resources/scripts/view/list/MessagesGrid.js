@@ -23,6 +23,8 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
     typeErrorText: '_typeErrorText',
 
     initComponent: function () {
+        this.autoLoad = this.autoload || true;
+
         this.initMyStore();
         this.initMyColumns();
         this.initMyPlugins();
@@ -46,12 +48,13 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
                 },
                 extraParams: {filter: ''}
             },
-            autoLoad: true,
+            pageSize: 25,
+            autoLoad: this.autoLoad,
             sorters: [{property: 'createdAt', direction: 'DESC'}],
             remoteSort: true,
             listeners: {
                 load: function (store) {
-                    this.fireEvent('messages', store.getProxy().getReader().rawData);
+                    this.fireEvent('messages', this, store.getProxy().getReader().rawData);
                 },
                 scope: this
             }
@@ -124,8 +127,7 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
         this.dockedItems = [{
             xtype: 'pagingtoolbar',
             itemId: 'pager',
-            dock: 'top',
-            pageSize: 25,
+            dock: 'bottom',
             store: this.store,
             displayInfo: true,
             displayMsg: this.displayMessageText,
@@ -134,12 +136,18 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
     },
 
     setFilter: function(values) {
-        this.getStore().getProxy().setExtraParam('filter', Ext.encode(values));
-        this.getStore().reload();
+        var pager = this.getDockedComponent('pager');
+
+        this.getStore().getProxy().setExtraParam('filter', values ? Ext.encode(values) : null);
+        this.getStore().load({
+            params: {
+                start: 0,
+                page: 1
+            }
+        });
     },
 
     clearFilter: function() {
-        this.getStore().getProxy().setExtraParam('filter', null);
-        this.getStore().reload();
+        this.setFilter(null);
     }
 });

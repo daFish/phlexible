@@ -20,25 +20,27 @@ class Criteria implements CriteriumInterface, \IteratorAggregate, \Countable
     const MODE_OR = 'or';
     const MODE_AND = 'and';
 
-    const CRITERIUM_SUBJECT_LIKE     = 'subject_like';
-    const CRITERIUM_SUBJECT_NOT_LIKE = 'subject_not_like';
-    const CRITERIUM_BODY_LIKE        = 'body_like';
-    const CRITERIUM_BODY_NOT_LIKE    = 'body_not_like';
-    const CRITERIUM_PRIORITY_IS      = 'priority_is';
-    const CRITERIUM_PRIORITY_IN      = 'priority_in';
-    const CRITERIUM_PRIORITY_MIN     = 'priority_min';
-    const CRITERIUM_TYPE_IS          = 'type_is';
-    const CRITERIUM_TYPE_IN          = 'type_in';
-    const CRITERIUM_CHANNEL_IS       = 'channel_is';
-    const CRITERIUM_CHANNEL_LIKE     = 'channel_like';
-    const CRITERIUM_CHANNEL_IN       = 'channel_in';
-    const CRITERIUM_ROLE_IS          = 'role_is';
-    const CRITERIUM_ROLE_IN          = 'role_in';
-    const CRITERIUM_MIN_AGE          = 'min_age';
-    const CRITERIUM_MAX_AGE          = 'max_age';
-    const CRITERIUM_START_DATE       = 'start_date';
-    const CRITERIUM_END_DATE         = 'end_date';
-    const CRITERIUM_DATE_IS          = 'date_is';
+    const CRITERIUM_SUBJECT_LIKE     = 'subjectLike';
+    const CRITERIUM_SUBJECT_NOT_LIKE = 'subjectNotLike';
+    const CRITERIUM_BODY_LIKE        = 'bodyLike';
+    const CRITERIUM_BODY_NOT_LIKE    = 'bodyNotLike';
+    const CRITERIUM_USER_LIKE        = 'userLike';
+    const CRITERIUM_USER_NOT_LIKE    = 'userNotLike';
+    const CRITERIUM_PRIORITY_IS      = 'priorityIs';
+    const CRITERIUM_PRIORITY_IN      = 'priorityIn';
+    const CRITERIUM_PRIORITY_MIN     = 'priorityMin';
+    const CRITERIUM_TYPE_IS          = 'typeIs';
+    const CRITERIUM_TYPE_IN          = 'typeIn';
+    const CRITERIUM_CHANNEL_IS       = 'channelIs';
+    const CRITERIUM_CHANNEL_LIKE     = 'channelLike';
+    const CRITERIUM_CHANNEL_IN       = 'channelIn';
+    const CRITERIUM_ROLE_IS          = 'roleIs';
+    const CRITERIUM_ROLE_IN          = 'roleIn';
+    const CRITERIUM_MIN_AGE          = 'minAge';
+    const CRITERIUM_MAX_AGE          = 'maxAge';
+    const CRITERIUM_START_DATE       = 'startDate';
+    const CRITERIUM_END_DATE         = 'endDate';
+    const CRITERIUM_DATE_IS          = 'dateIs';
 
     /**
      * @var CriteriumInterface[]
@@ -193,6 +195,30 @@ class Criteria implements CriteriumInterface, \IteratorAggregate, \Countable
     public function bodyNotLike($value)
     {
         $this->add(new Criterium(self::CRITERIUM_BODY_NOT_LIKE, $value));
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function userLike($value)
+    {
+        $this->criteria[] = new Criterium(self::CRITERIUM_USER_LIKE, $value);
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function userNotLike($value)
+    {
+        $this->add(new Criterium(self::CRITERIUM_USER_NOT_LIKE, $value));
 
         return $this;
     }

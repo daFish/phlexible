@@ -7,8 +7,9 @@ Ext.define('Phlexible.message.view.list.FilterPanel', {
     iconCls: 'p-message-filter-icon',
     autoScroll: true,
 
-    textText: '_textText',
     subjectText: '_subjectText',
+    bodyText: '_bodyText',
+    userText: '_userText',
     resetText: '_resetText',
     priorityText: '_priorityText',
     loadingText: '_loadingText',
@@ -43,6 +44,7 @@ Ext.define('Phlexible.message.view.list.FilterPanel', {
             {
                 xtype: 'panel',
                 title: this.textText,
+                itemId: 'text',
                 layout: 'form',
                 frame: true,
                 collapsible: true,
@@ -70,9 +72,29 @@ Ext.define('Phlexible.message.view.list.FilterPanel', {
                     },
                     {
                         xtype: 'textfield',
-                        fieldLabel: this.textText,
+                        fieldLabel: this.bodyText,
                         flex: 1,
-                        name: 'text',
+                        name: 'body',
+                        labelAlign: 'top',
+                        enableKeyEvents: true,
+                        listeners: {
+                            keyup: function (field, event) {
+                                if (event.getKey() == event.ENTER) {
+                                    this.task.cancel();
+                                    this.updateFilter();
+                                    return;
+                                }
+
+                                this.task.delay(500);
+                            },
+                            scope: this
+                        }
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: this.userText,
+                        flex: 1,
+                        name: 'user',
                         labelAlign: 'top',
                         enableKeyEvents: true,
                         listeners: {
@@ -370,6 +392,9 @@ Ext.define('Phlexible.message.view.list.FilterPanel', {
     },
 
     resetFilter: function (btn) {
+        this.getComponent('text').items.each(function (item) {
+            item.setValue('');
+        });
         this.getComponent('priorities').items.each(function (item) {
             item.enable();
             item.setValue(false);
@@ -394,13 +419,41 @@ Ext.define('Phlexible.message.view.list.FilterPanel', {
         this.getDockedComponent('tbar').getComponent('resetBtn').enable();
 
         var values = this.form.getValues(),
-            filter = {mode: 'AND', criteria: []};
+            filter = {mode: 'AND', value: []},
+            priorities = [],
+            types = [],
+            channels = [],
+            roles = [];
 
-        if (values.subject) {
-            filter.criteria.push({type: 'subjectLike', value: values.subject})
+        Ext.Object.each(values, function(key, value) {
+            if (key === 'subject' && value) {
+                filter.value.push({type: 'subjectLike', value: value})
+            } else if (key === 'body' && value) {
+                filter.value.push({type: 'bodyLike', value: value})
+            } else if (key === 'user' && value) {
+                filter.value.push({type: 'userLike', value: value})
+            } else if (key.substr(0, 9) === 'priority_' && value) {
+                priorities.push(key.substr(9));
+            } else if (key.substr(0, 5) === 'type_' && value) {
+                types.push(key.substr(5));
+            } else if (key.substr(0, 8) === 'channel_' && value) {
+                channels.push(key.substr(8));
+            } else if (key.substr(0, 5) === 'role_' && value) {
+                roles.push(key.substr(5));
+            }
+        });
+
+        if (priorities.length) {
+            filter.value.push({type: 'priorityIn', value: priorities});
         }
-        if (values.body) {
-            filter.criteria.push({type: 'subjectLike', value: values.body})
+        if (types.length) {
+            filter.value.push({type: 'typeIn', value: types});
+        }
+        if (channels.length) {
+            filter.value.push({type: 'channelIn', value: channels});
+        }
+        if (roles.length) {
+            filter.value.push({type: 'rolesIn', value: roles});
         }
 
         this.fireEvent('updateFilter', filter);

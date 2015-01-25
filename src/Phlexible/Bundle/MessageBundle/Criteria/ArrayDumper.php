@@ -22,23 +22,25 @@ class ArrayDumper
      */
     public function dump(Criteria $criteria)
     {
-        $data = array(
-            'mode' => $criteria->getMode(),
-        );
+        $collection = array();
 
         foreach ($criteria as $criterium) {
             if ($criterium instanceof Criteria) {
-                $data['criteria'][] = array('type' => $criterium->getType(), 'value' => $this->dump($criterium, 1));
+                $collection[] = $this->dump($criterium, 1);
             } elseif ($criterium instanceof Criterium) {
                 $type = $criterium->getType();
                 $value = $criterium->getValue();
                 if ($value instanceof \DateTime) {
                     $value = $value->format('Y-m-d H:i:s');
                 }
-                $data['criteria'][] = array('type' => $type, 'value' => $value);
+                $collection[] = array('type' => $type, 'value' => $value);
             }
         }
 
-        return $data;
+        return array(
+            'mode'  => $criteria->getMode(),
+            'type'  => 'collection',
+            'value' => $collection,
+        );
     }
 }

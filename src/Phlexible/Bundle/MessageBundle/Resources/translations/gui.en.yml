@@ -37,6 +37,8 @@ Phlexible:
                     subjectNotLikeText: Subject not like
                     bodyLikeText: Body like
                     bodyNotLikeText: Body not like
+                    userLikeText: User like
+                    userNotLikeText: User not like
                     priorityIsText: Priority is
                     priorityInText: Priority in
                     priorityMinText: Priority min
@@ -66,23 +68,12 @@ Phlexible:
                 MainPanel:
                     title: Filter
 
-                xPreviewPanel:
-                    title: Preview
-                    emptyText: 'No messages'
-                    subjectText: Subject
-                    typeText: Type
-                    channelText: Channel
-                    roleText: Role
-                    userText: User
-                    createdAtText: 'Created at'
-                    previewText: Preview
-                    previewForText: 'Preview for "{0}"'
-
             list:
                 FilterPanel:
                     title: Filter
-                    textText: Text
                     subjectText: Subject
+                    bodyText: Text
+                    userText: User
                     resetText: Reset
                     priorityText: Priority
                     loadingText: Loading...

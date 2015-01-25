@@ -38,6 +38,8 @@ Ext.define('Phlexible.message.view.filter.CriteriaForm', {
     subjectNotLikeText: '_subjectNotLikeText',
     bodyLikeText: '_bodyLikeText',
     bodyNotLikeText: '_bodyNotLikeText',
+    userLikeText: '_userLikeText',
+    userNotLikeText: '_userNotLikeText',
     priorityIsText: '_priorityIsText',
     priorityInText: '_priorityInText',
     priorityMinText: '_priorityMinText',
@@ -315,6 +317,8 @@ Ext.define('Phlexible.message.view.filter.CriteriaForm', {
                     ['subjectNotLike', this.subjectNotLikeText],
                     ['bodyLike', this.bodyLikeText],
                     ['bodyNotLike', this.bodyNotLikeText],
+                    ['userLike', this.userLikeText],
+                    ['userNotLike', this.userNotLikeText],
                     ['priorityIs', this.priorityIsText],
                     ['priorityIn', this.priorityInText],
                     ['priorityMin', this.priorityMinText],
@@ -328,9 +332,7 @@ Ext.define('Phlexible.message.view.filter.CriteriaForm', {
                     ['maxAge', this.maxAgeText],
                     ['startDate', this.startDateText],
                     ['endDate', this.endDateText],
-                    ['dateIs', this.dateIsText],
-                    ['limit', this.limitText],
-                    ['order', this.orderText]
+                    ['dateIs', this.dateIsText]
                 ]
             }),
             listeners: {
@@ -565,20 +567,27 @@ Ext.define('Phlexible.message.view.filter.CriteriaForm', {
     },
 
     serializeCriteria: function (all) {
-        var criteria = {mode: 'OR', criteria: []};
+        var criteria = {mode: 'OR', type: 'collection', value: []};
+
         this.getComponent('criteria').items.each(function (block) {
-            var group = {mode: 'AND', criteria: []};
+            var orBlock = {mode: 'AND', type: 'collection', value: []};
             block.items.each(function (row) {
                 if (!row.getComponent('criterium').getValue()) {
                     return;
                 }
-                group.criteria.push({
-                    key: row.getComponent('criterium').getValue(),
+                orBlock.value.push({
+                    type: row.getComponent('criterium').getValue(),
                     value: row.getComponent('value').getValue()
                 });
             }, this);
-            criteria.criteria.push(group);
+            if (orBlock.value.length) {
+                criteria.value.push(orBlock);
+            }
         }, this);
+
+        if (!criteria.value.length) {
+            criteria = null;
+        }
 
         console.info('serialize:', criteria);
 

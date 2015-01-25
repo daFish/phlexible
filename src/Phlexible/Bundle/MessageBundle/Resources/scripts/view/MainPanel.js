@@ -4,6 +4,7 @@ Ext.define('Phlexible.message.view.MainPanel', {
 
     iconCls: Phlexible.Icon.get('resource-monitor'),
     layout: 'fit',
+    border: false,
 
     initComponent: function () {
         this.initMyTabs();

@@ -51,6 +51,10 @@ class MessagesController extends Controller
         $criteria2->add(new Criterium(Criteria::CRITERIUM_PRIORITY_IN, array('a,b')));
         $criteria2->add(new Criterium(Criteria::CRITERIUM_TYPE_IS, array('c')));
         $criteria->add($criteria2);
+        $criteria3 = new Criteria(array(), Criteria::MODE_AND);
+        $criteria3->add(new Criterium(Criteria::CRITERIUM_PRIORITY_IN, array('d,e')));
+        $criteria3->add(new Criterium(Criteria::CRITERIUM_TYPE_IS, array('f')));
+        $criteria->add($criteria3);
         if (!is_array($filter)) {
             $filter = [];
         }
@@ -67,11 +71,6 @@ class MessagesController extends Controller
         $priorityList = $messageManager->getPriorityNames();
         $typeList = $messageManager->getTypeNames();
 
-        $priorityFilter = [];
-        $typeFilter = [];
-        $channelFilter = [];
-        $roleFilter = [];
-
         if ($filter) {
             $parser = new ArrayParser();
             $criteria = $parser->parse($filter);
@@ -80,6 +79,11 @@ class MessagesController extends Controller
         }
 
         /*
+        $priorityFilter = [];
+        $typeFilter = [];
+        $channelFilter = [];
+        $roleFilter = [];
+
         foreach ($filter as $key => $value) {
             if ($key == 'subject' && !empty($value)) {
                 $criteria->addRaw(Criteria::CRITERIUM_SUBJECT_LIKE, $value);

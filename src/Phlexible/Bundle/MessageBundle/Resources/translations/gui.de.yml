@@ -37,6 +37,8 @@ Phlexible:
                     subjectNotLikeText: Betreff enthält nicht
                     bodyLikeText: Text enthält
                     bodyNotLikeText: Text enthält nicht
+                    userLikeText: Benutzer enthält
+                    userNotLikeText: Benutzer enthält nicht
                     priorityIsText: Priorität ist
                     priorityInText: Priorität in
                     priorityMinText: Priorität mindestens
@@ -66,23 +68,12 @@ Phlexible:
                 MainPanel:
                     title: Filter
 
-                xPreviewPanel:
-                    title: Vorschau
-                    emptyText: 'Keine Nachrichten'
-                    subjectText: Betreff
-                    typeText: Typ
-                    channelText: Kanal
-                    roleText: Rolle
-                    userText: Benutzer
-                    createdAtText: 'Angelegt an'
-                    previewText: Vorschau
-                    previewForText: 'Vorschau für "{0}"'
-
             list:
                 FilterPanel:
                     title: Filter
-                    textText: Text
                     subjectText: Betreff
+                    bodyText: Text
+                    userText: Benutzer
                     resetText: Zurücksetzen
                     priorityText: Priorität
                     loadingText: Lade...

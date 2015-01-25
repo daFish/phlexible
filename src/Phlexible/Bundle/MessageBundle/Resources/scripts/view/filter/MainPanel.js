@@ -61,7 +61,7 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
                         xtype: 'message-filter-preview',
                         itemId: 'preview',
                         region: 'center',
-                        disabled: true
+                        autoLoad: false
                     }
                 ]
             }
