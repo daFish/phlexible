@@ -50,7 +50,7 @@ Ext.define('Phlexible.dashboard.infobar.Welcome', {
                     Phlexible.Icon.inline('edit-column') + ' ' + this.changeLayoutText,
                 '</span>',
             '</div>',
-            Phlexible.Icon.inlineDirect('p-icon-phlexible') + ' ' + this.welcomeToText
+            Phlexible.Icon.inlineText('phlexible', this.welcomeToText)
         );
     }
 });

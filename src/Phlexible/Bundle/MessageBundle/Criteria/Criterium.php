@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\MessageBundle\Criteria;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Criterium
+class Criterium implements CriteriumInterface
 {
     /**
      * @var string
@@ -36,7 +36,7 @@ class Criterium
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getType()
     {
@@ -44,7 +44,7 @@ class Criterium
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getValue()
     {
@@ -52,7 +52,7 @@ class Criterium
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function toArray()
     {

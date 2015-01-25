@@ -1,13 +1,15 @@
-Ext.provide('Phlexible.messages.model.Message');
+Ext.define('Phlexible.message.model.Message', {
+    extend: 'Ext.data.Model',
 
-Phlexible.messages.model.Message = Ext.data.Record.create([
-    {name: 'id'},
-    {name: 'subject'},
-    {name: 'body'},
-    {name: 'priority'},
-    {name: 'type'},
-    {name: 'channel'},
-    {name: 'role'},
-    {name: 'user'},
-    {name: 'createdAt'}
-]);
+    fields:[
+        {name: 'id'},
+        {name: 'subject'},
+        {name: 'body'},
+        {name: 'priority'},
+        {name: 'type'},
+        {name: 'channel'},
+        {name: 'role'},
+        {name: 'user'},
+        {name: 'createdAt'}
+    ]
+});

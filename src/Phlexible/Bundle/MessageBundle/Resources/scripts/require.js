@@ -1,1 +1,1 @@
-Ext.require('Phlexible.messages.portlet.Messages');
+Ext.require('Phlexible.message.portlet.Messages');

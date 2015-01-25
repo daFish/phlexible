@@ -8,7 +8,10 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
+use Phlexible\Bundle\MessageBundle\Criteria\ArrayDumper;
+use Phlexible\Bundle\MessageBundle\Criteria\ArrayParser;
 use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
+use Phlexible\Bundle\MessageBundle\Criteria\Criterium;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,9 +45,22 @@ class MessagesController extends Controller
             $filter = json_decode($filter, true);
         }
 
+        /*
+        $criteria = new Criteria(array(), Criteria::MODE_OR);
+        $criteria2 = new Criteria(array(), Criteria::MODE_AND);
+        $criteria2->add(new Criterium(Criteria::CRITERIUM_PRIORITY_IN, array('a,b')));
+        $criteria2->add(new Criterium(Criteria::CRITERIUM_TYPE_IS, array('c')));
+        $criteria->add($criteria2);
         if (!is_array($filter)) {
             $filter = [];
         }
+
+        $dumper = new ArrayDumper();
+        $dump = $dumper->dump($criteria);
+        echo '<pre>';print_r($dump);
+        $parser = new ArrayParser();
+        print_r($parser->parse($filter));die;
+        */
 
         $messageManager = $this->get('phlexible_message.message_manager');
 
@@ -56,7 +72,14 @@ class MessagesController extends Controller
         $channelFilter = [];
         $roleFilter = [];
 
-        $criteria = new Criteria();
+        if ($filter) {
+            $parser = new ArrayParser();
+            $criteria = $parser->parse($filter);
+        } else {
+            $criteria = new Criteria();
+        }
+
+        /*
         foreach ($filter as $key => $value) {
             if ($key == 'subject' && !empty($value)) {
                 $criteria->addRaw(Criteria::CRITERIUM_SUBJECT_LIKE, $value);
@@ -104,6 +127,7 @@ class MessagesController extends Controller
                 implode(',', $roleFilter)
             );
         }
+        */
 
         $count = $messageManager->countByCriteria($criteria);
         $messages = $messageManager->findByCriteria($criteria, [$sort => $dir], $limit, $start);

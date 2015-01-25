@@ -16,8 +16,18 @@ Ext.define('Phlexible.gui.util.Icon', {
         /**
          * @cfg {String} extension Icon file extension
          */
-        extension: '.png'
+        extension: '.png',
+
+        /**
+         * @cfg {Boolean} log Log to console?
+         */
+        log: false
     },
+
+    /**
+     * @cfg {Object} names
+     */
+    names: [],
 
     /**
      * Constructor
@@ -27,8 +37,8 @@ Ext.define('Phlexible.gui.util.Icon', {
     constructor: function(config) {
         this.initConfig(config);
 
-        Ext.util.CSS.createStyleSheet('', 'icons');
-        this.css = Ext.get('icons');
+        this.css = Ext.util.CSS.createStyleSheet('', 'icons');
+        //this.css = Ext.get('icons');
         this.rules = {};
 
         this.ADD     = 'plus-circle';
@@ -49,8 +59,8 @@ Ext.define('Phlexible.gui.util.Icon', {
      *
      * @returns {Object}
      */
-    getRules: function() {
-        return this.rules;
+    getNames: function() {
+        return this.names;
     },
 
     /**
@@ -59,9 +69,9 @@ Ext.define('Phlexible.gui.util.Icon', {
      * @param {String} icon
      * @return {String}
      */
-    getRule: function(icon) {
-        if (this.hasRule(icon)) {
-            return this.rules[icon];
+    getName: function(icon) {
+        if (this.has(icon)) {
+            return this.names[icon];
         }
 
         return this.createRule(icon);
@@ -73,8 +83,8 @@ Ext.define('Phlexible.gui.util.Icon', {
      * @param {String} icon
      * @return {Boolean}
      */
-    hasRule: function(icon) {
-        return !!this.rules[icon];
+    has: function(icon) {
+        return !!this.names[icon];
     },
 
     /**
@@ -84,19 +94,27 @@ Ext.define('Phlexible.gui.util.Icon', {
      * @return {String}
      */
     createRule: function(icon) {
-        var rule = this.config.prefix + icon;
+        var name = this.config.prefix + icon,
+            rule = '.' + name,
+            property;
 
-        this.css.update(
-            this.css.getHtml() +
-                ' .' + rule +
-                ' {background-image: url(' + this.getPath() + '/16/' + icon + this.getExtension() + ') !important;}' + "\n"
-        );
+        if (Ext.util.CSS.getRule(rule, true)) {
+            if (this.getLog()) {
+                Phlexible.console.info('Icon rule already exists: ' + name);
+            }
+            return name;
+        }
 
-        this.rules[icon] = rule;
+        property = 'background-image: url(' + this.getPath() + '/16/' + icon + this.getExtension() + ') !important;';
+        Ext.util.CSS.createRule(this.css, rule, property);
 
-        //Phlexible.console.debug('Added CSS icon rule: ' + icon);
+        this.names[icon] = name;
 
-        return rule;
+        if (this.getLog()) {
+            Phlexible.console.debug('Added CSS icon rule:', icon, name, rule, property);
+        }
+
+        return name;
     },
 
     /**
@@ -106,13 +124,19 @@ Ext.define('Phlexible.gui.util.Icon', {
      * @returns {String}
      */
     get: function(icon) {
+        if (!icon) {
+            return '';
+        }
+
         // are we already prefixed?
         if (icon.substr(0, this.getPrefix().length) === this.getPrefix()) {
-            //Phlexible.console.error('Icon already prefixed: ' + icon);
+            if (this.getLog()) {
+                Phlexible.console.info('Icon already prefixed: ' + icon);
+            }
             return icon;
         }
 
-        return this.getRule(icon);
+        return this.getName(icon);
     },
 
     /**

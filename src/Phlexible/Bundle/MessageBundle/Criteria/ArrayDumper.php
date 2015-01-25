@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\MessageBundle\Criteria;
 
 /**
- * Message criteria dumper
+ * Message criteria array dumper
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CriteriaDumper
+class ArrayDumper
 {
     /**
      * @param Criteria $criteria
@@ -22,23 +22,23 @@ class CriteriaDumper
      */
     public function dump(Criteria $criteria)
     {
-        $mode = strtoupper($criteria->getMode());
+        $data = array(
+            'mode' => $criteria->getMode(),
+        );
 
-        $parts = array();
         foreach ($criteria as $criterium) {
             if ($criterium instanceof Criteria) {
-                $parts[] = $this->dump($criterium, 1);
+                $data['criteria'][] = array('type' => $criterium->getType(), 'value' => $this->dump($criterium, 1));
             } elseif ($criterium instanceof Criterium) {
                 $type = $criterium->getType();
                 $value = $criterium->getValue();
                 if ($value instanceof \DateTime) {
-                    $parts[] = $type . ' = "' . $value->format('Y-m-d H:i:s') . '"';
-                } else {
-                    $parts[] = $type . ' = "' . $value . '"';
+                    $value = $value->format('Y-m-d H:i:s');
                 }
+                $data['criteria'][] = array('type' => $type, 'value' => $value);
             }
         }
 
-        return '(' . implode(' ' . $mode . ' ', $parts) . ')';
+        return $data;
     }
 }

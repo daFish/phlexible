@@ -1,6 +1,8 @@
-Ext.provide('Phlexible.messages.model.Criterium');
+Ext.define('Phlexible.message.model.Criterium', {
+    extend: 'Ext.data.Model',
 
-Phlexible.messages.model.Criterium = Ext.data.Record.create([
-    {name: 'key'},
-    {name: 'value'}
-]);
+    fields:[
+        {name: 'key'},
+        {name: 'value'}
+    ]
+});

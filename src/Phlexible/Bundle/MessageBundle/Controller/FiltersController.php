@@ -62,44 +62,15 @@ class FiltersController extends Controller
      * List filter values
      *
      * @return JsonResponse
-     * @Route("/filtervalues", name="messages_filter_filtervalues")
+     * @Route("/facets", name="messages_filter_facets")
      */
-    public function filtervalueAction()
+    public function facetsAction()
     {
-        $data = ['roles' => []];
+        $messageManager = $this->get('phlexible_message.message_manager');
+        $data = $messageManager->getFacets();
 
-        /*
-        foreach ($acl->getResources() as $role) {
-            $data['roles'][] = array($role, ucfirst($role));
-        }
-        */
-
-        $bundles = $this->container->getParameter('kernel.bundles');
-        foreach ($bundles as $id => $class) {
-            $data['bundles'][] = [$id, $id];
-        }
-
-        $data['criteria'] = [
-            ['key' => 'subject_like', 'value' => 'Subject like'],
-            ['key' => 'subject_not_like', 'value' => 'Subject not like'],
-            ['key' => 'body_like', 'value' => 'Body Like'],
-            ['key' => 'body_not_like', 'value' => 'Body not like'],
-            ['key' => 'priority_is', 'value' => 'Priority is'],
-            ['key' => 'priority_in', 'value' => 'Priority in'],
-            ['key' => 'priority_min', 'value' => 'Priority min'],
-            ['key' => 'type_is', 'value' => 'Type is'],
-            ['key' => 'type_in', 'value' => 'Type in'],
-            ['key' => 'channel_is', 'value' => 'Channel is'],
-            ['key' => 'channel_like', 'value' => 'Channel like'],
-            ['key' => 'channel_in', 'value' => 'Channel in'],
-            ['key' => 'role_is', 'value' => 'Role is'],
-            ['key' => 'min_age', 'value' => 'Min age'],
-            ['key' => 'max_age', 'value' => 'Max age'],
-            ['key' => 'start_date', 'value' => 'Start date'],
-            ['key' => 'end_date', 'value' => 'End date'],
-            ['key' => 'date_is', 'value' => 'Date is'],
-            ['key' => '', 'value' => ''],
-        ];
+        $data['priorityNames'] = $messageManager->getPriorityNames();
+        $data['typeNames'] = $messageManager->getTypeNames();
 
         return new JsonResponse($data);
     }

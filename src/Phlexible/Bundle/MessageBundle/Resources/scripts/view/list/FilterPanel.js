@@ -1,20 +1,48 @@
-Ext.provide('Phlexible.messages.view.FilterPanel');
+Ext.define('Phlexible.message.view.list.FilterPanel', {
+    extend: 'Ext.form.FormPanel',
+    alias: 'widget.message-list-filter',
 
-Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
-    title: Phlexible.messages.Strings.filter,
-    strings: Phlexible.messages.Strings,
-    bodyStyle: 'padding: 5px;',
-    cls: 'p-messages-filter-panel',
+    bodyPadding: 5,
+    cls: 'p-messages-view-filter',
     iconCls: 'p-message-filter-icon',
     autoScroll: true,
+
+    textText: '_textText',
+    subjectText: '_subjectText',
+    resetText: '_resetText',
+    priorityText: '_priorityText',
+    loadingText: '_loadingText',
+    typeText: '_typeText',
+    channelText: '_channelText',
+    roleText: '_roleText',
+    dateText: '_dateText',
+    afterText: '_afterText',
+    beforeText: '_beforeText',
 
     initComponent: function () {
         this.task = new Ext.util.DelayedTask(this.updateFilter, this);
 
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('messages_messages_facets'),
+            success: function (response) {
+                var facets = Ext.decode(response.responseText);
+
+                this.loadFacets(facets);
+            },
+            scope: this
+        });
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'panel',
-                title: this.strings.text,
+                title: this.textText,
                 layout: 'form',
                 frame: true,
                 collapsible: true,
@@ -22,8 +50,8 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                 items: [
                     {
                         xtype: 'textfield',
-                        fieldLabel: this.strings.subject,
-                        anchor: '-25',
+                        fieldLabel: this.subjectText,
+                        flex: 1,
                         name: 'subject',
                         labelAlign: 'top',
                         enableKeyEvents: true,
@@ -42,8 +70,8 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'textfield',
-                        fieldLabel: this.strings.text,
-                        anchor: '-25',
+                        fieldLabel: this.textText,
+                        flex: 1,
                         name: 'text',
                         labelAlign: 'top',
                         enableKeyEvents: true,
@@ -64,60 +92,86 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
             },
             {
                 xtype: 'panel',
-                title: this.strings.priority,
+                itemId: 'priorities',
+                title: this.priorityText,
                 layout: 'form',
+                margin: '5 0 0 0',
                 frame: true,
                 collapsible: true,
                 defaults: {
                     hideLabel: true
                 },
-                html: '<div class="loading-indicator">' + this.strings.loading + '...</div>'
+                items: [{
+                    plain: true,
+                    frame: false,
+                    html: '<div class="loading-indicator">' + this.loadingText + '...</div>'
+                }]
             },
             {
                 xtype: 'panel',
-                title: this.strings.type,
+                itemId: 'types',
+                title: this.typeText,
                 layout: 'form',
+                margin: '5 0 0 0',
                 frame: true,
                 collapsible: true,
                 defaults: {
                     hideLabel: true
                 },
-                html: '<div class="loading-indicator">' + this.strings.loading + '...</div>'
+                items: [{
+                    plain: true,
+                    frame: false,
+                    html: '<div class="loading-indicator">' + this.loadingText + '...</div>'
+                }]
             },
             {
                 xtype: 'panel',
-                title: this.strings.channel,
+                itemId: 'channels',
+                title: this.channelText,
                 layout: 'form',
+                margin: '5 0 0 0',
                 frame: true,
                 collapsible: true,
                 defaults: {
                     hideLabel: true
                 },
-                html: '<div class="loading-indicator">' + this.strings.loading + '...</div>'
+                items: [{
+                    plain: true,
+                    frame: false,
+                    html: '<div class="loading-indicator">' + this.loadingText + '...</div>'
+                }]
             },
             {
                 xtype: 'panel',
-                title: this.strings.role,
+                itemId: 'roles',
+                title: this.roleText,
                 layout: 'form',
+                margin: '5 0 0 0',
                 frame: true,
                 collapsible: true,
                 defaults: {
                     hideLabel: true
                 },
-                html: '<div class="loading-indicator">' + this.strings.loading + '...</div>'
+                items: [{
+                    plain: true,
+                    frame: false,
+                    html: '<div class="loading-indicator">' + this.loadingText + '...</div>'
+                }]
             },
             {
                 xtype: 'panel',
-                title: this.strings.date,
+                title: this.dateText,
                 layout: 'form',
+                margin: '5 0 0 0',
                 frame: true,
                 collapsible: true,
                 labelWidth: 55,
                 items: [
                     {
                         xtype: 'datefield',
+                        flex: 1,
                         name: 'date_after',
-                        fieldLabel: this.strings.after,
+                        fieldLabel: this.afterText,
                         editable: false,
                         format: 'Y-m-d',
                         listeners: {
@@ -127,8 +181,9 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                     },
                     {
                         xtype: 'datefield',
+                        flex: 1,
                         name: 'date_before',
-                        fieldLabel: this.strings.before,
+                        fieldLabel: this.beforeText,
                         editable: false,
                         format: 'Y-m-d',
                         listeners: {
@@ -139,31 +194,30 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
                 ]
             }
         ];
+    },
 
-        this.tbar = ['->', {
-            text: this.strings.reset,
-            iconCls: 'p-message-reset-icon',
-            disabled: true,
-            handler: this.resetFilter,
-            scope: this
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'tbar',
+            dock: 'top',
+            items: [
+                '->',
+                {
+                    text: this.resetText,
+                    itemId: 'resetBtn',
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.RESET),
+                    disabled: true,
+                    handler: this.resetFilter,
+                    scope: this
+                }
+            ]
         }];
-
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('messages_messages_facets'),
-            success: function (response) {
-                var facets = Ext.decode(response.responseText);
-
-                this.loadFacets(facets);
-            },
-            scope: this
-        });
-
-        Phlexible.messages.view.FilterPanel.superclass.initComponent.call(this);
     },
 
     updateFacets: function (facets) {
         if (facets.priorities && facets.priorities.length && Ext.isArray(facets.priorities)) {
-            this.getComponent(1).items.each(function (item) {
+            this.getComponent('priorities').items.each(function (item) {
                 var found = false;
                 Ext.each(facets.priorities, function (priority) {
                     if (item.name === 'priority_' + priority) {
@@ -180,7 +234,7 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
         }
 
         if (facets.types && facets.types.length && Ext.isArray(facets.types)) {
-            this.getComponent(2).items.each(function (item) {
+            this.getComponent('types').items.each(function (item) {
                 var found = false;
                 Ext.each(facets.types, function (type) {
                     if (item.name === 'type_' + type) {
@@ -197,7 +251,7 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
         }
 
         if (facets.channels && facets.channels.length && Ext.isArray(facets.channels)) {
-            this.getComponent(3).items.each(function (item) {
+            this.getComponent('channels').items.each(function (item) {
                 var found = false;
                 Ext.each(facets.channels, function (channel) {
                     if (item.name === 'channel_' + channel) {
@@ -214,7 +268,7 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
         }
 
         if (facets.roles && facets.roles.length && Ext.isArray(facets.roles)) {
-            this.getComponent(4).items.each(function (item) {
+            this.getComponent('roles').items.each(function (item) {
                 var found = false;
                 Ext.each(facets.roles, function (role) {
                     if (item.name === 'role_' + role) {
@@ -233,96 +287,102 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
 
     loadFacets: function (facets) {
         if (facets.priorities && facets.priorities.length && Ext.isArray(facets.priorities)) {
-            this.getComponent(1).body.update('');
+            var priorities = [];
             Ext.each(facets.priorities, function (item) {
-                this.getComponent(1).add({
+                priorities.push({
                     xtype: 'checkbox',
                     name: 'priority_' + item.id,
-                    boxLabel: Phlexible.inlineIcon('p-message-priority_' + item.title + '-icon') + ' ' + item.title,
+                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.PriorityIcons[item.title], item.title),
                     listeners: {
-                        check: this.updateFilter,
+                        change: this.updateFilter,
                         scope: this
                     }
                 });
             }, this);
-            this.getComponent(1).items.each(function (item) {
-                this.form.add(item);
-            }, this);
+            this.getComponent('priorities').removeAll();
+            this.getComponent('priorities').add(priorities);
+            this.getComponent('priorities').show();
         } else {
-            this.getComponent(1).hide();
+            this.getComponent('priorities').hide();
         }
 
         if (facets.types && facets.types.length && Ext.isArray(facets.types)) {
-            this.getComponent(2).body.update('');
+            var types = [];
             Ext.each(facets.types, function (item) {
-                this.getComponent(2).add({
+                types.push({
                     xtype: 'checkbox',
                     name: 'type_' + item.id,
-                    boxLabel: Phlexible.inlineIcon('p-message-type_' + item.title + '-icon') + ' ' + item.title,
+                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.TypeIcons[item.title], item.title),
                     listeners: {
-                        check: this.updateFilter,
+                        change: this.updateFilter,
                         scope: this
                     }
                 });
             }, this);
-            this.getComponent(2).items.each(function (item) {
-                this.form.add(item);
-            }, this);
+            this.getComponent('types').removeAll();
+            this.getComponent('types').add(types);
+            this.getComponent('types').show();
         } else {
-            this.getComponent(2).hide();
+            this.getComponent('types').hide();
         }
 
         if (facets.channels && facets.channels.length && Ext.isArray(facets.channels)) {
-            this.getComponent(3).body.update('');
+            var channels = [];
             Ext.each(facets.channels, function (item) {
-                this.getComponent(3).add({
+                channels.push({
                     xtype: 'checkbox',
                     name: 'channel_' + item.id,
                     boxLabel: item.title,
                     listeners: {
-                        check: this.updateFilter,
+                        change: this.updateFilter,
                         scope: this
                     }
                 });
             }, this);
+            this.getComponent('channels').removeAll();
+            this.getComponent('channels').add(channels);
+            this.getComponent('channels').show();
         } else {
-            this.getComponent(3).hide();
+            this.getComponent('channels').hide();
         }
 
         if (facets.roles && facets.roles.length && Ext.isArray(facets.roles)) {
-            this.getComponent(4).body.update('');
+            var roles = [];
             Ext.each(facets.roles, function (item) {
-                this.getComponent(4).add({
+                roles.push({
                     xtype: 'checkbox',
                     name: 'role_' + item.id,
                     boxLabel: item.title,
                     listeners: {
-                        check: this.updateFilter,
+                        change: this.updateFilter,
                         scope: this
                     }
                 });
+                this.getComponent('roles').removeAll();
+                this.getComponent('roles').add(roles);
+                this.getComponent('roles').show();
             }, this);
         } else {
-            this.getComponent(4).hide();
+            this.getComponent('roles').hide();
         }
 
         this.doLayout();
     },
 
     resetFilter: function (btn) {
-        this.getComponent(1).items.each(function (item) {
+        this.getComponent('priorities').items.each(function (item) {
             item.enable();
             item.setValue(false);
         });
-        this.getComponent(2).items.each(function (item) {
+        this.getComponent('types').items.each(function (item) {
             item.enable();
             item.setValue(false);
         });
-        this.getComponent(3).items.each(function (item) {
+        this.getComponent('channels').items.each(function (item) {
             item.enable();
             item.setValue(false);
         });
-        this.getComponent(4).items.each(function (item) {
+        this.getComponent('roles').items.each(function (item) {
             item.enable();
             item.setValue(false);
         });
@@ -331,10 +391,18 @@ Phlexible.messages.view.FilterPanel = Ext.extend(Ext.form.FormPanel, {
     },
 
     updateFilter: function () {
-        this.getTopToolbar().items.items[1].enable();
-        var values = this.form.getValues();
-        this.fireEvent('updateFilter', values);
+        this.getDockedComponent('tbar').getComponent('resetBtn').enable();
+
+        var values = this.form.getValues(),
+            filter = {mode: 'AND', criteria: []};
+
+        if (values.subject) {
+            filter.criteria.push({type: 'subjectLike', value: values.subject})
+        }
+        if (values.body) {
+            filter.criteria.push({type: 'subjectLike', value: values.body})
+        }
+
+        this.fireEvent('updateFilter', filter);
     }
 });
-
-Ext.reg('messages-view-filterpanel', Phlexible.messages.view.FilterPanel);

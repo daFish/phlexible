@@ -1,20 +1,28 @@
-Ext.provide('Phlexible.messages.portlet.Messages');
-Ext.provide('Phlexible.messages.portlet.MessagesRecord');
+Ext.define('Phlexible.message.portlet.Message', {
+    extend: 'Ext.data.Model',
 
-Ext.require('Ext.ux.Portlet');
+    fields: [
+        {name: 'id', type: 'string'},
+        {name: 'subject', type: 'string'},
+        {name: 'time', type: 'date'}
+    ]
+});
 
-Phlexible.messages.portlet.MessagesRecord = Ext.data.Record.create([
-    {name: 'id', type: 'string'},
-    {name: 'subject', type: 'string'},
-    {name: 'time', type: 'date'}
-]);
+Ext.define('Phlexible.message.portlet.Messages', {
+    extend: 'Portal.view.Portlet',
+    alias: 'widget.message-portlet-messages',
 
-Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
-    title: Phlexible.messages.Strings.messages,
-    strings: Phlexible.messages.Strings,
-    iconCls: 'p-message-component-icon',
+    title: '_Messages',
+    iconCls: Phlexible.Icon.get('application-list'),
     extraCls: 'messages-portlet',
     bodyStyle: 'padding: 5px',
+
+    noRecentMessagesText: '_noRecentMessagesText',
+    priorityText: '_priorityText',
+    typeText: '_typeText',
+    subjectText: '_subjectText',
+    channelText: '_channelText',
+    dateText: '_dateText',
 
     initComponent: function () {
         this.tpl = new Ext.XTemplate(
@@ -27,11 +35,11 @@ Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
             '<col width="110" />',
             '</colgroup>',
             '<tr>',
-            '<th>{[Phlexible.messages.Strings.subject]}</th>',
-            '<th>' + this.strings.channel + '</th>',
-            '<th style="text-align: center;" qtip="' + this.strings.priority + '">' + this.strings.priority.substring(0, 1) + '.</th>',
-            '<th style="text-align: center;" qtip="' + this.strings.type + '">' + this.strings.type.substring(0, 1) + '.</th>',
-            '<th>' + this.strings.date + '</th>',
+            '<th>' + this.subjectText + '</th>',
+            '<th>' + this.channelText + '</th>',
+            '<th style="text-align: center;" qtip="' + this.priorityText + '">' + this.priorityText.substring(0, 1) + '.</th>',
+            '<th style="text-align: center;" qtip="' + this.typeText + '">' + this.typeText.substring(0, 1) + '.</th>',
+            '<th>' + this.dateText + '</th>',
             '</tr>',
             '<tpl for=".">',
             '<tr class="messages-wrap" id="message_{id}">',
@@ -45,17 +53,17 @@ Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
             '</table>'
         );
 
-        this.store = new Ext.data.SimpleStore({
-            fields: Phlexible.messages.portlet.MessagesRecord,
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.message.portlet.Message',
             id: 'id',
-            sortInfo: {field: 'time', direction: 'DESC'}
+            sorters: [{property: 'time', direction: 'DESC'}]
         });
 
         var data = this.record.get('data');
         if (data) {
             Ext.each(data, function (item) {
                 item.time = new Date(item.time * 1000);
-                this.add(new Phlexible.messages.portlet.MessagesRecord(item, item.id));
+                this.add(new Phlexible.message.portlet.Message(item, item.id));
             }, this.store);
         }
 
@@ -63,10 +71,10 @@ Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
             {
                 xtype: 'dataview',
                 itemSelector: 'tr.messages-wrap',
-                overClass: 'messages-wrap-over',
+                overItemClass: 'messages-wrap-over',
                 style: 'overflow: auto',
                 singleSelect: true,
-                emptyText: this.strings.no_recent_messages,
+                emptyText: this.noRecentMessagesText,
                 deferEmptyText: false,
                 autoHeight: true,
                 store: this.store,
@@ -80,7 +88,7 @@ Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
             }
         ];
 
-        Phlexible.messages.portlet.Messages.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     updateData: function (data) {
@@ -92,7 +100,7 @@ Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
             var r = this.store.getById(row.id);
             if (!r) {
                 row.time = new Date(row.time * 1000);
-                this.store.insert(0, new Phlexible.messages.portlet.MessagesRecord(row, row.id));
+                this.store.insert(0, new Phlexible.message.portlet.Message(row, row.id));
 
                 Ext.fly('message_' + row.id).frame('#8db2e3', 1);
             }
@@ -108,5 +116,3 @@ Phlexible.messages.portlet.Messages = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('time', 'DESC');
     }
 });
-
-Ext.reg('messages-portlet-messages', Phlexible.messages.portlet.Messages);

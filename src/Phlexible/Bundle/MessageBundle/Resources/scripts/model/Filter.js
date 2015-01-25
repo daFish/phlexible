@@ -1,7 +1,9 @@
-Ext.provide('Phlexible.messages.model.Filter');
+Ext.define('Phlexible.message.model.Filter', {
+    extend: 'Ext.data.Model',
 
-Phlexible.messages.model.Filter = Ext.data.Record.create([
-    {name: 'id'},
-    {name: 'title'},
-    {name: 'criteria'}
-]);
+    fields:[
+        {name: 'id'},
+        {name: 'title'},
+        {name: 'criteria'}
+    ]
+});

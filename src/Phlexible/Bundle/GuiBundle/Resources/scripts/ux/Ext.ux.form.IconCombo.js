@@ -25,26 +25,28 @@ Ext.define('Ext.ux.form.IconCombo',{
                 }
             },
             fieldSubTpl: [
-                '<div class="{hiddenDataCls}" role="presentation"></div>',
-                '<div class="ux-icon-combo-wrap"><input id="{id}" type="{type}" {inputAttrTpl}',
-                '<tpl if="value"> value="{value}"</tpl>',
-                '<tpl if="name"> name="{name}"</tpl>',
-                '<tpl if="placeholder"> placeholder="{placeholder}"</tpl>',
-                '<tpl if="size"> size="{size}"</tpl>',
-                '<tpl if="maxLength !== undefined"> maxlength="{maxLength}"</tpl>',
-                '<tpl if="readOnly"> readonly="readonly"</tpl>',
-                '<tpl if="disabled"> disabled="disabled"</tpl>',
-                '<tpl if="tabIdx"> tabIndex="{tabIdx}"</tpl>',
-                '<tpl if="fieldStyle"> style="{fieldStyle}"</tpl>',
-                'class="{fieldCls} {typeCls}" autocomplete="off" /></div>',
+                '<div class="ux-icon-combo-wrap">',
+                    '<input id="{id}" data-ref="inputEl" type="{type}" role="{role}" {inputAttrTpl}',
+                    ' size="1"', // allows inputs to fully respect CSS widths across all browsers
+                        '<tpl if="name"> name="{name}"</tpl>',
+                        '<tpl if="value"> value="{[Ext.util.Format.htmlEncode(values.value)]}"</tpl>',
+                        '<tpl if="placeholder"> placeholder="{placeholder}"</tpl>',
+                        '{%if (values.maxLength !== undefined){%} maxlength="{maxLength}"{%}%}',
+                        '<tpl if="readOnly"> readonly="readonly"</tpl>',
+                        '<tpl if="disabled"> disabled="disabled"</tpl>',
+                        '<tpl if="tabIdx != null"> tabindex="{tabIdx}"</tpl>',
+                        '<tpl if="fieldStyle"> style="{fieldStyle}"</tpl>',
+                    ' class="{fieldCls} {typeCls} {typeCls}-{ui} {editableCls} {inputCls}" autocomplete="off"/>',
+                '</div>',
                 {
-                    compiled: true,
                     disableFormats: true
                 }]
         });
 
         // call parent initComponent
         this.callParent(arguments);
+
+        this.on('select', this.setIconCls, this);
 
     }, // end of function initComponent
 
@@ -56,7 +58,7 @@ Ext.define('Ext.ux.form.IconCombo',{
         this.el.down('div[class=ux-icon-combo-wrap]').applyStyles({
             position: 'relative'
         });
-        this.el.down('input').addCls('ux-icon-combo-input');
+
 
         // add div for icon
         this.icon = Ext.core.DomHelper.append(this.el.down('div[class=ux-icon-combo-wrap]'), {
@@ -68,9 +70,11 @@ Ext.define('Ext.ux.form.IconCombo',{
     setIconCls: function() {
         if (this.rendered) {
             var rec = this.store.findRecord(this.valueField, this.getValue());
-            if (rec) {
+            if (rec && rec.get(this.iconClsField)) {
+                this.el.down('input').addCls('ux-icon-combo-input');
                 this.icon.className = 'ux-icon-combo-icon ' + rec.get(this.iconClsField);
             } else {
+                this.el.down('input').removeCls('ux-icon-combo-input');
                 this.icon.className = '';
             }
         } else {

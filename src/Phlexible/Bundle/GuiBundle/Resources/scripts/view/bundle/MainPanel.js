@@ -2,15 +2,13 @@ Ext.define('Phlexible.gui.view.bundle.MainPanel', {
     extend: 'Ext.Panel',
     alias: 'widget.gui-bundles',
 
-    iconCls: 'p-gui-manager-icon',
+    iconCls: Phlexible.Icon.get('symfony'),
     cls: 'p-gui-bundles',
     closable: true,
     layout: 'border',
     border: false,
 
     initComponent: function () {
-        this.iconCls = Phlexible.Icon.get('resource-monitor');
-
         this.initMyItems();
 
         this.callParent(arguments);

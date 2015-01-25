@@ -1,8 +1,10 @@
-Ext.provide('Phlexible.messages.model.Subscription');
+Ext.define('Phlexible.message.model.Subscription', {
+    extend: 'Ext.data.Model',
 
-Phlexible.messages.model.Subscription = Ext.data.Record.create([
-    {name: 'id'},
-    {name: 'filter'},
-    {name: 'filterId'},
-    {name: 'handler'}
-]);
+    fields: [
+        {name: 'id'},
+        {name: 'filter'},
+        {name: 'filterId'},
+        {name: 'handler'}
+    ]
+});

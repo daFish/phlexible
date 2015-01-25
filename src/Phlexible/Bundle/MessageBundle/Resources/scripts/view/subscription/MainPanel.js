@@ -1,132 +1,157 @@
-Ext.provide('Phlexible.messages.subscription.MainPanel');
+Ext.define('Phlexible.message.view.subscription.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.message-subscription-main',
 
-Ext.require('Phlexible.messages.model.Subscription');
-
-Phlexible.messages.subscription.MainPanel = Ext.extend(Ext.Panel, {
-    title: Phlexible.messages.Strings.subscriptions,
-    strings: Phlexible.messages.Strings,
-    iconCls: 'p-message-subscription-icon',
+    iconCls: Phlexible.Icon.get('tick'),
     layout: 'fit',
 
+    emptyText: '_emptyText',
+    actionsText: '_actionsText',
+    idText: '_idText',
+    filterText: '_filterText',
+    handlerText: '_handlerText',
+    deleteText: '_deleteText',
+    subscribeText: '_subscribeText',
+
     initComponent: function () {
+        this.initMyItems();
+        this.initMyDockedItems();
 
-        // Create RowActions Plugin
-        var actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
-            width: 40,
-            actions: [
-                {
-                    iconCls: 'p-message-delete-icon',
-                    tooltip: this.strings.delete,
-                    callback: this.deleteSubscription.createDelegate(this),
-                    scope: this
-                }
-            ]
-        });
+        this.callParent(arguments);
+    },
 
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'grid',
                 region: 'center',
                 loadMask: true,
+                emptyText: this.emptyText,
                 viewConfig: {
-                    emptyText: this.strings.no_subscriptions,
                     deferEmptyText: false
                 },
-                store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('messages_subscriptions'),
-                    fields: Phlexible.messages.model.Subscription,
-                    id: 'id',
+                store: Ext.create('Ext.data.Store', {
+                    model: 'Phlexible.message.model.Subscription',
+                    proxy: {
+                        type: 'ajax',
+                        url: Phlexible.Router.generate('messages_subscriptions'),
+                        simpleSortMode: true,
+                        reader: {
+                            type: 'json',
+                            idProperty: 'id'
+                        }
+                    },
                     autoLoad: true
                 }),
                 columns: [
                     {
-                        header: this.strings.id,
+                        header: this.idText,
                         dataIndex: 'id',
                         width: 200,
                         hidden: true
                     },
                     {
-                        header: this.strings.filter,
+                        header: this.filterText,
                         width: 200,
                         dataIndex: 'filter'
                     },
                     {
-                        header: this.strings.handler,
+                        header: this.handlerText,
                         width: 200,
                         dataIndex: 'handler'
                     },
-                    actions
-                ],
-                plugins: [actions]
-            }
-        ];
-
-        this.tbar = [
-            {
-                xtype: 'combo',
-                emptyText: this.strings.filter,
-                store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('messages_filters'),
-                    id: 'id',
-                    fields: Phlexible.messages.model.Filter
-                }),
-                displayField: 'title',
-                valueField: 'id',
-                mode: 'remote',
-                editable: false,
-                allowBlank: false,
-                triggerAction: 'all'
-            },
-            ' ',
-            {
-                xtype: 'iconcombo',
-                emptyText: this.strings.handler,
-                store: new Ext.data.SimpleStore({
-                    fields: ['id', 'name', 'iconCls'],
-                    data: Phlexible.messages.Handlers
-                }),
-                displayField: 'name',
-                valueField: 'id',
-                iconClsField: 'iconCls',
-                mode: 'local',
-                editable: false,
-                allowBlank: false,
-                triggerAction: 'all'
-            },
-            ' ',
-            {
-                xtype: 'button',
-                text: this.strings.subscribe,
-                iconCls: 'p-message-subscription-icon',
-                handler: function () {
-                    var filter = this.getTopToolbar().items.items[0].getValue(),
-                        handler = this.getTopToolbar().items.items[2].getValue();
-
-                    Ext.Ajax.request({
-                        url: Phlexible.Router.generate('messages_subscription_create'),
-                        params: {
-                            filter: filter,
-                            handler: handler
-                        },
-                        success: function (response) {
-                            var result = Ext.decode(response.responseText);
-
-                            if (result.success) {
-                                this.getComponent(0).getStore().reload();
-                                Phlexible.success(result.msg);
-                            } else {
-                                Phlexible.failure(result.msg);
+                    {
+                        xtype: 'actioncolumn',
+                        width: 40,
+                        items: [
+                            {
+                                iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                                tooltip: this.deleteText,
+                                handler: this.deleteSubscription,
+                                scope: this
                             }
-                        },
-                        scope: this
-                    });
-                },
-                scope: this
+                        ]
+                    }
+                ]
             }
         ];
+    },
 
-        Phlexible.messages.subscription.MainPanel.superclass.initComponent.call(this);
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'tbar',
+            dock: 'top',
+            items: [
+                {
+                    xtype: 'combo',
+                    itemId: 'filter',
+                    emptyText: this.filterText,
+                    store: Ext.create('Ext.data.Store', {
+                        model: 'Phlexible.message.model.Filter',
+                        proxy: {
+                            type: 'ajax',
+                            url: Phlexible.Router.generate('messages_filters'),
+                            reader: {
+                                type: 'json',
+                                idProperty: 'id'
+                            }
+                        }
+                    }),
+                    displayField: 'title',
+                    valueField: 'id',
+                    mode: 'remote',
+                    editable: false,
+                    triggerAction: 'all'
+                },
+                ' ',
+                {
+                    xtype: 'iconcombo',
+                    itemId: 'handler',
+                    emptyText: this.handlerText,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['id', 'name', 'iconCls'],
+                        data: Phlexible.message.Handlers
+                    }),
+                    displayField: 'name',
+                    valueField: 'id',
+                    iconClsField: 'iconCls',
+                    mode: 'local',
+                    editable: false,
+                    triggerAction: 'all'
+                },
+                ' ',
+                {
+                    xtype: 'button',
+                    text: this.subscribeText,
+                    iconCls: Phlexible.Icon.get('tick'),
+                    handler: function () {
+                        var filter = this.getDockedComponent('tbar').getComponent('filter').getValue(),
+                            handler = this.getDockedComponent('tbar').getComponent('handler').getValue();
+
+                        Ext.Ajax.request({
+                            url: Phlexible.Router.generate('messages_subscription_create'),
+                            params: {
+                                filter: filter,
+                                handler: handler
+                            },
+                            success: function (response) {
+                                var result = Ext.decode(response.responseText);
+
+                                if (result.success) {
+                                    this.getComponent(0).getStore().reload();
+                                    Phlexible.Notify.success(result.msg);
+                                } else {
+                                    Phlexible.Notify.failure(result.msg);
+                                }
+                            },
+                            scope: this
+                        });
+                    },
+                    scope: this
+                }
+            ]
+        }];
     },
 
     reloadSubscriptions: function () {
@@ -141,14 +166,12 @@ Phlexible.messages.subscription.MainPanel = Ext.extend(Ext.Panel, {
 
                 if (result.success) {
                     this.getComponent(0).getStore().reload();
-                    Phlexible.success(result.msg);
+                    Phlexible.Notify.success(result.msg);
                 } else {
-                    Phlexible.failure(result.msg);
+                    Phlexible.Notify.failure(result.msg);
                 }
             },
             scope: this
         })
     }
 });
-
-Ext.reg('messages-subscription-mainpanel', Phlexible.messages.subscription.MainPanel);

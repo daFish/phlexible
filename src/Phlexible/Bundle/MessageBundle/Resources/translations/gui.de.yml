@@ -1,61 +1,128 @@
-messages:
-    messages: Nachrichten
-    message: Nachricht
-    loading: Lade...
-    view: Anzeige
-    no_recent_messages: 'Keine neuen Nachrichten.'
-    no_messages_found: 'Keine Nachrichten gefunden.'
-    no_filters: 'Keine Filter gefunden.'
-    no_subscriptions: 'Keine Abonnements gefunden.'
-    filter: Filter
-    id: ID
-    subject: Betreff
-    text: Text
-    priority: Priorität
-    type: Typ
-    channel: Kanal
-    role: Role
-    date: Datum
-    before: Before
-    after: After
-    user: 'Erzeugt durch'
-    created_at: Zeitpunkt
-    empty_msg: 'Keine Nachrichten gefunden.'
-    display_msg: 'Zeige Nachrichten {0} - {1} von {2}'
-    priority_low: Niedrig
-    priority_normal: Normal
-    priority_high: Hoch
-    priority_urgent: Dringend
-    type_info: Info
-    type_error: Fehler
-    reset: Zurücksetzen
-    subscription: Subscription
-    subscriptions: Subscriptions
-    filter: Filter
-    filters: Filter
-    criterium: Kriterium
-    criteria: Kriterien
-    criteria_for: 'Kriterien für Filter "{0}"'
-    title: Titel
-    handler: Handler
-    actions: Aktionen
-    add: Hinzufügen
-    subscribe: Abonnieren
-    delete: Löschen
-    add_filter: 'Bitte geben Sie einen Titel für den neuen Filter ein.'
-    rename_filter: 'Bitte geben Sie einen neuen Titel für den Filter "{0}" ein.'
-    delete_filter: 'Möchten Sie den Filter "{0}" wirklich löschen?'
-    value: Wert
-    information: Informationen
-    save: Speichern
-    refresh: Aktualisieren
-    preview: Vorschau
-    preview_for: 'Vorschau für Filter "{0}"'
-    body: Body
-    addOrBlock: '"Oder"-Block hinzufügen'
-    group: Gruppe
-    number_of_days: Tage...
-    add_filter: 'Filter hinzufügen'
-    cancel: Abbrechen
-    messages_filter: Nachrichtenfilter
-    select_criterium: 'Bitte wählen Sie ein Kriterium'
+Phlexible:
+    message:
+        handler:
+            Messages:
+                text: Nachrichten
+
+        portlet:
+            Messages:
+                noRecentMessagesText: 'Keine Nachrichten'
+                priorityText: Priorität
+                typeText: Typ
+                subjectText: Betreff
+                channelText: Kanal
+                dateText: Datum
+
+        view:
+            MainPanel:
+                title: Nachrichten
+
+            filter:
+                CriteriaForm:
+                    title: Kriterien
+                    titleText: Titel
+                    saveText: Speichern
+                    addOrBlockText: 'Oder-Block hinzufügen'
+                    refreshText: Aktualisieren
+                    criteriaForText: 'Kriterien für "{0}"'
+                    criteriaText: Kriterien
+                    selectCriteriumText: 'Bitte wählen Sie ein Kriterium'
+                    selectPriorityText: 'Bitte wählen Sie eine Priorität'
+                    selectTypeText: 'Bitte wählen Sie einen Typen'
+                    selectChannelText: 'Bitte wählen Sie einen Kanal'
+                    selectRoleText: 'Bitte wählen Sie eine Rolle'
+                    numberOfDaysText: 'Tage...'
+                    groupText: Gruppe
+                    subjectLikeText: Betreff enthält
+                    subjectNotLikeText: Betreff enthält nicht
+                    bodyLikeText: Text enthält
+                    bodyNotLikeText: Text enthält nicht
+                    priorityIsText: Priorität ist
+                    priorityInText: Priorität in
+                    priorityMinText: Priorität mindestens
+                    typeIsText: Typ is
+                    typeInText: Typ in
+                    channelIsText: Kanal ist
+                    channelInText: Kanal in
+                    roleIsText: Rolle ist
+                    roleInText: Rolle in
+                    minAgeText: Mindestalter
+                    maxAgeText: Maximales Alter
+                    startDateText: Nach
+                    endDateText: Vor
+                    dateIsText: Datum ist
+
+                ListGrid:
+                    title: Filter
+                    emptyText: 'Keine Filter'
+                    actionsText: Aktionen
+                    deleteFilterText: 'Filter löschen'
+                    titleText: Titel
+                    addFilterText: 'Neuer Filter'
+                    addFilterDescriptionText: 'Bitte geben Sie einen Titel für den neuen Filter ein.'
+                    deleteFilterText: 'Filter löschen'
+                    deleteFilterDescriptionText: 'Möchten Sie den Filter "{0}" wirklich löschen?'
+
+                MainPanel:
+                    title: Filter
+
+                xPreviewPanel:
+                    title: Vorschau
+                    emptyText: 'Keine Nachrichten'
+                    subjectText: Betreff
+                    typeText: Typ
+                    channelText: Kanal
+                    roleText: Rolle
+                    userText: Benutzer
+                    createdAtText: 'Angelegt an'
+                    previewText: Vorschau
+                    previewForText: 'Vorschau für "{0}"'
+
+            list:
+                FilterPanel:
+                    title: Filter
+                    textText: Text
+                    subjectText: Betreff
+                    resetText: Zurücksetzen
+                    priorityText: Priorität
+                    loadingText: Lade...
+                    typeText: Typ
+                    channelText: Kanal
+                    roleText: Rolle
+                    dateText: Datum
+                    afterText: Nach
+                    beforeText: Vor
+
+                MainPanel:
+                    title: Nachrichten
+
+                MessagesGrid:
+                    title: Nachrichten
+                    emptyText: 'Keine Nachrichten'
+                    displayMessageText: 'Zeige Nachrichten {0} - {1} von {2}'
+                    emptyMessageText: 'Keine Nachrichten'
+                    idText: ID
+                    subjectText: Betreff
+                    priorityText: Priorität
+                    typeText: Typ
+                    channelText: Kanal
+                    roleText: Rolle
+                    userText: Benutzer
+                    createdAtText: 'Angelegt an'
+                    priorityUrgent: Dringend
+                    priorityHighText: Hoch
+                    priorityNormalText: Normal
+                    priorityLowText: Niedrig
+                    typeInfoText: Information
+                    typeErrorText: Fehler
+
+            subscription:
+                MainPanel:
+                    title: Abonnements
+                    emptyText: 'Keine Abonnements'
+                    actionsText: Aktionen
+                    idText: ID
+                    filterText: Filter
+                    handlerText: Handler
+                    deleteText: Löschen
+                    subscribeText: Abonnieren

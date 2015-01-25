@@ -1,35 +1,31 @@
-Ext.provide('Phlexible.messages.filter.MainPanel');
+Ext.define('Phlexible.message.view.filter.MainPanel', {
+    extend: 'Ext.Panel',
+    alias: 'widget.message-filter-main',
 
-Ext.require('Phlexible.messages.filter.ListGrid');
-Ext.require('Phlexible.messages.filter.CriteriaForm');
-Ext.require('Phlexible.messages.filter.PreviewPanel');
-
-Phlexible.messages.filter.MainPanel = Ext.extend(Ext.Panel, {
-    title: Phlexible.messages.Strings.filters,
-    strings: Phlexible.messages.Strings,
-    iconCls: 'p-message-filter-icon',
+    iconCls: Phlexible.Icon.get(Phlexible.Icon.FILTER),
     layout: 'border',
 
     initComponent: function () {
         this.items = [
             {
-                xtype: 'messages-filter-listgrid',
+                xtype: 'message-filter-list',
+                itemId: 'list',
                 region: 'west',
-                width: '200',
+                width: 200,
                 collapsible: true,
                 split: true,
                 listeners: {
                     filterChange: function (record) {
-                        if (this.getFilterForm().ready === true) {
-                            this.getFilterForm().ready = false;
-                            this.getFilterForm().loadData(record);
+                        if (this.getCriteriaPanel().ready === true) {
+                            this.getCriteriaPanel().ready = false;
+                            this.getCriteriaPanel().loadData(record);
                         }
                     },
                     filterDeleted: function (record) {
                         this.fireEvent('filterDeleted');
 
-                        this.getFilterForm().clear();
-                        this.getFilterForm().disable();
+                        this.getCriteriaPanel().clear();
+                        this.getCriteriaPanel().disable();
                         this.getPreviewPanel().clear();
                         this.getPreviewPanel().disable();
                     },
@@ -38,29 +34,32 @@ Phlexible.messages.filter.MainPanel = Ext.extend(Ext.Panel, {
             },
             {
                 xtype: 'panel',
+                itemId: 'wrap',
                 region: 'center',
                 layout: 'border',
                 border: false,
                 items: [
                     {
-                        xtype: 'messages-filter-criteriaform',
+                        xtype: 'message-filter-criteria',
+                        itemId: 'criteria',
                         region: 'west',
-                        width: '550',
+                        width: 550,
                         disabled: true,
                         ready: true,
                         split: true,
                         listeners: {
                             reload: function () {
-                                this.getListGrid().getStore().reload();
+                                this.getListPanel().getStore().reload();
                             },
-                            refreshPreview: function (data, title) {
-                                this.getPreviewPanel().loadData(data, title);
+                            refreshPreview: function (values) {
+                                this.getPreviewPanel().setFilter(values);
                             },
                             scope: this
                         }
                     },
                     {
-                        xtype: 'messages-filter-previewpanel',
+                        xtype: 'message-filter-preview',
+                        itemId: 'preview',
                         region: 'center',
                         disabled: true
                     }
@@ -68,24 +67,22 @@ Phlexible.messages.filter.MainPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.messages.filter.MainPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
-    getListGrid: function () {
-        return this.getComponent(0);
+    getListPanel: function () {
+        return this.getComponent('list');
     },
 
-    getFilterForm: function () {
-        return this.getComponent(1).getComponent(0);
+    getCriteriaPanel: function () {
+        return this.getComponent('wrap').getComponent('criteria');
     },
 
     getPreviewPanel: function () {
-        return this.getComponent(1).getComponent(1);
+        return this.getComponent('wrap').getComponent('preview');
     },
 
     loadParams: function () {
         return;
     }
 });
-
-Ext.reg('messages-filter-mainpanel', Phlexible.messages.filter.MainPanel);

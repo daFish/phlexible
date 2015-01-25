@@ -1,61 +1,128 @@
-messages:
-    messages: Messages
-    message: Message
-    loading: Loading...
-    view: View
-    no_recent_messages: 'No recent messages.'
-    no_messages_found: 'No messages found.'
-    no_filters: 'No filters to display.'
-    no_subscriptions: 'No subscriptions to display.'
-    filter: Filter
-    id: ID
-    subject: Subject
-    text: Text
-    priority: Priority
-    type: Type
-    channel: Channel
-    role: Role
-    date: Date
-    before: Vor
-    after: Nach
-    user: 'Created by'
-    created_at: 'Created at'
-    empty_msg: 'No messages to display.'
-    display_msg: 'Displaying messages {0} - {1} of {2}'
-    priority_low: Low
-    priority_normal: Normal
-    priority_high: High
-    priority_urgent: Urgent
-    type_info: Info
-    type_error: Error
-    reset: Reset
-    subscription: Subscription
-    subscriptions: Subscriptions
-    filter: Filter
-    filters: Filters
-    criteriom: Criterion
-    criteria: Criteria
-    criteria_for: 'Criteria for filter "{0}"'
-    title: Title
-    handler: Handler
-    actions: Actions
-    add: Add
-    subscribe: Subscribe
-    delete: Delete
-    add_filter: 'Please enter the title for the new filter.'
-    rename_filter: 'Please enter the new title for filter "{0}".'
-    delete_filter: 'Do you really want to delete filter "{0}"?'
-    value: Value
-    information: Information
-    save: Save
-    refresh: Refresh
-    preview: Preview
-    preview_for: 'Preview for filter "{0}"'
-    body: Body
-    addOrBlock: 'Add "or"-block'
-    group: Group
-    number_of_days: 'Number of days...'
-    add_filter: 'Add filter'
-    cancel: Cancel
-    messages_filter: 'Messages Filter'
-    select_criterium: 'Please select a criterium'
+Phlexible:
+    message:
+        handler:
+            Messages:
+                text: Messages
+
+        portlet:
+            Messages:
+                noRecentMessagesText: 'No recent messages'
+                priorityText: Priority
+                typeText: Type
+                subjectText: Subject
+                channelText: Channel
+                dateText: Date
+
+        view:
+            MainPanel:
+                title: Messages
+
+            filter:
+                CriteriaForm:
+                    title: Criteria
+                    titleText: Title
+                    saveText: Save
+                    addOrBlockText: 'Add or block'
+                    refreshText: Refresh
+                    criteriaForText: 'Criteria for "{0}"'
+                    criteriaText: Criteria
+                    selectCriteriumText: 'Please choose a criterium'
+                    selectPriorityText: 'Please choose a priority'
+                    selectTypeText: 'Please choose a type'
+                    selectChannelText: 'Please choose a channel'
+                    selectRoleText: 'Please choose a role'
+                    numberOfDaysText: 'Days...'
+                    groupText: Group
+                    subjectLikeText: Subject like
+                    subjectNotLikeText: Subject not like
+                    bodyLikeText: Body like
+                    bodyNotLikeText: Body not like
+                    priorityIsText: Priority is
+                    priorityInText: Priority in
+                    priorityMinText: Priority min
+                    typeIsText: Type is
+                    typeInText: Type in
+                    channelIsText: Channel is
+                    channelInText: Channel in
+                    roleIsText: Role is
+                    roleInText: Role in
+                    minAgeText: Minimum age
+                    maxAgeText: Maximum age
+                    startDateText: After
+                    endDateText: Before
+                    dateIsText: Date is
+
+                ListGrid:
+                    title: Filters
+                    emptyText: 'No filters'
+                    actionsText: Actions
+                    deleteFilterText: 'Delete Filter'
+                    titleText: Title
+                    addFilterText: 'Add filter'
+                    addFilterDescriptionText: 'Please enter a title for the new filter.'
+                    deleteFilterText: 'Delete filter'
+                    deleteFilterDescriptionText: 'Do your really want to delete filter "{0}"?'
+
+                MainPanel:
+                    title: Filter
+
+                xPreviewPanel:
+                    title: Preview
+                    emptyText: 'No messages'
+                    subjectText: Subject
+                    typeText: Type
+                    channelText: Channel
+                    roleText: Role
+                    userText: User
+                    createdAtText: 'Created at'
+                    previewText: Preview
+                    previewForText: 'Preview for "{0}"'
+
+            list:
+                FilterPanel:
+                    title: Filter
+                    textText: Text
+                    subjectText: Subject
+                    resetText: Reset
+                    priorityText: Priority
+                    loadingText: Loading...
+                    typeText: Type
+                    channelText: Channel
+                    roleText: Role
+                    dateText: Date
+                    afterText: After
+                    beforeText: Before
+
+                MainPanel:
+                    title: Messages
+
+                MessagesGrid:
+                    title: Messages
+                    emptyText: 'No messages'
+                    displayMessageText: 'Showing messages {0} - {1} of {2}'
+                    emptyMessageText: 'No messages'
+                    idText: ID
+                    subjectText: Subject
+                    priorityText: Priority
+                    typeText: Type
+                    channelText: Channel
+                    roleText: Role
+                    userText: User
+                    createdAtText: 'Created at'
+                    priorityUrgent: Urgent
+                    priorityHighText: High
+                    priorityNormalText: Normal
+                    priorityLowText: Low
+                    typeInfoText: Information
+                    typeErrorText: Error
+
+            subscription:
+                MainPanel:
+                    title: Subscriptions
+                    emptyText: 'No subscriptions'
+                    actionsText: Actions
+                    idText: ID
+                    filterText: Filter
+                    handlerText: Handler
+                    deleteText: Delete
+                    subscribeText: Subscribe

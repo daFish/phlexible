@@ -15,7 +15,7 @@ use Phlexible\Bundle\MessageBundle\Exception\InvalidArgumentException;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Criteria implements \IteratorAggregate, \Countable
+class Criteria implements CriteriumInterface, \IteratorAggregate, \Countable
 {
     const MODE_OR = 'or';
     const MODE_AND = 'and';
@@ -41,7 +41,7 @@ class Criteria implements \IteratorAggregate, \Countable
     const CRITERIUM_DATE_IS          = 'date_is';
 
     /**
-     * @var array
+     * @var CriteriumInterface[]
      */
     private $criteria = [];
 
@@ -85,23 +85,40 @@ class Criteria implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param Criteria $criteria
-     *
-     * @return $this
+     * {@inheritdoc}
      */
-    public function addCriteria(Criteria $criteria)
+    public function toArray()
     {
-        $this->criteria[] = $criteria;
+        $data = [];
+        foreach ($this->criteria as $criterium) {
+            $data[] = $criterium->toArray();
+        }
 
-        return $this;
+        return $data;
     }
 
     /**
-     * @param Criterium $criterium
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'collection';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getValue()
+    {
+        return $this->criteria;
+    }
+
+    /**
+     * @param CriteriumInterface $criterium
      *
      * @return $this
      */
-    public function add(Criterium $criterium)
+    public function add(CriteriumInterface $criterium)
     {
         $this->criteria[] = $criterium;
 
@@ -109,14 +126,27 @@ class Criteria implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param string $type
-     * @param string $value
-     *
-     * @return $this
+     * @return array
      */
-    public function addRaw($type, $value)
+    public function all()
     {
-        return $this->add(new Criterium($type, $value));
+        return $this->criteria;
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->criteria);
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->criteria);
     }
 
     /**
@@ -351,42 +381,5 @@ class Criteria implements \IteratorAggregate, \Countable
         $this->add(new Criterium(self::CRITERIUM_DATE_IS, $value));
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCriteria()
-    {
-        return $this->criteria;
-    }
-
-    /**
-     * @return \ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->criteria);
-    }
-
-    /**
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->criteria);
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        $data = [];
-        foreach ($this->criteria as $criterium) {
-            $data[] = $criterium->toArray();
-        }
-
-        return $data;
     }
 }

@@ -1,75 +1,94 @@
-Ext.provide('Phlexible.messages.filter.ListGrid');
+Ext.define('Phlexible.message.view.filter.ListGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.message-filter-list',
 
-Ext.require('Phlexible.messages.model.Filter');
-Ext.require('Ext.ux.grid.RowActions');
-
-Phlexible.messages.filter.ListGrid = Ext.extend(Ext.grid.GridPanel, {
-    title: Phlexible.messages.Strings.filters,
-    strings: Phlexible.messages.Strings,
-    autoExpandColumn: 'filterTitle',
     loadMask: true,
     hideMode: 'offsets',
+    emptyText: '_emptyText',
     viewConfig: {
-        emptyText: Phlexible.messages.Strings.no_filters,
         deferEmptyText: false
     },
 
+    actionsText: '_actionsText',
+    titleText: '_titleText',
+    addFilterText: '_addFilterText',
+    addFilterDescriptionText: '_addFilterDescriptionText',
+    deleteFilterText: '_deleteFilterText',
+    deleteFilterDescriptionText: '_deleteFilterDescriptionText',
+
     initComponent: function () {
-        // Create RowActions Plugin
-        var actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
-            width: 40,
-            actions: [
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
+        this.initMyListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.message.model.Filter',
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('messages_filters'),
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    idProperty: 'id'
+                }
+            },
+            autoLoad: true
+        });
+    },
+
+    initMyColumns: function() {
+        this.columns = [
+            {
+                header: this.titleText,
+                dataIndex: 'title',
+                sortable: true,
+                flex: 1
+            },
+            {
+                xtype: 'actioncolumn',
+                header: this.actionsText,
+                width: 40,
+                items: [
+                    {
+                        iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                        tooltip: this.deleteFilterText,
+                        handler: this.deleteFilter,
+                        scope: this
+                    }
+                ]
+            }
+        ];
+    },
+
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [
                 {
-                    iconCls: 'p-message-delete-icon',
-                    tooltip: this.strings.delete,
-                    callback: this.deleteFilter.createDelegate(this),
+                    text: this.addFilterText,
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                    handler: this.addFilter,
                     scope: this
                 }
             ]
-        });
+        }];
+    },
 
-        this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('messages_filters'),
-            id: 'id',
-            fields: Phlexible.messages.model.Filter,
-            autoLoad: true
-        });
-
-        this.selModel = new Ext.grid.RowSelectionModel();
-
-        this.columns = [
-            {
-                id: 'filterTitle',
-                header: this.strings.title,
-                dataIndex: 'title',
-                sortable: true,
-                width: 100
-            },
-            actions
-        ];
-
-        this.plugins = [actions];
-
-        this.tbar = [
-            {
-                text: this.strings.add,
-                iconCls: 'p-message-add-icon',
-                handler: this.addFilter,
-                scope: this
-            }
-        ];
-
+    initMyListeners: function() {
         this.addListener({
             rowdblclick: this.filterChange,
             scope: this
         });
-
-        Phlexible.messages.filter.ListGrid.superclass.initComponent.call(this);
     },
 
     addFilter: function () {
-        Ext.MessageBox.prompt(Phlexible.messages.Strings.add, Phlexible.messages.Strings.add_filter, function (btn, title) {
+        Ext.MessageBox.prompt(this.addFilterText, this.addFilterDescriptionText, function (btn, title) {
             if (btn === 'ok') {
                 Ext.Ajax.request({
                     url: Phlexible.Router.generate('messages_filter_create'),
@@ -80,10 +99,10 @@ Phlexible.messages.filter.ListGrid = Ext.extend(Ext.grid.GridPanel, {
                         var result = Ext.decode(response.responseText);
 
                         if (result.success) {
-                            Phlexible.success(result.msg);
+                            Phlexible.Notify.success(result.msg);
                             this.store.reload();
                         } else {
-                            Phlexible.failure(result.msg);
+                            Phlexible.Notify.failure(result.msg);
                         }
                     },
                     scope: this
@@ -92,13 +111,12 @@ Phlexible.messages.filter.ListGrid = Ext.extend(Ext.grid.GridPanel, {
         }, this);
     },
 
-    filterChange: function (grid, rowIndex, event) {
-        var r = grid.store.getAt(rowIndex);
-        this.fireEvent('filterChange', r);
+    filterChange: function (grid, record) {
+        this.fireEvent('filterChange', record);
     },
 
     deleteFilter: function (grid, record) {
-        Ext.MessageBox.confirm(this.strings['delete'], String.format(this.strings.delete_filter, record.get('title')), function (btn) {
+        Ext.MessageBox.confirm(this.deleteFilterText, Ext.String.format(this.deleteFilterDescriptionText, record.get('title')), function (btn) {
             if (btn != 'yes') {
                 return;
             }
@@ -108,11 +126,11 @@ Phlexible.messages.filter.ListGrid = Ext.extend(Ext.grid.GridPanel, {
                     var data = Ext.decode(response.responseText);
 
                     if (data.success) {
-                        Phlexible.success(data.msg);
+                        Phlexible.Notify.success(data.msg);
                         this.store.reload();
                         this.fireEvent('filterDeleted');
                     } else {
-                        Phlexible.failure(data.msg);
+                        Phlexible.Notify.failure(data.msg);
                     }
                 },
                 scope: this
@@ -120,5 +138,3 @@ Phlexible.messages.filter.ListGrid = Ext.extend(Ext.grid.GridPanel, {
         }, this);
     }
 });
-
-Ext.reg('messages-filter-listgrid', Phlexible.messages.filter.ListGrid);

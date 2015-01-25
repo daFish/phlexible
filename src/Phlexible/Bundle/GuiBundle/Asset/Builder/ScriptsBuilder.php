@@ -272,6 +272,8 @@ class ScriptsBuilder
                 'displayfield',
                 'tbseparator',
                 'tagfield',
+                'datefield',
+                'multiselectfield',
             );
 
             if (!empty($file->requires)) {

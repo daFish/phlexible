@@ -3,6 +3,6 @@ Ext.define('Phlexible.gui.handler.Bundles', {
     requires: ['Phlexible.gui.view.bundle.MainPanel'],
 
     text: '_bundles',
-    iconCls: Phlexible.Icon.get('resource-monitor'),
+    iconCls: Phlexible.Icon.get('symfony'),
     name: 'gui-bundles'
 });
