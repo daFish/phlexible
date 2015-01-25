@@ -4,7 +4,7 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
 
     iconCls: Phlexible.Icon.get('tick'),
     layout: 'border',
-    padding: 5,
+    border: false,
 
     emptyText: '_emptyText',
     actionsText: '_actionsText',
@@ -16,7 +16,6 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
 
     initComponent: function () {
         this.initMyItems();
-        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -27,7 +26,8 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
                 xtype: 'grid',
                 region: 'center',
                 loadMask: true,
-                border: false,
+                padding: 5,
+                border: true,
                 emptyText: this.emptyText,
                 viewConfig: {
                     deferEmptyText: false
@@ -74,86 +74,83 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
                             }
                         ]
                     }
-                ]
-            }
-        ];
-    },
-
-    initMyDockedItems: function() {
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            itemId: 'tbar',
-            dock: 'top',
-            items: [
-                {
-                    xtype: 'combo',
-                    itemId: 'filter',
-                    emptyText: this.filterText,
-                    store: Ext.create('Ext.data.Store', {
-                        model: 'Phlexible.message.model.Filter',
-                        proxy: {
-                            type: 'ajax',
-                            url: Phlexible.Router.generate('messages_filters'),
-                            reader: {
-                                type: 'json',
-                                idProperty: 'id'
-                            }
-                        }
-                    }),
-                    displayField: 'title',
-                    valueField: 'id',
-                    mode: 'remote',
-                    editable: false,
-                    triggerAction: 'all'
-                },
-                ' ',
-                {
-                    xtype: 'iconcombo',
-                    itemId: 'handler',
-                    emptyText: this.handlerText,
-                    store: Ext.create('Ext.data.Store', {
-                        fields: ['id', 'name', 'iconCls'],
-                        data: Phlexible.message.Handlers
-                    }),
-                    displayField: 'name',
-                    valueField: 'id',
-                    iconClsField: 'iconCls',
-                    mode: 'local',
-                    editable: false,
-                    triggerAction: 'all'
-                },
-                ' ',
-                {
-                    xtype: 'button',
-                    text: this.subscribeText,
-                    iconCls: Phlexible.Icon.get('tick'),
-                    handler: function () {
-                        var filter = this.getDockedComponent('tbar').getComponent('filter').getValue(),
-                            handler = this.getDockedComponent('tbar').getComponent('handler').getValue();
-
-                        Ext.Ajax.request({
-                            url: Phlexible.Router.generate('messages_subscription_create'),
-                            params: {
-                                filter: filter,
-                                handler: handler
-                            },
-                            success: function (response) {
-                                var result = Ext.decode(response.responseText);
-
-                                if (result.success) {
-                                    this.getComponent(0).getStore().reload();
-                                    Phlexible.Notify.success(result.msg);
-                                } else {
-                                    Phlexible.Notify.failure(result.msg);
+                ],
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    itemId: 'tbar',
+                    dock: 'top',
+                    items: [
+                        {
+                            xtype: 'combo',
+                            itemId: 'filter',
+                            emptyText: this.filterText,
+                            store: Ext.create('Ext.data.Store', {
+                                model: 'Phlexible.message.model.Filter',
+                                proxy: {
+                                    type: 'ajax',
+                                    url: Phlexible.Router.generate('messages_filters'),
+                                    reader: {
+                                        type: 'json',
+                                        idProperty: 'id'
+                                    }
                                 }
+                            }),
+                            displayField: 'title',
+                            valueField: 'id',
+                            mode: 'remote',
+                            editable: false,
+                            triggerAction: 'all'
+                        },
+                        ' ',
+                        {
+                            xtype: 'iconcombo',
+                            itemId: 'handler',
+                            emptyText: this.handlerText,
+                            store: Ext.create('Ext.data.Store', {
+                                fields: ['id', 'name', 'iconCls'],
+                                data: Phlexible.message.Handlers
+                            }),
+                            displayField: 'name',
+                            valueField: 'id',
+                            iconClsField: 'iconCls',
+                            mode: 'local',
+                            editable: false,
+                            triggerAction: 'all'
+                        },
+                        ' ',
+                        {
+                            xtype: 'button',
+                            text: this.subscribeText,
+                            iconCls: Phlexible.Icon.get('tick'),
+                            handler: function () {
+                                var filter = this.getDockedComponent('tbar').getComponent('filter').getValue(),
+                                    handler = this.getDockedComponent('tbar').getComponent('handler').getValue();
+
+                                Ext.Ajax.request({
+                                    url: Phlexible.Router.generate('messages_subscription_create'),
+                                    params: {
+                                        filter: filter,
+                                        handler: handler
+                                    },
+                                    success: function (response) {
+                                        var result = Ext.decode(response.responseText);
+
+                                        if (result.success) {
+                                            this.getComponent(0).getStore().reload();
+                                            Phlexible.Notify.success(result.msg);
+                                        } else {
+                                            Phlexible.Notify.failure(result.msg);
+                                        }
+                                    },
+                                    scope: this
+                                });
                             },
                             scope: this
-                        });
-                    },
-                    scope: this
-                }
-            ]
-        }];
+                        }
+                    ]
+                }]
+            }
+        ];
     },
 
     reloadSubscriptions: function () {
