@@ -23,7 +23,7 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
     typeErrorText: '_typeErrorText',
 
     initComponent: function () {
-        this.autoLoad = this.autoload || true;
+        this.autoLoad = this.autoLoad || true;
 
         this.initMyStore();
         this.initMyColumns();
