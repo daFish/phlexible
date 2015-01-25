@@ -3,7 +3,6 @@ Ext.define('Phlexible.message.view.filter.CriteriaForm', {
     alias: 'widget.message-filter-criteria',
     requires: ['Ext.ux.form.MultiSelect'],
 
-    title: '_CriteriaForm',
     cls: 'p-message-filter-criteria',
     border: true,
     layout: 'border',

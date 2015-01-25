@@ -4,6 +4,7 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
 
     iconCls: Phlexible.Icon.get('tick'),
     layout: 'fit',
+    padding: 5,
 
     emptyText: '_emptyText',
     actionsText: '_actionsText',
@@ -24,7 +25,6 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
         this.items = [
             {
                 xtype: 'grid',
-                region: 'center',
                 loadMask: true,
                 emptyText: this.emptyText,
                 viewConfig: {

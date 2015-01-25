@@ -4,6 +4,9 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
 
     loadMask: true,
     emptyText: '_emptyText',
+    viewConfig: {
+        deferEmptyText: false
+    },
 
     displayMessageText: '_displayMessageText',
     emptyMessageText: '_emptyMessageText',
@@ -23,7 +26,8 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
     typeErrorText: '_typeErrorText',
 
     initComponent: function () {
-        this.autoLoad = this.autoLoad || true;
+        console.log(this.autoLoad);
+        this.autoLoad = this.autoLoad !== false;
 
         this.initMyStore();
         this.initMyColumns();

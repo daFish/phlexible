@@ -4,6 +4,7 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
 
     iconCls: Phlexible.Icon.get(Phlexible.Icon.FILTER),
     layout: 'border',
+    border: false,
 
     initComponent: function () {
         this.items = [
@@ -11,9 +12,10 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
                 xtype: 'message-filter-list',
                 itemId: 'list',
                 region: 'west',
+                padding: '5 0 5 5',
                 width: 200,
                 collapsible: true,
-                split: true,
+                split: false,
                 listeners: {
                     filterChange: function (record) {
                         if (this.getCriteriaPanel().ready === true) {
@@ -43,10 +45,11 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
                         xtype: 'message-filter-criteria',
                         itemId: 'criteria',
                         region: 'west',
+                        padding: '5 0 5 5',
                         width: 550,
                         disabled: true,
                         ready: true,
-                        split: true,
+                        split: false,
                         listeners: {
                             reload: function () {
                                 this.getListPanel().getStore().reload();
@@ -61,6 +64,7 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
                         xtype: 'message-filter-preview',
                         itemId: 'preview',
                         region: 'center',
+                        padding: '5 0 5 5',
                         autoLoad: false
                     }
                 ]

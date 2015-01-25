@@ -5,6 +5,7 @@ Ext.define('Phlexible.message.view.list.MainPanel', {
     cls: 'p-messages-view-main',
     iconCls: Phlexible.Icon.get('application-list'),
     layout: 'border',
+    border: false,
 
     initComponent: function () {
         this.initMyItems();
