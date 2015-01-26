@@ -1,61 +1,76 @@
-Ext.provide('Phlexible.elementtypes.ElementtypeUsage');
+Ext.define('Phlexible.elementtype.ElementtypeUsage', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.elementtype-usage',
 
-Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
-    strings: Phlexible.elementtypes.Strings,
-    title: Phlexible.elementtypes.Strings.usage,
-    iconCls: 'p-element-component-icon',
-    autoExpandColumn: 3,
+    iconCls: Phlexible.Icon.get('user'),
 
-    viewConfig: {
-        emptyText: Phlexible.elementtypes.Strings.no_usage
-    },
+    emptyText: '_emptyText',
+    typeText: '_typeText',
+    asText: '_asText',
+    idText: '_idText',
+    titleText: '_titleText',
+    latestVersionText: '_latestVersionText',
 
     initComponent: function () {
+        this.initMyStore();
+        this.initMyColumns();
 
-        this.store = new Ext.data.JsonStore({
-            url: '',
-            root: 'list',
-            totalProperty: 'total',
-            autoLoad: false,
-            sortInfo: {
-                field: 'title',
-                direction: 'ASC'
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
+            fields: ['type', 'as', 'id', 'title', 'latest_version'],
+            proxy: {
+                type: 'ajax',
+                url: '',
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'list',
+                    totalProperty: 'total'
+                }
             },
-            fields: ['type', 'as', 'id', 'title', 'latest_version']
+            autoLoad: false,
+            sorters: [{
+                property: 'title',
+                direction: 'ASC'
+            }]
         });
+    },
 
+    initMyColumns: function() {
         this.columns = [
             {
-                header: this.strings.type,
+                header: this.typeText,
+                dataIndex: 'type',
                 width: 100,
-                sortable: true,
-                dataIndex: 'type'
+                sortable: true
             },
             {
-                header: '_as',
+                header: this.asText,
+                dataIndex: 'as',
                 width: 100,
-                sortable: true,
-                dataIndex: 'as'
+                sortable: true
             },
             {
-                header: 'ID',
+                header: this.idText,
+                dataIndex: 'id',
                 width: 50,
-                sortable: true,
-                dataIndex: 'id'
+                sortable: true
             },
             {
-                header: this.strings.title,
+                header: this.titleText,
+                dataIndex: 'title',
                 sortable: true,
-                dataIndex: 'title'
+                flex: 1
             },
             {
-                header: this.strings.latest_version,
+                header: this.latestVersionText,
                 sortable: true,
                 dataIndex: 'latest_version'
             }
         ];
-
-        Phlexible.elementtypes.ElementtypeUsage.superclass.initComponent.call(this);
     },
 
     empty: function () {
@@ -63,9 +78,7 @@ Phlexible.elementtypes.ElementtypeUsage = Ext.extend(Ext.grid.GridPanel, {
     },
 
     load: function (id, title, version, type) {
-        this.store.proxy.conn.url = Phlexible.Router.generate('elementtypes_usage', {id: id});
+        this.store.getProxy().setUrl(Phlexible.Router.generate('elementtypes_usage', {id: id}));
         this.store.reload();
     }
 });
-
-Ext.reg('elementtypes-usage', Phlexible.elementtypes.ElementtypeUsage);

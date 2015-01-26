@@ -12,23 +12,25 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
     deferredRender: false,
     activeTab: 0,
 
+    /**
+     * @event beforeSaveRoot
+     * Fires before root is saved
+     * @param {Ext.tree.TreeNode} node The node that the properties will be saved to.
+     */
+    /**
+     * @event saveRoot
+     * Fires after root is saved
+     * @param {Ext.tree.TreeNode} node The node that the properties have been saved to.
+     */
+
     initComponent: function () {
+        this.initMyItems();
+        this.initMyDockedItems();
 
-        this.addEvents(
-            /**
-             * @event beforeSaveRoot
-             * Fires before root is saved
-             * @param {Ext.tree.TreeNode} node The node that the properties will be saved to.
-             */
-            'beforeSaveRoot',
-            /**
-             * @event saveRoot
-             * Fires after root is saved
-             * @param {Ext.tree.TreeNode} node The node that the properties have been saved to.
-             */
-            'saveRoot'
-        );
+        this.callParent(arguments);
+    },
 
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'elementtypes-root-properties',
@@ -42,7 +44,9 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
                 isRootAccordion: true
             }
         ];
+    },
 
+    initMyDockedItems: function() {
         this.tbar = [
             {
                 text: this.strings.save_properties,

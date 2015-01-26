@@ -1,22 +1,10 @@
-Ext.provide('Phlexible.elementtypes.MainPanel');
+Ext.define('Phlexible.elementtype.view.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.elementtype-main',
 
-Ext.require('Phlexible.elementtypes.ElementtypesList');
-Ext.require('Phlexible.elementtypes.ElementtypeStructureTree');
-Ext.require('Phlexible.elementtypes.ElementtypeField');
-Ext.require('Phlexible.elementtypes.ElementtypeRoot');
-Ext.require('Phlexible.elementtypes.ElementtypeUsage');
-Ext.require('Phlexible.elementtypes.ElementtypeViability');
-Ext.require('Phlexible.elements.Element');
-Ext.require('Phlexible.elements.ElementContentPanel');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
-Ext.require('Ext.ux.GUID');
-
-Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
-    strings: Phlexible.elementtypes.Strings,
-    title: Phlexible.elementtypes.Strings.elementtypes,
     layout: 'border',
-    cls: 'p-elementtypes-panel',
-    iconCls: 'p-elementtype-component-icon',
+    cls: 'p-elementtype-main',
+    iconCls: Phlexible.Icon.get('tree'),
 
     loadParams: function (params) {
         if (params.type && params.elementtype_id && params.version) {
@@ -28,14 +16,18 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         element = new Phlexible.elements.Element({});
         element.lockinfo = {status: 'edit'};
 
+        this.initMyItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'elementtypes-list',
+                itemId: 'list',
                 region: 'west',
                 width: 300,
-                viewConfig: {
-                    forceFit: true
-                },
                 collapsible: true,
                 params: this.params,
                 listeners: {
@@ -71,12 +63,14 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
             {
                 xtype: 'tabpanel',
                 region: 'center',
+                itemId: 'tabs',
                 activeTab: 0,
                 deferredRender: false,
                 disabled: true,
                 items: [
                     {
                         title: this.strings.structure,
+                        itemId: 'structure',
                         iconCls: 'p-elementtype-tree-icon',
                         layout: 'border',
                         cls: 'p-elementtypes-2-panel',
@@ -87,6 +81,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                             {
                                 xtype: 'elementtypes-tree',
                                 region: 'west',
+                                itemId: 'templateTree',
                                 title: Phlexible.elementtypes.Strings.template_elementtype,
                                 iconCls: 'p-elementtype-tree_template-icon',
                                 width: 300,
@@ -105,7 +100,8 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                     {
                                         xtype: 'elementtypes-tree',
                                         region: 'west',
-                                        iconCls: 'p-elementtype-tree_edit-icon',
+                                        itemId: 'editTree',
+                                        iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
                                         width: 300,
                                         split: true,
                                         collapsible: false,
@@ -203,12 +199,14 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                     },
                                     {
                                         layout: 'card',
+                                        itemId: 'cards',
                                         border: true,
                                         region: 'center',
                                         activeItem: 0,
                                         items: [
                                             {
                                                 xtype: 'elementtypes-root',
+                                                itemId: 'root',
                                                 border: false,
                                                 listeners: {
                                                     saveRoot: this.onSaveRoot,
@@ -217,6 +215,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                                             },
                                             {
                                                 xtype: 'elementtypes-field',
+                                                itemId: 'field',
                                                 border: false,
                                                 listeners: {
                                                     saveField: this.onSaveField,
@@ -230,14 +229,16 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                         ]
                     },
                     {
-                        xtype: 'elementtypes-viability'
+                        xtype: 'elementtypes-viability',
+                        itemId: 'viability'
                     },
                     {
-                        xtype: 'elementtypes-usage'
+                        xtype: 'elementtypes-usage',
+                        itemId: 'usage'
                     },
                     {
                         cls: 'p-elements-data-panel',
-                        title: this.strings.preview,
+                        itemId: 'previewWrap',
                         iconCls: 'p-elementtype-preview-icon',
                         border: false,
                         layout: 'fit',
@@ -245,18 +246,23 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                         items: [
                             {
                                 xtype: 'elements-elementcontentpanel',
+                                itemId: 'preview',
                                 autoScroll: true,
                                 element: element
                             }
                         ],
-                        tbar: [{
-                            text: 'master',
-                            enableToggle: true,
-                            pressed: true,
-                            handler: function() {
-                                this.preview(true);
-                            },
-                            scope: this
+                        dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'top',
+                            items: [{
+                                text: 'master',
+                                enableToggle: true,
+                                pressed: true,
+                                handler: function () {
+                                    this.preview(true);
+                                },
+                                scope: this
+                            }]
                         }],
                         listeners: {
                             show: this.preview,
@@ -264,65 +270,71 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                         }
                     }
                 ]
-            },{
+            }
+        ];
+    },
+
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 region: 'north',
                 height: 30,
                 html: 'Committable elementtype changes detected.',
                 plain: true,
                 hidden: true,
                 bodyStyle: 'padding-top: 7px; background-color: #EE2C2C; color: white; text-align: center; font-weight: bolder;'
-            }
-        ];
-
-        Phlexible.elementtypes.MainPanel.superclass.initComponent.call(this);
+            }]
+        }]
     },
 
     getListGrid: function () {
-        return this.getComponent(0);
+        return this.getComponent('list');
     },
 
     getMainTabPanel: function () {
-        return this.getComponent(1);
+        return this.getComponent('tabs');
     },
 
     getStructureTab: function () {
-        return this.getMainTabPanel().getComponent(0);
+        return this.getMainTabPanel().getComponent('structure');
     },
 
     getViabilityTab: function () {
-        return this.getMainTabPanel().getComponent(1);
+        return this.getMainTabPanel().getComponent('viability');
     },
 
     getUsageTab: function () {
-        return this.getMainTabPanel().getComponent(2);
+        return this.getMainTabPanel().getComponent('usage');
     },
 
     getPropertyCards: function () {
-        return this.getStructureTab().getComponent(1).getComponent(1);
+        return this.getStructureTab().getComponent(1).getComponent('cards');
     },
 
     getRootTabs: function () {
-        return this.getPropertyCards().getComponent(0);
+        return this.getPropertyCards().getComponent('root');
     },
 
     getFieldTabs: function () {
-        return this.getPropertyCards().getComponent(1);
+        return this.getPropertyCards().getComponent('field');
     },
 
     getEditTreePanel: function () {
-        return this.getStructureTab().getComponent(1).getComponent(0);
+        return this.getStructureTab().getComponent(1).getComponent('editTree');
     },
 
     getTemplateTreePanel: function () {
-        return this.getStructureTab().getComponent(0);
+        return this.getStructureTab().getComponent('templateTree');
     },
 
     getPreviewWrap: function () {
-        return this.getMainTabPanel().getComponent(3);
+        return this.getMainTabPanel().getComponent('previewWrap');
     },
 
     getPreviewPanel: function () {
-        return this.getPreviewWrap().getComponent(0);
+        return this.getPreviewWrap().getComponent('preview');
     },
 
     onElementtypeChange: function (id, title, version, type) {

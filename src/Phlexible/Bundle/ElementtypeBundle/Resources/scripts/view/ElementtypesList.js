@@ -1,29 +1,41 @@
-Ext.provide('Phlexible.elementtypes.ElementtypesGridView');
-Ext.provide('Phlexible.elementtypes.ElementtypesList');
+Ext.define('Phlexible.elementtype.ElementtypesList', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.elementtype-list',
 
-Ext.require('Phlexible.elementtypes.model.Elementtype');
-Ext.require('Phlexible.elementtypes.Format');
-Ext.require('Phlexible.elementtypes.NewElementtypeWindow');
-
-Phlexible.elementtypes.ElementtypesGridView = Ext.extend(Ext.grid.GridView, {
-    getRowClass: function (record, index, rowParams, store) {
-
-    }
-});
-
-Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
-    strings: Phlexible.elementtypes.Strings,
-    title: Phlexible.elementtypes.Strings.elementtypes,
-    autoExpandColumn: 1,
     collapsible: true,
-    cls: 'p-elementtypes-grid',
+    cls: 'p-elementtypes-list',
     selectedRecord: 0,
     collapseFirst: false,
-    loadMask: {
-        msg: 'Loading list...'
-    },
+    loadMask: true,
 
     mode: Phlexible.elementtypes.TYPE_FULL,
+
+    idText: '_idText',
+    nameText: '_nameText',
+    versionText: '_versionText',
+    fullText: '_fullText',
+    structureText: '_structureText',
+    referenceText: '_referenceText',
+    layoutText: '_layoutText',
+    partText: '_partText',
+    createText: '_createText',
+    deleteText: '_deleteText',
+    duplicateText: '_duplicateText',
+    loadInTemplateTreeText: '_loadInTemplateTreeText',
+
+    /**
+     * @event beforeElementtypeChange
+     * Fires before the active ElementType has been changed
+     * @param {Number} elementtype_id The ID of the selected ElementType.
+     * @param {String} elementtype_title The Title of the selected ElementType.
+     */
+
+    /**
+     * @event elementtypeChange
+     * Fires after the active ElementType has been changed
+     * @param {Number} elementtype_id The ID of the selected ElementType.
+     * @param {String} elementtype_title The Title of the selected ElementType.
+     */
 
     initComponent: function () {
         if (!this.params) {
@@ -34,36 +46,31 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
             this.params.type = 'full';
         }
 
-        this.addEvents(
-            /**
-             * @event beforeElementtypeChange
-             * Fires before the active ElementType has been changed
-             * @param {Number} elementtype_id The ID of the selected ElementType.
-             * @param {String} elementtype_title The Title of the selected ElementType.
-             */
-            'beforeElementtypeChange',
-            /**
-             * @event elementtypeChange
-             * Fires after the active ElementType has been changed
-             * @param {Number} elementtype_id The ID of the selected ElementType.
-             * @param {String} elementtype_title The Title of the selected ElementType.
-             */
-            'elementtypeChange'
-        );
+        this.initMyStore();
+        this.initMyColumns();
 
-        // create the data store
-        this.store = new Ext.data.JsonStore({
-            // load using HTTP
-            url: Phlexible.Router.generate('elementtypes_list', {type: this.params.type}),
-            root: 'elementtypes',
-            totalProperty: 'total',
-            id: 'id',
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
             fields: Phlexible.elementtypes.model.Elementtype,
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('elementtypes_list', {type: this.params.type}),
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'elementtypes',
+                    idProperty: 'id',
+                    totalProperty: 'total'
+                }
+            },
             autoLoad: true,
-            sortInfo: {
+            sorters: [{
                 field: 'title',
                 direction: 'ASC'
-            },
+            }],
             listeners: {
                 load: function (store) {
                     this.fireEvent('changes', !!store.reader.jsonData.changes);
@@ -83,46 +90,31 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                 scope: this
             }
         });
+    },
 
-        // create the column model
+    initMyColumns: function() {
         this.columns = [
             {
-                header: 'ID',
-                width: 34,
+                header: this.idText,
                 dataIndex: 'id',
-//            fixed: true,
+                width: 34,
                 resizable: false,
                 hidden: true
             },
             {
-                header: this.strings.name,
-                width: 120,
+                header: this.nameText,
                 dataIndex: 'title',
-//            fixed: true,
+                width: 120,
                 resizable: false,
                 renderer: Phlexible.elementtypes.Format.title
             },
             {
-                header: '#',
-                width: 35,
+                header: this.versionText,
                 dataIndex: 'version',
-//            fixed: true,
+                width: 35,
                 resizable: false//,
-                //renderer: Phlexible.ElementtypeFormat.version
             }
         ];
-
-        // create the selection model
-        this.sm = new Ext.grid.RowSelectionModel({
-            singleSelect: true,
-
-            listeners: {
-                rowselect: function (selModel) {
-                    //var sel = selModel.getSelected();
-                },
-                scope: this
-            }
-        });
 
         this.viewConfig = {
             listeners: {
@@ -143,35 +135,35 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                 scope: this,
                 items: [
                     {
-                        text: this.strings.full,
+                        text: this.fullText,
                         iconCls: 'p-elementtype-type_full-icon',
                         checked: this.params.type == Phlexible.elementtypes.TYPE_FULL,
                         source: Phlexible.elementtypes.TYPE_FULL,
                         scope: this
                     },
                     {
-                        text: this.strings.structure,
+                        text: this.structureText,
                         iconCls: 'p-elementtype-type_structure-icon',
                         checked: this.params.type == Phlexible.elementtypes.TYPE_STRUCTURE,
                         source: Phlexible.elementtypes.TYPE_STRUCTURE,
                         scope: this
                     },
                     {
-                        text: this.strings.reference,
+                        text: this.referenceText,
                         iconCls: 'p-elementtype-type_reference-icon',
                         checked: this.params.type == Phlexible.elementtypes.TYPE_REFERENCE,
                         source: Phlexible.elementtypes.TYPE_REFERENCE,
                         scope: this
                     },
                     {
-                        text: this.strings.layout,
+                        text: this.layoutText,
                         iconCls: 'p-elementtype-type_layoutarea-icon',
                         checked: this.params.type == Phlexible.elementtypes.TYPE_LAYOUTAREA,
                         source: Phlexible.elementtypes.TYPE_LAYOUTAREA,
                         scope: this
                     },
                     {
-                        text: this.strings.part,
+                        text: this.partText,
                         iconCls: 'p-elementtype-type_part-icon',
                         checked: this.params.type == Phlexible.elementtypes.TYPE_PART,
                         source: Phlexible.elementtypes.TYPE_PART,
@@ -181,11 +173,10 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
             },
             '-',
             {
-                text: this.strings.create,
-                iconCls: 'p-elementtype-elementtype_add-icon',
+                text: this.createText,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: function () {
-                    //Phlexible.console.log('new');
-                    var w = new Phlexible.elementtypes.NewElementtypeWindow({
+                    var w = Ext.create('Phlexible.elementtypes.window.NewElementtypeWindow', {
                         type: this.mode,
                         listeners: {
                             success: this.onElementtypeCreate,
@@ -201,14 +192,14 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         this.contextMenu = new Ext.menu.Menu({
             items: [
                 {
-                    // 0
+                    itemId: 'name',
                     cls: 'x-btn-text-icon-bold',
                     text: '.'
                 },
                 '-',
                 {
-                    // 2
-                    text: this.strings['delete'],
+                    itemId: 'deleteBtn',
+                    text: this.deleteText,
                     iconCls: 'p-elementtype-delete-icon',
                     handler: function (item) {
                         Ext.MessageBox.confirm('Confirm', 'Do you really want to delete this Element Type?<br /><br /><br /><b>PLEASE NOTE:</b><br /><br />All Elements based on this Element Type will also be deleted.', function (btn, text, x, item) {
@@ -221,8 +212,8 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                 },
                 '-',
                 {
-                    // 4
-                    text: this.strings.duplicate,
+                    itemId: 'duplicateBtn',
+                    text: this.duplicateText,
                     iconCls: 'p-elementtype-duplicate-icon',
                     handler: function (item) {
                         this.onDuplicate(item.parentMenu.record);
@@ -231,8 +222,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                 },
                 '-',
                 {
-                    // 6
-                    text: 'Load in Template Tree',
+                    text: this.loadInTemplateTreeText,
                     iconCls: 'p-elementtype-tree_template-icon',
                     handler: function (item) {
                         this.onElementtypeTemplateSelect(this, item.parentMenu.index);
@@ -398,5 +388,3 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         }
     }
 });
-
-Ext.reg('elementtypes-list', Phlexible.elementtypes.ElementtypesList);

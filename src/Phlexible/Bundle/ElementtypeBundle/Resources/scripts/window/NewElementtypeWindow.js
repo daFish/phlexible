@@ -1,19 +1,16 @@
-Ext.provide('Phlexible.elementtypes.NewElementtypeWindow');
+Ext.define('Phlexible.elementtypes.window.NewElementtypeWindow', {
+    extend: 'Phlexible.gui.util.Dialog',
 
-Ext.require('Phlexible.gui.util.Dialog');
-
-Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dialog, {
-    title: Phlexible.elementtypes.Strings.create_element_type,
     width: 400,
     height: 230,
     minWidth: 400,
     minHeight: 230,
     iconCls: 'p-elementtype-elementtype_add-icon',
 
-    textHeader: Phlexible.elementtypes.Strings.new_elementtype_header,
-    textDescription: Phlexible.elementtypes.Strings.new_elementtype_description,
-    textOk: Phlexible.elementtypes.Strings.save,
-    textCancel: Phlexible.elementtypes.Strings.cancel,
+    textHeader: '_textHeader',
+    textDescription: '_textDescription',
+    textOk: '_textOk',
+    textCancel: '_textCancel',
 
     extraCls: 'p-elementtypes-newelementtype',
     iconClsOk: 'p-elementtype-elementtype_save-icon',

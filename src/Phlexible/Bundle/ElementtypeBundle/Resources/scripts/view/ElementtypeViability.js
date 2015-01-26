@@ -1,46 +1,54 @@
-Ext.provide('Phlexible.elementtypes.ElementtypeViability');
+Ext.define('Phlexible.elementtype.ElementtypeViability', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.elementtype-viability',
 
-Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
-    title: Phlexible.elementtypes.Strings.viability,
-    strings: Phlexible.elementtypes.Strings,
-    iconCls: 'p-elementtype-add-icon',
+    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
     border: true,
     autoScroll: true,
     viewConfig: {
-        forceFit: true,
-        emptyText: Phlexible.elementtypes.Strings.no_viability
+        forceFit: true
     },
-//    autoExpandColumn: 'title',
+
+    emptyText: '_emptyText',
+    idText: '_idText',
+    elementtypeText: '_elementtypeText',
+    actionsText: '_actionsText',
+    saveText: '_saveText',
+    addElementtypeText: '_addElementtypeText',
+    removeText: '_removeText',
 
     initComponent: function () {
-        // Create RowActions Plugin
-        this.actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
-            width: 150,
-            actions: [
-                {
-                    iconCls: 'p-elementtype-delete-icon',
-                    tooltip: this.strings.remove,
-                    callback: function (grid, record, action, row, col) {
-                        var r = grid.store.getAt(row);
+        this.initMyStore();
+        this.initMyColumns();
+        this.initMyDockedItems();
 
-                        this.store.remove(r);
-                    }.createDelegate(this)
+        this.callParent(arguments);
+    },
+
+    initMyStore: function() {
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.elementtype.model.Elementtype',
+            proxy: {
+                type: 'ajax',
+                url: '',//Phlexible.Router.generate('elementtypes_list_viability'),
+                simpleSortMode: true,
+                reader: {
+                    type: 'json',
+                    rootProperty: 'viability',
+                    idProperty: 'id'
                 }
-            ]
+            },
+            sorters: [{
+                property: 'title',
+                direction: 'ASC'
+            }]
         });
+    },
 
-        this.store = new Ext.data.JsonStore({
-            url: '',//Phlexible.Router.generate('elementtypes_list_viability'),
-            id: 'id',
-            root: 'viability',
-            fields: ['id', 'title', 'icon'],
-            sortInfo: {field: 'title', direction: 'ASC'}
-        });
-
+    initMyColumns: function() {
         this.columns = [
             {
-                header: 'ID',
+                header: this.idText,
                 dataIndex: 'id',
                 width: 30,
                 hidden: true,
@@ -48,27 +56,43 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
             },
             {
                 id: 'title',
-                header: this.strings.elementtype,
+                header: this.elementtypeText,
                 dataIndex: 'title',
-                width: 250,
+                flex: 1,
                 sortable: true,
                 renderer: function (value, meta, r) {
                     return '<img src="' + Phlexible.bundleAsset('/phlexibleelementtype/elementtypes/' + r.get('icon')) + '" width="18" height="18" style="vertical-align: middle;" /> ' + value;
                 }
             },
-            this.actions
-        ];
-
-        this.plugins = [this.actions];
-
-        this.sm = new Ext.grid.RowSelectionModel({
-            multiSelect: true
-        });
-
-        this.tbar = [
             {
-                text: this.strings.save,
-                iconCls: 'p-elementtype-save-icon',
+                xtype: 'actioncolumn',
+                header: this.actionsText,
+                width: 40,
+                items: [
+                    {
+                        iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                        tooltip: this.removeText,
+                        handler: function (grid, record, action, row, col) {
+                            var r = grid.store.getAt(row);
+
+                            this.store.remove(r);
+                        },
+                        scope: this
+                    }
+                ]
+            }
+        ];
+    },
+
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'tbar',
+            dock: 'top',
+            items: [{
+                itemId: 'saveBtn',
+                text: this.saveText,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                 handler: function () {
                     var records = this.store.getRange(),
                         ids = [];
@@ -91,19 +115,27 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
             '-',
             {
                 xtype: 'combo',
-                emptyText: this.strings.add_elementtype,
+                itemId: 'addBtn',
+                emptyText: this.addElementtypeText,
                 triggerAction: 'all',
                 listClass: 'x-combo-list-big',
                 editable: false,
                 tpl: '<tpl for="."><div class="x-combo-list-item"><img src="{[Phlexible.bundleAsset(\"/phlexibleelementtype/elementtypes/\" + values.icon)]}" width="18" height="18" style="vertical-align: middle;" /> {title}</div></tpl>',
                 width: 250,
                 listWidth: 250,
-                store: new Ext.data.JsonStore({
-                    url: '',//Phlexible.Router.generate('elementtypes_list_for_type'),
-                    root: 'elementtypes',
-                    id: 'id',
-                    fields: ['id', 'title', 'icon'],
-                    sortInfo: {field: 'title', direction: 'ASC'},
+                store: Ext.create('Ext.data.Store', {
+                    model: 'Phlexible.elementtype.model.Elementtype',
+                    proxy: {
+                        type: 'ajax',
+                        url: '',//Phlexible.Router.generate('elementtypes_list_for_type'),
+                        simpleSortMode: true,
+                        reader: {
+                            type: 'json',
+                            rootProperty: 'elementtypes',
+                            idProperty: 'id'
+                        }
+                    },
+                    sorters: [{property: 'title', direction: 'ASC'}],
                     listeners: {
                         load: function (comboStore) {
                             var r = this.store.getRange();
@@ -123,19 +155,17 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
                     select: this.onAdd,
                     scope: this
                 }
-            }
-        ];
-
-        Phlexible.elementtypes.ElementtypeViability.superclass.initComponent.call(this);
+            }]
+        }];
     },
 
     getCombo: function () {
-        return this.getTopToolbar().items.items[2];
+        return this.getDockedItem('tbar').getComponent('addBtn');
     },
 
     onAdd: function (combo, record, index) {
         if (!this.store.getById(record.id)) {
-            this.store.add(new Ext.data.Record({
+            this.store.add(new Phlexible.elementtype.model.Elementtype({
                 id: record.id,
                 title: record.data.title,
                 icon: record.data.icon
@@ -167,5 +197,3 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
         }
     }
 });
-
-Ext.reg('elementtypes-viability', Phlexible.elementtypes.ElementtypeViability);

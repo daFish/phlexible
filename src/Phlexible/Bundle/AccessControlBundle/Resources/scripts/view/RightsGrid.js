@@ -18,6 +18,7 @@ Ext.define('Phlexible.accesscontrol.RightsGrid', {
     languageText: '_languageText',
     allText: '_allText',
     actionsText: '_actionsText',
+    deleteText: '_deleteText',
     linkText: '_linkText',
     restoreText: '_restoreText',
     saveText: '_saveText',
@@ -43,12 +44,6 @@ Ext.define('Phlexible.accesscontrol.RightsGrid', {
     },
 
     initComponent: function () {
-        if (this.strings) {
-            this.strings = Ext.apply(Phlexible.accesscontrol.Strings, this.strings);
-        } else {
-            this.strings = Phlexible.accesscontrol.Strings;
-        }
-
         Ext.applyIf(this.urls, this.getDefaultUrls());
 
         if (!this.urls.users || !this.urls.groups || !this.urls.subjects || !this.urls.rights || !this.urls.add || !this.urls.save) {
@@ -229,7 +224,7 @@ Ext.define('Phlexible.accesscontrol.RightsGrid', {
                 {
                     showIndex: 'set_here',
                     iconCls: 'p-accesscontrol-delete-icon',
-                    tooltip: this.strings['delete'],
+                    tooltip: this.deleteText,
                     callback: this.deleteAction
                 },
                 {
