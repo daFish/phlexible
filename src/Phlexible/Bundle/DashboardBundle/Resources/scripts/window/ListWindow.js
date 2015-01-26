@@ -4,7 +4,6 @@
 Ext.define('Phlexible.dashboard.window.ListWindow', {
     extend: 'Ext.Window',
 
-    title: '_ListWindow',
     width: 600,
     height: 400,
     layout: 'fit',
@@ -40,9 +39,12 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
                 store: Ext.data.StoreManager.lookup('dashboard-available'),
                 tpl: new Ext.XTemplate(
                     '<tpl for=".">',
-                        '<tpl if="hidden"><div class="list-item list-wrap" style="display:none;" id="{title}"></tpl>',
-                        '<tpl if="!hidden"><div class="list-item list-wrap" id="{title}"></tpl>',
-                        '<div class="image"><img src="/bundles/phlexibleuser/images/users.png" width="120" height="50" /></div>',
+                        '<tpl if="hidden">',
+                            '<div class="list-item list-wrap" style="display:none;" id="{title}">',
+                        '<tpl else>',
+                            '<div class="list-item list-wrap" id="{title}">',
+                        '</tpl>',
+                        '<div class="image"><img src="{imageUrl}" width="120" height="50" /></div>',
                         '<div class="text">',
                             '<div class="title"><tpl if="iconCls">{[Phlexible.Icon.inline(values.iconCls)]} </tpl>{title}</div>',
                             '<div class="description">{description}</div>',
@@ -54,7 +56,7 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
                 emptyText: this.noAvailablePortletsText,
                 deferEmptyText: false,
                 itemSelector: 'div.list-wrap',
-                overItemCls: 'x-view-over',
+                overItemCls: 'list-item-over',
                 trackOver: true,
                 singleSelect: true,
                 listeners: {

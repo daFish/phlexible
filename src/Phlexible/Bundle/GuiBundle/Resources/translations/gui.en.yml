@@ -34,6 +34,7 @@ Phlexible:
                 oneMinAvgText: '1 Min'
                 fiveMinAvgText: '5 Min'
                 fifteenMinAvgText: '15 Min'
+                waitingForDataText: Waiting for data...
 
         util:
             Notify:

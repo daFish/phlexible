@@ -40,7 +40,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * Initialize application
      */
     init: function(){
-        Phlexible.console.group('Application.init()');
+        Phlexible.Logger.info('Application.init()');
 
         this.initConfig();
 
@@ -61,11 +61,11 @@ Ext.define('Phlexible.gui.util.Application', {
         // remove splashscreen
         this.removeSplash();
 
-        Phlexible.console.groupEnd();
+        Phlexible.Logger.info('Application.init() done');
     },
 
     initConfig: function() {
-        Phlexible.console.debug('Application.initConfig()');
+        Phlexible.Logger.debug('Application.initConfig()');
 
         var configValues = this.config;
         this.config = Ext.create('Phlexible.gui.util.Config', configValues);
@@ -84,7 +84,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * @private
      */
     initUser: function() {
-        Phlexible.console.debug('Application.initUser()');
+        Phlexible.Logger.debug('Application.initUser()');
 
         this.user = Ext.create('Phlexible.gui.util.User', {
             id: this.config.get('user.id'),
@@ -133,7 +133,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * @private
      */
     initRequestListener: function() {
-        Phlexible.console.debug('Application.initRequestListener()');
+        Phlexible.Logger.debug('Application.initRequestListener()');
 
         var requestListener = Ext.create('Phlexible.gui.util.RequestListener');
         requestListener.bind(this, Ext.Ajax);
@@ -143,7 +143,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * @private
      */
     removeSplash: function() {
-        Phlexible.console.debug('Application.removeSplash()');
+        Phlexible.Logger.debug('Application.removeSplash()');
 
         Ext.get("loading").fadeOut({remove: true});
     },
@@ -197,7 +197,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * @private
      */
     initPoller: function() {
-        Phlexible.console.debug('Application.initPoller()');
+        Phlexible.Logger.debug('Application.initPoller()');
 
         var poller = this.poller = Ext.create('Phlexible.gui.util.Poller', {
             noButton: false,
@@ -229,7 +229,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * @private
      */
     initViewport: function() {
-        Phlexible.console.debug('Application.initViewport()');
+        Phlexible.Logger.debug('Application.initViewport()');
 
         var dockedItems = [];
 
@@ -261,7 +261,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * @private
      */
     initPanels: function() {
-        Phlexible.console.debug('Application.initPanels()');
+        Phlexible.Logger.debug('Application.initPanels()');
         this.initialPanels = [];
         return;
 
@@ -277,7 +277,7 @@ Ext.define('Phlexible.gui.util.Application', {
             delete this.panels;
         }
 
-        Phlexible.console.debug('Application.loadInititalPanels()', menuitems);
+        Phlexible.Logger.debug('Application.loadInititalPanels()', menuitems);
 
         Ext.each(menuitems, function(menuitem) {
             var item = Ext.create(menuitem.item, menuitem.parameters);

@@ -145,6 +145,7 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
             }
             row.title = cls.prototype.title || this.noTitleText;
             row.description = cls.prototype.description || this.noDescriptionText;
+            row.imageUrl = cls.prototype.imageUrl || '/bundles/phlexibledashboard/images/portlet-plain.png';
             row.hidden = false;
             col = false;
             pos = false;

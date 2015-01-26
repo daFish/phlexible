@@ -28,10 +28,10 @@ class RolesController extends Controller
      * List roles
      *
      * @return JsonResponse
-     * @Route("", name="users_roles_list")
+     * @Route("", name="phlexible_roles")
      * @Method("GET")
      * @ApiDoc(
-     *   description="Returns a list of roles"
+     *   description="Returns a list of defined roles."
      * )
      */
     public function listAction()

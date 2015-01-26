@@ -7,6 +7,7 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     bodyStyle: 'padding: 5px 5px 5px 5px',
 
     type: 'small',
+    imageUrl: '/bundles/phlexiblemediamanager/images/portlet-latest-files.png',
 
     noRecentFilesText: '_noRecentFilesText',
 

@@ -7,7 +7,7 @@ Ext.define('Phlexible.gui.menu.Tray', {
     items: {},
 
     add: function(id, config) {
-        Phlexible.console.debug('Tray.add()', id, config);
+        Phlexible.Logger.debug('Tray.add()', id, config);
 
         config.itemId = id;
 
@@ -19,7 +19,7 @@ Ext.define('Phlexible.gui.menu.Tray', {
     },
 
     get: function(id) {
-        Phlexible.console.debug('Tray.get(' + id + ')');
+        Phlexible.Logger.debug('Tray.get(' + id + ')');
 
         return this.items[id];
     },

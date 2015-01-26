@@ -1,4 +1,4 @@
-Ext.define('Phlexible.users.security.LoginWindow', {
+Ext.define('Phlexible.user.security.LoginWindow', {
     extend: 'Ext.Window',
 
     modal: false,

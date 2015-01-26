@@ -4,7 +4,6 @@
 Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
     extend: 'Ext.Window',
 
-    title: '_ColumnsWindow',
     width: 180,
     height: 100,
     modal: true,
@@ -44,7 +43,7 @@ Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
             dock: 'bottom',
             ui: 'footer',
             items: [{
-                text: this.cancelText,
+                text: this.closeText,
                 handler: this.close,
                 scope: this
             },{

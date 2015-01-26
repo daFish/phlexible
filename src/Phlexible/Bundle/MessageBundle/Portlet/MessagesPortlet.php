@@ -12,7 +12,6 @@ use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Messages portlet
@@ -37,22 +36,19 @@ class MessagesPortlet extends Portlet
     private $securityContext;
 
     /**
-     * @param TranslatorInterface          $translator
      * @param SubscriptionManagerInterface $subscriptionManager
      * @param MessageManagerInterface      $messageManager
      * @param SecurityContextInterface     $securityContext
      */
     public function __construct(
-        TranslatorInterface $translator,
         SubscriptionManagerInterface $subscriptionManager,
         MessageManagerInterface $messageManager,
         SecurityContextInterface $securityContext)
     {
         $this
             ->setId('messages-portlet')
-            ->setTitle($translator->trans('messages.messages', [], 'gui'))
             ->setXtype('messages-portlet')
-            ->setIconClass('p-message-component-icon')
+            ->setIconClass('resource-monitor')
             ->setRole('ROLE_MESSAGE_SUBSCRIPTIONS');
 
         $this->subscriptionManager = $subscriptionManager;

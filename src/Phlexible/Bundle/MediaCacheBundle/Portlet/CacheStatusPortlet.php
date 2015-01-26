@@ -26,16 +26,14 @@ class CacheStatusPortlet extends Portlet
     private $cacheManager;
 
     /**
-     * @param TranslatorInterface   $translator
      * @param CacheManagerInterface $cacheManager
      */
-    public function __construct(TranslatorInterface $translator, CacheManagerInterface $cacheManager)
+    public function __construct(CacheManagerInterface $cacheManager)
     {
         $this
             ->setId('cachestatus-portlet')
-            ->setTitle($translator->trans('mediacache.cache_status', [], 'gui'))
             ->setXtype('cache-status-portlet')
-            ->setIconClass('p-mediacache-component-icon')
+            ->setIconClass('images-stack')
             ->setRole('ROLE_MEDIA_CACHE');
 
         $this->cacheManager = $cacheManager;

@@ -1,0 +1,28 @@
+.p-dashboard-list-window .list-item {
+    border: 1px solid transparent;
+    padding: 5px;
+    color: #15428B;
+    font-weight: bold;
+}
+.p-dashboard-list-window .list-item .image {
+    float: left;
+}
+.p-dashboard-list-window .list-item .text {
+    padding-left: 130px;
+}
+.p-dashboard-list-window .list-item .title {
+    padding: 5px;
+    color: #15428B;
+    font-size: 13px;
+    font-weight: bold;
+}
+.p-dashboard-list-window .list-item .description {
+    padding: 0 5px 5px 5px;
+    color: black;
+    font-weight: normal;
+}
+.p-dashboard-list-window .list-item-over {
+    border: 1px solid #AFB8F6;
+    background-color: #DFE8F6 !important;
+    cursor: pointer;
+}

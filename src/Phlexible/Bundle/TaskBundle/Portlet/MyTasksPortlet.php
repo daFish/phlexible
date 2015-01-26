@@ -48,15 +48,13 @@ class MyTasksPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param TranslatorInterface      $translator
      * @param TaskManagerInterface     $taskManager
      * @param TypeCollection           $types
      * @param SecurityContextInterface $securityContext
      * @param UserManagerInterface     $userManager
      * @param int                      $numItems
      */
-    public function __construct(TranslatorInterface $translator,
-                                TaskManagerInterface $taskManager,
+    public function __construct(TaskManagerInterface $taskManager,
                                 TypeCollection $types,
                                 SecurityContextInterface $securityContext,
                                 UserManagerInterface $userManager,
@@ -64,10 +62,8 @@ class MyTasksPortlet extends Portlet
     {
         $this
             ->setId('my-tasks-portlet')
-            ->setTitle($translator->trans('tasks.my_tasks', [], 'gui'))
-            //->setDescription('Displays your active tasks')
             ->setXtype('tasks-my-tasks-portlet')
-            ->setIconClass('p-task-portlet-icon')
+            ->setIconClass('clipboard-task')
             ->setRole('ROLE_TASKS');
 
         $this->taskManager = $taskManager;

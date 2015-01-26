@@ -1,16 +1,14 @@
-Ext.provide('Phlexible.users.SuccessorWindow');
+Ext.define('Phlexible.user.window.SuccessorWindow', {
+    extend: 'Phlexible.gui.util.Dialog',
 
-Ext.require('Phlexible.gui.util.Dialog');
-
-Phlexible.users.SuccessorWindow = Ext.extend(Phlexible.gui.util.Dialog, {
-    title: Phlexible.users.Strings.successor,
+    title: '_SuccessorWindow',
     width: 400,
     height: 220,
 
-    textHeader: Phlexible.users.Strings.successor_header,
-    textDescription: Phlexible.users.Strings.successor_description,
-    textOk: Phlexible.users.Strings.save,
-    textCancel: Phlexible.users.Strings.cancel,
+    textHeader: '_textHeader',
+    textDescription: '_textDescription',
+    textOk: '_textOk',
+    textCancel: '_textCancel',
 
     userId: null,
 
@@ -19,15 +17,15 @@ Phlexible.users.SuccessorWindow = Ext.extend(Phlexible.gui.util.Dialog, {
             {
                 xtype: 'combo',
                 hiddenName: 'successor',
-                fieldLabel: Phlexible.users.Strings.successor,
+                fieldLabel: this.successorText,
                 anchor: '-80',
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('users_successor_list', {userId: this.userId}),
-                    fields: ['uid', 'name'],
-                    id: 'uid'
+                    fields: ['id', 'name'],
+                    id: 'id'
                 }),
                 displayField: 'name',
-                valueField: 'uid',
+                valueField: 'id',
                 mode: 'remote',
                 allowBlank: false,
                 triggerAction: 'all',

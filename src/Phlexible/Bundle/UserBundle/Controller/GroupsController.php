@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/users/groups")
- * @Security("is_granted('ROLE_USERS')")
+ * @Security("is_granted('ROLE_GROUPS')")
  */
 class GroupsController extends Controller
 {
@@ -31,10 +31,11 @@ class GroupsController extends Controller
      * List groups
      *
      * @return JsonResponse
-     * @Route("", name="users_groups_list")
+     * @Route("", name="phlexible_groups")
      * @Method("GET")
+     * @Security("is_granted('ROLE_GROUP_ADMIN_READ')")
      * @ApiDoc(
-     *   description="Returns a list of groups"
+     *   description="Returns a list of groups."
      * )
      */
     public function listAction()
@@ -67,10 +68,11 @@ class GroupsController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("", name="users_groups_create")
+     * @Route("", name="phlexible_group_create")
      * @Method("POST")
+     * @Security("is_granted('ROLE_GROUP_ADMIN_CREATE')")
      * @ApiDoc(
-     *   description="Create new group",
+     *   description="Create new group.",
      *   requirements={
      *     {"name"="name", "dataType"="string", "required"=true, "description"="New group name"}
      *   }
@@ -98,22 +100,23 @@ class GroupsController extends Controller
     }
 
     /**
-     * Rename group
+     * Update group
      *
      * @param Request $request
      * @param string  $groupId
      *
      * @return JsonResponse
-     * @Route("/{groupId}", name="users_groups_rename")
+     * @Route("/{groupId}", name="phlexible_group_update")
      * @Method("PATCH")
+     * @Security("is_granted('ROLE_GROUP_ADMIN_UPDATE')")
      * @ApiDoc(
-     *   description="Rename group",
+     *   description="Update group.",
      *   requirements={
-     *     {"name"="name", "dataType"="string", "required"=true, "description"="Rename name"}
+     *     {"name"="name", "dataType"="string", "required"=true, "description"="Name"}
      *   }
      * )
      */
-    public function renameAction(Request $request, $groupId)
+    public function patchAction(Request $request, $groupId)
     {
         $name = $request->get('name');
 
@@ -140,10 +143,11 @@ class GroupsController extends Controller
      * @param string $groupId
      *
      * @return JsonResponse
-     * @Route("/{groupId}", name="users_groups_delete")
+     * @Route("/{groupId}", name="phlexible_group_delete")
      * @Method("DELETE")
+     * @Security("is_granted('ROLE_GROUP_ADMIN_DELETE')")
      * @ApiDoc(
-     *   description="Delete group"
+     *   description="Delete group."
      * )
      */
     public function deleteAction($groupId)

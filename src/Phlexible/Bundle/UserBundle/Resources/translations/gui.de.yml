@@ -1,3 +1,198 @@
+Phlexible:
+    user:
+        handler:
+            Users:
+                text: Benutzer
+
+            Options:
+                text: Optionen
+
+            Logout:
+                text: Logout
+
+        view:
+            MainPanel:
+                title: Benutzer
+
+            group:
+                MainPanel:
+                    title: Gruppen
+
+            user:
+                MainPanel:
+                    title: Benutzer
+
+                FilterPanel:
+                    title: Filter
+                    searchText: Suchen
+                    accountText: Konto
+                    isDisabledText: Ist gesperrt
+                    hasExpireDateText: Hat Ablaufdatum
+                    isExpiredText: Ist abgelaufen
+                    resetText: Zurücksetzen
+                    rolesText: Rollen
+                    groupsText: Gruppen
+
+                DetailPanel:
+                    title: Details
+                    noUserSelectedText: No user selected
+                    usernameText: Username
+                    emailText: Email
+                    isDisabledText: Ist gesperrt
+                    expiresOnText: Wird gesperrt an
+                    commentsText: Bemerkungen
+                    rolesText: Rollen
+                    groupsText: Gruppen
+                    propertiesText: Eigenschaften
+
+                ListGrid:
+                    title: Benutzer
+                    idText: ID
+                    usernameText: Benutzername
+                    emailText: Email
+                    firstnameText: Vorname
+                    lastnameText: Nachname
+                    commentText: Bemerkungen
+                    expireDateText: Ablaufdatum
+                    createDateText: Erstellt am
+                    createUserText: Erstellt durch
+                    modifyDateText: Geändert am
+                    modifyUserText: Geändert durch
+                    flagsText: Flags
+                    hasCommentsText: Hat Kommentare
+                    hasExpireDateText: Hat Ablaufdatum
+                    isDisabledText: Ist gesperrt
+                    addUserText: Benutzer anlegen
+                    deleteUserText: Benutzer löschen
+                    impersonateText: Imitieren
+                    totalUsersText: "{0} Benutzer"
+                    filteredUsersText: "{0} gefilterte Benutzer"
+                    emptyMsgText: Keine Benutzer
+                    deleteUsersWarningText: Ausgewählte Benutzer wirklich löschen?
+                    deleteUserWarningText: Benutzer "{0}" wirklich löschen?
+
+        window:
+            OptionsWindow:
+                title: Optionen
+                closeText: Schliessen
+
+            UserWindow:
+                accountIsDisabledText: Konto ist gesperrt
+                accountIsExpiredText: Konto ist abgelaufen
+                addUserText: Neuer Benutzer
+                editUserText: "{0}"
+                saveText: Speichern
+                cancelText: Abbrechen
+                saveAndNotifyText: Speichern und benachrichtigen
+                userText: Benutzer
+
+        edit:
+            Details:
+                title: Persönliche Daten
+                usernameText: Benutzername
+                firstnameText: Vorname
+                lastnameText: Nachname
+                emailText: Email
+                imageText: Bild
+
+            Password:
+                title: Passwort
+                passwordText: Passwort
+                passwordRepeatText: Passwort (wiederholt)
+                passwordsDontMatchText: Passwöter stimmen nicht überein
+                notifyUserText: Benutzer nach Speichern benachrichten
+                generatePasswordText: Password erzeugen
+                generatedPasswordText: Erzeugtes Passwort
+                generateText: Erzeugen
+                copyText: Kopieren
+
+            Comment:
+                title: Bemerkungen
+                commentText: Bemerkungen
+
+            Preferences:
+                title: Einstellungen
+                themeText: Theme
+                dateFormatText: Datumsformat
+                systemDefaultText: Systemstandard
+
+            Account:
+                title: Konto
+                isDisabledText: Ist gesperrt
+                cantChangePasswordText: Kann Passwort nicht ändern
+                passwordDoesntExpireText: Passwort läuft nicht ab
+                changePasswordNextLoginText: Muss Passwort nach nächstem Login ändern
+                accountExpiresOnText: Konto läuft ab an
+                expireHelpText: Ablauf Hilfe
+
+            Roles:
+                emptyText: Keine Rollen
+                title: Rollen
+                memberText: Member
+                roleText: Rolle
+
+            Groups:
+                emptyText: Keine Gruppen
+                title: Gruppen
+                memberText: Member
+                groupText: Gruppe
+
+            Properties:
+                title: Eigenschaften
+                addPropertyText: Eigenschaft hinzufügen
+                removePropertyText: Eigenschaft entfernen
+                newPropertyText: Neue Eigenschaft
+                enterPropertyNameText: Name der neuen Eigenschaft
+
+        options:
+            Details:
+                title: Details
+                descriptionText: Details Beschreibung
+                firstnameText: Vorname
+                lastnameText: Nachname
+                emailText: Email
+                imageText: Bild
+                saveText: Speichern
+                cancelText: Abbrechen
+
+            Password:
+                title: Passwort
+                descriptionText: Passwort Beschreibung
+                passwordText: Passwort
+                passwordRepeatText: Passwort wiederholen
+                passwordsDontMatchText: Passwörter stimmen nicht überein
+                saveText: Speichern
+                cancelText: Abbrechen
+
+            Preferences:
+                title: Einstellungen
+                descriptionText: Einstellungen Beschreibung
+                dateFormatText: Datumsformat
+                systemDefaultText: Systemstandard
+                saveText: Speichern
+                cancelText: Abbrechen
+
+            Properties:
+                title: Eigenschaften
+                descriptionText: Eigenschaften Beschreibung
+                saveText: Speichern
+                cancelText: Abbrechen
+
+            Theme:
+                title: Theme
+                descriptionText: Theme Beschreibung
+                saveText: Speichern
+                cancelText: Abbrechen
+                emptyText: Keine Themes
+
+        portlet:
+            LastLogins:
+                title: Wer ist online?
+                noLastLoginsText: Keine Logins in letzter Zeit
+                userText: Benutzer
+                loggedInText: Hat sich eingeloggt
+                loggedOutText: Hat sich ausgeloggt
+
 users:
     login:
         enter_username_and_password: bla

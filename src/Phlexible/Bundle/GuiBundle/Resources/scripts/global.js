@@ -1,5 +1,6 @@
-Ext.require('Phlexible.gui.util.Console');
 Phlexible.console = Ext.create('Phlexible.gui.util.Console');
+
+Phlexible.Logger = Ext.create('Phlexible.gui.util.Logger');
 
 Phlexible.Handles = Ext.create('Phlexible.gui.util.Handles');
 
@@ -23,7 +24,7 @@ Phlexible.globalKeyMap.accessKey({key: 'y', alt: true}, function () {
     Phlexible.gui.Actions.show();
 });
 
-Phlexible.PluginRegistry = Ext.create('Phlexible.gui.util.PluginManager');
+Phlexible.PluginManager = Ext.create('Phlexible.gui.util.PluginManager');
 
 Phlexible.Router = Ext.create('Phlexible.gui.util.Router');
 

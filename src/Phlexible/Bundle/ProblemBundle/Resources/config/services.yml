@@ -18,7 +18,7 @@ services:
     phlexible_problem.portlet.problems:
         class: Phlexible\Bundle\ProblemBundle\Portlet\ProblemsPortlet
         public: false
-        arguments: [@translator, @phlexible_problem.problem_fetcher]
+        arguments: [@phlexible_problem.problem_fetcher]
         tags:
             - {name: phlexible_dashboard.portlet}
 

@@ -65,7 +65,7 @@ Ext.define('Phlexible.gui.menu.MenuBar', {
             throw new Error('config.itemId missing');
         }
 
-        Phlexible.console.debug('Menu.addTrayItem()', config);
+        Phlexible.Logger.debug('Menu.addTrayItem()', config);
 
         this.getComponent('tray').add(config);
         this.getComponent('tray').show();

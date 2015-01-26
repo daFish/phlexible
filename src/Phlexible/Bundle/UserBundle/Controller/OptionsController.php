@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,74 +28,40 @@ class OptionsController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/savedetails", name="users_options_savedetails")
+     * @Route("", name="phlexible_options")
+     * @Method("PATCH")
      */
     public function savedetailsAction(Request $request)
     {
-        $user = $this->getUser()
-            ->setFirstname($request->request->get('firstname'))
-            ->setLastname($request->request->get('lastname'))
-            ->setEmail($request->request->get('email'));
-
-        $this->get('phlexible_user.user_manager')->updateUser($user);
-
-        return new ResultResponse(true, 'User details saved.');
-    }
-
-    /**
-     * Save password
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/savepassword", name="users_options_savepassword")
-     */
-    public function savepasswordAction(Request $request)
-    {
         $user = $this->getUser();
+
+        if ($request->request->has('firstname')) {
+            $user->setFirstname($request->request->get('firstname'));
+        }
+
+        if ($request->request->has('lastname')) {
+            $user->setLastname($request->request->get('lastname'));
+        }
+
+        if ($request->request->has('email')) {
+            $user->setEmail($request->request->get('email'));
+        }
 
         if ($request->request->has('password')) {
             $user->setPlainPassword($request->request->get('password'));
         }
 
-        $this->get('phlexible_user.user_manager')->updateUser($user);
+        if ($request->request->has('interfaceLanguage')) {
+            $user->setInterfaceLanguage($request->request->get('interfaceLanguage'));
+        }
 
-        return new ResultResponse(true, 'User password saved.');
-    }
+        if ($request->request->has('theme')) {
+            $user->setInterfaceLanguage($request->request->get('theme'));
+        }
 
-    /**
-     * Save preferences
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/savepreferences", name="users_options_savepreferences")
-     */
-    public function savepreferencesAction(Request $request)
-    {
-        $user = $this->getUser()
-            ->setInterfaceLanguage($request->request->get('interfaceLanguage', 'en'));
+        $userManager = $this->get('phlexible_user.user_manager');
+        $userManager->updateUser($user);
 
-        $this->get('phlexible_user.user_manager')->updateUser($user);
-
-        return new ResultResponse(true, 'User preferences saved.');
-    }
-
-    /**
-     * Save preferences
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/savetheme", name="users_options_savetheme")
-     */
-    public function savethemeAction(Request $request)
-    {
-        $user = $this->getUser()
-            ->setProperty('theme', $request->request->get('theme', 'default'));
-
-        $this->get('phlexible_user.user_manager')->updateUser($user);
-
-        return new ResultResponse(true, 'User theme saved.');
+        return new ResultResponse(true, 'User updated.');
     }
 }

@@ -1,65 +1,95 @@
-Ext.provide('Phlexible.users.options.Theme');
+/**
+ * User theme option panel
+ */
+Ext.define('Phlexible.user.options.Theme', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.user-options-theme',
 
-Ext.require('Phlexible.PluginRegistry');
-
-Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
-    strings: Phlexible.users.Strings,
-    title: Phlexible.users.Strings.theme,
-    bodyStyle: 'padding: 15px',
+    title: '_theme',
+    iconCls: Phlexible.Icon.get('image-empty'),
+    bodyPadding: '15',
     border: true,
-    header: false,
 
-    initComponent: function () {
-        this.items = new Ext.DataView({
-            store: new Ext.data.SimpleStore({
-                id: 0,
-                fields: ['id', 'name', 'preview'],
-                data: Phlexible.Config.get('set.themes')
+    descriptionText: '_description',
+    saveText: '_save',
+    cancelText: '_cancel',
+    emptyText: '_no_themes',
+
+    initComponent: function() {
+        this.initMyItems();
+        this.initMyDockedItems();
+        this.initListeners();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
+        this.items = {
+            xtype: 'dataview',
+            store: Ext.create('Ext.data.Store', {
+                model: 'Phlexible.gui.model.KeyValueIconCls',
+                data: Phlexible.App.getConfig().get('resources.themes')
             }),
-            tpl: Phlexible.users.OptionsWindowThemeTemplate,
+            tpl: new Ext.XTemplate(
+                '<tpl for=".">',
+                '<div class="theme-wrap" id="{key}">',
+                '<div class="theme"><img src="/bundles/phlexibleuser/themes/{iconCls}" title="{value}"></div>',
+                '<span>{value}</span></div>',
+                '</tpl>',
+                '<div class="x-clear"></div>'
+            ),
             autoHeight: true,
             singleSelect: true,
-            overClass: 'x-view-over',
-            itemSelector: 'div.thumb-wrap',
-            emptyText: 'No themes to display',
-            listeners: {
-                selectionchange: function (view, nodes) {
-                    var records = view.getSelectedRecords();
-                    if (records[0]) {
-                        var r = records[0];
-                        this.changeTheme(r.id);
-                    }
-                },
-                scope: this
-            }
-        });
+            trackOver: true,
+            overItemCls: 'x-item-over',
+            itemSelector: 'div.theme-wrap',
+            emptyText: this.emptyText
+        };
+    },
 
+    initMyListeners: function() {
         this.addListener({
             show: function (panel) {
-                panel.getComponent(0).select(Phlexible.Config.get('user.property.theme', 'default'), false, true);
+                var record = panel.getComponent(0).getStore().findRecord('key', Phlexible.App.getUser().getOptions().theme);
+
+                if (record) {
+                    panel.getComponent(0).select(record, false, true);
+                }
             }
         });
+    },
 
-        this.buttons = [
-            {
-                text: this.strings.save,
-                handler: function () {
-                    var view = this.getComponent(0);
-                    var records = view.getSelectedRecords();
-                    if (records[0]) {
-                        var r = records[0];
-                        if (Phlexible.Config.get('user.property.theme', 'default') != r.id) {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                text: this.saveText,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
+                handler: function() {
+                    var view = this.getComponent(0),
+                        records = view.getSelectionModel().getSelection(),
+                        record;
+
+                    if(records.length)
+                    {
+                        record = records[0];
+
+                        if (Phlexible.App.getUser().getOptions().theme != record.get('key')) {
                             Ext.Ajax.request({
-                                url: Phlexible.Router.generate('users_options_savedetails', {theme: r.id}),
-                                success: function (response) {
+                                url: Phlexible.Router.generate('phlexible_options'),
+                                method: 'PATCH',
+                                params: {
+                                    theme: record.get('key')
+                                },
+                                success: function(response){
                                     var data = Ext.decode(response.responseText);
                                     if (data.success) {
-                                        Phlexible.Config.set('user.property.theme', this.getComponent(0).getSelectedRecords()[0].id);
-
-                                        this.fireEvent('save');
+                                        Phlexible.App.getUser().getOptions().theme = record.get('key');
                                     }
                                     else {
-                                        Ext.MessageBox.alert('Failure', data.msg);
+                                        Phlexible.Notify.failure(data.msg);
                                     }
                                 },
                                 scope: this
@@ -68,48 +98,7 @@ Phlexible.users.options.Theme = Ext.extend(Ext.form.FormPanel, {
                     }
                 },
                 scope: this
-            },
-            {
-                text: this.strings.cancel,
-                handler: function () {
-                    var view = this.getComponent(0);
-                    var records = view.getSelectedRecords();
-                    if (records[0]) {
-                        var r = records[0];
-                        if (Phlexible.Config.get('user.property.theme', 'default') != r.id) {
-                            this.changeTheme(Phlexible.Config.get('user.property.theme', 'default'));
-                        }
-                    }
-                    this.fireEvent('cancel');
-                },
-                scope: this
-            }
-        ];
-
-        Phlexible.users.options.Theme.superclass.initComponent.call(this);
-    },
-
-    changeTheme: function (themeName) {
-        // cleanup changed theme
-//                    var values = this.layout.activeItem.form.getValues();
-//                    if(values.theme != Phlexible.Config.get('user.property.theme', 'default)) {
-//                        this.changeTheme(Phlexible.Config.get('user.property.theme', 'default));
-//                    }
-
-        Phlexible.console.log(themeName);
-        Ext.util.CSS.removeStyleSheet('theme');
-        if (themeName != 'default') {
-            var theme = Phlexible.bundleAsset('/phlexiblegui/scripts/ext-2.3.0/resources/css/xtheme-' + themeName + '.css');
-            Ext.util.CSS.swapStyleSheet('theme', theme);
-        }
+            }]
+        }];
     }
-});
-
-Ext.reg('usersoptionstheme', Phlexible.users.options.Theme);
-
-Phlexible.PluginRegistry.append('userOptionCards', {
-    xtype: 'usersoptionstheme',
-    title: Phlexible.users.Strings.theme,
-    description: Phlexible.users.Strings.theme_description,
-    iconCls: 'p-user-theme-icon'
 });

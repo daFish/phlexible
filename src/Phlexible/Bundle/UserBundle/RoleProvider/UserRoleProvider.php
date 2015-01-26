@@ -26,6 +26,14 @@ class UserRoleProvider extends RoleProvider
             'ROLE_USERS',
             'ROLE_SWITCH_USER',
             'ROLE_GROUPS',
+            'ROLE_USER_ADMIN_READ',
+            'ROLE_USER_ADMIN_CREATE',
+            'ROLE_USER_ADMIN_UPDATE',
+            'ROLE_USER_ADMIN_DELETE',
+            'ROLE_GROUP_ADMIN_READ',
+            'ROLE_GROUP_ADMIN_CREATE',
+            'ROLE_GROUP_ADMIN_UPDATE',
+            'ROLE_GROUP_ADMIN_DELETE',
         ];
     }
 

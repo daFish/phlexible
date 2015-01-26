@@ -9,7 +9,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.Group', {
                 var handleName, handler;
 
                 if (!Phlexible.Handles.has(menuItem.handle)) {
-                    console.error('Invalid handle in:', menuItem);
+                    Phlexible.Logger.error('Invalid handle in:', menuItem);
                     return;
                 }
 

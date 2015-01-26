@@ -6,6 +6,7 @@ Phlexible:
 
         portlet:
             Messages:
+                title: Messages
                 noRecentMessagesText: 'No recent messages'
                 priorityText: Priority
                 typeText: Type

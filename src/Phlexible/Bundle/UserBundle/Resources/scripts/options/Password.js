@@ -1,97 +1,89 @@
-Ext.provide('Phlexible.users.options.Password');
+/**
+ * User password option panel
+ */
+Ext.define('Phlexible.user.options.Password', {
+    extend: 'Ext.form.FormPanel',
+    alias: 'widget.user-options-password',
 
-Ext.require('Phlexible.PluginRegistry');
-Ext.require('Ext.ux.PasswordField');
-
-Phlexible.users.options.Password = Ext.extend(Ext.form.FormPanel, {
-    strings: Phlexible.users.Strings,
-    title: Phlexible.users.Strings.password,
-    bodyStyle: 'padding: 15px',
+    title: '_password',
+    iconCls: Phlexible.Icon.get('star'),
+    bodyPadding: '15',
     border: true,
     hideMode: 'offsets',
-    labelWidth: 150,
     defaultType: 'textfield',
-    defaults: {
+    fieldDefaults: {
+        labelWidth: 150,
+        labelAlign: 'top',
         msgTarget: 'under'
     },
-    labelAlign: 'top',
     monitorValid: true,
-    header: false,
 
-    initComponent: function () {
-        this.items = [
-            {
-                xtype: 'passwordfield',
-                fieldLabel: this.strings.password,
-                name: 'password',
-                //inputType: 'password',
-//                anchor: '100%',
-                width: 200,
-                value: '',
-                minLength: Phlexible.Config.get('system.password_min_length'),
-                showStrengthMeter: true,
-                showCapsWarning: true,
-                invalidText: this.strings.passwords_dont_match,
-                validator: function () {
-                    return this.getComponent(0).getValue() === this.getComponent(1).getValue();
-                }.createDelegate(this)
-            },
-            {
-                fieldLabel: this.strings.password_repeat,
-                name: 'password_repeat',
-                inputType: 'password',
-//                anchor: '100%',
-                width: 200,
-                minLength: Phlexible.Config.get('system.password_min_length'),
-                listeners: {
-                    valid: function (f) {
-                        f.ownerCt.getComponent(0).validate();
-                    },
-                    scope: this
-                }
+    descriptionText: '_description',
+    passwordText: '_password',
+    passwordRepeatText: '_password_repeat',
+    passwordsDontMatchText: '_passwords_dont_match_text',
+    saveText: '_save',
+    cancelText: '_cancel',
+
+    initComponent: function() {
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
+        this.items = [{
+            xtype: 'ux.passwordmeterfield',
+            fieldLabel: this.passwordText,
+            name: 'password',
+            inputType: 'password',
+            anchor: '100%',
+            width: 200,
+            value: '',
+            minLength: Phlexible.App.getConfig().get('users.system.password_min_length'),
+            strength   : 24
+        },{
+            fieldLabel: this.passwordRepeatText,
+            name: 'password_repeat',
+            inputType: 'password',
+            anchor: '100%',
+            width: 200,
+            minLength: Phlexible.App.getConfig().get('users.system.password_min_length'),
+            listeners: {
+                valid: function(f) {
+                    f.ownerCt.getComponent(0).validate();
+                },
+                scope: this
             }
-        ];
+        }];
+    },
 
-        this.buttons = [
-            {
-                text: this.strings.save,
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                text: this.saveText,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                 formBind: true,
-                handler: function () {
+                handler: function() {
                     this.form.submit({
-                        url: Phlexible.Router.generate('users_options_savepassword'),
-                        success: function (form, result) {
+                        url: Phlexible.Router.generate('phlexible_options'),
+                        method: 'PATCH',
+                        success: function(form, result) {
                             if (result.success) {
-                                this.fireEvent('back');
+
                             } else {
-                                Ext.Msg.alert('Failure', result.msg);
+                                Phlexible.Notify.failure(result.msg);
                             }
                         },
                         scope: this
                     });
                 },
                 scope: this
-            },
-            {
-                text: this.strings.cancel,
-                handler: function () {
-                    this.fireEvent('back');
-                },
-                scope: this
-            }
-        ];
-
-        Phlexible.users.options.Password.superclass.initComponent.call(this);
-    }
-});
-
-Ext.reg('usersoptionspassword', Phlexible.users.options.Password);
-
-Phlexible.PluginRegistry.append('userOptionCards', {
-    xtype: 'usersoptionspassword',
-    title: Phlexible.users.Strings.password,
-    description: Phlexible.users.Strings.password_description,
-    iconCls: 'p-user-user_password-icon',
-    available: function() {
-        return !Phlexible.Config.get('user.property.noPasswordChange', false);
+            }]
+        }];
     }
 });

@@ -1,25 +1,28 @@
 Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
     extend: 'Portal.view.Portlet',
-    alias: 'widget.mediacache-portlet-cachestatus',
+    alias: 'widget.cache-status-portlet',
 
-    title: Phlexible.mediacache.Strings.cache_status,
-    strings: Phlexible.mediacache.Strings,
     iconCls: Phlexible.Icon.get('images-stack'),
-    bodyStyle: 'padding: 5px 5px 5px 5px',
+    bodyPadding: 5,
 
     firstData: null,
     firstTs: null,
+    imageUrl: '/bundles/phlexiblemediacache/images/portlet-cache-status.png',
+
+    emptyText: '_emptyText',
+    itemsText: '_itemsText',
+    remainingText: '_remainingText',
 
     initComponent: function () {
         var itemsLeft = parseInt(this.record.get('data'), 10);
 
         if (itemsLeft) {
-            this.html = '<span id="media_cache_status">' + String.format(this.strings.cache_status_items, itemsLeft) + '</span>';
+            this.html = '<span id="media_cache_status">' + Ext.String.format(this.itemsLeftText, itemsLeft) + '</span>';
             this.firstData = itemsLeft;
             this.firstTs = new Date();
         }
         else {
-            this.html = '<span id="media_cache_status">' + this.strings.cache_status_empty + '</span>';
+            this.html = '<span id="media_cache_status">' + this.emptyText + '</span>';
         }
 
         this.callParent(arguments);
@@ -41,18 +44,18 @@ Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
                 var secondsLeft = itemsLeft / itemsPerSecond;
                 //var minutesLeft = parseInt(secondsLeft / 60, 10);
 
-                this.body.first().update(String.format(this.strings.cache_status_items_remaining, itemsLeft, itemsPerMinute, Phlexible.Format.age(secondsLeft)));
+                this.body.first().update(String.format(this.remainingItemsText, itemsLeft, itemsPerMinute, Phlexible.Format.age(secondsLeft)));
 
                 Ext.fly('media_cache_status').frame('#8db2e3', 1);
             }
             else {
-                this.body.first().update(String.format(this.strings.cache_status_items, itemsLeft));
+                this.body.first().update(String.format(this.itemsLeftText, itemsLeft));
                 this.firstData = itemsLeft;
                 this.firstTs = new Date();
             }
         }
         else {
-            this.body.first().update(String.format(this.strings.cache_status_empty));
+            this.body.first().update(String.format(this.emptyText));
             this.firstTs = null;
             this.firstData = null;
         }

@@ -27,7 +27,7 @@ Ext.define('Phlexible.gui.util.User', {
      */
     isGranted: function(role) {
         var result = this.getRoles().indexOf(role) !== -1;
-        Phlexible.console.debug('User.isGranted(' + role + ') === ' + result);
+        Phlexible.Logger.debug('User.isGranted(' + role + ') === ' + result);
         return result;
     },
 

@@ -100,7 +100,7 @@ Ext.define('Phlexible.gui.util.Icon', {
 
         if (Ext.util.CSS.getRule(rule, true)) {
             if (this.getLog()) {
-                Phlexible.console.info('Icon rule already exists: ' + name);
+                Phlexible.Logger.info('Icon rule already exists: ' + name);
             }
             return name;
         }
@@ -111,7 +111,7 @@ Ext.define('Phlexible.gui.util.Icon', {
         this.names[icon] = name;
 
         if (this.getLog()) {
-            Phlexible.console.debug('Added CSS icon rule:', icon, name, rule, property);
+            Phlexible.Logger.debug('Added CSS icon rule:', icon, name, rule, property);
         }
 
         return name;
@@ -131,7 +131,7 @@ Ext.define('Phlexible.gui.util.Icon', {
         // are we already prefixed?
         if (icon.substr(0, this.getPrefix().length) === this.getPrefix()) {
             if (this.getLog()) {
-                Phlexible.console.info('Icon already prefixed: ' + icon);
+                Phlexible.Logger.info('Icon already prefixed: ' + icon);
             }
             return icon;
         }

@@ -14,7 +14,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.PanelHandle', {
             throw Error('Not a function.');
         }
 
-        Phlexible.console.debug('PanelHandle.handle(' + component + ', ' + identifier + ')', parameters);
+        Phlexible.Logger.debug('PanelHandle.handle(' + component + ', ' + identifier + ')', parameters);
 
         Phlexible.Frame.loadPanel(identifier, component, parameters);
     },

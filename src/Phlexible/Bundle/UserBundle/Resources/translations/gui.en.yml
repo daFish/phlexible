@@ -1,3 +1,198 @@
+Phlexible:
+    user:
+        handler:
+            Users:
+                text: Users
+
+            Options:
+                text: Options
+
+            Logout:
+                text: Logout
+
+        view:
+            MainPanel:
+                title: Users
+
+            group:
+                MainPanel:
+                    title: Groups
+
+            user:
+                MainPanel:
+                    title: Users
+
+                FilterPanel:
+                    title: Filter
+                    searchText: Search
+                    accountText: Account
+                    isDisabledText: Is disabled
+                    hasExpireDateText: Has expire date
+                    isExpiredText: Is expired
+                    resetText: Reset
+                    rolesText: Roles
+                    groupsText: Groups
+
+                DetailPanel:
+                    title: Detail
+                    noUserSelectedText: Kein Benutzer ausgewählt
+                    usernameText: Username
+                    emailText: Email
+                    isDisabledText: Is disabled
+                    expiresOnText: Expires on
+                    commentsText: Comments
+                    rolesText: Roles
+                    groupsText: Groups
+                    propertiesText: Properties
+
+                ListGrid:
+                    title: Users
+                    idText: ID
+                    usernameText: Username
+                    emailText: Email
+                    firstnameText: Firstname
+                    lastnameText: Lastname
+                    commentText: Comments
+                    expireDateText: Expire date
+                    createDateText: Created on
+                    createUserText: Created by
+                    modifyDateText: Modified on
+                    modifyUserText: Modified by
+                    flagsText: Flags
+                    hasCommentsText: Has comments
+                    hasExpireDateText: Has expire date
+                    isDisabledText: Is disabled
+                    addUserText: Add user
+                    deleteUserText: Delete user
+                    impersonateText: Impersonate
+                    totalUsersText: "{0} users"
+                    filteredUsersText: "{0} filtered users"
+                    emptyMsgText: No users
+                    deleteUsersWarningText: Really delete selected users?
+                    deleteUserWarningText: Really delete user "{0}"?
+
+        window:
+            OptionsWindow:
+                title: Options
+                closeText: Close
+
+            UserWindow:
+                accountIsDisabledText: Account is disabled
+                accountIsExpiredText: Account is expired
+                addUserText: New user
+                editUserText: "{0}"
+                saveText: Save
+                cancelText: Cancel
+                saveAndNotifyText: Save and notify
+                userText: User
+
+        edit:
+            Details:
+                title: Personal Details
+                usernameText: Username
+                firstnameText: Firstname
+                lastnameText: Lastname
+                emailText: Email
+                imageText: Image
+
+            Password:
+                title: Password
+                passwordText: Password
+                passwordRepeatText: Password (repeat)
+                passwordsDontMatchText: Passwords don't match
+                notifyUserText: Notify user after save
+                generatePasswordText: Generate password
+                generatedPasswordText: Generated password
+                generateText: Generate
+                copyText: Copy
+
+            Comment:
+                title: Comments
+                commentText: Comments
+
+            Preferences:
+                title: Preferences
+                themeText: Theme
+                dateFormatText: Date format
+                systemDefaultText: System default
+
+            Account:
+                title: Account
+                isDisabledText: Is disabled
+                cantChangePasswordText: Can't change password
+                passwordDoesntExpireText: Password doesn't expire
+                changePasswordNextLoginText: Change password on next login
+                accountExpiresOnText: Account expires on
+                expireHelpText: Expire help
+
+            Roles:
+                emptyText: No roles
+                title: Roles
+                memberText: Member
+                roleText: Role
+
+            Groups:
+                emptyText: No groups
+                title: Groups
+                memberText: Member
+                groupText: Group
+
+            Properties:
+                title: Properties
+                addPropertyText: Add property
+                removePropertyText: Remove property
+                newPropertyText: New property
+                enterPropertyNameText: Property name
+
+        options:
+            Details:
+                title: Details
+                descriptionText: Details description
+                firstnameText: Firstname
+                lastnameText: Lastname
+                emailText: Email
+                imageText: Image
+                saveText: Save
+                cancelText: Cancel
+
+            Password:
+                title: Password
+                descriptionText: Password description
+                passwordText: Password
+                passwordRepeatText: Repeat password
+                passwordsDontMatchText: Passwords don't match
+                saveText: Save
+                cancelText: Cancel
+
+            Preferences:
+                title: Preferences
+                descriptionText: Preferences description
+                dateFormatText: Date format
+                systemDefaultText: System default
+                saveText: Save
+                cancelText: Cancel
+
+            Properties:
+                title: Properties
+                descriptionText: Properties description
+                saveText: Save
+                cancelText: Cancel
+
+            Theme:
+                title: Theme
+                descriptionText: Theme description
+                saveText: Save
+                cancelText: Cancel
+                emptyText: No themes
+
+        portlet:
+            LastLogins:
+                title: Who is online?
+                noLastLoginsText: No recent logins
+                userText: User
+                loggedInText: Logged in
+                loggedOutText: Logged out
+
 users:
     login:
         enter_username_and_password: bla

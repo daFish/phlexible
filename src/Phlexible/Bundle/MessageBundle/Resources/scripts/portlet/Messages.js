@@ -1,4 +1,4 @@
-Ext.define('Phlexible.message.portlet.Message', {
+Ext.define('Phlexible.message.portlet.model.Message', {
     extend: 'Ext.data.Model',
 
     fields: [
@@ -10,12 +10,13 @@ Ext.define('Phlexible.message.portlet.Message', {
 
 Ext.define('Phlexible.message.portlet.Messages', {
     extend: 'Portal.view.Portlet',
-    alias: 'widget.message-portlet-messages',
+    alias: 'widget.messages-portlet',
 
-    title: '_Messages',
     iconCls: Phlexible.Icon.get('application-list'),
     extraCls: 'messages-portlet',
     bodyStyle: 'padding: 5px',
+
+    imageUrl: '/bundles/phlexiblemessage/images/portlet-messages.png',
 
     noRecentMessagesText: '_noRecentMessagesText',
     priorityText: '_priorityText',
@@ -54,7 +55,7 @@ Ext.define('Phlexible.message.portlet.Messages', {
         );
 
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.message.portlet.Message',
+            model: 'Phlexible.message.portlet.model.Message',
             id: 'id',
             sorters: [{property: 'time', direction: 'DESC'}]
         });
@@ -63,7 +64,7 @@ Ext.define('Phlexible.message.portlet.Messages', {
         if (data) {
             Ext.each(data, function (item) {
                 item.time = new Date(item.time * 1000);
-                this.add(new Phlexible.message.portlet.Message(item, item.id));
+                this.add(new Phlexible.message.portlet.model.Message(item, item.id));
             }, this.store);
         }
 

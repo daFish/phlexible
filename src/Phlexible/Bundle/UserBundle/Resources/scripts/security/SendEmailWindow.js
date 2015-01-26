@@ -1,6 +1,6 @@
-Ext.namespace('Phlexible.users.security');
+Ext.define('Phlexible.user.security.SendEmailWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.users.security.SendEmailWindow = Ext.extend(Ext.Window, {
     modal: false,
     closable: false,
     collapsible: false,
@@ -139,7 +139,7 @@ Phlexible.users.security.SendEmailWindow = Ext.extend(Ext.Window, {
             scope: this
         });
 
-        Phlexible.users.security.SendEmailWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     submit: function () {

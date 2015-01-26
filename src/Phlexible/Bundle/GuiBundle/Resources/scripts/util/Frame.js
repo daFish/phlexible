@@ -160,7 +160,8 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
      */
     initConfig: function() {
         var config = Phlexible.config;
-        console.log(config);
+        Phlexible.Logger.notice(config);
+
         delete Phlexible.config;
         Phlexible.Config = new Phlexible.gui.util.Config(config);
         Phlexible.User = new Phlexible.gui.util.User(
@@ -343,9 +344,9 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                 width: 300
             });
             this.getTrayButton('load').setIconClass('p-gui-conn_error-icon');
-            Phlexible.console.log('Status Code: ' + response.status);
+            Phlexible.Logger.debug('Status Code: ' + response.status);
             if (response.argument) {
-                Phlexible.console.log('Request URL: ' + response.argument.url);
+                Phlexible.Logger.debug('Request URL: ' + response.argument.url);
             }
         }, this);
     },
@@ -423,7 +424,7 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                 this.mainPanel.add(panel);
                 this.getMainPanel().setActiveTab(panel);
             } else {
-                Phlexible.console.error('loadPanel() received type ' + typeof(cls));
+                Phlexible.Logger.error('loadPanel() received type ' + typeof(cls));
                 return;
             }
         } else {

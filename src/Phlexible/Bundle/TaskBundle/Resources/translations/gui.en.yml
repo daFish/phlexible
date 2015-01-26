@@ -4,6 +4,10 @@ Phlexible:
             Tasks:
                 text: Tasks
 
+        portlet:
+            MyTasks:
+                title: My Tasks
+
         view:
             FilterPanel:
                 title: Filter

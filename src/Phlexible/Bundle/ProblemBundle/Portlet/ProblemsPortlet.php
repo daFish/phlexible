@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\ProblemBundle\Portlet;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Problems portlet
@@ -27,16 +26,14 @@ class ProblemsPortlet extends Portlet
     private $fetcher;
 
     /**
-     * @param TranslatorInterface $translator
      * @param ProblemFetcher      $fetcher
      */
-    public function __construct(TranslatorInterface $translator, ProblemFetcher $fetcher)
+    public function __construct(ProblemFetcher $fetcher)
     {
         $this
             ->setId('problems-portlet')
-            ->setTitle($translator->trans('problems.problems', [], 'gui'))
             ->setXtype('problems-portlet')
-            ->setIconClass('p-problem-portlet-icon')
+            ->setIconClass('exclamation')
             ->setRole('ROLE_PROBLEMS');
 
         $this->fetcher = $fetcher;

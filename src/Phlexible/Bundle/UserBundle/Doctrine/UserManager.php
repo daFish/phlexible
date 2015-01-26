@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
+use Phlexible\Bundle\UserBundle\Doctrine\Query\UserQuery;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
@@ -170,16 +171,9 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function search($term)
+    public function query()
     {
-        $qb = $this->getUserRepository()->createQueryBuilder('u');
-        $qb
-            ->where($qb->expr()->like('u.username', $qb->expr()->literal("%$term%")))
-            ->orWhere($qb->expr()->like('u.email', $qb->expr()->literal("%$term%")))
-            ->orWhere($qb->expr()->like('u.firstname', $qb->expr()->literal("%$term%")))
-            ->orWhere($qb->expr()->like('u.lastname', $qb->expr()->literal("%$term%")));
-
-        return $qb->getQuery()->getResult();
+        return new UserQuery($this->objectManager, $this->dispatcher, $this->class);
     }
 
     /**

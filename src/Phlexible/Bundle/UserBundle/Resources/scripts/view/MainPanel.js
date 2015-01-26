@@ -1,40 +1,41 @@
-Ext.provide('Phlexible.users.MainPanel');
-
-Ext.require('Phlexible.users.UsersMainPanel');
-Ext.require('Phlexible.users.GroupsMainPanel');
-
 /**
+ * Main view
+ *
  * Input params:
- * - uid (optional)
+ * - id (optional)
  *   Set focus on specific user
  */
-Phlexible.users.MainPanel = Ext.extend(Ext.Panel, {
-    title: Phlexible.users.Strings.users,
+Ext.define('Phlexible.user.view.MainPanel', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.user-main',
+
     layout: 'fit',
-    cls: 'p-users-main-panel',
-    iconCls: 'p-user-component-icon',
+    iconCls: Phlexible.Icon.get('users'),
+    border: false,
 
-    initComponent: function () {
-        this.items = {
-            xtype: 'tabpanel',
-            border: false,
-            activeTab: 0,
-            items: [
-                {
-                    xtype: 'users-users-mainpanel',
-                    params: this.params
-                },
-                {
-                    xtype: 'users-groups-mainpanel'
-                }
-            ]
-        };
+    initComponent: function() {
+        this.initMyItems();
 
-        Phlexible.users.UsersMainPanel.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
-    loadParams: function (params) {
-        this.getComponent(0).getComponent(0).loadParams(params);
+    initMyItems: function() {
+        this.items = {
+            xtype: 'tabpanel',
+            itemId: 'tabPanel',
+            border: false,
+            activeTab: 0,
+            items: [{
+                xtype: 'user-user-main',
+                itemId: 'users'
+            },{
+                xtype: 'user-group-main',
+                itemId: 'groups'
+            }]
+        };
+    },
+
+    loadParams: function(params) {
+        this.getComponent('tabPanel').getComponent('users').loadParams(params);
     }
 });
-Ext.reg('users-main', Phlexible.users.MainPanel);

@@ -47,7 +47,6 @@ class LatestFilesPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param TranslatorInterface      $translator
      * @param VolumeManager            $volumeManager
      * @param CacheManagerInterface    $cacheManager
      * @param SecurityContextInterface $securityContext
@@ -55,7 +54,6 @@ class LatestFilesPortlet extends Portlet
      * @param int                      $numItems
      */
     public function __construct(
-        TranslatorInterface $translator,
         VolumeManager $volumeManager,
         CacheManagerInterface $cacheManager,
         SecurityContextInterface $securityContext,
@@ -64,9 +62,8 @@ class LatestFilesPortlet extends Portlet
     {
         $this
             ->setId('mediamanager-portlet')
-            ->setTitle($translator->trans('mediamanager.latest_files', [], 'gui'))
             ->setXtype('mediamanager-latest-files-portlet')
-            ->setIconClass('p-mediamanager-portlet-icon')
+            ->setIconClass('images')
             ->setRole('ROLE_MEDIA');
 
         $this->volumeManager = $volumeManager;

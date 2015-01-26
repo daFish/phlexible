@@ -71,7 +71,6 @@ services:
     phlexible_gui.portlet.load:
         class: Phlexible\Bundle\GuiBundle\Portlet\LoadPortlet
         public: false
-        arguments: [@translator]
         tags:
             - {name: phlexible_dashboard.portlet}
 

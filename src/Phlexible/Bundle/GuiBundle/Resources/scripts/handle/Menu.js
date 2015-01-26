@@ -17,7 +17,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.Menu', {
                 var handleName, handler;
 
                 if (!Phlexible.Handles.has(menuItem.handle)) {
-                    console.warn('Invalid handle in:', menuItem);
+                    Phlexible.Logger.warn('Invalid handle in:', menuItem);
                     return;
                 }
 

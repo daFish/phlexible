@@ -23,11 +23,6 @@ class Portlet
     /**
      * @var string
      */
-    private $title;
-
-    /**
-     * @var string
-     */
     private $xtype;
 
     /**
@@ -61,26 +56,6 @@ class Portlet
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
 
         return $this;
     }
@@ -178,7 +153,6 @@ class Portlet
     {
         return array(
             'id'       => $this->getId(),
-            'title'    => $this->getTitle(),
             'xtype'    => $this->getXtype(),
             'iconCls'  => $this->getIconClass(),
             'data'     => $this->getData(),

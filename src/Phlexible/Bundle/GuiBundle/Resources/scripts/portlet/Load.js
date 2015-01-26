@@ -3,15 +3,18 @@ Ext.define('Phlexible.gui.portlet.Load', {
     alias: 'widget.gui-load-portlet',
 
     title: '_Load',
+    iconCls: Phlexible.Icon.get('system-monitor'),
     bodyStyle: 'padding: 5px 5px 5px 5px',
 
     COLOR1: '#eacc00',
     COLOR5: '#ea8f00',
     COLOR15: '#b1441e',
+    imageUrl: '/bundles/phlexiblegui/images/portlet-load.png',
 
     oneMinAvgText: '_oneMinAvgText',
     fiveMinAvgText: '_fiveMinAvgText',
     fifteenMinAvgText: '_fifteenMinAvgText',
+    waitingForDataText: '_waitingForDataText',
 
     initComponent: function () {
 //        if (Phlexible.StartMessage) {
@@ -67,7 +70,7 @@ Ext.define('Phlexible.gui.portlet.Load', {
                 }
             },
             {
-                html: Phlexible.gui.Strings.waiting_for_data
+                html: this.waitingForDataText
             }
         ];
 

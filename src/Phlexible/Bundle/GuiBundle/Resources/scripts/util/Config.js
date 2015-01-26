@@ -1,5 +1,5 @@
 /**
- * Icon helper
+ * Config
  */
 Ext.define('Phlexible.gui.util.Config', {
     extend: 'Ext.util.Observable',

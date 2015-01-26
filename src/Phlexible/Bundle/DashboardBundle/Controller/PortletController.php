@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\DashboardBundle\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\DashboardBundle\Infobar\AbstractInfobar;
+use Phlexible\Bundle\DashboardBundle\Infobar\Infobar;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -37,8 +37,7 @@ class PortletController extends Controller
      */
     public function portletsAction()
     {
-        $securityContext = $this->get('security.context');
-
+        $authorizationChecker = $this->get('security.authorization_checker');
         $portlets = $this->get('phlexible_dashboard.portlets');
         $infobars = $this->get('phlexible_dashboard.infobars');
 
@@ -50,11 +49,11 @@ class PortletController extends Controller
 
         foreach ($infobars->all() as $infobar) {
             switch ($infobar->getRegion()) {
-                case AbstractInfobar::REGION_HEADER:
+                case Infobar::REGION_HEADER:
                     $data['headerBar'][] = $infobar->toArray();
                     break;
 
-                case AbstractInfobar::REGION_FOOTER:
+                case Infobar::REGION_FOOTER:
                     $data['footerBar'][] = $infobar->toArray();
                     break;
             }
@@ -62,9 +61,9 @@ class PortletController extends Controller
         }
 
         foreach ($portlets->all() as $portlet) {
-            #if ($portlet->hasResource() && !$acl->isAllowed($currentUser, $portlet->getResource())) {
-            #    continue;
-            #}
+            if ($portlet->hasRole() && !$authorizationChecker->isGranted($portlet->getRole())) {
+                continue;
+            }
 
             $data['portlets'][] = $portlet->toArray();
         }

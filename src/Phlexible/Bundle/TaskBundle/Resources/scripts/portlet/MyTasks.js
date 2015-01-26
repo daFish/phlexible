@@ -6,6 +6,8 @@ Ext.define('Phlexible.task.portlet.MyTasks', {
     iconCls: 'p-task-portlet-icon',
     title: '_MyTasks',
 
+    imageUrl: '/bundles/phlexibletask/images/portlet-my-tasks.png',
+
     noActiveTasksText: '_noActiveTasksText',
 
     initComponent: function () {

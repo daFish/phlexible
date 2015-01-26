@@ -21,5 +21,5 @@ Phlexible:
 
             ColumnsWindow:
                 title: Columns
-                columns: Columns
-                save: Save
+                saveText: Save
+                closeText: Close

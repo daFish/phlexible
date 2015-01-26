@@ -1,113 +1,95 @@
-Ext.provide('Phlexible.users.OptionsWindowThemeTemplate');
-Ext.provide('Phlexible.users.OptionsWindow');
+/**
+ * Options window
+ */
+Ext.define('Phlexible.user.window.OptionsWindow', {
+    extend: 'Ext.Window',
+    alias: 'widget.users-optionswindow',
 
-Phlexible.users.OptionsWindowThemeTemplate = new Ext.XTemplate(
-    '<tpl for=".">',
-    '<div class="thumb-wrap" id="{id}">',
-    '<div class="thumb"><img src="' + Phlexible.bundleAsset('/phlexibleuser/images/{preview}') + '" title="{name}"></div>',
-    '<span class="x-editable">{name}</span></div>',
-    '</tpl>',
-    '<div class="x-clear"></div>'
-);
-
-Phlexible.users.OptionsWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.users.Strings.options,
-    strings: Phlexible.users.Strings,
+    title: '_options',
     plain: true,
+    constrain: true,
     cls: 'p-users-options-window',
-    iconCls: 'p-user-preferences-icon',
-    width: 400,
-    minWidth: 400,
+    iconCls: Phlexible.Icon.get('card-address'),
+    width: 600,
+    minWidth: 600,
     height: 400,
     minHeight: 400,
-    layout: 'card',
-    border: false,
+    layout: 'border',
+    border: true,
     modal: true,
     activeItem: 0,
 //    deferredRender: true,
 
-    initComponent: function () {
-        var lis = '';
-        var items = [];
-        var actions = {
-            'view_overview': function (owner) {
-                owner.layout.setActiveItem(0);
-            }
-        };
+    closeText: '_close',
 
-        var optionCards = Phlexible.PluginRegistry.get('userOptionCards');
+    initComponent: function() {
+        this.initMyItems();
 
-        for (var i = 0; i < optionCards.length; i++) {
-            var item = optionCards[i];
+        this.callParent(arguments);
+    },
 
-            if (typeof(item.available) == 'function' && !item.available()) {
-                continue;
-            }
+    initMyItems: function() {
+        var xtypes = Phlexible.PluginManager.get('userOptionCards'),
+            cards = [],
+            buttons = [];
 
-            lis += '<li>' +
-                '<img src="' + Ext.BLANK_IMAGE_URL + '" class="' + item.iconCls + '" />' +
-                '<a id="view_' + item.xtype + '" href="#">' + item.title + '</a><br />' +
-                '<span>' + item.description + '</span>' +
-                '</li>';
-            items.push({
-                xtype: item.xtype,
-                listeners: {
-                    save: this.viewOverview,
-                    cancel: this.viewOverview,
-                    back: this.viewOverview,
-                    scope: this
-                }
+        Ext.each(xtypes, function (xtype) {
+            var cls = Ext.ClassManager.getByAlias('widget.' + xtype);
+
+            buttons.push({
+                text: cls.prototype.title,
+                iconCls: cls.prototype.iconCls,
+                margin: '0 0 5 0',
+                width: 135,
+                textAlign: 'left',
+                toggleHandler: function (btn, state) {
+                    if (state) {
+                        this.getComponent(1).getLayout().setActiveItem('panel-' + xtype);
+                    }
+                },
+                scope: this
             });
-            actions['view_' + item.xtype] = function (owner, cardIndex) {
-                owner.layout.setActiveItem(cardIndex);
-                owner.setTitle(owner.layout.activeItem.title);
-            }.createDelegate(this, [i + 1], true);
-        }
 
-        items.unshift({
-            bodyStyle: 'padding: 15px',
-            border: true,
-            html: '<ul class="user">' + lis + '</ul>',
-            buttons: [
-                {
-                    text: this.strings.close,
-                    handler: this.close,
-                    scope: this
-                }
-            ]
-        });
+            cards.push({
+                xtype: xtype,
+                itemId: 'panel-' + xtype,
+                header: false
+            });
+        }, this);
 
-        this.items = items;
-        this.actions = actions;
+        buttons[0].pressed = true;
 
-        Phlexible.users.UserWindow.superclass.initComponent.call(this);
-    },
-
-    doAction: function (e, t) {
-        e.stopEvent();
-        this.actions[t.id](this);
-    },
-
-    viewOverview: function () {
-        this.actions['view_overview'](this);
-        this.setTitle(Phlexible.users.Strings.options);
-    },
-
-    afterRender: function () {
-        this.body.on({
-            'mousedown': {
-                fn: this.doAction,
-                scope: this,
-                delegate: 'a'
+        this.items = [{
+            xtype: 'buttongroup',
+            region: 'west',
+            width: 150,
+            columns: 1,
+            margin: 5,
+            padding: 5,
+            defaults: {
+                enableToggle: true,
+                toggleGroup: 'card'
             },
-            'click': {
-                fn: Ext.emptyFn,
-                scope: null,
-                delegate: 'a',
-                preventDefault: true
-            }
-        });
+            items: buttons
+        }, {
+            region: 'center',
+            layout: 'card',
+            border: false,
+            margin: '5 5 5 0',
+            items: cards
+        }];
+    },
 
-        Phlexible.users.OptionsWindow.superclass.afterRender.call(this);
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                text: this.closeText,
+                handler: this.close,
+                scope: this
+            }]
+        }];
     }
 });

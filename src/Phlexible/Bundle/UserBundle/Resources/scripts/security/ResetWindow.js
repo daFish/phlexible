@@ -1,6 +1,6 @@
-Ext.namespace('Phlexible.users.security');
+Ext.define('Phlexible.user.security.ResetWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.users.security.ResetWindow = Ext.extend(Ext.Window, {
     modal: false,
     closable: false,
     collapsible: false,
@@ -138,7 +138,7 @@ Phlexible.users.security.ResetWindow = Ext.extend(Ext.Window, {
             scope: this
         });
 
-        Phlexible.users.security.ResetWindow.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     submit: function () {

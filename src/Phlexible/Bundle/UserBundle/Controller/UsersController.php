@@ -8,13 +8,10 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
-use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\UserBundle\Entity\User;
-use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
 use Phlexible\Bundle\UserBundle\UsersMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,13 +19,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Users controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/users/users")
+ * @Route("/users")
  * @Security("is_granted('ROLE_USERS')")
  */
 class UsersController extends Controller
@@ -39,15 +35,17 @@ class UsersController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("", name="users_users_list")
-     * @Method({"GET", "POST"})
+     * @Route("", name="phlexible_users")
+     * @Method("GET")
+     * @Security("is_granted('ROLE_USER_ADMIN_READ')")
      * @ApiDoc(
-     *   description="Returns a list of users",
+     *   description="Returns a list of users.",
      *   filters={
      *      {"name"="start", "dataType"="integer", "description"="Start index", "default"=0},
      *      {"name"="limit", "dataType"="integer", "description"="Limit results", "default"=20},
      *      {"name"="sort", "dataType"="string", "description"="Sort field", "default"="username"},
-     *      {"name"="dir", "dataType"="string", "description"="Sort direction", "default"="ASC"}
+     *      {"name"="dir", "dataType"="string", "description"="Sort direction", "default"="ASC"},
+     *      {"name"="search", "dataType"="array", "description"="Search"}
      *   }
      * )
      */
@@ -59,122 +57,76 @@ class UsersController extends Controller
         $dir = $request->get('dir', 'ASC');
         $search = $request->get('search', null);
 
-        if ($search) {
+        $userManager = $this->container->get('phlexible_user.user_manager');
+        $userSerializer = $this->container->get('phlexible_user.user_serializer');
+        $userQuery = $userManager->query();
+
+        $userQuery
+            ->sort($sort, $dir)
+            ->limit($start, $limit);
+
+        if ($search !== null) {
             $search = json_decode($search, true);
-        }
 
-        $userManager = $this->get('phlexible_user.user_manager');
-        $securityContext = $this->get('security.context');
+            foreach ($search as $key => $value) {
+                if (!$value) {
+                    continue;
+                }
 
-        $allUsers = $userManager->findAll();
-        $systemUserUid = $userManager->getSystemUserId();
-
-        $users = [];
-        $sortField = [];
-
-        foreach ($allUsers as $user) {
-            /* @var $user UserInterface */
-
-            //if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            //    continue;
-            //}
-
-            if ($user->getId() === $systemUserUid && !$securityContext->isGranted('ROLE_SUPER_ADMIN')
-            ) {
-                continue;
-            }
-
-            if ($search !== null) {
-                foreach ($search as $key => $value) {
-                    if (!$value) {
-                        continue;
+                if ($key == 'key') {
+                    $userQuery->byValue($value);
+                } elseif ($key == 'account_disabled') {
+                    $userQuery->byAccountDisabled();
+                } elseif ($key == 'account_expired') {
+                    $userQuery->byAccountExpired();
+                } elseif ($key == 'account_has_expire_date') {
+                    $userQuery->byAccountHasExpireDate();
+                } elseif ($key === 'roles') {
+                    foreach ($value as $role) {
+                        $userQuery->byRole($role);
                     }
-
-                    if ($key == 'key' &&
-                        stripos($user->getUsername(), $value) === false &&
-                        stripos($user->getEmail(), $value) === false &&
-                        stripos($user->getFirstname(), $value) === false &&
-                        stripos($user->getLastname(), $value) === false
-                    ) {
-                        continue 2;
-                    }
-
-                    //                    if ($key == 'account_active')
-                    //                    {
-                    //
-                    //                    }
-
-                    if ($key == 'account_expired') {
-                        if (!$user->getExpiresAt() || $user->getExpiresAt()->format('U') > time()) {
-                            continue 2;
-                        }
-                    }
-
-                    if ($key == 'account_has_expire_date') {
-                        if (!$user->getExpiresAt()) {
-                            continue 2;
-                        }
-                    }
-
-                    if (substr($key, 0, 5) == 'role_') {
-                        $role = strtoupper(substr($key, 5));
-                        if (!in_array($role, $user->getRoles())) {
-                            continue 2;
-                        }
-                    }
-
-                    if (substr($key, 0, 6) == 'group_') {
-                        $groupId = substr($key, 6);
-                        $group = $this->get('phlexible_user.group_manager')->find($groupId);
-                        if (!$user->hasGroup($group)) {
-                            continue 2;
-                        }
-                    }
+                } elseif (substr($key, 0, 5) == 'role_') {
+                    $userQuery->byRole(substr($key, 5));
+                } elseif (substr($key, 0, 6) == 'group_') {
+                    $userQuery->byGroup(substr($key, 6));
                 }
             }
-
-            $groups = [];
-            foreach ($user->getGroups() as $group) {
-                $groups[] = $group->getId();
-            }
-
-            $dummy = [
-                'uid'        => $user->getId(),
-                'username'   => $user->getUsername(),
-                'email'      => $user->getEmail(),
-                'firstname'  => $user->getFirstname(),
-                'lastname'   => $user->getLastname(),
-                'comment'    => $user->getComment(),
-                'expireDate' => $user->getExpiresAt() ? $user->getExpiresAt()->format('Y-m-d H:i:s') : null,
-                'roles'      => $user->getRoles(),
-                'groups'     => $groups,
-                'createDate' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
-                'createUser' => '',
-                'modifyDate' => $user->getModifiedAt()->format('Y-m-d H:i:s'),
-                'modifyUser' => '',
-                'properties' => $user->getProperties(),
-            ];
-
-            $users[] = $dummy;
-
-            $sortField[] = strtolower($dummy[$sort]);
         }
 
-        if (strtoupper($dir) == 'ASC') {
-            array_multisort($sortField, SORT_ASC, SORT_STRING, $users);
-        } else {
-            array_multisort($sortField, SORT_DESC, SORT_STRING, $users);
+        $users = array();
+        foreach ($userQuery->getResult() as $user) {
+            $users[] = $userSerializer->serialize($user);
         }
-
-        $count = count($users);
-        $users = array_slice($users, $start, $limit);
 
         return new JsonResponse(
-            [
+            array(
                 'users' => $users,
-                'count' => $count
-            ]
+                'count' => count($userQuery)
+            )
         );
+    }
+
+    /**
+     * User details
+     *
+     * @param Request $request
+     * @param string  $userId
+     *
+     * @return JsonResponse
+     * @Route("/{userId}", name="phlexible_user")
+     * @Method("GET")
+     * @Security("is_granted('ROLE_USER_ADMIN_READ')")
+     * @ApiDoc(
+     *   description="Returns a single user."
+     * )
+     */
+    public function detailsAction(Request $request, $userId)
+    {
+        $userManager = $this->container->get('phlexible_user.user_manager');
+        $userSerializer = $this->container->get('phlexible_user.user_serializer');
+        $user = $userManager->find($userId);
+
+        return new JsonResponse($userSerializer->serialize($user));
     }
 
     /**
@@ -184,10 +136,11 @@ class UsersController extends Controller
      *
      * @throws \Exception
      * @return ResultResponse
-     * @Route("/create", name="users_users_create")
+     * @Route("/create", name="phlexible_user_create")
      * @Method("POST")
+     * @Security("is_granted('ROLE_USER_ADMIN_CREATE')")
      * @ApiDoc(
-     *   description="Create user",
+     *   description="Create user.",
      *   requirements={
      *     {"name"="username", "dataType"="string", "required"=true, "description"="Username"},
      *     {"name"="email", "dataType"="string", "required"=true, "description"="Email"},
@@ -243,10 +196,11 @@ class UsersController extends Controller
      *
      * @throws \Exception
      * @return ResultResponse
-     * @Route("/{userId}", name="users_users_update")
+     * @Route("/{userId}", name="phlexible_user_update")
      * @Method("PUT")
+     * @Security("is_granted('ROLE_USER_ADMIN_UPDATE')")
      * @ApiDoc(
-     *   description="Update user",
+     *   description="Update user.",
      *   requirements={
      *     {"name"="username", "dataType"="string", "required"=true, "description"="Username"},
      *     {"name"="email", "dataType"="string", "required"=true, "description"="Email"},
@@ -294,6 +248,143 @@ class UsersController extends Controller
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
 
         return new ResultResponse(true, "User {$user->getUsername()} updated.");
+    }
+
+    /**
+     * Delete users
+     *
+     * @param Request $request
+     * @param string  $userId
+     *
+     * @return ResultResponse
+     * @Route("/{userId}", name="phlexible_user_delete")
+     * @Method("DELETE")
+     * @Security("is_granted('ROLE_USER_ADMIN_DELETE')")
+     * @ApiDoc(
+     *   description="Delete user."
+     * )
+     */
+    public function deleteAction(Request $request, $userId)
+    {
+        $successorUserId = $request->request->get('successor');
+
+        $userManager = $this->get('phlexible_user.user_manager');
+
+        $successorUser = $userManager->find($successorUserId);
+        $user = $userManager->find($userId);
+
+        $userManager->deleteUser($user, $successorUser);
+
+        $this->get('phlexible_message.message_poster')
+            ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));
+
+        return new ResultResponse(true);
+    }
+
+    /**
+     * Return available roles by user
+     *
+     * @param int $userId
+     *
+     * @return JsonResponse
+     * @throws \Exception
+     * @Route("/{userId}/roles", name="phlexible_user_roles", options={"expose"=true})
+     * @Method("GET")
+     * @Security("is_granted('ROLE_USER_ADMIN_READ')")
+     * @ApiDoc(
+     *   description="Returns roles for user."
+     * )
+     */
+    public function userRolesAction($userId)
+    {
+        $userManager = $this->get('phlexible_user.user_manager');
+
+        $roleData = $this->getRoleData();
+        $user = $userManager->findUserBy(array('id' => $userId));
+
+        if (!$user) {
+            throw new \Exception("User $userId not found");
+        }
+
+        $userRoles = $user->getRoles();
+
+        foreach ($roleData as $key => $roleRow) {
+            $roleData[$key]['member'] = in_array($roleRow['id'], $userRoles);
+        }
+
+        return new JsonResponse(array('roles' => $roleData));
+    }
+
+    /**
+     * Return available Groups
+     *
+     * @param int $userId
+     *
+     * @return JsonResponse
+     * @Route("/{userId}/groups", name="phlexible_user_groups", options={"expose"=true})
+     * @Method("GET")
+     * @Security("is_granted('ROLE_USER_ADMIN_READ')")
+     * @ApiDoc(
+     *   description="Returns groups for user."
+     * )
+     */
+    public function userGroupsAction($userId)
+    {
+        $groupData = $this->getGroupData();
+
+        foreach ($groupData as $key => $groupRow) {
+            $groupData['member'] = false;
+        }
+
+        return new JsonResponse(array('groups' => $groupData));
+    }
+
+    /**
+     * @param array $roles
+     *
+     * @return array
+     */
+    private function resolveRolesHierarchy(array $roles)
+    {
+        $list = array();
+
+        foreach ($roles as $roleKey => $role) {
+            if (is_array($role)) {
+                $list[] = $roleKey;
+                $list = array_merge($list, $this->resolveRolesHierarchy($role));
+            } else {
+                $list[] = $role;
+            }
+        }
+
+        return array_unique($list);
+    }
+
+    /**
+     * @return array
+     */
+    private function getRoleData()
+    {
+        $rolesHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
+        $roles = $this->resolveRolesHierarchy($rolesHierarchy);
+
+        $roleData = array();
+        foreach ($roles as $role) {
+            $roleData[] = array(
+                'id'     => $role,
+                'role'   => $role,
+            );
+        }
+
+        return $roleData;
+    }
+
+    /**
+     * @return array
+     */
+    private function getGroupData()
+    {
+        return array();
     }
 
     /**
@@ -361,107 +452,5 @@ class UsersController extends Controller
                 $user->addGroup($group);
             }
         }
-    }
-
-    /**
-     * Delete users
-     *
-     * @param Request $request
-     * @param string  $userId
-     *
-     * @return ResultResponse
-     * @Route("/{userId}", name="users_users_delete")
-     * @Method("DELETE")
-     * @ApiDoc(
-     *   description="Delete user"
-     * )
-     */
-    public function deleteAction(Request $request, $userId)
-    {
-        $successorUserId = $request->request->get('successor');
-
-        $userManager = $this->get('phlexible_user.user_manager');
-
-        $successorUser = $userManager->find($successorUserId);
-        $user = $userManager->find($userId);
-
-        $userManager->deleteUser($user, $successorUser);
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));
-
-        return new ResultResponse(true);
-    }
-
-    /**
-     * Return filter values
-     *
-     * @return JsonResponse
-     * @Route("/filtervalues", name="users_users_filtervalues")
-     * @Method("GET")
-     * @ApiDoc(
-     *   description="List filter values"
-     * )
-     */
-    public function filtervaluesAction()
-    {
-        $securityContext = $this->get('security.context');
-        $groupManager = $this->get('phlexible_user.group_manager');
-
-        $allGroups = $groupManager->findAll();
-        $everyoneGroupId = $groupManager->getEveryoneGroupId();
-
-        $groups = [];
-        foreach ($allGroups as $group) {
-            if ($group->getId() == $everyoneGroupId) {
-                continue;
-            }
-
-            $groups[] = [
-                'id'    => $group->getId(),
-                'title' => $group->getName()
-            ];
-        }
-
-        $roles = [];
-        foreach ($this->container->getParameter('security.role_hierarchy.roles') as $role => $subRoles) {
-            if (!$securityContext->isGranted($role)) {
-                continue;
-            }
-
-            $roles[] = ['id' => $role, 'title' => ucfirst(str_replace('_', ' ', $role))];
-        }
-
-        $data = [
-            'groups' => $groups,
-            'roles'  => $roles,
-        ];
-
-        return new JsonResponse($data);
-    }
-
-    /**
-     * Create password
-     *
-     * @return JsonResponse
-     * @Route("/password", name="users_password")
-     * @Method("GET")
-     * @ApiDoc(
-     *   description="Create password"
-     * )
-     */
-    public function passwordAction()
-    {
-        $minLength = $this->container->getParameter('phlexible_user.password.min_length');
-
-        $generator = new PasswordGenerator();
-        $password = $generator->create($minLength, PasswordGenerator::TYPE_UNPRONOUNCABLE);
-
-        return new JsonResponse(
-            [
-                'password' => $password,
-                'success'  => true
-            ]
-        );
     }
 }

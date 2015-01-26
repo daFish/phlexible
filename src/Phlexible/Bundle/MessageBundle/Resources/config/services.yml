@@ -74,7 +74,7 @@ services:
     phlexible_message.portlet.messages:
         class: Phlexible\Bundle\MessageBundle\Portlet\MessagesPortlet
         public: false
-        arguments: [@translator, @phlexible_message.subscription_manager, @phlexible_message.message_manager, @security.context]
+        arguments: [@phlexible_message.subscription_manager, @phlexible_message.message_manager, @security.context]
         tags:
             - {name: phlexible_dashboard.portlet}
 

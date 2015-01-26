@@ -34,7 +34,6 @@ services:
         class: Phlexible\Bundle\TaskBundle\Portlet\MyTasksPortlet
         public: false
         arguments:
-            - @translator
             - @phlexible_task.task_manager
             - @phlexible_task.types
             - @security.context

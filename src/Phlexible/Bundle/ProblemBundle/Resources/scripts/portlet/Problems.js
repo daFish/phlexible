@@ -1,10 +1,12 @@
 Ext.define('Phlexible.problem.portlet.Problems', {
     extend: 'Portal.view.Portlet',
-    alias: 'widget.problem-portlet',
+    alias: 'widget.problems-portlet',
 
     title: '_Problems',
     bodyStyle: 'padding: 5px 5px 5px 5px',
     iconCls: Phlexible.Icon.get('exclamation'),
+
+    imageUrl: '/bundles/phlexibleproblem/images/portlet-problems.png',
 
     solutionText: '_solutionText',
     menuHintText: '_menuHintText',

@@ -27,7 +27,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.WindowHandle', {
     },
 
     handle: function () {
-        Phlexible.console.debug('WindowHandle.handle(' + this.getName() + ')', this.getParameters());
+        Phlexible.Logger.debug('WindowHandle.handle(' + this.getName() + ')', this.getParameters());
 
         var win = Ext.create(this.getName(), this.getParameters());
         win.show();

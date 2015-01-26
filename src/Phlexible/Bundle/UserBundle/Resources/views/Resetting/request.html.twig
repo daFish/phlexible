@@ -4,7 +4,7 @@
     <script type="text/javascript">
         //<![CDATA[
         Ext.onReady(function () {
-            win = new Phlexible.users.security.SendEmailWindow({
+            win = Ext.create('Phlexible.user.security.SendEmailWindow', {
                 title: "{{ project.title }}",
                 loginUrl: "{{ path("fos_user_security_login") }}",
                 sendEmailUrl: "{{ path("fos_user_resetting_send_email") }}",
