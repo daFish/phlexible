@@ -31,24 +31,13 @@ Ext.define('Phlexible.gui.util.RequestListener', {
             scope: this
         });
 
-        app.on({
-            guiready: function() {
-                var tray = app.getTray();
-
-                if (!tray) {
-                    return;
-                }
-
-                tray.add('request', {
-                    tooltip: this.requestIdleText,
-                    cls: 'x-btn-icon',
-                    iconCls: this.IDLE_ICON,
-                    handler: this.start,
-                    scope: this
-                });
-            },
+        Phlexible.App.getMenu().addTrayItem('request', {
+            tooltip: this.requestIdleText,
+            //cls: 'x-btn-icon',
+            iconCls: this.IDLE_ICON,
+            handler: this.start,
             scope: this
-        })
+        });
     },
 
     /**
@@ -133,48 +122,15 @@ Ext.define('Phlexible.gui.util.RequestListener', {
         window.show();
     },
 
-    /**
-     * Return tray button
-     *
-     * @returns {Ext.button.Button}
-     */
-    getButton: function() {
-        var tray = Phlexible.App.getTray(),
-            btn;
-
-        if (!tray) {
-            return null;
-        }
-
-        btn = tray.get('request');
-
-        return btn;
-    },
-
     setButtonIdle: function() {
-        var btn = this.getButton();
-
-        if (btn) {
-            btn.setIconCls(this.IDLE_ICON);
-            btn.setTooltip(this.requestIdleText);
-        }
+        Phlexible.App.getMenu().updateTrayItem('request', {iconCls: this.IDLE_ICON, tooltip: this.requestIdleText});
     },
 
     setButtonBusy: function() {
-        var btn = this.getButton();
-
-        if (btn) {
-            btn.setIconCls(this.BUSY_ICON);
-            btn.setTooltip(this.requestBusyText);
-        }
+        Phlexible.App.getMenu().updateTrayItem('request', {iconCls: this.BUSY_ICON, tooltip: this.requestBusyText});
     },
 
     setButtonError: function() {
-        var btn = this.getButton();
-
-        if (btn) {
-            btn.setIconCls(this.ERROR_ICON);
-            btn.setTooltip(this.requestErrorText);
-        }
+        Phlexible.App.getMenu().updateTrayItem('request', {iconCls: this.ERROR_ICON, tooltip: this.requestErrorText});
     }
 });

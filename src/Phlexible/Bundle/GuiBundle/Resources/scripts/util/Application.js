@@ -40,7 +40,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * Initialize application
      */
     init: function(){
-        Phlexible.Logger.info('Application.init()');
+        Phlexible.Logger.debug('Application.init()');
 
         this.initConfig();
 
@@ -56,19 +56,14 @@ Ext.define('Phlexible.gui.util.Application', {
         // generate viewport
         this.initViewport();
 
+        Phlexible.Logger.debug('Application > guiready');
+
         this.fireEvent('guiready', this);
 
         // remove splashscreen
         this.removeSplash();
 
-        Phlexible.Logger.info('Application.init() done');
-    },
-
-    initConfig: function() {
-        Phlexible.Logger.debug('Application.initConfig()');
-
-        var configValues = this.config;
-        this.config = Ext.create('Phlexible.gui.util.Config', configValues);
+        Phlexible.Logger.debug('Application.init() > done');
     },
 
     /**
@@ -81,6 +76,95 @@ Ext.define('Phlexible.gui.util.Application', {
     },
 
     /**
+     * Return menu
+     *
+     * @returns {Phlexible.gui.menu.Menu}
+     */
+    getMenu: function() {
+        return this.menu;
+    },
+
+    /**
+     * Return user
+     *
+     * @return {Phlexible.gui.util.User}
+     */
+    getUser: function() {
+        return this.user;
+    },
+
+    /**
+     * Return poller
+     *
+     * @returns {Phlexible.gui.util.Poller}
+     */
+    getPoller: function() {
+        return this.poller;
+    },
+
+    /**
+     * Return viewport
+     *
+     * @returns {Ext.Viewport}
+     */
+    getViewport: function() {
+        return this.viewport;
+    },
+
+    /**
+     * Return main panel
+     *
+     * @returns {Ext.panel.Panel}
+     */
+    getMainPanel: function() {
+        return this.viewport.getComponent('mainPanel');
+    },
+
+    /**
+     * Return active panel
+     *
+     * @return {Ext.Component}
+     */
+    getActivePanel: function(){
+        return this.getMainPanel().getActiveTab();
+    },
+
+    /**
+     * Is the current user granted access to role?
+     *
+     * @param {String} role
+     * @return {Boolean}
+     */
+    isGranted: function(role) {
+        return this.user.isGranted(role);
+    },
+
+    /**
+     * Initialize config
+     *
+     * @private
+     */
+    initConfig: function() {
+        Phlexible.Logger.debug('Application.initConfig()');
+
+        var configValues = this.config;
+        this.config = Ext.create('Phlexible.gui.util.Config', configValues);
+    },
+
+    /**
+     * Initialize menu
+     *
+     * @private
+     */
+    initMenu: function() {
+        this.menu = Ext.create('Phlexible.gui.menu.Menu', {
+            menuData: Phlexible.menu
+        })
+    },
+
+    /**
+     * Initialize user
+     *
      * @private
      */
     initUser: function() {
@@ -100,36 +184,8 @@ Ext.define('Phlexible.gui.util.Application', {
     },
 
     /**
-     * Return user
+     * Initialize request listener
      *
-     * @return {Phlexible.gui.util.User}
-     */
-    getUser: function() {
-        return this.user;
-    },
-
-    /**
-     * Is the current user granted access to role?
-     *
-     * @param {String} role
-     * @return {Boolean}
-     */
-    isGranted: function(role) {
-        return this.user.isGranted(role);
-    },
-
-    /**
-     * @private
-     */
-    initMenu: function () {
-        this.menu = Ext.create('Phlexible.gui.menu.Menu', {
-            menuData: Phlexible.menu
-        });
-        this.tray = Ext.create('Phlexible.gui.menu.Tray', {
-        });
-    },
-
-    /**
      * @private
      */
     initRequestListener: function() {
@@ -137,60 +193,6 @@ Ext.define('Phlexible.gui.util.Application', {
 
         var requestListener = Ext.create('Phlexible.gui.util.RequestListener');
         requestListener.bind(this, Ext.Ajax);
-    },
-
-    /**
-     * @private
-     */
-    removeSplash: function() {
-        Phlexible.Logger.debug('Application.removeSplash()');
-
-        Ext.get("loading").fadeOut({remove: true});
-    },
-
-    /**
-     * Return main panel
-     *
-     * @returns {Ext.panel.Panel}
-     */
-    getMainPanel: function() {
-        return this.viewport.getComponent('mainPanel');
-    },
-
-    /**
-     * Return menu bar
-     *
-     * @returns {Phlexible.gui.menu.MenuBar}
-     */
-    getMenuBar: function() {
-        return this.getMainPanel().getDockedComponent('menuBar');
-    },
-
-    /**
-     * Return tray
-     *
-     * @returns {Phlexible.gui.menu.Tray}
-     */
-    getTray: function() {
-        return this.tray;
-    },
-
-    /**
-     * Return menu
-     *
-     * @returns {Phlexible.gui.menu.Menu}
-     */
-    getMenu: function() {
-        return this.menu();
-    },
-
-    /**
-     * Return poller
-     *
-     * @returns {Phlexible.gui.util.Poller}
-     */
-    getPoller: function() {
-        return this.poller;
     },
 
     /**
@@ -217,30 +219,12 @@ Ext.define('Phlexible.gui.util.Application', {
     },
 
     /**
-     * Return viewport
+     * Initialize viewport
      *
-     * @returns {Ext.Viewport}
-     */
-    getViewport: function() {
-        return this.viewport;
-    },
-
-    /**
      * @private
      */
     initViewport: function() {
         Phlexible.Logger.debug('Application.initViewport()');
-
-        var dockedItems = [];
-
-        if (!this.noMenu) {
-            dockedItems.push({
-                xtype: 'menu-menubar',
-                itemId: 'menuBar',
-                menu: this.menu,
-                tray: this.tray
-            });
-        }
 
         this.viewport = Ext.create('Ext.Viewport', {
             layout: 'fit',
@@ -250,23 +234,30 @@ Ext.define('Phlexible.gui.util.Application', {
                 border: false,
                 tabPosition: 'bottom',
                 enableTabScroll: true,
-                dockedItems: dockedItems,
+                dockedItems: [{
+                    xtype: 'menu-menubar',
+                    itemId: 'menuBar',
+                    menu: this.menu
+                }],
                 items: this.initialPanels
             }]
         });
+
         delete this.initialPanels;
     },
 
     /**
+     * Initialize start panels
+     *
      * @private
      */
     initPanels: function() {
         Phlexible.Logger.debug('Application.initPanels()');
         this.initialPanels = [];
+
         return;
 
         var menuitems = [];
-        //menuitems.push({item: 'Phlexible.dashboard.menuitem.Dashboard', parameters: {}});
 
         if (this.panels) {
             if (Ext.isArray(this.panels)) {
@@ -286,12 +277,14 @@ Ext.define('Phlexible.gui.util.Application', {
     },
 
     /**
-     * Return active panel
+     * Remove splash screen
      *
-     * @return {Ext.Component}
+     * @private
      */
-    getActivePanel: function(){
-        return this.getMainPanel().getActiveTab();
+    removeSplash: function() {
+        Phlexible.Logger.debug('Application.removeSplash()');
+
+        Ext.get("loading").fadeOut({remove: true});
     },
 
     /**

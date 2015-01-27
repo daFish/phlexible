@@ -38,7 +38,6 @@ Ext.define('Phlexible.gui.util.Logger', {
      */
     debug: function(line) {
         this.addItem(line, 'debug');
-        Phlexible.console.debug('Logger:', line);
     },
 
     /**
@@ -48,7 +47,6 @@ Ext.define('Phlexible.gui.util.Logger', {
      */
     info: function(line) {
         this.addItem(line, 'info');
-        Phlexible.console.info('Logger:', line);
     },
 
     /**
@@ -58,7 +56,6 @@ Ext.define('Phlexible.gui.util.Logger', {
      */
     notice: function(line) {
         this.addItem(line, 'notice');
-        Phlexible.console.info('Logger:', line);
     },
 
     /**
@@ -68,7 +65,6 @@ Ext.define('Phlexible.gui.util.Logger', {
      */
     warn: function(line) {
         this.addItem(line, 'error');
-        Phlexible.console.warn('Logger:', line);
     },
 
     /**
@@ -78,14 +74,52 @@ Ext.define('Phlexible.gui.util.Logger', {
      */
     error: function(line) {
         this.addItem(line, 'error');
-        Phlexible.console.error('Logger:', line);
     },
 
     /**
      * @private
      */
     addItem: function(line, severity) {
-        this.logs.add(Ext.create('Phlexible.gui.model.LogItem', {id: this.currentId++, line: line, severity: severity, ts: new Date()}));
+        var record = Ext.create('Phlexible.gui.model.LogItem', {id: this.currentId++, line: line, severity: severity, ts: new Date()});
+        this.logs.add(record);
+        this.logItem(record);
+    },
+
+    /**
+     *
+     * @param {Ext.data.Model} record
+     */
+    logItem: function(record) {
+        var line = record.get('line'),
+            ts = Ext.Date.format(record.get('ts'), 'c');
+
+        switch(record.get('severity')) {
+            case 'debug':
+                console.debug(ts, line);
+                break;
+
+            case 'info':
+                console.log(ts, line);
+                break;
+
+            case 'notice':
+                console.info(ts, line);
+                break;
+
+            case 'warn':
+                console.warn(ts, line);
+                break;
+
+            case 'error':
+                console.error(ts, line);
+                break;
+        }
+
+    },
+
+    out: function() {
+        this.logs.each(function(r) {
+        })
     },
 
     /**

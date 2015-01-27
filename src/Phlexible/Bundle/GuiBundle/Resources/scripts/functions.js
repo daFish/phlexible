@@ -47,33 +47,3 @@ Phlexible.evalClassString = function (s) {
 
     return n;
 };
-
-/**
- * Create inline icon
- *
- * @param {String} iconCls
- * @param {Object} attr
- * @returns {string}
- */
-Phlexible.inlineIcon = function (iconCls, attr) {
-    if (!attr) attr = {};
-
-    attr = Ext.applyIf(attr, {
-        src: Ext.BLANK_IMAGE_URL,
-        width: 16,
-        height: 16,
-        'class': 'p-inline-icon ' + iconCls
-    });
-
-    var s = '<img';
-    for (var i in attr) {
-        if (!attr.hasOwnProperty(i)) {
-            continue;
-        }
-        s += ' ' + i + '="' + attr[i] + '"';
-    }
-
-    s += ' />';
-
-    return s;
-};

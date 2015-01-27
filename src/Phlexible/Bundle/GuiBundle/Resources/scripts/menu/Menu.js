@@ -14,22 +14,49 @@ Ext.define('Phlexible.gui.menu.Menu', {
     extend: 'Ext.util.Observable',
 
     /**
-     * @event beforeload
      * Fires before menu is loaded.
+     *
+     * @event beforeload
      * @param {Phlexible.gui.Menu} menu
      */
 
     /**
-     * @event load
      * Fires after menu is loaded.
+     *
+     * @event load
+     * @param {Phlexible.gui.Menu} menu
+     * @param {Array} menuItems
+     */
+
+    /**
+     * Fires before the menu is populated.
+     *
+     * @event beforepopulate
      * @param {Phlexible.gui.Menu} menu
      */
 
     /**
-     * @event addTrayItem
-     * Fires after a tray item was added.
+     * Fires after the menu is populated.
+     *
+     * @event populate
      * @param {Phlexible.gui.Menu} menu
-     * @param {Object} item
+     * @param {Array} menuItems
+     */
+
+    /**
+     * Fires after a tray item was added.
+     *
+     * @event addTrayItem
+     * @param {Phlexible.gui.Menu} menu
+     * @param {Object} config
+     */
+
+    /**
+     * Fires after a tray item was updated.
+     *
+     * @event updateTrayItem
+     * @param {Phlexible.gui.Menu} menu
+     * @param {Object} config
      */
 
     /**
@@ -46,7 +73,7 @@ Ext.define('Phlexible.gui.menu.Menu', {
     },
 
     items: [],
-    trayItems: [],
+    trayItems: {},
 
     loaded: false,
 
@@ -65,7 +92,7 @@ Ext.define('Phlexible.gui.menu.Menu', {
             url: Phlexible.Router.generate('gui_menu'),
             success: this.onLoadSuccess,
             failure: function () {
-                Ext.MessageBox.alert('Load error', 'Error loading menu.');
+                Phlexible.Notify.failure('Error loading menu.');
             },
             scope: this
         });
@@ -81,6 +108,7 @@ Ext.define('Phlexible.gui.menu.Menu', {
     /**
      * Called after successful load
      * @param {Object} response
+     * @private
      */
     onLoadSuccess: function (response) {
         var data = Ext.decode(response.responseText);
@@ -90,6 +118,10 @@ Ext.define('Phlexible.gui.menu.Menu', {
         this.fireEvent('load', this, this.items);
     },
 
+    /**
+     * @param {Array} data
+     * @private
+     */
     populate: function(data) {
         this.fireEvent('beforepopulate', this, data);
 
@@ -100,27 +132,44 @@ Ext.define('Phlexible.gui.menu.Menu', {
         this.fireEvent('populate', this, this.items);
     },
 
+    /**
+     * @return {Array}
+     */
     getItems: function () {
         return this.items;
     },
 
-    addTrayItem: function(item) {
-        if (!item.trayId) {
-            throw new Error('trayId not set');
-        }
-        this.trayItems.push(item);
-        this.fireEvent('addTrayItem', this, item);
+    /**
+     * Add a tray item
+     *
+     * @param {String} itemId
+     * @param {Object} config
+     */
+    addTrayItem: function(itemId, config) {
+        Phlexible.Logger.debug('Menu.addTrayItem('+itemId+', '+Ext.encode(config)+')');
+        config.itemId = itemId;
+
+        this.trayItems[itemId] = config;
+
+        this.fireEvent('addTrayItem', this, config);
     },
 
-    getTrayItem: function(trayId) {
-        Ext.each(this.trayItems, function(item) {
-            if (item.trayId === trayId) {
-                return item;
-            }
-        })
-        throw new Error('Tray item ' + trayId + ' not found.');
+    /**
+     * Update a tray item
+     *
+     * @param {String} itemId
+     * @param {Object} config
+     */
+    updateTrayItem: function(itemId, config) {
+        Phlexible.Logger.debug('Menu.updateTrayItem('+itemId+', '+Ext.encode(config)+')');
+        Ext.apply(this.trayItems[itemId], config);
+
+        this.fireEvent('updateTrayItem', this, this.trayItems[itemId]);
     },
 
+    /**
+     * @returns {Object}
+     */
     getTrayItems: function() {
         return this.trayItems;
     },

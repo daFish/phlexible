@@ -6,23 +6,16 @@ Ext.define('Phlexible.gui.menu.MenuBar', {
     alias: 'widget.menu-menubar',
 
     menuRendered: false,
-    trayRendered: false,
 
     initComponent: function() {
         if (!this.menu) {
-            throw Exception('menu missing');
-        }
-        if (!this.tray) {
-            throw Exception('tray missing');
+            throw new Error('menu missing');
         }
 
         this.menu.on({
             populate: this.populateMenu,
-            scope: this
-        });
-
-        this.tray.on({
-            addItem: this.addTrayItem,
+            addTrayItem: this.addTrayItem,
+            updateTrayItem: this.updateTrayItem,
             scope: this
         });
 
@@ -37,70 +30,69 @@ Ext.define('Phlexible.gui.menu.MenuBar', {
 
         this.callParent(arguments);
 
-        this.populateMenu(this.menu.getItems());
+        this.populateMenu(this.menu);
     },
 
-    getTray: function() {
-        return this.tray;
-    },
-
-    getMenu: function() {
-        return this.menu;
-    },
-
-    reloadMenu: function() {
-
-    },
-
-    clearMenu: function() {
-
-    },
-
-    addTrayItem: function(config) {
-        if (!this.trayRendered) {
-            return;
-        }
-
-        if (!config.itemId) {
-            throw new Error('config.itemId missing');
-        }
-
-        Phlexible.Logger.debug('Menu.addTrayItem()', config);
-
+    /**
+     * @param {Phlexible.gui.util.Menu} menu
+     * @param {Object} config
+     * @private
+     */
+    addTrayItem: function(menu, config) {
         this.getComponent('tray').add(config);
         this.getComponent('tray').show();
 
         config.item = this.getComponent('tray').getComponent(config.itemId);
     },
 
-    populateTray: function() {
-        if (this.trayRendered) {
-            return;
+    /**
+     * @param {Phlexible.gui.util.Menu} menu
+     * @param {Object} config
+     * @private
+     */
+    updateTrayItem: function(menu, config) {
+        var btn = this.getTrayItem(config.itemId);
+        if (config.iconCls) {
+            btn.setIconCls(config.iconCls);
         }
-
-        //Phlexible.console.info('menuBar.populateTray()');
-
-        this.getComponent('tray').add(this.tray.items);
-        /*
-        Ext.each(this.tray.items, function(item) {
-            this.getComponent('tray').add(item);
-        }, this);
-        */
-
-        this.trayRendered = true;
-
-        this.getComponent('tray').show();
+        if (config.tooltip) {
+            btn.setTooltip(config.tooltip);
+        }
     },
 
-    populateMenu: function(menu) {
-        this.clearMenu();
+    /**
+     * @param {String} itemId
+     * @return {Ext.Component}
+     * @private
+     */
+    getTrayItem: function(itemId) {
+        return this.getComponent('tray').getComponent(itemId);
+    },
 
-        //Phlexible.console.info('menuBar.populateMenu()');
+    /**
+     * @param {String} itemId
+     * @return {Boolean}
+     * @private
+     */
+    hasTrayItem: function(itemId) {
+        return this.getComponent('tray').getComponent(itemId);
+    },
+
+    /**
+     * @param {Phlexible.gui.menu.Menu} menu
+     * @private
+     */
+    populateMenu: function(menu) {
+        this.items.each(function(item) {
+            if (item.itemId !== 'tray') {
+                item.destroy();
+            }
+        });
 
         var lastItemWasSeperator = false,
             menuGrp = [],
             toolsGrp = [],
-            items = this.menu.getItems(),
+            items = menu.getItems(),
             i = 0;
 
         Ext.each(items, function(item) {
@@ -108,6 +100,22 @@ Ext.define('Phlexible.gui.menu.MenuBar', {
             i += 1;
         }, this);
 
-        this.populateTray();
+        this.populateTray(menu);
+    },
+
+    /**
+     * @param {Phlexible.gui.menu.Menu} menu
+     * @private
+     */
+    populateTray: function(menu) {
+        Ext.Object.each(menu.getTrayItems(), function(itemId, config) {
+            if (this.hasTrayItem(itemId)) {
+                this.updateTrayItem(menu, config);
+            } else {
+                this.addTrayItem(menu, config);
+            }
+        }, this);
+
+        this.getComponent('tray').show();
     }
 });
