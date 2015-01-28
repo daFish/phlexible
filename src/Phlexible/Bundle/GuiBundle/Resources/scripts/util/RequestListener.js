@@ -31,7 +31,7 @@ Ext.define('Phlexible.gui.util.RequestListener', {
             scope: this
         });
 
-        Phlexible.App.getMenu().addTrayItem('request', {
+        app.getMenu().addTrayItem('request', {
             tooltip: this.requestIdleText,
             //cls: 'x-btn-icon',
             iconCls: this.IDLE_ICON,

@@ -170,6 +170,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         //$request->attributes->set('siterootUrl', $siterootUrl);
 
+        if (isset($parameters['_route_document'])) {
+            $treeNode = $parameters['_route_document'];
+            /* @var $treeNode TreeNodeInterface */
+            if ($treeNode->getNeedAuthentication()) {
+                $attributes['_security'] = 'is_granted("bla")';
+            }
+        }
+
         return $parameters;
 
         return [

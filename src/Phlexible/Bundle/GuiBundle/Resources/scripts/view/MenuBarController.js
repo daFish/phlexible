@@ -1,81 +1,19 @@
-/**
- * @class Phlexible.gui.MenuBar
- * @extends Ext.util.Observable
- * This class represents the menu.
- * <br><br>Usage:<pre><code>
- var menu = new Phlexible.gui.Menu();
- // ...
- // reload menu
- menu.reload();
- * </code></pre>
- * @constructor
- */
-Ext.define('Phlexible.gui.menu.Menu', {
-    extend: 'Ext.util.Observable',
+Ext.define('Phlexible.gui.view.MenuBarController', {
+    extend: 'Ext.app.ViewController',
 
-    /**
-     * Fires before menu is loaded.
-     *
-     * @event beforeload
-     * @param {Phlexible.gui.Menu} menu
-     */
+    alias: 'controller.gui.menubar',
 
-    /**
-     * Fires after menu is loaded.
-     *
-     * @event load
-     * @param {Phlexible.gui.Menu} menu
-     * @param {Array} menuItems
-     */
+    init: function() {
+        Phlexible.Logger.debug('MenuBarController.initComponent()');
 
-    /**
-     * Fires before the menu is populated.
-     *
-     * @event beforepopulate
-     * @param {Phlexible.gui.Menu} menu
-     */
-
-    /**
-     * Fires after the menu is populated.
-     *
-     * @event populate
-     * @param {Phlexible.gui.Menu} menu
-     * @param {Array} menuItems
-     */
-
-    /**
-     * Fires after a tray item was added.
-     *
-     * @event addTrayItem
-     * @param {Phlexible.gui.Menu} menu
-     * @param {Object} config
-     */
-
-    /**
-     * Fires after a tray item was updated.
-     *
-     * @event updateTrayItem
-     * @param {Phlexible.gui.Menu} menu
-     * @param {Object} config
-     */
-
-    /**
-     * Constructor
-     */
-    constructor: function(config) {
-        this.callParent(arguments);
-
-        if (config.menuData) {
-            this.populate(config.menuData);
+        if (Phlexible.menu) {
+            this.populate(Phlexible.menu);
         } else {
             this.load();
         }
+
+        this.callParent(arguments);
     },
-
-    items: [],
-    trayItems: {},
-
-    loaded: false,
 
     /**
      * Load the menu entries
@@ -84,9 +22,7 @@ Ext.define('Phlexible.gui.menu.Menu', {
      * After successful load the "load" event is fired.
      */
     load: function () {
-        if (this.fireEvent('beforeload', this) === false) {
-            return;
-        }
+        Phlexible.Logger.debug('MenuBarController.load()');
 
         Ext.Ajax.request({
             url: Phlexible.Router.generate('gui_menu'),
@@ -114,8 +50,6 @@ Ext.define('Phlexible.gui.menu.Menu', {
         var data = Ext.decode(response.responseText);
 
         this.populate(data);
-
-        this.fireEvent('load', this, this.items);
     },
 
     /**
@@ -123,20 +57,30 @@ Ext.define('Phlexible.gui.menu.Menu', {
      * @private
      */
     populate: function(data) {
-        this.fireEvent('beforepopulate', this, data);
-
-        this.items = this.iterate(data);
+        Phlexible.Logger.debug('MenuBarController.populate()');
 
         this.loaded = true;
 
-        this.fireEvent('populate', this, this.items);
+        this.populateMenu(this.iterate(data));
     },
 
     /**
-     * @return {Array}
+     * @param {Array} items
+     * @private
      */
-    getItems: function () {
-        return this.items;
+    populateMenu: function(items) {
+        this.getView().items.each(function(item) {
+            if (item.itemId !== 'tray') {
+                item.destroy();
+            }
+        });
+
+        var i = 0;
+
+        Ext.each(items, function(item) {
+            this.getView().insert(i, item);
+            i += 1;
+        }, this);
     },
 
     /**
@@ -146,12 +90,31 @@ Ext.define('Phlexible.gui.menu.Menu', {
      * @param {Object} config
      */
     addTrayItem: function(itemId, config) {
-        Phlexible.Logger.debug('Menu.addTrayItem('+itemId+', '+Ext.encode(config)+')');
+        Phlexible.Logger.debug('MenuBarController.addTrayItem('+itemId+', '+Ext.encode(config)+')');
         config.itemId = itemId;
 
-        this.trayItems[itemId] = config;
+        if (this.getView().rendered) {
+            this.getView().getComponent('tray').add(config);
+            this.getView().getComponent('tray').show();
+        }
+    },
 
-        this.fireEvent('addTrayItem', this, config);
+    /**
+     * @param {String} itemId
+     * @return {Ext.Component}
+     * @private
+     */
+    getTrayItem: function(itemId) {
+        return this.getView().getComponent('tray').getComponent(itemId);
+    },
+
+    /**
+     * @param {String} itemId
+     * @return {Boolean}
+     * @private
+     */
+    hasTrayItem: function(itemId) {
+        return this.getView().getComponent('tray').getComponent(itemId);
     },
 
     /**
@@ -161,10 +124,18 @@ Ext.define('Phlexible.gui.menu.Menu', {
      * @param {Object} config
      */
     updateTrayItem: function(itemId, config) {
-        Phlexible.Logger.debug('Menu.updateTrayItem('+itemId+', '+Ext.encode(config)+')');
-        Ext.apply(this.trayItems[itemId], config);
+        Phlexible.Logger.debug('MenuBarController.updateTrayItem('+itemId+', '+Ext.encode(config)+')');
 
-        this.fireEvent('updateTrayItem', this, this.trayItems[itemId]);
+        var btn = this.getTrayItem(itemId);
+        if (config.iconCls) {
+            btn.setIconCls(config.iconCls);
+        }
+        if (config.tooltip) {
+            btn.setTooltip(config.tooltip);
+        }
+        if (config.handler) {
+            btn.setHandler(config.handler);
+        }
     },
 
     /**

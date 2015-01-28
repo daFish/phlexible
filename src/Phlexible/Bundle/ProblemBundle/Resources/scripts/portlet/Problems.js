@@ -1,5 +1,5 @@
 Ext.define('Phlexible.problem.portlet.Problems', {
-    extend: 'Portal.view.Portlet',
+    extend: 'Ext.dashboard.Panel',
     alias: 'widget.problems-portlet',
 
     title: '_Problems',
@@ -42,18 +42,12 @@ Ext.define('Phlexible.problem.portlet.Problems', {
     },
 
     initMyStore: function() {
-        this.store = Ext.create('Ext.data.SimpleStore', {
+        this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.problem.model.Problem',
             id: 'id',
-            sortInfo: {field: 'severity', username: 'ASC'}
+            sorters: [{property: 'severity', username: 'ASC'}],
+            data: this.item.data
         });
-
-        var data = this.record.get('data');
-        if (data) {
-            Ext.each(data, function (item) {
-                this.add(new Phlexible.problem.portlet.ProblemRecord(item, item.id));
-            }, this.store);
-        }
     },
 
     initMyItems: function() {

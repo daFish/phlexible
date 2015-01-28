@@ -3,6 +3,6 @@ Ext.define('Phlexible.gui.handler.Account', {
 
     iconCls: Phlexible.Icon.get('card-address'),
     getText: function () {
-        return Phlexible.App.getUser().getDisplayName();
+        return Phlexible.User.getDisplayName();
     }
 })

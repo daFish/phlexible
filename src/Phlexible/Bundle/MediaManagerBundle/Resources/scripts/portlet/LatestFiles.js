@@ -1,10 +1,10 @@
 Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
-    extend: 'Portal.view.Portlet',
+    extend: 'Ext.dashboard.Panel',
     alias: 'widget.mediamanager-latest-files-portlet',
 
     title: '_LatestFiles',
     iconCls: 'p-mediamanager-portlet-icon',
-    bodyStyle: 'padding: 5px 5px 5px 5px',
+    bodyPadding: 5,
 
     type: 'small',
     imageUrl: '/bundles/phlexiblemediamanager/images/portlet-latest-files.png',
@@ -12,8 +12,8 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     noRecentFilesText: '_noRecentFilesText',
 
     initComponent: function () {
-        if (this.record.data.settings.style) {
-            this.type = this.record.data.settings.style;
+        if (this.item.settings.style) {
+            this.type = this.item.settings.style;
         }
 
         var tpl;
@@ -40,16 +40,9 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
             sorters: [{
                 property: 'time',
                 direction: 'DESC'
-            }]
+            }],
+            data: this.item.data
         });
-
-        var data = this.record.get('data');
-        if (data) {
-            Ext.each(data, function (item) {
-                item.time = new Date(item.time * 1000);
-                this.store.add(new Phlexible.mediamanager.model.LatestFile(item, item.id));
-            }, this);
-        }
 
         this.items = [
             {

@@ -16,7 +16,7 @@ Ext.define('Phlexible.gui.util.Poller', {
         /**
          * @cfg {Boolean} autoStart Autostart poller after instanciation
          */
-        autoStart: true,
+        autoStart: false,
         /**
          * @cfg {Boolean} noButton Don't register tray button
          */
@@ -69,37 +69,30 @@ Ext.define('Phlexible.gui.util.Poller', {
         this.BUSY_ICON    = Phlexible.Icon.get('network-status-busy');
         this.PAUSE_ICON   = Phlexible.Icon.get('network-status-away');
 
-        if (!this.config.noButton) {
-            Phlexible.App.getTray().add('poller', {
-                tooltip: this.pollerOfflineText,
-                cls: 'x-btn-icon',
-                iconCls: this.OFFLINE_ICON,
-                handler: this.start,
-                scope: this
-            });
-        }
-
         this.callParent(arguments);
 
         this.lastPoll = new Date();
         this.task = this.createTask();
-
-        if (this.config.autoStart) {
-            this.start();
-        }
+        this.task.stop();
     },
 
     /**
-     * Return tray button
+     * Bind to connection
      *
-     * @returns {Object}
+     * @param {Phlexible.gui.util.Application} app
      */
-    getButton: function() {
-        if (this.config.noButton) {
-            return null;
-        }
+    bind: function(app) {
+        app.getMenu().addTrayItem('poller', {
+            tooltip: this.pollerOfflineText,
+            cls: 'x-btn-icon',
+            iconCls: this.OFFLINE_ICON,
+            handler: this.start,
+            scope: this
+        });
 
-        return Phlexible.App.getTray().get('poller');
+        if (this.config.autoStart) {
+            //this.start();
+        }
     },
 
     /**
@@ -159,6 +152,9 @@ Ext.define('Phlexible.gui.util.Poller', {
         if (new Date() - this.lastPoll > this.config.interval) {
             this.poll();
         }
+
+        Ext.getWin().on('focus', this.start);
+        Ext.getWin().on('blur', this.pause);
     },
 
     /**
@@ -169,6 +165,9 @@ Ext.define('Phlexible.gui.util.Poller', {
         this.paused = false;
         this.active = false;
         this.setButtonInactive(this.start);
+
+        Ext.getWin().off('focus', this.start);
+        Ext.getWin().off('blur', this.pause);
     },
 
     /**
@@ -218,7 +217,11 @@ Ext.define('Phlexible.gui.util.Poller', {
      * @private
      */
     setButtonInactive: function(handler) {
-        this.updateButton(this.OFFLINE_ICON, this.pollerOfflineText, handler);
+        Phlexible.App.getMenu().updateTrayItem('poller', {
+            iconCls: this.OFFLINE_ICON,
+            tooltip: this.pollerOfflineText,
+            handler: handler
+        });
     },
 
     /**
@@ -226,7 +229,11 @@ Ext.define('Phlexible.gui.util.Poller', {
      * @private
      */
     setButtonBusy: function(handler) {
-        this.updateButton(this.BUSY_ICON, this.pollerBusyText, handler);
+        Phlexible.App.getMenu().updateTrayItem('poller', {
+            iconCls: this.BUSY_ICON,
+            tooltip: this.pollerBusyText,
+            handler: handler
+        });
     },
 
     /**
@@ -234,7 +241,11 @@ Ext.define('Phlexible.gui.util.Poller', {
      * @private
      */
     setButtonIdle: function(handler) {
-        this.updateButton(this.ONLINE_ICON, this.pollerOnlineText, handler);
+        Phlexible.App.getMenu().updateTrayItem('poller', {
+            iconCls: this.ONLINE_ICON,
+            tooltip: this.pollerOnlineText,
+            handler: handler
+        });
     },
 
     /**
@@ -242,36 +253,10 @@ Ext.define('Phlexible.gui.util.Poller', {
      * @private
      */
     setButtonPause: function(handler) {
-        this.updateButton(this.PAUSE_ICON, this.pollerPausedText, handler);
-    },
-
-    /**
-     * @param {String} iconCls
-     * @param {String} tooltip
-     * @param {Function} handler
-     * @private
-     */
-    updateButton: function(iconCls, tooltip, handler) {
-        if (this.config.noButton) {
-            return null;
-        }
-
-        var btn = this.getButton();
-
-        if (!btn) {
-            console.warn('Poller.updateButton()');
-            return;
-        }
-        if (iconCls) {
-            btn.setIconCls(iconCls);
-        }
-
-        if (tooltip) {
-            btn.setTooltip(tooltip);
-        }
-
-        if (handler) {
-            btn.handler = handler;
-        }
+        Phlexible.App.getMenu().updateTrayItem('poller', {
+            iconCls: this.PAUSE_ICON,
+            tooltip: this.pollerPausedText,
+            handler: handler
+        });
     }
 });

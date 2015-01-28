@@ -1,5 +1,5 @@
 Ext.define('Phlexible.gui.portlet.Load', {
-    extend: 'Portal.view.Portlet',
+    extend: 'Ext.dashboard.Panel',
     alias: 'widget.gui-load-portlet',
 
     title: '_Load',

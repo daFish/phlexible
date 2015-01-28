@@ -1,5 +1,5 @@
 Ext.define('Phlexible.task.portlet.MyTasks', {
-    extend: 'Portal.view.Portlet',
+    extend: 'Ext.dashboard.Panel',
     alias: 'widget.tasks-my-tasks-portlet',
 
     bodyStyle: 'padding: 5px 5px 5px 5px',
@@ -14,16 +14,10 @@ Ext.define('Phlexible.task.portlet.MyTasks', {
 
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.task.model.MyTask',
-            id: 'id'
-            //sortInfo: {field: 'type', username: 'ASC'},
+            id: 'id',
+            //sorters: [{field: 'type', username: 'ASC'}],
+            data: this.item.data
         });
-
-        var data = this.record.get('data');
-        if (data) {
-            Ext.each(data, function (item) {
-                this.add(new Phlexible.task.model.MyTask(item, item.id));
-            }, this.store);
-        }
 
         this.items = [
             {

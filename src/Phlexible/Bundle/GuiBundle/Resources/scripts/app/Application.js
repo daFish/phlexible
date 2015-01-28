@@ -1,15 +1,168 @@
+Ext.define('Phlexible.gui.app.Application', {
+    extend: 'Ext.app.Application',
+    requires: [
+        'Phlexible.gui.util.Config',
+        'Phlexible.gui.util.Poller',
+        'Phlexible.gui.util.RequestListener',
+        'Phlexible.gui.util.User',
+        'Phlexible.gui.view.MenuBar',
+        'Phlexible.gui.view.Main'
+    ],
+    $configStrict: false,
+
+    name: 'Phlexible',
+    namespace: 'Phlexible',
+    appFolder: 'gui/load/Phlexible',
+    appProperty: 'App',
+
+    init: function() {
+        Phlexible.Logger.debug('Application.init()');
+
+        this.initMyConfig();
+        this.initMyUser();
+        this.initMyRequestListener();
+        this.initMyPoller();
+    },
+
+    launch: function() {
+        Phlexible.Logger.debug('Application.launch()');
+
+        this.requestListener.bind(this, Ext.Ajax);
+        this.poller.bind(this);
+
+        Ext.get("loading").fadeOut({remove: true});
+    },
+
+    getMenu: function() {
+        return this.getMainView().getComponent('main').getDockedComponent('menubar').getController();
+    },
+
+    getTabs: function() {
+        return this.getMainView().getComponent('main');
+    },
+
+    getPoller: function() {
+        return this.poller;
+    },
+
+    /**
+     * Add panel by menuitem
+     * @param {Phlexible.gui.menu.item.Item} menuitem
+     * @param {Boolean} noCloseButton
+     * @returns {Ext.Component}
+     */
+    addPanelByHandle: function(menuitem, noCloseButton) {
+        var identifier = menuitem.getIdentifier(),
+            xtype      = menuitem.getName(),
+            parameters = menuitem.getParameters(),
+            panel      = this.getTabs().getComponent(identifier);
+
+        if (!Ext.isString(xtype)) {
+            throw new Error('xtype has to be a string.');
+        }
+
+        if (!panel) {
+            panel = this.getTabs().add({
+                xtype: xtype,
+                id: identifier,
+                header: true,
+                closable: !noCloseButton,
+                menuitem: menuitem,
+                tools: [{
+                    type: 'close',
+                    handler: function(e, toolEl){
+                        this.removePanelByMenuitem(menuitem);
+                    },
+                    scope: this
+                }],
+                parameters: parameters
+            });
+        } else {
+            if (panel.loadParameters) {
+                panel.loadParameters(parameters);
+            }
+        }
+
+        this.getTabs().setActiveTab(panel);
+
+        return panel;
+    },
+
+    /**
+     * Initialize config
+     *
+     * @private
+     */
+    initMyConfig: function() {
+        Phlexible.Logger.debug('Application.initMyConfig()');
+
+        var config = Phlexible.config;
+        delete Phlexible.config;
+
+        Phlexible.Config = Ext.create('Phlexible.gui.util.Config', config);
+    },
+
+    /**
+     * Initialize user
+     *
+     * @private
+     */
+    initMyUser: function() {
+        Phlexible.Logger.debug('Application.initMyUser()');
+
+        Phlexible.User = Ext.create('Phlexible.gui.util.User', {
+            id: Phlexible.Config.get('user.id'),
+            username: Phlexible.Config.get('user.id'),
+            email: Phlexible.Config.get('user.email'),
+            firstname: Phlexible.Config.get('user.firstname'),
+            lastname: Phlexible.Config.get('user.lastname'),
+            displayName: Phlexible.Config.get('user.displayName'),
+            properties: Phlexible.Config.get('user.properties'),
+            roles: Phlexible.Config.get('user.roles')
+        });
+        Phlexible.User.getRoles();
+    },
+
+    /**
+     * Initialize request listener
+     *
+     * @private
+     */
+    initMyRequestListener: function() {
+        Phlexible.Logger.debug('Application.initMyRequestListener()');
+
+        this.requestListener = Ext.create('Phlexible.gui.util.RequestListener');
+    },
+
+    /**
+     * @private
+     */
+    initMyPoller: function() {
+        Phlexible.Logger.debug('Application.initMyPoller()');
+
+        var poller = this.poller = Ext.create('Phlexible.gui.util.Poller', {
+            noButton: false,
+            autoStart: true
+        });
+        this.poller.on('message', function(e){
+            if(e.msg) {
+                Phlexible.msg('Event', e.msg);
+            }
+        });
+        Ext.getWin().on('focus', function() {
+            poller.start();
+        });
+        Ext.getWin().on('blur', function() {
+            poller.stop();
+        });
+    }
+});
+
 /**
  * Application class
  */
-Ext.define('Phlexible.gui.util.Application', {
+Ext.define('Phlexible.gui.util.xApplication', {
     extend: 'Ext.util.Observable',
-    requires: [
-        'Ext.util.Observable',
-        'Ext.Viewport',
-        'Phlexible.gui.util.Config',
-        'Phlexible.gui.util.Poller',
-        'Phlexible.gui.util.RequestListener'
-    ],
 
     /**
      * @property {Phlexible.gui.util.RequestListener} requestListener
@@ -43,18 +196,11 @@ Ext.define('Phlexible.gui.util.Application', {
         Phlexible.Logger.debug('Application.init()');
 
         this.initConfig();
-
         this.initUser();
-
         this.initMenu();
-
-        // initialize request listener
         this.initRequestListener();
-
         this.initPanels();
-
-        // generate viewport
-        this.initViewport();
+        this.initPoller();
 
         Phlexible.Logger.debug('Application > guiready');
 
@@ -78,7 +224,7 @@ Ext.define('Phlexible.gui.util.Application', {
     /**
      * Return menu
      *
-     * @returns {Phlexible.gui.menu.Menu}
+     * @returns {Phlexible.gui.view.Menu}
      */
     getMenu: function() {
         return this.menu;
@@ -157,7 +303,7 @@ Ext.define('Phlexible.gui.util.Application', {
      * @private
      */
     initMenu: function() {
-        this.menu = Ext.create('Phlexible.gui.menu.Menu', {
+        this.menu = Extcreate('Phlexible.gui.menu.Menu', {
             menuData: Phlexible.menu
         })
     },
@@ -216,6 +362,8 @@ Ext.define('Phlexible.gui.util.Application', {
         Ext.getWin().on('blur', function() {
             poller.stop();
         });
+
+        this.fireEvent('initPoller', poller);
     },
 
     /**

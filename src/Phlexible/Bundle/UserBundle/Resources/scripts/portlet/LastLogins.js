@@ -2,7 +2,7 @@
  * Last logins portlet
  */
 Ext.define('Phlexible.user.portlet.LastLogins', {
-    extend: 'Portal.view.Portlet',
+    extend: 'Ext.dashboard.Panel',
     alias: 'widget.users-online-portlet',
 
     title: '_last_logins',
@@ -24,15 +24,9 @@ Ext.define('Phlexible.user.portlet.LastLogins', {
             sorters: {
                 property: 'username',
                 username: 'ASC'
-            }
+            },
+            data: this.item.data
         });
-
-        var data = this.item.data;
-        if(data) {
-            Ext.each(data, function(item) {
-                this.add(Ext.create('Phlexible.user.model.LastLogin', item));
-            }, this.store);
-        }
 
         this.items = [{
             xtype: 'dataview',

@@ -1,22 +1,30 @@
-Ext.define('Phlexible.gui.menuhandle.handle.Group', {
+Ext.define('Phlexible.gui.menuhandle.handle.Menu', {
     extend: 'Phlexible.gui.menuhandle.handle.Handle',
 
+    menu: [],
+
     createConfig: function (data) {
-        var btns = [];
+        if (!data.menu || !Ext.isArray(data.menu)) {
+            return null;
+        }
+
+        var config = this.createBasicConfig();
 
         if (data.menu && Ext.isArray(data.menu)) {
+            subMenu = [];
+
             Ext.each(data.menu, function (menuItem) {
                 var handleName, handler;
 
                 if (!Phlexible.Handles.has(menuItem.handle)) {
-                    Phlexible.Logger.error('Invalid handle in:', menuItem);
+                    Phlexible.Logger.warn('Invalid handle in:', menuItem);
                     return;
                 }
 
                 if (menuItem.roles) {
                     var allowed = false;
                     Ext.each(menuItem.roles, function(role) {
-                        if (Phlexible.App.isGranted(role)) {
+                        if (Phlexible.User.isGranted(role)) {
                             allowed = true;
                             return false;
                         }
@@ -37,10 +45,17 @@ Ext.define('Phlexible.gui.menuhandle.handle.Group', {
                     handler.setParameters(menuItem.parameters);
                 }
 
-                btns.push(handler.createConfig(menuItem));
+                subMenu.push(handler.createConfig(menuItem));
             }, this);
+
+            if (subMenu.length) {
+                subMenu.sort(function(a,b) { return (a.text > b.text) - (b.text > a.text) } );
+                config.menu = subMenu;
+            } else {
+                config.hidden = true;
+            }
         }
 
-        return btns;
+        return config;
     }
 });

@@ -3,6 +3,8 @@
  */
 Ext.define('Phlexible.dashboard.infobar.Welcome', {
     extend: 'Phlexible.dashboard.infobar.AbstractInfoBar',
+    requires: ['Phlexible.dashboard.infobar.AbstractInfoBar'],
+
     alias: 'widget.dashboard-infobar-welcome',
 
     welcomeToText: '_welcomeToText',

@@ -101,7 +101,10 @@ class ScriptsBuilder
      */
     private function buildScripts(array $bindings)
     {
-        $entryPoints = array();
+        $entryPoints = array(
+            '/phlexible/phlexiblegui/scripts/global.js' => true,
+            '/phlexible/phlexiblegui/scripts/require.js' => true,
+        );
 
         foreach ($bindings as $binding) {
             foreach ($binding->getResources() as $resource) {
@@ -179,11 +182,13 @@ class ScriptsBuilder
                     }
                 }
 
+                /*
                 if (preg_match_all('/xtype:\s*["\'](.+)["\']/', $body, $matches)) {
                     foreach ($matches[1] as $require) {
                         $file->requires[] = $require;
                     }
                 }
+                */
 
                 if (preg_match_all('/window:\s*["\'](.+)["\']/', $body, $matches)) {
                     foreach ($matches[1] as $require) {
@@ -203,9 +208,9 @@ class ScriptsBuilder
                     }
                 }
 
-                if (preg_match_all('/requires:\s*\[(["\'].+["\'])\]/m', $body, $matches)) {
+                if (preg_match_all('/requires:\s*\[(.*?)\]/s', $body, $matches)) {
                     foreach ($matches[1] as $require) {
-                        $parts = explode(', ', $require);
+                        $parts = explode(',', $require);
                         foreach ($parts as $part) {
                             $file->requires[] = trim($part, " \t\n\r\0\"'");
                         }
@@ -216,7 +221,10 @@ class ScriptsBuilder
             }
         }
 
-        $entryPointFiles = array_intersect_key($files, $entryPoints);
+        $entryPointFiles = array();
+        foreach (array_keys($entryPoints) as $path) {
+            $entryPointFiles[$path] = $files[$path];
+        }
 
         $symbols = array();
         foreach ($files as $file) {
@@ -292,7 +300,6 @@ class ScriptsBuilder
         };
 
         foreach ($entryPointFiles as $file) {
-        //foreach ($files as $file) {
             addToResult($file, $results, $symbols);
         }
 
@@ -306,9 +313,15 @@ class ScriptsBuilder
                 $unusedPaths[] = $path;
             }
         }
+        $usedPaths = array();
+        foreach ($results as $path => $file) {
+            $usedPaths[] = $path;
+        }
 
         $scripts = '/* Created: ' . date('Y-m-d H:i:s');
         if ($this->debug) {
+            $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Used paths:' . PHP_EOL . ' * ' .
+                implode(PHP_EOL . ' * ', $usedPaths) . PHP_EOL;
             $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Unused paths:' . PHP_EOL . ' * ' .
                 implode(PHP_EOL . ' * ', $unusedPaths) . PHP_EOL;
         }

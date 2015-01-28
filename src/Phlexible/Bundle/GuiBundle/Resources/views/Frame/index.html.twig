@@ -76,12 +76,18 @@
     //]]>
 </script>
 {{ scripts|raw }}
-<script type="text/javascript" src="{{ path("asset_translations", {language: language}) }}"></script>
 <script type="text/javascript" src="{{ path("asset_scripts") }}"></script>
+<script type="text/javascript" src="{{ path("asset_translations", {language: language}) }}"></script>
 <script type="text/javascript" src="{{ path("gui_routes") }}"></script>
 <script type="text/javascript">
     //<![CDATA[
-    Ext.onReady(function () {
+    Ext.application({
+        name: 'Phlexible',
+        namespace: 'Phlexible',
+        appFolder: 'gui/load/Phlexible',
+        appProperty: 'App',
+        extend: 'Phlexible.gui.app.Application',
+        autoCreateViewport: 'Phlexible.gui.view.Main'
     });
     //]]>
 </script>

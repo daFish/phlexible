@@ -1,5 +1,5 @@
 Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
-    extend: 'Portal.view.Portlet',
+    extend: 'Ext.dashboard.Panel',
     alias: 'widget.cache-status-portlet',
 
     iconCls: Phlexible.Icon.get('images-stack'),
@@ -14,7 +14,7 @@ Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
     remainingText: '_remainingText',
 
     initComponent: function () {
-        var itemsLeft = parseInt(this.record.get('data'), 10);
+        var itemsLeft = parseInt(this.item.data, 10);
 
         if (itemsLeft) {
             this.html = '<span id="media_cache_status">' + Ext.String.format(this.itemsLeftText, itemsLeft) + '</span>';

@@ -1,10 +1,10 @@
 Ext.onReady(function() {
-    if (!Phlexible.App.getUser().isImpersonated()) {
+    return;
+    if (!Phlexible.User.isImpersonated()) {
         return;
     }
 
-    var btn = Phlexible.App.getTray().add('impersonate', Ext.create('Ext.button.Button', {
-        cls: 'x-btn-icon',
+    var btn = Phlexible.Menu.addTrayItem('impersonate', {
         iconCls: Phlexible.Icon.get('user-thief'),
         handler: function() {
             document.location.href = Phlexible.Router.generate('gui_index', {"_switch_user": "_exit"});
@@ -21,5 +21,5 @@ Ext.onReady(function() {
                 });
             }
         }
-    }));
+    });
 });

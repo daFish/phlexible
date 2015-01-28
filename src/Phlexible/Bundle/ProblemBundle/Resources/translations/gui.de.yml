@@ -13,7 +13,7 @@ Phlexible:
                 newProblemText: 'Neues Problem'
 
         view:
-            ProblemsGrid:
+            Problems:
                 title: Probleme
                 idtext: ID
                 problemText: Problem

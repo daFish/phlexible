@@ -49,6 +49,28 @@ class FrameController extends Controller
     }
 
     /**
+     * Return file
+     *
+     * @param string$path
+     *
+     * @return Response
+     * @Route("/gui/load/{path}.js", name="gui_load", requirements={"path": ".*"})
+     * @Method("GET")
+     */
+    public function loadAction($path)
+    {
+        $x = explode('/', $path);
+        array_shift($x);
+        $a = array_shift($x);
+        $b = implode('/', $x);
+        $y = "/phlexible/phlexible$a/scripts/$b.js";
+        $puli = $this->get('puli.repository');
+        $z = $puli->get($y);
+
+        return new Response($z->getBody(), 200, array('Content-type' => 'text/javascript'));
+    }
+
+    /**
      * Return configuration
      *
      * @return JsonResponse
