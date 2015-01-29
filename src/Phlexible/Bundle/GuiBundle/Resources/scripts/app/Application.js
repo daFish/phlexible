@@ -15,6 +15,14 @@ Ext.define('Phlexible.gui.app.Application', {
     appFolder: 'gui/load/Phlexible',
     appProperty: 'App',
 
+    listen : {
+        controller : {
+            '#' : {
+                unmatchedroute : 'onUnmatchedRoute'
+            }
+        }
+    },
+
     init: function() {
         Phlexible.Logger.debug('Application.init()');
 
@@ -43,6 +51,19 @@ Ext.define('Phlexible.gui.app.Application', {
 
     getPoller: function() {
         return this.poller;
+    },
+
+    onUnmatchedRoute: function(hash) {
+        Phlexible.Logger.info('Hash: ' + hash);
+        var parts = hash.split('/'),
+            name = parts[0],
+            id = parts[1];
+
+        if (Phlexible.Handles.has(name)) {
+            var handlerName = Phlexible.Handles.get(name),
+                handler = Ext.create(handlerName);
+            handler.handle();
+        }
     },
 
     /**
@@ -144,17 +165,14 @@ Ext.define('Phlexible.gui.app.Application', {
             noButton: false,
             autoStart: true
         });
-        this.poller.on('message', function(e){
-            if(e.msg) {
-                Phlexible.msg('Event', e.msg);
+
+        poller.on('message', function(e){
+            if (e.msg) {
+                Phlexible.Logger.debug('Message: ', e.msg);
             }
         });
-        Ext.getWin().on('focus', function() {
-            poller.start();
-        });
-        Ext.getWin().on('blur', function() {
-            poller.stop();
-        });
+
+        this.fireEvent('initPoller', poller);
     }
 });
 

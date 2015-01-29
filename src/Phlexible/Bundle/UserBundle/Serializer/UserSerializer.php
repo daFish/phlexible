@@ -8,14 +8,16 @@
 
 namespace Phlexible\Bundle\UserBundle\Serializer;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr;
 use FOS\UserBundle\Model\UserInterface;
 use Phlexible\Bundle\UserBundle\Event\SerializeUserEvent;
-use Phlexible\Bundle\UserBundle\Model\UserQueryInterface;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * User serializer
@@ -39,42 +41,52 @@ class UserSerializer
 
     /**
      * @param UserInterface $user
+     * @param string        $format
      *
-     * @return array
+     * @return ArrayCollection
      */
-    public function serialize(UserInterface $user)
+    public function serialize(UserInterface $user, $format = 'json')
     {
-        $userData = new \ArrayObject(
-            array(
-                'id'         => $user->getId(),
-                'username'   => $user->getUsername(),
-                'email'      => $user->getEmail(),
-                'emailHash'  => md5(strtolower($user->getEmail())),
-                'firstname'  => $user->getFirstname(),
-                'lastname'   => $user->getLastname(),
-                'comment'    => $user->getComment(),
-                'expired'    => $user->isExpired() ? 1 : 0,
-                'expiresAt'  => $user->getExpiresAt() ? $user->getExpiresAt()->format('Y-m-d') : '',
-                'disabled'   => $user->isEnabled() ? 0 : 1,
-                'createDate' => $user->getCreatedAt()
-                    ? $user->getCreatedAt()->format('Y-m-d H:i:s')
-                    : '',
-                'createUser' => '',//$user->getCreateUserId(),
-                'modifyDate' => $user->getModifiedAt()
-                    ? $user->getModifiedAt()->format('Y-m-d H:i:s')
-                    : '',
-                'modifyUser' => '',//$foundUser->getModifyUserId(),
-                'properties' => $user->getProperties(),
-                'roles'      => $user->getRoles(),
-                'extra'      => new \ArrayObject(),
-            )
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizer = new GetSetMethodNormalizer();
+        $dateCallback = function($dateTime) {
+            return $dateTime instanceof \DateTime
+                ? $dateTime->format(\DateTime::ISO8601)
+                : null;
+        };
+        $circularReferenceHandler = function() {
+            return null;
+        };
+        $callbacks = array(
+            'createdAt' => $dateCallback,
+            'modifiedAt' => $dateCallback,
+            'expiresAt' => $dateCallback,
+            'passwordRequestedAt' => $dateCallback,
+            'lastLogin' => $dateCallback,
         );
+        $ignoredAttributes = array(
+            'groups',
+            'password',
+            'plainPassword',
+            'salt',
+            'interfaceLanguage',
+            'contentLanguage',
+        );
+        $normalizer->setCallbacks($callbacks);
+        //$normalizer->setCircularReferenceHandler($circularReferenceHandler);
+        //$normalizer->setCircularReferenceLimit(1);
+        $normalizer->setIgnoredAttributes($ignoredAttributes);
+        $normalizers = array($normalizer);
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        return $serializer->serialize($user, $format);
 
         $this->eventDispatcher->dispatch(
             UserEvents::SERIALIZE_USER,
             new SerializeUserEvent($user, $userData)
         );
 
-        return (array) $userData;
+        return $userData->toArray();
     }
 }

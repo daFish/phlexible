@@ -26,8 +26,6 @@ Phlexible.globalKeyMap.accessKey({key: 'y', alt: true}, function () {
 
 Phlexible.PluginManager = Ext.create('Phlexible.gui.util.PluginManager');
 
-Phlexible.Router = Ext.create('Phlexible.gui.util.Router');
-
 Phlexible.Icon = Ext.create('Phlexible.gui.util.Icon');
 
 Phlexible.Notify = Ext.create('Phlexible.gui.util.Notify');

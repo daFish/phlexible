@@ -2,7 +2,9 @@
  * Plugin manager
  */
 Ext.define('Phlexible.gui.util.PluginManager', {
-    plugins: {},
+    constructor: function() {
+        this.plugins = {};
+    },
 
     addObject: function(plugin, key, value) {
         if (!this.plugins[plugin]) {
@@ -27,5 +29,17 @@ Ext.define('Phlexible.gui.util.PluginManager', {
 
     get: function(plugin) {
         return this.plugins[plugin];
+    },
+
+    remove: function(plugin, value) {
+        if (!this.plugins[plugin]) {
+            return;
+        }
+
+        var index = Ext.Array.indexOf(this.plugins[plugin], value);
+
+        if (index >= 0) {
+            this.plugins[plugin].splice(index, 1);
+        }
     }
 });

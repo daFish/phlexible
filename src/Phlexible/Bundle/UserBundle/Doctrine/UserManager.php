@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Doctrine;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
@@ -15,6 +16,7 @@ use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
 use Phlexible\Bundle\UserBundle\Doctrine\Query\UserQuery;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
+use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
 use Phlexible\Bundle\UserBundle\UserEvents;
@@ -171,9 +173,19 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function query()
+    public function createCriteria()
     {
-        return new UserQuery($this->objectManager, $this->dispatcher, $this->class);
+        return new Criteria();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function query(Criteria $criteria)
+    {
+        $query = new UserQuery($this->objectManager, $this->dispatcher, $this->getClass());
+
+        return $query->getResult($criteria);
     }
 
     /**

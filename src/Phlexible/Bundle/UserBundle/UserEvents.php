@@ -88,7 +88,7 @@ class UserEvents
     /**
      * Fired on user query
      */
-    const USER_QUERY = 'phlexible_user.user_query';
+    const USER_QUERY_APPLY_CRITERIA = 'phlexible_user.user_query_apply_criteria';
 
     /**
      * Fired on serialize user

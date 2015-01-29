@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Event;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -24,17 +25,17 @@ class SerializeUserEvent extends Event
     private $user;
 
     /**
-     * @var \ArrayObject
+     * @var ArrayCollection
      */
     private $userData;
 
     /**
      * Constructor
      *
-     * @param UserInterface $user
-     * @param \ArrayObject  $userData
+     * @param UserInterface   $user
+     * @param ArrayCollection $userData
      */
-    public function __construct(UserInterface $user, \ArrayObject $userData)
+    public function __construct(UserInterface $user, ArrayCollection $userData)
     {
         $this->user = $user;
         $this->userData = $userData;
@@ -53,7 +54,7 @@ class SerializeUserEvent extends Event
     /**
      * Return user data
      *
-     * @return \ArrayObject
+     * @return ArrayCollection
      */
     public function getUserData()
     {

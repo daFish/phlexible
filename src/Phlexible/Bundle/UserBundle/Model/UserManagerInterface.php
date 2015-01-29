@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\UserBundle\Model;
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface as BaseUserManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -75,9 +77,16 @@ interface UserManagerInterface extends BaseUserManagerInterface
     public function findOneBy(array $criteria, $order = []);
 
     /**
-     * @return UserQueryInterface
+     * @return Criteria
      */
-    public function query();
+    public function createCriteria();
+
+    /**
+     * @param Criteria $criteria
+     *
+     * @return \Countable|\Iterator
+     */
+    public function query(Criteria $criteria);
 
     /**
      * @return string

@@ -6,6 +6,7 @@ Ext.define('Phlexible.problem.view.Problems', {
 
     iconCls: Phlexible.Icon.get('exclamation'),
     loadMask: true,
+    border: false,
 
     idtext: '_idtext',
     problemText: '_problemText',

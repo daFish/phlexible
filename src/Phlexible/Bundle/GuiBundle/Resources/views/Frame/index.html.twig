@@ -76,9 +76,9 @@
     //]]>
 </script>
 {{ scripts|raw }}
+<script type="text/javascript" src="{{ path("gui_routes") }}"></script>
 <script type="text/javascript" src="{{ path("asset_scripts") }}"></script>
 <script type="text/javascript" src="{{ path("asset_translations", {language: language}) }}"></script>
-<script type="text/javascript" src="{{ path("gui_routes") }}"></script>
 <script type="text/javascript">
     //<![CDATA[
     Ext.application({

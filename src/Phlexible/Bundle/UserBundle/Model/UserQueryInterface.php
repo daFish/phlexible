@@ -8,8 +8,10 @@
 
 namespace Phlexible\Bundle\UserBundle\Model;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * User query
@@ -19,104 +21,11 @@ use Doctrine\ORM\Query\Expr;
 interface UserQueryInterface
 {
     /**
-     * Limit query
-     *
-     * @param int $start
-     * @param int $limit
-     *
-     * @return $this
-     */
-    public function limit($start = 0, $limit = 20);
-
-    /**
-     * Sort query
-     *
-     * @param string $field
-     * @param string $dir
-     *
-     * @return $this
-     */
-    public function sort($field, $dir = 'asc');
-
-    /**
-     * Filter by value
-     *
-     * @param string $value
-     *
-     * @return $this
-     */
-    public function byValue($value);
-
-    /**
-     * Filter by account disabled
-     *
-     * @param bool $disabled
-     *
-     * @return $this
-     */
-    public function byAccountDisabled($disabled = true);
-
-    /**
-     * Filter by account expired
-     *
-     * @param bool $expired
-     *
-     * @return $this
-     */
-    public function byAccountExpired($expired = true);
-
-    /**
-     * Filter by account has expire date
-     *
-     * @param bool $hasExpireDate
-     *
-     * @return $this
-     */
-    public function byAccountHasExpireDate($hasExpireDate = true);
-
-    /**
-     * Filter by role
-     *
-     * @param string $role
-     *
-     * @return $this
-     */
-    public function byRole($role);
-
-    /**
-     * Filter by group
-     *
-     * @param string $group
-     *
-     * @return $this
-     */
-    public function byGroup($group);
-
-    /**
-     * Count result
-     *
-     * @return int
-     */
-    public function count();
-
-    /**
      * Return users
      *
-     * @return array
-     */
-    public function getResult();
-
-    /**
-     * Return query builder
+     * @param Criteria $criteria
      *
-     * @return QueryBuilder
+     * @return \Countable|\Iterator
      */
-    public function getQueryBuilder();
-
-    /**
-     * Return where
-     *
-     * @return Expr\Andx
-     */
-    public function getWhere();
+    public function getResult(Criteria $criteria);
 }

@@ -186,15 +186,10 @@ Ext.define('Phlexible.user.window.UserWindow', {
     },
 
     doSave: function(notify) {
-        if (!notify) {
-            notify = 0;
-        } else {
-            notify = 1;
-        }
-
         var cardPanel = this.getComponent(1),
             valid = true,
             params = {},
+            jsonData = {},
             url, method;
 
         cardPanel.items.each(function(panel) {
@@ -207,35 +202,54 @@ Ext.define('Phlexible.user.window.UserWindow', {
             return;
         }
 
-        params = {
-            notify: notify
-        };
+        if (notify) {
+            params[notify] = notify;
+        }
 
         cardPanel.items.each(function(panel) {
             var values = panel.getValues(),
                 key;
 
-            for (key in values) {
-                params[panel.key + '_' + key] = values[key];
-            }
+            Ext.Object.each(values, function(key, value)  {
+                jsonData[key] = value;
+            });
         });
 
         if (this.userId) {
-            params.userId = this.userId;
-        }
+            /*
+            Phlexible.Rest.put('phlexible_user_put_user', {userId: this.userId, notify: notify}, jsonData);
+            Phlexible.Rest.put({
+                route: 'phlexible_user_put_user',
+                params: {userId: this.userId, notify: notify},
+                jsonData: jsonData
+            });
+            */
 
-        if (this.userId) {
-            url = Phlexible.Router.generate('phlexible_user_patch', {userId: this.userId});
+            url = Phlexible.Router.generate('phlexible_user_put_user', {userId: this.userId});
             method = 'PUT';
         } else {
-            url = Phlexible.Router.generate('phlexible_user_create');
+            /*
+            Phlexible.Rest.put('phlexible_user_post_users', {notify: notify}, jsonData);
+            Phlexible.Rest.put({
+                route: 'phlexible_user_put_user',
+                params: {userId: this.userId, notify: notify},
+                jsonData: jsonData
+            });
+            */
+
+            url = Phlexible.Router.generate('phlexible_user_post_users');
             method = 'POST';
         }
+        console.log(url);
+        console.log(method);
+        console.log(jsonData);
+        return;
 
         Ext.Ajax.request({
             url: url,
             method: method,
             params: params,
+            jsonData: jsonData,
             success: this.onSaveSuccess,
             scope: this
         });

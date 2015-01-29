@@ -8,37 +8,36 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\UserBundle\UsersMessage;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Groups controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/users/groups")
  * @Security("is_granted('ROLE_GROUPS')")
+ * @Prefix("/user")
+ * @NamePrefix("phlexible_user_")
  */
-class GroupsController extends Controller
+class GroupsController extends FOSRestController
 {
     /**
-     * List groups
+     * Get groups
      *
-     * @return JsonResponse
-     * @Route("", name="phlexible_groups")
-     * @Method("GET")
+     * @return Response
+     *
      * @Security("is_granted('ROLE_GROUP_ADMIN_READ')")
      * @ApiDoc(
      *   description="Returns a list of groups."
      * )
      */
-    public function listAction()
+    public function getGroupsAction()
     {
         $groupManager = $this->get('phlexible_user.group_manager');
 
@@ -59,7 +58,12 @@ class GroupsController extends Controller
             ];
         }
 
-        return new JsonResponse($groups);
+        return $this->handleView($this->view(
+            array(
+                'groups' => $groups,
+                'count'  => count($groups)
+            )
+        ));
     }
 
     /**
@@ -67,18 +71,16 @@ class GroupsController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("", name="phlexible_group_create")
-     * @Method("POST")
+     * @return Response
+     *
      * @Security("is_granted('ROLE_GROUP_ADMIN_CREATE')")
      * @ApiDoc(
-     *   description="Create new group.",
      *   requirements={
      *     {"name"="name", "dataType"="string", "required"=true, "description"="New group name"}
      *   }
      * )
      */
-    public function createAction(Request $request)
+    public function postGroupsAction(Request $request)
     {
         $name = $request->get('name');
 
@@ -96,7 +98,53 @@ class GroupsController extends Controller
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
 
-        return new ResultResponse(true, "Group $name created.");
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+                'message' => "Group $name created."
+            )
+        ));
+    }
+
+    /**
+     * Create new group
+     *
+     * @param Request $request
+     * @param string  $groupId
+     *
+     * @return Response
+     *
+     * @Security("is_granted('ROLE_GROUP_ADMIN_UPDATE')")
+     * @ApiDoc(
+     *   requirements={
+     *     {"name"="name", "dataType"="string", "required"=true, "description"="New group name"}
+     *   }
+     * )
+     */
+    public function putGroupAction(Request $request, $groupId)
+    {
+        $name = $request->get('name');
+
+        $groupManager = $this->get('phlexible_user.group_manager');
+
+        $group = $groupManager->find($groupId)
+            ->setName($name)
+            ->setCreateUserId($this->getUser()->getId())
+            ->setCreatedAt(new \DateTime())
+            ->setModifyUserId($this->getUser()->getId())
+            ->setModifiedAt(new \DateTime());
+
+        $groupManager->updateGroup($group);
+
+        $this->get('phlexible_message.message_poster')
+            ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
+
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+                'message' => "Group $name created."
+            )
+        ));
     }
 
     /**
@@ -105,18 +153,15 @@ class GroupsController extends Controller
      * @param Request $request
      * @param string  $groupId
      *
-     * @return JsonResponse
-     * @Route("/{groupId}", name="phlexible_group_update")
-     * @Method("PATCH")
+     * @return Response
      * @Security("is_granted('ROLE_GROUP_ADMIN_UPDATE')")
      * @ApiDoc(
-     *   description="Update group.",
      *   requirements={
      *     {"name"="name", "dataType"="string", "required"=true, "description"="Name"}
      *   }
      * )
      */
-    public function patchAction(Request $request, $groupId)
+    public function patchGroupAction(Request $request, $groupId)
     {
         $name = $request->get('name');
 
@@ -134,7 +179,12 @@ class GroupsController extends Controller
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('Group "' . $group->getName() . '" updated.'));
 
-        return new ResultResponse(true, "Group $oldName renamed to $name.");
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+                'message' => "Group $name patched."
+            )
+        ));
     }
 
     /**
@@ -142,13 +192,10 @@ class GroupsController extends Controller
      *
      * @param string $groupId
      *
-     * @return JsonResponse
-     * @Route("/{groupId}", name="phlexible_group_delete")
-     * @Method("DELETE")
+     * @return Response
+     *
      * @Security("is_granted('ROLE_GROUP_ADMIN_DELETE')")
-     * @ApiDoc(
-     *   description="Delete group."
-     * )
+     * @ApiDoc()
      */
     public function deleteAction($groupId)
     {
@@ -162,6 +209,11 @@ class GroupsController extends Controller
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('Group "' . $group->getName() . '" deleted.'));
 
-        return new ResultResponse(true, "Group $name deleted.");
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+                'message' => "Group $name patched."
+            )
+        ));
     }
 }

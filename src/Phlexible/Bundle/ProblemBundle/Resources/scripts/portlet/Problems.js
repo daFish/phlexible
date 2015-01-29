@@ -2,9 +2,8 @@ Ext.define('Phlexible.problem.portlet.Problems', {
     extend: 'Ext.dashboard.Panel',
     alias: 'widget.problems-portlet',
 
-    title: '_Problems',
-    bodyStyle: 'padding: 5px 5px 5px 5px',
     iconCls: Phlexible.Icon.get('exclamation'),
+    bodyPadding: 5,
 
     imageUrl: '/bundles/phlexibleproblem/images/portlet-problems.png',
 
@@ -44,7 +43,13 @@ Ext.define('Phlexible.problem.portlet.Problems', {
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.problem.model.Problem',
-            id: 'id',
+            proxy: {
+                type: 'memory',
+                reader: {
+                    type: 'json',
+                    idProperty: 'id',
+                }
+            },
             sorters: [{property: 'severity', username: 'ASC'}],
             data: this.item.data
         });
@@ -90,9 +95,8 @@ Ext.define('Phlexible.problem.portlet.Problems', {
             problemsMap.push(row.id);
             var r = this.store.getById(row.id);
             if (!r) {
-                this.store.add(new Phlexible.problem.portlet.ProblemRecord(row, row.id));
+                this.store.add(new Phlexible.problem.model.Problem(row));
 
-                Phlexible.msg('Problem', this.newProblemText + ' "' + row.msg + '".');
                 Ext.fly('portal_problems_' + row.id).frame('#8db2e3', 1);
             }
         }

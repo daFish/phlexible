@@ -1,4 +1,20 @@
 Ext.define('Phlexible.gui.util.Format', {
+    secondsText: 's',
+    secondText: 's',
+    minutesText: 'm',
+    minuteText: 'm',
+    hoursText: 'h',
+    hourText: 'h',
+    daysText: 'd',
+    dayText: 'd',
+    weeksText: 'w',
+    weekText: 'w',
+    monthsText: 'm',
+    monthText: 'm',
+    yearsText: 'y',
+    yearText: 'y',
+    andText: '_andText',
+
     size: function (size, binarySuffix) {
         if (!size) {
             return 0;
@@ -40,27 +56,32 @@ Ext.define('Phlexible.gui.util.Format', {
             items = 2;
         }
 
-        if (!parseInt(time, 10)) {
-            return '0s';
+        if (Ext.isDate(time)) {
+            time = Ext.Date.diff(time, new Date(), Ext.Date.SECOND);
+        } else {
+            time = !parseInt(time, 10);
+            if (!time) {
+                return '0s';
+            }
         }
 
         var msuffix = [
-            Phlexible.gui.Strings.seconds,
-            Phlexible.gui.Strings.minutes,
-            Phlexible.gui.Strings.hours,
-            Phlexible.gui.Strings.days,
-            Phlexible.gui.Strings.weeks,
-            Phlexible.gui.Strings.months,
-            Phlexible.gui.Strings.years
+            this.secondsText,
+            this.minutesText,
+            this.hoursText,
+            this.daysText,
+            this.weeksText,
+            this.monthsText,
+            this.yearsText
         ];
         var ssuffix = [
-            Phlexible.gui.Strings.second,
-            Phlexible.gui.Strings.minute,
-            Phlexible.gui.Strings.hour,
-            Phlexible.gui.Strings.day,
-            Phlexible.gui.Strings.week,
-            Phlexible.gui.Strings.month,
-            Phlexible.gui.Strings.year
+            this.secondText,
+            this.minuteText,
+            this.hourText,
+            this.dayText,
+            this.weekText,
+            this.monthText,
+            this.yearText
         ];
 
         var result = '';
@@ -156,7 +177,7 @@ Ext.define('Phlexible.gui.util.Format', {
             result += (result ? ', ' : '') + v;
         }
 
-        result += ' ' + Phlexible.gui.Strings.and + ' ' + results.pop();
+        result += ' ' + this.andText + ' ' + results.pop();
 
         return result;
 

@@ -17,7 +17,7 @@ Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
         var itemsLeft = parseInt(this.item.data, 10);
 
         if (itemsLeft) {
-            this.html = '<span id="media_cache_status">' + Ext.String.format(this.itemsLeftText, itemsLeft) + '</span>';
+            this.html = '<span id="media_cache_status">' + Ext.String.format(this.itemsText, itemsLeft) + '</span>';
             this.firstData = itemsLeft;
             this.firstTs = new Date();
         }
@@ -44,18 +44,18 @@ Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
                 var secondsLeft = itemsLeft / itemsPerSecond;
                 //var minutesLeft = parseInt(secondsLeft / 60, 10);
 
-                this.body.first().update(String.format(this.remainingItemsText, itemsLeft, itemsPerMinute, Phlexible.Format.age(secondsLeft)));
+                this.body.first().update(Ext.String.format(this.remainingText, itemsLeft, itemsPerMinute, Phlexible.Format.age(secondsLeft)));
 
                 Ext.fly('media_cache_status').frame('#8db2e3', 1);
             }
             else {
-                this.body.first().update(String.format(this.itemsLeftText, itemsLeft));
+                this.body.first().update(Ext.String.format(this.itemsText, itemsLeft));
                 this.firstData = itemsLeft;
                 this.firstTs = new Date();
             }
         }
         else {
-            this.body.first().update(String.format(this.emptyText));
+            this.body.first().update(Ext.String.format(this.emptyText));
             this.firstTs = null;
             this.firstData = null;
         }

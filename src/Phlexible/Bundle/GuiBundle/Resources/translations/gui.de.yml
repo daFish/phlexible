@@ -59,21 +59,14 @@ Phlexible:
             PropertiesPanel:
                 title: Properties
 
-            bundle:
-                FilterPanel:
-                    title: Filter
-                    packageText: Package
-                    filterText: Filter
-                    resetText: Zurücksetzen
-
-                ListGrid:
-                    bundleText: Bundle
-                    packageText: Package
-                    classnameText: Classname
-                    pathText: Pfad
-
-                MainPanel:
-                    title: Bundles
+            Bundles:
+                title: Bundles
+                packageText: Package
+                filterText: Filter
+                resetText: Zurücksetzen
+                bundleText: Bundle
+                classnameText: Classname
+                pathText: Pfad
 
         window:
             RequestErrorWindow:

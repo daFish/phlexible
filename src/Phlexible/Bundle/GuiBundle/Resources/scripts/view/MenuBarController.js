@@ -90,7 +90,7 @@ Ext.define('Phlexible.gui.view.MenuBarController', {
      * @param {Object} config
      */
     addTrayItem: function(itemId, config) {
-        Phlexible.Logger.debug('MenuBarController.addTrayItem('+itemId+', '+Ext.encode(config)+')');
+        Phlexible.Logger.debug('MenuBarController.addTrayItem('+itemId+')');
         config.itemId = itemId;
 
         if (this.getView().rendered) {

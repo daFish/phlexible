@@ -2,13 +2,13 @@ Ext.define('Phlexible.task.portlet.MyTasks', {
     extend: 'Ext.dashboard.Panel',
     alias: 'widget.tasks-my-tasks-portlet',
 
-    bodyStyle: 'padding: 5px 5px 5px 5px',
-    iconCls: 'p-task-portlet-icon',
-    title: '_MyTasks',
+    iconCls: Phlexible.Icon.get('clipboard-task'),
+    bodyPadding: 5,
 
     imageUrl: '/bundles/phlexibletask/images/portlet-my-tasks.png',
 
     noActiveTasksText: '_noActiveTasksText',
+    commentText: '_commentText',
 
     initComponent: function () {
 
@@ -40,7 +40,7 @@ Ext.define('Phlexible.task.portlet.MyTasks', {
                     '</div>',
                     '<tpl if="comment">',
                     '<div style="padding-left: 20px;">',
-                    '{[Phlexible.task.Strings.comment]}: {comment}',
+                    this.commentText + ': {comment}',
                     '</div>',
                     '</tpl>',
                     '</div>',

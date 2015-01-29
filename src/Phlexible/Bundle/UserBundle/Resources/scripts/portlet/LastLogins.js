@@ -5,9 +5,8 @@ Ext.define('Phlexible.user.portlet.LastLogins', {
     extend: 'Ext.dashboard.Panel',
     alias: 'widget.users-online-portlet',
 
-    title: '_last_logins',
-    bodyStyle: 'padding: 5px',
     iconCls: Phlexible.Icon.get('users'),
+    bodyPadding: 5,
     extraCls: 'last-logins-portlet',
 
     imageUrl: '/bundles/phlexibleuser/images/portlet-users.png',

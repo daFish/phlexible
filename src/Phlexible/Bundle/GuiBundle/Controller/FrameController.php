@@ -51,7 +51,7 @@ class FrameController extends Controller
     /**
      * Return file
      *
-     * @param string$path
+     * @param string $path
      *
      * @return Response
      * @Route("/gui/load/{path}.js", name="gui_load", requirements={"path": ".*"})
@@ -159,7 +159,9 @@ class FrameController extends Controller
             'routes'   => $routes,
         ];
 
-        $content = sprintf('Phlexible.Router.setData(%s);', json_encode($data));
+        $content = '';
+        $content .= file_get_contents(dirname(__DIR__).'/Resources/scripts/util/Router.js');
+        $content .= sprintf('Phlexible.Router = Ext.create("Phlexible.gui.util.Router", %s);', json_encode($data));
 
         return new Response($content, 200, ['Content-type' => 'text/javascript; charset=utf-8']);
     }

@@ -16,7 +16,7 @@ Ext.define('Phlexible.gui.util.Poller', {
         /**
          * @cfg {Boolean} autoStart Autostart poller after instanciation
          */
-        autoStart: false,
+        autoStart: true,
         /**
          * @cfg {Boolean} noButton Don't register tray button
          */
@@ -69,11 +69,10 @@ Ext.define('Phlexible.gui.util.Poller', {
         this.BUSY_ICON    = Phlexible.Icon.get('network-status-busy');
         this.PAUSE_ICON   = Phlexible.Icon.get('network-status-away');
 
+        this.lastPoll = new Date();
+
         this.callParent(arguments);
 
-        this.lastPoll = new Date();
-        this.task = this.createTask();
-        this.task.stop();
     },
 
     /**
@@ -82,6 +81,8 @@ Ext.define('Phlexible.gui.util.Poller', {
      * @param {Phlexible.gui.util.Application} app
      */
     bind: function(app) {
+        Phlexible.Logger.debug('Poller.bind()');
+
         app.getMenu().addTrayItem('poller', {
             tooltip: this.pollerOfflineText,
             cls: 'x-btn-icon',
@@ -90,8 +91,10 @@ Ext.define('Phlexible.gui.util.Poller', {
             scope: this
         });
 
+        this.task = this.createTask();
+
         if (this.config.autoStart) {
-            //this.start();
+            this.start();
         }
     },
 
@@ -108,12 +111,14 @@ Ext.define('Phlexible.gui.util.Poller', {
      * Poll
      */
     poll: function() {
+        Phlexible.Logger.debug('Poller.poll()');
+
         this.setButtonBusy();
 
         this.lastPoll = new Date();
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlx_gui_poll'),
+            url: Phlexible.Router.generate('gui_poll'),
             disableCaching: true,
             scope: this,
             success: this.processResponse,
@@ -144,6 +149,8 @@ Ext.define('Phlexible.gui.util.Poller', {
      * Start poller
      */
     start: function(){
+        Phlexible.Logger.debug('Poller.start()');
+
         this.setButtonIdle(this.stop);
         this.active = true;
         this.paused = false;
@@ -153,27 +160,31 @@ Ext.define('Phlexible.gui.util.Poller', {
             this.poll();
         }
 
-        Ext.getWin().on('focus', this.start);
-        Ext.getWin().on('blur', this.pause);
+        Ext.getWin().on('focus', this.start, this);
+        Ext.getWin().on('blur', this.pause, this);
     },
 
     /**
      * Stop poller
      */
     stop: function() {
+        Phlexible.Logger.debug('Poller.stop()');
+
         this.task.stop();
         this.paused = false;
         this.active = false;
         this.setButtonInactive(this.start);
 
-        Ext.getWin().off('focus', this.start);
-        Ext.getWin().off('blur', this.pause);
+        Ext.getWin().un('focus', this.start, this);
+        Ext.getWin().un('blur', this.pause, this);
     },
 
     /**
      * Pause poller
      */
     pause: function() {
+        Phlexible.Logger.debug('Poller.pause()');
+
         if (!this.isPaused() && this.isActive()) {
             this.task.stop();
             this.paused = true;
@@ -205,9 +216,12 @@ Ext.define('Phlexible.gui.util.Poller', {
         this.setButtonIdle();
 
         if (response.responseText) {
-            var events = Ext.decode(response.responseText);
-            for(var i=0; i<events.length; i++){
-                this.fireEvent('message', events[i]);
+            var messages = Ext.decode(response.responseText);
+            if (Ext.isArray(messages)) {
+                Ext.each(messages, function(message) {
+                    Phlexible.Logger.debug('Poller.Message: ' + Ext.encode(message));
+                    this.fireEvent('message', message);
+                }, this);
             }
         }
     },

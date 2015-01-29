@@ -24,11 +24,7 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
     init: function() {
         Phlexible.Logger.debug('DashboardController.init()');
 
-        /*
-        Phlexible.App.on('initPoller', function(poller) {
-            poller.on('message', this.processMessage, this);
-        });
-        */
+        Phlexible.App.getPoller().on('message', this.processMessage, this);
 
         if (Phlexible.Config.has('dashboard.columns')) {
             this.cols = Phlexible.Config.get('dashboard.columns');
@@ -156,7 +152,8 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
 
             var o = {
                 xtype: item.xtype,
-                id: item.id,
+                itemId: item.id,
+                reference: item.id,
                 item: item,
                 collapsed: item.mode == 'collapsed',
                 tools: tools,
@@ -209,19 +206,16 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
     },
 
     processMessage: function(event){
-        if(typeof event == "object" && event.type == "dashboard") {
-            var data = event.data;
+        if (Ext.isObject(event) && event.type == "dashboard") {
+            Ext.Object.each(event.data, function(id, data) {
+                    var panel = this.lookupReference(id);
 
-            var r;
-            for(var id in data) {
-                var panel = this.panels[id];
-
-                if(!panel || !panel.updateData) {
-                    continue;
+                if (!panel || !panel.updateData) {
+                    return;
                 }
 
-                panel.updateData(data[id]);
-            }
+                panel.updateData(data);
+            }, this);
         }
     },
 

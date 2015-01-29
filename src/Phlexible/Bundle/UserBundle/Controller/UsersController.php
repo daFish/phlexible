@@ -8,38 +8,43 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\UserBundle\Entity\User;
+use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\UsersMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Users controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/users")
  * @Security("is_granted('ROLE_USERS')")
+ * @Prefix("/user")
+ * @NamePrefix("phlexible_user_")
  */
-class UsersController extends Controller
+class UsersController extends FOSRestController
 {
     /**
-     * List users
+     * Get users
      *
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("", name="phlexible_users")
-     * @Method("GET")
+     * @return Response
+     *
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
      * @ApiDoc(
-     *   description="Returns a list of users.",
      *   filters={
      *      {"name"="start", "dataType"="integer", "description"="Start index", "default"=0},
      *      {"name"="limit", "dataType"="integer", "description"="Limit results", "default"=20},
@@ -49,84 +54,56 @@ class UsersController extends Controller
      *   }
      * )
      */
-    public function listAction(Request $request)
+    public function getUsersAction(Request $request)
     {
         $start = $request->get('start');
         $limit = $request->get('limit', 20);
         $sort = $request->get('sort', 'username');
         $dir = $request->get('dir', 'ASC');
-        $search = $request->get('search', null);
 
         $userManager = $this->container->get('phlexible_user.user_manager');
         $userSerializer = $this->container->get('phlexible_user.user_serializer');
-        $userQuery = $userManager->query();
+        $criteria = $userManager->createCriteria();
 
-        $userQuery
-            ->sort($sort, $dir)
-            ->limit($start, $limit);
+        $criteria
+            ->orderBy(array($sort => $dir))
+            ->setFirstResult($start)
+            ->setMaxResults($limit);
 
-        if ($search !== null) {
-            $search = json_decode($search, true);
+        UserCriteriaBuilder::applyFromRequest($criteria, $request);
 
-            foreach ($search as $key => $value) {
-                if (!$value) {
-                    continue;
-                }
-
-                if ($key == 'key') {
-                    $userQuery->byValue($value);
-                } elseif ($key == 'account_disabled') {
-                    $userQuery->byAccountDisabled();
-                } elseif ($key == 'account_expired') {
-                    $userQuery->byAccountExpired();
-                } elseif ($key == 'account_has_expire_date') {
-                    $userQuery->byAccountHasExpireDate();
-                } elseif ($key === 'roles') {
-                    foreach ($value as $role) {
-                        $userQuery->byRole($role);
-                    }
-                } elseif (substr($key, 0, 5) == 'role_') {
-                    $userQuery->byRole(substr($key, 5));
-                } elseif (substr($key, 0, 6) == 'group_') {
-                    $userQuery->byGroup(substr($key, 6));
-                }
-            }
-        }
+        $result = $userManager->query($criteria);
 
         $users = array();
-        foreach ($userQuery->getResult() as $user) {
+        foreach ($result as $user) {
             $users[] = $userSerializer->serialize($user);
         }
 
-        return new JsonResponse(
+        return $this->handleView($this->view(
             array(
                 'users' => $users,
-                'count' => count($userQuery)
+                'count' => count($result)
             )
-        );
+        ));
     }
 
     /**
-     * User details
+     * Get user
      *
-     * @param Request $request
-     * @param string  $userId
+     * @param string $userId
      *
-     * @return JsonResponse
-     * @Route("/{userId}", name="phlexible_user")
-     * @Method("GET")
+     * @return UserInterface
+     *
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc(
-     *   description="Returns a single user."
-     * )
+     * @View(templateVar="user")
+     * @ApiDoc()
      */
-    public function detailsAction(Request $request, $userId)
+    public function getUserAction($userId)
     {
         $userManager = $this->container->get('phlexible_user.user_manager');
-        $userSerializer = $this->container->get('phlexible_user.user_serializer');
         $user = $userManager->find($userId);
 
-        return new JsonResponse($userSerializer->serialize($user));
+        return $user;
     }
 
     /**
@@ -136,24 +113,10 @@ class UsersController extends Controller
      *
      * @throws \Exception
      * @return ResultResponse
-     * @Route("/create", name="phlexible_user_create")
-     * @Method("POST")
      * @Security("is_granted('ROLE_USER_ADMIN_CREATE')")
-     * @ApiDoc(
-     *   description="Create user.",
-     *   requirements={
-     *     {"name"="username", "dataType"="string", "required"=true, "description"="Username"},
-     *     {"name"="email", "dataType"="string", "required"=true, "description"="Email"},
-     *     {"name"="password", "dataType"="string", "required"=false, "description"="password"},
-     *     {"name"="firstname", "dataType"="string", "required"=true, "description"="Firstname"},
-     *     {"name"="lastname", "dataType"="string", "required"=true, "description"="Lastname"},
-     *     {"name"="roles", "dataType"="array", "required"=false, "description"="Roles"},
-     *     {"name"="groups", "dataType"="array", "required"=false, "description"="Groups"},
-     *     {"name"="property_*", "dataType"="string", "required"=false, "description"="Property"}
-     *   }
-     * )
+     * @ApiDoc()
      */
-    public function createAction(Request $request)
+    public function postUsersAction(Request $request)
     {
         $userManager = $this->get('phlexible_user.user_manager');
 
@@ -185,7 +148,12 @@ class UsersController extends Controller
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
 
-        return new ResultResponse(true, "User {$user->getUsername()} created.");
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+                'msg'     => "User {$user->getUsername()} created."
+            )
+        ));
     }
 
     /**
@@ -200,7 +168,6 @@ class UsersController extends Controller
      * @Method("PUT")
      * @Security("is_granted('ROLE_USER_ADMIN_UPDATE')")
      * @ApiDoc(
-     *   description="Update user.",
      *   requirements={
      *     {"name"="username", "dataType"="string", "required"=true, "description"="Username"},
      *     {"name"="email", "dataType"="string", "required"=true, "description"="Email"},
@@ -213,7 +180,7 @@ class UsersController extends Controller
      *   }
      * )
      */
-    public function updateAction(Request $request, $userId)
+    public function putUserAction(Request $request, $userId)
     {
         $userManager = $this->get('phlexible_user.user_manager');
 
@@ -247,11 +214,16 @@ class UsersController extends Controller
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
 
-        return new ResultResponse(true, "User {$user->getUsername()} updated.");
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+                'msg'     => "User {$user->getUsername()} updated."
+            )
+        ));
     }
 
     /**
-     * Delete users
+     * Delete user
      *
      * @param Request $request
      * @param string  $userId
@@ -260,11 +232,9 @@ class UsersController extends Controller
      * @Route("/{userId}", name="phlexible_user_delete")
      * @Method("DELETE")
      * @Security("is_granted('ROLE_USER_ADMIN_DELETE')")
-     * @ApiDoc(
-     *   description="Delete user."
-     * )
+     * @ApiDoc()
      */
-    public function deleteAction(Request $request, $userId)
+    public function deleteUserAction(Request $request, $userId)
     {
         $successorUserId = $request->request->get('successor');
 
@@ -278,24 +248,25 @@ class UsersController extends Controller
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));
 
-        return new ResultResponse(true);
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+                'msg'     => "User {$user->getUsername()} deleted."
+            )
+        ));
     }
 
     /**
-     * Return available roles by user
+     * Return roles for user
      *
      * @param int $userId
      *
      * @return JsonResponse
      * @throws \Exception
-     * @Route("/{userId}/roles", name="phlexible_user_roles", options={"expose"=true})
-     * @Method("GET")
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc(
-     *   description="Returns roles for user."
-     * )
+     * @ApiDoc()
      */
-    public function userRolesAction($userId)
+    public function getUserRolesAction($userId)
     {
         $userManager = $this->get('phlexible_user.user_manager');
 
@@ -312,23 +283,23 @@ class UsersController extends Controller
             $roleData[$key]['member'] = in_array($roleRow['id'], $userRoles);
         }
 
-        return new JsonResponse(array('roles' => $roleData));
+        return $this->handleView($this->view(
+            array(
+                'roles' => $roleData
+            )
+        ));
     }
 
     /**
-     * Return available Groups
+     * Return groups for user
      *
      * @param int $userId
      *
      * @return JsonResponse
-     * @Route("/{userId}/groups", name="phlexible_user_groups", options={"expose"=true})
-     * @Method("GET")
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc(
-     *   description="Returns groups for user."
-     * )
+     * @ApiDoc()
      */
-    public function userGroupsAction($userId)
+    public function getUserGroupsAction($userId)
     {
         $groupData = $this->getGroupData();
 
@@ -336,7 +307,12 @@ class UsersController extends Controller
             $groupData['member'] = false;
         }
 
-        return new JsonResponse(array('groups' => $groupData));
+
+        return $this->handleView($this->view(
+            array(
+                'groups' => $groupData
+            )
+        ));
     }
 
     /**

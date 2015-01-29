@@ -25,11 +25,6 @@ Ext.define('Phlexible.gui.util.Icon', {
     },
 
     /**
-     * @cfg {Object} names
-     */
-    names: [],
-
-    /**
      * Constructor
      *
      * @param {Object} config
@@ -37,9 +32,8 @@ Ext.define('Phlexible.gui.util.Icon', {
     constructor: function(config) {
         this.initConfig(config);
 
+        this.names = [];
         this.css = Ext.util.CSS.createStyleSheet('', 'icons');
-        //this.css = Ext.get('icons');
-        this.rules = {};
 
         this.ADD     = 'plus-circle';
         this.DELETE  = 'minus-circle';

@@ -3,16 +3,12 @@ Ext.define('Phlexible.gui.view.Main', {
     requires: [
         'Phlexible.dashboard.view.Dashboard',
         'Phlexible.gui.view.MainController',
-        'Phlexible.gui.view.MainModel',
         'Phlexible.gui.view.MenuBar'
     ],
 
     xtype: 'gui.main',
 
     controller: 'gui.main',
-    viewModel: {
-        type: 'gui.main'
-    },
 
     layout: 'fit',
 

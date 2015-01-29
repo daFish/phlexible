@@ -39,11 +39,7 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
                 store: Ext.data.StoreManager.lookup('dashboard-available'),
                 tpl: new Ext.XTemplate(
                     '<tpl for=".">',
-                        '<tpl if="hidden">',
-                            '<div class="list-item list-wrap" style="display:none;" id="{title}">',
-                        '<tpl else>',
-                            '<div class="list-item list-wrap" id="{title}">',
-                        '</tpl>',
+                        '<div class="list-item list-wrap" id="{title}">',
                         '<div class="image"><img src="{imageUrl}" width="120" height="50" /></div>',
                         '<div class="text">',
                             '<div class="title"><tpl if="iconCls">{[Phlexible.Icon.inline(values.iconCls)]} </tpl>{title}</div>',
@@ -63,6 +59,12 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
                     itemclick: function(view, record){
                         var item = Ext.clone(record.data);
                         record.set('hidden', true);
+                        this.store.clearFilter();
+                        this.store.filterBy(function(record) {
+                            if (!record.get('hidden')) {
+                                return true;
+                            }
+                        });
                         this.fireEvent('portletOpen', item);
                     },
                     scope: this

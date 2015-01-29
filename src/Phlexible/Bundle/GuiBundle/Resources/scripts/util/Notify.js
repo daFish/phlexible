@@ -4,14 +4,14 @@
 Ext.define('Phlexible.gui.util.Notify', {
     successText: '_success',
     failureText: '_failure',
-    require: ['Ext.ux.window.Notification'],
+    requires: ['Ext.ux.window.Notification'],
 
     /**
      * Notify
      *
-     * @param {String} title
-     * @param {String} text
-     * @param {Object} extraParams
+     * @param {String} title
+     * @param {String} text
+     * @param {Object} extraParams
      */
     notify: function(title, text, extraParams){
         Ext.create({

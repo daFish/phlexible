@@ -1,5 +1,18 @@
 Ext.define('Phlexible.gui.util.Router', {
     /**
+     * @param {Object} data
+     * @see setData
+     */
+    constructor: function(data) {
+        this.baseUrl = '';
+        this.basePath = '';
+        this.routes = {};
+        if (Ext.isObject(data)) {
+            this.setData(data);
+        }
+    },
+
+    /**
      * Set routing data
      *
      * @param {Object} data Routing structure:
@@ -39,7 +52,6 @@ Ext.define('Phlexible.gui.util.Router', {
                 Phlexible.console.info(key, route.path);
             }
         }
-        ;
     },
 
     /**
