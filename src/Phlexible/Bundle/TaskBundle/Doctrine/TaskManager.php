@@ -128,133 +128,20 @@ class TaskManager implements TaskManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByCreatedByAndStatus(
-        $userId,
-        array $status = [],
-        array $sort = [],
-        $limit = null,
-        $start = null)
+    public function countBy(array $criteria)
     {
         $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb
-            ->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)))
-            ->where($qb->expr()->in('t.finiteState', $status));
+        $qb->select('COUNT(t.id)');
 
-        foreach ($sort as $field => $dir) {
-            $qb->orderBy("t.$field", $dir);
-        }
-        if ($start) {
-            $qb->setFirstResult($start);
-        }
-        if ($limit) {
-            $qb->setMaxResults($limit);
+        foreach ($criteria as $field => $value) {
+            if (is_array($value)) {
+                $qb->andWhere($qb->expr()->in($field, $value));
+            } else {
+                $qb->andWhere($qb->expr()->eq($field, $value));
+            }
         }
 
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function countByCreatedByAndStatus($userId, array $status = [])
-    {
-        $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb
-            ->select('COUNT(t.id)')
-            ->where($qb->expr()->eq('t.createUserId', $qb->expr()->literal($userId)))
-            ->where($qb->expr()->in('t.finiteState', $status));
-
-        return $qb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findByAssignedToAndStatus(
-        $userId,
-        array $status = [],
-        array $sort = [],
-        $limit = null,
-        $start = null)
-    {
-        $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb
-            ->where($qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)));
-
-        if ($status) {
-            $qb->andWhere($qb->expr()->IN('t.finiteState', $status));
-        }
-
-        foreach ($sort as $field => $dir) {
-            $qb->orderBy("t.$field", $dir);
-        }
-        if ($start) {
-            $qb->setFirstResult($start);
-        }
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function countByAssignedToAndStatus($userId, array $status = [])
-    {
-        $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb
-            ->select('COUNT(t.id)')
-            ->where($qb->expr()->eq('t.assignedUserId', $qb->expr()->literal($userId)));
-
-        if ($status) {
-            $qb->andWhere($qb->expr()->IN('t.finiteState', $status));
-        }
-
-        return $qb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findByInvolvementAndStatus(
-        $userId,
-        array $status = [],
-        array $sort = [],
-        $limit = null,
-        $start = null)
-    {
-        $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb
-            ->where($qb->expr()->like('t.involedUserIds', $qb->expr()->literal("%$userId%")))
-            ->where($qb->expr()->in('t.finiteState', $status));
-
-        foreach ($sort as $field => $dir) {
-            $qb->orderBy("t.$field", $dir);
-        }
-        if ($start) {
-            $qb->setFirstResult($start);
-        }
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function countByInvolvementAndStatus($userId, array $status = [])
-    {
-        $qb = $this->getTaskRepository()->createQueryBuilder('t');
-        $qb
-            ->select('COUNT(t.id)')
-            ->where($qb->expr()->like('t.involedUserIds', $qb->expr()->literal("%$userId%")))
-            ->where($qb->expr()->in('t.finiteState', $status));
-
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**

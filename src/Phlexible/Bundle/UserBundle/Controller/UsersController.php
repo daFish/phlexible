@@ -9,9 +9,13 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\NoRoute;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
 use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
@@ -20,6 +24,7 @@ use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\UsersMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,30 +44,27 @@ class UsersController extends FOSRestController
     /**
      * Get users
      *
-     * @param Request $request
+     * @param ParamFetcher $paramFetcher
      *
      * @return Response
      *
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc(
-     *   filters={
-     *      {"name"="start", "dataType"="integer", "description"="Start index", "default"=0},
-     *      {"name"="limit", "dataType"="integer", "description"="Limit results", "default"=20},
-     *      {"name"="sort", "dataType"="string", "description"="Sort field", "default"="username"},
-     *      {"name"="dir", "dataType"="string", "description"="Sort direction", "default"="ASC"},
-     *      {"name"="search", "dataType"="array", "description"="Search"}
-     *   }
-     * )
+     * @QueryParam(name="start", requirements="\d+", default=0, description="First result")
+     * @QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
+     * @QueryParam(name="sort", requirements="\w+", default="username", description="Sort field")
+     * @QueryParam(name="dir", requirements="\w+", default="ASC", description="Sort direction")
+     * @QueryParam(name="criteria", description="Search criteria.")
+     * @ApiDoc()
      */
-    public function getUsersAction(Request $request)
+    public function getUsersAction(ParamFetcher $paramFetcher)
     {
-        $start = $request->get('start');
-        $limit = $request->get('limit', 20);
-        $sort = $request->get('sort', 'username');
-        $dir = $request->get('dir', 'ASC');
+        $start = $paramFetcher->get('start');
+        $limit = $paramFetcher->get('limit');
+        $sort = $paramFetcher->get('sort');
+        $dir = $paramFetcher->get('dir');
+        $criteriaString = $paramFetcher->get('criteria');
 
         $userManager = $this->container->get('phlexible_user.user_manager');
-        $userSerializer = $this->container->get('phlexible_user.user_serializer');
         $criteria = $userManager->createCriteria();
 
         $criteria
@@ -70,19 +72,19 @@ class UsersController extends FOSRestController
             ->setFirstResult($start)
             ->setMaxResults($limit);
 
-        UserCriteriaBuilder::applyFromRequest($criteria, $request);
+        //UserCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
 
-        $result = $userManager->query($criteria);
+        $userResult = $userManager->query($criteria);
 
         $users = array();
-        foreach ($result as $user) {
-            $users[] = $userSerializer->serialize($user);
+        foreach ($userResult as $user) {
+            $users[] = $user;
         }
 
         return $this->handleView($this->view(
             array(
                 'users' => $users,
-                'count' => count($result)
+                'count' => count($users)
             )
         ));
     }
@@ -109,33 +111,34 @@ class UsersController extends FOSRestController
     /**
      * Create user
      *
-     * @param Request $request
+     * @param User         $user
+     * @param ParamFetcher $paramFetcher
+     *
+     * @return ResultResponse
      *
      * @throws \Exception
-     * @return ResultResponse
      * @Security("is_granted('ROLE_USER_ADMIN_CREATE')")
+     * @ParamConverter("user", converter="fos_rest.request_body")
+     * @QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
+     * @Post("/users")
      * @ApiDoc()
      */
-    public function postUsersAction(Request $request)
+    public function postUsersAction(User $user, ParamFetcher $paramFetcher)
     {
         $userManager = $this->get('phlexible_user.user_manager');
 
-        if ($request->get('username') && $userManager->checkUsername($request->get('username'))) {
-            throw new \Exception('Username "' . $request->get('username') . '" already exists.');
+        if ($userManager->checkUsername($user->getUsername())) {
+            throw new \Exception('Username "' . $user->getUsername() . '" already exists.');
         }
-        if ($request->get('email') && $userManager->checkEmail($request->get('email'))) {
-            throw new \Exception('Email "' . $request->get('email') . '" already exists.');
+        if ($userManager->checkEmail($user->getEmail())) {
+            throw new \Exception('Email "' . $user->getEmail() . '" already exists.');
         }
-
-        $user = $userManager->createUser();
-
-        $this->requestToUser($request, $user);
 
         $user
             ->setCreatedAt(new \DateTime())
             ->setModifiedAt(new \DateTime());
 
-        $optin = (bool) $request->request->get('optin', false);
+        $optin = $paramFetcher->get('optin');
         if ($optin) {
             $user->setPasswordToken(Uuid::generate());
 
@@ -164,8 +167,6 @@ class UsersController extends FOSRestController
      *
      * @throws \Exception
      * @return ResultResponse
-     * @Route("/{userId}", name="phlexible_user_update")
-     * @Method("PUT")
      * @Security("is_granted('ROLE_USER_ADMIN_UPDATE')")
      * @ApiDoc(
      *   requirements={
@@ -313,6 +314,34 @@ class UsersController extends FOSRestController
                 'groups' => $groupData
             )
         ));
+    }
+
+    /**
+     * Set successor
+     *
+     * @param Request $request
+     * @param string  $userId
+     *
+     * @return Response
+     *
+     * @ApiDoc(
+     *   requirements={
+     *     {"name"="successorUserId", "dataType"="string", "required"=true, "description"="Successor user ID"},
+     *   }
+     * )
+     */
+    public function successorUserAction(Request $request, $userId)
+    {
+        $successorUserId = $request->get('successorUserId');
+
+        $userManager = $this->get('phlexible_user.user_manager');
+        $user = $userManager->find($userId);
+        $successorUser = $userManager->find($successorUserId);
+
+        $successor = $this->get('phlexible_user.successor_service');
+        $successor->set($user, $successorUser);
+
+        return new ResultResponse(true, 'Successor set');
     }
 
     /**

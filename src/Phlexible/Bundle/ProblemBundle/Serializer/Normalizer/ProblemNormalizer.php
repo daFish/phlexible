@@ -6,17 +6,17 @@
  * @license   http://www.makeweb.de/LICENCE     Dummy Licence
  */
 
-namespace Phlexible\Bundle\UserBundle\Serializer;
+namespace Phlexible\Bundle\ProblemBundle\Serializer\Normalizer;
 
-use Phlexible\Bundle\UserBundle\Entity\User;
+use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
 /**
- * User normalizer
+ * Problem normalizer
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class UserNormalizer extends GetSetMethodNormalizer
+class ProblemNormalizer extends GetSetMethodNormalizer
 {
     /**
      * Constructor.
@@ -33,18 +33,9 @@ class UserNormalizer extends GetSetMethodNormalizer
         };
         $callbacks = array(
             'createdAt' => $dateCallback,
-            'modifiedAt' => $dateCallback,
-            'expiresAt' => $dateCallback,
-            'passwordRequestedAt' => $dateCallback,
-            'lastLogin' => $dateCallback,
+            'lastCheckedAt' => $dateCallback,
         );
         $ignoredAttributes = array(
-            'groups',
-            'password',
-            'plainPassword',
-            'salt',
-            'interfaceLanguage',
-            'contentLanguage',
         );
         $this->setCallbacks($callbacks);
         //$this->setCircularReferenceHandler($circularReferenceHandler);
@@ -57,7 +48,7 @@ class UserNormalizer extends GetSetMethodNormalizer
      */
     public function supportsNormalization($data, $format = null)
     {
-        return $data instanceof User;
+        return $data instanceof Problem;
     }
 
     /**
@@ -65,7 +56,7 @@ class UserNormalizer extends GetSetMethodNormalizer
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return $type === 'User';
+        return $type === 'Job';
     }
 
 }

@@ -8,7 +8,10 @@
 
 namespace Phlexible\Bundle\TaskBundle\Controller;
 
-use Doctrine\ORM\EntityRepository;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
@@ -16,103 +19,81 @@ use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Task controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/tasks")
  * @Security("is_granted('ROLE_TASKS')")
+ * @Prefix("/task")
+ * @NamePrefix("phlexible_task_")
  */
-class TaskController extends Controller
+class TasksController extends FOSRestController
 {
     /**
-     * List tasks
+     * Get tasks
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/list", name="tasks_list")
-     * @Method({"GET", "POST"})
      * @ApiDoc(
-     *   description="Search",
-     *   requirements={
-     *     {"name"="query", "dataType"="string", "required"=true, "description"="Search query"}
-     *   },
      *   filters={
      *     {"name"="limit", "dataType"="integer", "default"=20, "description"="Limit results"},
      *     {"name"="start", "dataType"="integer", "default"=0, "description"="Result offset"},
      *     {"name"="sort", "dataType"="string", "default"="created_at", "description"="Sort field"},
      *     {"name"="dir", "dataType"="string", "default"="DESC", "description"="Sort direction"},
-     *     {"name"="tasks", "dataType"="string", "default"="involved", "description"="involvement"},
-     *     {"name"="status_open", "dataType"="boolean", "default"=false, "description"="Status open"},
-     *     {"name"="status_rejected", "dataType"="boolean", "default"=false, "description"="Status rejected"},
-     *     {"name"="status_reopened", "dataType"="boolean", "default"=false, "description"="Status reopened"},
-     *     {"name"="status_finished", "dataType"="boolean", "default"=false, "description"="Status finished"},
-     *     {"name"="status_closed", "dataType"="boolean", "default"=false, "description"="Status closed"}
+     *     {"name"="createdBy", "dataType"="string", "default"="involved", "description"="Created by"},
+     *     {"name"="assignedTo", "dataType"="string", "default"="involved", "description"="Assigned to"},
+     *     {"name"="involved", "dataType"="string", "default"="involved", "description"="Involved"},
+     *     {"name"="status", "dataType"="string", "default"=false, "description"="Status"},
      *   }
      * )
      */
-    public function listAction(Request $request)
+    public function getTasksAction(Request $request)
     {
-        $type = $request->request->get('tasks', 'involved');
-        $sort = $request->request->get('sort', 'createdAt');
-        $dir = $request->request->get('dir', 'DESC');
-        $limit = $request->request->get('limit', 20);
-        $start = $request->request->get('start', 0);
-
-        $status = [];
-        if ($request->request->get('status_open')) {
-            $status[] = Task::STATUS_OPEN;
-        }
-        if ($request->request->get('status_rejected')) {
-            $status[] = Task::STATUS_REJECTED;
-        }
-        if ($request->request->get('status_reopened')) {
-            $status[] = Task::STATUS_REOPENED;
-        }
-        if ($request->request->get('status_finished')) {
-            $status[] = Task::STATUS_FINISHED;
-        }
-        if ($request->request->get('status_closed')) {
-            $status[] = Task::STATUS_CLOSED;
-        }
-        if (!count($status)) {
-            $status[] = Task::STATUS_OPEN;
-        }
+        $type = $request->query->get('tasks', 'involved');
+        $status = $request->query->get('status');
+        $createdBy = $request->query->get('createdBy');
+        $assignedTo = $request->query->get('assignedTo');
+        $involved = $request->query->get('involved');
+        $sort = $request->query->get('sort', 'createdAt');
+        $dir = $request->query->get('dir', 'DESC');
+        $limit = $request->query->get('limit', 20);
+        $start = $request->query->get('start', 0);
 
         $taskManager = $this->get('phlexible_task.task_manager');
-        /* @var $taskRepository EntityRepository */
         $userManager = $this->get('phlexible_user.user_manager');
         $types = $this->get('phlexible_task.types');
 
         $userId = $this->getUser()->getId();
 
-        switch ($type) {
-            case 'tasks':
-                $tasks = $taskManager->findByCreatedByAndStatus($userId, $status, [$sort => $dir], $limit, $start);
-                $total = $taskManager->countByCreatedByAndStatus($userId, $status);
-                break;
+        $criteria = array();
 
-            case 'todos':
-                $tasks = $taskManager->findByAssignedToAndStatus($userId, $status, [$sort => $dir], $limit, $start);
-                $total = $taskManager->countByAssignedToAndStatus($userId, $status);
-                break;
-
-            case 'involved':
-                $tasks = $taskManager->findByInvolvementAndStatus($userId, $status, [$sort => $dir], $limit, $start);
-                $total = $taskManager->countByInvolvementAndStatus($userId, $status);
-                break;
-
-            case 'all':
-            default:
-                $tasks = $taskManager->findByStatus($status, [$sort => $dir], $limit, $start);
-                $total = $taskManager->countByStatus($status);
-                break;
+        if ($status) {
+            $criteria['status'] = $status;
         }
+        if ($createdBy) {
+            $criteria['createdBy'] = $createdBy;
+        }
+        if ($assignedTo) {
+            $criteria['assignedTo'] = $assignedTo;
+        }
+        if ($involved) {
+            $criteria['involved'] = $involved;
+        }
+
+        $tasks = $taskManager->findBy($criteria, [$sort => $dir], $limit, $start);
+        $total = $taskManager->countBy($criteria);
+
+        return $this->handleView($this->view(
+            array(
+                'tasks' => $tasks,
+                'count' => $total
+            )
+        ));
 
         $data = [];
         foreach ($tasks as $task) {
@@ -167,10 +148,45 @@ class TaskController extends Controller
             ];
         }
 
-        return new JsonResponse([
-            'tasks' => $data,
-            'total' => $total,
-        ]);
+        return $this->handleView($this->view(
+            array(
+                'tasks' => $tasks,
+                'count' => $total
+            )
+        ));
+    }
+
+    /**
+     * Get tasks
+     *
+     * @param Request $request
+     * @param string  $taskId
+     *
+     * @return Response
+     *
+     * @View
+     * @ApiDoc(
+     *   filters={
+     *     {"name"="limit", "dataType"="integer", "default"=20, "description"="Limit results"},
+     *     {"name"="start", "dataType"="integer", "default"=0, "description"="Result offset"},
+     *     {"name"="sort", "dataType"="string", "default"="created_at", "description"="Sort field"},
+     *     {"name"="dir", "dataType"="string", "default"="DESC", "description"="Sort direction"},
+     *     {"name"="tasks", "dataType"="string", "default"="involved", "description"="involvement"},
+     *     {"name"="status_open", "dataType"="boolean", "default"=false, "description"="Status open"},
+     *     {"name"="status_rejected", "dataType"="boolean", "default"=false, "description"="Status rejected"},
+     *     {"name"="status_reopened", "dataType"="boolean", "default"=false, "description"="Status reopened"},
+     *     {"name"="status_finished", "dataType"="boolean", "default"=false, "description"="Status finished"},
+     *     {"name"="status_closed", "dataType"="boolean", "default"=false, "description"="Status closed"}
+     *   }
+     * )
+     */
+    public function getTaskAction(Request $request, $taskId)
+    {
+        $taskManager = $this->get('phlexible_task.task_manager');
+
+        $task = $taskManager->find($taskId);
+
+        return $task;
     }
 
     /**
@@ -231,7 +247,7 @@ class TaskController extends Controller
 
         $types = $this->get('phlexible_task.types');
         $userManager = $this->get('phlexible_user.user_manager');
-        $securityContext = $this->get('security.context');
+        $authorizationChecker = $this->get('security.authorization_checker');
 
         $systemUserId = $userManager->getSystemUserId();
 
@@ -243,11 +259,11 @@ class TaskController extends Controller
                 continue;
             }
 
-            if (!$securityContext->isGranted('tasks')) {
+            if (!$authorizationChecker->isGranted('tasks')) {
                 continue;
             }
 
-            if ($type->getResource() && !$securityContext->isGranted($type->getResource())) {
+            if ($type->getResource() && !$authorizationChecker->isGranted($type->getResource())) {
                 continue;
             }
 
@@ -268,9 +284,7 @@ class TaskController extends Controller
      *
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("/create/task", name="tasks_create_task")
-     * @Method({"GET", "POST"})
+     * @return Response
      * @ApiDoc(
      *   description="Create task",
      *   requirements={
@@ -281,7 +295,7 @@ class TaskController extends Controller
      *   }
      * )
      */
-    public function createTaskAction(Request $request)
+    public function postTasksAction(Request $request)
     {
         $typeName = $request->get('type');
         $assignedUserId = $request->get('recipient');
@@ -308,19 +322,17 @@ class TaskController extends Controller
      * Create task comment
      *
      * @param Request $request
+     * @param string  $taskId
      *
-     * @return ResultResponse
-     * @Route("/create/comment", name="tasks_create_comment")
-     * @Method({"GET", "POST"})
+     * @return Response
      * @ApiDoc(
-     *   description="Create status",
+     *   description="Create task comment",
      *   requirements={
-     *     {"name"="id", "dataType"="string", "required"=true, "description"="Task ID"},
      *     {"name"="comment", "dataType"="string", "required"=true, "description"="Comment"}
      *   }
      * )
      */
-    public function commentAction(Request $request)
+    public function postTaskCommentAction(Request $request, $taskId)
     {
         $id = $request->get('id');
         $comment = $request->get('comment');
@@ -341,23 +353,21 @@ class TaskController extends Controller
      * Create task transition
      *
      * @param Request $request
+     * @param string  $taskId
      *
-     * @return ResultResponse
-     * @Route("/create/transition", name="tasks_create_transition")
-     * @Method({"GET", "POST"})
+     * @return Response
+     *
      * @ApiDoc(
-     *   description="Create status",
+     *   description="Create task transition",
      *   requirements={
-     *     {"name"="id", "dataType"="string", "required"=true, "description"="Task ID"},
      *     {"name"="recipient", "dataType"="string", "required"=false, "description"="Recipient"},
      *     {"name"="name", "dataType"="string", "required"=true, "description"="Transition name"},
      *     {"name"="comment", "dataType"="string", "required"=false, "description"="Comment"}
      *   }
      * )
      */
-    public function transitionAction(Request $request)
+    public function postTaskTransitionAction(Request $request, $taskId)
     {
-        $id = $request->get('id');
         $assignedUserId = $request->get('recipient');
         $name = $request->get('name');
         $comment = $request->get('comment');
@@ -384,10 +394,9 @@ class TaskController extends Controller
      * Assign task
      *
      * @param Request $request
+     * @param string  $taskId
      *
-     * @return ResultResponse
-     * @Route("/assign", name="tasks_assign")
-     * @Method({"GET", "POST"})
+     * @return Response
      * @ApiDoc(
      *   description="Create status",
      *   requirements={
@@ -397,9 +406,8 @@ class TaskController extends Controller
      *   }
      * )
      */
-    public function assignAction(Request $request)
+    public function assignTaskAction(Request $request, $taskId)
     {
-        $id = $request->get('id');
         $assignedUserId = $request->get('recipient');
         $comment = $request->get('comment');
 
@@ -410,7 +418,7 @@ class TaskController extends Controller
         $taskManager = $this->get('phlexible_task.task_manager');
         $userManager = $this->get('phlexible_user.user_manager');
 
-        $task = $taskManager->find($id);
+        $task = $taskManager->find($taskId);
         $assignUser = $userManager->find($assignedUserId);
 
         $taskManager->updateTask($task, $this->getUser(), null, $assignUser, $comment);

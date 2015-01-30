@@ -8,32 +8,47 @@
 
 namespace Phlexible\Bundle\QueueBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Data controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/queue")
  * @Security("is_granted('ROLE_QUEUE')")
+ * @Prefix("/queue")
+ * @NamePrefix("phlexible_queue_")
  */
-class DataController extends Controller
+class JobsController extends FOSRestController
 {
     /**
-     * Job list
+     * Get jobs
      *
-     * @return JsonResponse
-     * @Route("/list", name="queue_list")
+     * @return Response
+     *
+     * @ApiDoc()
      */
-    public function indexAction()
+    public function getJobsAction()
     {
         $jobManager = $this->get('phlexible_queue.job_manager');
 
+        $jobs = $jobManager->findBy([], ['createdAt' => 'DESC']);
+
+        return $this->handleView($this->view(
+            array(
+                'jobs' => $jobs,
+                'count' => count($jobs)
+            )
+        ));
+
         $data = [];
-        foreach ($jobManager->findBy([], ['createdAt' => 'DESC']) as $queueItem) {
+        foreach ($jobs as $queueItem) {
             $data[] = [
                 'id'          => $queueItem->getId(),
                 'command'     => $queueItem->getCommand(),
@@ -47,6 +62,25 @@ class DataController extends Controller
         }
 
         return new JsonResponse(['data' => $data]);
+    }
+
+    /**
+     * Get job
+     *
+     * @param string $jobId
+     *
+     * @return Response
+     *
+     * @View()
+     * @ApiDoc()
+     */
+    public function getJobAction($jobId)
+    {
+        $jobManager = $this->get('phlexible_queue.job_manager');
+
+        $job = $jobManager->find($jobId);
+
+        return $job;
     }
 
 }

@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
+use FOS\RestBundle\Controller\FOSRestController;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,31 +20,26 @@ use Symfony\Component\HttpFoundation\Request;
  * Sets controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/metasets/sets")
  * @Security("is_granted('ROLE_META_SETS')")
  */
-class SetsController extends Controller
+class MetaSetsController extends FOSRestController
 {
     /**
      * List sets
      *
      * @return JsonResponse
-     * @Route("/list", name="metasets_sets_list")
      */
-    public function listAction()
+    public function getMetaSetsAction()
     {
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
-        $metaSet = $metaSetManager->findAll();
+        $metaSets = $metaSetManager->findAll();
 
-        $data = [];
-        foreach ($metaSet as $set) {
-            $data[] = [
-                'id'   => $set->getId(),
-                'name' => $set->getName(),
-            ];
-        }
-
-        return new JsonResponse(['sets' => $data]);
+        return $this->handleView($this->view(
+            array(
+                'metaSets' => $metaSets,
+                'count'    => count($metaSets)
+            )
+        ));
     }
 
     /**
@@ -79,6 +74,32 @@ class SetsController extends Controller
         return new JsonResponse(['values' => $data]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("", name="metasets_values")
+     */
+    public function valuesAction(Request $request)
+    {
+        $sourceId = $request->get('source_id');
+        $language = $request->get('language', 'en');
+
+        $datasourceManager = $this->get('phlexible_data_source.data_source_manager');
+        $datasource = $datasourceManager->find($sourceId);
+        $keys = $datasource->getValuesForLanguage($language);
+
+        $data = [];
+        foreach ($keys as $key) {
+            if (!$key) {
+                continue;
+            }
+
+            $data[] = ['key' => $key, 'value' => $key];
+        }
+
+        return new JsonResponse(['values' => $data]);
+    }
     /**
      * Create set
      *

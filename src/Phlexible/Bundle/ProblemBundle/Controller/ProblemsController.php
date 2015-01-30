@@ -8,35 +8,42 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * List controller
+ * Problems controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/problems")
  * @Security("is_granted('ROLE_PROBLEMS')")
+ * @Prefix("/problem")
+ * @NamePrefix("phlexible_problem_")
  */
-class ListController extends Controller
+class ProblemsController extends FOSRestController
 {
     /**
-     * List problems
+     * Get problems
      *
      * @return JsonResponse
-     * @Route("/list", name="problem_list")
-     * @Method({"GET", "POST"})
-     * @ApiDoc(
-     *   description="Return problems"
-     * )
+     *
+     * @ApiDoc()
      */
-    public function listAction()
+    public function getProblemsAction()
     {
         $problemFetcher = $this->get('phlexible_problem.problem_fetcher');
+
+        $problems = $problemFetcher->fetch();
+
+        return $this->handleView($this->view(
+            array(
+                'problems' => $problems,
+                'count'    => count($problems)
+            )
+        ));
 
         $data = [];
         foreach ($problemFetcher->fetch() as $problem) {
@@ -54,5 +61,29 @@ class ListController extends Controller
         }
 
         return new JsonResponse($data);
+    }
+
+    /**
+     * Get problem
+     *
+     * @param string $problemId
+     *
+     * @return JsonResponse
+     *
+     * @ApiDoc()
+     */
+    public function getProblemAction($problemId)
+    {
+        $problemFetcher = $this->get('phlexible_problem.problem_fetcher');
+
+        $problems = $problemFetcher->fetch();
+
+        foreach ($problems as $problem) {
+            if ($problem->getId() === $problemId) {
+                return $problem;
+            }
+        }
+
+        return null;
     }
 }

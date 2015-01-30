@@ -40,61 +40,11 @@ interface TaskManagerInterface
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param string $userId
-     * @param array  $status
-     * @param array  $sort
-     * @param int    $limit
-     * @param int    $start
-     *
-     * @return Task[]
-     */
-    public function findByCreatedByAndStatus($userId, array $status = [], array $sort = [], $limit = null, $start = null);
-
-    /**
-     * @param string $userId
-     * @param array  $status
+     * @param array $criteria
      *
      * @return int
      */
-    public function countByCreatedByAndStatus($userId, array $status = []);
-
-    /**
-     * @param string $userId
-     * @param array  $status
-     * @param array  $sort
-     * @param int    $limit
-     * @param int    $start
-     *
-     * @return Task[]
-     */
-    public function findByAssignedToAndStatus($userId, array $status = [], array $sort = [], $limit = null, $start = null);
-
-    /**
-     * @param string $userId
-     * @param array  $status
-     *
-     * @return int
-     */
-    public function countByAssignedToAndStatus($userId, array $status = []);
-
-    /**
-     * @param string $userId
-     * @param array  $status
-     * @param array  $sort
-     * @param int    $limit
-     * @param int    $start
-     *
-     * @return Task[]
-     */
-    public function findByInvolvementAndStatus($userId, array $status = [], array $sort = [], $limit = null, $start = null);
-
-    /**
-     * @param string $userId
-     * @param array  $status
-     *
-     * @return int
-     */
-    public function countByInvolvementAndStatus($userId, array $status = []);
+    public function countBy(array $criteria);
 
     /**
      * @param array $status

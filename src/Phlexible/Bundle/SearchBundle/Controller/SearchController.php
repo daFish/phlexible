@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\SearchBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,9 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
  * Search controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/search/search")
+ *
+ * @Prefix("/search")
+ * @NamePrefix("phlexible_search_")
  */
-class SearchController extends Controller
+class SearchController extends FOSRestController
 {
     /**
      * Return search results
@@ -29,8 +31,6 @@ class SearchController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("", name="search_search")
-     * @Method({"GET", "POST"})
      * @ApiDoc(
      *   description="Search",
      *   requirements={
@@ -42,7 +42,7 @@ class SearchController extends Controller
      *   }
      * )
      */
-    public function indexAction(Request $request)
+    public function getResultsAction(Request $request)
     {
         $query = $request->get('query');
         $limit = $request->get('limit', 8);
@@ -51,9 +51,11 @@ class SearchController extends Controller
         $search = $this->get('phlexible_search.search');
         $results = $search->search($query);
 
-        return new JsonResponse([
-            'totalCount' => count($results),
-            'results'    => array_slice($results, $start, $limit)
-        ]);
+        return $this->handleView($this->view(
+            array(
+                'results'    => array_slice($results, $start, $limit),
+                'totalCount' => count($results)
+            )
+        ));
     }
 }

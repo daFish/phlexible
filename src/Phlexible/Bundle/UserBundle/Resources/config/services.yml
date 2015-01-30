@@ -8,7 +8,7 @@ parameters:
 
 services:
     phlexible_user.user_normalizer:
-        class: Phlexible\Bundle\UserBundle\Serializer\UserNormalizer
+        class: Phlexible\Bundle\UserBundle\Serializer\Normalizer\UserNormalizer
         public: false
         tags:
             - {name: serializer.normalizer}

@@ -1,4 +1,10 @@
 services:
+    phlexible_queue.job_normalizer:
+        class: Phlexible\Bundle\QueueBundle\Serializer\Normalizer\JobNormalizer
+        public: false
+        tags:
+            - {name: serializer.normalizer}
+
     # event listeners
     phlexible_queue.listener.collect_problems:
         class: Phlexible\Bundle\QueueBundle\EventListener\CollectProblemsListener

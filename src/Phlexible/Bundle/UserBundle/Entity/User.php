@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Entity\User as BaseUser;
 use FOS\UserBundle\Model\GroupInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -64,6 +65,7 @@ class User extends BaseUser
     /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
+     * @Assert\NotNull
      */
     private $createdAt;
 
