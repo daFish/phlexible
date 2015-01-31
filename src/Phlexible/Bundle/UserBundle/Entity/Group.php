@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\UserBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\GroupInterface;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * Group
@@ -45,6 +46,7 @@ class Group implements GroupInterface
     /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
+     * @Type("DateTime")
      */
     private $createdAt;
 

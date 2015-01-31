@@ -4,6 +4,7 @@
 Ext.define('Phlexible.user.edit.Password', {
     extend: 'Ext.form.FormPanel',
     alias: 'widget.user-edit-password',
+    requires: ['Ext.ux.form.field.PasswordMeter'],
 
     title: '_password',
     iconCls: Phlexible.Icon.get('star'),

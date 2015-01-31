@@ -80,6 +80,8 @@ class MyTasksPortlet extends Portlet
      */
     public function getData()
     {
+        return array();
+
         $tasksToShow = $this->numItems;
 
         $tasks = $this->taskManager->findByAssignedToAndStatus(

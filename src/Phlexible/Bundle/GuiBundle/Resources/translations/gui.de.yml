@@ -61,6 +61,7 @@ Phlexible:
 
             Bundles:
                 title: Bundles
+                nameText: Name
                 packageText: Package
                 filterText: Filter
                 resetText: Zurücksetzen

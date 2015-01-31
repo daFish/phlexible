@@ -7,19 +7,13 @@ Ext.define('Phlexible.gui.view.BundlesController', {
     },
 
     init: function () {
-        this.loadFilterValues();
-
         this.initMyTasks();
-        this.loadFilterValues();
 
         this.getView().getComponent('list').getStore().on({
-            load: function () {
-                if (this.filterData) {
-                    this.setFilterData(this.filterData);
-                }
-            },
+            load: this.onLoadStore,
             scope: this
         });
+        this.getView().getComponent('list').getStore().load();
 
         this.callParent(arguments);
     },
@@ -32,32 +26,33 @@ Ext.define('Phlexible.gui.view.BundlesController', {
         return this.getView().getComponent('filter').getComponent('packages');
     },
 
-    loadFilterValues: function() {
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('gui_bundles_filtervalues'),
-            success: this.onLoadFilterValues,
-            scope: this
+    onLoadStore: function (store, bundles) {
+        var packages = [];
+        Ext.each(bundles, function(bundle) {
+            if (packages.indexOf(bundle.data.package) === -1) {
+                packages.push(bundle.data.package);
+            }
         });
-    },
 
-    onLoadFilterValues: function (response) {
-        var data = Ext.decode(response.responseText);
+        this.getPackagesForm().removeAll();
 
-        if (data.packages && data.packages.length && Ext.isArray(data.packages)) {
-            this.getPackagesForm().removeAll();
-            Ext.each(data.packages, function (item) {
-                this.getPackagesForm().add({
-                    xtype: 'checkbox',
-                    name: 'package_' + item.id,
-                    boxLabel: item.title,
-                    checked: item.checked,
-                    listeners: {
-                        change: this.updateFilter,
-                        scope: this
-                    }
-                });
-            }, this);
+        if (!packages.length) {
+            this.getPackagesForm().hide();
+            return;
         }
+
+        Ext.each(packages, function (packageX) {
+            this.getPackagesForm().add({
+                xtype: 'checkbox',
+                name: 'package_' + packageX,
+                boxLabel: packageX,
+                checked: true,
+                listeners: {
+                    change: this.updateFilter,
+                    scope: this
+                }
+            });
+        }, this);
     },
 
     onBundles: function() {
@@ -106,7 +101,7 @@ Ext.define('Phlexible.gui.view.BundlesController', {
         }
         if (filter) {
             filters.push(new Ext.util.Filter({
-                property: 'id',
+                property: 'name',
                 value: filter,
                 operator: 'like'
             }));

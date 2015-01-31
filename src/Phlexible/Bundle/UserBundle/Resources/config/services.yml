@@ -7,18 +7,6 @@ parameters:
     phlexible_user.mailer.new_password.from: %phlexible_gui.mail.from_email%
 
 services:
-    phlexible_user.user_normalizer:
-        class: Phlexible\Bundle\UserBundle\Serializer\Normalizer\UserNormalizer
-        public: false
-        tags:
-            - {name: serializer.normalizer}
-
-    phlexible_user.group_normalizer:
-        class: Phlexible\Bundle\UserBundle\Serializer\Normalizer\GroupNormalizer
-        public: false
-        tags:
-            - {name: serializer.normalizer}
-
     phlexible_user.successor_service:
         class: Phlexible\Bundle\UserBundle\Successor\SuccessorService
         arguments: [@event_dispatcher, @phlexible_message.message_poster]

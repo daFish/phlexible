@@ -14,6 +14,7 @@ Ext.define('Phlexible.gui.view.Bundles', {
     border: false,
 
     bundleText: '_bundleText',
+    nameText: '_nameText',
     packageText: '_packageText',
     classnameText: '_classnameText',
     pathText: '_pathText',
@@ -90,24 +91,25 @@ Ext.define('Phlexible.gui.view.Bundles', {
                 model: 'Phlexible.gui.model.Bundle',
                 proxy: {
                     type: 'ajax',
-                    url: Phlexible.Router.generate('gui_bundles'),
+                    url: Phlexible.Router.generate('phlexible_gui_get_bundles'),
                     reader: {
                         type: 'json',
-                        idProperty: 'id',
+                        idProperty: 'name',
+                        rootProperty: 'bundles',
                         totalProperty: 'count'
-                    }
+                    },
                 },
                 // TODO: enable when buffered paging reload works. disabled for now.
-                autoLoad: true,
+                autoLoad: false,
                 sorters: [{
-                    property: 'id',
+                    property: 'name',
                     direction: 'ASC'
                 }]
             }),
             columns: [{
-                header: this.bundleText,
+                header: this.nameText,
                 width: 250,
-                dataIndex: 'id',
+                dataIndex: 'name',
                 resizable: false
             }, {
                 header: this.packageText,

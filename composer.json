@@ -50,7 +50,7 @@
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
         "yohang/finite": "~1.0",
-        "jms/serializer": "~0.16"
+        "jms/serializer-bundle": "~0.13"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1",

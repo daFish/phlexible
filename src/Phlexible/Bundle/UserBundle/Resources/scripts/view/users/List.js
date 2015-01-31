@@ -266,7 +266,7 @@ Ext.define('Phlexible.user.view.users.List', {
                 }
             },
             rowdblclick: function(view, record){
-                if (!Phlexible.User.isGranted('ROLE_USER_ADMIN_PATCH')) {
+                if (!Phlexible.User.isGranted('ROLE_USER_ADMIN_UPDATE')) {
                     return;
                 }
                 var w = Ext.create('Phlexible.user.window.UserWindow', {

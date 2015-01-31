@@ -37,9 +37,8 @@ class BundlesController extends FOSRestController
         $bundles = $this->container->getParameter('kernel.bundles');
 
         $bundlesData = [];
-        $packages = [];
 
-        foreach ($bundles as $id => $class) {
+        foreach ($bundles as $name => $class) {
             $className = $class;
             $package = $class;
             if (strstr($class, '\\')) {
@@ -53,33 +52,21 @@ class BundlesController extends FOSRestController
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
-            $bundlesData[$id] = [
-                'id'          => $id,
+            $bundlesData[$name] = [
+                'name'        => $name,
                 'classname'   => $className,
                 'package'     => $package,
                 'path'        => $path,
             ];
-
-            $namespace = $reflection->getNamespaceName();
-            $package = current(explode('\\', $namespace));
-            $packages[$package] = 1;
         }
 
         ksort($bundlesData);
         $bundlesData = array_values($bundlesData);
 
-        $packagesData = [];
-        foreach (array_keys($packages) as $package) {
-            $packages[$package] = ['id' => $package, 'title' => ucfirst($package), 'checked' => true];
-        }
-        ksort($packagesData);
-        $packagesData = array_values($packagesData);
-
         return $this->handleView($this->view(
             array(
-                'users' => $bundlesData,
-                'count' => count($bundlesData),
-                'packages' => $packagesData,
+                'bundles'  => $bundlesData,
+                'count'    => count($bundlesData),
             )
         ));
     }

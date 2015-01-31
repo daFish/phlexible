@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\UserBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\UserBundle\Entity\Group;
@@ -36,30 +37,13 @@ class GroupsController extends FOSRestController
      * @return Response
      *
      * @Security("is_granted('ROLE_GROUP_ADMIN_READ')")
-     * @ApiDoc(
-     *   description="Returns a list of groups."
-     * )
+     * @ApiDoc
      */
     public function getGroupsAction()
     {
         $groupManager = $this->get('phlexible_user.group_manager');
 
-        $groups = [];
-        foreach ($groupManager->findAll() as $group) {
-            $members = [];
-            foreach ($group->getUsers() as $user) {
-                $members[] = $user->getDisplayName();
-            }
-            sort($members);
-
-            $groups[] = [
-                'gid'       => $group->getId(),
-                'name'      => $group->getName(),
-                'readonly'  => false,
-                'memberCnt' => count($members),
-                'members'   => $members
-            ];
-        }
+        $groups = $groupManager->findAll();
 
         return $this->handleView($this->view(
             array(
@@ -67,6 +51,26 @@ class GroupsController extends FOSRestController
                 'count'  => count($groups)
             )
         ));
+    }
+
+    /**
+     * Get group
+     *
+     * @param string $groupId
+     *
+     * @return Response
+     *
+     * @Security("is_granted('ROLE_GROUP_ADMIN_READ')")
+     * @View(templateVar="group")
+     * @ApiDoc
+     */
+    public function getGroupAction($groupId)
+    {
+        $groupManager = $this->get('phlexible_user.group_manager');
+
+        $group = $groupManager->find($groupId);
+
+        return $this->handleView($this->view($group));
     }
 
     /**
@@ -106,11 +110,7 @@ class GroupsController extends FOSRestController
      * @return Response
      *
      * @Security("is_granted('ROLE_GROUP_ADMIN_UPDATE')")
-     * @ApiDoc(
-     *   requirements={
-     *     {"name"="name", "dataType"="string", "required"=true, "description"="New group name"}
-     *   }
-     * )
+     * @ApiDoc
      */
     public function putGroupAction(Request $request, $groupId)
     {
@@ -146,11 +146,7 @@ class GroupsController extends FOSRestController
      *
      * @return Response
      * @Security("is_granted('ROLE_GROUP_ADMIN_UPDATE')")
-     * @ApiDoc(
-     *   requirements={
-     *     {"name"="name", "dataType"="string", "required"=true, "description"="Name"}
-     *   }
-     * )
+     * @ApiDoc
      */
     public function patchGroupAction(Request $request, $groupId)
     {
@@ -186,14 +182,13 @@ class GroupsController extends FOSRestController
      * @return Response
      *
      * @Security("is_granted('ROLE_GROUP_ADMIN_DELETE')")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function deleteAction($groupId)
     {
         $groupManager = $this->get('phlexible_user.group_manager');
 
         $group = $groupManager->find($groupId);
-        $name = $group->getName();
 
         $groupManager->deleteGroup($group);
 
@@ -203,7 +198,6 @@ class GroupsController extends FOSRestController
         return $this->handleView($this->view(
             array(
                 'success' => true,
-                'message' => "Group $name patched."
             )
         ));
     }
