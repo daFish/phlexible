@@ -41,7 +41,7 @@ Ext.define('Phlexible.user.options.Password', {
             anchor: '100%',
             width: 200,
             value: '',
-            minLength: Phlexible.App.getConfig().get('users.system.password_min_length'),
+            minLength: Phlexible.Config.get('users.system.password_min_length'),
             strength   : 24
         },{
             fieldLabel: this.passwordRepeatText,
@@ -49,7 +49,7 @@ Ext.define('Phlexible.user.options.Password', {
             inputType: 'password',
             anchor: '100%',
             width: 200,
-            minLength: Phlexible.App.getConfig().get('users.system.password_min_length'),
+            minLength: Phlexible.Config.get('users.system.password_min_length'),
             listeners: {
                 valid: function(f) {
                     f.ownerCt.getComponent(0).validate();

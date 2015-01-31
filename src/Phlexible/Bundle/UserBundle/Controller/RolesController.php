@@ -8,33 +8,32 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Roles controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/users/roles")
+ *
  * @Security("is_granted('ROLE_USERS')")
+ * @Prefix("/user")
+ * @NamePrefix("phlexible_user_")
  */
-class RolesController extends Controller
+class RolesController extends FOSRestController
 {
     /**
-     * List roles
+     * Get roles
      *
-     * @return JsonResponse
-     * @Route("", name="phlexible_roles")
-     * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns a list of defined roles."
-     * )
+     * @return Response
+     *
+     * @ApiDoc
      */
-    public function listAction()
+    public function getRolesAction()
     {
         $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
 
@@ -43,6 +42,11 @@ class RolesController extends Controller
             $roles[] = ['id' => $role, 'name' => $role];
         }
 
-        return new JsonResponse($roles);
+        return $this->handleView($this->view(
+            array(
+                'roles' => $roles,
+                'count' => count($roles)
+            )
+        ));
     }
 }

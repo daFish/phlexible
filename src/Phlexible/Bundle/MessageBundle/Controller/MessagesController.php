@@ -8,75 +8,72 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Phlexible\Bundle\MessageBundle\Criteria\ArrayDumper;
-use Phlexible\Bundle\MessageBundle\Criteria\ArrayParser;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
-use Phlexible\Bundle\MessageBundle\Criteria\Criterium;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Messages controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/messages/messages")
+ *
+ * @Prefix("/message")
+ * @NamePrefix("phlexible_message_")
  */
-class MessagesController extends Controller
+class MessagesController extends FOSRestController
 {
     /**
-     * List messages
+     * Get messages
      *
-     * @param Request $request
+     * @param ParamFetcher $paramFetcher
      *
-     * @return JsonResponse
-     * @Route("", name="messages_messages")
+     * @return Response
+     * @QueryParam(name="start", requirements="\d+", default=0, description="First result")
+     * @QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
+     * @QueryParam(name="sort", requirements="\w+", default="username", description="Sort field")
+     * @QueryParam(name="dir", requirements="\w+", default="ASC", description="Sort direction")
+     * @QueryParam(name="criteria", description="Search criteria.")
+     * @ApiDoc()
      */
-    public function listAction(Request $request)
+    public function getMessagesAction(ParamFetcher $paramFetcher)
     {
-        $limit = $request->get('limit', 25);
-        $start = $request->get('start', 0);
-        $sort = $request->get('sort', 'createdAt');
-        $dir = $request->get('dir', 'DESC');
-        $filter = $request->get('filter', null);
-
-        if ($filter) {
-            $filter = json_decode($filter, true);
-        }
-
-        /*
-        $criteria = new Criteria(array(), Criteria::MODE_OR);
-        $criteria2 = new Criteria(array(), Criteria::MODE_AND);
-        $criteria2->add(new Criterium(Criteria::CRITERIUM_PRIORITY_IN, array('a,b')));
-        $criteria2->add(new Criterium(Criteria::CRITERIUM_TYPE_IS, array('c')));
-        $criteria->add($criteria2);
-        $criteria3 = new Criteria(array(), Criteria::MODE_AND);
-        $criteria3->add(new Criterium(Criteria::CRITERIUM_PRIORITY_IN, array('d,e')));
-        $criteria3->add(new Criterium(Criteria::CRITERIUM_TYPE_IS, array('f')));
-        $criteria->add($criteria3);
-        if (!is_array($filter)) {
-            $filter = [];
-        }
-
-        $dumper = new ArrayDumper();
-        $dump = $dumper->dump($criteria);
-        echo '<pre>';print_r($dump);
-        $parser = new ArrayParser();
-        print_r($parser->parse($filter));die;
-        */
+        $start = $paramFetcher->get('start');
+        $limit = $paramFetcher->get('limit');
+        $sort = $paramFetcher->get('sort');
+        $dir = $paramFetcher->get('dir');
+        $criteriaString = $paramFetcher->get('criteria');
 
         $messageManager = $this->get('phlexible_message.message_manager');
 
         $priorityList = $messageManager->getPriorityNames();
         $typeList = $messageManager->getTypeNames();
 
-        if ($filter) {
-            $parser = new ArrayParser();
-            $criteria = $parser->parse($filter);
-        } else {
-            $criteria = new Criteria();
+        $criteria
+            ->orderBy(array($sort => $dir))
+            ->setFirstResult($start)
+            ->setMaxResults($limit);
+
+        //UserCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
+
+        $messageResult = $messageManager->query($criteria);
+
+        $messages = array();
+        foreach ($messageResult as $message) {
+            $messages[] = $message;
         }
+
+        return $this->handleView($this->view(
+            array(
+                'messages' => $messages,
+                'count' => count($messages)
+            )
+        ));
 
         /*
         $priorityFilter = [];

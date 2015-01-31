@@ -34,7 +34,7 @@ Ext.define('Phlexible.user.options.Details', {
     },
 
     initMyItems: function() {
-        var user = Phlexible.App.getUser();
+        var user = Phlexible.User;
 
         this.items = [{
             fieldLabel: this.firstnameText,
@@ -80,7 +80,7 @@ Ext.define('Phlexible.user.options.Details', {
                         success: function(form, result) {
                             if (result.success) {
                                 var values = form.getValues(),
-                                    user = Phlexible.App.getUser();
+                                    user = Phlexible.User;
                                 user.setFirstname(values.firstname);
                                 user.setLastname(values.lastname);
                                 user.setEmail(values.email);

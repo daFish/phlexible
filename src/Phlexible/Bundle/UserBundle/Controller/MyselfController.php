@@ -8,30 +8,53 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Patch;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Options controller
+ * Myself controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/users/options")
+ * @Prefix("/user")
+ * @NamePrefix("phlexible_user_")
  */
-class OptionsController extends Controller
+class MyselfController extends Controller
 {
     /**
-     * Save details
+     * Get information about current user
+     *
+     * @return Response
+     *
+     * @Get()
+     * @View()
+     * @ApiDoc()
+     */
+    public function getMyselfAction()
+    {
+        $user = $this->getUser();
+
+        return $user;
+    }
+
+    /**
+     * Update current user
      *
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("", name="phlexible_options")
-     * @Method("PATCH")
+     * @return Response
+     *
+     * @Patch()
+     * @ApiDoc()
      */
-    public function savedetailsAction(Request $request)
+    public function patchMyselfAction(Request $request)
     {
         $user = $this->getUser();
 

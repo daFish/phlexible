@@ -5,9 +5,15 @@
  * - id (optional)
  *   Set focus on specific user
  */
-Ext.define('Phlexible.user.view.user.MainPanel', {
+Ext.define('Phlexible.user.view.users.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.user-user-main',
+    requires: [
+        'Phlexible.user.view.users.Details',
+        'Phlexible.user.view.users.Filter',
+        'Phlexible.user.view.users.List'
+    ],
+
+    xtype: 'user.users.main',
 
     layout: 'border',
     cls: 'p-user-main',
@@ -42,7 +48,7 @@ Ext.define('Phlexible.user.view.user.MainPanel', {
 
     initMyItems: function() {
         this.items = [{
-            xtype: 'user-user-filter',
+            xtype: 'user.users.filter',
             itemId: 'filterPanel',
             region: 'west',
             width: 250,
@@ -75,7 +81,7 @@ Ext.define('Phlexible.user.view.user.MainPanel', {
                 scope: this
             }
         },{
-            xtype: 'user-user-list',
+            xtype: 'user.users.list',
             itemId: 'usersGrid',
             region: 'center',
             padding: '5 0 5 5',
@@ -97,7 +103,7 @@ Ext.define('Phlexible.user.view.user.MainPanel', {
                 scope: this
             }
         },{
-            xtype: 'user-user-details',
+            xtype: 'user.users.details',
             itemId: 'detailPanel',
             region: 'east',
             width: 300,

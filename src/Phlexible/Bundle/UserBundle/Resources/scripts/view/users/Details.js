@@ -1,12 +1,13 @@
 /**
  * User detail view
  */
-Ext.define('Phlexible.user.view.user.DetailPanel', {
+Ext.define('Phlexible.user.view.users.Details', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.user-user-details',
 
-    cls: 'p-user-detail',
+    xtype: 'user.users.details',
+
     iconCls: Phlexible.Icon.get('card'),
+    cls: 'p-user-detail',
 
     noUserSelectedText: '_no_user_selected',
     usernameText: '_username',

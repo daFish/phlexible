@@ -8,35 +8,38 @@
 
 namespace Phlexible\Bundle\MediaTypeBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * List controller
+ * Media types controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/mediatypes")
+ *
  * @Security("is_granted('ROLE_MEDIA_TYPES')")
+ * @Prefix("/mediatype")
+ * @NamePrefix("phlexible_mediatype_")
  */
-class ListController extends Controller
+class MediaTypesController extends FOSRestController
 {
     /**
-     * List media types
+     * Get media types
      *
-     * @param Request $request
+     * @return Response
      *
-     * @return JsonResponse
-     * @Route("/list", name="mediatypes_list")
+     * @ApiDoc()
      */
-    public function listAction(Request $request)
+    public function getMediatypesAction()
     {
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
         $iconResolver = $this->get('phlexible_media_type.icon_resolver');
 
-        $mediaTypes = [];
+        $mediaTypes = $mediaTypeManager->findAll();
+        /*
         foreach ($mediaTypeManager->findAll() as $mediaType) {
             $mediaTypes[] = [
                 'id'        => $mediaType->getName(),
@@ -52,10 +55,13 @@ class ListController extends Controller
                 'icon256'   => (bool) $iconResolver->resolve($mediaType, 256),
             ];
         }
+        */
 
-        return new JsonResponse([
-            'totalCount' => count($mediaTypes),
-            'mediatypes' => $mediaTypes
-        ]);
+        return $this->handleView($this->view(
+            array(
+                'mediatypes' => $mediaTypes,
+                'count'      => count($mediaTypes),
+            )
+        ));
     }
 }

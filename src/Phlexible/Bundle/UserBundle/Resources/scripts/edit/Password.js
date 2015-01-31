@@ -32,7 +32,7 @@ Ext.define('Phlexible.user.edit.Password', {
             xtype: 'ux.passwordmeterfield',
             name: 'password',
             fieldLabel: this.passwordText,
-            minLength: Phlexible.App.getConfig().get('users.system.password_min_length'),
+            minLength: Phlexible.Config.get('users.system.password_min_length'),
             width: 150,
             listeners: {
                 change: function() {
@@ -47,7 +47,7 @@ Ext.define('Phlexible.user.edit.Password', {
             name: 'repeat',
             fieldLabel: this.passwordRepeatText,
             inputType: "password",
-            minLength: Phlexible.App.getConfig().get('users.system.password_min_length'),
+            minLength: Phlexible.Config.get('users.system.password_min_length'),
             width: 150,
             invalidText: this.passwordsDontMatchText,
             listeners: {
@@ -84,7 +84,7 @@ Ext.define('Phlexible.user.edit.Password', {
                     iconCls: Phlexible.Icon.get('wand'),
                     handler: function(btn) {
                         var generator = Ext.create('Phlexible.user.util.PasswordGenerator'),
-                            length = Phlexible.App.getConfig().get('users.system.password_min_length'),
+                            length = Phlexible.Config.get('users.system.password_min_length'),
                             password = generator.create(length, false);
 
                         this.getComponent(3).getComponent(0).getComponent(0).setValue(password);

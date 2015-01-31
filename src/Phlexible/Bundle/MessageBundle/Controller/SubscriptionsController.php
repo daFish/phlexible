@@ -8,87 +8,84 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\MessageBundle\Entity\Subscription;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Subscriptions controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/messages/subscriptions")
+ *
+ * @Prefix("/message")
+ * @NamePrefix("phlexible_message_")
  */
-class SubscriptionsController extends Controller
+class SubscriptionsController extends FOSRestController
 {
     /**
-     * List subscriptions
+     * Get subscriptions
      *
-     * @return JsonResponse
-     * @Route("", name="messages_subscriptions")
+     * @return Response
+     *
+     * @ApiDoc()
      */
-    public function listAction()
+    public function getSubscriptionsAction()
     {
         $subscriptionManager = $this->get('phlexible_message.subscription_manager');
 
-        $subscriptions = [];
+        $subscriptions = $subscriptionManager->findAll();
 
-        foreach ($subscriptionManager->findAll() as $subscription) {
-            $subscriptions[] = [
-                'id'       => $subscription->getId(),
-                'filterId' => $subscription->getFilter()->getId(),
-                'filter'   => $subscription->getFilter()->getTitle(),
-                'handler'  => $subscription->getHandler(),
-            ];
-        }
-
-        return new JsonResponse($subscriptions);
+        return $this->handleView($this->view($subscriptions));
     }
 
     /**
      * Create subscription
      *
-     * @param Request $request
+     * @param Subscription $subscription
      *
-     * @return ResultResponse
-     * @Route("/create", name="messages_subscription_create")
+     * @return Response
+     * @ParamConverter("subscription", converter="fos_rest.request_body")
+     * @Post("/subscriptions")
+     * @ApiDoc()
      */
-    public function createAction(Request $request)
+    public function postSubscriptionsAction(Subscription $subscription)
     {
-        $filterId = $request->get('filter');
-        $handler = $request->get('handler');
-
         $subscriptionManager = $this->get('phlexible_message.subscription_manager');
-        $filterManager = $this->get('phlexible_message.filter_manager');
-
-        $filter = $filterManager->find($filterId);
-
-        $subscription = $subscriptionManager->create()
-            ->setUserId($this->getUser()->getId())
-            ->setFilter($filter)
-            ->setHandler($handler);
 
         $subscriptionManager->updateSubscription($subscription);
 
-        return new ResultResponse(true, 'Subscription created.');
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
     }
 
     /**
      * Delete subscription
      *
-     * @param string $id
+     * @param string $subscriptionId
      *
-     * @return ResultResponse
-     * @Route("/delete/{id}", name="messages_subscription_delete")
+     * @return Response
+     * @Route("/delete/{subscriptionId}", name="messages_subscription_delete")
      */
-    public function deleteAction($id)
+    public function deleteSubscriptionAction($subscriptionId)
     {
         $subscriptionManager = $this->get('phlexible_message.subscription_manager');
 
-        $subscription = $subscriptionManager->find($id);
+        $subscription = $subscriptionManager->find($subscriptionId);
         $subscriptionManager->deleteSubscription($subscription);
 
-        return new ResultResponse(true, 'Subscription deleted.');
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
     }
 }

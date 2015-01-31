@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\NoRoute;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -21,11 +21,8 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\UserBundle\Entity\User;
-use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\UsersMessage;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Users controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
  * @Security("is_granted('ROLE_USERS')")
  * @Prefix("/user")
  * @NamePrefix("phlexible_user_")
@@ -154,7 +152,6 @@ class UsersController extends FOSRestController
         return $this->handleView($this->view(
             array(
                 'success' => true,
-                'msg'     => "User {$user->getUsername()} created."
             )
         ));
     }
@@ -162,26 +159,20 @@ class UsersController extends FOSRestController
     /**
      * Update user
      *
-     * @param Request $request
-     * @param string  $userId
+     * @param User         $user
+     * @param ParamFetcher $paramFetcher
+     * @param string       $userId
      *
-     * @throws \Exception
      * @return ResultResponse
+     * @throws \Exception
+     *
+     * @ParamConverter("user", converter="fos_rest.request_body")
+     * @QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
      * @Security("is_granted('ROLE_USER_ADMIN_UPDATE')")
-     * @ApiDoc(
-     *   requirements={
-     *     {"name"="username", "dataType"="string", "required"=true, "description"="Username"},
-     *     {"name"="email", "dataType"="string", "required"=true, "description"="Email"},
-     *     {"name"="password", "dataType"="string", "required"=false, "description"="password"},
-     *     {"name"="firstname", "dataType"="string", "required"=true, "description"="Firstname"},
-     *     {"name"="lastname", "dataType"="string", "required"=true, "description"="Lastname"},
-     *     {"name"="roles", "dataType"="array", "required"=false, "description"="Roles"},
-     *     {"name"="groups", "dataType"="array", "required"=false, "description"="Groups"},
-     *     {"name"="property_*", "dataType"="string", "required"=false, "description"="Property"}
-     *   }
-     * )
+     * @Put("/users/{userId}")
+     * @ApiDoc()
      */
-    public function putUserAction(Request $request, $userId)
+    public function putUserAction(User $user, ParamFetcher $paramFetcher, $userId)
     {
         $userManager = $this->get('phlexible_user.user_manager');
 
@@ -229,9 +220,7 @@ class UsersController extends FOSRestController
      * @param Request $request
      * @param string  $userId
      *
-     * @return ResultResponse
-     * @Route("/{userId}", name="phlexible_user_delete")
-     * @Method("DELETE")
+     * @return Response
      * @Security("is_granted('ROLE_USER_ADMIN_DELETE')")
      * @ApiDoc()
      */

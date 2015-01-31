@@ -1,9 +1,10 @@
 /**
  * Groups main view
  */
-Ext.define('Phlexible.user.view.group.MainPanel', {
+Ext.define('Phlexible.user.view.groups.Main', {
     extend: 'Ext.Panel',
-    alias: 'widget.user-group-main',
+
+    xtype: 'user.groups.main',
 
     iconCls: Phlexible.Icon.get('users'),
     cls: 'p-group-main',
@@ -61,7 +62,7 @@ Ext.define('Phlexible.user.view.group.MainPanel', {
                 model: 'Phlexible.user.model.Group',
                 proxy: {
                     type: 'ajax',
-                    url: Phlexible.Router.generate('phlexible_groups'),
+                    url: Phlexible.Router.generate('phlexible_user_get_groups'),
                     reader: {
                         type: 'json',
                         rootProperty: 'groups'
@@ -175,7 +176,7 @@ Ext.define('Phlexible.user.view.group.MainPanel', {
                     }
 
                     Ext.Ajax.request({
-                        url: Phlexible.Router.generate('phlexible_group_create'),
+                        url: Phlexible.Router.generate('phlexible_user_post_groups'),
                         params: {
                             data: Ext.encode(data)
                         },

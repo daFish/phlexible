@@ -28,7 +28,7 @@ Ext.define('Phlexible.user.options.Theme', {
             xtype: 'dataview',
             store: Ext.create('Ext.data.Store', {
                 model: 'Phlexible.gui.model.KeyValueIconCls',
-                data: Phlexible.App.getConfig().get('resources.themes')
+                data: Phlexible.Config.get('resources.themes')
             }),
             tpl: new Ext.XTemplate(
                 '<tpl for=".">',
@@ -50,7 +50,7 @@ Ext.define('Phlexible.user.options.Theme', {
     initMyListeners: function() {
         this.addListener({
             show: function (panel) {
-                var record = panel.getComponent(0).getStore().findRecord('key', Phlexible.App.getUser().getOptions().theme);
+                var record = panel.getComponent(0).getStore().findRecord('key', Phlexible.Config.getOptions().theme);
 
                 if (record) {
                     panel.getComponent(0).select(record, false, true);
@@ -76,7 +76,7 @@ Ext.define('Phlexible.user.options.Theme', {
                     {
                         record = records[0];
 
-                        if (Phlexible.App.getUser().getOptions().theme != record.get('key')) {
+                        if (Phlexible.User.getOptions().theme != record.get('key')) {
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('phlexible_options'),
                                 method: 'PATCH',
@@ -86,7 +86,7 @@ Ext.define('Phlexible.user.options.Theme', {
                                 success: function(response){
                                     var data = Ext.decode(response.responseText);
                                     if (data.success) {
-                                        Phlexible.App.getUser().getOptions().theme = record.get('key');
+                                        Phlexible.User.getOptions().theme = record.get('key');
                                     }
                                     else {
                                         Phlexible.Notify.failure(data.msg);

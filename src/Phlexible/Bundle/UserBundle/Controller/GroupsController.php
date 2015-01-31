@@ -9,10 +9,13 @@
 namespace Phlexible\Bundle\UserBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Prefix;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\UserBundle\Entity\Group;
 use Phlexible\Bundle\UserBundle\UsersMessage;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,29 +72,18 @@ class GroupsController extends FOSRestController
     /**
      * Create new group
      *
-     * @param Request $request
+     * @param Group $group
      *
      * @return Response
      *
      * @Security("is_granted('ROLE_GROUP_ADMIN_CREATE')")
-     * @ApiDoc(
-     *   requirements={
-     *     {"name"="name", "dataType"="string", "required"=true, "description"="New group name"}
-     *   }
-     * )
+     * @ParamConverter("group", converter="fos_rest.request_body")
+     * @Post("/groups")
+     * @ApiDoc()
      */
-    public function postGroupsAction(Request $request)
+    public function postGroupsAction(Group $group)
     {
-        $name = $request->get('name');
-
         $groupManager = $this->get('phlexible_user.group_manager');
-
-        $group = $groupManager->create()
-            ->setName($name)
-            ->setCreateUserId($this->getUser()->getId())
-            ->setCreatedAt(new \DateTime())
-            ->setModifyUserId($this->getUser()->getId())
-            ->setModifiedAt(new \DateTime());
 
         $groupManager->updateGroup($group);
 
@@ -101,7 +93,6 @@ class GroupsController extends FOSRestController
         return $this->handleView($this->view(
             array(
                 'success' => true,
-                'message' => "Group $name created."
             )
         ));
     }

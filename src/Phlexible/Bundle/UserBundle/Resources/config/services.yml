@@ -13,9 +13,11 @@ services:
         tags:
             - {name: serializer.normalizer}
 
-    phlexible_user.user_serializer:
-        class: Phlexible\Bundle\UserBundle\Serializer\UserSerializer
-        arguments: [@event_dispatcher]
+    phlexible_user.group_normalizer:
+        class: Phlexible\Bundle\UserBundle\Serializer\Normalizer\GroupNormalizer
+        public: false
+        tags:
+            - {name: serializer.normalizer}
 
     phlexible_user.successor_service:
         class: Phlexible\Bundle\UserBundle\Successor\SuccessorService

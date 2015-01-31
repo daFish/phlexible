@@ -15,7 +15,7 @@ Ext.onReady(function() {
                     target: c.el,
                     dismissDelay: 0,
                     autoHide: true,
-                    html: 'Switch back to "' + Phlexible.App.getUser().getImpersonated().username + '"',
+                    html: 'Switch back to "' + Phlexible.User.getImpersonated().username + '"',
                     anchor: 'bottom',
                     defaultAlign: 'tr-br?'
                 });

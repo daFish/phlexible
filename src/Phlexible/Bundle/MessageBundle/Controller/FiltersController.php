@@ -8,54 +8,56 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
-use Phlexible\Bundle\MessageBundle\Criteria\Criterium;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\MessageBundle\Entity\Filter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Filter controller
+ * Filters controller
  *
- * @author Caspar Baratella <cb@brainbits.net>
- * @Route("/messages/filters")
+ * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @Prefix("/message")
+ * @NamePrefix("phlexible_message_")
  */
-class FiltersController extends Controller
+class FiltersController extends FOSRestController
 {
     /**
-     * List filters
+     * Get filters
      *
-     * @return JsonResponse
-     * @Route("", name="messages_filters")
+     * @param ParamFetcher $paramFetcher
+     *
+     * @return Response
+     *
+     * @QueryParam(name="userId", requirements=".+", description="User ID")
      */
-    public function listAction()
+    public function getFiltersAction(ParamFetcher $paramFetcher)
     {
         $filterManager = $this->get('phlexible_message.filter_manager');
 
-        $filters = [];
-
-        foreach ($filterManager->findBy(['userId' => $this->getUser()->getId()]) as $filter) {
-            $criteria = [];
-            foreach ($filter->getCriteria() as $groupIndex => $group) {
-                foreach ($group as $criterium) {
-                    $criteria[] = [
-                        'criteria' => $criterium->getType(),
-                        'value'    => $criterium->getValue(),
-                        'group'    => $groupIndex + 1,
-                    ];
-                }
-            }
-
-            $filters[] = [
-                'id'       => $filter->getId(),
-                'title'    => $filter->getTitle(),
-                'criteria' => $criteria,
-            ];
+        $criteria = array();
+        if ($userId = $paramFetcher->get('userId')) {
+            $criteria['userId'] = $userId;
         }
 
-        return new JsonResponse($filters);
+        $filters = $filterManager->findBy($criteria);
+
+        return $this->handleView($this->view(
+            array(
+                'users' => $filters,
+                'count' => count($filters)
+            )
+        ));
     }
 
     /**
@@ -78,151 +80,70 @@ class FiltersController extends Controller
     /**
      * Create filter
      *
-     * @param Request $request
+     * @param Filter $filter
      *
-     * @return ResultResponse
-     * @Route("/create", name="messages_filter_create")
+     * @return Response
+     *
+     * @ParamConverter("subscription", converter="fos_rest.request_body")
+     * @Post("/filters")
+     * @ApiDoc()
      */
-    public function createAction(Request $request)
+    public function postFiltersAction(Filter $filter)
     {
-        $title = $request->get('title');
-
         $filterManager = $this->get('phlexible_message.filter_manager');
-
-        $filter = $filterManager->create();
-        $filter
-            ->setUserId($this->getUser()->getId())
-            ->setTitle($title)
-            ->setModifiedAt(new \DateTime())
-            ->setCreatedAt(new \DateTime());
-
         $filterManager->updateFilter($filter);
 
-        return new ResultResponse(true, 'Filter created.');
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
     }
 
     /**
      * Updates a Filter
      *
-     * @param Request $request
-     * @param string  $id
+     * @param Filter $filter
+     * @param string $filterId
      *
-     * @return ResultResponse
-     * @Route("/update/{id}", name="messages_filter_update")
+     * @return Response
+     * @ParamConverter("filter", converter="fos_rest.request_body")
+     * @Put("/filters/{filterId}")
+     * @ApiDoc()
      */
-    public function updateAction(Request $request, $id)
+    public function putFilterAction(Filter $filter, $filterId)
     {
-        $title = $request->get('title');
-        $rawCriteria = json_decode($request->get('criteria'), true);
-
         $filterManager = $this->get('phlexible_message.filter_manager');
 
-        $filter = $filterManager->find($id);
-        $filter->setTitle($title);
-
-        $criteria = new Criteria();
-        $criteria->setMode(Criteria::MODE_OR);
-        foreach ($rawCriteria as $group) {
-            $criteriaGroup = new Criteria();
-            $criteriaGroup->setMode(Criteria::MODE_AND);
-            foreach ($group as $row) {
-                if (!strlen($row['value'])) {
-                    continue;
-                }
-
-                $criterium = new Criterium($row['key'], $row['value']);
-                $criteriaGroup->add($criterium);
-            }
-            if ($criteriaGroup->count()) {
-                $criteria->addCriteria($criteriaGroup);
-            }
-        }
-        $filter->setCriteria($criteria);
+        $filter = $filterManager->find($filterId);
 
         $filterManager->updateFilter($filter);
 
-        return new ResultResponse(true, 'Filter updated');
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
     }
 
     /**
      * Delete filter
      *
-     * @param string $id
+     * @param string $filterId
      *
-     * @return ResultResponse
-     * @Route("/delete/{id}", name="messages_filter_delete")
+     * @return Response
+     * @ApiDoc()
      */
-    public function deleteAction($id)
+    public function deleteFilterAction($filterId)
     {
         $filterManager = $this->get('phlexible_message.filter_manager');
-        $filter = $filterManager->find($id);
+        $filter = $filterManager->find($filterId);
         $filterManager->deleteFilter($filter);
 
-        return new ResultResponse(true, 'Filter "' . $filter->getTitle() . '" deleted.');
-    }
-
-    /**
-     * Preview messages
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/preview", name="messages_filter_preview")
-     */
-    public function previewAction(Request $request)
-    {
-        $rawCriteria = json_decode($request->get('filters'), true);
-
-        $messageManager = $this->get('phlexible_message.message_manager');
-
-        $criteria = new Criteria();
-        $criteria->setMode(Criteria::MODE_OR);
-        foreach ($rawCriteria as $group) {
-            $criteriaGroup = new Criteria();
-            $criteriaGroup->setMode(Criteria::MODE_AND);
-            foreach ($group as $row) {
-                if (!strlen($row['value'])) {
-                    continue;
-                }
-
-                $criterium = new Criterium($row['key'], $row['value']);
-                $criteriaGroup->add($criterium);
-            }
-            if ($criteriaGroup->count()) {
-                $criteria->addCriteria($criteriaGroup);
-            }
-        }
-
-        if (!$criteria->count()) {
-            return new JsonResponse([
-                'total'    => 0,
-                'messages' => []
-            ]);
-        }
-
-        $messages = $messageManager->findByCriteria($criteria, ['createdAt' => 'DESC'], 20);
-        $count = $messageManager->countByCriteria($criteria);
-
-        $priorityList = $messageManager->getPriorityNames();
-        $typeList = $messageManager->getTypeNames();
-
-        $data = [];
-        foreach ($messages as $message) {
-            $data[] = [
-                'subject'    => $message->getSubject(),
-                'body'       => nl2br($message->getBody()),
-                'priority'   => $priorityList[$message->getPriority()],
-                'type'       => $typeList[$message->getType()],
-                'channel'    => $message->getChannel(),
-                'role'       => $message->getRole(),
-                'created_at' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-                'user'       => $message->getUser(),
-            ];
-        }
-
-        return new JsonResponse([
-            'total'    => $count,
-            'messages' => $data
-        ]);
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
     }
 }

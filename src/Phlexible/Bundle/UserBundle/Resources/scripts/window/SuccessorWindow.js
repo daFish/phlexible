@@ -20,7 +20,7 @@ Ext.define('Phlexible.user.window.SuccessorWindow', {
                 fieldLabel: this.successorText,
                 anchor: '-80',
                 store: new Ext.data.JsonStore({
-                    url: Phlexible.Router.generate('users_successor_list', {userId: this.userId}),
+                    url: Phlexible.Router.generate('phlexible_user_get_users', {userId: this.userId}),
                     fields: ['id', 'name'],
                     id: 'id'
                 }),

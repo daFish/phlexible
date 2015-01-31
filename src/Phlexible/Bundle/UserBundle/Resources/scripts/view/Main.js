@@ -5,9 +5,16 @@
  * - id (optional)
  *   Set focus on specific user
  */
-Ext.define('Phlexible.user.view.MainPanel', {
+Ext.define('Phlexible.user.view.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.user-main',
+    requires: [
+        'Phlexible.user.view.MainController',
+        'Phlexible.user.view.groups.Main',
+        'Phlexible.user.view.users.Main'
+    ],
+
+    xtype: 'user.main',
+    controller: 'user.main',
 
     layout: 'fit',
     iconCls: Phlexible.Icon.get('users'),
@@ -26,10 +33,10 @@ Ext.define('Phlexible.user.view.MainPanel', {
             border: false,
             activeTab: 0,
             items: [{
-                xtype: 'user-user-main',
+                xtype: 'user.users.main',
                 itemId: 'users'
             },{
-                xtype: 'user-group-main',
+                xtype: 'user.groups.main',
                 itemId: 'groups'
             }]
         };

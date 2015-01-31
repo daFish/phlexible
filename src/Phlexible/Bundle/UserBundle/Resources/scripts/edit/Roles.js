@@ -26,7 +26,7 @@ Ext.define('Phlexible.user.edit.Roles', {
             model: 'Phlexible.user.model.UserRole',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_roles'),
+                url: Phlexible.Router.generate('phlexible_user_get_roles'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -62,7 +62,7 @@ Ext.define('Phlexible.user.edit.Roles', {
     },
 
     loadRecord: function(record) {
-        this.getStore().getProxy().url = Phlexible.Router.generate('phlexible_user_roles', {userId: record.get('id')});
+        this.getStore().getProxy().url = Phlexible.Router.generate('phlexible_user_get_user_roles', {userId: record.get('id')});
         this.getStore().load();
     },
 

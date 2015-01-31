@@ -1,9 +1,10 @@
 /**
  * User grid view
  */
-Ext.define('Phlexible.user.view.user.ListGrid', {
+Ext.define('Phlexible.user.view.users.List', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.user-user-list',
+
+    xtype: 'user.users.list',
 
     cls: 'p-user-list',
     stripeRows: true,
@@ -56,7 +57,7 @@ Ext.define('Phlexible.user.view.user.ListGrid', {
             model: 'Phlexible.user.model.User',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_users'),
+                url: Phlexible.Router.generate('phlexible_user_get_users'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -183,7 +184,7 @@ Ext.define('Phlexible.user.view.user.ListGrid', {
     initMyTbarItems: function() {
         this.tbarItems = [];
 
-        if (Phlexible.App.isGranted('ROLE_USER_ADMIN_CREATE')) {
+        if (Phlexible.User.isGranted('ROLE_USER_ADMIN_CREATE')) {
             this.tbarItems.push({
                 itemId: 'addBtn',
                 text: this.addUserText,
@@ -201,7 +202,7 @@ Ext.define('Phlexible.user.view.user.ListGrid', {
             });
         }
 
-        if (Phlexible.App.isGranted('ROLE_ALLOWED_TO_SWITCH')) {
+        if (Phlexible.User.isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             if (this.tbarItems.length) {
                 this.tbarItems.push('-');
             }
@@ -265,7 +266,7 @@ Ext.define('Phlexible.user.view.user.ListGrid', {
                 }
             },
             rowdblclick: function(view, record){
-                if (!Phlexible.App.isGranted('ROLE_USER_ADMIN_PATCH')) {
+                if (!Phlexible.User.isGranted('ROLE_USER_ADMIN_PATCH')) {
                     return;
                 }
                 var w = Ext.create('Phlexible.user.window.UserWindow', {
@@ -292,12 +293,12 @@ Ext.define('Phlexible.user.view.user.ListGrid', {
                 lastname: '',
                 email: '',
                 options: {
-                    theme: Phlexible.App.getConfig().get('users.defaults.theme')
+                    theme: Phlexible.Config.get('users.defaults.theme')
                 },
                 account: {
-                    forcePasswordChange: Phlexible.App.getConfig().get('users.defaults.force_password_change'),
-                    noPasswordChange: Phlexible.App.getConfig().get('users.defaults.cant_change_password'),
-                    noPasswordExpire: Phlexible.App.getConfig().get('users.defaults.password_doesnt_expire')
+                    forcePasswordChange: Phlexible.Config.get('users.defaults.force_password_change'),
+                    noPasswordChange: Phlexible.Config.get('users.defaults.cant_change_password'),
+                    noPasswordExpire: Phlexible.Config.get('users.defaults.password_doesnt_expire')
                 },
                 roles: [
                     'user'
@@ -341,7 +342,7 @@ Ext.define('Phlexible.user.view.user.ListGrid', {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('phlexible_user_delete'),
+                url: Phlexible.Router.generate('phlexible_user_delete_user'),
                 params: {
                     'ids[]': ids
                 },

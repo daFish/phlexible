@@ -11,18 +11,18 @@ Phlexible:
                 text: Logout
 
         view:
-            MainPanel:
+            Main:
                 title: Benutzer
 
-            group:
-                MainPanel:
+            groups:
+                Main:
                     title: Gruppen
 
-            user:
-                MainPanel:
+            users:
+                Main:
                     title: Benutzer
 
-                FilterPanel:
+                Filter:
                     title: Filter
                     searchText: Suchen
                     accountText: Konto
@@ -33,7 +33,7 @@ Phlexible:
                     rolesText: Rollen
                     groupsText: Gruppen
 
-                DetailPanel:
+                Details:
                     title: Details
                     noUserSelectedText: No user selected
                     usernameText: Username
@@ -45,7 +45,7 @@ Phlexible:
                     groupsText: Gruppen
                     propertiesText: Eigenschaften
 
-                ListGrid:
+                List:
                     title: Benutzer
                     idText: ID
                     usernameText: Benutzername

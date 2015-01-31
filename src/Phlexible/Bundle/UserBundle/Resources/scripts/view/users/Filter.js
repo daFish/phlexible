@@ -1,10 +1,11 @@
 /**
  * User filter view
  */
-Ext.define('Phlexible.user.view.user.FilterPanel', {
+Ext.define('Phlexible.user.view.users.Filter', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-user-filter',
     requires: ['Ext.ux.form.trigger.Clear'],
+
+    xtype: 'user.users.filter',
 
     cls: 'p-user-filter',
     iconCls: Phlexible.Icon.get(Phlexible.Icon.FILTER),
@@ -148,7 +149,7 @@ Ext.define('Phlexible.user.view.user.FilterPanel', {
                     model: 'Phlexible.user.model.UserRole',
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('phlexible_roles'),
+                        url: Phlexible.Router.generate('phlexible_user_get_roles'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',
@@ -187,7 +188,7 @@ Ext.define('Phlexible.user.view.user.FilterPanel', {
                     model: 'Phlexible.user.model.UserGroup',
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('phlexible_groups'),
+                        url: Phlexible.Router.generate('phlexible_user_get_groups'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',

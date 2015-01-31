@@ -7,6 +7,6 @@ Ext.define('Phlexible.user.handler.Logout', {
     text: '_logout',
     iconCls: Phlexible.Icon.get('door-open-in'),
     getComponent: function() {
-        return Phlexible.App.getConfig().get('users.logout_url');
+        return Phlexible.Config.get('users.logout_url');
     }
 });

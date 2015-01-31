@@ -32,7 +32,7 @@ Ext.define('Phlexible.search.form.SearchBox', {
             model: 'Phlexible.search.model.Result',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('search_search'),
+                url: Phlexible.Router.generate('phlexible_search_get_results'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',

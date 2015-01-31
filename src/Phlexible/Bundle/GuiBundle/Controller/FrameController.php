@@ -76,9 +76,6 @@ class FrameController extends Controller
      * @return JsonResponse
      * @Route("/gui/config", name="gui_config")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns config values"
-     * )
      */
     public function configAction()
     {
@@ -94,9 +91,6 @@ class FrameController extends Controller
      * @return JsonResponse
      * @Route("/gui/menu", name="gui_menu")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns menu structure"
-     * )
      */
     public function menuAction()
     {
@@ -115,9 +109,6 @@ class FrameController extends Controller
      * @return Response
      * @Route("/gui/routes", name="gui_routes")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns routes"
-     * )
      */
     public function routesAction(Request $request)
     {

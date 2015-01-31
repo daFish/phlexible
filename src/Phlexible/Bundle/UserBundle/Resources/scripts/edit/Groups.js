@@ -26,7 +26,7 @@ Ext.define('Phlexible.user.edit.Groups', {
             model: 'Phlexible.user.model.UserGroup',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_groups'),
+                url: Phlexible.Router.generate('phlexible_user_get_groups'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -62,7 +62,7 @@ Ext.define('Phlexible.user.edit.Groups', {
     },
 
     loadRecord: function(record) {
-        this.getStore().getProxy().url = Phlexible.Router.generate('phlexible_user_groups', {userId: record.get('id')});
+        this.getStore().getProxy().url = Phlexible.Router.generate('phlexible_user_get_user_groups', {userId: record.get('id')});
         this.getStore().load();
     },
 

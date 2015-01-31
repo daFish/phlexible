@@ -8,29 +8,79 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Controller;
 
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Form controller
+ * Media templates controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/mediatemplates/form")
+ *
  * @Security("is_granted('ROLE_MEDIA_TEMPLATES')")
+ * @Prefix("/mediatemplate")
+ * @NamePrefix("phlexible_mediatemplate_")
  */
-class FormController extends Controller
+class MediaTemplatesController extends FOSRestController
 {
+    /**
+     * Get media templates
+     *
+     * @return Response
+     *
+     * @ApiDoc()
+     */
+    public function getMediatemplatesAction()
+    {
+        $repository = $this->get('phlexible_media_template.template_manager');
+
+        $mediaTemplates = $repository->findAll();
+
+        return $this->handleView($this->view(
+            array(
+                'mediatemplates' => $mediaTemplates,
+                'count'          => count($mediaTemplates),
+            )
+        ));
+    }
+
+    /**
+     * Create mediatemplate
+     *
+     * @param ImageTemplate $mediaTemplate
+     *
+     * @return Response
+     *
+     * @ParamConverter("mediatemplate", converter="fos_rest.request_body")
+     * @Post("/mediatemplates")
+     * @ApiDoc()
+     */
+    public function postMediatemplatesAction(ImageTemplate $mediaTemplate)
+    {
+        $templateRepository = $this->get('phlexible_media_template.template_manager');
+
+        $templateRepository->updateTemplate($mediaTemplate);
+
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
+    }
+
     /**
      * List variables
      *
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("/load", name="mediatemplates_form_load")
+     * @return Response
      */
     public function loadAction(Request $request)
     {
@@ -46,7 +96,7 @@ class FormController extends Controller
             unset($parameters['method']);
         }
 
-        return new JsonResponse(['success' => true, 'data' => $parameters]);
+        return new Response(['success' => true, 'data' => $parameters]);
     }
 
     /**
@@ -54,8 +104,7 @@ class FormController extends Controller
      *
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("/save", name="mediatemplates_form_save")
+     * @return Response
      */
     public function saveAction(Request $request)
     {
@@ -65,9 +114,9 @@ class FormController extends Controller
         $params = $request->request->all();
 
         unset($params['template_key'],
-        $params['module'],
-        $params['controller'],
-        $params['action']);
+            $params['module'],
+            $params['controller'],
+            $params['action']);
 
         $template = $repository->find($templateKey);
 
@@ -79,7 +128,7 @@ class FormController extends Controller
 
         $repository->updateTemplate($template);
 
-        return new ResultResponse(true, 'Media template "' . $template->getKey() . '" saved.');
+        return new Response(true, 'Media template "' . $template->getKey() . '" saved.');
     }
 
     /**

@@ -32,7 +32,7 @@ Ext.define('Phlexible.user.edit.Preferences', {
             emptyText: this.systemDefaultText,
             store: Ext.create('Ext.data.Store', {
                 model: 'Phlexible.gui.model.KeyValue',
-                data: Phlexible.App.getConfig().get('resources.themes')
+                data: Phlexible.Config.get('resources.themes')
             }),
             displayField: 'value',
             valueField: 'key',

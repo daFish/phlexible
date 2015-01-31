@@ -48,7 +48,7 @@ Ext.define('Phlexible.user.options.Preferences', {
                         success: function(form, result) {
                             if (result.success) {
                                 var values = form.getValues();
-                                Phlexible.App.getUser().getOptions().language   = values.language;
+                                Phlexible.User.getOptions().language   = values.language;
                             } else {
                                 Phlexible.Notify.failure(result.msg);
                             }

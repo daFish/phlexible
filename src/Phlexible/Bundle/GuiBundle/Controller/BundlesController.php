@@ -8,40 +8,38 @@
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Bundles controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @Route("/gui/bundles")
  * @Security("is_granted('ROLE_BUNDLES')")
+ * @Prefix("/gui")
+ * @NamePrefix("phlexible_gui_")
  */
-class BundlesController extends Controller
+class BundlesController extends FOSRestController
 {
     /**
-     * List all Components
+     * Get bundles
      *
-     * @return JsonResponse
-     * @Route("", name="gui_bundles")
-     * @Method({"GET", "POST"})
-     * @ApiDoc(
-     *   description="Returns a list of installed bundles"
-     * )
+     * @return Response
+     * @ApiDoc()
      */
-    public function listAction()
+    public function getBundlesAction()
     {
-        $modules = [];
+        $bundles = $this->container->getParameter('kernel.bundles');
 
-        $components = $this->container->getParameter('kernel.bundles');
+        $bundlesData = [];
+        $packages = [];
 
-        foreach ($components as $id => $class) {
+        foreach ($bundles as $id => $class) {
             $className = $class;
             $package = $class;
             if (strstr($class, '\\')) {
@@ -55,51 +53,34 @@ class BundlesController extends Controller
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
-            $modules[$id] = [
+            $bundlesData[$id] = [
                 'id'          => $id,
                 'classname'   => $className,
                 'package'     => $package,
                 'path'        => $path,
             ];
-        }
 
-        ksort($modules);
-        $modules = array_values($modules);
-
-        return new JsonResponse($modules);
-    }
-
-    /**
-     * Filter values
-     *
-     * @return JsonResponse
-     * @Route("/filtervalues", name="gui_bundles_filtervalues")
-     * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns a list of bundle filter values"
-     * )
-     */
-    public function filtervaluesAction()
-    {
-        $bundles = $this->container->getParameter('kernel.bundles');
-
-        $packageList = [];
-        foreach ($bundles as $id => $class) {
-            $reflection = new \ReflectionClass($class);
             $namespace = $reflection->getNamespaceName();
             $package = current(explode('\\', $namespace));
-            $packageList[$package] = 1;
+            $packages[$package] = 1;
         }
 
-        $packages = [];
-        foreach (array_keys($packageList) as $package) {
+        ksort($bundlesData);
+        $bundlesData = array_values($bundlesData);
+
+        $packagesData = [];
+        foreach (array_keys($packages) as $package) {
             $packages[$package] = ['id' => $package, 'title' => ucfirst($package), 'checked' => true];
         }
-        ksort($packages);
-        $packages = array_values($packages);
+        ksort($packagesData);
+        $packagesData = array_values($packagesData);
 
-        return new JsonResponse([
-            'packages' => $packages,
-        ]);
+        return $this->handleView($this->view(
+            array(
+                'users' => $bundlesData,
+                'count' => count($bundlesData),
+                'packages' => $packagesData,
+            )
+        ));
     }
 }
