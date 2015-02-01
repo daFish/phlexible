@@ -25,6 +25,7 @@ Ext.define('Phlexible.user.view.users.List', {
     hasCommentsText: '_has_comments',
     hasExpireDateText: '_has_expire_date',
     isDisabledText: '_is_disabled',
+    isExpiredDateText: '_isExpiredDateText',
     addUserText: '_add_user',
     deleteUserText: '_delete_user',
     impersonateText: '_impersonate',
@@ -169,7 +170,7 @@ Ext.define('Phlexible.user.view.users.List', {
         },{
             header: this.flagsText,
             sortable: false,
-            width: 60,
+            width: 80,
             renderer: this.flagsRenderer
         }];
     },
@@ -371,11 +372,14 @@ Ext.define('Phlexible.user.view.users.List', {
         if (r.get('comment')) {
             v += Phlexible.Icon.inline('sticky-note-text', {'data-qtip': this.hasCommentsText});
         }
-        if (r.get('disabled')) {
-            v += Phlexible.Icon.inline('cross', {'data-qtip': this.isDisabledText});
+        if (!r.get('enabled')) {
+            v += Phlexible.Icon.inline('key', {'data-qtip': this.isDisabledText});
+        }
+        if (r.get('expired')) {
+            v += Phlexible.Icon.inline('alarm-clock--exclamation', {'data-qtip': this.isExpiredDateText});
         }
         if (r.get('expiresAt')) {
-            v += Phlexible.Icon.inline('alarm-clock', {'data-qtip': this.hasExpireDateText});
+            v += Phlexible.Icon.inline('alarm-clock-select', {'data-qtip': this.hasExpireDateText});
         }
         return v;
     }

@@ -53,6 +53,7 @@ Phlexible:
                     firstnameText: Vorname
                     lastnameText: Nachname
                     commentText: Bemerkungen
+                    isExpiredDateText: Ist abgelaufen
                     expireDateText: Ablaufdatum
                     createDateText: Erstellt am
                     createUserText: Erstellt durch
@@ -77,8 +78,9 @@ Phlexible:
                 closeText: Schliessen
 
             UserWindow:
-                accountIsDisabledText: Konto ist gesperrt
-                accountIsExpiredText: Konto ist abgelaufen
+                isDisabledText: Ist deaktiviert
+                isExpiredText: Ist abgelaufen
+                isLockedText: Ist gesperrt
                 addUserText: Neuer Benutzer
                 editUserText: "{0}"
                 saveText: Speichern
@@ -118,27 +120,28 @@ Phlexible:
 
             Account:
                 title: Konto
-                isDisabledText: Ist gesperrt
-                cantChangePasswordText: Kann Passwort nicht ändern
-                passwordDoesntExpireText: Passwort läuft nicht ab
-                changePasswordNextLoginText: Muss Passwort nach nächstem Login ändern
-                accountExpiresOnText: Konto läuft ab an
-                expireHelpText: Ablauf Hilfe
+                enabledText: Ist aktiviert
+                lockedText: Ist gesperrt
+                expiredText: Ist abgelaufen
+                expiresAtText: Läuft ab an
+                credentialsExpiredText: Anmeldedaten abgelaufen
+                credentialsExpireAtText: Anmeldedaten laufen ab an
 
             Roles:
-                emptyText: Keine Rollen
                 title: Rollen
+                emptyText: Keine Rollen
                 memberText: Member
                 roleText: Rolle
 
             Groups:
-                emptyText: Keine Gruppen
                 title: Gruppen
+                emptyText: Keine Gruppen
                 memberText: Member
                 groupText: Gruppe
 
             Properties:
                 title: Eigenschaften
+                emptyText: Keine Eigenschaften
                 addPropertyText: Eigenschaft hinzufügen
                 removePropertyText: Eigenschaft entfernen
                 newPropertyText: Neue Eigenschaft

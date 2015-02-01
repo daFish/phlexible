@@ -53,6 +53,7 @@ Phlexible:
                     firstnameText: Firstname
                     lastnameText: Lastname
                     commentText: Comments
+                    isExpiredDateText: Is expired
                     expireDateText: Expire date
                     createDateText: Created on
                     createUserText: Created by
@@ -77,8 +78,9 @@ Phlexible:
                 closeText: Close
 
             UserWindow:
-                accountIsDisabledText: Account is disabled
-                accountIsExpiredText: Account is expired
+                isDisabledText: Is disabled
+                isExpiredText: Is expired
+                isLockedText: Is locked
                 addUserText: New user
                 editUserText: "{0}"
                 saveText: Save
@@ -118,27 +120,28 @@ Phlexible:
 
             Account:
                 title: Account
-                isDisabledText: Is disabled
-                cantChangePasswordText: Can't change password
-                passwordDoesntExpireText: Password doesn't expire
-                changePasswordNextLoginText: Change password on next login
-                accountExpiresOnText: Account expires on
-                expireHelpText: Expire help
+                enabledText: Is enabled
+                lockedText: Is locked
+                expiredText: Is expired
+                credentialsExpiredText: Credentials expired
+                expiresAtText: Expires at
+                credentialsExpireAtText: Credentials expire at
 
             Roles:
-                emptyText: No roles
                 title: Roles
+                emptyText: No roles
                 memberText: Member
                 roleText: Role
 
             Groups:
-                emptyText: No groups
                 title: Groups
+                emptyText: No groups
                 memberText: Member
                 groupText: Group
 
             Properties:
                 title: Properties
+                emptyText: No properties
                 addPropertyText: Add property
                 removePropertyText: Remove property
                 newPropertyText: New property

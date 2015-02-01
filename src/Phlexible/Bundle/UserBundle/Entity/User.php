@@ -385,25 +385,5 @@ class User extends BaseUser
     {
         return $this->setProperty('interfaceLanguage', $interfaceLanguage);
     }
-
-    /**
-     * @param string $defaultLanguage
-     *
-     * @return string
-     */
-    public function getContentLanguage($defaultLanguage = null)
-    {
-        return $this->getProperty('contentLanguage', $defaultLanguage);
-    }
-
-    /**
-     * @param string $contentLanguage
-     *
-     * @return $this
-     */
-    public function setContentLanguage($contentLanguage)
-    {
-        return $this->setProperty('contentLanguage', $contentLanguage);
-    }
 }
 

@@ -20,50 +20,60 @@ Ext.define('Phlexible.user.edit.Account', {
 
     key: 'account',
 
-    accountText: '_account',
-    isDisabledText: '_disabled',
-    cantChangePasswordText: '_cant_change_password',
-    passwordDoesntExpireText: '_password_doesnt_expire',
-    changePasswordNextLoginText: '_change_password_next_login',
-    accountExpiresOnText: '_account_expires_on',
-    expireHelpText: '_expire_help',
+    accountText: '_accountText',
+    enabledText: '_enabledText',
+    lockedText: '_lockedText',
+    expiredText: '_expiredText',
+    credentialsExpiredText: '_credentialsExpiredText',
+    expiresAtText: '_expiresAtText',
+    credentialsExpireAtText: '_credentialsExpireAtText',
 
     initComponent: function() {
         this.items = [{
             xtype: 'checkbox',
-            boxLabel: this.isDisabledText,
+            boxLabel: this.enabledText,
             hideLabel: true,
-            name: 'disabled',
+            name: 'enabled',
             inputValue: '1',
             uncheckedValue: '0'
         },{
             xtype: 'checkbox',
-            boxLabel: this.cantChangePasswordText,
+            boxLabel: this.lockedText,
             hideLabel: true,
-            name: 'noPasswordChange',
+            name: 'locked',
             inputValue: '1',
             uncheckedValue: '0'
         },{
             xtype: 'checkbox',
-            boxLabel: this.passwordDoesntExpireText,
+            boxLabel: this.expiredText,
             hideLabel: true,
-            name: 'noPasswordExpire',
-            inputValue: '1',
-            uncheckedValue: '0'
-        },{
-            xtype: 'checkbox',
-            boxLabel: this.changePasswordNextLoginText,
-            hideLabel: true,
-            name: 'forcePasswordChange',
+            name: 'expired',
             inputValue: '1',
             uncheckedValue: '0'
         },{
             xtype: 'datefield',
-            fieldLabel: this.accountExpiresOnText,
+            fieldLabel: this.expiresAtText,
             name: 'expiresAt',
-            width: 150,
-            format: 'Y-m-d',
-            helpText: this.expireHelpText,
+            width: 160,
+            format: 'Y-m-d H:i:s',
+            triggers: {
+                clear: {
+                    type: 'clear'
+                }
+            }
+        },{
+            xtype: 'checkbox',
+            boxLabel: this.credentialsExpiredText,
+            hideLabel: true,
+            name: 'credentialsExpired',
+            inputValue: '1',
+            uncheckedValue: '0'
+        },{
+            xtype: 'datefield',
+            fieldLabel: this.credentialsExpireAtText,
+            name: 'credentialsExpireAt',
+            width: 160,
+            format: 'Y-m-d H:i:s',
             triggers: {
                 clear: {
                     type: 'clear'
@@ -74,16 +84,8 @@ Ext.define('Phlexible.user.edit.Account', {
         this.callParent(arguments);
     },
 
-    loadRecord: function(record) {
-        var properties = record.get('properties') || {};
-
-        this.getForm().setValues({
-            disabled: record.get('disabled'),
-            expiresAt: record.get('expiresAt'),
-            noPasswordChange: properties['account.noPasswordChange'],
-            noPasswordExpire: properties['account.noPasswordExpire'],
-            forcePasswordChange: properties['account.forcePasswordChange']
-        });
+    loadRecord: function(user) {
+        this.getForm().setValues(user.data);
     },
 
     isValid: function() {

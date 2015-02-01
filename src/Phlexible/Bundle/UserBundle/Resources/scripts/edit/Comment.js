@@ -6,7 +6,7 @@ Ext.define('Phlexible.user.edit.Comment', {
     alias: 'widget.user-edit-comment',
 
     title: '_comment',
-    iconCls: Phlexible.Icon.get('pencil'),
+    iconCls: Phlexible.Icon.get('sticky-note-text'),
     layout: 'fit',
     bodyPadding: 5,
     border: true,

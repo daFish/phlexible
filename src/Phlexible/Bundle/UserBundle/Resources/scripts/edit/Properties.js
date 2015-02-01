@@ -10,13 +10,15 @@ Ext.define('Phlexible.user.edit.Properties', {
     border: true,
     hideMode: 'offsets',
     viewConfig: {
-        stripeRows: true
+        stripeRows: true,
+        deferEmptyText: false
     },
     source: {x:1},
     nameColumnWidth: 200,
 
     key: 'properties',
 
+    emptyText: '_emptyText',
     addPropertyText: '_add_property',
     removePropertyText: '_remove_property',
     newPropertyText: '_new_property',

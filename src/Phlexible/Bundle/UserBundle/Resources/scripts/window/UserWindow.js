@@ -9,14 +9,15 @@ Ext.define('Phlexible.user.window.UserWindow', {
     iconCls: Phlexible.Icon.get('user'),
     width: 630,
     minWidth: 630,
-    height: 400,
-    minHeight: 400,
+    height: 420,
+    minHeight: 420,
     layout: 'border',
     border: true,
     modal: true,
 
-    accountIsExpiredText: '_account_is_expired',
-    accountIsDisabledText: '_account_is_disabled',
+    isExpiredText: '_isExpiredText',
+    isDisabledText: '_isDisabledText',
+    isLockedText: '_isLockedText',
     saveText: '_save',
     cancelText: '_cancel',
     saveAndNotifyText: '_save_and_notify_text',
@@ -42,13 +43,13 @@ Ext.define('Phlexible.user.window.UserWindow', {
         var xtypes = Phlexible.PluginManager.get('userEditCards'),
             cards = [],
             buttons = [],
-            i = 0,
             cls;
 
         Ext.each(xtypes, function(xtype) {
             cls = Ext.ClassManager.getByAlias('widget.' + xtype);
             console.log(cls.prototype.title, cls.prototype.defaultConfig.iconCls);
             buttons.push({
+                itemId: xtype,
                 text: cls.prototype.title,
                 iconCls: cls.prototype.defaultConfig.iconCls,
                 margin: '0 0 5 0',
@@ -56,18 +57,17 @@ Ext.define('Phlexible.user.window.UserWindow', {
                 textAlign: 'left',
                 toggleHandler: function(btn, state) {
                     if (state) {
-                        this.getComponent(1).getLayout().setActiveItem('panel-' + xtype);
+                        this.getComponent('cards').getLayout().setActiveItem(xtype);
                     }
                 },
                 scope: this
             });
             cards.push({
                 xtype: xtype,
-                itemId: 'panel-' + xtype,
+                itemId: xtype,
                 header: false,
                 mode: this.mode
             });
-            i += 1;
         }, this);
 
         buttons[0].pressed = true;
@@ -75,6 +75,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
         this.items = [{
             xtype: 'buttongroup',
             region: 'west',
+            itemId: 'buttons',
             width: 150,
             columns: 1,
             padding: 5,
@@ -86,6 +87,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
             items: buttons
         },{
             region: 'center',
+            itemId: 'cards',
             layout: 'card',
             border: false,
             margin: '5 5 5 0',
@@ -97,34 +99,37 @@ Ext.define('Phlexible.user.window.UserWindow', {
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
-            itemId: 'accountExpiredTbar',
+            itemId: 'infoTbar',
             cls: 'p-users-user-expired',
             border: true,
             hidden: true,
             items: [
                 '->',
             {
+                itemId: 'disabledBtn',
                 iconCls: Phlexible.Icon.get('key'),
-                text: this.accountIsExpiredText,
+                text: this.isDisabledText,
+                hidden: true,
                 handler: function() {
-                    this.getComponent(1).getLayout().setActiveItem('accountPanel');
+                    this.getComponent('buttons').getComponent('user-edit-account').toggle(true);
                 },
                 scope: this
-            }]
-        },{
-            xtype: 'toolbar',
-            dock: 'top',
-            itemId: 'accountDisabledTbar',
-            cls: 'p-users-user-disabled',
-            border: true,
-            hidden: true,
-            items: [
-                '->',
-            {
-                iconCls: Phlexible.Icon.get('key'),
-                text: this.accountIsDisabledText,
+            },{
+                itemId: 'expiredBtn',
+                iconCls: Phlexible.Icon.get('alarm-clock--exclamation'),
+                text: this.isExpiredText,
+                hidden: true,
                 handler: function() {
-                    this.getComponent(1).getLayout().setActiveItem('accountPanel');
+                    this.getComponent('buttons').getComponent('user-edit-account').toggle(true);
+                },
+                scope: this
+            },{
+                itemId: 'lockedBtn',
+                iconCls: Phlexible.Icon.get('lock'),
+                text: this.isLockedText,
+                hidden: true,
+                handler: function() {
+                    this.getComponent('buttons').getComponent('user-edit-account').toggle(true);
                 },
                 scope: this
             }]
@@ -170,10 +175,16 @@ Ext.define('Phlexible.user.window.UserWindow', {
         });
 
         if (record.get('expired') || (record.get('expiresAt') && record.get('expiresAt') <= Ext.Date.format(new Date(), 'Y-m-d H:i:s'))) {
-            this.getDockedComponent('accountExpiredTbar').show();
+            this.getDockedComponent('infoTbar').show();
+            this.getDockedComponent('infoTbar').getComponent('expiredBtn').show();
         }
-        if (record.get('disabled')) {
-            this.getDockedComponent('accountDisabledTbar').show();
+        if (!record.get('enabled')) {
+            this.getDockedComponent('infoTbar').show();
+            this.getDockedComponent('infoTbar').getComponent('disabledBtn').show();
+        }
+        if (record.get('locked')) {
+            this.getDockedComponent('infoTbar').show();
+            this.getDockedComponent('infoTbar').getComponent('lockedBtn').show();
         }
     },
 
