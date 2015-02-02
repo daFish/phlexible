@@ -49,7 +49,7 @@ Ext.define('Phlexible.message.view.list.List', {
                     type: 'json',
                     rootProperty: 'messages',
                     idProperty: 'id',
-                    totalProperty: 'totalCount'
+                    totalProperty: 'count'
                 },
                 extraParams: {filter: ''}
             },

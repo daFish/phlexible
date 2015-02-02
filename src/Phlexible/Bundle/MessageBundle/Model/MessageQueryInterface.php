@@ -6,17 +6,17 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\UserBundle\Model;
+namespace Phlexible\Bundle\MessageBundle\Model;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\Expr;
 
 /**
- * User query interface
+ * Message query interface
  *
  * @author  Stephan Wentz <sw@brainbits.net>
  */
-interface UserQueryInterface
+interface MessageQueryInterface
 {
     /**
      * Return users
@@ -26,4 +26,11 @@ interface UserQueryInterface
      * @return \Countable|\Iterator
      */
     public function getResult(Criteria $criteria);
+
+    /**
+     * @param Criteria $criteria
+     *
+     * @return array
+     */
+    public function getFacets(Criteria $criteria);
 }

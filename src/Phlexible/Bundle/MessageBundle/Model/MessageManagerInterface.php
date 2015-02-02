@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MessageBundle\Model;
 
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
+use Doctrine\Common\Collections\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 
@@ -42,23 +42,16 @@ interface MessageManagerInterface
     public function findOneBy(array $criteria, $orderBy = null);
 
     /**
-     * Find messages by criteria
-     *
-     * @param Criteria $criteria
-     * @param string   $order
-     * @param int      $limit
-     * @param int      $offset
-     *
-     * @return Message[]
+     * @return Criteria
      */
-    public function findByCriteria(Criteria $criteria, $order = null, $limit = null, $offset = null);
+    public function createCriteria();
 
     /**
      * @param Criteria $criteria
      *
-     * @return int
+     * @return \Countable|\Iterator
      */
-    public function countByCriteria(Criteria $criteria);
+    public function query(Criteria $criteria);
 
     /**
      * Get priority map
@@ -77,18 +70,11 @@ interface MessageManagerInterface
     /**
      * Return facets
      *
-     * @return array
-     */
-    public function getFacets();
-
-    /**
-     * Return facets
-     *
      * @param Criteria $criteria
      *
      * @return array
      */
-    public function getFacetsByCriteria(Criteria $criteria);
+    public function getFacets(Criteria $criteria);
 
     /**
      * Update message

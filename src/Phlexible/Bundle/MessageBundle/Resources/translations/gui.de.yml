@@ -15,11 +15,11 @@ Phlexible:
                 dateText: Datum
 
         view:
-            MainPanel:
+            Main:
                 title: Nachrichten
 
             filter:
-                CriteriaForm:
+                Criteria:
                     title: Kriterien
                     titleText: Titel
                     saveText: Speichern
@@ -55,7 +55,7 @@ Phlexible:
                     endDateText: Vor
                     dateIsText: Datum ist
 
-                ListGrid:
+                List:
                     title: Filter
                     emptyText: 'Keine Filter'
                     actionsText: Aktionen
@@ -66,11 +66,11 @@ Phlexible:
                     deleteFilterText: 'Filter löschen'
                     deleteFilterDescriptionText: 'Möchten Sie den Filter "{0}" wirklich löschen?'
 
-                MainPanel:
+                Main:
                     title: Filter
 
             list:
-                FilterPanel:
+                Filter:
                     title: Filter
                     subjectText: Betreff
                     bodyText: Text
@@ -85,10 +85,10 @@ Phlexible:
                     afterText: Nach
                     beforeText: Vor
 
-                MainPanel:
+                Main:
                     title: Nachrichten
 
-                MessagesGrid:
+                List:
                     title: Nachrichten
                     emptyText: 'Keine Nachrichten'
                     displayMessageText: 'Zeige Nachrichten {0} - {1} von {2}'
@@ -109,7 +109,7 @@ Phlexible:
                     typeErrorText: Fehler
 
             subscription:
-                MainPanel:
+                Main:
                     title: Abonnements
                     emptyText: 'Keine Abonnements'
                     actionsText: Aktionen

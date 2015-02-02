@@ -15,7 +15,6 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Phlexible\Bundle\UserBundle\Event;
 use Phlexible\Bundle\UserBundle\Event\UserQueryApplyCriteriaEvent;
-use Phlexible\Bundle\UserBundle\Event\UserQueryApplyFilterEvent;
 use Phlexible\Bundle\UserBundle\Model\UserQueryInterface;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

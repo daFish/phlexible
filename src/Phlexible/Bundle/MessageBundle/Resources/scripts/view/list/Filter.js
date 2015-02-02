@@ -27,7 +27,7 @@ Ext.define('Phlexible.message.view.list.Filter', {
         this.initMyDockedItems();
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('messages_messages_facets'),
+            url: Phlexible.Router.generate('phlexible_message_get_messages'),
             success: function (response) {
                 var facets = Ext.decode(response.responseText);
 

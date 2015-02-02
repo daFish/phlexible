@@ -9,11 +9,14 @@
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Prefix;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,8 +39,9 @@ class MessagesController extends FOSRestController
      * @return Response
      * @QueryParam(name="start", requirements="\d+", default=0, description="First result")
      * @QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
-     * @QueryParam(name="sort", requirements="\w+", default="username", description="Sort field")
-     * @QueryParam(name="dir", requirements="\w+", default="ASC", description="Sort direction")
+     * @QueryParam(name="sort", requirements="\w+", default="createdAt", description="Sort field")
+     * @QueryParam(name="dir", requirements="\w+", default="DESC", description="Sort direction")
+     * @QueryParam(name="include", requirements="\w+", default="facets", description="Include optional values, like facets")
      * @QueryParam(name="criteria", description="Search criteria.")
      * @ApiDoc()
      */
@@ -50,6 +54,7 @@ class MessagesController extends FOSRestController
         $criteriaString = $paramFetcher->get('criteria');
 
         $messageManager = $this->get('phlexible_message.message_manager');
+        $criteria = $messageManager->createCriteria();
 
         $priorityList = $messageManager->getPriorityNames();
         $typeList = $messageManager->getTypeNames();
@@ -59,6 +64,7 @@ class MessagesController extends FOSRestController
             ->setFirstResult($start)
             ->setMaxResults($limit);
 
+        $criteria->andWhere($criteria->expr()->eq('priority', 0));
         //UserCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
 
         $messageResult = $messageManager->query($criteria);
@@ -68,12 +74,13 @@ class MessagesController extends FOSRestController
             $messages[] = $message;
         }
 
-        return $this->handleView($this->view(
-            array(
-                'messages' => $messages,
-                'count' => count($messages)
-            )
-        ));
+        $data = array(
+            'messages' => $messages,
+            'count'    => count($messages),
+            'facets'   => $messageManager->getFacets($criteria),
+        );
+
+        return $this->handleView($this->view($data));
 
         /*
         $priorityFilter = [];
@@ -152,6 +159,27 @@ class MessagesController extends FOSRestController
             'messages'   => $data,
             'facets'     => $messageManager->getFacetsByCriteria($criteria),
         ]);
+    }
+
+    /**
+     * @param Message $message
+     *
+     * @return Response
+     * @ParamConverter("message", converter="fos_rest.request_body")
+     * @Post("/messages")
+     * @ApiDoc()
+     */
+    public function postMessages(Message $message)
+    {
+        $messageManager = $this->get('phlexible_message.message_manager');
+
+        $messageManager->updateMessage($message);
+
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
     }
 
     /**

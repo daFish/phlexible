@@ -35,7 +35,9 @@ Ext.define('Phlexible.message.view.filter.List', {
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
-                    idProperty: 'id'
+                    idProperty: 'id',
+                    rootProperty: 'filters',
+                    totalProperty: 'count'
                 }
             },
             autoLoad: true

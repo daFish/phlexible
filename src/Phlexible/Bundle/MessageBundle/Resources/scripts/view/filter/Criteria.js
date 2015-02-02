@@ -1,6 +1,9 @@
 Ext.define('Phlexible.message.view.filter.Criteria', {
     extend: 'Ext.form.FormPanel',
-    requires: ['Ext.ux.form.MultiSelect'],
+    requires: [
+        'Ext.ux.form.MultiSelect',
+        'Ext.ux.form.IconCombo'
+    ],
 
     xtype: 'message.filter.criteria',
 
@@ -57,36 +60,38 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
     initComponent: function () {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('messages_filter_facets'),
+            url: Phlexible.Router.generate('phlexible_message_get_messages'),
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
-                var priorities = [],
+                var priorityNames = Phlexible.Config.get('message.priorities'),
+                    typeNames = Phlexible.Config.get('message.types'),
+                    priorities = [],
                     types = [],
                     channels = [],
                     roles = [];
 
-                Ext.each(data.priorities, function(priority) {
+                Ext.each(data.facets.priorities, function(priority) {
                     priorities.push({
                         id: priority,
-                        name: data.priorityNames[priority],
+                        name: priorityNames[priority],
                         iconCls: Phlexible.message.PriorityIcons[priority]
                     });
                 });
-                Ext.each(data.types, function(type) {
+                Ext.each(data.facets.types, function(type) {
                     types.push({
                         id: type,
-                        name: data.typeNames[type],
+                        name: typeNames[type],
                         iconCls: Phlexible.message.TypeIcons[type]
                     });
                 });
-                Ext.each(data.channels, function(channel) {
+                Ext.each(data.facets.channels, function(channel) {
                     channels.push({
                         id: channel,
                         name: channel
                     });
                 });
-                Ext.each(data.roles, function(role) {
+                Ext.each(data.facets.roles, function(role) {
                     roles.push({
                         id: role,
                         name: role

@@ -18,8 +18,6 @@ use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\MessageBundle\Entity\Filter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -54,8 +52,8 @@ class FiltersController extends FOSRestController
 
         return $this->handleView($this->view(
             array(
-                'users' => $filters,
-                'count' => count($filters)
+                'filters' => $filters,
+                'count'   => count($filters)
             )
         ));
     }
@@ -92,7 +90,7 @@ class FiltersController extends FOSRestController
      * @return Response
      * @ParamConverter("filter", converter="fos_rest.request_body")
      * @Put("/filters/{filterId}")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function putFilterAction(Filter $filter, $filterId)
     {
@@ -115,7 +113,7 @@ class FiltersController extends FOSRestController
      * @param string $filterId
      *
      * @return Response
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function deleteFilterAction($filterId)
     {

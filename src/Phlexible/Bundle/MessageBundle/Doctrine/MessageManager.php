@@ -8,14 +8,13 @@
 
 namespace Phlexible\Bundle\MessageBundle\Doctrine;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
+use Phlexible\Bundle\MessageBundle\Doctrine\Query\MessageQuery;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Entity\Repository\MessageRepository;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Doctrine message manager
@@ -73,33 +72,29 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByCriteria(Criteria $criteria, $order = null, $limit = null, $offset = null)
+    public function createCriteria()
     {
-        return $this->getMessageRepository()->findByCriteria($criteria, $order, $limit, $offset);
+        return new Criteria();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function countByCriteria(Criteria $criteria)
+    public function query(Criteria $criteria)
     {
-        return $this->getMessageRepository()->countByCriteria($criteria);
+        $query = new MessageQuery($this->entityManager);
+
+        return $query->getResult($criteria);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFacets()
+    public function getFacets(Criteria $criteria)
     {
-        return $this->getMessageRepository()->getFacets();
-    }
+        $query = new MessageQuery($this->entityManager);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFacetsByCriteria(Criteria $criteria)
-    {
-        return $this->getMessageRepository()->getFacetsByCriteria($criteria);
+        return $query->getFacets($criteria);
     }
 
     /**

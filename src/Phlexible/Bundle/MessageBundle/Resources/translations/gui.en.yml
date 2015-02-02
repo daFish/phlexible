@@ -15,11 +15,11 @@ Phlexible:
                 dateText: Date
 
         view:
-            MainPanel:
+            Main:
                 title: Messages
 
             filter:
-                CriteriaForm:
+                Criteria:
                     title: Criteria
                     titleText: Title
                     saveText: Save
@@ -55,7 +55,7 @@ Phlexible:
                     endDateText: Before
                     dateIsText: Date is
 
-                ListGrid:
+                List:
                     title: Filters
                     emptyText: 'No filters'
                     actionsText: Actions
@@ -66,11 +66,11 @@ Phlexible:
                     deleteFilterText: 'Delete filter'
                     deleteFilterDescriptionText: 'Do your really want to delete filter "{0}"?'
 
-                MainPanel:
+                Main:
                     title: Filter
 
             list:
-                FilterPanel:
+                Filter:
                     title: Filter
                     subjectText: Subject
                     bodyText: Text
@@ -85,10 +85,10 @@ Phlexible:
                     afterText: After
                     beforeText: Before
 
-                MainPanel:
+                Main:
                     title: Messages
 
-                MessagesGrid:
+                List:
                     title: Messages
                     emptyText: 'No messages'
                     displayMessageText: 'Showing messages {0} - {1} of {2}'
@@ -109,7 +109,7 @@ Phlexible:
                     typeErrorText: Error
 
             subscription:
-                MainPanel:
+                Main:
                     title: Subscriptions
                     emptyText: 'No subscriptions'
                     actionsText: Actions
