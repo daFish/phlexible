@@ -8,35 +8,44 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Prefix;
 use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Sets controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
  * @Security("is_granted('ROLE_META_SETS')")
+ * @Prefix("/metaset")
+ * @NamePrefix("phlexible_metaset_")
  */
 class MetaSetsController extends FOSRestController
 {
     /**
-     * List sets
+     * Get meta sets
      *
-     * @return JsonResponse
+     * @return Response
+     *
+     * @ApiDoc
      */
-    public function getMetaSetsAction()
+    public function getMetasetsAction()
     {
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSets = $metaSetManager->findAll();
 
         return $this->handleView($this->view(
             array(
-                'metaSets' => $metaSets,
+                'metasets' => array_values($metaSets),
                 'count'    => count($metaSets)
             )
         ));
@@ -100,6 +109,7 @@ class MetaSetsController extends FOSRestController
 
         return new JsonResponse(['values' => $data]);
     }
+
     /**
      * Create set
      *

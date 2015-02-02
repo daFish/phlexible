@@ -5,7 +5,7 @@ Phlexible:
                 text: Meta Sets
 
         view:
-            MainPanel:
+            Main:
                 title: 'Meta Sets'
                 idText: ID
                 nameText: Name

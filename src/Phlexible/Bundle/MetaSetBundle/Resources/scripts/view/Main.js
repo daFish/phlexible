@@ -1,6 +1,6 @@
-Ext.define('Phlexible.metaset.view.MainPanel', {
+Ext.define('Phlexible.metaset.view.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.metaset-main',
+    xtype: 'metaset.main',
 
     title: '_MainPanel',
     layout: 'border',
@@ -46,15 +46,15 @@ Ext.define('Phlexible.metaset.view.MainPanel', {
                 padding: '5 0 5 5',
                 loadMask: true,
                 store: Ext.create('Ext.data.Store', {
-                    fields: ['id', 'name'],
+                    model: 'Phlexible.metaset.model.MetaSet',
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('metaset_sets_list'),
+                        url: Phlexible.Router.generate('phlexible_metaset_get_metasets'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',
-                            rootProperty: 'sets',
-                            idProperty: 'uid',
+                            rootProperty: 'metasets',
+                            idProperty: 'id',
                             totalProperty: 'count'
                         },
                         extraParams: this.storeExtraParams
@@ -103,12 +103,11 @@ Ext.define('Phlexible.metaset.view.MainPanel', {
                     ]
                 }],
                 listeners: {
-                    itemdblclick: function (grid, record) {
-                        var id = record.get('id');
+                    itemdblclick: function (grid, metaSet) {
+                        var id = metaSet.get('id');
                         this.getComponent(1).setId = id;
+                        this.getComponent(1).getStore().loadData(Ext.Object.getValues(metaSet.get('fields')));
                         this.getComponent(1).enable();
-                        this.getComponent(1).getStore().getProxy().extraParams.id = id;
-                        this.getComponent(1).store.load();
                     },
                     scope: this
                 }
@@ -137,19 +136,7 @@ Ext.define('Phlexible.metaset.view.MainPanel', {
                     clicksToEdit: 1
                 },
                 store: Ext.create('Ext.data.Store', {
-                    fields: ['id', 'key', 'type', 'required', 'synchronized', 'readonly', 'options'],
-                    proxy: {
-                        type: 'ajax',
-                        url: Phlexible.Router.generate('metaset_sets_fields'),
-                        simpleSortMode: true,
-                        reader: {
-                            type: 'json',
-                            rootProperty: 'values'
-                        },
-                        extraParams: {
-                            id: ''
-                        }
-                    }
+                    model: 'Phlexible.metaset.model.MetaSetField'
                 }),
                 columns: [
                     {
@@ -160,7 +147,7 @@ Ext.define('Phlexible.metaset.view.MainPanel', {
                     },
                     {
                         header: this.nameText,
-                        dataIndex: 'key',
+                        dataIndex: 'name',
                         width: 200,
                         editor: {
                             xtype: 'textfield',

@@ -31,7 +31,7 @@ class MediaTypesController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getMediatypesAction()
     {
