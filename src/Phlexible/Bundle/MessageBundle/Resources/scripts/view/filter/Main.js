@@ -1,7 +1,13 @@
-Ext.define('Phlexible.message.view.filter.MainPanel', {
+Ext.define('Phlexible.message.view.filter.Main', {
     extend: 'Ext.Panel',
-    alias: 'widget.message-filter-main',
+    requires: [
+        'Phlexible.message.view.filter.Criteria',
+        'Phlexible.message.view.filter.List',
+        'Phlexible.message.view.filter.Preview'
+    ],
+    xtype: 'message.filter.main',
 
+    cls: 'p-message-filter-main',
     iconCls: Phlexible.Icon.get(Phlexible.Icon.FILTER),
     layout: 'border',
     border: false,
@@ -9,7 +15,7 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
     initComponent: function () {
         this.items = [
             {
-                xtype: 'message-filter-list',
+                xtype: 'message.filter.list',
                 itemId: 'list',
                 region: 'west',
                 padding: '5 0 5 5',
@@ -42,7 +48,7 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
                 border: false,
                 items: [
                     {
-                        xtype: 'message-filter-criteria',
+                        xtype: 'message.filter.criteria',
                         itemId: 'criteria',
                         region: 'west',
                         padding: '5 0 5 5',
@@ -61,7 +67,7 @@ Ext.define('Phlexible.message.view.filter.MainPanel', {
                         }
                     },
                     {
-                        xtype: 'message-filter-preview',
+                        xtype: 'message.filter.preview',
                         itemId: 'preview',
                         region: 'center',
                         padding: '5 0 5 5',

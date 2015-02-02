@@ -64,6 +64,13 @@ services:
             - {name: data_collector, template: @PhlexibleMessage/Collector/messages.html.twig, id: messages, priority: 0}
 
     # event listeners
+    phlexible_message.listener.get_config:
+        class: Phlexible\Bundle\MessageBundle\EventListener\GetConfigListener
+        arguments:
+            - @phlexible_message.message_manager
+        tags:
+            - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
+
     phlexible_message.listener.message:
         class: Phlexible\Bundle\MessageBundle\EventListener\MessageListener
         arguments: [@phlexible_message.handlers]

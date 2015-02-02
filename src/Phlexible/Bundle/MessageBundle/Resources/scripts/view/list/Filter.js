@@ -1,10 +1,10 @@
-Ext.define('Phlexible.message.view.list.FilterPanel', {
+Ext.define('Phlexible.message.view.list.Filter', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.message-list-filter',
+    xtype: 'message.list.filter',
 
-    bodyPadding: 5,
-    cls: 'p-messages-view-filter',
+    cls: 'p-messages-list-filter',
     iconCls: 'p-message-filter-icon',
+    bodyPadding: 5,
     autoScroll: true,
 
     subjectText: '_subjectText',

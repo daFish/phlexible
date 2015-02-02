@@ -1,7 +1,8 @@
-Ext.define('Phlexible.message.view.filter.ListGrid', {
+Ext.define('Phlexible.message.view.filter.List', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.message-filter-list',
+    xtype: 'message.filter.list',
 
+    cls: 'p-message-filter-list',
     loadMask: true,
     hideMode: 'offsets',
     emptyText: '_emptyText',
@@ -30,7 +31,7 @@ Ext.define('Phlexible.message.view.filter.ListGrid', {
             model: 'Phlexible.message.model.Filter',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('messages_filters'),
+                url: Phlexible.Router.generate('phlexible_message_get_filters'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -91,7 +92,7 @@ Ext.define('Phlexible.message.view.filter.ListGrid', {
         Ext.MessageBox.prompt(this.addFilterText, this.addFilterDescriptionText, function (btn, title) {
             if (btn === 'ok') {
                 Ext.Ajax.request({
-                    url: Phlexible.Router.generate('messages_filter_create'),
+                    url: Phlexible.Router.generate('phlexible_message_post_filters'),
                     params: {
                         title: title
                     },
@@ -121,7 +122,7 @@ Ext.define('Phlexible.message.view.filter.ListGrid', {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('messages_filter_delete', {id: record.get('id')}),
+                url: Phlexible.Router.generate('phlexible_message_delete_filter', {filterId: record.get('id')}),
                 success: function (response) {
                     var data = Ext.decode(response.responseText);
 

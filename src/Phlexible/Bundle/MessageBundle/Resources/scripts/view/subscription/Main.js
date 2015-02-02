@@ -1,7 +1,8 @@
-Ext.define('Phlexible.message.view.subscription.MainPanel', {
+Ext.define('Phlexible.message.view.subscription.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.message-subscription-main',
+    xtype: 'message.subscription.main',
 
+    cls: 'p-message-subscription-main',
     iconCls: Phlexible.Icon.get('tick'),
     layout: 'border',
     border: false,
@@ -36,7 +37,7 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
                     model: 'Phlexible.message.model.Subscription',
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('messages_subscriptions'),
+                        url: Phlexible.Router.generate('phlexible_message_get_subscriptions'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',
@@ -88,7 +89,7 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
                                 model: 'Phlexible.message.model.Filter',
                                 proxy: {
                                     type: 'ajax',
-                                    url: Phlexible.Router.generate('messages_filters'),
+                                    url: Phlexible.Router.generate('phlexible_message_get_filters'),
                                     reader: {
                                         type: 'json',
                                         idProperty: 'id'
@@ -127,7 +128,7 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
                                     handler = this.getDockedComponent('tbar').getComponent('handler').getValue();
 
                                 Ext.Ajax.request({
-                                    url: Phlexible.Router.generate('messages_subscription_create'),
+                                    url: Phlexible.Router.generate('phlexible_message_post_subscriptions'),
                                     params: {
                                         filter: filter,
                                         handler: handler
@@ -159,7 +160,7 @@ Ext.define('Phlexible.message.view.subscription.MainPanel', {
 
     deleteSubscription: function (grid, record) {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('messages_subscription_delete', {id: record.data.id}),
+            url: Phlexible.Router.generate('phlexible_message_delete_subscription', {subscriptionId: record.data.id}),
             success: function (response) {
                 var result = Ext.decode(response.responseText);
 

@@ -61,23 +61,6 @@ class FiltersController extends FOSRestController
     }
 
     /**
-     * List filter values
-     *
-     * @return JsonResponse
-     * @Route("/facets", name="messages_filter_facets")
-     */
-    public function facetsAction()
-    {
-        $messageManager = $this->get('phlexible_message.message_manager');
-        $data = $messageManager->getFacets();
-
-        $data['priorityNames'] = $messageManager->getPriorityNames();
-        $data['typeNames'] = $messageManager->getTypeNames();
-
-        return new JsonResponse($data);
-    }
-
-    /**
      * Create filter
      *
      * @param Filter $filter

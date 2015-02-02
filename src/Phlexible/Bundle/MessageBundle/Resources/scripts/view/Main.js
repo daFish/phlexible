@@ -1,7 +1,17 @@
-Ext.define('Phlexible.message.view.MainPanel', {
+Ext.define('Phlexible.message.view.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.message-main',
+    requires: [
+        'Phlexible.message.view.MainController',
+        'Phlexible.message.view.list.Main',
+        'Phlexible.message.view.filter.Main',
+        'Phlexible.message.view.subscription.Main'
+    ],
 
+    xtype: 'message.main',
+
+    controller: 'message.main',
+
+    cls: 'p-message-main',
     iconCls: Phlexible.Icon.get('resource-monitor'),
     layout: 'fit',
     border: false,
@@ -12,29 +22,25 @@ Ext.define('Phlexible.message.view.MainPanel', {
 
         this.callParent(arguments);
     },
+
     initMyTabs: function() {
         this.tabs = [{
-            xtype: 'message-list-main',
+            xtype: 'message.list.main',
             itemId: 'view'
         }];
 
-        if (Phlexible.App.isGranted('ROLE_MESSAGE_FILTERS')) {
+        if (Phlexible.User.isGranted('ROLE_MESSAGE_FILTERS')) {
             this.tabs.push({
-                xtype: 'message-filter-main',
+                xtype: 'message.filter.main',
                 itemId: 'filter',
                 listeners: {
-                    filterDeleted: function () {
-                        if (Phlexible.App.isGranted('ROLE_MESSAGE_SUBSCRIPTIONS')) {
-                            this.getComponent(0).getComponent('subscriptions').reloadSubscriptions();
-                        }
-                    },
-                    scope: this
+                    filterDeleted: 'onDeleteFilter'
                 }
             });
         }
-        if (Phlexible.App.isGranted('ROLE_MESSAGE_SUBSCRIPTIONS')) {
+        if (Phlexible.User.isGranted('ROLE_MESSAGE_SUBSCRIPTIONS')) {
             this.tabs.push({
-                xtype: 'message-subscription-main',
+                xtype: 'message.subscription.main',
                 itemId: 'subscription'
             });
         }

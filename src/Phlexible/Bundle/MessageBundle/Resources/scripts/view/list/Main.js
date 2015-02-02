@@ -1,8 +1,12 @@
-Ext.define('Phlexible.message.view.list.MainPanel', {
+Ext.define('Phlexible.message.view.list.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.message-list-main',
+    requires: [
+        'Phlexible.message.view.list.Filter',
+        'Phlexible.message.view.list.List'
+    ],
+    xtype: 'message.list.main',
 
-    cls: 'p-messages-view-main',
+    cls: 'p-message-list-main',
     iconCls: Phlexible.Icon.get('application-list'),
     layout: 'border',
     border: false,
@@ -16,7 +20,7 @@ Ext.define('Phlexible.message.view.list.MainPanel', {
     initMyItems: function() {
         this.items = [
             {
-                xtype: 'message-list-filter',
+                xtype: 'message.list.filter',
                 itemId: 'filter',
                 region: 'west',
                 width: 250,
@@ -30,7 +34,7 @@ Ext.define('Phlexible.message.view.list.MainPanel', {
                 }
             },
             {
-                xtype: 'message-list-list',
+                xtype: 'message.list.list',
                 itemId: 'list',
                 region: 'center',
                 padding: 5,

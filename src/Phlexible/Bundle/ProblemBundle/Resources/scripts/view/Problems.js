@@ -29,11 +29,13 @@ Ext.define('Phlexible.problem.view.Problems', {
             model: 'Phlexible.problem.model.Problem',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('problem_list'),
+                url: Phlexible.Router.generate('phlexible_problem_get_problems'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
-                    idProperty: 'id'
+                    idProperty: 'id',
+                    rootProperty: 'problems',
+                    totalProperty: 'count'
                 }
             },
             autoLoad: true

@@ -1,7 +1,8 @@
-Ext.define('Phlexible.message.view.list.MessagesGrid', {
+Ext.define('Phlexible.message.view.list.List', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.message-list-list',
+    xtype: 'message.list.list',
 
+    cls: 'p-message-list-list',
     loadMask: true,
     emptyText: '_emptyText',
     viewConfig: {
@@ -42,7 +43,7 @@ Ext.define('Phlexible.message.view.list.MessagesGrid', {
             model: 'Phlexible.message.model.Message',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('messages_messages'),
+                url: Phlexible.Router.generate('phlexible_message_get_messages'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',

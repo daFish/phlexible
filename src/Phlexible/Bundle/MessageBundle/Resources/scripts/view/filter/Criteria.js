@@ -1,7 +1,8 @@
-Ext.define('Phlexible.message.view.filter.CriteriaForm', {
+Ext.define('Phlexible.message.view.filter.Criteria', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.message-filter-criteria',
     requires: ['Ext.ux.form.MultiSelect'],
+
+    xtype: 'message.filter.criteria',
 
     cls: 'p-message-filter-criteria',
     border: true,
@@ -180,7 +181,7 @@ Ext.define('Phlexible.message.view.filter.CriteriaForm', {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('messages_filter_update', {id: this.record.id}),
+            url: Phlexible.Router.generate('phlexible_message_put_filter', {id: this.record.id}),
             params: {
                 title: this.getComponent(0).getComponent(0).getValue(),
                 criteria: Ext.encode(this.serializeCriteria())
