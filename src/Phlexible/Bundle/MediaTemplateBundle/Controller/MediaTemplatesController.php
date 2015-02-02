@@ -35,7 +35,7 @@ class MediaTemplatesController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getMediatemplatesAction()
     {
@@ -45,7 +45,7 @@ class MediaTemplatesController extends FOSRestController
 
         return $this->handleView($this->view(
             array(
-                'mediatemplates' => $mediaTemplates,
+                'mediatemplates' => array_values($mediaTemplates),
                 'count'          => count($mediaTemplates),
             )
         ));
@@ -60,7 +60,7 @@ class MediaTemplatesController extends FOSRestController
      *
      * @ParamConverter("mediatemplate", converter="fos_rest.request_body")
      * @Post("/mediatemplates")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function postMediatemplatesAction(ImageTemplate $mediaTemplate)
     {

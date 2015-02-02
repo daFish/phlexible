@@ -4,16 +4,17 @@ Phlexible:
             MediaTemplates:
                 text: Media Templates
 
-        view:
-            BasePreviewPanel:
+        panel:
+            PreviewPanel:
                 title: Vorschau
                 noPreviewAvailableText: Keine Vorschau verfügbar
                 debugText: Debug
 
-            MainPanel:
+        view:
+            Main:
                 title: Medienvorlagen
 
-            TemplatesGrid:
+            List:
                 title: Vorlagen
                 titleText: Titel
                 addText: Hinzufügen
@@ -24,18 +25,18 @@ Phlexible:
                 noFilterText: Alle
 
             audio:
-                MainPanel:
+                Main:
                     title: Audiovorlage
                     audioTemplateTitleText: 'Audiovorlage "{0}"'
 
-                FormPanel:
+                Form:
                     title: Audiovorlage
                     audioText: Audio
                     saveText: Speichern
                     previewText: Vorschau
                     debugText: Debug
 
-                FieldsPanel:
+                Fields:
                     title: Audio
                     keepBitrateText: 'Bitrate beibehalten'
                     bitrateText: Bitrate
@@ -54,11 +55,11 @@ Phlexible:
                     channelsStereoText: 'Stereo'
 
             image:
-                MainPanel:
+                Main:
                     title: Bildvorlage
                     imageTemplateTitleText: 'Bildvorlage "{0}"'
 
-                FormPanel:
+                Form:
                     title: Bildvorlage
                     imageText: Bild
                     selectMethodText: 'Bitte wählen Sie eine Verkleinerungsmethode'
@@ -85,7 +86,7 @@ Phlexible:
                     qualityText: Qualität
                     qualityHelpText: 'Qualität des generierten Bildes.'
                     selectCompressionText: 'Bitte wählen Sie einen Kompressionsgrad'
-                    compressionText: 'Bitte wählen Sie einen Kompressionsgrad'
+                    compressionText: 'Kompressionsgrad'
                     compressionHelpText: 'Kompressionsgrad des generierten Bildes.'
                     selectFilterTypeText: 'Bitte wählen Sie einen Filtertypen'
                     filterTypeText: Filtertyp
@@ -121,14 +122,14 @@ Phlexible:
                     requiredValuesText: 'Bitte überprüfen Sie das Formular auf Pflichtfelder.'
                     saveDescriptionText: 'Bitte beachten Sie, dass nach dem Speichern alle in der Medienverwaltung hinterlegten Bilder auf der Basis dieser Medienvorlage neu berechnet werden. Das kann den Server stark belasten. Wenn Sie Ihre Einstellungen testen möchten, verwenden Sie bitte den Vorschau-Button. Ein Speichern ist hierfür nicht erforderlich.'
 
-                PreviewPanel:
+                Preview:
                     changeBackgroundColorToText: Hintergrundfarbe ändern:
                     whiteText: Weiss
                     blackText: Schwarz
                     randomText: Zufällig
 
             pdf2swf:
-                FormPanel:
+                Form:
                     title: pdf2swf-Vorlage
                     pdf2swfText: pdf2swf
                     resolutionText: Auflösung
@@ -149,15 +150,12 @@ Phlexible:
                     previewText: Vorschau
                     debugText: Debug
 
-                MainPanel:
+                Main:
                     title: pdf2swf-Vorlage
                     pdf2swfTemplateTitleText: 'pdf2swf-Vorlage "{0}"'
 
             video:
-                FormPanel:
-                    title: Videovorlage
-
-                MainPanel:
+                Form:
                     title: Videovorlage
                     videoTemplateTitleText: 'Videovorlage "{0}"'
                     videoText: Video
@@ -182,3 +180,6 @@ Phlexible:
                     saveText: Speichern
                     previewText: Vorschau
                     debugText: Debug
+
+                Main:
+                    title: Videovorlage

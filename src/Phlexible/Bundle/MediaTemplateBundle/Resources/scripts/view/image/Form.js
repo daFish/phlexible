@@ -1,8 +1,7 @@
-Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
+Ext.define('Phlexible.mediatemplate.view.image.Form', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.mediatemplates-image-form',
+    xtype: 'mediatemplate.image.form',
 
-    title: '_FormPanel',
 //    labelWidth: 80,
     labelAlign: 'top',
     disabled: true,
@@ -106,6 +105,12 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                 items: [
                     {
                         xtype: 'combo',
+                        itemId: 'methodField',
+                        name: 'method',
+                        flex: 1,
+                        fieldLabel: this.methodText,
+                        emptyText: this.selectMethodText,
+                        helpText: this.methodHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'method', 'help'],
                             data: [
@@ -125,14 +130,8 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        emptyText: this.selectMethodText,
                         editable: false,
                         allowBlank: false,
-                        fieldLabel: this.methodText,
-                        name: 'xmethod',
-                        width: 280,
-                        listWidth: 650,
-                        helpText: this.methodHelpText,
                         listeners: {
                             select: this.updateMethod,
                             scope: this
@@ -140,20 +139,27 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                     },
                     {
                         xtype: 'numberfield',
-                        width: 280,
+                        itemId: 'widthField',
                         name: 'width',
+                        flex: 1,
                         fieldLabel: this.widthText,
                         helpText: this.widthHelpText
                     },
                     {
                         xtype: 'numberfield',
-                        width: 280,
+                        itemId: 'heightField',
                         name: 'height',
+                        flex: 1,
                         fieldLabel: this.heightText,
                         helpText: this.heightHelpText
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'scaleField',
+                        name: 'scale',
+                        flex: 1,
+                        fieldLabel: this.scaleText,
+                        helpText: this.scaleHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'scale'],
                             data: [
@@ -169,17 +175,13 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         triggerAction: 'all',
                         emptyText: this.selectScaleText,
                         editable: false,
-                        allowBlank: false,
-                        fieldLabel: this.scaleText,
-                        name: 'scale',
-                        width: 280,
-                        //listWidth: 550,
-                        helpText: this.scaleHelpText
+                        allowBlank: false
                     },
                     {
                         xtype: 'checkbox',
-                        width: 280,
+                        itemId: 'forWebField',
                         name: 'for_web',
+                        flex: 1,
                         hideLabel: true,
                         boxLabel: this.forWebText,
                         helpText: this.forWebHelpText,
@@ -196,6 +198,13 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'formatField',
+                        name: 'format',
+                        flex: 1,
+                        value: '',
+                        fieldLabel: this.formatText,
+                        emptyText: this.selectFormatText,
+                        helpText: this.formatHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'format'],
                             data: [
@@ -212,15 +221,8 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
                         editable: false,
-                        fieldLabel: this.formatText,
-                        name: 'format',
-                        width: 280,
-                        listWidth: 280,
                         allowBlank: false,
-                        emptyText: this.selectFormatText,
-                        helpText: this.formatHelpText,
                         listeners: {
                             select: function (c, r) {
                                 this.updateColorspace();
@@ -233,6 +235,12 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'colorspaceField',
+                        name: 'colorspace',
+                        value: '',
+                        flex: 1,
+                        fieldLabel: this.colorspaceText,
+                        helpText: this.colorspaceHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'colorspace'],
                             data: [
@@ -247,16 +255,16 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.colorspaceText,
-                        name: 'colorspace',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.colorspaceHelpText
+                        editable: false
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'colorDepthField',
+                        name: 'depth',
+                        value: '',
+                        flex: 1,
+                        fieldLabel: this.depthText,
+                        helpText: this.depthHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'depth'],
                             data: [
@@ -270,16 +278,15 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.depthText,
-                        name: 'depth',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.depthHelpText
+                        editable: false
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'tiffCompressionField',
+                        name: 'tiffcompression',
+                        value: '',
+                        fieldLabel: this.tiffCompressionText,
+                        helpText: this.tiffCompressionHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'tiffcompression'],
                             data: [
@@ -293,18 +300,13 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.tiffCompressionText,
-                        name: 'tiffcompression',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.tiffCompressionHelpText
+                        editable: false
                     },
                     {
                         xtype: 'numberfield',
-                        width: 280,
+                        itemId: 'qualityField',
                         name: 'quality',
+                        flex: 1,
                         fieldLabel: this.qualityText,
                         helpText: this.qualityHelpText,
                         allowBlank: false,
@@ -313,6 +315,13 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'compressionField',
+                        name: 'compression',
+                        value: '',
+                        flex: 1,
+                        fieldLabel: this.compressionText,
+                        emptyText: this.selectCompressionText,
+                        helpText: this.compressionHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'compression'],
                             data: [
@@ -333,18 +342,18 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.compressionText,
-                        name: 'compression',
-                        width: 280,
-                        listWidth: 280,
                         allowBlank: false,
-                        emptyText: this.selectCompressionText,
-                        helpText: this.compressionHelpText
+                        editable: false
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'filterTypeField',
+                        name: 'filtertype',
+                        value: '',
+                        flex: 1,
+                        emptyText: this.selectFilterTypeText,
+                        fieldLabel: this.filterTypeText,
+                        helpText: this.filterTypeHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'filtertype'],
                             data: [
@@ -361,21 +370,15 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
                         editable: false,
-                        fieldLabel: this.filterTypeText,
-                        name: 'filtertype',
-                        width: 280,
-                        listWidth: 280,
-                        allowBlank: false,
-                        emptyText: this.selectFilterTypeText,
-                        helpText: this.filterTypeHelpText
+                        allowBlank: false
                     },
                     {
+                        itemId: 'backgroundColorField',
                         type: 'colorfield', // TODO: colorfield
                         xtype: 'textfield',
-                        width: 280,
                         name: 'backgroundcolor',
+                        flex: 1,
                         emptyText: this.emptyBackgroundColorText,
                         fieldLabel: this.backgroundColorText,
                         helpText: this.backgroundColorHelpText
@@ -383,7 +386,6 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                 ]
             }
         ];
-
     },
 
     initMyDockedItems: function() {
@@ -490,25 +492,25 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
     },
 
     updateMethod: function () {
-        var method = this.getComponent(0).getComponent(0).getValue();
+        var method = this.getComponent(0).getComponent('methodField').getValue();
 
         if (method === 'width') {
-            this.getComponent(0).getComponent(1).enable();
-            this.getComponent(0).getComponent(2).disable();
+            this.getComponent(0).getComponent('widthField').enable();
+            this.getComponent(0).getComponent('heightField').disable();
         }
         else if (method === 'height') {
-            this.getComponent(0).getComponent(1).disable();
-            this.getComponent(0).getComponent(2).enable();
+            this.getComponent(0).getComponent('widthField').disable();
+            this.getComponent(0).getComponent('heightField').enable();
         }
         else {
-            this.getComponent(0).getComponent(1).enable();
-            this.getComponent(0).getComponent(2).enable();
+            this.getComponent(0).getComponent('widthField').enable();
+            this.getComponent(0).getComponent('heightField').enable();
         }
     },
 
     updateFormat: function () {
-        var optimize = this.getComponent(0).getComponent(4);
-        var format = this.getComponent(0).getComponent(5);
+        var optimize = this.getComponent(0).getComponent('forWebField');
+        var format = this.getComponent(0).getComponent('formatField');
 
         if (optimize.getValue()) {
             format.store.loadData([
@@ -529,9 +531,9 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
     },
 
     updateColorspace: function () {
-        var optimize = this.getComponent(0).getComponent(4);
-        var formatValue = this.getComponent(0).getComponent(5).getValue;
-        var colorspace = this.getComponent(0).getComponent(6);
+        var optimize = this.getComponent(0).getComponent('forWebField');
+        var formatValue = this.getComponent(0).getComponent('formatField').getValue;
+        var colorspace = this.getComponent(0).getComponent('colorspaceField');
 
         if (optimize.getValue()) {
             if (formatValue == 'jpg' || formatValue == 'tif') {
@@ -552,8 +554,8 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
     },
 
     updateColorDepth: function () {
-        var format = this.getComponent(0).getComponent(5);
-        var colorDepth = this.getComponent(0).getComponent(7);
+        var format = this.getComponent(0).getComponent('formatField');
+        var colorDepth = this.getComponent(0).getComponent('colorDepthField');
 
         var formatValue = format.getValue();
         if (formatValue != 'tif') {
@@ -566,8 +568,8 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
     },
 
     updateTiffCompression: function () {
-        var format = this.getComponent(0).getComponent(5);
-        var tiffcompression = this.getComponent(0).getComponent(8);
+        var format = this.getComponent(0).getComponent('formatField');
+        var tiffcompression = this.getComponent(0).getComponent('tiffCompressionField');
 
         var formatValue = format.getValue();
         var tiffcompressionValue = tiffcompression.getValue();
@@ -586,11 +588,11 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
     },
 
     updateQuality: function () {
-        var format = this.getComponent(0).getComponent(5);
-        var tiffcompression = this.getComponent(0).getComponent(8);
-        var quality = this.getComponent(0).getComponent(9);
-        var compression = this.getComponent(0).getComponent(10);
-        var filtertype = this.getComponent(0).getComponent(11);
+        var format = this.getComponent(0).getComponent('formatField');
+        var tiffcompression = this.getComponent(0).getComponent('tiffCompressionField');
+        var quality = this.getComponent(0).getComponent('qualityField');
+        var compression = this.getComponent(0).getComponent('compressionField');
+        var filtertype = this.getComponent(0).getComponent('filterTypeField');
 
         var formatValue = format.getValue();
         if (formatValue == 'jpg') {
@@ -635,41 +637,30 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
         }
     },
 
-    loadParameters: function (template_key) {
-        this.disable();
-        this.template_key = template_key;
+    loadParameters: function (key, parameters) {
+        this.template_key = key;
 
         this.getForm().reset();
-        this.getForm().load({
-            url: Phlexible.Router.generate('mediatemplates_form_load'),
-            params: {
-                template_key: template_key
-            },
-            success: function (form, data) {
-                this.enable();
+        this.getForm().setValues(parameters);
 
-                this.updateMethod();
-                this.updateFormat();
-                this.updateColorspace();
-                this.updateColorDepth();
-                this.updateQuality();
-                this.updateTiffCompression();
+        this.updateMethod();
+        this.updateFormat();
+        this.updateColorspace();
+        this.updateColorDepth();
+        this.updateQuality();
+        this.updateTiffCompression();
 
-                if (data.result.data.quality) {
-                    var quality = parseInt(data.result.data.quality, 10);
-                    var compression = Math.floor(quality / 10);
-                    var filtertype = quality % 10;
+        if (parameters.quality) {
+            var quality = parseInt(parameters.quality, 10);
+            var compression = Math.floor(quality / 10);
+            var filtertype = quality % 10;
 
-                    this.getComponent(0).getComponent(9).setValue(quality);
-                    this.getComponent(0).getComponent(10).setValue(compression);
-                    this.getComponent(0).getComponent(11).setValue(filtertype);
-                }
+            this.getComponent(0).getComponent('qualityField').setValue(quality);
+            this.getComponent(0).getComponent('compressionField').setValue(compression);
+            this.getComponent(0).getComponent('filterTypeField').setValue(filtertype);
+        }
 
-                this.fireEvent('paramsload');
-            },
-            scope: this
-        });
-
+        this.enable();
     },
 
     saveParameters: function () {
@@ -692,7 +683,7 @@ Ext.define('Phlexible.mediatemplate.view.image.FormPanel', {
                     var data = Ext.decode(action.response.responseText);
                     if (data.success) {
                         Phlexible.success(data.msg);
-                        this.fireEvent('paramssave');
+                        this.fireEvent('saveTemplate');
                     }
                     else {
                         Ext.Msg.alert('Failure', data.msg);

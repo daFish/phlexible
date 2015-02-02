@@ -20,11 +20,6 @@ abstract class AbstractTemplate implements TemplateInterface
     /**
      * @var string
      */
-    private $id;
-
-    /**
-     * @var string
-     */
     private $key;
 
     /**
@@ -66,24 +61,6 @@ abstract class AbstractTemplate implements TemplateInterface
      * @var \DateTime
      */
     private $modifiedAt;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
      * {@inheritdoc}

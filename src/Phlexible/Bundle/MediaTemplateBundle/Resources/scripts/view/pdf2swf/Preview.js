@@ -1,6 +1,8 @@
-Ext.define('Phlexible.mediatemplate.view.pdf2swf.PreviewPanel', {
-    extend: 'Phlexible.mediatemplate.view.BasePreviewPanel',
-    alias: 'widget.mediatemplates-pdf2swf-preview',
+Ext.define('Phlexible.mediatemplate.view.pdf2swf.Preview', {
+    extend: 'Phlexible.mediatemplate.panel.PreviewPanel',
+    requires: ['Phlexible.mediatemplate.panel.PreviewPanel'],
+
+    xtype: 'mediatemplate.pdf2swf.preview',
 
     createUrl: function () {
         return Phlexible.Router.generate('mediatemplates_preview_pdf');

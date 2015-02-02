@@ -1,6 +1,10 @@
-Ext.define('Phlexible.mediatemplate.view.image.PreviewPanel', {
-    extend: 'Phlexible.mediatemplate.view.BasePreviewPanel',
-    alias: 'widget.mediatemplates-image-preview',
+Ext.define('Phlexible.mediatemplate.view.image.Preview', {
+    extend: 'Phlexible.mediatemplate.panel.PreviewPanel',
+    requires: [
+        'Phlexible.mediatemplate.panel.PreviewPanel'
+    ],
+
+    xtype: 'mediatemplate.image.preview',
 
     changeBackgroundColorToText: '_changeBackgroundColorToText',
     whiteText: '_whiteText',

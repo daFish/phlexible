@@ -1,8 +1,8 @@
-Ext.define('Phlexible.mediatemplate.view.pdf2swf.FormPanel', {
+Ext.define('Phlexible.mediatemplate.view.pdf2swf.Form', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.mediatemplates-pdf2swf-form',
 
-    title: '_FormPanel',
+    xtype: 'mediatemplate.pdf2swf.form',
+
 //    labelWidth: 80,
     labelAlign: 'top',
     disabled: true,
@@ -49,24 +49,24 @@ Ext.define('Phlexible.mediatemplate.view.pdf2swf.FormPanel', {
                 items: [
                     {
                         xtype: 'numberfield',
-                        width: 280,
                         name: 'resolution',
+                        flex: 1,
                         fieldLabel: this.resolutionText,
                         helpText: this.resolutionHelpText,
                         minValue: 1
                     },
                     {
                         xtype: 'numberfield',
-                        width: 280,
                         name: 'framerate',
+                        flex: 1,
                         fieldLabel: this.framerateText,
                         helpText: this.framerateHelpText,
                         minValue: 1
                     },
                     {
                         xtype: 'numberfield',
-                        width: 280,
                         name: 'jpeg_quality',
+                        flex: 1,
                         fieldLabel: this.qualityText,
                         helpText: this.qualityHelpText,
                         minValue: 0,
@@ -74,24 +74,24 @@ Ext.define('Phlexible.mediatemplate.view.pdf2swf.FormPanel', {
                     },
                     {
                         xtype: 'checkbox',
-                        width: 280,
                         name: 'links_disable',
+                        flex: 1,
                         fieldLabel: this.linksText,
                         boxLabel: this.disabledText,
                         helpText: this.linksDisabledHelpText
                     },
                     {
                         xtype: 'checkbox',
-                        width: 280,
                         name: 'links_new_window',
+                        flex: 1,
                         fieldLabel: this.linksText,
                         boxLabel: this.newWindowText,
                         helpText: this.linksnewWindowHelpText
                     },
                     {
                         xtype: 'checkbox',
-                        width: 280,
                         name: 'zlib_enable',
+                        flex: 1,
                         fieldLabel: this.zlibText,
                         boxLabel: this.enabledText,
                         helpText: this.zlibHelpText
@@ -156,23 +156,13 @@ Ext.define('Phlexible.mediatemplate.view.pdf2swf.FormPanel', {
         });
     },
 
-    loadParameters: function (template_key) {
-        this.disable();
-        this.template_key = template_key;
+    loadParameters: function (key, parameters) {
+        this.template_key = key;
 
         this.getForm().reset();
-        this.getForm().load({
-            url: Phlexible.Router.generate('mediatemplates_form_load'),
-            params: {
-                template_key: template_key
-            },
-            success: function (form, data) {
-                this.enable();
+        this.getForm().setValues(parameters);
 
-                this.fireEvent('paramsload');
-            },
-            scope: this
-        });
+        this.enable();
     },
 
     saveParameters: function () {

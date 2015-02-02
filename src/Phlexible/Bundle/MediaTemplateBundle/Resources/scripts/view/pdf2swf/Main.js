@@ -1,8 +1,13 @@
-Ext.define('Phlexible.mediatemplate.view.video.MainPanel', {
+Ext.define('Phlexible.mediatemplate.view.pdf2swf.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediatemplates-video-main',
+    requires: [
+        'Phlexible.mediatemplate.view.pdf2swf.Form',
+        'Phlexible.mediatemplate.view.pdf2swf.Preview'
+    ],
 
-    title: '_MainPanel',
+    xtype: 'mediatemplate.pdf2swf.main',
+
+    header: false,
     layout: 'border',
 
     initComponent: function () {
@@ -14,33 +19,38 @@ Ext.define('Phlexible.mediatemplate.view.video.MainPanel', {
     initMyItems: function() {
         this.items = [
             {
-                xtype: 'mediatemplates-video-form',
+                xtype: 'mediatemplate.pdf2swf.form',
+                itemId: 'form',
                 region: 'west',
                 width: 320,
+                margin: 5,
                 header: false,
                 listeners: {
                     paramsload: function () {
+
                     },
                     paramssave: function () {
                         this.fireEvent('paramssave');
                     },
                     preview: function (params, debug) {
-                        this.getComponent(1).createPreview(params, debug);
+                        this.getComponent('preview').createPreview(params, debug);
                     },
                     scope: this
                 }
             },
             {
-                xtype: 'mediatemplates-video-preview',
+                xtype: 'mediatemplate.pdf2swf.preview',
+                itemId: 'preview',
                 region: 'center',
+                margin: '5 5 5 0',
                 header: false
             }
         ];
     },
 
-    loadParameters: function (template_key) {
-        this.setTitle(Ext.String.format(this.videoTemplateTitleText, template_key));
+    loadParameters: function (key, parameters) {
+        this.getComponent('form').setTitle(Ext.String.format(this.pdf2swfTemplateTitleText, key));
 
-        this.getComponent(0).loadParameters(template_key);
+        this.getComponent('form').loadParameters(key, parameters);
     }
 });

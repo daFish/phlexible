@@ -1,13 +1,18 @@
-Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
+Ext.define('Phlexible.mediatemplate.view.video.Form', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.mediatemplates-video-form',
+    requires: ['Phlexible.mediatemplate.view.audio.Fields'],
 
-    title: '_FormPanel',
+    xtype: 'mediatemplate.video.form',
+
 //    labelWidth: 80,
     autoScroll: true,
     labelAlign: 'top',
     disabled: true,
-    layout: 'accordion',
+    layout: {
+        type: 'accordion',
+        fill: false,
+        multi: true,
+    },
 
     debugPreview: false,
 
@@ -55,21 +60,24 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                 items: [
                     {
                         xtype: 'numberfield',
-                        width: 280,
+                        itemId: 'videoWidthField',
+                        flex: 1,
                         name: 'video_width',
                         fieldLabel: this.widthText,
                         helpText: this.widthHelpText
                     },
                     {
                         xtype: 'numberfield',
-                        width: 280,
+                        itemId: 'videoHeightField',
+                        flex: 1,
                         name: 'video_height',
                         fieldLabel: this.heightText,
                         helpText: this.heightHelpText
                     },
                     {
                         xtype: 'checkbox',
-                        width: 280,
+                        itemId: 'videoForWebField',
+                        flex: 1,
                         name: 'for_web',
                         hideLabel: true,
                         boxLabel: this.forWebText,
@@ -83,6 +91,12 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'videoFormatField',
+                        flex: 1,
+                        name: 'format',
+                        value: '',
+                        fieldLabel: this.formatText,
+                        helpText: this.formatHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'format'],
                             data: [
@@ -101,13 +115,7 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
                         editable: false,
-                        fieldLabel: this.formatText,
-                        name: 'format',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.formatHelpText,
                         listeners: {
                             select: function (c) {
                                 this.updateFormat();
@@ -117,7 +125,8 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                     },
                     {
                         xtype: 'checkbox',
-                        width: 280,
+                        itemId: 'videoMatchFormatField',
+                        flex: 1,
                         name: 'match_format',
                         hideLabel: true,
                         boxLabel: this.matchFormatText,
@@ -125,6 +134,12 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'videoBitrateField',
+                        flex: 1,
+                        name: 'video_bitrate',
+                        value: '',
+                        fieldLabel: this.bitrateText,
+                        helpText: this.bitrateHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'bitrate'],
                             data: [
@@ -141,16 +156,16 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.bitrateText,
-                        name: 'video_bitrate',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.bitrateHelpText
+                        editable: false
                     },
                     {
                         xtype: 'combo',
+                        itemId: 'videoFramerateField',
+                        flex: 1,
+                        value: '',
+                        name: 'video_framerate',
+                        fieldLabel: this.framerateText,
+                        helpText: this.framerateHelpText,
                         store: Ext.create('Ext.data.Store', {
                             fields: ['id', 'framerate'],
                             data: [
@@ -167,17 +182,12 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                         typeAhead: false,
                         mode: 'local',
                         triggerAction: 'all',
-                        value: '',
-                        editable: false,
-                        fieldLabel: this.framerateText,
-                        name: 'video_framerate',
-                        width: 280,
-                        listWidth: 280,
-                        helpText: this.framerateHelpText
+                        editable: false
                     },
                     {
                         xtype: 'checkbox',
-                        width: 280,
+                        itemId: 'videoDeinterlaceField',
+                        flex: 1,
                         name: 'deinterlace',
                         hideLabel: true,
                         boxLabel: this.deinterlaceText,
@@ -186,7 +196,7 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
                 ]
             },
             {
-                xtype: 'mediatemplates-audio-fields'
+                xtype: 'mediatemplate.audio.fields'
             }
         ];
     },
@@ -280,25 +290,15 @@ Ext.define('Phlexible.mediatemplate.view.video.FormPanel', {
         }
     },
 
-    loadParameters: function (template_key) {
-        this.disable();
-        this.template_key = template_key;
+    loadParameters: function (key, parameters) {
+        this.template_key = key;
 
         this.getForm().reset();
-        this.getForm().load({
-            url: Phlexible.Router.generate('mediatemplates_form_load'),
-            params: {
-                template_key: template_key
-            },
-            success: function (form, data) {
-                this.enable();
-
-                this.fireEvent('paramsload');
-            },
-            scope: this
-        });
+        this.getForm().setValues(parameters);
 
         this.updateForWeb();
+
+        this.enable();
     },
 
     saveParameters: function () {

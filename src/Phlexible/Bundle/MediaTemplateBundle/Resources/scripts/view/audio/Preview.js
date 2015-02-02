@@ -1,18 +1,17 @@
-Ext.define('Phlexible.mediatemplate.view.video.PreviewPanel', {
-    extend: 'Phlexible.mediatemplate.view.BasePreviewPanel',
-    alias: 'widget.mediatemplates-video-preview',
+Ext.define('Phlexible.mediatemplate.view.audio.Preview', {
+    extend: 'Phlexible.mediatemplate.panel.PreviewPanel',
+    requires: ['Phlexible.mediatemplate.panel.PreviewPanel'],
+
+    xtype: 'mediatemplate.audio.preview',
 
     createUrl: function () {
-        return Phlexible.Router.generate('mediatemplates_preview_video');
+        return Phlexible.Router.generate('mediatemplates_preview_audio');
     },
 
     getResult: function (data) {
         var s = '';
         if (data.template) {
             s += data.template;
-        }
-        if (data.width && data.height) {
-            s += ', ' + data.width + ' x ' + data.height;
         }
         if (data.format) {
             s += ', ' + data.format;
@@ -27,11 +26,9 @@ Ext.define('Phlexible.mediatemplate.view.video.PreviewPanel', {
         //var link = 'file=' + Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()});
 
         return {
-            tag: 'video',
+            tag: 'audio',
             autoplay: 'autoplay',
             controls: 'controls',
-            width: data.width,
-            height: data.height,
             children: [
                 {
                     tag: 'source',
@@ -40,10 +37,9 @@ Ext.define('Phlexible.mediatemplate.view.video.PreviewPanel', {
                 }
             ]
             /*
-             tag: 'embed',
              src: Phlexible.bundleAsset('/mediamanager/flash/player.swf'),
-             width: parseInt(data.width, 10),
-             height: parseInt(data.height, 10) + 20,
+             width: 300,
+             height: 20,
              allowfullscreen: 'false',
              allowscriptaccess: 'always',
              quality: 'high',

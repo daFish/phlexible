@@ -4,16 +4,17 @@ Phlexible:
             MediaTemplates:
                 text: Media Templates
 
-        view:
-            BasePreviewPanel:
+        panel:
+            PreviewPanel:
                 title: Preview
                 noPreviewAvailableText: No preview available
                 debugText: Debug
 
-            MainPanel:
+        view:
+            Main:
                 title: Media templates
 
-            TemplatesGrid:
+            List:
                 title: Templates
                 titleText: Title
                 addText: Add
@@ -24,18 +25,18 @@ Phlexible:
                 noFilterText: All
 
             audio:
-                MainPanel:
+                Main:
                     title: Audio template
                     audioTemplateTitleText: 'Audio templatevorlage "{0}"'
 
-                FormPanel:
+                Form:
                     title: Audio template
                     audioText: Audio
                     saveText: Save
                     previewText: Preview
                     debugText: Debug
 
-                FieldsPanel:
+                Fields:
                     title: Audio
                     keepBitrateText: 'Keep bitrate'
                     bitrateText: Bitrate
@@ -54,11 +55,11 @@ Phlexible:
                     channelsStereoText: 'Stereo'
 
             image:
-                MainPanel:
+                Main:
                     title: Image template
                     imageTemplateTitleText: 'Image template "{0}"'
 
-                FormPanel:
+                Form:
                     title: Image template
                     imageText: Image
                     selectMethodText: 'Please select a resize method'
@@ -85,7 +86,7 @@ Phlexible:
                     qualityText: Quality
                     qualityHelpText: 'Quality of the generated image.'
                     selectCompressionText: 'Please select a compression level'
-                    compressionText: 'Bitte wählen Sie einen Kompressionsgrad'
+                    compressionText: 'Compression level'
                     compressionHelpText: 'Compression level of the generated image.'
                     selectFilterTypeText: 'Please select a filter type'
                     filterTypeText: Filtertype
@@ -124,14 +125,14 @@ Phlexible:
                     requiredValuesText: 'Please check the form for required fields.'
                     saveDescriptionText: 'Please note that saving will result in regenerating all images stored in the media manager based on this media template. This can result in heavy server load. If you want to test your settings use the preview button. Saving is not necessary for previewing.'
 
-                PreviewPanel:
+                Preview:
                     changeBackgroundColorToText: Change background color:
                     whiteText: White
                     blackText: Black
                     randomText: Random
 
             pdf2swf:
-                FormPanel:
+                Form:
                     title: pdf2swf template
                     pdf2swfText: pdf2swf
                     resolutionText: Resolution
@@ -152,15 +153,12 @@ Phlexible:
                     previewText: Preview
                     debugText: Debug
 
-                MainPanel:
+                Main:
                     title: pdf2swf template
                     pdf2swfTemplateTitleText: 'pdf2swf template "{0}"'
 
             video:
-                FormPanel:
-                    title: Video template
-
-                MainPanel:
+                Form:
                     title: Video template
                     videoTemplateTitleText: 'Video template "{0}"'
                     videoText: Video
@@ -182,6 +180,9 @@ Phlexible:
                     framerateHelpText: 'Defines the framerate of the video.'
                     deinterlaceText: Deinterlace
                     deinterlaceHelpText: 'Activate deinterlacing. Converts interlaced in non-interlaced videos.'
-                    saveText: Speichern
-                    previewText: Vorschau
+                    saveText: Save
+                    previewText: Preview
                     debugText: Debug
+
+                Main:
+                    title: Video template

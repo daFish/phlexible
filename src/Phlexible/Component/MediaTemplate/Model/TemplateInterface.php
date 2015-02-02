@@ -18,18 +18,6 @@ interface TemplateInterface
     /**
      * @return string
      */
-    public function getId();
-
-    /**
-     * @param string $id
-     *
-     * @return $this
-     */
-    public function setId($id);
-
-    /**
-     * @return string
-     */
     public function getKey();
 
     /**

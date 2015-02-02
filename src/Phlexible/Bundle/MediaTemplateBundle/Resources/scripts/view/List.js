@@ -1,8 +1,7 @@
-Ext.define('Phlexible.mediatemplate.view.TemplatesGrid', {
+Ext.define('Phlexible.mediatemplate.view.List', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.mediatemplates-list',
+    xtype: 'mediatemplate.list',
 
-    title: '_TemplatesGrid',
     border: true,
 
     titleText: '_titleText',
@@ -24,15 +23,16 @@ Ext.define('Phlexible.mediatemplate.view.TemplatesGrid', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            fields: ['key', 'type'],
+            model: 'Phlexible.mediatemplate.model.MediaTemplate',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('mediatemplates_templates_list'),
+                url: Phlexible.Router.generate('phlexible_mediatemplate_get_mediatemplates'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
-                    rootProperty: 'templates',
-                    idProperty: 'key'
+                    rootProperty: 'mediatemplates',
+                    idProperty: 'key',
+                    totalProperty: 'count'
                 },
                 extraParams: this.storeExtraParams
             },
@@ -72,25 +72,25 @@ Ext.define('Phlexible.mediatemplate.view.TemplatesGrid', {
                         {
                             text: this.imageText,
                             iconCls: Phlexible.mediatemplate.TemplateIcons.image,
-                            handler: this.newImageTemplate,
+                            handler: this.createImageTemplate,
                             scope: this
                         },
                         {
                             text: this.videoText,
                             iconCls: Phlexible.mediatemplate.TemplateIcons.video,
-                            handler: this.newVideoTemplate,
+                            handler: this.createVideoTemplate,
                             scope: this
                         },
                         {
                             text: this.audioText,
                             iconCls: Phlexible.mediatemplate.TemplateIcons.audio,
-                            handler: this.newAudioTemplate,
+                            handler: this.createAudioTemplate,
                             scope: this
                         },
                         {
                             text: this.pdf2swfText,
                             iconCls: Phlexible.mediatemplate.TemplateIcons.pdf2swf,
-                            handler: this.newPdfTemplate,
+                            handler: this.createPdfTemplate,
                             scope: this
                         }
                     ]
@@ -144,8 +144,8 @@ Ext.define('Phlexible.mediatemplate.view.TemplatesGrid', {
 
     initMyListeners: function() {
         this.on({
-            rowdblclick: function (grid, record) {
-                this.fireEvent('templatechange', record);
+            rowdblclick: function (grid, mediaType) {
+                this.fireEvent('loadTemplate', mediaType);
             },
             scope: this
         });
@@ -164,59 +164,23 @@ Ext.define('Phlexible.mediatemplate.view.TemplatesGrid', {
         }
     },
 
-    newImageTemplate: function () {
-        this.newTemplate('image');
+    createImageTemplate: function () {
+        this.createTemplate('image');
     },
 
-    newVideoTemplate: function () {
-        this.newTemplate('video');
+    createVideoTemplate: function () {
+        this.createTemplate('video');
     },
 
-    newAudioTemplate: function () {
-        this.newTemplate('audio');
+    createAudioTemplate: function () {
+        this.createTemplate('audio');
     },
 
-    newPdfTemplate: function () {
-        this.newTemplate('pdf');
+    createPdfTemplate: function () {
+        this.createTemplate('pdf');
     },
 
-    newTemplate: function (type) {
-        if (!type || (type != 'image' && type != 'video' && type != 'audio' && type != 'pdf')) {
-            return;
-        }
-
-        Ext.MessageBox.prompt('_title', '_title', function (btn, key) {
-            if (btn !== 'ok') {
-                return;
-            }
-
-            Ext.Ajax.request({
-                url: Phlexible.Router.generate('mediatemplates_templates_create'),
-                params: {
-                    type: type,
-                    key: key
-                },
-                success: function (response) {
-                    var data = Ext.decode(response.responseText);
-                    if (data.success) {
-                        Phlexible.success(data.msg);
-
-                        // store reload
-                        this.store.reload({
-                            callback: function (template_id) {
-                                var r = this.store.getById(template_id);
-                                var index = this.store.indexOf(r);
-                                this.selModel.selectRange(index);
-                                this.fireEvent('create', template_id, r.get('key'), r.get('type'));
-                            }.createDelegate(this, [data.id])
-                        });
-                    } else {
-                        Ext.Msg.alert('Failure', data.msg);
-                    }
-                },
-                scope: this
-
-            });
-        }, this);
+    createTemplate: function (type) {
+        this.fireEvent('createTemplate', type);
     }
 });

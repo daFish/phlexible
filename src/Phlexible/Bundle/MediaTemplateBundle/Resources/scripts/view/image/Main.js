@@ -1,8 +1,12 @@
-Ext.define('Phlexible.mediatemplate.view.image.MainPanel', {
+Ext.define('Phlexible.mediatemplate.view.image.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediatemplates-image-main',
+    requires: [
+        'Phlexible.mediatemplate.view.image.Form',
+        'Phlexible.mediatemplate.view.image.Preview'
+    ],
 
-    title: '_MainPanel',
+    xtype: 'mediatemplate.image.main',
+
     header: false,
     layout: 'border',
 
@@ -17,26 +21,25 @@ Ext.define('Phlexible.mediatemplate.view.image.MainPanel', {
     initMyItems: function () {
         this.items = [
             {
-                xtype: 'mediatemplates-image-form',
+                xtype: 'mediatemplate.image.form',
                 region: 'west',
+                itemId: 'form',
                 width: 320,
                 margin: 5,
                 header: false,
                 listeners: {
-                    paramsload: function () {
-
-                    },
-                    paramssave: function () {
+                    saveTemplate: function () {
                         this.fireEvent('paramssave');
                     },
                     preview: function (params, debug) {
-                        this.getComponent(1).createPreview(params, debug);
+                        this.getComponent('preview').createPreview(params, debug);
                     },
                     scope: this
                 }
             },
             {
-                xtype: 'mediatemplates-image-preview',
+                xtype: 'mediatemplate.image.preview',
+                itemId: 'preview',
                 region: 'center',
                 margin: '5 5 5 0',
                 header: false
@@ -44,9 +47,8 @@ Ext.define('Phlexible.mediatemplate.view.image.MainPanel', {
         ];
     },
 
-    loadParameters: function (template_key) {
-        this.getComponent(0).setTitle(Ext.String.format(this.imageTemplateTitleText, template_key));
-
-        this.getComponent(0).loadParameters(template_key);
+    loadParameters: function (key, parameters) {
+        this.getComponent('form').setTitle(Ext.String.format(this.imageTemplateTitleText, key));
+        this.getComponent('form').loadParameters(key, parameters);
     }
 });

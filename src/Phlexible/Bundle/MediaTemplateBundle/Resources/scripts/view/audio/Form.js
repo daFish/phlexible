@@ -1,6 +1,8 @@
-Ext.define('Phlexible.mediatemplate.view.audio.FormPanel', {
+Ext.define('Phlexible.mediatemplate.view.audio.Form', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.mediatemplates-audio-form',
+    requires: ['Phlexible.mediatemplate.view.audio.Fields'],
+
+    xtype: 'mediatemplate.audio.form',
 
     title: '_FormPanel',
 //    labelWidth: 80,
@@ -26,6 +28,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.FormPanel', {
 
     initComponent: function () {
         this.initMyItems();
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -33,7 +36,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.FormPanel', {
     initMyItems: function() {
         this.items = [
             {
-                xtype: 'mediatemplates-audio-fields'
+                xtype: 'mediatemplate.audio.fields'
             }
         ];
     },
@@ -46,7 +49,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.FormPanel', {
             items: [
                 {
                     text: this.saveText,
-                    iconCls: Phlexible.Icons.get(Phlexible.Icon.SAVE),
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                     itemId: 'saveBtn',
                     handler: this.saveParameters,
                     scope: this
@@ -55,7 +58,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.FormPanel', {
                 {
                     xtype: 'splitbutton',
                     text: this.previewText,
-                    iconCls: Phlexible.Icons.get(Phlexible.Icon.PREVIEW),
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.PREVIEW),
                     handler: function () {
                         var values = this.getForm().getValues();
 
@@ -89,24 +92,13 @@ Ext.define('Phlexible.mediatemplate.view.audio.FormPanel', {
         });
     },
 
-    loadParameters: function (template_key) {
-        this.disable();
-        this.template_key = template_key;
+    loadParameters: function (key, parameters) {
+        this.template_key = key;
 
         this.getForm().reset();
-        this.getForm().load({
-            url: Phlexible.Router.generate('mediatemplates_form_load'),
-            params: {
-                template_key: template_key
-            },
-            success: function (form, data) {
-                this.enable();
+        this.getForm().setValues(parameters);
 
-                this.fireEvent('paramsload');
-            },
-            scope: this
-        });
-
+        this.enable();
     },
 
     saveParameters: function () {

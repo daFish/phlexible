@@ -1,12 +1,12 @@
-Ext.define('Phlexible.mediatemplate.view.audio.FieldsPanel', {
+Ext.define('Phlexible.mediatemplate.view.audio.Fields', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediatemplates-audio-fields',
+    xtype: 'mediatemplate.audio.fields',
 
-    title: '_FieldsPanel',
     iconCls: Phlexible.mediatemplate.TemplateIcons.audio,
     bodyPadding: 5,
     border: false,
     autoScroll: true,
+    layout: 'form',
 
     keepBitrateText: '_keepBitrateText',
     bitrateText: '_bitrateText',
@@ -48,6 +48,11 @@ Ext.define('Phlexible.mediatemplate.view.audio.FieldsPanel', {
         this.items = [
             {
                 xtype: 'combo',
+                name: 'audio_bitrate',
+                value: '',
+                flex: 1,
+                fieldLabel: this.bitrateText,
+                helpText: this.bitrateHelpText,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'bitrate'],
                     data: [
@@ -66,16 +71,15 @@ Ext.define('Phlexible.mediatemplate.view.audio.FieldsPanel', {
                 typeAhead: false,
                 mode: 'local',
                 triggerAction: 'all',
-                value: '',
-                editable: false,
-                fieldLabel: this.bitrateText,
-                name: 'audio_bitrate',
-                width: 280,
-                listWidth: 280,
-                helpText: this.bitrateHelpText
+                editable: false
             },
             {
                 xtype: 'combo',
+                name: 'audio_samplerate',
+                value: '',
+                flex: 1,
+                fieldLabel: this.samplerateText,
+                helpText: this.samplerateHelpText,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'samplerate'],
                     data: [
@@ -90,16 +94,15 @@ Ext.define('Phlexible.mediatemplate.view.audio.FieldsPanel', {
                 typeAhead: false,
                 mode: 'local',
                 triggerAction: 'all',
-                value: '',
-                editable: false,
-                fieldLabel: this.samplerateText,
-                name: 'audio_samplerate',
-                width: 280,
-                listWidth: 280,
-                helpText: this.samplerateHelpText
+                editable: false
             },
             {
                 xtype: 'combo',
+                name: 'audio_samplebits',
+                value: '',
+                flex: 1,
+                fieldLabel: this.samplebitsText,
+                helpText: this.samplebitsHelpText,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'samplebits'],
                     data: [
@@ -114,16 +117,15 @@ Ext.define('Phlexible.mediatemplate.view.audio.FieldsPanel', {
                 typeAhead: false,
                 mode: 'local',
                 triggerAction: 'all',
-                value: '',
-                editable: false,
-                fieldLabel: this.samplebitsText,
-                name: 'audio_samplebits',
-                width: 280,
-                listWidth: 280,
-                helpText: this.samplebitsHelpText
+                editable: false
             },
             {
                 xtype: 'combo',
+                name: 'audio_channels',
+                value: '',
+                flex: 1,
+                fieldLabel: this.channelsText,
+                helpText: this.channelsHelpText,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'channels'],
                     data: [
@@ -138,13 +140,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.FieldsPanel', {
                 typeAhead: false,
                 mode: 'local',
                 triggerAction: 'all',
-                value: '',
-                editable: false,
-                fieldLabel: this.channelsText,
-                name: 'audio_channels',
-                width: 280,
-                listWidth: 280,
-                helpText: this.channelsHelpText
+                editable: false
             }
         ]
     }

@@ -1,8 +1,7 @@
-Ext.define('Phlexible.mediatemplate.view.BasePreviewPanel', {
+Ext.define('Phlexible.mediatemplate.panel.PreviewPanel', {
     extend: 'Ext.panel.Panel',
 
-    title: '_BasePreviewPanel',
-    cls: 'p-mediatemplates-preview-panel',
+    cls: 'p-mediatemplate-preview',
     border: true,
     bodyStyle: 'padding: 5px',
     autoScroll: true,
