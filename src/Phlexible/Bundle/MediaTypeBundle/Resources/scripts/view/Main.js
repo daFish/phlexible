@@ -1,6 +1,13 @@
-Ext.define('Phlexible.mediatype.view.MainPanel', {
+Ext.define('Phlexible.mediatype.view.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediatype-main',
+    requires: [
+        'Phlexible.mediatype.view.MainController',
+        'Phlexible.mediatype.view.MediaTypes',
+        'Phlexible.mediatype.view.Mimetypes'
+    ],
+
+    xtype: 'mediatype.main',
+    controller: 'mediatype.main',
 
     iconCls: Phlexible.Icon.get('image-share'),
     layout: 'border',
@@ -15,32 +22,21 @@ Ext.define('Phlexible.mediatype.view.MainPanel', {
     initMyItems: function() {
         this.items = [
             {
-                xtype: 'mediatype-list',
+                xtype: 'mediatype.list',
                 region: 'center',
                 header: false,
                 padding: 5,
                 listeners: {
-                    mediaTypeChange: function (r) {
-                        var mimetypes = null;
-                        if (r) {
-                            mimetypes = r.get('mimetypes');
-                        }
-                        this.getComponent('mimetypes').loadMimetypes(mimetypes);
-                    },
-                    scope: this
+                    mediaTypeChange: 'onChangeMediaType'
                 }
             },
             {
-                xtype: 'mediatype-mimetypes',
+                xtype: 'mediatype.mimetypes',
                 itemId: 'mimetypes',
                 region: 'east',
                 padding: '5 5 5 0',
                 width: 400
             }
         ];
-    },
-
-    loadParams: function () {
-
     }
 });

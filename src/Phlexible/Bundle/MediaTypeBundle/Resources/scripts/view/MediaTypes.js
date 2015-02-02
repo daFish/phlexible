@@ -1,15 +1,15 @@
-Ext.define('Phlexible.mediatype.view.MediaTypesGrid', {
+Ext.define('Phlexible.mediatype.view.MediaTypes', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.mediatype-list',
 
-    title: '_MediaTypesGrid',
+    xtype: 'mediatype.list',
+
     iconCls: 'p-mediatype-component-icon',
     loadMask: true,
     stripeRows: true,
 
-    idText: '_idText',
-    keyText: '_keyText',
+    nameText: '_nameText',
     mimetypesText: '_mimetypesText',
+    sizesText: '_sizesText',
     reloadText: '_reloadText',
     iconsForText: '_iconsForText',
 
@@ -26,13 +26,13 @@ Ext.define('Phlexible.mediatype.view.MediaTypesGrid', {
         this.store = Ext.create('Ext.data.Store', {
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('mediatypes_list'),
+                url: Phlexible.Router.generate('phlexible_mediatype_get_mediatypes'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
                     rootProperty: 'mediatypes',
                     idProperty: 'id',
-                    totalProperty: 'totalCount'
+                    totalProperty: 'count'
                 }
             },
             model: 'Phlexible.mediatype.model.MediaType',
@@ -47,36 +47,34 @@ Ext.define('Phlexible.mediatype.view.MediaTypesGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.idText,
-                dataIndex: 'id',
-                sortable: false,
-                hidden: true,
-                width: 220
-            },
-            {
-                id: 'key',
-                header: this.keyText,
-                dataIndex: 'key',
+                header: this.nameText,
+                dataIndex: 'name',
                 sortable: true,
                 width: 100
             },
             {
                 header: 'de', //this.strings.type,
-                dataIndex: 'de',
+                dataIndex: 'titles',
                 sortable: true,
-                width: 250
+                width: 250,
+                renderer: function(v) {
+                    return v['en'];
+                }
             },
             {
                 header: 'en', //this.strings.type,
-                dataIndex: 'en',
+                dataIndex: 'titles',
                 sortable: true,
-                width: 250
+                width: 250,
+                renderer: function(v) {
+                    return v['en'];
+                }
             },
             {
                 header: this.mimetypesText,
                 dataIndex: 'mimetypes',
                 sortable: false,
-                width: 100,
+                width: 150,
                 renderer: function (m) {
                     if (!Ext.isArray(m) || !m.length) {
                         return 'No mimetypes';
@@ -86,32 +84,13 @@ Ext.define('Phlexible.mediatype.view.MediaTypesGrid', {
                 }
             },
             {
-                header: '16',
-                dataIndex: 'icon16',
+                header: this.sizesText,
+                dataIndex: 'icons',
                 sortable: false,
-                width: 30,
-                renderer: this.iconRenderer
-            },
-            {
-                header: '32',
-                dataIndex: 'icon32',
-                sortable: false,
-                width: 30,
-                renderer: this.iconRenderer
-            },
-            {
-                header: '48',
-                dataIndex: 'icon48',
-                sortable: false,
-                width: 30,
-                renderer: this.iconRenderer
-            },
-            {
-                header: '256',
-                dataIndex: 'icon256',
-                sortable: false,
-                width: 30,
-                renderer: this.iconRenderer
+                width: 100,
+                renderer: function(v) {
+                    return Ext.Object.getKeys(v).join(',');
+                }
             }
         ];
     },
@@ -140,43 +119,30 @@ Ext.define('Phlexible.mediatype.view.MediaTypesGrid', {
                 }
                 this.fireEvent('mediaTypeChange', records[0]);
             },
-            itemdblclick: function (grid, r) {
-                var key = r.get('key');
+            itemdblclick: function (grid, mediaType) {
+                debugger;
+                var key = mediaType.get('key'),
+                    name = mediaType.get('titles').en,
+                    icons = mediaType.get('icons'),
+                    html1 = '',
+                    html2 = '';
+
+                Ext.Object.each(icons, function(size, icon) {
+                    html1 += '<td align="center" valign="bottom"><img src="' + icon + '" width="' + size + '" height="' + size + '" /></td>';
+                    html2 += '<td align="center">' + size + 'x' + size + '</td>';
+                });
 
                 var w = Ext.create('Ext.window.Window', {
-                    title: Ext.String.format(this.iconsForText, r.get('en')),
+                    title: Ext.String.format(this.iconsForText, name),
                     width: 420,
                     height: 320,
                     bodyStyle: 'background: white; background: linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, lightgray; background-size: 30px 30px; padding: 5px;',
                     modal: true,
-                    html: '<table><tr>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes16/' + key + '.gif') + '" width="16" height="16" />' +
-                        '</td>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes32/' + key + '.gif') + '" width="32" height="32" />' +
-                        '</td>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes48/' + key + '.gif') + '" width="48" height="48" />' +
-                        '</td>' +
-                        '<td align="center" valign="bottom">' +
-                        '<img src="' + Phlexible.bundleAsset('/phlexiblemediatype/mimetypes256/' + key + '.gif') + '" width="256" height="256" />' +
-                        '</td>' +
-                        '</tr><tr>' +
-                        '<td align="center">16x16</td>' +
-                        '<td align="center">32x32</td>' +
-                        '<td align="center">48x48</td>' +
-                        '<td align="center">256x256</td>' +
-                        '</tr></table>'
+                    html: '<table><tr>' + html1 + '</tr><tr>' + html2 + '</tr></table>'
                 });
                 w.show();
             },
             scope: this
         });
-    },
-
-    iconRenderer: function (k) {
-        var icon = k ? 'tick-circle' : 'cross-circle';
-        return Phlexible.Icon.inline(icon);
     }
 });

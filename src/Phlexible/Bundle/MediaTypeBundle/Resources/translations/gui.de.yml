@@ -5,18 +5,18 @@ Phlexible:
                 text: Media Types
 
         view:
-            MainPanel:
+            Main:
                 title: Medientypen
 
-            MediaTypesGrid:
+            MediaTypes:
                 title: Medientypen
-                idText: ID
-                keyText: Schlüssel
+                nameText: Name
+                sizesText: Größen
                 mimetypesText: Mimetypen
                 reloadText: 'Neu laden'
                 iconsForText: 'Icons für "{0}"'
 
-            MimetypesGrid:
+            Mimetypes:
                 title: Mimetypen
                 emptyText: Keine Mimetypen
                 mimetypeText: Mimetyp

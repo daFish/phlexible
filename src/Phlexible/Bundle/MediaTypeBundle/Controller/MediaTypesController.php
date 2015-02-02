@@ -38,24 +38,21 @@ class MediaTypesController extends FOSRestController
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
         $iconResolver = $this->get('phlexible_media_type.icon_resolver');
 
-        $mediaTypes = $mediaTypeManager->findAll();
-        /*
+        $mediaTypes = array();
         foreach ($mediaTypeManager->findAll() as $mediaType) {
+            $icons = array();
+            foreach ($mediaType->getIcons() as $size => $file) {
+                $filename = basename($file);
+                $icons[$size] = "/bundles/phlexiblemediatype/mimetypes$size/$filename";
+            }
             $mediaTypes[] = [
-                'id'        => $mediaType->getName(),
-                'key'       => $mediaType->getName(),
-                'upperkey'  => strtoupper($mediaType->getName()),
-                'type'      => $mediaType->getCategory(),
-                'de'        => $mediaType->getTitle('de'),
-                'en'        => $mediaType->getTitle('en'),
+                'name'      => $mediaType->getName(),
+                'category'  => $mediaType->getCategory(),
+                'titles'    => $mediaType->getTitles(),
                 'mimetypes' => $mediaType->getMimetypes(),
-                'icon16'    => (bool) $iconResolver->resolve($mediaType, 16),
-                'icon32'    => (bool) $iconResolver->resolve($mediaType, 32),
-                'icon48'    => (bool) $iconResolver->resolve($mediaType, 48),
-                'icon256'   => (bool) $iconResolver->resolve($mediaType, 256),
+                'icons'     => $icons,
             ];
         }
-        */
 
         return $this->handleView($this->view(
             array(

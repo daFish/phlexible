@@ -2,14 +2,10 @@ Ext.define('Phlexible.mediatype.model.MediaType', {
     extend: 'Ext.data.Model',
 
     fields: [
-        {name: 'id', type: 'string'},
-        {name: 'key', type: 'string'},
-        {name: 'de', type: 'string'},
-        {name: 'en', type: 'string'},
+        {name: 'name', type: 'string'},
+        {name: 'category', type: 'string'},
+        {name: 'titles'},
         {name: 'mimetypes'},
-        {name: 'icon16', type: 'boolean'},
-        {name: 'icon32', type: 'boolean'},
-        {name: 'icon48', type: 'boolean'},
-        {name: 'icon256', type: 'boolean'}
+        {name: 'icons'}
     ]
 });

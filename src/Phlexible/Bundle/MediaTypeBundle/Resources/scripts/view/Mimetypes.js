@@ -1,6 +1,6 @@
-Ext.define('Phlexible.mediatype.view.MimetypesGrid', {
+Ext.define('Phlexible.mediatype.view.Mimetypes', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.mediatype-mimetypes',
+    xtype: 'mediatype.mimetypes',
 
     iconCls: Phlexible.Icon.get('image-share'),
     loadMask: true,
@@ -13,7 +13,7 @@ Ext.define('Phlexible.mediatype.view.MimetypesGrid', {
     mimetypeText: '_mimetypeText',
 
     initComponent: function () {
-        this.store = new Ext.data.Store({
+        this.store = Ext.create('Ext.data.Store', {
             fields: ['mimetype'],
             sorters: [{
                 property: 'mimetype',
