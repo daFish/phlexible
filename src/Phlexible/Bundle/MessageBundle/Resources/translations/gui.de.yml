@@ -72,6 +72,7 @@ Phlexible:
             list:
                 Filter:
                     title: Filter
+                    contentText: Inhalt
                     subjectText: Betreff
                     bodyText: Text
                     userText: Benutzer

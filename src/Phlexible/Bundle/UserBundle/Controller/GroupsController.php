@@ -184,7 +184,7 @@ class GroupsController extends FOSRestController
      * @Security("is_granted('ROLE_GROUP_ADMIN_DELETE')")
      * @ApiDoc
      */
-    public function deleteAction($groupId)
+    public function deleteGroupAction($groupId)
     {
         $groupManager = $this->get('phlexible_user.group_manager');
 

@@ -38,6 +38,7 @@ Ext.define('Phlexible.message.view.list.Main', {
                 itemId: 'list',
                 region: 'center',
                 padding: 5,
+                autoLoad: true,
                 listeners: {
                     messages: function (p, data) {
                         this.getComponent('filter').updateFacets(data.facets);

@@ -84,16 +84,16 @@ Ext.define('Phlexible.message.view.list.List', {
                 dataIndex: 'priority',
                 sortable: true,
                 width: 70,
-                renderer: function (s) {
-                    return s ? Phlexible.Icon.inlineText(Phlexible.message.PriorityIcons[s], this['priority' + Ext.String.capitalize(s) + 'Text']) : '';
+                renderer: function (v) {
+                    return v !== undefined && v !== null ? Phlexible.Icon.inlineText(Phlexible.message.PriorityIcons[v], Phlexible.Config.get('message.priorities')[v]) : '';
                 }
             }, {
                 header: this.typeText,
                 dataIndex: 'type',
                 sortable: true,
                 width: 70,
-                renderer: function (s) {
-                    return s ? Phlexible.Icon.inlineText(Phlexible.message.TypeIcons[s], this['type' + Ext.String.capitalize(s) + 'Text']) : '';
+                renderer: function (v) {
+                    return v !== undefined && v !== null ? Phlexible.Icon.inlineText(Phlexible.message.TypeIcons[v], Phlexible.Config.get('message.types')[v]) : '';
                 }
             }, {
                 header: this.channelText,

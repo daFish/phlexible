@@ -17,8 +17,6 @@ use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -37,13 +35,14 @@ class MessagesController extends FOSRestController
      * @param ParamFetcher $paramFetcher
      *
      * @return Response
+     *
      * @QueryParam(name="start", requirements="\d+", default=0, description="First result")
      * @QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
      * @QueryParam(name="sort", requirements="\w+", default="createdAt", description="Sort field")
      * @QueryParam(name="dir", requirements="\w+", default="DESC", description="Sort direction")
      * @QueryParam(name="include", requirements="\w+", default="facets", description="Include optional values, like facets")
      * @QueryParam(name="criteria", description="Search criteria.")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getMessagesAction(ParamFetcher $paramFetcher)
     {
@@ -56,16 +55,12 @@ class MessagesController extends FOSRestController
         $messageManager = $this->get('phlexible_message.message_manager');
         $criteria = $messageManager->createCriteria();
 
-        $priorityList = $messageManager->getPriorityNames();
-        $typeList = $messageManager->getTypeNames();
-
         $criteria
             ->orderBy(array($sort => $dir))
             ->setFirstResult($start)
             ->setMaxResults($limit);
 
-        $criteria->andWhere($criteria->expr()->eq('priority', 0));
-        //UserCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
+        //MessageCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
 
         $messageResult = $messageManager->query($criteria);
 
@@ -136,40 +131,20 @@ class MessagesController extends FOSRestController
             );
         }
         */
-
-        $count = $messageManager->countByCriteria($criteria);
-        $messages = $messageManager->findByCriteria($criteria, [$sort => $dir], $limit, $start);
-
-        $data = [];
-        foreach ($messages as $message) {
-            $data[] = [
-                'subject'   => $message->getSubject(),
-                'body'      => nl2br($message->getBody()),
-                'priority'  => $priorityList[$message->getPriority()],
-                'type'      => $typeList[$message->getType()],
-                'channel'   => $message->getChannel(),
-                'role'      => $message->getRole(),
-                'user'      => $message->getUser(),
-                'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-            ];
-        }
-
-        return new JsonResponse([
-            'totalCount' => $count,
-            'messages'   => $data,
-            'facets'     => $messageManager->getFacetsByCriteria($criteria),
-        ]);
     }
 
     /**
+     * Create message
+     *
      * @param Message $message
      *
      * @return Response
+     *
      * @ParamConverter("message", converter="fos_rest.request_body")
      * @Post("/messages")
-     * @ApiDoc()
+     * @ApiDoc
      */
-    public function postMessages(Message $message)
+    public function postMessagesAction(Message $message)
     {
         $messageManager = $this->get('phlexible_message.message_manager');
 
@@ -180,51 +155,5 @@ class MessagesController extends FOSRestController
                 'success' => true,
             )
         ));
-    }
-
-    /**
-     * List filter values
-     *
-     * @return JsonResponse
-     * @Route("/facets", name="messages_messages_facets")
-     */
-    public function facetsAction()
-    {
-        $messageManager = $this->get('phlexible_message.message_manager');
-
-        $filterSets = $messageManager->getFacets();
-        $priorityList = $messageManager->getPriorityNames();
-        $typeList = $messageManager->getTypeNames();
-
-        $priorities = [];
-        arsort($filterSets['priorities']);
-        foreach ($filterSets['priorities'] as $priority) {
-            $priorities[] = ['id' => $priority, 'title' => $priorityList[$priority]];
-        }
-
-        $types = [];
-        arsort($filterSets['types']);
-        foreach ($filterSets['types'] as $key => $type) {
-            $types[] = ['id' => $type, 'title' => $typeList[$type]];
-        }
-
-        $channels = [];
-        sort($filterSets['channels']);
-        foreach ($filterSets['channels'] as $channel) {
-            $channels[] = ['id' => $channel, 'title' => $channel ? : '(no channel)'];
-        }
-
-        $roles = [];
-        sort($filterSets['roles']);
-        foreach ($filterSets['roles'] as $role) {
-            $roles[] = ['id' => $role, 'title' => $role ? : '(no role)'];
-        }
-
-        return new JsonResponse([
-            'priorities' => $priorities,
-            'types'      => $types,
-            'channels'   => $channels,
-            'roles'      => $roles,
-        ]);
     }
 }

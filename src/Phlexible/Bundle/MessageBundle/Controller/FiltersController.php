@@ -38,6 +38,7 @@ class FiltersController extends FOSRestController
      * @return Response
      *
      * @QueryParam(name="userId", requirements=".+", description="User ID")
+     * @ApiDoc
      */
     public function getFiltersAction(ParamFetcher $paramFetcher)
     {
@@ -67,7 +68,7 @@ class FiltersController extends FOSRestController
      *
      * @ParamConverter("subscription", converter="fos_rest.request_body")
      * @Post("/filters")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function postFiltersAction(Filter $filter)
     {
@@ -88,6 +89,7 @@ class FiltersController extends FOSRestController
      * @param string $filterId
      *
      * @return Response
+     *
      * @ParamConverter("filter", converter="fos_rest.request_body")
      * @Put("/filters/{filterId}")
      * @ApiDoc
@@ -113,6 +115,7 @@ class FiltersController extends FOSRestController
      * @param string $filterId
      *
      * @return Response
+     *
      * @ApiDoc
      */
     public function deleteFilterAction($filterId)

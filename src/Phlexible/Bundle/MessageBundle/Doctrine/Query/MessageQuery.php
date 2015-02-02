@@ -82,10 +82,14 @@ class MessageQuery implements MessageQueryInterface
         $roleQb = clone $queryBuilder;
         $roles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
+        $toInt = function($v) {
+            return (int) $v;
+        };
+
         return [
+            'priorities' => array_map($toInt, array_column($priorities, 'priority')),
+            'types'      => array_map($toInt, array_column($types, 'type')),
             'channels'   => array_column($channels, 'channel'),
-            'types'      => array_column($types, 'type'),
-            'priorities' => array_column($priorities, 'priority'),
             'roles'      => array_column($roles, 'role'),
         ];
     }

@@ -7,6 +7,7 @@ Ext.define('Phlexible.message.view.list.Filter', {
     bodyPadding: 5,
     autoScroll: true,
 
+    contentText: '_contentText',
     subjectText: '_subjectText',
     bodyText: '_bodyText',
     userText: '_userText',
@@ -23,18 +24,18 @@ Ext.define('Phlexible.message.view.list.Filter', {
     initComponent: function () {
         this.task = new Ext.util.DelayedTask(this.updateFilter, this);
 
-        this.initMyItems();
-        this.initMyDockedItems();
-
         Ext.Ajax.request({
             url: Phlexible.Router.generate('phlexible_message_get_messages'),
             success: function (response) {
-                var facets = Ext.decode(response.responseText);
+                var data = Ext.decode(response.responseText);
 
-                this.loadFacets(facets);
+                this.loadFacets(data.facets);
             },
             scope: this
         });
+
+        this.initMyItems();
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -43,7 +44,7 @@ Ext.define('Phlexible.message.view.list.Filter', {
         this.items = [
             {
                 xtype: 'panel',
-                title: this.textText,
+                title: this.contentText,
                 itemId: 'text',
                 layout: 'form',
                 frame: true,
@@ -313,8 +314,8 @@ Ext.define('Phlexible.message.view.list.Filter', {
             Ext.each(facets.priorities, function (item) {
                 priorities.push({
                     xtype: 'checkbox',
-                    name: 'priority_' + item.id,
-                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.PriorityIcons[item.title], item.title),
+                    name: 'priority_' + item,
+                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.PriorityIcons[item], Phlexible.Config.get('message.priorities')[item]),
                     listeners: {
                         change: this.updateFilter,
                         scope: this
@@ -333,8 +334,8 @@ Ext.define('Phlexible.message.view.list.Filter', {
             Ext.each(facets.types, function (item) {
                 types.push({
                     xtype: 'checkbox',
-                    name: 'type_' + item.id,
-                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.TypeIcons[item.title], item.title),
+                    name: 'type_' + item,
+                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.TypeIcons[item], Phlexible.Config.get('message.types')[item]),
                     listeners: {
                         change: this.updateFilter,
                         scope: this
@@ -353,8 +354,8 @@ Ext.define('Phlexible.message.view.list.Filter', {
             Ext.each(facets.channels, function (item) {
                 channels.push({
                     xtype: 'checkbox',
-                    name: 'channel_' + item.id,
-                    boxLabel: item.title,
+                    name: 'channel_' + item,
+                    boxLabel: item,
                     listeners: {
                         change: this.updateFilter,
                         scope: this
@@ -373,8 +374,8 @@ Ext.define('Phlexible.message.view.list.Filter', {
             Ext.each(facets.roles, function (item) {
                 roles.push({
                     xtype: 'checkbox',
-                    name: 'role_' + item.id,
-                    boxLabel: item.title,
+                    name: 'role_' + item,
+                    boxLabel: item,
                     listeners: {
                         change: this.updateFilter,
                         scope: this
@@ -387,8 +388,6 @@ Ext.define('Phlexible.message.view.list.Filter', {
         } else {
             this.getComponent('roles').hide();
         }
-
-        this.doLayout();
     },
 
     resetFilter: function (btn) {
@@ -416,6 +415,7 @@ Ext.define('Phlexible.message.view.list.Filter', {
     },
 
     updateFilter: function () {
+        debugger;
         this.getDockedComponent('tbar').getComponent('resetBtn').enable();
 
         var values = this.form.getValues(),

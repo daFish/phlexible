@@ -33,7 +33,7 @@ class SubscriptionsController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getSubscriptionsAction()
     {
@@ -50,9 +50,10 @@ class SubscriptionsController extends FOSRestController
      * @param Subscription $subscription
      *
      * @return Response
+     *
      * @ParamConverter("subscription", converter="fos_rest.request_body")
      * @Post("/subscriptions")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function postSubscriptionsAction(Subscription $subscription)
     {
@@ -73,7 +74,9 @@ class SubscriptionsController extends FOSRestController
      * @param string $subscriptionId
      *
      * @return Response
+     *
      * @Route("/delete/{subscriptionId}", name="messages_subscription_delete")
+     * @ApiDoc
      */
     public function deleteSubscriptionAction($subscriptionId)
     {
