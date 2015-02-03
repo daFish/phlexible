@@ -1,14 +1,14 @@
-Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
+Ext.define('Phlexible.siteroot.view.SpecialTids', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroot-specialtids',
 
-    title: '_SpecialTidGrid',
+    xtype: 'siteroot.specialtids',
+
     border: false,
     emptyText: '_emptyText',
 
-    keyText: '_keyText',
+    nameText: '_nameText',
     languageText: '_languageText',
-    tidText: '_tidText',
+    treeIdText: '_treeIdText',
     deleteText: '_deleteText',
     removeText: '_removeText',
     removeDescriptionText: '_removeDescriptionText',
@@ -36,8 +36,8 @@ Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.keyText,
-                dataIndex: 'key',
+                header: this.nameText,
+                dataIndex: 'name',
                 flex: 1,
                 sortable: true,
                 editor: {
@@ -51,6 +51,9 @@ Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
                 sortable: true,
                 renderer: this.renderLanguage,
                 width: 100,
+                renderer: function(v) {
+                    return v || '';
+                },
                 editor: {
                     xtype: 'iconcombo',
                     allowBlank: true,
@@ -64,13 +67,13 @@ Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
                     emptyText: '',
                     store: Ext.create('Ext.data.SimpleStore', {
                         model: 'Phlexible.gui.model.KeyValueIconCls',
-                        data: Phlexible.App.getConfig().get('set.language.frontend')
+                        data: Phlexible.Config.get('set.language.frontend')
                     })
                 }
             },
             {
-                header: this.tidText,
-                dataIndex: 'tid',
+                header: this.treeIdText,
+                dataIndex: 'treeId',
                 width: 200,
                 sortable: true,
                 editor: {
@@ -104,6 +107,7 @@ Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
+            border: false,
             items: [{
                 text: this.addSpecialTidText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
@@ -136,18 +140,11 @@ Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
     /**
      * After the siteroot selection changes load the siteroot data.
      *
-     * @param {Number} id
-     * @param {String} title
-     * @param {Object} data
+     * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
-    loadData: function (id, title, data) {
+    loadData: function (siteroot) {
         this.deletedRecords = [];
-        this.store.commitChanges();
-
-        // remember current siteroot id
-        this.siterootId = id;
-
-        this.store.loadData(data.specialtids);
+        this.reconfigure(siteroot.specialTids());
     },
 
     renderLanguage: function (v, md, r, ri, ci, store) {
@@ -168,7 +165,6 @@ Ext.define('Phlexible.siteroot.view.SpecialTidGrid', {
      * @param {Object} r
      */
     onDeleteSpecialTid: function (r) {
-
         if (!this.deletedRecords) {
             this.deletedRecords = [];
         }

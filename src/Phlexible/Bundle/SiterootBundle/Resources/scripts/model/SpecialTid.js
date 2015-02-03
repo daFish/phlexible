@@ -1,8 +1,9 @@
 Ext.define('Phlexible.siteroot.model.SpecialTid', {
     extend: 'Ext.data.Model',
+
     fields: [
-        {name: 'key'},
+        {name: 'name'},
         {name: 'language'},
-        {name: 'tid'}
+        {name: 'treeId'}
     ]
 });

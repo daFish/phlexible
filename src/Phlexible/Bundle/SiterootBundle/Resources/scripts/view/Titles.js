@@ -1,8 +1,8 @@
-Ext.define('Phlexible.siteroot.view.TitleForm', {
+Ext.define('Phlexible.siteroot.view.Titles', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.siteroot-titles',
 
-    title: '_TitleForm',
+    xtype: 'siteroot.titles',
+
     border: false,
 
     customTitlesText: '_customTitlesText',
@@ -107,10 +107,10 @@ Ext.define('Phlexible.siteroot.view.TitleForm', {
             }
         ];
 
-        for (var i = 0; i < Phlexible.App.getConfig().get('set.language.frontend').length; i++) {
+        for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
             this.items[0].items.push({
-                fieldLabel: Phlexible.Icon.inline(Phlexible.App.getConfig().get('set.language.frontend')[i][2]) + ' ' + Phlexible.App.getConfig().get('set.language.frontend')[i][1],
-                name: Phlexible.App.getConfig().get('set.language.frontend')[i][0],
+                fieldLabel: Phlexible.Icon.inline(Phlexible.Config.get('set.language.frontend')[i][2]) + ' ' + Phlexible.Config.get('set.language.frontend')[i][1],
+                name: Phlexible.Config.get('set.language.frontend')[i][0],
                 xtype: 'textfield',
                 flex: 1,
                 allowBlank: false
@@ -121,19 +121,14 @@ Ext.define('Phlexible.siteroot.view.TitleForm', {
     /**
      * After the siteroot selection changes load the siteroot data.
      *
-     * @param {Number} id
-     * @param {String} title
-     * @param {Object} data
+     * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
-    loadData: function (id, title, data) {
-        // remember current siteroot id
-        this.siterootId = id;
-
+    loadData: function (siteroot) {
         this.getComponent('titles').getForm().reset();
-        this.getComponent('titles').getForm().setValues(data.titles);
+        this.getComponent('titles').getForm().setValues(siteroot.data.titles);
 
         this.getComponent('patterns').getStore().removeAll();
-        this.getComponent('patterns').getStore().loadData(data.patterns);
+        this.getComponent('patterns').getStore().loadData(siteroot.data.patterns);
     },
 
     isValid: function () {

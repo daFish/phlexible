@@ -1,6 +1,8 @@
 Ext.define('Phlexible.search.form.SearchBox', {
     extend: 'Ext.form.ComboBox',
-    alias: 'widget.searchbox',
+    requires: ['Phlexible.search.model.Result'],
+
+    xtype: 'searchbox',
 
     displayField: 'title',
     cls: 'p-searchbox',
@@ -38,8 +40,7 @@ Ext.define('Phlexible.search.form.SearchBox', {
                     type: 'json',
                     rootProperty: 'results',
                     totalProperty: 'totalCount'
-                },
-                extraParams: this.storeExtraParams
+                }
             }
         });
     },

@@ -5,19 +5,28 @@ Phlexible:
                 text: Siteroots
 
         view:
-            ContentChannelGrid:
+            Main:
+                title: Siteroots
+                saveSiterootDataText: 'Siteroot-Daten speichern'
+                checkAccordionsForErrorsText: 'Überprüfen Sie die markierten Akkordeons.'
+
+            List:
+                title: Siteroots
+                idText: ID
+                siterootsText: Siteroots
+                removeText: Löschen
+                removeDescriptionText: 'Sind Sie sicher?'
+                addSiterootText: 'Siteroot hinzufügen'
+                titleText: Titel
+
+            ContentChannels:
                 title: Content Channels
                 contentchannelIdText: 'Content Channel ID'
                 contentchannelText: 'Content Channel'
                 activeText: Aktiv
                 defaultText: Standard
 
-            MainPanel:
-                title: Siteroots
-                saveSiterootDataText: 'Siteroot-Daten speichern'
-                checkAccordionsForErrorsText: 'Überprüfen Sie die markierten Akkordeons.'
-
-            NavigationGrid:
+            Navigations:
                 title: Navigationen
                 titleText: Titel
                 handlerText: Handler
@@ -30,30 +39,21 @@ Phlexible:
                 addNavigationText: 'Navigation hinzufügen'
                 emptyTitleText: 'Sie müssen einen Titel angeben.'
 
-            PropertyGrid:
+            Properties:
                 title: Eigenschaften
                 emptyText: 'Keine Eigenschaften'
 
-            SiterootGrid:
-                title: Siteroots
-                idText: ID
-                siterootsText: Siteroots
-                removeText: Löschen
-                removeDescriptionText: 'Sind Sie sicher?'
-                addSiterootText: 'Siteroot hinzufügen'
-                titleText: Titel
-
-            SpecialTidGrid:
+            SpecialTids:
                 title: 'Special TIDs'
-                keyText: Schlüssel
+                NameText: Name
                 languageText: Sprache
-                tidText: TID
+                treeIdText: TID
                 removeText: Entfernen
                 removeDescriptionText: 'Sind Sie sicher?'
                 addSpecialTidText: 'Special TID hinzufügen'
                 emptyKeyText: 'Keine Special TIDs'
 
-            TitleForm:
+            Titles:
                 title: Titel
                 customTitlesText: Angepasste Titel
                 nameText: Name
@@ -61,7 +61,7 @@ Phlexible:
                 exampleText: Beispiel
                 legendText: Legende
 
-            UrlGrid:
+            Urls:
                 title: URLs
                 defaultText: Standard
                 hostnameText: Hostname

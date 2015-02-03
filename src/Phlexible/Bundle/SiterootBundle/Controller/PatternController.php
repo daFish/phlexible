@@ -26,7 +26,7 @@ class PatternController extends Controller
 {
     /**
      * @return JsonResponse
-     * @Route("/placeholders", name="siteroots_pattern_placeholders")
+     * @Route("/placeholders", name="siteroot_pattern_placeholders")
      */
     public function placeholdersAction()
     {
@@ -45,7 +45,7 @@ class PatternController extends Controller
      * @param Request $request
      *
      * @return ResultResponse
-     * @Route("/example", name="siteroots_pattern_example")
+     * @Route("/example", name="siteroot_pattern_example")
      */
     public function exampleAction(Request $request)
     {

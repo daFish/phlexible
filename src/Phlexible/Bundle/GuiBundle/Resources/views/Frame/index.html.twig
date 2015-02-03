@@ -69,6 +69,7 @@
         project: "{{ project.title }}",
         baseUrl: "{{ app.request.baseUrl }}/admin",
         basePath: "{{ app.request.basePath }}/admin",
+        apikey: "swentz",
         bundlePath: "{{ app.request.basePath }}/bundles",
         config: {{ render(path("gui_config"))|raw }},
         menu: {{ render(path("gui_menu"))|raw }}

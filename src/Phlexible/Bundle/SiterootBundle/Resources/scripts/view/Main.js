@@ -1,10 +1,18 @@
-Ext.define('Phlexible.siteroot.view.MainPanel', {
+Ext.define('Phlexible.siteroot.view.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.siteroot-main',
+    requires: [
+        'Phlexible.siteroot.view.List',
+        'Phlexible.siteroot.view.Navigations',
+        'Phlexible.siteroot.view.Properties',
+        'Phlexible.siteroot.view.SpecialTids',
+        'Phlexible.siteroot.view.Titles',
+        'Phlexible.siteroot.view.Urls'
+    ],
 
-    title: '_MainPanel',
+    xtype: 'siteroot.main',
+
     iconCls: Phlexible.Icon.get('globe'),
-    cls: 'p-siteroot-main-panel',
+    cls: 'p-siteroot-main',
     border: false,
     layout: 'border',
 
@@ -30,23 +38,23 @@ Ext.define('Phlexible.siteroot.view.MainPanel', {
 
     initMyItems: function() {
         this.items = [{
-            xtype: 'siteroot-list',
-            region: 'west',
+            xtype: 'siteroot.list',
             itemId: 'list',
+            region: 'west',
             width: 250,
             minWidth: 200,
             maxWidth: 350,
             split: false,
             padding: '5 0 5 5',
             listeners: {
-                siterootChange: this.onSiterootChange,
+                loadSiteroot: this.onLoadSiteroot,
                 siterootDataChange: this.onSiterootDataChange,
                 scope: this
             }
         }, {
-            region: 'center',
             xtype: 'panel',
-            itemId: 'accordion',
+            itemId: 'accordions',
+            region: 'center',
             title: 'no_siteroot_loaded',
             layout: 'accordion',
             disabled: true,
@@ -61,19 +69,19 @@ Ext.define('Phlexible.siteroot.view.MainPanel', {
             ],
             items: [
                 {
-                    xtype: 'siteroot-urls'
+                    xtype: 'siteroot.urls'
                 },
                 {
-                    xtype: 'siteroot-titles'
+                    xtype: 'siteroot.titles'
                 },
                 {
-                    xtype: 'siteroot-properties'
+                    xtype: 'siteroot.properties'
                 },
                 {
-                    xtype: 'siteroot-specialtids'
+                    xtype: 'siteroot.specialtids'
                 },
                 {
-                    xtype: 'siteroot-navigations'
+                    xtype: 'siteroot.navigations'
                 }
             ]
         }];
@@ -85,29 +93,21 @@ Ext.define('Phlexible.siteroot.view.MainPanel', {
     /**
      * After the siteroot selection changes load the siteroot data.
      *
-     * @param {Number} id
-     * @param {String} title
+     * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
-    onSiterootChange: function (id, title) {
-        this.getComponent(0).enable();
+    onLoadSiteroot: function (siteroot) {
+        this.getComponent('list').enable();
 
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroot_siteroot_load', {id: id}),
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
+        this.siteroot = siteroot;
+        this.siterootId = id;
+        this.siterootTitle = siteroot.data.titles.de;
+        this.getComponent('accordions').setTitle(siteroot.data.titles.de);
 
-                this.siterootId = id;
-                this.siterootTitle = title;
-                this.getComponent('accordion').setTitle(title);
+        this.getComponent('accordions').items.each(function (panel) {
+            panel.loadData(siteroot);
+        });
 
-                this.getComponent('accordion').items.each(function (panel) {
-                    panel.loadData(id, title, data);
-                });
-
-                this.getComponent('accordion').enable();
-            },
-            scope: this
-        })
+        this.getComponent('accordions').enable();
     },
 
     /**
@@ -128,6 +128,9 @@ Ext.define('Phlexible.siteroot.view.MainPanel', {
      * submit process.
      */
     onSaveData: function () {
+        this.siteroot.save();
+        return;
+
         var saveData = {}, valid = true;
 
         this.getComponent(1).items.each(function (panel) {

@@ -3,6 +3,7 @@
  */
 Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
     extend: 'Ext.Window',
+    requires: ['Phlexible.gui.model.KeyValueIconCls'],
 
     cls: 'p-dashboard-columns-window',
     width: 500,

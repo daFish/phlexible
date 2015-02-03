@@ -1,3 +1,5 @@
+Ext.Ajax.setDefaultHeaders({apikey: Phlexible.apikey});
+
 Phlexible.console = Ext.create('Phlexible.gui.util.Console');
 
 Phlexible.Logger = Ext.create('Phlexible.gui.util.Logger');

@@ -1,8 +1,8 @@
-Ext.define('Phlexible.siteroot.view.SiterootGrid', {
+Ext.define('Phlexible.siteroot.view.List', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroot-list',
+    requires: ['Phlexible.siteroot.model.Siteroot'],
 
-    title: '_SiterootGrid',
+    xtype: 'siteroot.list',
 
     idText: '_idText',
     siterootsText: '_siterootsText',
@@ -40,18 +40,6 @@ Ext.define('Phlexible.siteroot.view.SiterootGrid', {
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.siteroot.model.Siteroot',
-            proxy: {
-                type: 'ajax',
-                url: Phlexible.Router.generate('siteroot_list'),
-                simpleSortMode: true,
-                reader: {
-                    type: 'json',
-                    rootProperty: 'siteroots',
-                    idProperty: 'id',
-                    totalProperty: 'count'
-                },
-                extraParams: this.storeExtraParams
-            },
             autoLoad: true,
             remoteSort: true,
             sorters: [{
@@ -73,9 +61,12 @@ Ext.define('Phlexible.siteroot.view.SiterootGrid', {
                 dataIndex: 'id'
             }, {
                 header: this.siterootsText,
-                dataIndex: 'title',
+                dataIndex: 'titles',
                 flex: 1,
-                sortable: true
+                sortable: true,
+                renderer: function(v) {
+                    return v.de;
+                }
             }, {
                 xtype: 'actioncolumn',
                 width: 30,
@@ -125,7 +116,6 @@ Ext.define('Phlexible.siteroot.view.SiterootGrid', {
      * @param {Object} store
      */
     onLoadStore: function (store) {
-
         var sm = this.getSelectionModel();
 
         if ((store.getCount() > 0)) {
@@ -142,12 +132,11 @@ Ext.define('Phlexible.siteroot.view.SiterootGrid', {
     /**
      * If the siteroot selection changes fire the siterootChange event.
      *
-     * @param {Object} selModel
-     * @param {Number} rowIndex
-     * @param {Object} record
+     * @param {Ext.grid.Panel}                    grid
+     * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
-    onSelectSiteroot: function (grid, record, rowIndex) {
-        this.fireEvent('siterootChange', record.get('id'), record.get('title'));
+    onSelectSiteroot: function (grid, siteroot) {
+        this.fireEvent('loadSiteroot', siteroot);
     },
 
     /**

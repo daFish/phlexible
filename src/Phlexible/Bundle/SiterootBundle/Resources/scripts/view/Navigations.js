@@ -1,8 +1,8 @@
-Ext.define('Phlexible.siteroot.view.NavigationGrid', {
+Ext.define('Phlexible.siteroot.view.Navigations', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroot-navigations',
 
-    title: '_NavigationGrid',
+    xtype: 'siteroot.navigations',
+
     border: false,
     emptyText: '_emptyText',
 
@@ -36,7 +36,9 @@ Ext.define('Phlexible.siteroot.view.NavigationGrid', {
             {
                 header: this.titleText,
                 dataIndex: 'title',
-                editor: new Ext.form.TextField(),
+                editor: {
+                    xtype: 'textfield'
+                },
                 flex: 1
             },
             {
@@ -47,27 +49,35 @@ Ext.define('Phlexible.siteroot.view.NavigationGrid', {
             },
             {
                 header: this.startTidText,
-                dataIndex: 'start_tid',
-                editor: 'textfield',
+                dataIndex: 'startTreeId',
+                editor: {
+                    xtype: 'textfield'
+                },
                 width: 80
             },
             {
                 header: this.maxDepthText,
-                dataIndex: 'max_depth',
-                editor: 'numberfield',
+                dataIndex: 'maxDepth',
+                editor: {
+                    xtype: 'numberfield'
+                },
                 width: 80
             },
             {
                 header: this.flagsText,
                 dataIndex: 'flags',
-                editor: 'numberfield',
+                editor: {
+                    xtype: 'numberfield'
+                },
                 width: 80,
                 hidden: true
             },
             {
                 header: this.additionalText,
                 dataIndex: 'additional',
-                editor: 'textfield',
+                editor: {
+                    xtype: 'textfield'
+                },
                 width: 100,
                 hidden: true
             },
@@ -133,6 +143,7 @@ Ext.define('Phlexible.siteroot.view.NavigationGrid', {
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
+            border: false,
             items: [{
                 text: this.addNavigationText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
@@ -147,7 +158,7 @@ Ext.define('Phlexible.siteroot.view.NavigationGrid', {
      */
     onAddNavigation: function () {
         // create new empty record
-        var newRecord = Ext.create('Phlexible.siteroot.model.Navigation', {
+        var navigation = Ext.create('Phlexible.siteroot.model.Navigation', {
             id: '',
             siteroot_id: this.siterootId,
             title: '',
@@ -159,7 +170,7 @@ Ext.define('Phlexible.siteroot.view.NavigationGrid', {
         });
 
         // add empty record to store
-        this.store.insert(0, newRecord);
+        this.store.insert(0, navigation);
         this.selModel.selectFirstRow();
         this.startEditing(0, 0);
     },
@@ -167,17 +178,11 @@ Ext.define('Phlexible.siteroot.view.NavigationGrid', {
     /**
      * After the siteroot selection changes load the siteroot data.
      *
-     * @param {Number} id
-     * @param {String} title
-     * @param {Object} data
+     * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
-    loadData: function (id, title, data) {
+    loadData: function (siteroot) {
         this.deletedRecords = [];
-        this.store.commitChanges();
-
-        this.siterootId = id;
-
-        this.store.loadData(data.navigations);
+        this.reconfigure(siteroot.navigations());
     },
 
     /**

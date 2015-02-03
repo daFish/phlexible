@@ -1,8 +1,9 @@
 Ext.define('Phlexible.gui.portlet.Load', {
     extend: 'Ext.dashboard.Panel',
-    alias: 'widget.gui-load-portlet',
+    requires: ['Phlexible.gui.model.LoadEntry'],
 
-    title: '_Load',
+    xtype: 'gui-load-portlet',
+
     iconCls: Phlexible.Icon.get('system-monitor'),
     bodyPadding: 5,
 

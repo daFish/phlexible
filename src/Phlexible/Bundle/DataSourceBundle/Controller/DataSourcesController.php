@@ -9,14 +9,12 @@
 namespace Phlexible\Bundle\DataSourceBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\NoRoute;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Prefix;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @Prefix("/datasource")
  * @NamePrefix("phlexible_datasource_")
  */
-class DatasourcesController extends FOSRestController
+class DataSourcesController extends FOSRestController
 {
     /**
      * Return data sources

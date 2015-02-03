@@ -13,6 +13,8 @@ use FOS\RestBundle\Controller\Annotations\Prefix;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\QueueBundle\Entity\Job;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +34,7 @@ class JobsController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getJobsAction()
     {
@@ -46,22 +48,6 @@ class JobsController extends FOSRestController
                 'count' => count($jobs)
             )
         ));
-
-        $data = [];
-        foreach ($jobs as $queueItem) {
-            $data[] = [
-                'id'          => $queueItem->getId(),
-                'command'     => $queueItem->getCommand(),
-                'priority'    => $queueItem->getPriority(),
-                'status'      => $queueItem->getState(),
-                'create_time' => $queueItem->getCreatedAt()->format('Y-m-d H:i:s'),
-                'start_time'  => $queueItem->getStartedAt() ? $queueItem->getStartedAt()->format('Y-m-d H:i:s') : null,
-                'end_time'    => $queueItem->getFinishedAt() ? $queueItem->getFinishedAt()->format('Y-m-d H:i:s') : null,
-                'output'      => nl2br($queueItem->getOutput()),
-            ];
-        }
-
-        return new JsonResponse(['data' => $data]);
     }
 
     /**
@@ -71,8 +57,8 @@ class JobsController extends FOSRestController
      *
      * @return Response
      *
-     * @View()
-     * @ApiDoc()
+     * @View
+     * @ApiDoc
      */
     public function getJobAction($jobId)
     {
@@ -83,4 +69,26 @@ class JobsController extends FOSRestController
         return $job;
     }
 
+    /**
+     * Create job
+     *
+     * @param Job $job
+     *
+     * @return Response
+     *
+     * @ParamConverter("job", converter="fos_rest.request_body")
+     * @ApiDoc
+     */
+    public function postJobsAction(Job $job)
+    {
+        $jobManager = $this->get('phlexible_queue.job_manager');
+
+        $jobManager->updateJob($job);
+
+        return $this->handleView($this->view(
+            array(
+                'success' => 1,
+            )
+        ));
+    }
 }

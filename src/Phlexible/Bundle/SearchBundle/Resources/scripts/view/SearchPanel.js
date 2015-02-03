@@ -1,6 +1,8 @@
 Ext.define('Phlexible.search.view.SearchPanel', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.searchpanel',
+    requires: ['Phlexible.search.model.Result'],
+
+    xtype: 'searchpanel',
 
     title: '_SearchPanel',
     cls: 'p-searchpanel',
@@ -41,17 +43,9 @@ Ext.define('Phlexible.search.view.SearchPanel', {
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('search_search'),
                     root: 'results',
-                    totalProperty: 'totalCount',
+                    totalProperty: 'count',
                     //                id: 'id'
-                    fields: Phlexible.search.model.Result,
-                    listeners: {
-                        xload: {
-                            fn: function () {
-                                this.doLayout();
-                            },
-                            scope: this
-                        }
-                    }
+                    model: 'Phlexible.search.model.Result'
                 }),
                 autoHeight: true,
                 multiSelect: false,

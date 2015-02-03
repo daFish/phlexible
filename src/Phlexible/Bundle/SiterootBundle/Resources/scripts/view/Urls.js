@@ -1,8 +1,8 @@
-Ext.define('Phlexible.siteroot.view.UrlGrid', {
+Ext.define('Phlexible.siteroot.view.Urls', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.siteroot-urls',
 
-    title: '_UrlGrid',
+    xtype: 'siteroot.urls',
+
     border: false,
     emptyText: '_emptyText',
 
@@ -77,7 +77,7 @@ Ext.define('Phlexible.siteroot.view.UrlGrid', {
                     emptyText: '',
                     store: Ext.create('Ext.data.SimpleStore', {
                         model: 'Phlexible.gui.model.KeyValueIconCls',
-                        data: Phlexible.App.getConfig().get('set.language.frontend')
+                        data: Phlexible.Config.get('set.language.frontend')
                     })
                 }
             },
@@ -118,14 +118,17 @@ Ext.define('Phlexible.siteroot.view.UrlGrid', {
     },
 
     initMyDockedItems: function() {
-        this.tbar = [
-            {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            border: false,
+            items: [{
                 text: this.addMappingText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddUrl,
                 scope: this
-            }
-        ];
+            }]
+        }];
     },
 
     initMyListeners: function() {
@@ -180,25 +183,11 @@ Ext.define('Phlexible.siteroot.view.UrlGrid', {
     /**
      * After the siteroot selection changes load the siteroot data.
      *
-     * @param {Number} id
-     * @param {String} title
-     * @param {Object} data
+     * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
-    loadData: function (id, title, data) {
+    loadData: function (siteroot) {
         this.deletedRecords = [];
-        this.store.commitChanges();
-
-        // remember current siteroot id
-        this.siterootId = id;
-
-        this.store.loadData(data.urls);
-
-        /*
-         TODO: enable
-        var cm = this.getSelectionModel();
-        var editor = cm.getCellEditor(4, 0);
-        editor.field.setSiterootId(id);
-         */
+        this.reconfigure(siteroot.urls());
     },
 
     /**

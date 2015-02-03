@@ -1,14 +1,14 @@
 Ext.define('Phlexible.siteroot.model.Navigation', {
     extend: 'Ext.data.Model',
+
+    idProperty: 'id',
     fields: [
-        {name: 'id'},
-        {name: 'title'},
-        {name: 'handler'},
-        {name: 'start_tid'},
-        {name: 'max_depth'},
-        {name: 'flags'},
-        {name: 'supports'},
-        {name: 'additional'},
-        {name: 'hide_config', type: 'bool'}
+        {name: 'id', type: 'string'},
+        {name: 'title', type: 'string'},
+        {name: 'handler', type: 'string'},
+        {name: 'startTreeId', type: 'int'},
+        {name: 'maxDepth', type: 'int'},
+        {name: 'flags', type: 'int'},
+        {name: 'additional'}
     ]
 });

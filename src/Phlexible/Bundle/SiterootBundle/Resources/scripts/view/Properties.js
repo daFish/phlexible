@@ -1,20 +1,18 @@
-Ext.define('Phlexible.siteroot.view.PropertyGrid', {
+Ext.define('Phlexible.siteroot.view.Properties', {
     extend: 'Ext.grid.PropertyGrid',
-    alias: 'widget.siteroot-properties',
 
-    title: '_PropertyGrid',
+    xtype: 'siteroot.properties',
+
     border: false,
     emptyText: '_emptyText',
 
     /**
      * After the siteroot selection changes load the siteroot data.
      *
-     * @param {Number} id
-     * @param {String} title
-     * @param {Object} data
+     * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
-    loadData: function (id, title, data) {
-        this.setSource(data.properties);
+    loadData: function (siteroot) {
+        this.setSource(siteroot.data.properties);
     },
 
     isValid: function () {
