@@ -29,6 +29,7 @@ class PhlexibleGuiExtension extends Extension
         $loader->load('services.yml');
         $loader->load('assets.yml');
         $loader->load('twig.yml');
+        $loader->load('wsse.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
