@@ -1,7 +1,6 @@
 Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
     extend: 'Ext.window.Window',
 
-    title: '_SuggestConfigurationWindow',
     width: 300,
     height: 400,
     layout: 'fit',
@@ -10,6 +9,7 @@ Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
     datasourceText: '_datasourceText',
     createDatasourceText: '_createDatasourceText',
     createDatasourceDescriptionText: '_createDatasourceDescriptionText',
+    useCreateText: '_useCreateText',
     cancelText: '_cancelText',
     selectText: '_selectText',
 
@@ -24,11 +24,15 @@ Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
         this.items = [{
             xtype: 'grid',
             border: false,
+            emptyText: this.useCreateText,
+            viewConfig: {
+                deferEmptyText: false
+            },
             store: Ext.create('Ext.data.Store', {
                 fields: ['id', 'title'],
                 proxy: {
                     type: 'ajax',
-                    url: Phlexible.Router.generate('datasources_list'),
+                    url: Phlexible.Router.generate('phlexible_datasource_get_datasources'),
                     simpleSortMode: true,
                     reader: {
                         type: 'json',
@@ -73,7 +77,7 @@ Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
                                 return;
                             }
                             Ext.Ajax.request({
-                                url: Phlexible.Router.generate('datasources_create'),
+                                url: Phlexible.Router.generate('phlexible_datasource_post_datasources'),
                                 params: {
                                     title: title
                                 },

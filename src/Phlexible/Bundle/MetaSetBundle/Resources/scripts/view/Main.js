@@ -2,7 +2,6 @@ Ext.define('Phlexible.metaset.view.Main', {
     extend: 'Ext.panel.Panel',
     xtype: 'metaset.main',
 
-    title: '_MainPanel',
     layout: 'border',
     border: false,
     iconCls: Phlexible.Icon.get('weather-clouds'),

@@ -1,7 +1,6 @@
 Ext.define('Phlexible.metaset.window.MetaSetsWindow', {
     extend: 'Ext.window.Window',
 
-    title: '_MetaSetsWindow',
     iconCls: 'p-metaset-component-icon',
     width: 400,
     height: 300,

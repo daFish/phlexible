@@ -31,9 +31,6 @@ class PortletController extends Controller
      * @return JsonResponse
      * @Route("", name="dashboard_portlets")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns a list of user portlets"
-     * )
      */
     public function portletsAction()
     {
@@ -79,12 +76,6 @@ class PortletController extends Controller
      * @return ResultResponse
      * @Route("/save", name="dashboard_portlets_save")
      * @Method("POST")
-     * @ApiDoc(
-     *   description="Save user portlets",
-     *   parameters={
-     *     {"name"="portlets", "dataType"="array", "required"=true, "description"="Portlet data"}
-     *   }
-     * )
      */
     public function saveAction(Request $request)
     {

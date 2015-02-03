@@ -36,7 +36,6 @@ class MediaTypesController extends FOSRestController
     public function getMediatypesAction()
     {
         $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
-        $iconResolver = $this->get('phlexible_media_type.icon_resolver');
 
         $mediaTypes = array();
         foreach ($mediaTypeManager->findAll() as $mediaType) {

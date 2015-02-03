@@ -52,7 +52,7 @@ class UsersController extends FOSRestController
      * @QueryParam(name="sort", requirements="\w+", default="username", description="Sort field")
      * @QueryParam(name="dir", requirements="\w+", default="ASC", description="Sort direction")
      * @QueryParam(name="criteria", description="Search criteria.")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getUsersAction(ParamFetcher $paramFetcher)
     {
@@ -96,7 +96,7 @@ class UsersController extends FOSRestController
      *
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
      * @View(templateVar="user")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getUserAction($userId)
     {
@@ -119,7 +119,7 @@ class UsersController extends FOSRestController
      * @ParamConverter("user", converter="fos_rest.request_body")
      * @QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
      * @Post("/users")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function postUsersAction(User $user, ParamFetcher $paramFetcher)
     {
@@ -170,7 +170,7 @@ class UsersController extends FOSRestController
      * @QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
      * @Security("is_granted('ROLE_USER_ADMIN_UPDATE')")
      * @Put("/users/{userId}")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function putUserAction(User $user, ParamFetcher $paramFetcher, $userId)
     {
@@ -222,7 +222,7 @@ class UsersController extends FOSRestController
      *
      * @return Response
      * @Security("is_granted('ROLE_USER_ADMIN_DELETE')")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function deleteUserAction(Request $request, $userId)
     {
@@ -254,7 +254,7 @@ class UsersController extends FOSRestController
      * @return JsonResponse
      * @throws \Exception
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getUserRolesAction($userId)
     {
@@ -287,7 +287,7 @@ class UsersController extends FOSRestController
      *
      * @return JsonResponse
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc()
+     * @ApiDoc
      */
     public function getUserGroupsAction($userId)
     {

@@ -42,7 +42,7 @@ Phlexible:
 
             SelectConfigurationWindow:
                 title: 'Configure select-field'
-                useAddText: 'Click on "Add" to add a new value.'
+                useAddText: 'No values. Click on "Add value" to add a new value.'
                 valueText: Value
                 actionsText: Actions
                 removeValueText: 'Remove value'
@@ -51,9 +51,9 @@ Phlexible:
                 storeText: Store
                 addAtLeastOneValueText: 'Please add at least one value.'
 
-
             SuggestConfigurationWindow:
                 title: 'Configure suggest-field'
+                useCreateText: 'No data sources. Click on "Create data source" to create a new data source.'
                 datasourceText: Data source
                 createDatasourceText: 'Create data source'
                 createDatasourceDescriptionText: 'Please enter a title for the new data source.'

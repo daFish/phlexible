@@ -1,7 +1,6 @@
 Ext.define('Phlexible.metaset.window.SelectConfigurationWindow', {
     extend: 'Ext.window.Window',
 
-    title: '_SelectConfigurationWindow',
     width: 300,
     height: 400,
     layout: 'fit',
@@ -34,8 +33,9 @@ Ext.define('Phlexible.metaset.window.SelectConfigurationWindow', {
         this.items = [{
             xtype: 'grid',
             border: false,
-            autoExpandColumn: 'value',
-            deferEmptyText: false,
+            viewConfig: {
+                deferEmptyText: false
+            },
             emptyText: this.useAddText,
             stripeRows: true,
             store: Ext.create('Ext.data.Store', {

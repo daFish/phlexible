@@ -42,7 +42,7 @@ Phlexible:
 
             SelectConfigurationWindow:
                 title: 'Select-Feld konfigurieren'
-                useAddText: 'Klicken Sie auf "Hinzufügen" um einen neuen Wert hinzuzufügen.'
+                useAddText: 'Keine Werte. Klicken Sie auf "Wert hinzufügen" um einen neuen Wert hinzuzufügen.'
                 valueText: Wert
                 actionsText: Aktionen
                 removeValueText: 'Wert entfernen'
@@ -53,7 +53,8 @@ Phlexible:
 
             SuggestConfigurationWindow:
                 title: 'Suggest-Feld konfigurieren'
-                datasourceText: DataSource
+                useCreateText: 'Keine Datenquellen. Klicken Sie auf "Neue Datenquelle anlegen", um eine neue Datenquelle anzulegen.'
+                datasourceText: Datenquellen
                 createDatasourceText: 'Neue Datenquelle anlegen'
                 createDatasourceDescriptionText: 'Bitte geben Sie den Titel der neuen Datenquelle ein.'
                 cancelText: Abbrechen
