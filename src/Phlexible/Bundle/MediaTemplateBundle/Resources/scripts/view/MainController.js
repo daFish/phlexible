@@ -23,7 +23,7 @@ Ext.define('Phlexible.mediatemplate.view.MainController', {
     },
 
     onCreateTemplate: function (type) {
-        if (!type || (type != 'image' && type != 'video' && type != 'audio' && type != 'pdf')) {
+        if (!type || (type != 'image' && type != 'video' && type != 'audio')) {
             return;
         }
 

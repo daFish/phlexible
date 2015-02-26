@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\SiterootBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
@@ -90,24 +91,18 @@ class SiterootManager implements SiterootManagerInterface
      */
     public function updateSiteroot(Siteroot $siteroot)
     {
-        if ($siteroot->getId()) {
+        if ($this->entityManager->contains($siteroot)) {
             $event = new SiterootEvent($siteroot);
             if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_UPDATE_SITEROOT, $event)->isPropagationStopped()) {
                 return;
             }
 
-            foreach ($siteroot->getNavigations() as $navigation) {
-                $this->entityManager->persist($navigation);
-            }
-            foreach ($siteroot->getUrls() as $url) {
-                $this->entityManager->persist($url);
-            }
             $this->entityManager->flush();
 
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::UPDATE_SITEROOT, $event);
 
-            $message = SiterootsMessage::create('Siteroot created.', '', null, null, 'siteroot');
+            $message = SiterootsMessage::create('Siteroot updated.', '', null, null, 'siteroot');
             $this->messagePoster->post($message);
         } else {
             $event = new SiterootEvent($siteroot);
@@ -115,19 +110,17 @@ class SiterootManager implements SiterootManagerInterface
                 return;
             }
 
-            foreach ($siteroot->getNavigations() as $navigation) {
-                $this->entityManager->persist($navigation);
+            if (null === $siteroot->getId()) {
+                $this->applyIdentifier($siteroot);
             }
-            foreach ($siteroot->getUrls() as $url) {
-                $this->entityManager->persist($url);
-            }
+
             $this->entityManager->persist($siteroot);
             $this->entityManager->flush();
 
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::CREATE_SITEROOT, $event);
 
-            $message = SiterootsMessage::create('Siteroot updated.', '', null, null, 'siteroot');
+            $message = SiterootsMessage::create('Siteroot created.', '', null, null, 'siteroot');
             $this->messagePoster->post($message);
         }
     }
@@ -150,5 +143,19 @@ class SiterootManager implements SiterootManagerInterface
 
         $message = SiterootsMessage::create('Siteroot deleted.', '', null, null, 'siteroot');
         $this->messagePoster->post($message);
+    }
+
+    /**
+     * Apply UUID as identifier when entity doesn't have one yet.
+     *
+     * @param Siteroot $siteroot
+     */
+    private function applyIdentifier(Siteroot $siteroot)
+    {
+        $reflectionClass = new \ReflectionClass(get_class($siteroot));
+
+        $reflectionProperty = $reflectionClass->getProperty('id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($siteroot, Uuid::generate());
     }
 }

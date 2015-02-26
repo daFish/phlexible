@@ -14,6 +14,8 @@ use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -170,21 +172,69 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         //$request->attributes->set('siterootUrl', $siterootUrl);
 
-        if (isset($parameters['_route_document'])) {
-            $treeNode = $parameters['_route_document'];
+        if (isset($parameters['_route_object'])) {
+            $treeNode = $parameters['_route_object'];
             /* @var $treeNode TreeNodeInterface */
-            if ($treeNode->getNeedAuthentication()) {
-                $attributes['_security'] = 'is_granted("bla")';
+            if ($cache = $treeNode->getAttribute('cache')) {
+                $configuration = new Cache(array());
+
+                if (!empty($cache['ETag'])) {
+                    $configuration->setETag($cache['ETag']);
+                }
+                if (!empty($cache['lastModified'])) {
+                    $configuration->setLastModified($cache['lastModified']);
+                }
+                if (!empty($cache['expires'])) {
+                    $configuration->setExpires($cache['expires']);
+                }
+                if (!empty($cache['public'])) {
+                    $configuration->setPublic($cache['public']);
+                }
+                if (!empty($cache['maxage'])) {
+                    $configuration->setMaxAge($cache['maxage']);
+                }
+                if (!empty($cache['smaxage'])) {
+                    $configuration->setSMaxAge($cache['smaxage']);
+                }
+                if (!empty($cache['vary'])) {
+                    $configuration->setVary($cache['vary']);
+                }
+
+                $request->attributes->set('_cache', $configuration);
+            }
+
+            if ($security = $treeNode->getAttribute('security')) {
+                $expression = null;
+
+                if (!empty($security['expression'])) {
+                    $expression = $security['expression'];
+                } else {
+                    $expressions = array();
+                    if (!empty($security['authenticationRequired'])) {
+                        $expressions[] = 'is_fully_authenticated()';
+                    }
+                    if (!empty($security['roles'])) {
+                        $security['roles'] = (array) $security['roles'];
+                        foreach ($security['roles'] as $role) {
+                            $expressions[] = "has_role('$role')";
+                        }
+                    }
+                    if (!empty($security['query_acl'])) {
+                        $expressions[] = "is_granted('VIEW', node)";
+                    }
+
+                    $expression = implode(' and ', $expressions);
+                }
+
+                if ($expression) {
+                    $configuration = new Security(array());
+                    $configuration->setValue($expression);
+                    $request->attributes->set('_security', $configuration);
+                }
             }
         }
 
         return $parameters;
-
-        return [
-            'siterootUrl' => $siterootUrl,
-            'identifiers' => $identifiers,
-            'parameters'  => $parameters,
-        ];
     }
 
     /**

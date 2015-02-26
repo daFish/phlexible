@@ -11,8 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Portlet;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Latest files portlet
@@ -32,9 +31,9 @@ class LatestFilesPortlet extends Portlet
     private $cacheManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
      * @var string
@@ -47,16 +46,16 @@ class LatestFilesPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param VolumeManager            $volumeManager
-     * @param CacheManagerInterface    $cacheManager
-     * @param SecurityContextInterface $securityContext
-     * @param string                   $style
-     * @param int                      $numItems
+     * @param VolumeManager                 $volumeManager
+     * @param CacheManagerInterface         $cacheManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param string                        $style
+     * @param int                           $numItems
      */
     public function __construct(
         VolumeManager $volumeManager,
         CacheManagerInterface $cacheManager,
-        SecurityContextInterface $securityContext,
+        AuthorizationCheckerInterface $authorizationChecker,
         $style,
         $numItems)
     {
@@ -68,7 +67,7 @@ class LatestFilesPortlet extends Portlet
 
         $this->volumeManager = $volumeManager;
         $this->cacheManager = $cacheManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
         $this->style = $style;
         $this->numItems = $numItems;
     }
@@ -102,7 +101,7 @@ class LatestFilesPortlet extends Portlet
             foreach ($files as $file) {
                 $folder = $volume->findFolder($file->getFolderId());
 
-                if (!$this->securityContext->isGranted('FILE_READ', $folder)) {
+                if (!$this->authorizationChecker->isGranted('FILE_READ', $folder)) {
                     continue;
                 }
 

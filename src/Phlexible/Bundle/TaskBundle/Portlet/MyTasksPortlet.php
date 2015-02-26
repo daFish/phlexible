@@ -12,8 +12,7 @@ use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
 use Phlexible\Bundle\TaskBundle\Task\Type\TypeCollection;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * My tasks portlet
@@ -33,9 +32,9 @@ class MyTasksPortlet extends Portlet
     private $types;
 
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var UserManagerInterface
@@ -48,15 +47,15 @@ class MyTasksPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param TaskManagerInterface     $taskManager
-     * @param TypeCollection           $types
-     * @param SecurityContextInterface $securityContext
-     * @param UserManagerInterface     $userManager
-     * @param int                      $numItems
+     * @param TaskManagerInterface  $taskManager
+     * @param TypeCollection        $types
+     * @param TokenStorageInterface $tokenStorage
+     * @param UserManagerInterface  $userManager
+     * @param int                   $numItems
      */
     public function __construct(TaskManagerInterface $taskManager,
                                 TypeCollection $types,
-                                SecurityContextInterface $securityContext,
+                                TokenStorageInterface $tokenStorage,
                                 UserManagerInterface $userManager,
                                 $numItems)
     {
@@ -68,7 +67,7 @@ class MyTasksPortlet extends Portlet
 
         $this->taskManager = $taskManager;
         $this->types = $types;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
         $this->numItems = $numItems;
     }
@@ -85,7 +84,7 @@ class MyTasksPortlet extends Portlet
         $tasksToShow = $this->numItems;
 
         $tasks = $this->taskManager->findByAssignedToAndStatus(
-            $this->securityContext->getToken()->getUser()->getId(),
+            $this->tokenStorage->getToken()->getUser()->getId(),
             [],
             [],
             $tasksToShow

@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route as RoutingRoute;
-use Webmozart\PathUtil\Path;
 
 /**
  * Frame controller
@@ -40,10 +39,8 @@ class FrameController extends Controller
     {
         $viewIndex = $this->get('phlexible_gui.view.index');
 
-        $securityContext = $this->get('security.context');
-
         return [
-            'scripts'  => $viewIndex->get($request, $securityContext),
+            'scripts'  => $viewIndex->get($request),
             'noScript' => $viewIndex->getNoScript(),
         ];
     }
@@ -79,10 +76,10 @@ class FrameController extends Controller
      */
     public function configAction()
     {
-        $configBuilder = $this->get('phlexible_gui.builder.config');
-        $config = $configBuilder->toArray();
+        $configBuilder = $this->get('phlexible_gui.config_builder');
+        $config = $configBuilder->build();
 
-        return new JsonResponse($config->getAll());
+        return new JsonResponse($config->all());
     }
 
     /**

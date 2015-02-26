@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\MessageBundle\Portlet;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Messages portlet
@@ -31,19 +31,19 @@ class MessagesPortlet extends Portlet
     private $messageManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @param SubscriptionManagerInterface $subscriptionManager
      * @param MessageManagerInterface      $messageManager
-     * @param SecurityContextInterface     $securityContext
+     * @param TokenStorageInterface        $tokenStorage
      */
     public function __construct(
         SubscriptionManagerInterface $subscriptionManager,
         MessageManagerInterface $messageManager,
-        SecurityContextInterface $securityContext)
+        TokenStorageInterface $tokenStorage)
     {
         $this
             ->setId('messages-portlet')
@@ -53,7 +53,7 @@ class MessagesPortlet extends Portlet
 
         $this->subscriptionManager = $subscriptionManager;
         $this->messageManager = $messageManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -65,7 +65,7 @@ class MessagesPortlet extends Portlet
     {
         $subscription = $this->subscriptionManager
             ->findOneBy(
-                ['userId' => $this->securityContext->getToken()->getUser()->getId(), 'handler' => 'portlet']
+                ['userId' => $this->tokenStorage->getToken()->getUser()->getId(), 'handler' => 'portlet']
             );
 
         if (!$subscription) {

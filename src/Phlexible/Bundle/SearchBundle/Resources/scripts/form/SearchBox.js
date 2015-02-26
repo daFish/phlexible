@@ -18,7 +18,6 @@ Ext.define('Phlexible.search.form.SearchBox', {
     //hideTrigger: true,
     triggerClass: 'x-form-search-trigger',
     itemSelector: 'div.search-item',
-
     initComponent: function () {
         this.origWidth = this.width;
 
@@ -77,21 +76,17 @@ Ext.define('Phlexible.search.form.SearchBox', {
                 }
             },
             beforeselect: function (combo, record) {
-                var menu = record.get('menu');
+                var handlerData = record.get('handler');
 
-                if (menu && menu.xtype) {
-                    var xtype = Phlexible.evalClassString(menu.xtype),
-                        handler = new xtype();
+                if (handlerData && handlerData.handler) {
+                    var handler = Phlexible.Handles.get(handlerData.handler)();
 
-                    if (menu.parameters) {
-                        handler.setParameters(menu.parameters);
+                    if (handlerData.parameters) {
+                        handler.setParameters(handlerData.parameters);
                     }
 
                     handler.handle();
                 }
-
-                combo.collapse();
-                this.setWidth(this.origWidth);
 
                 return false;
             },

@@ -21,7 +21,6 @@ Phlexible:
                 imageText: Image
                 videoText: Video
                 audioText: Audio
-                pdf2swfText: pdf2swf
                 noFilterText: All
 
             audio:
@@ -130,32 +129,6 @@ Phlexible:
                     whiteText: White
                     blackText: Black
                     randomText: Random
-
-            pdf2swf:
-                Form:
-                    title: pdf2swf template
-                    pdf2swfText: pdf2swf
-                    resolutionText: Resolution
-                    resolutionHelpText: 'Resolution of the generated SWF'
-                    framerateText: Framerate
-                    framerateHelpText: 'Framerate for automatic paging.'
-                    qualityText: Quality
-                    qualityHelpText: 'Quality of JPGs in the generated SWF.'
-                    linksText: Links
-                    enabledText: Enabled
-                    disabledText: Disabled
-                    linksDisabledHelpText: 'Links are deactivated.'
-                    newWindowText: 'Open in new window'
-                    linksnewWindowHelpText: 'Open links in new window.'
-                    zlibText: Zlib
-                    zlibHelpText: 'Use Zlib to compress the generated SWF.'
-                    saveText: Save
-                    previewText: Preview
-                    debugText: Debug
-
-                Main:
-                    title: pdf2swf template
-                    pdf2swfTemplateTitleText: 'pdf2swf template "{0}"'
 
             video:
                 Form:

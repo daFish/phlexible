@@ -34,7 +34,7 @@ services:
             - @phlexible_element.element_service
             - @phlexible_tree.tree_manager
             - @phlexible_teaser.teaser_manager
-            - @security.context
+            - @security.authorization_checker
 
     phlexible_element.publish.selector:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Selector
@@ -43,7 +43,7 @@ services:
             - @phlexible_elementtype.elementtype_service
             - @phlexible_tree.tree_manager
             - @phlexible_teaser.teaser_manager
-            - @security.context
+            - @security.authorization_checker
 
     phlexible_element.icon_builder:
         class: Phlexible\Bundle\ElementBundle\Icon\IconBuilder
@@ -88,7 +88,7 @@ services:
     # event listeners
     phlexible_element.listener.task:
         class: Phlexible\Bundle\ElementBundle\EventListener\TaskListener
-        arguments: [@phlexible_task.task_manager, @security.context]
+        arguments: [@phlexible_task.task_manager, @security.token_storage]
         tags:
             - {name: kernel.event_subscriber}
 
@@ -114,7 +114,7 @@ services:
         arguments:
             - @phlexible_siteroot.siteroot_manager
             - @phlexible_tree.tree_manager
-            - @security.context
+            - @security.authorization_checker
             - %phlexible_element.publish.comment_required%
             - %phlexible_element.publish.confirm_required%
             - %phlexible_element.create.use_multilanguage%
@@ -137,7 +137,7 @@ services:
 
     phlexible_element.listener.elementtype_usage:
         class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeUsageListener
-        arguments: [@doctrine.dbal.default_connection, @security.context]
+        arguments: [@doctrine.dbal.default_connection, @security.token_storage]
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
 
@@ -164,33 +164,38 @@ services:
             - {name: phlexible_gui.role_provider}
 
     # searches
+    phlexible_element.search.abstract:
+        abstract: true
+        public: false
+        arguments:
+            - @doctrine.dbal.default_connection
+            - @phlexible_element.element_service
+            - @phlexible_tree.tree_manager
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_element.icon_resolver
+            - @security.authorization_checker
+            - %phlexible_cms.languages.default%
+
     phlexible_element.search.eid:
         class: Phlexible\Bundle\ElementBundle\Search\EidSearch
         public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
+        parent: phlexible_element.search.abstract
         tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}
 
     phlexible_element.search.tid:
         class: Phlexible\Bundle\ElementBundle\Search\TidSearch
         public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
+        parent: phlexible_element.search.abstract
         tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}
 
     phlexible_element.search.title:
         class: Phlexible\Bundle\ElementBundle\Search\TitleSearch
         public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
+        parent: phlexible_element.search.abstract
         tags:
-            - {name: phlexible_search.handler}
-
-    phlexible_element.search.unique_id:
-        class: Phlexible\Bundle\ElementBundle\Search\UniqueIdSearch
-        public: false
-        arguments: [@doctrine.dbal.default_connection, %phlexible_cms.languages.default%]
-        tags:
-            - {name: phlexible_search.handler}
+            - {name: phlexible_search.provider}
 
     # twig extensions
     phlexible_element.twig.element_extension:

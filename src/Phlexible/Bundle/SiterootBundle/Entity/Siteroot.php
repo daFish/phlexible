@@ -24,7 +24,6 @@ class Siteroot
     /**
      * @var string
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="string", length=36, options={"fixed"=true})
      */
     private $id;
@@ -34,12 +33,6 @@ class Siteroot
      * @ORM\Column(name="is_default", type="boolean")
      */
     private $default = false;
-
-    /**
-     * @var array
-     * @ORM\Column(type="json_array")
-     */
-    private $patterns = array();
 
     /**
      * @var \DateTime
@@ -84,42 +77,30 @@ class Siteroot
     private $properties = [];
 
     /**
-     * @var array
-     * @ORM\Column(name="content_channels", type="json_array")
-     */
-    private $contentChannels = [];
-
-    /**
      * @var Navigation[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot")
+     * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot", cascade={"persist", "remove"})
      */
     private $navigations;
 
     /**
      * @var Url[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot")
+     * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot", cascade={"persist", "remove"})
      */
     private $urls;
 
     /**
      * Constructor.
+     *
+     * @param string $uuid
      */
-    public function __construct()
+    public function __construct($uuid = null)
     {
+        if (null !== $uuid) {
+            $this->id = $uuid;
+        }
+
         $this->navigations = new ArrayCollection();
         $this->urls = new ArrayCollection();
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -148,55 +129,6 @@ class Siteroot
     public function isDefault()
     {
         return $this->default;
-    }
-
-    /**
-     * @param array $patterns
-     *
-     * @return $this
-     */
-    public function setPatterns(array $patterns = array())
-    {
-        foreach ($patterns as $name => $pattern) {
-            $this->setPattern($name, $pattern);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPatterns()
-    {
-        return $this->patterns;
-    }
-
-    /**
-     * @param string $name
-     * @param string $pattern
-     *
-     * @return $this
-     */
-    public function setPattern($name, $pattern)
-    {
-        $this->patterns[$name] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public function getPattern($name)
-    {
-        if (!isset($this->patterns[$name])) {
-            throw new \InvalidArgumentException("Siteroot pattern $name not found.");
-        }
-
-        return $this->patterns[$name];
     }
 
     /**
@@ -559,47 +491,5 @@ class Siteroot
         }
 
         return $this->properties[$key];
-    }
-
-    /**
-     * @param array $contentChannels
-     *
-     * @return $this
-     */
-    public function setContentChannels(array $contentChannels)
-    {
-        $this->contentChannels = $contentChannels;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getContentChannelIds()
-    {
-        if (null === $this->contentChannels) {
-            return [];
-        }
-
-        return array_keys($this->contentChannels);
-    }
-
-    /**
-     * @return int|null|string
-     */
-    public function getDefaultContentChannelId()
-    {
-        if (null === $this->contentChannels) {
-            return null;
-        }
-
-        foreach ($this->contentChannels as $contentChannelId => $default) {
-            if ($default) {
-                return $contentChannelId;
-            }
-        }
-
-        return null;
     }
 }

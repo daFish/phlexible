@@ -19,13 +19,6 @@ Phlexible:
                 addSiterootText: 'Siteroot hinzufügen'
                 titleText: Titel
 
-            ContentChannels:
-                title: Content Channels
-                contentchannelIdText: 'Content Channel ID'
-                contentchannelText: 'Content Channel'
-                activeText: Aktiv
-                defaultText: Standard
-
             Navigations:
                 title: Navigationen
                 titleText: Titel
@@ -55,11 +48,6 @@ Phlexible:
 
             Titles:
                 title: Titel
-                customTitlesText: Angepasste Titel
-                nameText: Name
-                patternText: Muster
-                exampleText: Beispiel
-                legendText: Legende
 
             Urls:
                 title: URLs

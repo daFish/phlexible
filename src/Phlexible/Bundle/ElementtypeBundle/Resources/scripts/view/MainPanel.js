@@ -467,7 +467,6 @@ Ext.define('Phlexible.elementtype.view.MainPanel', {
                 dsId: childNode.attributes.ds_id,
                 type: childNode.attributes.type,
                 configuration: childNode.attributes.properties.configuration,
-                contentchannels: childNode.attributes.properties.content_channels,
                 labels: childNode.attributes.properties.labels,
                 options: childNode.attributes.properties.options,
                 validation: childNode.attributes.properties.validation,

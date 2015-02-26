@@ -90,6 +90,10 @@ Ext.define('Phlexible.siteroot.view.Main', {
     loadParams: function () {
     },
 
+    getSiterootGrid: function() {
+        return this.getComponent(0);
+    },
+
     /**
      * After the siteroot selection changes load the siteroot data.
      *

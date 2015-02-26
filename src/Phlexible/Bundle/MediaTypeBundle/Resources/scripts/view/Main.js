@@ -31,11 +31,25 @@ Ext.define('Phlexible.mediatype.view.Main', {
                 }
             },
             {
-                xtype: 'mediatype.mimetypes',
-                itemId: 'mimetypes',
+                xtype: 'panel',
+                layout: 'border',
                 region: 'east',
+                itemId: 'east',
+                width: 400,
+                border: false,
                 padding: '5 5 5 0',
-                width: 400
+                items: [{
+                    xtype: 'mediatype-mimetypesgrid',
+                    componentId: 'mimetypes',
+                    region: 'north',
+                    height: 300
+                },{
+                    xtype: 'panel',
+                    componentId: 'icons',
+                    region: 'center',
+                    bodyStyle: 'background: white; background: linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, lightgray; background-size: 30px 30px; padding: 5px;',
+                    html: ''
+                }]
             }
         ];
     }

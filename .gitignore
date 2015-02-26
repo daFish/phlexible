@@ -1,4 +1,6 @@
+bin
 build
 vendor
 composer.lock
 .puli
+.idea

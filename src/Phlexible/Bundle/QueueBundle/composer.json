@@ -1,0 +1,36 @@
+{
+    "name": "phlexible/queue-bundle",
+    "description": "phlexible",
+    "license": "proprietary",
+    "type": "symfony-bundle",
+    "keywords": ["phlexible"],
+    "autoload": {
+        "psr-4": {
+            "Phlexible\\Bundle\\QueueBundle\\": ""
+        }
+    },
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.brainbits.net/phlexible-bundles/",
+            "options": {
+                "ssl": {
+                    "allow_self_signed": "true"
+                }
+            }
+        }
+    ],
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

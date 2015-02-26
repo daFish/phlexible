@@ -50,9 +50,7 @@ class SiterootSaver
 
         $this
             ->applyTitles($siteroot, $data)
-            ->applyContentchannels($siteroot, $data)
             ->applyProperties($siteroot, $data)
-            ->applyPatterns($siteroot, $data)
             ->applyNamedTids($siteroot, $data)
             ->applyNavigations($siteroot, $data)
             ->applyUrls($siteroot, $data);
@@ -86,35 +84,6 @@ class SiterootSaver
      *
      * @return $this
      */
-    private function applyContentchannels(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('contentchannels', $data)) {
-            // noting to save
-            return $this;
-        }
-
-        $contentchannelsData = $data['contentchannels'];
-
-        $contentchannels = [];
-        foreach ($contentchannelsData as $row) {
-            if (!$row['used']) {
-                continue;
-            }
-
-            $contentchannels[$row['contentchannel_id']] = $row['default'] ? true : false;
-        }
-
-        $siteroot->setContentChannels($contentchannels);
-
-        return $this;
-    }
-
-    /**
-     * @param Siteroot $siteroot
-     * @param array    $data
-     *
-     * @return $this
-     */
     private function applyProperties(Siteroot $siteroot, array $data)
     {
         if (!array_key_exists('properties', $data)) {
@@ -128,25 +97,6 @@ class SiterootSaver
 
         return $this;
     }
-
-    /**
-     * @param Siteroot $siteroot
-     * @param array    $data
-     *
-     * @return $this
-     */
-    private function applyPatterns(Siteroot $siteroot, array $data)
-    {
-        if (!array_key_exists('patterns', $data)) {
-            // noting to save
-            return $this;
-        }
-
-        $siteroot->setPatterns($data['patterns']);
-
-        return $this;
-    }
-
 
     /**
      * @param Siteroot $siteroot
@@ -251,8 +201,8 @@ class SiterootSaver
             $url = new Url();
             $url
                 ->setSiteroot($siteroot)
-                ->setDefault(false)
-                ->setGlobalDefault(false)
+                ->setDefault(!empty($row['default']))
+                ->setGlobalDefault(!empty($row['global_default']))
                 ->setHostname($row['hostname'])
                 ->setLanguage($row['language'])
                 ->setTarget($row['target']);
@@ -265,8 +215,8 @@ class SiterootSaver
                 if ($url->getId() === $row['id']) {
                     $url
                         ->setSiteroot($siteroot)
-                        ->setDefault(false)
-                        ->setGlobalDefault(false)
+                        ->setDefault(!empty($row['default']))
+                        ->setGlobalDefault(!empty($row['global_default']))
                         ->setHostname($row['hostname'])
                         ->setLanguage($row['language'])
                         ->setTarget($row['target']);

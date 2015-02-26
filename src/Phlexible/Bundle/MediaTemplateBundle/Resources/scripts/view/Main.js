@@ -5,8 +5,7 @@ Ext.define('Phlexible.mediatemplate.view.Main', {
         'Phlexible.mediatemplate.view.List',
         'Phlexible.mediatemplate.view.image.Main',
         'Phlexible.mediatemplate.view.audio.Main',
-        'Phlexible.mediatemplate.view.video.Main',
-        'Phlexible.mediatemplate.view.pdf2swf.Main'
+        'Phlexible.mediatemplate.view.video.Main'
     ],
 
     xtype: 'mediatemplate.main',
@@ -60,13 +59,6 @@ Ext.define('Phlexible.mediatemplate.view.Main', {
             }, {
                 xtype: 'mediatemplate.audio.main',
                 itemId: 'audio',
-                border: false,
-                listeners: {
-                    saveTemplate: 'onSaveTemplate'
-                }
-            }, {
-                xtype: 'mediatemplate.pdf2swf.main',
-                itemId: 'pdf2swf',
                 border: false,
                 listeners: {
                     saveTemplate: 'onSaveTemplate'

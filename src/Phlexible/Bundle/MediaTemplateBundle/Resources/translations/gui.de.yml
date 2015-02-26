@@ -21,7 +21,6 @@ Phlexible:
                 imageText: Bild
                 videoText: Video
                 audioText: Audio
-                pdf2swfText: pdf2swf
                 noFilterText: Alle
 
             audio:
@@ -127,32 +126,6 @@ Phlexible:
                     whiteText: Weiss
                     blackText: Schwarz
                     randomText: Zufällig
-
-            pdf2swf:
-                Form:
-                    title: pdf2swf-Vorlage
-                    pdf2swfText: pdf2swf
-                    resolutionText: Auflösung
-                    resolutionHelpText: 'Auflösung des generierten SWF.'
-                    framerateText: Framerate
-                    framerateHelpText: 'Framerate des SWFs für automatisches Blättern.'
-                    qualityText: Qualität
-                    qualityHelpText: 'Qualität der JPGs im generierten SWF.'
-                    linksText: Links
-                    enabledText: Aktiviert
-                    disabledText: Deaktiviert
-                    linksDisabledHelpText: 'Links werden deaktiviert'
-                    newWindowText: 'In neuem Fenster öffnen'
-                    linksnewWindowHelpText: 'Links werden in neuem Fenster geöffnet'
-                    zlibText: Zlib
-                    zlibHelpText: 'Zlib zum komprimieren des generierten SWFs benutzen.'
-                    saveText: Speichern
-                    previewText: Vorschau
-                    debugText: Debug
-
-                Main:
-                    title: pdf2swf-Vorlage
-                    pdf2swfTemplateTitleText: 'pdf2swf-Vorlage "{0}"'
 
             video:
                 Form:

@@ -9,7 +9,6 @@ Ext.define('Phlexible.mediatemplate.view.List', {
     imageText: '_imageText',
     videoText: '_videoText',
     audioText: '_audioText',
-    pdf2swfText: '_pdf2swfText',
     noFilterText: '_noFilterText',
 
     initComponent: function () {
@@ -86,12 +85,6 @@ Ext.define('Phlexible.mediatemplate.view.List', {
                             iconCls: Phlexible.mediatemplate.TemplateIcons.audio,
                             handler: this.createAudioTemplate,
                             scope: this
-                        },
-                        {
-                            text: this.pdf2swfText,
-                            iconCls: Phlexible.mediatemplate.TemplateIcons.pdf2swf,
-                            handler: this.createPdfTemplate,
-                            scope: this
                         }
                     ]
                 },
@@ -126,13 +119,6 @@ Ext.define('Phlexible.mediatemplate.view.List', {
                             text: this.audioText,
                             iconCls: Phlexible.mediatemplate.TemplateIcons.audio,
                             filter: 'audio',
-                            handler: this.toggleFilter,
-                            scope: this
-                        },
-                        {
-                            text: this.pdf2swfText,
-                            iconCls: Phlexible.mediatemplate.TemplateIcons.pdf2swf,
-                            filter: 'pdf2swf',
                             handler: this.toggleFilter,
                             scope: this
                         }
@@ -174,10 +160,6 @@ Ext.define('Phlexible.mediatemplate.view.List', {
 
     createAudioTemplate: function () {
         this.createTemplate('audio');
-    },
-
-    createPdfTemplate: function () {
-        this.createTemplate('pdf');
     },
 
     createTemplate: function (type) {

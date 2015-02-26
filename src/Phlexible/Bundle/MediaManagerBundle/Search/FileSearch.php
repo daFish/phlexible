@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Search;
 
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * File search
@@ -33,20 +33,23 @@ class FileSearch implements SearchProviderInterface
     private $userManager;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
-     * @param VolumeManager            $volumeManager
-     * @param UserManagerInterface     $userManager
-     * @param SecurityContextInterface $securityContext
+     * @param VolumeManager                 $volumeManager
+     * @param UserManagerInterface          $userManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function __construct(VolumeManager $volumeManager, UserManagerInterface $userManager, SecurityContextInterface $securityContext)
+    public function __construct(
+        VolumeManager $volumeManager,
+        UserManagerInterface $userManager,
+        AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->volumeManager = $volumeManager;
         $this->userManager = $userManager;
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -88,7 +91,7 @@ class FileSearch implements SearchProviderInterface
                 $folders[$file->getFolderId()] = $file->getVolume()->findFolder($file->getFolderId());
             }
 
-            if (!$this->securityContext->isGranted($folders[$file->getFolderId()], 'FILE_READ')) {
+            if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FILE_READ', $folders[$file->getFolderId()])) {
                 continue;
             }
 
@@ -104,14 +107,14 @@ class FileSearch implements SearchProviderInterface
                 $file->getId(),
                 $file->getName(),
                 $createUser->getDisplayname(),
-                $file->getCreatedAt()->format('U'),
+                $file->getCreatedAt(),
                 '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager File Search',
                 [
-                    'xtype'      => 'Phlexible.mediamanager.menuhandle.MediaHandle',
+                    'handler'    => 'media',
                     'parameters' => [
                         'startFileId'     => $file->getId(),
-                        'startFolderPath' => $folderPath
+                        'startFolderPath' => '/' . implode('/', $folderPath)
                     ],
                 ]
             );

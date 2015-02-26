@@ -32,7 +32,7 @@ class Url
      * @var bool
      * @ORM\Column(name="is_global_default", type="boolean")
      */
-    private $globalDefault;
+    private $globalDefault = false;
 
     /**
      * @var bool
@@ -61,7 +61,7 @@ class Url
     /**
      * @var Siteroot
      * @ORM\ManyToOne(targetEntity="Siteroot", inversedBy="urls")
-     * @ORM\JoinColumn(name="siteroot_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="siteroot_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $siteroot;
 
@@ -118,7 +118,7 @@ class Url
      *
      * @return $this
      */
-    public function setGlobalDefault($globalDefault)
+    public function setGlobalDefault($globalDefault = true)
     {
         $this->globalDefault = (bool) $globalDefault;
 

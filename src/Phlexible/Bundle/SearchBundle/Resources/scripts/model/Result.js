@@ -1,12 +1,12 @@
 Ext.define('Phlexible.search.model.Result', {
     extend: 'Ext.data.Model',
     fields: [
-        'id',
-        'image',
-        'title',
-        'author',
+        {name: 'id'},
+        {name: 'image'},
+        {name: 'title'},
+        {name: 'author'},
         {name: 'date', type: 'date', dateFormat: 'timestamp'},
-        'component',
-        'menu'
+        {name: 'component'},
+        {name: 'handler'}
     ]
 });

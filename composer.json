@@ -5,9 +5,8 @@
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
-        "psr-0": {
-            "Phlexible\\": "src/",
-            "Zend_": "src/"
+        "psr-4": {
+            "Phlexible\\": "src/Phlexible/"
         }
     },
     "require": {
@@ -23,12 +22,11 @@
         "ext-simplexml": "*",
         "ext-zip": "*",
         "brainbits/fugue-icons-bundle": "~3.0",
-        "puli/cli": "*",
-        "puli/twig-extension": "*",
-        "puli/symfony-bundle": "*",
+        "puli/cli": "~1.0",
+        "puli/twig-extension": "~1.0",
+        "puli/symfony-bundle": "~1.0",
         "zf1/zend-search-lucene": "~1.12",
-        "doctrine/dbal": "~2.4",
-        "doctrine/collections": "~1.1",
+        "doctrine/orm": "~2.4",
         "fluentdom/fluentdom": "~5.1",
         "friendsofsymfony/rest-bundle": "~1.5",
         "friendsofsymfony/user-bundle": "~1.3",
@@ -38,13 +36,11 @@
         "brainbits/mime": "~1.0",
         "brainbits/image-analyzer": "~1.0",
         "php-poppler/php-poppler": "~1.0",
-        "swftools/swftools": "~0.3",
         "imagine/imagine": "~0.6",
         "rhumsaa/uuid": "~2.7",
         "php-ffmpeg/php-ffmpeg": "~0.5",
         "php-ffmpeg/extras": "~0.3",
         "igorw/file-serve-bundle": "~1",
-        "alchemy/zippy": "~0.2",
         "cocur/slugify": "~0.8",
         "phpexiftool/phpexiftool": "~0.4",
         "cogpowered/finediff": "~0.3",
@@ -52,9 +48,16 @@
         "yohang/finite": "~1.0",
         "jms/serializer-bundle": "~0.13"
     },
+     "replace": {
+        "phlexible/dashboard-bundle": "self.version",
+        "phlexible/gui-bundle": "self.version",
+        "phlexible/queue-bundle": "self.version",
+        "phlexible/user-bundle": "self.version"
+    },
     "require-dev": {
-        "phpunit/phpunit": "~4.1",
-        "mikey179/vfsStream": "~1.4"
+        "phpunit/phpunit": "~4.5",
+        "mikey179/vfsStream": "~1.4",
+        "sami/sami": "~2.0"
     },
     "suggest": {
         "puli/composer-plugin": "This package contains Puli resources. Require the plugin to use them.",
@@ -71,10 +74,14 @@
             }
         }
     ],
+    "config": {
+        "bin-dir": "bin"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

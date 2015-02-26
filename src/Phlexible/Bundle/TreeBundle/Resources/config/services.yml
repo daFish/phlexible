@@ -1,4 +1,8 @@
 services:
+    phlexible_tree.pattern_resolver:
+        class: Phlexible\Bundle\TreeBundle\Pattern\PatternResolver
+        arguments: [@translator, %phlexible_tree.patterns%, %phlexible_gui.project.title%]
+
     phlexible_tree.tree_manager:
         class: Phlexible\Bundle\TreeBundle\Tree\TreeManager
         arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.tree_factory]
@@ -10,7 +14,7 @@ services:
             - @phlexible_element.icon_resolver
             - @phlexible_tree.state_manager
             - @phlexible_access_control.permissions
-            - @security.context
+            - @security.authorization_checker
 
     phlexible_tree.router.handler.default:
         class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultHandler
@@ -52,11 +56,25 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
+    phlexible_tree.listener.exception:
+        class: Phlexible\Bundle\TreeBundle\EventListener\ExceptionListener
+        arguments:
+            - @twig
+            - @phlexible_element_renderer.configurator
+            - @phlexible_tree.content_tree_manager
+            - @logger
+            - %kernel.debug%
+        tags:
+            - {name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 999}
+
     # twig extensions
     phlexible_tree.twig.tree_extension:
         class: Phlexible\Bundle\TreeBundle\Twig\Extension\TreeExtension
         public: false
-        arguments: [@phlexible_tree.content_tree_manager]
+        arguments:
+            - @phlexible_tree.content_tree_manager
+            - @phlexible_tree.pattern_resolver
+            - @request_stack
         tags:
             - {name: twig.extension}
 

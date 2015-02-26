@@ -10,6 +10,8 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Component\Volume\Exception\AlreadyExistsException;
+use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\Exception\NotFoundException;
 use Phlexible\Component\Volume\VolumeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
