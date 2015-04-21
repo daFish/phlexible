@@ -230,23 +230,6 @@
             "query": "/phlexible/phlexiblesiteroot/styles/**/*.css",
             "type": "phlexible/styles"
         },
-<<<<<<< HEAD
-        "3c16a1d5-c0e4-58e1-a418-282bd820f0de": {
-            "query": "/phlexible/phlexibletask/menu/*.yml",
-            "type": "phlexible/menu"
-        },
-        "0537382f-e1af-5e26-bc88-6eda5741fdf3": {
-            "query": "/phlexible/phlexibletask/scripts/**/*.js",
-            "type": "phlexible/scripts"
-        },
-        "4f1ab77a-fb01-5410-95cf-477147e83d53": {
-            "query": "/phlexible/phlexibletask/styles/**/*.css",
-            "type": "phlexible/styles"
-=======
-        "ddd7eb5a-5e9d-583a-aa29-44cb040150d6": {
-            "query": "/phlexible/phlexibleteaser/icons/*.png",
-            "type": "phlexible/icons"
->>>>>>> origin/master
         },
         "12016c15-1fab-5ec7-bdc4-4551f2fcaea6": {
             "query": "/phlexible/phlexibleteaser/scripts/**/*.js",
