@@ -1,6 +1,8 @@
-Ext.define('Phlexible.mediatype.view.MediaTypes', {
+Ext.define('Phlexible.mediatype.view.List', {
     extend: 'Ext.grid.GridPanel',
-
+    requires: [
+        'Phlexible.mediatype.model.MediaType'
+    ],
     xtype: 'mediatype.list',
 
     iconCls: 'p-mediatype-component-icon',

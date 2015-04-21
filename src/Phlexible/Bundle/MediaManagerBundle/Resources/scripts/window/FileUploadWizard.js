@@ -645,7 +645,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
 
     isRequiredFieldFilled: function (data) {
         var code, field;
-        var languages = Phlexible.App.getConfig().get('set.language.frontend');
+        var languages = Phlexible.Config.get('set.language.frontend');
 
         for (var i = 0; i < languages.length; ++i) {
             code = languages[i][0];

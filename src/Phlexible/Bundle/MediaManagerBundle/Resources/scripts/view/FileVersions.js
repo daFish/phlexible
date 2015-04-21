@@ -1,6 +1,9 @@
-Ext.define('Phlexible.mediamanager.view.FileVersionsPanel', {
+Ext.define('Phlexible.mediamanager.view.FileVersions', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediamanager-file-versions',
+    requires: [
+        'Phlexible.mediamanager.model.FileVersion'
+    ],
+    xtype: 'mediamanager.file-versions',
 
     title: '_FileVersionsPanel',
     iconCls: Phlexible.Icon.get('edit-number'),
@@ -40,7 +43,7 @@ Ext.define('Phlexible.mediamanager.view.FileVersionsPanel', {
 
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.mediamanager.FileVersion',
+            model: 'Phlexible.mediamanager.model.FileVersion',
             data: this.fileVersions || [],
             proxy: {
                 type: 'ajax',

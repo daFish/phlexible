@@ -1,6 +1,9 @@
-Ext.define('Phlexible.mediamanager.view.FolderTree', {
+Ext.define('Phlexible.mediamanager.view.Folders', {
     extend: 'Ext.tree.TreePanel',
-    alias: 'widget.mediamanager-folders',
+    requires: [
+        'Phlexible.mediamanager.model.Folder'
+    ],
+    xtype: 'mediamanager.folders',
 
     cls: 'p-mediamanager-folders',
     enableDD: true,
@@ -560,7 +563,7 @@ Ext.define('Phlexible.mediamanager.view.FolderTree', {
         }
 
         // delete
-        var deletePolicy = Phlexible.App.getConfig().get('mediamanager.delete_policy');
+        var deletePolicy = Phlexible.Config.get('mediamanager.delete_policy');
         var usageStatus = record.data.usageStatus;
 
         if (isRoot || !this.checkRights(Phlexible.mediamanager.Rights.FOLDER_DELETE)) {

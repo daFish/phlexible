@@ -1,6 +1,6 @@
-Ext.define('Phlexible.task.view.FilterPanel', {
+Ext.define('Phlexible.task.view.Filter', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.tasks-filter',
+    xtype: 'tasks.filter',
 
     title: '_FilterPanel',
     cls: 'p-tasks-filter',

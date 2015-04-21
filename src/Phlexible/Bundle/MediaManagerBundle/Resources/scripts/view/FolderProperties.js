@@ -1,6 +1,6 @@
-Ext.define('Phlexible.mediamanager.view.FolderPropertiesPanel', {
+Ext.define('Phlexible.mediamanager.view.FolderProperties', {
     extend: 'Ext.Component',
-    alias: 'widget.mediamanager-folder-properties',
+    xtype: 'mediamanager.folder-properties',
 
     title: '_FolderPropertiesPanel',
     iconCls: Phlexible.Icon.get('property'),

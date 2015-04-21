@@ -1,5 +1,8 @@
 Ext.define('Phlexible.mediatemplate.view.List', {
     extend: 'Ext.grid.GridPanel',
+    requires: [
+        'Phlexible.mediatemplate.model.MediaTemplate'
+    ],
     xtype: 'mediatemplate.list',
 
     border: true,

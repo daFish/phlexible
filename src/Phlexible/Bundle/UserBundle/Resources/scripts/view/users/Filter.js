@@ -3,7 +3,11 @@
  */
 Ext.define('Phlexible.user.view.users.Filter', {
     extend: 'Ext.form.FormPanel',
-    requires: ['Ext.ux.form.trigger.Clear'],
+    requires: [
+        'Ext.ux.form.trigger.Clear',
+        'Phlexible.user.model.UserGroup',
+        'Phlexible.user.model.UserRole'
+    ],
 
     xtype: 'user.users.filter',
 

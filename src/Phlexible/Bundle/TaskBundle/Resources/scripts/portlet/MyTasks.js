@@ -1,5 +1,8 @@
 Ext.define('Phlexible.task.portlet.MyTasks', {
     extend: 'Ext.dashboard.Panel',
+    requires: [
+        'Phlexible.task.model.MyTask'
+    ],
     alias: 'widget.tasks-my-tasks-portlet',
 
     iconCls: Phlexible.Icon.get('clipboard-task'),

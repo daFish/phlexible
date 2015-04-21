@@ -1,6 +1,12 @@
-Ext.define('Phlexible.mediamanager.view.MainPanel', {
+Ext.define('Phlexible.mediamanager.view.Main', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediamanager-main',
+    requires: [
+        'Phlexible.mediamanager.toolbar.UploadStatus',
+        'Phlexible.mediamanager.view.Files',
+        'Phlexible.mediamanager.view.Folders',
+        'Phlexible.mediamanager.view.Attributes'
+    ],
+    xtype: 'mediamanager.main',
 
     iconCls: Phlexible.Icon.get('images'),
     layout: 'border',
@@ -95,7 +101,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
 
     initMyItems: function() {
         this.items = [{
-            xtype: 'mediamanager-folders',
+            xtype: 'mediamanager.folders',
             itemId: 'folders',
             region: 'west',
             margin: '5 0 5 5',
@@ -115,7 +121,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
                 scope: this
             }
         },{
-            xtype: 'mediamanager-files',
+            xtype: 'mediamanager.files',
             itemId: 'files',
             region: 'center',
             margin: '5 5 5 0',
@@ -134,7 +140,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
                 scope: this
             }
         },{
-            xtype: 'mediamanager-attributes',
+            xtype: 'mediamanager.attributes',
             itemId: 'attributes',
             region: 'east',
             margin: '5 5 5 0',
@@ -323,7 +329,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
-                                        this.getFilesGrid().setFilter('createUserId', Phlexible.App.getUser().getId());
+                                        this.getFilesGrid().setFilter('createUserId', Phlexible.User.getId());
                                     },
                                     scope: this
                                 },
@@ -332,7 +338,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
-                                        this.getFilesGrid().setFilter('modifyUserId', Phlexible.App.getUser().getId());
+                                        this.getFilesGrid().setFilter('modifyUserId', Phlexible.User.getId());
                                     },
                                     scope: this
                                 },
@@ -341,7 +347,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
-                                        this.getFilesGrid().setFilter('notCreateUserId', Phlexible.App.getUser().getId());
+                                        this.getFilesGrid().setFilter('notCreateUserId', Phlexible.User.getId());
                                     },
                                     scope: this
                                 },
@@ -350,7 +356,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
                                     checked: false,
                                     group: 'user',
                                     handler: function () {
-                                        this.getFilesGrid().setFilter('notModifyUserId', Phlexible.App.getUser().getId());
+                                        this.getFilesGrid().setFilter('notModifyUserId', Phlexible.User.getId());
                                     },
                                     scope: this
                                 }
@@ -538,7 +544,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
                 }
             ]
         },{
-            xtype: 'mediamanager-upload-statusbar',
+            xtype: 'mediamanager.upload-status',
             itemId: 'updatestatus',
             dock: 'bottom'
         }];
@@ -895,7 +901,7 @@ Ext.define('Phlexible.mediamanager.view.MainPanel', {
 
     reloadFilesSortedLatest: function() {
         var store = this.getFilesGrid().getStore();
-        if (Phlexible.App.getConfig().get('mediamanager.upload.enable_upload_sort')) {
+        if (Phlexible.Config.get('mediamanager.upload.enable_upload_sort')) {
             if (!store.lastOptions) store.lastOptions = {};
             if (!store.lastOptions.params) store.lastOptions.params = {};
             store.lastOptions.params.start = 0;

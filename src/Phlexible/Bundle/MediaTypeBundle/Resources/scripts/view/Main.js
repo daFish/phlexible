@@ -2,7 +2,7 @@ Ext.define('Phlexible.mediatype.view.Main', {
     extend: 'Ext.panel.Panel',
     requires: [
         'Phlexible.mediatype.view.MainController',
-        'Phlexible.mediatype.view.MediaTypes',
+        'Phlexible.mediatype.view.List',
         'Phlexible.mediatype.view.Mimetypes'
     ],
 
@@ -39,7 +39,7 @@ Ext.define('Phlexible.mediatype.view.Main', {
                 border: false,
                 padding: '5 5 5 0',
                 items: [{
-                    xtype: 'mediatype-mimetypesgrid',
+                    xtype: 'mediatype.mimetypes',
                     componentId: 'mimetypes',
                     region: 'north',
                     height: 300

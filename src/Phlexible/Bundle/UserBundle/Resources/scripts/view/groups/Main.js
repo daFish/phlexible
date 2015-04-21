@@ -3,7 +3,9 @@
  */
 Ext.define('Phlexible.user.view.groups.Main', {
     extend: 'Ext.Panel',
-
+    requires: [
+        'Phlexible.user.model.Group'
+    ],
     xtype: 'user.groups.main',
 
     iconCls: Phlexible.Icon.get('users'),

@@ -70,7 +70,7 @@ Ext.define('Phlexible.mediamanager.window.FolderDetailWindow', {
             title: this.strings.folder_rights,
             iconCls: 'p-mediamanager-folder_rights-icon',
             disabled: this.folderRights.indexOf(Phlexible.mediamanager.Rights.FOLDER_RIGHTS) === -1,
-            hidden: Phlexible.App.isGranted('ROLE_MEDIA_ACCESS_CONTROL'),
+            hidden: Phlexible.User.isGranted('ROLE_MEDIA_ACCESS_CONTROL'),
             rightType: 'internal',
             contentType: 'folder',
             strings: {

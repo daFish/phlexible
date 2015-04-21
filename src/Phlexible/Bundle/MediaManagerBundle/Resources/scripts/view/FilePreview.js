@@ -1,6 +1,6 @@
-Ext.define('Phlexible.mediamanager.view.FilePreviewPanel', {
+Ext.define('Phlexible.mediamanager.view.FilePreview', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediamanager-file-preview',
+    xtype: 'mediamanager.file-preview',
 
     title: '_FilePreviewPanel',
     cls: 'p-mediamanager-preview-panel',

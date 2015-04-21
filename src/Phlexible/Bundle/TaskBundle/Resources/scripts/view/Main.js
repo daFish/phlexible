@@ -1,6 +1,10 @@
-Ext.define('Phlexible.task.view.MainPanel', {
+Ext.define('Phlexible.task.view.Main', {
     extend: 'Ext.Panel',
-    alias: 'widget.tasks-main',
+    requires: [
+        'Phlexible.task.view.Filter',
+        'Phlexible.task.view.List'
+    ],
+    xtype: 'tasks.main',
 
     cls: 'p-tasks-main',
     iconCls: Phlexible.Icon.get('clipboard-task'),
@@ -34,7 +38,7 @@ Ext.define('Phlexible.task.view.MainPanel', {
     initMyItems: function() {
         this.items = [
             {
-                xtype: 'tasks-filter',
+                xtype: 'tasks.filter',
                 itemdId: 'filter',
                 region: 'west',
                 width: 200,
@@ -54,7 +58,7 @@ Ext.define('Phlexible.task.view.MainPanel', {
                 layout: 'border',
                 border: false,
                 items: [{
-                    xtype: 'tasks-list',
+                    xtype: 'tasks.list',
                     region: 'center',
                     padding: 5,
                     taskId: this.params.id || false,

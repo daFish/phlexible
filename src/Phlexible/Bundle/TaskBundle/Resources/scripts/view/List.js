@@ -1,6 +1,9 @@
-Ext.define('Phlexible.task.view.TasksGrid', {
+Ext.define('Phlexible.task.view.List', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.tasks-list',
+    requires: [
+        'Phlexible.task.model.Task'
+    ],
+    xtype: 'tasks.list',
 
     cls: 'p-tasks-list',
     deferEmptyText: false,
@@ -36,7 +39,7 @@ Ext.define('Phlexible.task.view.TasksGrid', {
             model: 'Phlexible.task.model.Task',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('tasks_list'),
+                url: Phlexible.Router.generate('phlexible_task_get_tasks'),
                 simpleSortMode: true,
                 remoteSort: true,
                 reader: {

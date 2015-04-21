@@ -101,7 +101,7 @@ class TranslationsBuilder
 
         file_put_contents($cacheFilename, $content);
 
-        return $content;
+        return $cacheFilename;
 
         $translations = [];
         $catalogue = $this->catalogAccessor->getCatalogues($language);

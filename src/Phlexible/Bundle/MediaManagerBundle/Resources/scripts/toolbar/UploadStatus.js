@@ -1,6 +1,6 @@
-Ext.define('Phlexible.mediamanager.toolbar.UploadStatusBar', {
+Ext.define('Phlexible.mediamanager.toolbar.UploadStatus', {
     extend: 'Ext.toolbar.Toolbar',
-    alias: 'widget.mediamanager-upload-statusbar',
+    xtype: 'mediamanager.upload-status',
 
     height: 26,
 

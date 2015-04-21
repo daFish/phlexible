@@ -1,5 +1,9 @@
 Ext.define('Phlexible.metaset.view.Main', {
     extend: 'Ext.panel.Panel',
+    requires: [
+        'Phlexible.metaset.model.MetaSet',
+        'Phlexible.metaset.model.MetaSetField'
+    ],
     xtype: 'metaset.main',
 
     layout: 'border',

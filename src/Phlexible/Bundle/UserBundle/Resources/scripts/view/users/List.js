@@ -3,7 +3,9 @@
  */
 Ext.define('Phlexible.user.view.users.List', {
     extend: 'Ext.grid.GridPanel',
-
+    requires: [
+        'Phlexible.user.model.User'
+    ],
     xtype: 'user.users.list',
 
     cls: 'p-user-list',

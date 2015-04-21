@@ -1,6 +1,9 @@
 Ext.define('Phlexible.problem.view.Problems', {
     extend: 'Ext.grid.GridPanel',
-    requires: ['Phlexible.problem.view.ProblemsController'],
+    requires: [
+        'Phlexible.problem.model.Problem',
+        'Phlexible.problem.view.ProblemsController'
+    ],
     xtype: 'problem.problems',
     controller: 'problem.problems',
 

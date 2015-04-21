@@ -1,6 +1,9 @@
 Ext.define('Phlexible.mediamanager.view.FileMeta', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediamanager-file-meta',
+    requires: [
+        'Phlexible.mediamanager.view.FileMetas'
+    ],
+    xtype: 'mediamanager.file-meta',
 
     title: '_FileMeta',
     cls: 'p-mediamanager-meta',
@@ -40,7 +43,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
         this.metasetUrls = {
             list: Phlexible.Router.generate('mediamanager_file_meta_sets_list'),
             save: Phlexible.Router.generate('mediamanager_file_meta_sets_save'),
-            available: Phlexible.Router.generate('metaset_sets_list')
+            available: Phlexible.Router.generate('phlexible_metaset_get_metasets')
         };
     },
 
@@ -52,7 +55,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
 
     initMyDockedItems: function () {
         var languageBtns = [];
-        Ext.each(Phlexible.App.getConfig().get('set.language.meta'), function (item) {
+        Ext.each(Phlexible.Config.get('set.language.meta'), function (item) {
             var language = item[0];
             var t9n = item[1];
             var flag = item[2];
@@ -60,7 +63,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
                 text: t9n,
                 iconCls: flag,
                 language: language,
-                checked: Phlexible.App.getConfig().get('language.metasets') === language
+                checked: Phlexible.Config.get('language.metasets') === language
             });
         }, this);
 

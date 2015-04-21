@@ -2,6 +2,7 @@ Ext.define('Phlexible.gui.view.Bundles', {
     extend: 'Ext.panel.Panel',
     xtype: 'gui.bundles',
     requires: [
+        'Phlexible.gui.model.Bundle',
         'Phlexible.gui.view.BundlesController'
     ],
 

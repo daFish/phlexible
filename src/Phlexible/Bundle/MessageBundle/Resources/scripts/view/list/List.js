@@ -1,5 +1,8 @@
 Ext.define('Phlexible.message.view.list.List', {
     extend: 'Ext.grid.GridPanel',
+    requires: [
+        'Phlexible.message.model.Message'
+    ],
     xtype: 'message.list.list',
 
     cls: 'p-message-list-list',

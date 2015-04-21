@@ -1,6 +1,9 @@
-Ext.define('Phlexible.mediamanager.view.FilesGrid', {
+Ext.define('Phlexible.mediamanager.view.Files', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.mediamanager-files',
+    requires: [
+        'Phlexible.mediamanager.model.File'
+    ],
+    xtype: 'mediamanager.files',
 
     title: '_FilesGrid',
     iconCls: Phlexible.Icon.get('folder-open-document'),
@@ -118,7 +121,7 @@ Ext.define('Phlexible.mediamanager.view.FilesGrid', {
                     totalProperty: 'total'
                 },
                 extraParams: {
-                    limit: Phlexible.App.getConfig().get('mediamanager.files.num_files', 10),
+                    limit: Phlexible.Config.get('mediamanager.files.num_files', 10),
                     filter: Ext.encode(this.activeFilter)
                 }
             },
@@ -863,7 +866,7 @@ Ext.define('Phlexible.mediamanager.view.FilesGrid', {
                     allPresent = false;
                 }
             }
-            var deletePolicy = Phlexible.App.getConfig().get('mediamanager.delete_policy');
+            var deletePolicy = Phlexible.Config.get('mediamanager.delete_policy');
 
             contextmenu.getComponent('deleteBtn').setText(this.deleteFilesText);
             contextmenu.getComponent('hideBtn').setText(this.hideFilesText);
@@ -925,7 +928,7 @@ Ext.define('Phlexible.mediamanager.view.FilesGrid', {
             }
 
             var usageStatus = record.get('usageStatus');
-            var deletePolicy = Phlexible.App.getConfig().get('mediamanager.delete_policy');
+            var deletePolicy = Phlexible.Config.get('mediamanager.delete_policy');
 
             contextmenu.getComponent('deleteBtn').setText(this.deleteFileText);
             contextmenu.getComponent('hideBtn').setText(this.hideFileText);

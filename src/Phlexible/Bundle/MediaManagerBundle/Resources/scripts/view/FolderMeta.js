@@ -1,6 +1,9 @@
 Ext.define('Phlexible.mediamanager.view.FolderMeta', {
     extend: 'Phlexible.mediamanager.view.FileMeta',
-    alias: 'widget.mediamanager-folder-meta',
+    requires: [
+        'Phlexible.mediamanager.view.FolderMetas'
+    ],
+    xtype: 'mediamanager.folder-meta',
 
     title: '_FolderMeta',
 
@@ -15,13 +18,13 @@ Ext.define('Phlexible.mediamanager.view.FolderMeta', {
         this.metasetUrls = {
             list: Phlexible.Router.generate('mediamanager_folder_meta_sets_list'),
             save: Phlexible.Router.generate('mediamanager_folder_meta_sets_save'),
-            available: Phlexible.Router.generate('metasets_sets_list')
+            available: Phlexible.Router.generate('phlexible_metaset_get_metasets')
         };
     },
 
     createMetaGridConfig: function(setId, title, fields, small) {
         return {
-            xtype: 'mediamanager-folder-metas',
+            xtype: 'mediamanager.folder-metas',
             setId: setId,
             title: title,
             height: 180,

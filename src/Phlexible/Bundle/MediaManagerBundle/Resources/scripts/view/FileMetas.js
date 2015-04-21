@@ -1,6 +1,6 @@
-Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
+Ext.define('Phlexible.mediamanager.view.FileMetas', {
     extend: 'Ext.grid.GridPanel',
-    alias: 'widget.mediamanager-file-metas',
+    xtype: 'mediamanager.file-metas',
 
     title: '_FileMetaGrid',
     cls: 'p-mediamanager-meta-grid',
@@ -33,7 +33,7 @@ Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
     initMyStore: function() {
         var fields = ['key', 'type', 'options', 'required', 'synchronized', 'readonly'];
 
-        Ext.each(Phlexible.App.getConfig().get('set.language.meta'), function (language) {
+        Ext.each(Phlexible.Config.get('set.language.meta'), function (language) {
             fields.push('value_' + language[0]);
         }, this);
 
@@ -81,13 +81,13 @@ Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
             }
         ];
 
-        Ext.each(Phlexible.App.getConfig().get('set.language.meta'), function (language) {
+        Ext.each(Phlexible.Config.get('set.language.meta'), function (language) {
             this.columns.push({
                 header: this.valueText + ' ' + Phlexible.inlineIcon(language[2]) + ' ' + language [1],
                 dataIndex: 'value_' + language[0],
                 language: language[0],
                 flex: 1,
-                hidden: false,//this.small && language[0] !== Phlexible.App.getConfig().get('language.metasets'),
+                hidden: false,//this.small && language[0] !== Phlexible.Config.get('language.metasets'),
                 xrenderer: this.formatField,
                 xgetEditor: function(record) {
                     var type = record.get('editType');
@@ -136,7 +136,7 @@ Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
                 var isSynchronized = (1 == record.get('synchronized'));
                 var cm = this.getColumnModel();
                 var column = cm.getColumnById(cm.getColumnId(ci));
-                if (isSynchronized && (!column.language || column.language !== Phlexible.App.getConfig().get('language.metasets'))) {
+                if (isSynchronized && (!column.language || column.language !== Phlexible.Config.get('language.metasets'))) {
                     return false;
                 }
                 if (e.record.data.readonly) {
@@ -199,7 +199,7 @@ Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
             var cm = this.getColumnModel();
             var language = cm.getColumnById(cm.getColumnId(ci)).language;
             if (language) {
-                if (language === Phlexible.App.getConfig().get('language.metasets')) {
+                if (language === Phlexible.Config.get('language.metasets')) {
                     md.attr = 'style="border:1px solid green;"';
                 }
                 else {
@@ -225,9 +225,9 @@ Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
 
     validateMeta: function () {
         var valid = true;
-        var languages = Phlexible.App.getConfig().get('set.language.meta');
+        var languages = Phlexible.Config.get('set.language.meta');
         var language;
-        var defaultLanguage = Phlexible.App.getConfig().get('language.metasets');
+        var defaultLanguage = Phlexible.Config.get('language.metasets');
 
         var metaRecords = this.getStore().getRange();
 
@@ -262,7 +262,7 @@ Ext.define('Phlexible.mediamanager.view.FileMetaGrid', {
 
     isRequiredFieldFilled: function (data) {
         var code, field;
-        var languages = Phlexible.App.getConfig().get('set.language.meta');
+        var languages = Phlexible.Config.get('set.language.meta');
 
         for (var i = 0; i < languages.length; ++i) {
             code = languages[i][0];

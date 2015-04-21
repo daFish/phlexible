@@ -1,6 +1,12 @@
-Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
+Ext.define('Phlexible.mediamanager.view.Attributes', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.mediamanager-attributes',
+    requires: [
+        'Phlexible.mediamanager.view.FileMeta',
+        'Phlexible.mediamanager.view.FilePreview',
+        'Phlexible.mediamanager.view.FileVersions',
+        'Phlexible.mediamanager.view.FolderMeta'
+    ],
+    xtype: 'mediamanager.attributes',
 
     iconCls: Phlexible.Icon.get('document'),
     autoScroll: true,
@@ -25,7 +31,7 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
 
         this.items = [
             {
-                xtype: 'mediamanager-file-preview',
+                xtype: 'mediamanager.file-preview',
                 itemId: 'preview',
                 header: false,
                 border: false
@@ -74,7 +80,7 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
 
     initMyAccordions: function() {
         this.accordionPanels = [{
-            xtype: 'mediamanager-file-versions',
+            xtype: 'mediamanager.file-versions',
             itemId: 'versions',
             border: false,
             autoHeight: true,
@@ -99,14 +105,14 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
             autoHeight: true,
             collapsed: true
         },{
-            xtype: 'mediamanager-folder-meta',
+            xtype: 'mediamanager.folder-meta',
             itemId: 'folder-meta',
             border: false,
             autoHeight: true,
             collapsed: true,
             small: true
         },{
-            xtype: 'mediamanager-file-meta',
+            xtype: 'mediamanager.file-meta',
             itemId: 'file-meta',
             border: false,
             //autoHeight: true,
@@ -203,7 +209,7 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
             ]
         }];
 
-        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.accordionPanels.push({
                 xtype: 'grid',
                 itemId: 'file-debug',
@@ -367,7 +373,7 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
         this.getFolderUsedPanel().getStore().removeAll();
 
         // debug
-        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.getFileDebugPanel().getStore().removeAll();
             this.getCacheDebugPanel().getStore().removeAll();
         }
@@ -391,7 +397,7 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
         }
 
         // debug
-        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             var debugData = [];
             Ext.Object.each(folder.data, function(key, value) {
                 debugData.push({key: key, value: value});
@@ -419,7 +425,7 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
         this.getFileUsedPanel().getStore().removeAll();
 
         // debug
-        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.getFileDebugPanel().getStore().removeAll();
             this.getCacheDebugPanel().getStore().removeAll();
         }
@@ -462,7 +468,7 @@ Ext.define('Phlexible.mediamanager.view.AttributesPanel', {
             fileVersion: this.fileVersion
         });
 
-        if (Phlexible.App.isGranted('ROLE_SUPER_ADMIN')) {
+        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             var debugData = [];
             Ext.Object.each(file.data, function(key, value) {
                 debugData.push({key: key, value: value});

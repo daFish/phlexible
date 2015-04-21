@@ -1,6 +1,9 @@
 Ext.define('Phlexible.message.view.subscription.Main', {
     extend: 'Ext.panel.Panel',
-    requires: ['Ext.ux.form.IconCombo'],
+    requires: [
+        'Ext.ux.form.IconCombo',
+        'Phlexible.message.model.Subscription'
+    ],
 
     xtype: 'message.subscription.main',
 

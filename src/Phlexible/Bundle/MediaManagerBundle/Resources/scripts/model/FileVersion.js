@@ -1,4 +1,4 @@
-Ext.define('Phlexible.mediamanager.FileVersion', {
+Ext.define('Phlexible.mediamanager.model.FileVersion', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id', type: 'string'},
