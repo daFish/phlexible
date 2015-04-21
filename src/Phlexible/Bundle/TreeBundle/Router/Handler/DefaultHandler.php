@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
+use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
@@ -19,7 +20,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 
 /**
@@ -40,6 +40,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $contentTreeManager;
 
     /**
+     * @var SiterootRequestMatcher
+     */
+    private $siterootRequestMatcher;
+
+    /**
      * @var array
      */
     private $languages;
@@ -57,17 +62,20 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * @param LoggerInterface             $logger
      * @param ContentTreeManagerInterface $treeManager
+     * @param SiterootRequestMatcher      $siterootRequestMatcher
      * @param string                      $languages
      * @param string                      $defaultLanguage
      */
     public function __construct(
         LoggerInterface $logger,
         ContentTreeManagerInterface $treeManager,
+        SiterootRequestMatcher $siterootRequestMatcher,
         $languages,
         $defaultLanguage)
     {
         $this->logger = $logger;
         $this->contentTreeManager = $treeManager;
+        $this->siterootRequestMatcher = $siterootRequestMatcher;
         $this->languages = explode(',', $languages);
         $this->defaultLanguage = $defaultLanguage;
     }
@@ -166,7 +174,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $parameters = $this->matchIdentifiers($request, $tree);
 
         if (0 && !$siterootUrl->isDefault()) {
-            $siterootUrl = $siterootUrl->getSiteroot()->getDefaultUrl($request->attributes->get('language'));
+            $siterootUrl = $siterootUrl->getSiteroot()->getDefaultUrl($request->getLocale());
             // forward?
         }
 
@@ -203,34 +211,9 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
                 $request->attributes->set('_cache', $configuration);
             }
 
-            if ($security = $treeNode->getAttribute('security')) {
-                $expression = null;
-
-                if (!empty($security['expression'])) {
-                    $expression = $security['expression'];
-                } else {
-                    $expressions = array();
-                    if (!empty($security['authenticationRequired'])) {
-                        $expressions[] = 'is_fully_authenticated()';
-                    }
-                    if (!empty($security['roles'])) {
-                        $security['roles'] = (array) $security['roles'];
-                        foreach ($security['roles'] as $role) {
-                            $expressions[] = "has_role('$role')";
-                        }
-                    }
-                    if (!empty($security['query_acl'])) {
-                        $expressions[] = "is_granted('VIEW', node)";
-                    }
-
-                    $expression = implode(' and ', $expressions);
-                }
-
-                if ($expression) {
-                    $configuration = new Security(array());
-                    $configuration->setValue($expression);
-                    $request->attributes->set('_security', $configuration);
-                }
+            if ('true' !== $expression = $treeNode->getSecurityExpression()) {
+                $configuration = new Security(array('expression' => $expression));
+                $request->attributes->set('_security', $configuration);
             }
         }
 
@@ -246,27 +229,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     protected function findTree(Request $request)
     {
-        $default = null;
-        foreach ($this->contentTreeManager->findAll() as $tree) {
-            foreach ($tree->getUrls() as $siterootUrl) {
-                if ($siterootUrl->getHostname() === $request->getHttpHost()) {
-                    $request->attributes->set('siterootUrl', $siterootUrl);
-
-                    return $tree;
-                }
-                if ($tree->isDefaultSiteroot()) {
-                    $default = ['tree' => $tree, 'siterootUrl' => $siterootUrl];
-                }
-            }
+        $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+        if (!$siteroot) {
+            return null;
         }
+        $siterootUrl = $siteroot->getDefaultUrl();
+        $request->attributes->set('siterootUrl', $siterootUrl);
 
-        if ($default) {
-            $request->attributes->set('siterootUrl', $default['siterootUrl']);
-
-            return $default['tree'];
-        }
-
-        return null;
+        return $this->contentTreeManager->find($siteroot->getId());
     }
 
     /**

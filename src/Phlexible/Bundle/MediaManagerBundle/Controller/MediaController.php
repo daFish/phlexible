@@ -58,6 +58,12 @@ class MediaController extends Controller
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING) {
                 $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
                 $queueProcessor->processItem($cacheItem);
+            } elseif ($cacheItem->getCacheStatus() === CacheItem::STATUS_MISSING) {
+                $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
+                if (file_exists($file->getPhysicalPath())) {
+                    $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
+                    $queueProcessor->processItem($cacheItem);
+                }
             }
 
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
@@ -89,8 +95,7 @@ class MediaController extends Controller
             $batch = $batchBuilder->createForTemplateAndFile($template, $file);
             $queue = $batchResolver->resolve($batch);
 
-            $cacheItem = $queue->first();
-            $queueProcessor->processItem($cacheItem);
+            $cacheItem = $queueProcessor->processItem($queue->first());
 
             if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                 $storageKey = $template->getStorage();

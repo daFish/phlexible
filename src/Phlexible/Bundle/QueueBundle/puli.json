@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "name": "phlexible/queue-bundle",
-    "resources": {
+    "path-mappings": {
         "/phlexible/phlexiblequeue/icons": "src/Phlexible/Bundle/QueueBundle/Resources/public/icons",
         "/phlexible/phlexiblequeue/menu": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
         "/phlexible/phlexiblequeue/scripts": "src/Phlexible/Bundle/QueueBundle/Resources/scripts"
@@ -16,7 +16,7 @@
             "type": "phlexible/menu"
         },
         "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
-            "query": "/phlexible/phlexiblequeue/scripts/**.js",
+            "query": "/phlexible/phlexiblequeue/scripts/**/*.js",
             "type": "phlexible/scripts"
         }
     }
