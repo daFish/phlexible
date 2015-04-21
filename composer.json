@@ -45,7 +45,6 @@
         "phpexiftool/phpexiftool": "~0.4",
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
-        "yohang/finite": "~1.0",
         "jms/serializer-bundle": "~0.13"
     },
      "replace": {
