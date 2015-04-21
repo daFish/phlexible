@@ -230,7 +230,6 @@
             "query": "/phlexible/phlexiblesiteroot/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        },
         "12016c15-1fab-5ec7-bdc4-4551f2fcaea6": {
             "query": "/phlexible/phlexibleteaser/scripts/**/*.js",
             "type": "phlexible/scripts"
