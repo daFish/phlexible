@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/octet-stream</mimetype>
     </mimetypes>
+    <svg>binary</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/binary.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/binary.gif</icon>

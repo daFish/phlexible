@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/vnd.openxmlformats-officedocument.presentationml.presentation</mimetype>
     </mimetypes>
+    <svg>ppt</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/pptx.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/pptx.gif</icon>

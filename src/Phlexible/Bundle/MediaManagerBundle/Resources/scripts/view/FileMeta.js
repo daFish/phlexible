@@ -147,7 +147,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
 
     createMetaGridConfig: function(setId, title, fieldData, small) {
         return {
-            xtype: 'mediamanager-file-metas',
+            xtype: 'mediamanager.file-metas',
             setId: setId,
             title: title,
             height: 180,

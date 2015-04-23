@@ -9,6 +9,7 @@
         <mimetype>application/rar</mimetype>
         <mimetype>application/x-rar</mimetype>
     </mimetypes>
+    <svg>archive</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/rar.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/rar.gif</icon>

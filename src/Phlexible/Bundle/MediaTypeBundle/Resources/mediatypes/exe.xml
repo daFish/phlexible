@@ -9,6 +9,7 @@
         <mimetype>application/x-dosexec</mimetype>
         <mimetype>application/x-msdos-program</mimetype>
     </mimetypes>
+    <svg>executable</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/exe.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/exe.gif</icon>

@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/rtf</mimetype>
     </mimetypes>
+    <svg>document</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/rtf.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/rtf.gif</icon>

@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/vnd.oasis.opendocument.text-web</mimetype>
     </mimetypes>
+    <svg>document</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/oth.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/oth.gif</icon>

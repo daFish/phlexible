@@ -10,6 +10,7 @@
         <mimetype>application/msword</mimetype>
         <mimetype>application/vnd.msword</mimetype>
     </mimetypes>
+    <svg>doc</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/doc.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/doc.gif</icon>

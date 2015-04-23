@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/commonground</mimetype>
     </mimetypes>
+    <svg>development</svg>
     <icons>
     </icons>
 </documenttype>

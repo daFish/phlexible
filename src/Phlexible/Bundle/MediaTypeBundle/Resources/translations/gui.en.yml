@@ -8,7 +8,7 @@ Phlexible:
             Main:
                 title: Media types
 
-            MediaTypes:
+            List:
                 title: Media types
                 nameText: Name
                 sizesText: Sizes

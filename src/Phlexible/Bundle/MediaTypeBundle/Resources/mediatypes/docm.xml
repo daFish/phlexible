@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/vnd.ms-word.document.macroEnabled.12</mimetype>
     </mimetypes>
+    <svg>doc</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/docm.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/docm.gif</icon>

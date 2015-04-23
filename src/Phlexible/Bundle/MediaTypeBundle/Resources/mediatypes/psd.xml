@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>image/x-photoshop</mimetype>
     </mimetypes>
+    <svg>image</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/psd.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/psd.gif</icon>

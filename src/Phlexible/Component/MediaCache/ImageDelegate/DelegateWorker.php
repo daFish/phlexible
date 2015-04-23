@@ -232,7 +232,7 @@ class DelegateWorker
             imagefilledrectangle($target, 0, 0, $sx, $sy, $transparent);
             imagecopy($target, $source, 0, 0, 0, 0, $sx, $sy);
             $waiting = imagecreatefrompng(
-                $this->locator->locate('@PhlexibleMediaCacheBundle/Resources/public/icons/waiting.png')
+                $this->locator->locate('@PhlexibleMediaCacheBundle/Resources/public/images/waiting.png')
             );
             $sx -= 16;
             $sy -= 16;

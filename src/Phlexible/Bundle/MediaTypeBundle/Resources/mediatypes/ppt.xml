@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/vnd.ms-powerpoint</mimetype>
     </mimetypes>
+    <svg>ppt</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/ppt.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/ppt.gif</icon>

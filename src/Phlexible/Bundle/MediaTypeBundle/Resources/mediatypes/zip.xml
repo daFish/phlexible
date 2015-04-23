@@ -9,6 +9,7 @@
         <mimetype>application/x-zip</mimetype>
         <mimetype>application/zip</mimetype>
     </mimetypes>
+    <svg>archive</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/zip.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/zip.gif</icon>

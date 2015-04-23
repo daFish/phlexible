@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>text/plain</mimetype>
     </mimetypes>
+    <svg>text</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/txt.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/txt.gif</icon>

@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mimetype>
     </mimetypes>
+    <svg>xls</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/xlsx.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/xlsx.gif</icon>

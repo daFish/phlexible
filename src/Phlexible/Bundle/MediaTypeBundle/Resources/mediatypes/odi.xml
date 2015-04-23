@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/vnd.oasis.opendocument.image</mimetype>
     </mimetypes>
+    <svg>document</svg>
     <icons>
     </icons>
 </documenttype>

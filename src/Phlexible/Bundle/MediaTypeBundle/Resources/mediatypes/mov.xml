@@ -9,6 +9,7 @@
         <mimetype>video/quicktime</mimetype>
         <mimetype>video/x-quicktime</mimetype>
     </mimetypes>
+    <svg>video</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/mov.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/mov.gif</icon>

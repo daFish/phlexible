@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>video/x-msvideo</mimetype>
     </mimetypes>
+    <svg>video</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/avi.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/avi.gif</icon>

@@ -9,6 +9,7 @@
         <mimetype>application/x-empty</mimetype>
         <mimetype>inode/x-empty</mimetype>
     </mimetypes>
+    <svg>document</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/_empty.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/_empty.gif</icon>

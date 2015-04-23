@@ -9,6 +9,7 @@
         <mimetype>text/csv</mimetype>
         <mimetype>application/csv</mimetype>
     </mimetypes>
+    <svg>text</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/csv.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/csv.gif</icon>

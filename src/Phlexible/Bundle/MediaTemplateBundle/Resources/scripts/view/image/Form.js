@@ -16,7 +16,7 @@ Ext.define('Phlexible.mediatemplate.view.image.Form', {
     methodHelpText: '_methodHelpText',
     widthText: '_widthText',
     widthHelpText: '_widthHelpText',
-    heighText: '_heightText',
+    heightText: '_heightText',
     heightHelpText: '_heightHelpText',
     selectScaleText: '_selectScaleText',
     scaleHelpText: '_scaleHelpText',

@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>video/x-matroska</mimetype>
     </mimetypes>
+    <svg>video</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/mkv.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/mkv.gif</icon>

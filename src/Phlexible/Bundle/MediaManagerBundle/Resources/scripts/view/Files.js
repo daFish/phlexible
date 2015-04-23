@@ -244,6 +244,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
                                         '<div {unselectableAttr} class="x-grid-cell-inner">',
                                             '<div class="extra-image">',
                                                 '<img width="256" height="256" src="<tpl if="values.record.data.cache._mm_extra">{[values.record.data.cache._mm_extra]}<tpl else>{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.record.data.id, templateKey: \"_mm_extra\", fileVersion: values.record.data.version, _dc: Ext.Date.format(new Date(), \"U\")})]}</tpl>" />',
+                                                //'<img width="256" height="256" src="/bundles/phlexiblemediamanager/svg/{[values.record.data.mediaCategory]}.svg" />',
                                             '</div>',
                                             '<div class="extra-text">',
                                                 '<div>{[Phlexible.mediamanager.Bullets.getWithTrailingSpace(values.record.data)]}{[columnValues.name]}</div>',

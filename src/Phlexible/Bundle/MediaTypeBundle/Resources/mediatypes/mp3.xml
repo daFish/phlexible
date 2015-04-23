@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>audio/mpeg</mimetype>
     </mimetypes>
+    <svg>audio</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/mp3.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/mp3.gif</icon>

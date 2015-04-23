@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/x-shockwave-flash</mimetype>
     </mimetypes>
+    <svg>document</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/swf.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/swf.gif</icon>

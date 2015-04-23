@@ -8,6 +8,7 @@
     <mimetypes>
         <mimetype>application/vnd.oasis.opendocument.graphics-template</mimetype>
     </mimetypes>
+    <svg>document</svg>
     <icons>
         <icon size="16">@PhlexibleMediaTypeBundle/Resources/public/mimetypes16/otg.gif</icon>
         <icon size="32">@PhlexibleMediaTypeBundle/Resources/public/mimetypes32/otg.gif</icon>
