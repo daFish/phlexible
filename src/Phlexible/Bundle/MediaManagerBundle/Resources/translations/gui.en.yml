@@ -9,7 +9,8 @@ Phlexible:
                 title: 'Recent files'
                 noRecentFilesText: 'No recent files.'
 
-            AttributesPanel:
+        view:
+            Attributes:
                 noFileSelectedText: 'No file selected'
                 attributesText: Attributes
                 noAttributesText: 'No attribute'
@@ -21,17 +22,17 @@ Phlexible:
                 noValuesText: No values
                 fillRequiredFieldsText: 'Please check your input.'
 
-            FileMetaGrid:
+            FileMetas:
                 title: 'File meta data'
                 emptyText: 'No values'
                 keyText: Key
                 valueText: Value
 
-            FilePreviewPanel:
+            FilePreview:
                 title: Preview
                 noPreviewAvailableText: 'No preview available'
 
-            FilesGrid:
+            Files:
                 title: Files
                 emptyText: 'No files present.'
                 nameText: Name
@@ -62,7 +63,7 @@ Phlexible:
                 hideFileWarningText: 'Do your really want to delete this file?'
                 xFilesText: '{0} files'
 
-            FileVersionsPanel:
+            FileVersions:
                 title: File versions
                 versionsText: File versions
                 downloadFileVersionText: 'Download file version'
@@ -70,10 +71,10 @@ Phlexible:
             FolderMeta:
                 title: 'Folder meta data'
 
-            FolderMetaGrid:
+            FolderMetas:
                 title: 'Folder meta data'
 
-            FolderPropertiesPanel:
+            FolderProperties:
                 title: Ordnereigenschaften
                 typeText: Type
                 pathText: Path
@@ -88,7 +89,7 @@ Phlexible:
                 modifiedAtText: 'Modified at'
                 modifiedByText: 'Modified by'
 
-            FolderTree:
+            Folders:
                 reloadText: 'Reload'
                 expandAllText: Expand
                 collapseAllText: Collapse
@@ -98,7 +99,7 @@ Phlexible:
                 folderRightsText: Rights
                 propertiesText: Properties
 
-            MainPanel:
+            Main:
                 title: Media
                 createFolderText: 'Create folder'
                 uploadText: 'Upload'

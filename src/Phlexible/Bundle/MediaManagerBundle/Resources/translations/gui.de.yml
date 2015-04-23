@@ -9,7 +9,8 @@ Phlexible:
                 title: 'Neueste Dateien'
                 noRecentFilesText: 'Keine neuen Dateien'
 
-            AttributesPanel:
+        view:
+            Attributes:
                 noFileSelectedText: 'Keine Datei ausgewählt'
                 attributesText: Attribute
                 noAttributesText: 'Keine Attribute'
@@ -21,17 +22,17 @@ Phlexible:
                 noValuesText: Keine Werte
                 fillRequiredFieldsText: 'Überprüfen Sie Ihre Eingaben.'
 
-            FileMetaGrid:
+            FileMetas:
                 title: 'Datei-Metadaten'
                 emptyText: 'Keine Werte'
                 keyText: Schlüssel
                 valueText: Wert
 
-            FilePreviewPanel:
+            FilePreview:
                 title: Vorschau
                 noPreviewAvailableText: 'Keine Vorschau verfügbar'
 
-            FilesGrid:
+            Files:
                 title: Dateien
                 emptyText: 'Keine Dateien vorhanden.'
                 nameText: Name
@@ -62,7 +63,7 @@ Phlexible:
                 hideFileWarningText: 'Möchten Sie diese Dateien wirklich verstecken?'
                 xFilesText: '{0} Dateien'
 
-            FileVersionsPanel:
+            FileVersions:
                 title: Dateiversionen
                 versionsText: Dateiversionen
                 downloadFileVersionText: 'Dateiversion herunterladen'
@@ -70,10 +71,10 @@ Phlexible:
             FolderMeta:
                 title: 'Ordner-Metadaten'
 
-            FolderMetaGrid:
+            FolderMetas:
                 title: 'Ordner-Metadaten'
 
-            FolderPropertiesPanel:
+            FolderProperties:
                 title: Ordnereigenschaften
                 typeText: Typ
                 pathText: Pfad
@@ -88,7 +89,7 @@ Phlexible:
                 modifiedAtText: 'Geändert an'
                 modifiedByText: 'Geändert von'
 
-            FolderTree:
+            Folders:
                 reloadText: 'Neu laden'
                 expandAllText: Ausklappen
                 collapseAllText: Einklappen
@@ -98,7 +99,7 @@ Phlexible:
                 folderRightsText: Rechte
                 propertiesText: Eigenschaften
 
-            MainPanel:
+            Main:
                 title: Medien
                 createFolderText: 'Neuer Ordner'
                 uploadText: 'Hochladen'

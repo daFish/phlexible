@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Serializer;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\MediaManagerBundle\Usage\FileUsageManager;
-use Phlexible\Bundle\MediaManagerBundle\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaManager\Usage\FileUsageManager;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
