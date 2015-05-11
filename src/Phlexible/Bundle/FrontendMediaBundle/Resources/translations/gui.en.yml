@@ -1,5 +1,8 @@
-frontendmedia:
-    file: File
-    asset_type: Asset type
-    documenttypes: Document types
-    view_mode: View mode
+Phlexible:
+    frontendmedia:
+        configuration:
+            FieldConfigurationFile:
+                title: Datei
+                assetTypeText: 'Asset type'
+                documenttypesText: 'Document types'
+                viewModeText: 'View mode'

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Component\MediaType\Loader;
 
+use Brainbits\Mime\InternetMediaType;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
@@ -37,7 +38,8 @@ class XmlLoader implements LoaderInterface
         $attrs = $xml->attributes();
         $mediaType
             ->setName((string) $attrs['key'])
-            ->setCategory((string) $xml->type);
+            ->setCategory((string) $xml->type)
+            ->setSvg((string) $xml->svg);
 
         if ($xml->titles->count()) {
             if ($xml->titles->title->count()) {
@@ -57,7 +59,8 @@ class XmlLoader implements LoaderInterface
                 foreach ($xml->mimetypes->mimetype as $mimetypeNode) {
                     $mimetype = (string) $mimetypeNode;
                     if ($mimetype) {
-                        $mediaType->addMimetype($mimetype);
+                        $internetMediaType = InternetMediaType::fromString($mimetype);
+                        $mediaType->addMimetype($internetMediaType);
                     }
                 }
             }

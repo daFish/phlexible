@@ -37,7 +37,6 @@ class GetConfigListener
     public function onGetConfig(GetConfigEvent $event)
     {
         $event->getConfig()
-            ->set('message.priorities', $this->messageManager->getPriorityNames())
             ->set('message.types', $this->messageManager->getTypeNames());
     }
 }

@@ -3,13 +3,13 @@
  */
 Ext.define('Phlexible.user.edit.Preferences', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-edit-preferences',
+    requires: [
+        'Phlexible.gui.model.KeyValue'
+    ],
+    xtype: 'user.edit-preferences',
 
-    title: '_preferences',
     iconCls: Phlexible.Icon.get('switch'),
-    bodyPadding: '5',
-    border: true,
-    hideMode: 'offsets',
+    bodyPadding: 10,
     defaultType: 'textfield',
     fieldDefaults:{
         labelWidth: 130,
@@ -32,7 +32,7 @@ Ext.define('Phlexible.user.edit.Preferences', {
             emptyText: this.systemDefaultText,
             store: Ext.create('Ext.data.Store', {
                 model: 'Phlexible.gui.model.KeyValue',
-                data: Phlexible.Config.get('resources.themes')
+                data: Phlexible.Config.get('set.themes')
             }),
             displayField: 'value',
             valueField: 'key',
@@ -45,8 +45,8 @@ Ext.define('Phlexible.user.edit.Preferences', {
         this.callParent(arguments);
     },
 
-    loadRecord: function(record) {
-        var properties = record.get('properties') || {};
+    loadUser: function(user) {
+        var properties = user.get('properties') || {};
 
         this.getForm().setValues({
             dateFormat: properties['preferences.dateFormat'],

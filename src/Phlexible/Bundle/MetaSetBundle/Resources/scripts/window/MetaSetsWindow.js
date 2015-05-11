@@ -214,7 +214,7 @@ Ext.define('Phlexible.metaset.window.MetaSetsWindow', {
             ids.push(record.get('id'));
         });
 
-        var params = Phlexible.clone(this.baseParams);
+        var params = Ext.clone(this.baseParams);
         params.ids = ids.join(',');
 
         Ext.Ajax.request({

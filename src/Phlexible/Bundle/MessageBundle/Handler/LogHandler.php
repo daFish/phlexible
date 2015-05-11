@@ -42,15 +42,14 @@ class LogHandler implements HandlerInterface
      */
     public function handle(Message $message)
     {
-        $priority = $message->getPriority();
-
+        $type    = $message->getType();
         $channel = $message->getChannel();
         $role    = $message->getRole();
         $subject = $message->getSubject();
         $body    = $message->getBody();
 
         // build message
-        $msg = "Message ($priority)";
+        $msg = "Message ($type)";
 
         if (!empty($channel)) {
             $msg .= ' in channel ' . $channel;
@@ -63,7 +62,7 @@ class LogHandler implements HandlerInterface
         $msg .= ': ' . $subject;
 
         // log message
-        if ($message->getType() === Message::TYPE_ERROR) {
+        if ($type >= Message::TYPE_ERROR) {
             if (!empty($body)) {
                 $msg .= PHP_EOL . $body;
             }

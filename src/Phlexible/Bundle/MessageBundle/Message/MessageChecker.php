@@ -89,24 +89,6 @@ class MessageChecker
                     }
                     break;
 
-                case Criteria::CRITERIUM_PRIORITY_IS:
-                    if ($message->getPriority() != $value) {
-                        continue 2;
-                    }
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_MIN:
-                    if ($message->getPriority() < $value) {
-                        continue 2;
-                    }
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_IN:
-                    if (!in_array($message->getPriority(), $value)) {
-                        continue 2;
-                    }
-                    break;
-
                 case Criteria::CRITERIUM_TYPE_IS:
                     if ($message->getType() != $value) {
                         continue 2;

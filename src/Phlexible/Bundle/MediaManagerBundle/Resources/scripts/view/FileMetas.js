@@ -76,14 +76,14 @@ Ext.define('Phlexible.mediamanager.view.FileMetas', {
                 dataIndex: 'required',
                 width: 30,
                 renderer: function (v) {
-                    return 1 == v ? Phlexible.inlineIcon('p-mediamanager-wizard_required-icon') : '';
+                    return 1 == v ? /*Phlexible.inlineIcon('p-mediamanager-wizard_required-icon')*/ 'wizard' : '';
                 }
             }
         ];
 
         Ext.each(Phlexible.Config.get('set.language.meta'), function (language) {
             this.columns.push({
-                header: this.valueText + ' ' + Phlexible.inlineIcon(language[2]) + ' ' + language [1],
+                header: this.valueText + ' ' + language[2] + ' ' + language [1],
                 dataIndex: 'value_' + language[0],
                 language: language[0],
                 flex: 1,

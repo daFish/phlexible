@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\SiterootBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Siteroot
@@ -42,9 +43,9 @@ class Siteroot
 
     /**
      * @var string
-     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="create_user", type="string", length=36, options={"fixed"=true})
      */
-    private $createUserId;
+    private $createUser;
 
     /**
      * @var \DateTime
@@ -54,9 +55,9 @@ class Siteroot
 
     /**
      * @var  string
-     * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="modify_user", type="string", length=36, options={"fixed"=true})
      */
-    private $modifyUserId;
+    private $modifyUser;
 
     /**
      * @var array
@@ -79,12 +80,14 @@ class Siteroot
     /**
      * @var Navigation[]|ArrayCollection
      * @ORM\OneToMany(targetEntity="Navigation", mappedBy="siteroot", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $navigations;
 
     /**
      * @var Url[]|ArrayCollection
      * @ORM\OneToMany(targetEntity="Url", mappedBy="siteroot", cascade={"persist", "remove"})
+     * @Assert\Valid
      */
     private $urls;
 
@@ -101,6 +104,8 @@ class Siteroot
 
         $this->navigations = new ArrayCollection();
         $this->urls = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
     }
 
     /**
@@ -132,13 +137,13 @@ class Siteroot
     }
 
     /**
-     * @param string $createUid
+     * @param string $createUser
      *
      * @return $this
      */
-    public function setCreateUserId($createUid)
+    public function setCreateUser($createUser)
     {
-        $this->createUserId = $createUid;
+        $this->createUser = $createUser;
 
         return $this;
     }
@@ -146,9 +151,9 @@ class Siteroot
     /**
      * @return string
      */
-    public function getCreateUserId()
+    public function getCreateUser()
     {
-        return $this->createUserId;
+        return $this->createUser;
     }
 
     /**
@@ -172,13 +177,13 @@ class Siteroot
     }
 
     /**
-     * @param string $modifyUid
+     * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUserId($modifyUid)
+    public function setModifyUser($modifyUser)
     {
-        $this->modifyUserId = $modifyUid;
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }
@@ -186,9 +191,9 @@ class Siteroot
     /**
      * @return string
      */
-    public function getModifyUserId()
+    public function getModifyUser()
     {
-        return $this->modifyUserId;
+        return $this->modifyUser;
     }
 
     /**

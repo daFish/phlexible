@@ -3,12 +3,9 @@
  */
 Ext.define('Phlexible.user.edit.Properties', {
     extend: 'Ext.grid.property.Grid',
-    alias: 'widget.user-edit-properties',
+    xtype: 'user.edit-properties',
 
-    title: '_properties',
     iconCls: Phlexible.Icon.get('property'),
-    border: true,
-    hideMode: 'offsets',
     viewConfig: {
         stripeRows: true,
         deferEmptyText: false
@@ -31,12 +28,14 @@ Ext.define('Phlexible.user.edit.Properties', {
             itemId: 'tbar',
             items: [{
                 xtype: 'button',
+                itemId: 'addBtn',
                 text: this.addPropertyText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.addProperty,
                 scope: this
             },{
                 xtype: 'button',
+                itemId: 'removeBtn',
                 text: this.removePropertyText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                 disabled: true,
@@ -48,9 +47,9 @@ Ext.define('Phlexible.user.edit.Properties', {
         this.on({
             selectionchange: function(grid, selected) {
                 if (selected.length) {
-                    this.getDockedComponent('tbar').getComponent(1).enable();
+                    this.getDockedComponent('tbar').getComponent('removeBtn').enable();
                 } else {
-                    this.getDockedComponent('tbar').getComponent(1).disable();
+                    this.getDockedComponent('tbar').getComponent('removeBtn').disable();
                 }
             },
             scope: this
@@ -86,8 +85,8 @@ Ext.define('Phlexible.user.edit.Properties', {
         this.setSource(source);
     },
 
-    loadRecord: function(record) {
-        this.setSource(record.get('properties'));
+    loadUser: function(user) {
+        this.setSource(user.get('properties'));
     },
 
     isValid: function() {

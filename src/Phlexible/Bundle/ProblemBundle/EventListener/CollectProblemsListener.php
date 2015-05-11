@@ -42,6 +42,7 @@ class CollectProblemsListener
         if (!$lastRun) {
             $problem = new Problem();
             $problem
+                ->setId('problem_check_no_run')
                 ->setSeverity(Problem::SEVERITY_WARNING)
                 ->setMessage('Cached problems check was never run.')
                 ->setHint('Run cached problem check command')
@@ -53,6 +54,7 @@ class CollectProblemsListener
         } elseif (time() - strtotime($lastRun) > 86400) {
             $problem = new Problem();
             $problem
+                ->setId('problem_check_long_ago')
                 ->setSeverity(Problem::SEVERITY_WARNING)
                 ->setMessage('Cached problems last check run was on "' . $lastRun . '", more than 24h ago.')
                 ->setHint('Install a cronjob for running the cached problem check command')

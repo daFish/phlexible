@@ -14,8 +14,8 @@
     <link id="theme" href="{{ asset("/resources/css/xtheme-" ~ theme ~ ".css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
     {% endif %}
     #}
-    <link href="{{ path("asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
-    <!--link href="{{ path("asset_icons") }}" media="screen" rel="stylesheet" type="text/css"/-->
+    <link href="{{ path("phlexible_gui_asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
+    <!--link href="{{ path("phlexible_gui_asset_icons") }}" media="screen" rel="stylesheet" type="text/css"/-->
     <style type="text/css">
         #loading {
             position: absolute;
@@ -71,15 +71,15 @@
         basePath: "{{ app.request.basePath }}/admin",
         apikey: "swentz",
         bundlePath: "{{ app.request.basePath }}/bundles",
-        config: {{ render(path("gui_config"))|raw }},
-        menu: {{ render(path("gui_menu"))|raw }}
+        config: {{ render(path("phlexible_gui_config"))|raw }},
+        menu: {{ render(path("phlexible_gui_menu"))|raw }}
     };
     //]]>
 </script>
 {{ scripts|raw }}
-<script type="text/javascript" src="{{ path("gui_routes") }}"></script>
-<script type="text/javascript" src="{{ path("asset_scripts") }}"></script>
-<script type="text/javascript" src="{{ path("asset_translations", {language: language}) }}"></script>
+<script type="text/javascript" src="{{ path("phlexible_gui_routes") }}"></script>
+<script type="text/javascript" src="{{ path("phlexible_gui_asset_scripts") }}"></script>
+<script type="text/javascript" src="{{ path("phlexible_gui_asset_translations", {language: language}) }}"></script>
 <script type="text/javascript">
     //<![CDATA[
     Ext.application({

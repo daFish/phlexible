@@ -1,8 +1,8 @@
 Ext.define('Phlexible.siteroot.view.List', {
-    extend: 'Ext.grid.GridPanel',
-    requires: ['Phlexible.siteroot.model.Siteroot'],
-
+    extend: 'Ext.grid.Panel',
     xtype: 'siteroot.list',
+
+    iconCls: Phlexible.Icon.get('globe'),
 
     idText: '_idText',
     siterootsText: '_siterootsText',
@@ -15,8 +15,8 @@ Ext.define('Phlexible.siteroot.view.List', {
      * Fires after the active Siteroot has been changed
      *
      * @event siterootChange
-     * @param {Number} siteroot_id The ID of the selected ElementType.
-     * @param {String} siteriit_title The Title of the selected ElementType.
+     * @param {Number} siteroot_id The ID of the selected siteroot.
+     * @param {String} siteriit_title The Title of the selected siteroot.
      */
 
     /**
@@ -29,28 +29,11 @@ Ext.define('Phlexible.siteroot.view.List', {
      *
      */
     initComponent: function () {
-        this.initMyStore();
         this.initMyColumns();
         this.initMyDockedItems();
         this.initMyListeners();
 
         this.callParent(arguments);
-    },
-
-    initMyStore: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroot.model.Siteroot',
-            autoLoad: true,
-            remoteSort: true,
-            sorters: [{
-                property: 'title',
-                direction: 'ASC'
-            }],
-            listeners: {
-                load: this.onLoadStore,
-                scope: this
-            }
-        });
     },
 
     initMyColumns: function() {
@@ -98,7 +81,7 @@ Ext.define('Phlexible.siteroot.view.List', {
                 handler: this.onAddSiteroot,
                 scope: this
             }]
-        }]
+        }];
     },
 
     initMyListeners: function() {

@@ -38,6 +38,7 @@ Ext.define('Phlexible.gui.util.Icon', {
         this.ADD     = 'plus-circle';
         this.DELETE  = 'minus-circle';
         this.EDIT    = 'pencil';
+        this.ERROR   = 'exclamation-circle';
         this.FILTER  = 'funnel';
         this.NOK     = 'cross-circle';
         this.OK      = 'tick-circle';

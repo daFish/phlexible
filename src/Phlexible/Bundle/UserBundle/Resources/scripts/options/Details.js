@@ -3,9 +3,8 @@
  */
 Ext.define('Phlexible.user.options.Details', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-options-details',
+    xtype: 'user.options-details',
 
-    title: '_details',
     iconCls: Phlexible.Icon.get('card-address'),
     bodyPadding: '15',
     border: true,

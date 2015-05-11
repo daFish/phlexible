@@ -8,6 +8,8 @@
 
 namespace Phlexible\Component\MediaType\Model;
 
+use Brainbits\Mime\InternetMediaType;
+
 /**
  * Media type
  *
@@ -26,12 +28,17 @@ class MediaType
     private $category;
 
     /**
+     * @var string
+     */
+    private $svg;
+
+    /**
      * @var array
      */
     private $titles = [];
 
     /**
-     * @var array
+     * @var InternetMediaType[]
      */
     private $mimetypes = [];
 
@@ -76,6 +83,26 @@ class MediaType
     public function setCategory($category)
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSvg()
+    {
+        return $this->svg;
+    }
+
+    /**
+     * @param string $svg
+     *
+     * @return $this
+     */
+    public function setSvg($svg)
+    {
+        $this->svg = $svg;
 
         return $this;
     }
@@ -132,7 +159,7 @@ class MediaType
     }
 
     /**
-     * @return array
+     * @return InternetMediaType[]
      */
     public function getMimetypes()
     {
@@ -140,7 +167,7 @@ class MediaType
     }
 
     /**
-     * @param array $mimetypes
+     * @param InternetMediaType[] $mimetypes
      *
      * @return $this
      */
@@ -152,9 +179,9 @@ class MediaType
     }
 
     /**
-     * @param string $mimetype
+     * @param InternetMediaType $mimetype
      */
-    public function addMimetype($mimetype)
+    public function addMimetype(InternetMediaType $mimetype)
     {
         $this->mimetypes[] = $mimetype;
     }
@@ -168,7 +195,7 @@ class MediaType
             return reset($this->mimetypes);
         }
 
-        return 'application/octet-stream';
+        return InternetMediaType::fromString('application/octet-stream');
     }
 
     /**

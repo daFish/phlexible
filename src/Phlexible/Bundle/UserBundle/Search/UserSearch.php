@@ -54,7 +54,16 @@ class UserSearch implements SearchProviderInterface
      */
     public function search($query)
     {
-        $users = $this->userManager->search($query);
+        $criteria = $this->userManager->createCriteria();
+        $criteria->where(
+            $criteria->expr()->orX(
+                $criteria->expr()->contains('firstname', $query),
+                $criteria->expr()->contains('lastname', $query),
+                $criteria->expr()->contains('username', $query),
+                $criteria->expr()->contains('email', $query)
+            )
+        );
+        $users = $this->userManager->query($criteria);
 
         $createUser = new User();
         $createUser->setUsername('(unknown)');

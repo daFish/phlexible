@@ -16,7 +16,6 @@ services:
     phlexible_media_manager.file_serializer:
         class: Phlexible\Bundle\MediaManagerBundle\Serializer\FileSerializer
         arguments:
-            - @phlexible_user.user_manager
             - @phlexible_media_type.media_type_manager
             - @phlexible_media_cache.cache_manager
             - @phlexible_media_manager.file_usage_manager
@@ -25,7 +24,6 @@ services:
     phlexible_media_manager.folder_serializer:
         class: Phlexible\Bundle\MediaManagerBundle\Serializer\FolderSerializer
         arguments:
-            - @phlexible_user.user_manager
             - @phlexible_media_manager.folder_usage_manager
 
     phlexible_media_manager.delete_file_checker:
@@ -111,12 +109,6 @@ services:
             - %phlexible_media_manager.delete_policy%
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
-
-    phlexible_media_manager.listener.apply_successor:
-        class: Phlexible\Bundle\MediaManagerBundle\EventListener\ApplySuccessorListener
-        arguments: [@doctrine.dbal.default_connection]
-        tags:
-            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
     # portlets
     phlexible_media_manager.portlet.latest_files:

@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\UserBundle\Model;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface as BaseUserManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -82,11 +81,14 @@ interface UserManagerInterface extends BaseUserManagerInterface
     public function createCriteria();
 
     /**
-     * @param Criteria $criteria
+     * @param Criteria   $criteria
+     * @param array|null $sort
+     * @param int|null   $limit
+     * @param int|null   $offset
      *
      * @return \Countable|\Iterator
      */
-    public function query(Criteria $criteria);
+    public function query(Criteria $criteria, array $sort = null, $limit = null, $offset = null);
 
     /**
      * @return string
@@ -107,10 +109,4 @@ interface UserManagerInterface extends BaseUserManagerInterface
      * @return UserInterface[]
      */
     public function findLoggedInUsers();
-
-    /**
-     * @param UserInterface $user
-     * @param UserInterface $successorUser
-     */
-    public function deleteUserWithSuccessor(UserInterface $user, UserInterface $successorUser);
 }

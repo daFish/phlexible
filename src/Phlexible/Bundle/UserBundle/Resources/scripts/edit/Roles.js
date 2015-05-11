@@ -3,12 +3,9 @@
  */
 Ext.define('Phlexible.user.edit.Roles', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.user-edit-roles',
+    xtype: 'user.edit-roles',
 
-    title: '_roles',
     iconCls: Phlexible.Icon.get('user-business'),
-    border: true,
-    hideMode: 'offsets',
     viewConfig: {
         stripeRows: true,
         deferEmptyText: false
@@ -26,23 +23,19 @@ Ext.define('Phlexible.user.edit.Roles', {
             model: 'Phlexible.user.model.UserRole',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_user_get_roles'),
+                url: Phlexible.Router.generate('phlexible_api_user_get_roles'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
                     rootProperty: 'roles',
-                    idProperty: 'id',
                     totalProperty: 'count'
-                },
-                extraParams: {
-                    id: null
                 }
             },
             sorters: [{
                 property: 'role',
                 direction: 'ASC'
             }],
-            autoLoad: true
+            autoLoad: this.mode !== 'edit'
         });
 
         this.columns = [{
@@ -61,9 +54,11 @@ Ext.define('Phlexible.user.edit.Roles', {
         this.callParent(arguments);
     },
 
-    loadRecord: function(record) {
-        this.getStore().getProxy().url = Phlexible.Router.generate('phlexible_user_get_user_roles', {userId: record.get('id')});
-        this.getStore().load();
+    loadUser: function(user) {
+        if (this.mode === 'edit') {
+            this.getStore().getProxy().setUrl(Phlexible.Router.generate('phlexible_api_user_get_user_roles', {userId: user.get('id')}));
+            this.getStore().load();
+        }
     },
 
     isValid: function() {

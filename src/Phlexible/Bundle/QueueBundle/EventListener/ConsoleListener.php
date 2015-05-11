@@ -63,6 +63,7 @@ class ConsoleListener implements EventSubscriberInterface
         }
 
         $job = $this->jobManager->find($this->jobId);
+        $job->setMemoryUsage(memory_get_peak_usage());
         $job->setStackTrace(FlattenException::create($event->getException()));
 
         $this->jobManager->updateJob($job);

@@ -11,7 +11,7 @@ Ext.define('Phlexible.mediatemplate.view.Main', {
     xtype: 'mediatemplate.main',
     controller: 'mediatemplate.main',
 
-    iconCls: Phlexible.Icon.get('image-select'),
+    iconCls: Phlexible.Icon.get('image-resize'),
     layout: 'border',
     border: false,
 
@@ -31,7 +31,6 @@ Ext.define('Phlexible.mediatemplate.view.Main', {
             itemId: 'list',
             width: 200,
             margin: '5 0 5 5',
-            header: false,
             listeners: {
                 loadTemplate: 'onLoadTemplate',
                 createTemplate: 'onCreateTemplate'
@@ -45,6 +44,7 @@ Ext.define('Phlexible.mediatemplate.view.Main', {
             items: [{
                 xtype: 'mediatemplate.image.main',
                 itemId: 'image',
+                header: false,
                 border: false,
                 listeners: {
                     saveTemplate: 'onSaveTemplate'
@@ -52,6 +52,7 @@ Ext.define('Phlexible.mediatemplate.view.Main', {
             }, {
                 xtype: 'mediatemplate.video.main',
                 itemId: 'video',
+                header: false,
                 border: false,
                 listeners: {
                     saveTemplate: 'onSaveTemplate'
@@ -59,6 +60,7 @@ Ext.define('Phlexible.mediatemplate.view.Main', {
             }, {
                 xtype: 'mediatemplate.audio.main',
                 itemId: 'audio',
+                header: false,
                 border: false,
                 listeners: {
                     saveTemplate: 'onSaveTemplate'

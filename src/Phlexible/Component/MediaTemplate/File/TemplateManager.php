@@ -8,7 +8,6 @@
 
 namespace Phlexible\Component\MediaTemplate\File;
 
-use Phlexible\Component\MediaTemplate\Exception\NotFoundException;
 use Phlexible\Component\MediaTemplate\Model\TemplateCollection;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
@@ -63,17 +62,10 @@ class TemplateManager implements TemplateManagerInterface
      * @param string $key
      *
      * @return TemplateInterface
-     * @throws NotFoundException
      */
     public function find($key)
     {
-        $template = $this->getCollection()->get($key);
-
-        if ($template !== null) {
-            return $template;
-        }
-
-        throw new NotFoundException("Media template $key not found.");
+        return $this->getCollection()->get($key);
     }
 
     /**

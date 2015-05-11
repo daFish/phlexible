@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\SiterootBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Siteroot url
@@ -31,30 +32,36 @@ class Url
     /**
      * @var bool
      * @ORM\Column(name="is_global_default", type="boolean")
+     * @Assert\Type(type="bool")
      */
     private $globalDefault = false;
 
     /**
      * @var bool
      * @ORM\Column(name="is_default", type="boolean")
+     * @Assert\Type(type="bool")
      */
     private $default;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $hostname;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=2, options={"fixed"=true})
+     * @Assert\NotBlank
      */
     private $language;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Type(type="int")
      */
     private $target;
 

@@ -20,10 +20,8 @@ class TeasersMessage extends Message
     /**
      * {@inheritdoc}
      */
-    public function getDefaults()
+    public static function getDefaultChannel()
     {
-        return [
-            'channel' => 'teaser',
-        ];
+        return 'teaser';
     }
 }

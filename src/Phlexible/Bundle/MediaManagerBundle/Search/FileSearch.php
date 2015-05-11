@@ -97,16 +97,10 @@ class FileSearch implements SearchProviderInterface
 
             $folderPath = $folders[$file->getFolderId()]->getIdPath();
 
-            try {
-                $createUser = $this->userManager->find($file->getCreateUserId());
-            } catch (\Exception $e) {
-                $createUser = $this->userManager->getSystemUser();
-            }
-
             $results[] = new SearchResult(
                 $file->getId(),
                 $file->getName(),
-                $createUser->getDisplayname(),
+                $file->getCreateUser(),
                 $file->getCreatedAt(),
                 '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager File Search',

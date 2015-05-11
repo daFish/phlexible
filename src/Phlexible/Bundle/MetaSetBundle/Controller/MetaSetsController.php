@@ -8,17 +8,20 @@
 
 namespace Phlexible\Bundle\MetaSetBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Bundle\MetaSetBundle\Form\Type\MetaSetType;
+use Phlexible\Component\MetaSet\Model\MetaSet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Sets controller
@@ -26,8 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @Security("is_granted('ROLE_META_SETS')")
- * @Prefix("/metaset")
- * @NamePrefix("phlexible_metaset_")
+ * @Rest\NamePrefix("phlexible_api_metaset_")
  */
 class MetaSetsController extends FOSRestController
 {
@@ -36,19 +38,143 @@ class MetaSetsController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of MetaSet",
+     *   section="metaset",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful"
+     *   }
+     * )
      */
     public function getMetasetsAction()
     {
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSets = $metaSetManager->findAll();
 
-        return $this->handleView($this->view(
-            array(
-                'metasets' => array_values($metaSets),
-                'count'    => count($metaSets)
-            )
-        ));
+        return array(
+            'metasets' => array_values($metaSets),
+            'count'    => count($metaSets)
+        );
+    }
+
+    /**
+     * Get meta set
+     *
+     * @param string $metasetId
+     *
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a MetaSet",
+     *   section="metaset",
+     *   output="Phlexible\Component\MetaSetComponent\Model\MetaSet",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when job was not found"
+     *   }
+     * )
+     */
+    public function getMetasetAction($metasetId)
+    {
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $metaSet = $metaSetManager->find($metasetId);
+
+        if (!$metaSet instanceof MetaSet) {
+            throw new NotFoundHttpException('Meta set not found');
+        }
+
+        return array(
+            'metaset' => $metaSet
+        );
+    }
+
+    /**
+     * Get meta sets
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @ApiDoc(
+     *   description="Create a MetaSet",
+     *   section="metaset",
+     *   input="Phlexible\Bundle\MetaSetBundle\Form\Type\MetaSetType",
+     *   statusCodes={
+     *     201="Returned when metaset was created",
+     *     204="Returned when metaset was updated",
+     *     404="Returned when metaset was not found"
+     *   }
+     * )
+     */
+    public function postMetasetsAction(Request $request)
+    {
+        return $this->processForm($request, new MetaSet());
+    }
+
+    /**
+     * Get meta set
+     *
+     * @param Request $request
+     * @param string  $metasetId
+     *
+     * @return Response
+     *
+     * @ApiDoc(
+     *   description="Update a MetaSet",
+     *   section="metaset",
+     *   input="Phlexible\Bundle\MetaSetBundle\Form\Type\MetaSetType",
+     *   statusCodes={
+     *     201="Returned when metaset was created",
+     *     204="Returned when metaset was updated",
+     *     404="Returned when metaset was not found"
+     *   }
+     * )
+     */
+    public function putMetasetAction(Request $request, $metasetId)
+    {
+        $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+        $metaSet = $metaSetManager->find($metasetId);
+
+        return $this->processForm($request, $metaSet);
+    }
+
+    /**
+     * @param Request $request
+     * @param MetaSet $metaSet
+     *
+     * @return View|Response
+     */
+    private function processForm(Request $request, MetaSet $metaSet)
+    {
+        $statusCode = !$metaSet->getId() ? 201 : 204;
+
+        $form = $this->createForm(new MetaSetType(), $metaSet);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
+            $metaSetManager->updateMetaset($metaSet);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set('Location',
+                    $this->generateUrl(
+                        'phlexible_api_metaset_get_metaset', array('metasetId' => $metaSet->getId()),
+                        true // absolute
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
     }
 
     /**

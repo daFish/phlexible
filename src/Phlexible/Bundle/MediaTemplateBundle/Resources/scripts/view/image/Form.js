@@ -2,7 +2,7 @@ Ext.define('Phlexible.mediatemplate.view.image.Form', {
     extend: 'Ext.form.FormPanel',
     xtype: 'mediatemplate.image.form',
 
-//    labelWidth: 80,
+    iconCls: Phlexible.mediatemplate.TemplateIcons.image,
     labelAlign: 'top',
     disabled: true,
     layout: 'accordion',
@@ -484,7 +484,7 @@ Ext.define('Phlexible.mediatemplate.view.image.Form', {
     doPreview: function () {
         values = this.getSafeValues();
 
-        values.template = this.template_key;
+        values.template = this.templateKey;
         values.preview_image = this.previewFile;
         values.debug = this.debugPreview;
 
@@ -638,7 +638,9 @@ Ext.define('Phlexible.mediatemplate.view.image.Form', {
     },
 
     loadParameters: function (key, parameters) {
-        this.template_key = key;
+        this.templateKey = key;
+
+        this.setTitle(key);
 
         this.getForm().reset();
         this.getForm().setValues(parameters);
@@ -677,7 +679,7 @@ Ext.define('Phlexible.mediatemplate.view.image.Form', {
             this.getForm().submit({
                 url: Phlexible.Router.generate('mediatemplates_form_save'),
                 params: {
-                    template_key: this.template_key
+                    templateKey: this.templateKey
                 },
                 success: function (form, action) {
                     var data = Ext.decode(action.response.responseText);

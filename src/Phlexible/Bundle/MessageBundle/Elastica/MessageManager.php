@@ -65,10 +65,6 @@ class MessageManager implements MessageManagerInterface
         $query = new Query();
         $query->setSize(0);
 
-        $priorityFacet = new \Elastica\Facet\Terms('priorities');
-        $priorityFacet->setField('priority');
-        $query->addFacet($priorityFacet);
-
         $typeFacet = new \Elastica\Facet\Terms('types');
         $typeFacet->setField('type');
         $query->addFacet($typeFacet);
@@ -84,7 +80,6 @@ class MessageManager implements MessageManagerInterface
         $resultSet = $this->getType()->search($query);
         $facets = $resultSet->getFacets();
         $filterSets = [
-            'priorities' => array_column($facets['priorities']['terms'], 'term'),
             'types'      => array_column($facets['types']['terms'], 'term'),
             'channels'   => array_column($facets['channels']['terms'], 'term'),
             'roles'      => array_column($facets['roles']['terms'], 'term'),
@@ -225,19 +220,6 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getPriorityNames()
-    {
-        return [
-            0 => 'low',
-            1 => 'normal',
-            2 => 'high',
-            3 => 'urgent',
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getTypeNames()
     {
         return [
@@ -257,7 +239,6 @@ class MessageManager implements MessageManagerInterface
                 'id'         => $message->getId(),
                 'subject'    => $message->getSubject(),
                 'body'       => $message->getBody(),
-                'priority'   => $message->getPriority(),
                 'type'       => $message->getType(),
                 'channel'    => $message->getChannel(),
                 'role'       => $message->getRole(),
@@ -304,7 +285,6 @@ class MessageManager implements MessageManagerInterface
         $message = Message::create(
             $row['subject'],
             $row['body'],
-            $row['priority'],
             $row['type'],
             $row['channel'],
             $row['role'],
@@ -362,22 +342,6 @@ class MessageManager implements MessageManagerInterface
                     $andFilter->addFilter(
                         new BoolNot(new \Elastica\Filter\Query(new Wildcard('body', '*' . $value . '*')))
                     );
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_IS:
-                    $andFilter->addFilter(new Term(['priority', $value]));
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_MIN:
-                    $andFilter->addFilter(new Range('priority', ['gte' => $value]));
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_IN:
-                    $orFilter = new BoolOr();
-                    foreach (explode(',', $value) as $priority) {
-                        $orFilter->addFilter(new Term(['priority' => $priority]));
-                    }
-                    $andFilter->addFilter($orFilter);
                     break;
 
                 case Criteria::CRITERIUM_TYPE_IS:

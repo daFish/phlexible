@@ -32,8 +32,6 @@ class DebugHandler implements HandlerInterface
             'body'         => $message->getBody(),
             'type'         => $message->getType(),
             'typeName'     => $message->getType(),
-            'priority'     => $message->getPriority(),
-            'priorityName' => $message->getPriority(),
             'channel'      => $message->getChannel(),
             'role'         => $message->getRole(),
             'user'         => $message->getUser(),

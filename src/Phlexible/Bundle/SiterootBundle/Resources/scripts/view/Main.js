@@ -1,6 +1,7 @@
 Ext.define('Phlexible.siteroot.view.Main', {
     extend: 'Ext.panel.Panel',
     requires: [
+        'Phlexible.siteroot.model.Siteroot',
         'Phlexible.siteroot.view.List',
         'Phlexible.siteroot.view.Navigations',
         'Phlexible.siteroot.view.Properties',
@@ -8,14 +9,27 @@ Ext.define('Phlexible.siteroot.view.Main', {
         'Phlexible.siteroot.view.Titles',
         'Phlexible.siteroot.view.Urls'
     ],
-
     xtype: 'siteroot.main',
 
     iconCls: Phlexible.Icon.get('globe'),
     cls: 'p-siteroot-main',
     border: false,
     layout: 'border',
+    referenceHolder: true,
+    viewModel: {
+        stores: {
+            siteroots: {
+                model: 'Phlexible.siteroot.model.Siteroot',
+                autoLoad: true,
+                sorters: [{
+                    property: 'title',
+                    direction: 'ASC'
+                }]
+            }
+        }
+    },
 
+    siterootText: '_siterootText',
     saveSiterootDataText: '_saveSiterootDataText',
     checkAccordionsForErrorsText: '_checkAccordionsForErrorsText',
 
@@ -23,12 +37,12 @@ Ext.define('Phlexible.siteroot.view.Main', {
      * Fires after the active Siteroot has been changed
      *
      * @event siterootChange
-     * @param {Number} siterootId The ID of the selected ElementType.
-     * @param {String} siterootTitle The Title of the selected ElementType.
+     * @param {Number} siterootId The ID of the selected siteroot.
+     * @param {String} siterootTitle The Title of the selected siteroot.
      */
 
     /**
-     *
+     * @private
      */
     initComponent: function () {
         this.initMyItems();
@@ -40,12 +54,16 @@ Ext.define('Phlexible.siteroot.view.Main', {
         this.items = [{
             xtype: 'siteroot.list',
             itemId: 'list',
+            reference: 'list',
             region: 'west',
             width: 250,
             minWidth: 200,
             maxWidth: 350,
             split: false,
             padding: '5 0 5 5',
+            bind: {
+                store: '{siteroots}'
+            },
             listeners: {
                 loadSiteroot: this.onLoadSiteroot,
                 siterootDataChange: this.onSiterootDataChange,
@@ -55,10 +73,13 @@ Ext.define('Phlexible.siteroot.view.Main', {
             xtype: 'panel',
             itemId: 'accordions',
             region: 'center',
-            title: 'no_siteroot_loaded',
+            title: this.siterootText,
             layout: 'accordion',
-            disabled: true,
             padding: 5,
+            bind: {
+                title: '{list.selection.title}',
+                disabled: '{!list.selection}'
+            },
             tbar: [
                 {
                     text: this.saveSiterootDataText,
@@ -69,7 +90,10 @@ Ext.define('Phlexible.siteroot.view.Main', {
             ],
             items: [
                 {
-                    xtype: 'siteroot.urls'
+                    xtype: 'siteroot.urls',
+                    bind: {
+                        store: '{list.selection.urls}'
+                    }
                 },
                 {
                     xtype: 'siteroot.titles'
@@ -78,10 +102,16 @@ Ext.define('Phlexible.siteroot.view.Main', {
                     xtype: 'siteroot.properties'
                 },
                 {
-                    xtype: 'siteroot.specialtids'
+                    xtype: 'siteroot.specialtids',
+                    bind: {
+                        store: '{list.selection.specialTids}'
+                    }
                 },
                 {
-                    xtype: 'siteroot.navigations'
+                    xtype: 'siteroot.navigations',
+                    bind: {
+                        store: '{list.selection.navigations}'
+                    }
                 }
             ]
         }];
@@ -100,6 +130,7 @@ Ext.define('Phlexible.siteroot.view.Main', {
      * @param {Phlexible.siteroot.model.Siteroot} siteroot
      */
     onLoadSiteroot: function (siteroot) {
+        return;
         this.getComponent('list').enable();
 
         this.siteroot = siteroot;

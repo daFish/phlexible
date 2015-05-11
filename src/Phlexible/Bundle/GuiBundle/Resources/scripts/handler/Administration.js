@@ -3,4 +3,4 @@ Ext.define('Phlexible.gui.handler.Administration', {
 
     text: '_administration',
     iconCls: Phlexible.Icon.get('wrench-screwdriver')
-})
+});

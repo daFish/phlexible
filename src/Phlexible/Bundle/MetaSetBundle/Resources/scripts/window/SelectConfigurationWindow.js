@@ -47,7 +47,7 @@ Ext.define('Phlexible.metaset.window.SelectConfigurationWindow', {
                 header: this.valueText,
                 dataIndex: 'value',
                 flex: 1,
-                editor: 'textfield'
+                editor: {xtype: 'textfield'}
             }, {
                 xtype: 'actioncolumn',
                 header: this.actionsText,
@@ -61,6 +61,10 @@ Ext.define('Phlexible.metaset.window.SelectConfigurationWindow', {
                     }
                 ]
             }],
+            plugins: {
+                ptype: 'cellediting',
+                clicksToEdit: 1
+            },
             dockedItems: [{
                 xtype: 'toolbar',
                 dock: 'top',

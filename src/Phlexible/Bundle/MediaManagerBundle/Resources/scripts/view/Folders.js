@@ -133,7 +133,7 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
                 itemId: 'nameBtn',
                 iconCls: Phlexible.Icon.get('folder'),
                 text: '.',
-                canActivate: false
+                focusable: false
             },
             '-',
             {

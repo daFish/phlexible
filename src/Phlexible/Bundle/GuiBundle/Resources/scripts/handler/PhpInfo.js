@@ -3,6 +3,6 @@ Ext.define('Phlexible.gui.handler.PhpInfo', {
     requires: ['Phlexible.gui.window.PhpInfoWindow'],
 
     text: 'PHP Info',
-    iconCls: 'p-gui-php-icon',
+    iconCls: 'p-icon-php',
     name: 'Phlexible.gui.window.PhpInfoWindow'
 });

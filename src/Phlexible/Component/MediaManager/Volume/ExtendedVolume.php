@@ -24,12 +24,12 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
     /**
      * {@inheritdoc}
      */
-    public function setFolderMetasets(ExtendedFolderInterface $folder, array $metasets, $userId)
+    public function setFolderMetasets(ExtendedFolderInterface $folder, array $metasets, $user)
     {
         $folder
             ->setMetasets($metasets)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
         $event = new FolderEvent($folder);
         if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FOLDER_METASETS, $event)->isPropagationStopped()) {

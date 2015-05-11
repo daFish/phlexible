@@ -20,11 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
-    const PRIORITY_LOW = 0;
-    const PRIORITY_NORMAL = 1;
-    const PRIORITY_HIGH = 2;
-    const PRIORITY_URGENT = 3;
-
     const TYPE_INFO = 0;
     const TYPE_ERROR = 1;
 
@@ -47,12 +42,6 @@ class Message
      * @ORM\Column(type="text", nullable=true)
      */
     private $body;
-
-    /**
-     * @var int
-     * @ORM\Column(type="smallint", length=1)
-     */
-    private $priority = self::PRIORITY_NORMAL;
 
     /**
      * @var int
@@ -87,18 +76,16 @@ class Message
     /**
      * @param string    $subject
      * @param string    $body
-     * @param int       $priority
      * @param int       $type
      * @param string    $channel
      * @param string    $role
      * @param string    $user
      * @param \DateTime $createdAt
      */
-    public function __construct($subject, $body, $priority, $type, $channel, $role, $user, \DateTime $createdAt)
+    public function __construct($subject, $body, $type, $channel, $role, $user, \DateTime $createdAt)
     {
         $this->subject = $subject;
         $this->body = $body;
-        $this->priority = $priority;
         $this->type = $type;
         $this->channel = $channel;
         $this->role = $role;
@@ -120,14 +107,6 @@ class Message
     public static function getDefaultBody()
     {
         return null;
-    }
-
-    /**
-     * @return int|null
-     */
-    public static function getDefaultPriority()
-    {
-        return self::PRIORITY_NORMAL;
     }
 
     /**
@@ -173,7 +152,6 @@ class Message
     /**
      * @param string    $subject
      * @param string    $body
-     * @param int       $priority
      * @param int       $type
      * @param string    $channel
      * @param string    $role
@@ -185,7 +163,6 @@ class Message
     public static function create(
         $subject = null,
         $body = null,
-        $priority = null,
         $type = null,
         $channel = null,
         $role = null,
@@ -198,10 +175,6 @@ class Message
 
         if ($body === null) {
             $body = static::getDefaultBody();
-        }
-
-        if ($priority === null) {
-            $priority = static::getDefaultPriority();
         }
 
         if ($type === null) {
@@ -225,7 +198,7 @@ class Message
         }
 
         /* @var $message Message */
-        $message = new self($subject, $body, $priority, $type, $channel, $role, $user, $createdAt);
+        $message = new self($subject, $body, $type, $channel, $role, $user, $createdAt);
 
         return $message;
     }
@@ -252,14 +225,6 @@ class Message
     public function getBody()
     {
         return $this->body;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPriority()
-    {
-        return $this->priority;
     }
 
     /**

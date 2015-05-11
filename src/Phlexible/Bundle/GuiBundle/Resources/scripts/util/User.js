@@ -14,7 +14,7 @@ Ext.define('Phlexible.gui.util.User', {
         email: '',
         emailHash: '',
         password: '',
-        impersonated: false,
+        previousUsername: null,
         roles: [],
         options: {},
         properties: {}
@@ -38,7 +38,7 @@ Ext.define('Phlexible.gui.util.User', {
      * @return {Boolean}
      */
     isImpersonated: function() {
-        return !!this.getImpersonated();
+        return !!this.getPreviousUsername();
     },
 
     /**
@@ -196,7 +196,7 @@ Ext.define('Phlexible.gui.util.User', {
                 if (this.changes[key]) {
                     this.changes['property#' + key].new = value;
                 } else {
-                    this.changes['property#' + key] = {old: this.properties[key], new: value}
+                    this.changes['property#' + key] = {old: this.properties[key], new: value};
                 }
             }
         }, this);

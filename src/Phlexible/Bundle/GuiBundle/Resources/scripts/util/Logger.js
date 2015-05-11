@@ -113,13 +113,17 @@ Ext.define('Phlexible.gui.util.Logger', {
             case 'error':
                 console.error(ts, line);
                 break;
-        }
 
+            default:
+                console.log(ts, line);
+                break;
+        }
     },
 
     out: function() {
-        this.logs.each(function(r) {
-        })
+        this.logs.each(function(record) {
+            this.logItem(record);
+        });
     },
 
     /**

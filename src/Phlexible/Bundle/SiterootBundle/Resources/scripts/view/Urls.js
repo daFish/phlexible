@@ -1,11 +1,12 @@
 Ext.define('Phlexible.siteroot.view.Urls', {
-    extend: 'Ext.grid.GridPanel',
+    extend: 'Ext.grid.Panel',
 
     xtype: 'siteroot.urls',
 
     border: false,
     emptyText: '_emptyText',
 
+    idText: '_idText',
     defaultText: '_defaultText',
     hostnameText: '_hostnameText',
     languageText: '_languageText',
@@ -16,26 +17,21 @@ Ext.define('Phlexible.siteroot.view.Urls', {
     emptyUrlText: '_emptyUrlText',
     emptyTargetText: '_emptyTargetText',
     emptyLanguageText: '_emptyLanguageText',
+    actionsText: '_actionsText',
 
     initComponent: function () {
-        this.initMyStore();
         this.initMyColumns();
+        this.initMyPlugins();
         this.initMyDockedItems();
         this.initMyListeners();
 
         this.callParent(arguments);
     },
 
-    initMyStore: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroot.model.Url'
-        });
-    },
-
     initMyColumns: function() {
         this.columns = [
             {
-                header: 'ID',
+                header: this.idText,
                 hidden: true,
                 dataIndex: 'id'
             },
@@ -69,7 +65,7 @@ Ext.define('Phlexible.siteroot.view.Urls', {
                     allowBlank: true,
                     editable: false,
                     triggerAction: 'all',
-                    selectOnFocus: true,
+                    selectOnFocus: false,
                     mode: 'local',
                     displayField: 'title',
                     valueField: 'language',
@@ -85,7 +81,7 @@ Ext.define('Phlexible.siteroot.view.Urls', {
                 header: this.targetText,
                 dataIndex: 'target',
                 sortable: true,
-                width: 200/*,
+                width: 200,/*,
              TODO: enable
              editor: Ext.reate('Phlexible.elements.EidSelector', {
              labelSeparator: '',
@@ -96,18 +92,21 @@ Ext.define('Phlexible.siteroot.view.Urls', {
              listWidth: 283,
              treeWidth: 283
              })*/
+                editor: {
+                    xtype: 'numberfield'
+                }
             },
             {
                 xtype: 'actioncolumn',
+                text: this.actionsText,
+                width: 30,
                 items: [{
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                     tooltip: this.removeText,
-                    handler: function (grid, rowIndex, colIndex) {
-                        var r = grid.getStore().getAt(rowIndex);
-
+                    handler: function (grid, rowIndex, colIndex, item, e, url) {
                         Ext.MessageBox.confirm(this.removeText, this.removeDescriptionText, function (btn) {
                             if (btn === 'yes') {
-                                this.onDeleteUrl(r);
+                                this.onDeleteUrl(url);
                             }
                         }, this);
                     },
@@ -115,6 +114,13 @@ Ext.define('Phlexible.siteroot.view.Urls', {
                 }]
             }
         ];
+    },
+
+    initMyPlugins: function() {
+        this.plugins = [{
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        }];
     },
 
     initMyDockedItems: function() {
@@ -139,6 +145,7 @@ Ext.define('Phlexible.siteroot.view.Urls', {
     },
 
     renderLanguage: function (v, md, r, ri, ci, store) {
+        return v;
         var editor = this.getColumnModel().getCellEditor(3, 0);
 
         var estore = editor.field.store;
@@ -162,12 +169,10 @@ Ext.define('Phlexible.siteroot.view.Urls', {
     },
 
     /**
-     * Action if site
+     * Add url
      */
     onAddUrl: function () {
-
-        // create new empty record
-        var newRecord = Ext.create('Phlexible.siteroot.model.Url', {
+        var url = Ext.create('Phlexible.siteroot.model.Url', {
             id: '',
             hostname: '',
             language: '',
@@ -175,36 +180,18 @@ Ext.define('Phlexible.siteroot.view.Urls', {
         });
 
         // add empty record to store
-        this.store.insert(0, newRecord);
+        this.store.insert(0, url);
         this.selModel.selectFirstRow();
         this.startEditing(0, 2);
     },
 
     /**
-     * After the siteroot selection changes load the siteroot data.
+     * Remove url
      *
-     * @param {Phlexible.siteroot.model.Siteroot} siteroot
+     * @param {Phlexible.siteroot.model.Url} url
      */
-    loadData: function (siteroot) {
-        this.deletedRecords = [];
-        this.reconfigure(siteroot.urls());
-    },
-
-    /**
-     * Start deletion of record.
-     *
-     * @param {Object} r
-     */
-    onDeleteUrl: function (r) {
-        if (!this.deletedRecords) {
-            this.deletedRecords = [];
-        }
-
-        // remember record -> they are deleted on save
-        this.deletedRecords.push(r);
-
-        // delete record from store
-        this.store.remove(r);
+    onDeleteUrl: function (url) {
+        this.store.remove(url);
     },
 
     isValid: function () {

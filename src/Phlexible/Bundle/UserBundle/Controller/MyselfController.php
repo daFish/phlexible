@@ -8,11 +8,7 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Patch;
-use FOS\RestBundle\Controller\Annotations\Prefix;
-use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,8 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Myself controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Prefix("/user")
- * @NamePrefix("phlexible_user_")
+ * @Rest\NamePrefix("phlexible_api_user_")
  */
 class MyselfController extends Controller
 {
@@ -33,9 +28,16 @@ class MyselfController extends Controller
      *
      * @return Response
      *
-     * @Get()
-     * @View()
-     * @ApiDoc()
+     * @Rest\Get
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns current User",
+     *   section="user",
+     *   output="Phlexible\Bundle\UserBundle\Entity\User",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getMyselfAction()
     {
@@ -51,10 +53,19 @@ class MyselfController extends Controller
      *
      * @return Response
      *
-     * @Patch()
-     * @ApiDoc()
+     * @Rest\Put
+     * @ApiDoc(
+     *   description="Update current User",
+     *   section="user",
+     *   input="Phlexible\Bundle\UserBundle\Form\Type\GroupType",
+     *   statusCodes={
+     *     201="Returned when group was created",
+     *     204="Returned when group was updated",
+     *     404="Returned when group was not found"
+     *   }
+     * )
      */
-    public function patchMyselfAction(Request $request)
+    public function putMyselfAction(Request $request)
     {
         $user = $this->getUser();
 

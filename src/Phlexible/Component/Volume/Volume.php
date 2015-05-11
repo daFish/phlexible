@@ -497,9 +497,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setPath($folderPath)
             ->setAttributes($attributes)
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
+            ->setCreateUser($folder->getCreateUser())
             ->setModifiedAt($folder->getCreatedAt())
-            ->setModifyUserid($folder->getCreateUserId());
+            ->setModifyUser($folder->getCreateUser());
 
         $this->driver->validateCreateFolder($folder);
 
@@ -519,7 +519,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function renameFolder(FolderInterface $folder, $name, $userId)
+    public function renameFolder(FolderInterface $folder, $name, $user)
     {
         $oldPath = $folder->getPath();
         $parentFolder = $this->findFolder($folder->getParentId());
@@ -532,7 +532,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setName($name)
             ->setPath($newPath)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
         $this->driver->validateRenameFolder($folder);
 
@@ -552,7 +552,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
+    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $user)
     {
         if ($folder->getParentId() === $targetFolder->getId()) {
             return null;
@@ -572,7 +572,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setParentId($targetFolder->getId())
             ->setPath($newPath)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
         $this->driver->validateMoveFolder($folder);
 
@@ -677,12 +677,12 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function setFolderAttributes(FolderInterface $folder, array $attributes, $userId)
+    public function setFolderAttributes(FolderInterface $folder, array $attributes, $user)
     {
         $folder
             ->setAttributes($attributes)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
         $event = new FolderEvent($folder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SET_FOLDER_ATTRIBUTES, $event)->isPropagationStopped()) {

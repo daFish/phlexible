@@ -19,7 +19,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.XtypeHandle', {
     },
 
     getIdentifier: function () {
-        return this.getName().replace('.', '_');
+        return this.getName().replace(/\./g, '_');
     },
 
     getParameters: function () {

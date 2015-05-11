@@ -5,7 +5,6 @@ Ext.define('Phlexible.mediamanager.view.Files', {
     ],
     xtype: 'mediamanager.files',
 
-    title: '_FilesGrid',
     iconCls: Phlexible.Icon.get('folder-open-document'),
     cls: 'p-mediamanager-files-grid',
     emptyText: '_emptyText',
@@ -45,7 +44,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
      * Fires when a File is selected
      *
      * @event fileChange
-     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Phlexible.mediamanager.view.Files} grid
      * @param {Phlexible.mediamanager.model.File[]} selection
      */
 
@@ -53,7 +52,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
      * Fires when a Filter is changed / cleard
      *
      * @event filterChange
-     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Phlexible.mediamanager.view.Files} grid
      * @param {Object} filter
      */
 
@@ -61,7 +60,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
      * Fires when one needs to be downloaded
      *
      * @event downloadFile
-     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Phlexible.mediamanager.view.Files} grid
      * @param {Phlexible.mediamanager.model.File} files
      */
 
@@ -69,20 +68,22 @@ Ext.define('Phlexible.mediamanager.view.Files', {
      * Fires when at least two files need to be downloaded
      *
      * @event downloadFiles
-     * @param {Phlexible.mediamanager.FilesGrid} grid
+     * @param {Phlexible.mediamanager.view.Files} grid
      * @param {Array} files
      */
 
-    // private
+    /**
+     * @private
+     */
     initComponent: function () {
         this.activeFilter = {};
 
         if (this.mediaCategory) {
-            this.activeFilter['mediaCategory'] = this.mediaCategory;
+            this.activeFilter.mediaCategory = this.mediaCategory;
         }
 
         if (this.mediaTypes) {
-            this.activeFilter['mediaTypes'] = this.mediaTypes;
+            this.activeFilter.mediaTypes = this.mediaTypes;
         }
 
         this.initMyView();
@@ -243,8 +244,8 @@ Ext.define('Phlexible.mediamanager.view.Files', {
                                     '<td class="x-grid-cell x-grid-td x-grid-cell-{[values.columns[0].getId()]}" data-columnid="{[values.columns[0].getId()]}">',
                                         '<div {unselectableAttr} class="x-grid-cell-inner">',
                                             '<div class="extra-image">',
-                                                '<img width="256" height="256" src="<tpl if="values.record.data.cache._mm_extra">{[values.record.data.cache._mm_extra]}<tpl else>{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.record.data.id, templateKey: \"_mm_extra\", fileVersion: values.record.data.version, _dc: Ext.Date.format(new Date(), \"U\")})]}</tpl>" />',
-                                                //'<img width="256" height="256" src="/bundles/phlexiblemediamanager/svg/{[values.record.data.mediaCategory]}.svg" />',
+                                                //'<img width="256" height="256" src="<tpl if="values.record.data.cache._mm_extra">{[values.record.data.cache._mm_extra]}<tpl else>{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.record.data.id, templateKey: \"_mm_extra\", fileVersion: values.record.data.version, _dc: Ext.Date.format(new Date(), \"U\")})]}</tpl>" />',
+                                                '<img width="256" height="256" src="/bundles/phlexiblemediamanager/svg/{[values.record.data.mediaCategory]}.svg" />',
                                             '</div>',
                                             '<div class="extra-text">',
                                                 '<div>{[Phlexible.mediamanager.Bullets.getWithTrailingSpace(values.record.data)]}{[columnValues.name]}</div>',
@@ -480,23 +481,20 @@ Ext.define('Phlexible.mediamanager.view.Files', {
     initMyContextMenuItems: function () {
         this.contextMenuItems = [
             {
-                // 0
                 itemId: 'nameBtn',
                 iconCls: Phlexible.Icon.get('document'),
-                text: '.'
+                text: '.',
+                focusable: false
             },
             '-',
             {
-                // 2
                 text: this.renameFileText,
                 itemId: 'renameBtn',
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
                 handler: this.showRenameFileWindow,
                 scope: this
             },
-            '-',
             {
-                // 4
                 text: this.deleteFileText,
                 itemId: 'deleteBtn',
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
@@ -504,7 +502,6 @@ Ext.define('Phlexible.mediamanager.view.Files', {
                 scope: this
             },
             {
-                // 5
                 text: this.hideFileText,
                 itemId: 'hideBtn',
                 iconCls: Phlexible.Icon.get('eye-close'),
@@ -513,7 +510,6 @@ Ext.define('Phlexible.mediamanager.view.Files', {
                 hidden: true
             },
             {
-                // 6
                 text: this.showFileText,
                 itemId: 'showBtn',
                 iconCls: Phlexible.Icon.get('eye'),
@@ -523,7 +519,6 @@ Ext.define('Phlexible.mediamanager.view.Files', {
             },
             '-',
             {
-                // 8
                 text: this.downloadFileText,
                 itemId: 'downloadBtn',
                 iconCls: Phlexible.Icon.get('drive-download'),
@@ -532,7 +527,6 @@ Ext.define('Phlexible.mediamanager.view.Files', {
             },
             '-',
             {
-                // 10
                 text: this.propertiesText,
                 itemId: 'propertiesBtn',
                 iconCls: Phlexible.Icon.get('property'),
@@ -609,24 +603,24 @@ Ext.define('Phlexible.mediamanager.view.Files', {
 
         switch (value) {
             case "1day":
-                time.add(Date.DAY, -1)
+                time.add(Date.DAY, -1);
 
                 break;
 
             case "2days":
-                time.add(Date.DAY, -2)
+                time.add(Date.DAY, -2);
                 break;
 
             case "1week":
-                time.add(Date.DAY, -7)
+                time.add(Date.DAY, -7);
                 break;
 
             case "1month":
-                time.add(Date.MONTH, -1)
+                time.add(Date.MONTH, -1);
                 break;
 
             case "6months":
-                time.add(Date.MONTH, -6)
+                time.add(Date.MONTH, -6);
                 break;
 
             default:
@@ -641,7 +635,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
     setFilter: function (key, value) {
         this.activeFilter[key] = value;
 
-        this.store.getProxy().extraParams['filter'] = Ext.encode(this.activeFilter);
+        this.store.getProxy().extraParams.filter = Ext.encode(this.activeFilter);
         this.store.reload();
 
         this.fireEvent('filterChange', this, this.activeFilter);
@@ -650,7 +644,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
     clearFilter: function () {
         this.activeFilter = {};
 
-        this.store.getProxy().extraParams['filter'] = Ext.encode(this.activeFilter);
+        this.store.getProxy().extraParams.filter = Ext.encode(this.activeFilter);
         this.store.reload();
 
         this.fireEvent('filterChange', this, this.activeFilter);
@@ -759,19 +753,20 @@ Ext.define('Phlexible.mediamanager.view.Files', {
     },
 
     showHideFileWindow: function () {
-        var fileArr = this.getSelectionModel().getSelections();
+        var fileArr = this.getSelectionModel().getSelections(),
+            txt;
 
         if (fileArr.length > 1) {
-            var txt = this.hideFilesWarningText;
+            txt = this.hideFilesWarningText;
         } else {
-            var txt = this.hideFileWarningText;
+            txt = this.hideFileWarningText;
         }
 
-        Ext.MessageBox.confirm(this.confirmText, txt, function (btn, e, x, fileArr) {
-            if (btn == 'yes') {
+        Ext.MessageBox.confirm(this.confirmText, txt, function (btn, e, x) {
+            if (btn === 'yes') {
                 this.hideFiles(fileArr);
             }
-        }.createDelegate(this, [fileArr], true));
+        }, this);
     },
 
     hideFiles: function (file) {

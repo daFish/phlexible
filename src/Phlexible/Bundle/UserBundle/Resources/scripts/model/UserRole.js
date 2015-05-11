@@ -3,9 +3,10 @@
  */
 Ext.define('Phlexible.user.model.UserRole', {
     extend: 'Ext.data.Model',
+    idProperty: 'id',
     fields: [
         {name: 'id'},
-        {name: 'name'},
+        {name: 'role'},
         {name: 'member'}
     ]
 });

@@ -1,20 +1,22 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-
-Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('select', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeData, storeMode = 'remote', displayField = 'value';
     if (item.configuration.select_source === 'function' && item.configuration.select_function) {
-        store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elementtypes_selectfield_function'),
-            baseParams: {
-                provider: item.configuration.select_function
-            },
+        store = Ext.create('Ext.data.Store', {
             fields: ['key', 'value'],
-            sortInfo: {
-                field: 'value', direction: 'ASC'
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('elementtypes_selectfield_function'),
+                extraParams: {
+                    provider: item.configuration.select_function
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
             },
-            root: 'data',
+            sorters: [{
+                property: 'value', direction: 'ASC'
+            }],
             autoLoad: true,
             listeners: {
                 load: function () {
@@ -30,7 +32,7 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
         } else {
             storeData = [{key: 'no_valid_data', de: 'Keine gültigen Daten', en: 'No valid data'}];
         }
-        store = new Ext.data.JsonStore({
+        store = Ext.create('Ext.data.Store', {
             fields: ['key', 'de', 'en'],
             data: storeData
         });
@@ -38,7 +40,7 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
     } else {
         displayField = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
         storeData = [{key: 'no_valid_source', de: 'Keine gültige Quelle', en: 'No valid source'}];
-        store = new Ext.data.JsonStore({
+        store = Ext.create('Ext.data.Store', {
             fields: ['key', 'de', 'en'],
             data: storeData
         });
@@ -60,7 +62,6 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
         typeAhead: false,
         editable: false,
         triggerAction: 'all',
-        selectOnFocus: true,
         hideMode: 'offsets',
 
         supportsPrefix: true,
@@ -83,12 +84,13 @@ Phlexible.fields.Registry.addFactory('select', function (parentConfig, item, val
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('select', {
+Phlexible.fields.FieldTypes.register({
+    type: 'select',
     titles: {
         de: 'Select',
         en: 'Select'
     },
-    iconCls: 'p-elementtype-field_select-icon',
+    iconCls: Phlexible.Icon.get('ui-combo-box'),
     allowedIn: [
         'tab',
         'accordion',

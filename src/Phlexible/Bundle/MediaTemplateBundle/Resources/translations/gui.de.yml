@@ -15,7 +15,7 @@ Phlexible:
                 title: Medienvorlagen
 
             List:
-                title: Vorlagen
+                title: Medienvorlagen
                 titleText: Titel
                 addText: Hinzufügen
                 imageText: Bild
@@ -26,7 +26,6 @@ Phlexible:
             audio:
                 Main:
                     title: Audiovorlage
-                    audioTemplateTitleText: 'Audiovorlage "{0}"'
 
                 Form:
                     title: Audiovorlage
@@ -56,7 +55,6 @@ Phlexible:
             image:
                 Main:
                     title: Bildvorlage
-                    imageTemplateTitleText: 'Bildvorlage "{0}"'
 
                 Form:
                     title: Bildvorlage
@@ -130,7 +128,6 @@ Phlexible:
             video:
                 Form:
                     title: Videovorlage
-                    videoTemplateTitleText: 'Videovorlage "{0}"'
                     videoText: Video
                     widthText: Breite
                     widthHelpText: 'Breite des generierten Videos.'

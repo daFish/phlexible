@@ -63,6 +63,10 @@ EOF;
 
     public function testCompressFile()
     {
+        if (!class_exists('org\bovigo\vfs\vfsStream')) {
+            $this->markTestSkipped('vfsStream not available');
+        }
+
         $js = $this->createJs();
 
         $vfs = vfsStream::setup('root', null, array('test.js' => $js));

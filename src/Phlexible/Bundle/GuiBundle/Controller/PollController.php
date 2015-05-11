@@ -27,7 +27,7 @@ class PollController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("", name="gui_poll")
+     * @Route("", name="phlexible_gui_poll")
      */
     public function pollAction(Request $request)
     {

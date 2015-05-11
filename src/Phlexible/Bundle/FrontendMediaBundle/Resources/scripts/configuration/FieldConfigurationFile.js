@@ -1,21 +1,24 @@
-Ext.provide('Phlexible.frontendmedia.configuration.FieldConfigurationFile');
+Ext.define('Phlexible.frontendmedia.configuration.FieldConfigurationFile', {
+    extend: 'Ext.form.FieldSet',
+    xtype: 'frontendmedia-configuration-field-configuration-file',
 
-Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.form.FieldSet, {
-    strings: Phlexible.frontendmedia.Strings,
-    title: Phlexible.frontendmedia.Strings.file,
     iconCls: 'p-frontendmedia-field_file-icon',
     autoHeight: true,
     labelWidth: 139,
 
+    assetTypeText: '_assetTypeText',
+    documenttypesText: '_documenttypesText',
+    viewModeText: '_viewModeText',
+
     initComponent: function () {
         this.items = [
             {
-                xtype: 'twincombobox',
-                hiddenName: 'assettype',
-                fieldLabel: this.strings.asset_type,
-                width: 200,
-                listWidth: 200,
-                store: new Ext.data.JsonStore({
+                xtype: 'combobox',
+                itemId: 'assettype',
+                name: 'assettype',
+                fieldLabel: this.assetTypeText,
+                flex: 1,
+                store: Ext.create('Ext.data.Store', {
                     fields: ['key', 'title'],
                     data: [
                         {key: 'image', title: 'Image'},
@@ -30,45 +33,63 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
                 displayField: 'title',
                 valueField: 'key',
                 editable: false,
+                selectOnFocus: false,
                 triggerAction: 'all',
-                mode: 'local'
+                mode: 'local',
+                triggers: {
+                    clear: {
+                        type: 'clear'
+                    }
+                }
             },
             {
-                xtype: 'lovcombo',
-                hiddenName: 'documenttypes',
-                fieldLabel: this.strings.documenttypes,
-                width: 200,
-                listWidth: 200,
-                store: new Ext.data.JsonStore({
-                    fields: ['key', 'upperkey'],
-                    url: Phlexible.Router.generate('mediatypes_list'),
-                    root: 'documenttypes',
-                    id: 'key',
-                    sortInfo: {
-                        field: 'key',
-                        direction: 'asc'
+                xtype: 'tagfield',
+                itemId: 'documenttypes',
+                name: 'documenttypes',
+                fieldLabel: this.documenttypesText,
+                flex: 1,
+                store: Ext.create('Ext.data.Store', {
+                    model: 'Phlexible.mediatype.model.MediaType',
+                    proxy: {
+                        type: 'ajax',
+                        url: Phlexible.Router.generate('phlexible_api_mediatype_get_mediatypes'),
+                        reader: {
+                            type: 'json',
+                            rootProperty: 'mediatypes',
+                            idProperty: 'name'
+                        }
                     },
+                    sorters: [{
+                        property: 'name',
+                        direction: 'asc'
+                    }],
                     autoLoad: true,
                     listeners: {
                         load: function() {
-                            this.getComponent(1).setValue(this.getComponent(1).getValue());
+                            this.getComponent('documenttypes').setValue(this.getComponent('documenttypes').getValue());
                         },
                         scope: this
                     }
                 }),
-                displayField: 'upperkey',
-                valueField: 'key',
+                displayField: 'name',
+                valueField: 'name',
                 editable: false,
+                selectOnFocus: false,
                 triggerAction: 'all',
-                mode: 'remote'
+                mode: 'remote',
+                triggers: {
+                    clear: {
+                        type: 'clear'
+                    }
+                }
             },
             {
-                xtype: 'twincombobox',
-                hiddenName: 'viewMode',
-                fieldLabel: this.strings.view_mode,
-                width: 200,
-                listWidth: 200,
-                store: new Ext.data.JsonStore({
+                xtype: 'combobox',
+                itemId: 'viewMode',
+                name: 'viewMode',
+                fieldLabel: this.viewModeText,
+                flex: 1,
+                store: Ext.create('Ext.data.Store', {
                     fields: ['key', 'title'],
                     data: [
                         {key: 'extralarge', title: 'Extra Large'},
@@ -83,29 +104,31 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
                 valueField: 'key',
                 editable: false,
                 triggerAction: 'all',
-                mode: 'local'
+                mode: 'local',
+                selectOnFocus: false,
+                triggers: {
+                    clear: {
+                        type: 'clear'
+                    }
+                }
             }
         ];
 
         Phlexible.frontendmedia.configuration.FieldConfigurationFile.superclass.initComponent.call(this);
     },
 
-    updateVisibility: function (type) {
-        var isFile = type === 'file';
+    updateVisibility: function (configuration, fieldType) {
+        var isFile = fieldType.type === 'file';
         this.getComponent(0).setDisabled(!isFile);
         this.getComponent(1).setDisabled(!isFile);
         this.getComponent(2).setDisabled(!isFile);
         this.setVisible(isFile);
     },
 
-    loadData: function (fieldData, fieldType) {
-        fieldData.assetType = fieldData.assetType || null;
-        fieldData.documenttypes = fieldData.documenttypes || '';
-        fieldData.viewMode = fieldData.viewMode || '';
-
-        this.getComponent(0).setValue(fieldData.assetType);
-        this.getComponent(1).setValue(fieldData.documenttypes);
-        this.getComponent(2).setValue(fieldData.viewMode);
+    loadConfiguration: function (configuration, fieldType) {
+        this.getComponent(0).setValue(configuration.assetType || null);
+        this.getComponent(1).setValue(configuration.documenttypes || '');
+        this.getComponent(2).setValue(configuration.viewMode || '');
 
         this.isValid();
     },
@@ -119,10 +142,8 @@ Phlexible.frontendmedia.configuration.FieldConfigurationFile = Ext.extend(Ext.fo
     },
 
     isValid: function () {
-        return this.getComponent(0).isValid()
-            && this.getComponent(1).isValid()
-            && this.getComponent(2).isValid();
+        return this.getComponent(0).isValid() &&
+            this.getComponent(1).isValid() &&
+            this.getComponent(2).isValid();
     }
 });
-
-Ext.reg('frontendmedia-configuration-field-configuration-file', Phlexible.frontendmedia.configuration.FieldConfigurationFile);

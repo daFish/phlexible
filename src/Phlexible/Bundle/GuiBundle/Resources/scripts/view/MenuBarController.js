@@ -25,7 +25,7 @@ Ext.define('Phlexible.gui.view.MenuBarController', {
         Phlexible.Logger.debug('MenuBarController.load()');
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('gui_menu'),
+            url: Phlexible.Router.generate('phlexible_gui_menu'),
             success: this.onLoadSuccess,
             failure: function () {
                 Phlexible.Notify.failure('Error loading menu.');

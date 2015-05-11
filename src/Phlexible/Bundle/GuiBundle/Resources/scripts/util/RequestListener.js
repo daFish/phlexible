@@ -96,28 +96,34 @@ Ext.define('Phlexible.gui.util.RequestListener', {
     handleRequestError: function(conn, response, options, eOpts) {
         this.setButtonError();
 
-        var result, window;
+        var payload, window;
 
         try {
-            result = Ext.decode(response.responseText);
-        }
-        catch (err) {
-            return;
+            payload = Ext.decode(response.responseText);
+        } catch (err) {
+            payload = response.responseText;
         }
 
-        if (!result || !result.message) {
+        if (!payload || !payload.message) {
             Ext.MessageBox.alert('Error', 'The last request resulted in an error.');
             return;
         }
 
         window = Ext.create('Phlexible.gui.RequestErrorWindow', {
-            responseStatus: response.status,
-            responseStatusText: response.statusText,
-            requestUrl: options.url,
-            requestMethod: options.method || (options.params ? 'POST' : 'GET').toUpperCase() || '?',
-            requestTimeout: options.timeout || Ext.Ajax.timeout,
-            requestParams: options.params,
-            exception: result
+            response: {
+                status: response.status,
+                statusText: response.statusText,
+                headers: response.getAllResponseHeaders(),
+                payload: payload
+            },
+            request: {
+                url: options.url,
+                method: options.method || (options.params ? 'POST' : 'GET'),
+                timeout: options.timeout || Ext.Ajax.timeout,
+                headers: conn.requests[response.requestId].headers,
+                params: options.params,
+                jsonData: options.jsonData
+            }
         });
         window.show();
     },

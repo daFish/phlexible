@@ -5,6 +5,7 @@ Ext.define('Phlexible.mediatemplate.view.List', {
     ],
     xtype: 'mediatemplate.list',
 
+    iconCls: Phlexible.Icon.get('image-resize'),
     border: true,
 
     titleText: '_titleText',
@@ -28,7 +29,7 @@ Ext.define('Phlexible.mediatemplate.view.List', {
             model: 'Phlexible.mediatemplate.model.MediaTemplate',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_mediatemplate_get_mediatemplates'),
+                url: Phlexible.Router.generate('phlexible_api_mediatemplate_get_mediatemplates'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -104,6 +105,7 @@ Ext.define('Phlexible.mediatemplate.view.List', {
                             handler: this.toggleFilter,
                             scope: this
                         },
+                            '-',
                         {
                             text: this.imageText,
                             iconCls: Phlexible.mediatemplate.TemplateIcons.image,

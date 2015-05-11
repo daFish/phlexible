@@ -1,8 +1,5 @@
 Ext.define('Phlexible.message.view.list.List', {
     extend: 'Ext.grid.GridPanel',
-    requires: [
-        'Phlexible.message.model.Message'
-    ],
     xtype: 'message.list.list',
 
     cls: 'p-message-list-list',
@@ -16,57 +13,21 @@ Ext.define('Phlexible.message.view.list.List', {
     emptyMessageText: '_emptyMessageText',
     idText: '_idText',
     subjectText: '_subjectText',
-    priorityText: '_priorityText',
     typeText: '_typeText',
     channelText: '_channelText',
     roleText: '_roleText',
     userText: '_userText',
     createdAtText: '_createdAtText',
-    priorityUrgent: '_priorityUrgent',
-    priorityHighText: '_priorityHighText',
-    priorityNormalText: '_priorityNormalText',
-    priorityLowText: '_priorityLowText',
     typeInfoText: '_typeInfoText',
     typeErrorText: '_typeErrorText',
 
     initComponent: function () {
-        console.log(this.autoLoad);
         this.autoLoad = this.autoLoad !== false;
 
-        this.initMyStore();
         this.initMyColumns();
-        this.initMyPlugins();
         this.initMyDockedItems();
 
         this.callParent(arguments);
-    },
-
-    initMyStore: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.message.model.Message',
-            proxy: {
-                type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_message_get_messages'),
-                simpleSortMode: true,
-                reader: {
-                    type: 'json',
-                    rootProperty: 'messages',
-                    idProperty: 'id',
-                    totalProperty: 'count'
-                },
-                extraParams: {filter: ''}
-            },
-            pageSize: 25,
-            autoLoad: this.autoLoad,
-            sorters: [{property: 'createdAt', direction: 'DESC'}],
-            remoteSort: true,
-            listeners: {
-                load: function (store) {
-                    this.fireEvent('messages', this, store.getProxy().getReader().rawData);
-                },
-                scope: this
-            }
-        });
     },
 
     initMyColumns: function() {
@@ -82,14 +43,6 @@ Ext.define('Phlexible.message.view.list.List', {
                 dataIndex: 'subject',
                 sortable: true,
                 flex: 1
-            }, {
-                header: this.priorityText,
-                dataIndex: 'priority',
-                sortable: true,
-                width: 70,
-                renderer: function (v) {
-                    return v !== undefined && v !== null ? Phlexible.Icon.inlineText(Phlexible.message.PriorityIcons[v], Phlexible.Config.get('message.priorities')[v]) : '';
-                }
             }, {
                 header: this.typeText,
                 dataIndex: 'type',
@@ -112,23 +65,16 @@ Ext.define('Phlexible.message.view.list.List', {
                 header: this.userText,
                 dataIndex: 'user',
                 sortable: true,
-                width: 130
+                width: 120
             }, {
+                xtype: 'datecolumn',
                 header: this.createdAtText,
                 dataIndex: 'createdAt',
+                format: 'Y-m-d H:i:s',
                 sortable: true,
-                width: 130
+                width: 120
             }
         ];
-    },
-
-    initMyPlugins: function() {
-        this.plugins = [{
-            ptype: 'rowexpander',
-            rowBodyTpl: new Ext.XTemplate(
-                '<p style="padding: 0 10px 10px 10px;">{body}</p>'
-            )
-        }];
     },
 
     initMyDockedItems: function() {
@@ -136,26 +82,13 @@ Ext.define('Phlexible.message.view.list.List', {
             xtype: 'pagingtoolbar',
             itemId: 'pager',
             dock: 'bottom',
-            store: this.store,
+            //store: this.store,
+            bind: {
+                store: '{messages}'
+            },
             displayInfo: true,
             displayMsg: this.displayMessageText,
             emptyMsg: this.emptyMessageText
         }];
-    },
-
-    setFilter: function(values) {
-        var pager = this.getDockedComponent('pager');
-
-        this.getStore().getProxy().setExtraParam('filter', values ? Ext.encode(values) : null);
-        this.getStore().load({
-            params: {
-                start: 0,
-                page: 1
-            }
-        });
-    },
-
-    clearFilter: function() {
-        this.setFilter(null);
     }
 });

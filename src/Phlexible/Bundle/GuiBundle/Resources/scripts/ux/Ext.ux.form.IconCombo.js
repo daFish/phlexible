@@ -10,7 +10,6 @@ Ext.define('Ext.ux.form.IconCombo',{
     alias:'widget.iconcombo',
 
     initComponent:function() {
-
         Ext.apply(this, {
             scope:this,
             listConfig: {
@@ -71,10 +70,10 @@ Ext.define('Ext.ux.form.IconCombo',{
         if (this.rendered) {
             var rec = this.store.findRecord(this.valueField, this.getValue());
             if (rec && rec.get(this.iconClsField)) {
-                this.el.down('input').addCls('ux-icon-combo-input');
+                this.el.down('input.x-form-field').addCls('ux-icon-combo-input');
                 this.icon.className = 'ux-icon-combo-icon ' + rec.get(this.iconClsField);
             } else {
-                this.el.down('input').removeCls('ux-icon-combo-input');
+                this.el.down('input.x-form-field').removeCls('ux-icon-combo-input');
                 this.icon.className = '';
             }
         } else {

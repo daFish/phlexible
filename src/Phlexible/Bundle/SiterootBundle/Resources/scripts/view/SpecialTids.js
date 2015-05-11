@@ -1,5 +1,5 @@
 Ext.define('Phlexible.siteroot.view.SpecialTids', {
-    extend: 'Ext.grid.GridPanel',
+    extend: 'Ext.grid.Panel',
 
     xtype: 'siteroot.specialtids',
 
@@ -14,23 +14,14 @@ Ext.define('Phlexible.siteroot.view.SpecialTids', {
     removeDescriptionText: '_removeDescriptionText',
     addSpecialTidText: '_addSpecialTidText',
     emptyKeyText: '_emptyKeyText',
+    actionsText: '_actionsText',
 
     initComponent: function () {
-        this.initMyStore();
         this.initMyColumns();
+        this.initMyPlugins();
         this.initMyDockedItems();
 
         this.callParent(arguments);
-    },
-
-    initMyStore: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroot.model.SpecialTid',
-            sorters: [{
-                property: 'key',
-                direction: 'asc'
-            }]
-        });
     },
 
     initMyColumns: function() {
@@ -51,21 +42,18 @@ Ext.define('Phlexible.siteroot.view.SpecialTids', {
                 sortable: true,
                 renderer: this.renderLanguage,
                 width: 100,
-                renderer: function(v) {
-                    return v || '';
-                },
                 editor: {
                     xtype: 'iconcombo',
                     allowBlank: true,
                     editable: false,
                     triggerAction: 'all',
-                    selectOnFocus: true,
+                    selectOnFocus: false,
                     mode: 'local',
                     displayField: 'title',
                     valueField: 'language',
                     iconClsField: 'icon',
                     emptyText: '',
-                    store: Ext.create('Ext.data.SimpleStore', {
+                    store: Ext.create('Ext.data.Store', {
                         model: 'Phlexible.gui.model.KeyValueIconCls',
                         data: Phlexible.Config.get('set.language.frontend')
                     })
@@ -82,6 +70,7 @@ Ext.define('Phlexible.siteroot.view.SpecialTids', {
                 }
             }, {
                 xtype: 'actioncolumn',
+                header: this.actionsText,
                 width: 30,
                 items: [
                     {
@@ -103,6 +92,13 @@ Ext.define('Phlexible.siteroot.view.SpecialTids', {
         ];
     },
 
+    initMyPlugins: function() {
+        this.plugins = [{
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        }];
+    },
+
     initMyDockedItems: function() {
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -114,16 +110,15 @@ Ext.define('Phlexible.siteroot.view.SpecialTids', {
                 handler: this.onAddSpecialTid,
                 scope: this
             }]
-        }]
+        }];
     },
 
     /**
      * Action if site
      */
     onAddSpecialTid: function () {
-
         // create new empty record
-        var newRecord = new Phlexible.siteroot.model.SpecialTid({
+        var specialTid = new Phlexible.siteroot.model.SpecialTid({
             id: '',
             siteroot_id: this.siterootId,
             key: '',
@@ -132,22 +127,13 @@ Ext.define('Phlexible.siteroot.view.SpecialTids', {
         });
 
         // add empty record to store
-        this.store.insert(0, newRecord);
+        this.store.insert(0, specialTid);
         this.selModel.selectFirstRow();
         this.startEditing(0, 0);
     },
 
-    /**
-     * After the siteroot selection changes load the siteroot data.
-     *
-     * @param {Phlexible.siteroot.model.Siteroot} siteroot
-     */
-    loadData: function (siteroot) {
-        this.deletedRecords = [];
-        this.reconfigure(siteroot.specialTids());
-    },
-
     renderLanguage: function (v, md, r, ri, ci, store) {
+        return v; // TODO: repair
         var editor = this.getColumnModel().getCellEditor(1, 0);
 
         var estore = editor.field.store;

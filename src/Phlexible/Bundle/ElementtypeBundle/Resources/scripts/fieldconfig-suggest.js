@@ -1,9 +1,6 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.SuggestField');
-Ext.require('Phlexible.fields.FieldHelper');
+Ext.require('Phlexible.elementtype.field.SuggestField');
 
-Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeMode = 'local';
 
     if (item.configuration.suggest_source) {
@@ -14,15 +11,21 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
          });
          */
         storeMode = 'remote';
-        store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elementtypes_selectfield_suggest'),
-            baseParams: {
-                id: item.configuration.suggest_source,
-                ds_id: item.dsId,
-                language: element.language
-            },
+        store = Ext.create('Ext.data.Store', {
             fields: ['key', 'value'],
-            root: 'data',
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('elementtypes_selectfield_suggest'),
+                extraParams: {
+                    id: item.configuration.suggest_source,
+                    ds_id: item.dsId,
+                    language: element.language
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            },
             autoLoad: false
         });
     } else {
@@ -52,6 +55,7 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
         displayField: 'value',
         mode: storeMode,
         triggerAction: 'all',
+        editable: true,
         selectOnFocus: true,
         minChars: 2,
         supportsPrefix: true,
@@ -80,12 +84,13 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('suggest', {
+Phlexible.fields.FieldTypes.register({
+    type: 'suggest',
     titles: {
         de: 'Suggest',
         en: 'Suggest'
     },
-    iconCls: 'p-elementtype-field_suggest-icon',
+    iconCls: Phlexible.Icon.get('ui-text-field-suggestion'),
     allowedIn: [
         'tab',
         'accordion',

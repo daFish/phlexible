@@ -23,14 +23,9 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     criteriaForText: '_criteriaForText',
     criteriaText: '_criteriaText',
     selectCriteriumText: '_selectCriteriumText',
-    selectPriorityText: '_selectPriorityText',
     selectTypeText: '_selectTypeText',
     selectChannelText: '_selectChannelText',
     selectRoleText: '_selectRoleText',
-    priorityUrgentText: '_priorityUrgent',
-    priorityHighText: '_priorityHighText',
-    priorityNormalText: '_priorityNormalText',
-    priorityLowText: '_priorityLowText',
     typeInfoText: '_typeInfoText',
     typeErrorText: '_typeErrorText',
     numberOfDaysText: '_numberOfDaysText',
@@ -43,9 +38,6 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     bodyNotLikeText: '_bodyNotLikeText',
     userLikeText: '_userLikeText',
     userNotLikeText: '_userNotLikeText',
-    priorityIsText: '_priorityIsText',
-    priorityInText: '_priorityInText',
-    priorityMinText: '_priorityMinText',
     typeIsText: '_typeIsText',
     typeInText: '_typeInText',
     channelIsText: '_channelIsText',
@@ -60,24 +52,15 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
     initComponent: function () {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlexible_message_get_messages'),
+            url: Phlexible.Router.generate('phlexible_api_message_get_messages'),
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
-                var priorityNames = Phlexible.Config.get('message.priorities'),
-                    typeNames = Phlexible.Config.get('message.types'),
-                    priorities = [],
+                var typeNames = Phlexible.Config.get('message.types'),
                     types = [],
                     channels = [],
                     roles = [];
 
-                Ext.each(data.facets.priorities, function(priority) {
-                    priorities.push({
-                        id: priority,
-                        name: priorityNames[priority],
-                        iconCls: Phlexible.message.PriorityIcons[priority]
-                    });
-                });
                 Ext.each(data.facets.types, function(type) {
                     types.push({
                         id: type,
@@ -99,7 +82,6 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 });
 
                 this.facets = {
-                    priorities: priorities,
                     types: types,
                     channels: channels,
                     roles: roles
@@ -186,7 +168,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlexible_message_put_filter', {id: this.record.id}),
+            url: Phlexible.Router.generate('phlexible_api_message_put_filter', {id: this.record.id}),
             params: {
                 title: this.getComponent(0).getComponent(0).getValue(),
                 criteria: Ext.encode(this.serializeCriteria())
@@ -324,9 +306,6 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                     ['bodyNotLike', this.bodyNotLikeText],
                     ['userLike', this.userLikeText],
                     ['userNotLike', this.userNotLikeText],
-                    ['priorityIs', this.priorityIsText],
-                    ['priorityIn', this.priorityInText],
-                    ['priorityMin', this.priorityMinText],
                     ['typeIs', this.typeIsText],
                     //['typeIn', this.typeInText],
                     ['channelIs', this.channelIsText],
@@ -364,54 +343,6 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
         var field;
 
         switch (criterium) {
-            case 'priorityIs':
-                field = {
-                    xtype: 'iconcombo',
-                    emptyText: this.selectPriorityText,
-                    store: Ext.create('Ext.data.Store', {
-                        data: this.facets.priorities,
-                        fields: ['id', 'name', 'iconCls']
-                    }),
-                    valueField: 'id',
-                    displayField: 'name',
-                    iconClsField: 'iconCls',
-                    allowBlank: false,
-                    editable: false
-                };
-                break;
-
-            case 'priorityIn':
-                field = {
-                    xtype: 'tagfield',
-                    emptyText: this.selectPriorityText,
-                    store: Ext.create('Ext.data.Store', {
-                        data: this.facets.priorities,
-                        fields: ['id', 'name', 'iconCls']
-                    }),
-                    valueField: 'id',
-                    displayField: 'name',
-                    allowBlank: false,
-                    editable: true,
-                    stacked: true
-                };
-                break;
-
-            case 'priorityMin':
-                field = {
-                    xtype: 'iconcombo',
-                    emptyText: this.selectPriorityText,
-                    store: Ext.create('Ext.data.Store', {
-                        data: this.facets.priorities,
-                        fields: ['id', 'name', 'iconCls']
-                    }),
-                    valueField: 'id',
-                    displayField: 'name',
-                    iconClsField: 'iconCls',
-                    allowBlank: false,
-                    editable: false
-                };
-                break;
-
             case 'typeIs':
                 field = {
                     xtype: 'iconcombo',
@@ -553,7 +484,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 value = this.selectCriteriumText;
                 field = {
                     xtype: 'displayfield'
-                }
+                };
                 break;
         }
 

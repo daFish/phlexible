@@ -91,23 +91,20 @@ class CheckCommand extends ContainerAwareCommand
             $body .= PHP_EOL . '+ ' . implode(PHP_EOL . '+ ', $problemList['add']);
             $subject = "Problem check found $countAdd new problem(s)";
             $total = "Problem check found <fg=red>$countAdd new</fg=red> problem(s)";
-            $priority = ProblemsMessage::PRIORITY_HIGH;
         }
         if ($countRemove) {
             $body .= PHP_EOL . '- ' . implode(PHP_EOL . '- ', $problemList['remove']);
             $subject = "Problem check removed $countRemove existing problem(s)";
             $total = "Problem check removed <fg=green>$countRemove existing</fg=green> problem(s)";
-            $priority = ProblemsMessage::PRIORITY_NORMAL;
         }
         if ($countAdd && $countRemove) {
             $subject = "Problem check found $countAdd new and removed $countRemove existing problem(s)";
             $total = "Problem check found <fg=red>$countAdd new</fg=red> and removed <fg=green>$countRemove existing</fg=green> problem(s)";
-            $priority = ProblemsMessage::PRIORITY_HIGH;
         }
 
         if (isset($subject)) {
             $this->getContainer()->get('phlexible_message.message_poster')
-                ->post(ProblemsMessage::create($subject, $body, $priority));
+                ->post(ProblemsMessage::create($subject, $body));
         }
 
         if ($total) {

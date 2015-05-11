@@ -1,10 +1,9 @@
-Ext.require('Phlexible.fields.FieldTypes');
-
-Phlexible.fields.FieldTypes.addField('referenceroot', {
+Phlexible.fields.FieldTypes.register({
+    type: 'referenceroot',
     titles: {
         de: 'Referenz',
         en: 'Reference'
     },
-    iconCls: 'p-elementtype-container_root-icon',
+    iconCls: Phlexible.Icon.get('ui-scroll-pane-tree'),
     allowedIn: []
 });

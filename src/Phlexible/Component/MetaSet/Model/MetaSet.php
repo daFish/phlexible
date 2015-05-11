@@ -9,6 +9,7 @@
 namespace Phlexible\Component\MetaSet\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Meta set
@@ -24,11 +25,13 @@ class MetaSet implements MetaSetInterface
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @var int
+     * @Assert\Type(type="int")
      */
     private $revision;
 
@@ -44,6 +47,7 @@ class MetaSet implements MetaSetInterface
 
     /**
      * @var \DateTime
+     * @Assert\DateTime
      */
     private $createdAt;
 
@@ -54,6 +58,7 @@ class MetaSet implements MetaSetInterface
 
     /**
      * @var \DateTime
+     * @Assert\DateTime
      */
     private $modifiedAt;
 
@@ -62,7 +67,10 @@ class MetaSet implements MetaSetInterface
      */
     public function __construct()
     {
+        $this->revision = 1;
         $this->fields = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
     }
 
     /**
@@ -132,7 +140,7 @@ class MetaSet implements MetaSetInterface
      */
     public function addField(MetaSetFieldInterface $field)
     {
-        $this->fields->set($field->getName(), $field);
+        $this->fields->add($field);
         $field->setMetaSet($this);
 
         return $this;
@@ -143,7 +151,13 @@ class MetaSet implements MetaSetInterface
      */
     public function hasField($name)
     {
-        return $this->fields->containsKey($name);
+        foreach ($this->fields as $field) {
+            if ($field->getName() === $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -151,7 +165,13 @@ class MetaSet implements MetaSetInterface
      */
     public function getField($name)
     {
-        return $this->fields->get($name);
+        foreach ($this->fields as $field) {
+            if ($field->getName() === $name) {
+                return $field;
+            }
+        }
+
+        return null;
     }
 
     /**

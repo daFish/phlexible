@@ -80,7 +80,6 @@ class MessagesPortlet extends Portlet
 
         $messages = $this->messageManager->findByCriteria($filter->getCriteria(), ['createdAt' => 'DESC'], 20);
 
-        $priorityList = $this->messageManager->getPriorityNames();
         $typeList = $this->messageManager->getTypeNames();
 
         $data = [];
@@ -97,7 +96,6 @@ class MessagesPortlet extends Portlet
                 'id'       => $message->getId(),
                 'subject'  => $subject,
                 'time'     => $message->getCreatedAt()->format('U'),
-                'priority' => $priorityList[$message->getPriority()],
                 'type'     => $typeList[$message->getType()],
                 'channel'  => $message->getChannel(),
             ];

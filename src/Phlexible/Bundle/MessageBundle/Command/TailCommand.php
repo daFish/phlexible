@@ -49,7 +49,6 @@ class TailCommand extends ContainerAwareCommand
         $showBody = $input->getOption('body');
 
         $messageManager = $this->getContainer()->get('phlexible_message.message_manager');
-        $priorities = $messageManager->getPriorityNames();
         $types = $messageManager->getTypeNames();
 
         if ($limit) {
@@ -58,9 +57,8 @@ class TailCommand extends ContainerAwareCommand
             foreach ($messages as $message) {
                 $output->writeln(
                     sprintf(
-                        "[%s] %s.%s: %s [%s, %s]",
+                        "[%s] %s: %s [%s, %s]",
                         $message->getCreatedAt()->format('Y-m-d H:i:s'),
-                        $priorities[$message->getPriority()],
                         $types[$message->getType()],
                         $message->getSubject(),
                         $message->getChannel() ? : '-',
@@ -100,9 +98,8 @@ class TailCommand extends ContainerAwareCommand
 
                 $output->writeln(
                     sprintf(
-                        "[%s] %s.%s: %s [%s] [%s]",
+                        "[%s] %s: %s [%s] [%s]",
                         $message->getCreatedAt()->format('Y-m-d H:i:s'),
-                        $priorities[$message->getPriority()],
                         $types[$message->getType()],
                         $message->getSubject(),
                         $message->getChannel() ? : '-',
@@ -110,8 +107,7 @@ class TailCommand extends ContainerAwareCommand
                     )
                 );
 
-                if ($showBody || $message->getPriority() >= Message::PRIORITY_URGENT
-                        || $message->getType() === Message::TYPE_ERROR) {
+                if ($showBody || $message->getType() >= Message::TYPE_ERROR) {
                     $output->writeln(' > ' . $message->getBody());
                 }
             }

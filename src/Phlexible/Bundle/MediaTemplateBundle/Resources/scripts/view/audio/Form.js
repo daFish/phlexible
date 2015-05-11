@@ -1,11 +1,11 @@
 Ext.define('Phlexible.mediatemplate.view.audio.Form', {
     extend: 'Ext.form.FormPanel',
-    requires: ['Phlexible.mediatemplate.view.audio.Fields'],
-
+    requires: [
+        'Phlexible.mediatemplate.view.audio.Fields'
+    ],
     xtype: 'mediatemplate.audio.form',
 
-    title: '_FormPanel',
-//    labelWidth: 80,
+    iconCls: Phlexible.mediatemplate.TemplateIcons.audio,
     autoScroll: true,
     labelAlign: 'top',
     disabled: true,
@@ -62,7 +62,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
                     handler: function () {
                         var values = this.getForm().getValues();
 
-                        values.template = this.template_key;
+                        values.template = this.templateKey;
                         values.debug = this.debugPreview;
 
                         this.fireEvent('preview', values, this.debugPreview);
@@ -80,7 +80,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
                     ]
                 }
             ]
-        }]
+        }];
     },
 
     initMyListeners: function() {
@@ -93,7 +93,9 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
     },
 
     loadParameters: function (key, parameters) {
-        this.template_key = key;
+        this.templateKey = key;
+
+        this.setTitle(key);
 
         this.getForm().reset();
         this.getForm().setValues(parameters);
@@ -105,7 +107,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
         this.getForm().submit({
             url: Phlexible.Router.generate('mediatemplates_form_save'),
             params: {
-                template_key: this.template_key
+                templateKey: this.templateKey
             },
             success: function (form, action) {
                 var data = Ext.decode(action.response.responseText);

@@ -39,7 +39,7 @@ class ViewFrameListener
         $view = $event->getView();
 
         $view
-            ->addScript($this->router->generate('mediatypes_asset_scripts'))
-            ->addLink($this->router->generate('mediatypes_asset_css'));
+            ->addScript($this->router->generate('phlexible_mediatype_asset_scripts'))
+            ->addLink($this->router->generate('phlexible_mediatype_asset_css'));
     }
 }

@@ -136,6 +136,6 @@ class ResettingController extends BaseResettingController
      */
     protected function getRedirectionUrl(UserInterface $user)
     {
-        return $this->container->get('router')->generate('gui_index');
+        return $this->container->get('router')->generate('phlexible_gui');
     }
 }

@@ -1,6 +1,7 @@
 Ext.define('Phlexible.siteroot.model.Navigation', {
     extend: 'Ext.data.Model',
 
+    entityName: 'SiterootNavigation',
     idProperty: 'id',
     fields: [
         {name: 'id', type: 'string'},
@@ -9,6 +10,10 @@ Ext.define('Phlexible.siteroot.model.Navigation', {
         {name: 'startTreeId', type: 'int'},
         {name: 'maxDepth', type: 'int'},
         {name: 'flags', type: 'int'},
-        {name: 'additional'}
+        {name: 'additional'},
+        {name: 'siterootId', reference: {
+            type: 'Siteroot',
+            inverse: 'navigations'
+        }}
     ]
 });

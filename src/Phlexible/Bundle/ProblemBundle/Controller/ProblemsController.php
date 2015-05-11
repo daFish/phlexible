@@ -8,20 +8,20 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Problems controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ *
  * @Security("is_granted('ROLE_PROBLEMS')")
- * @Prefix("/problem")
- * @NamePrefix("phlexible_problem_")
+ * @Rest\NamePrefix("phlexible_api_problem_")
  */
 class ProblemsController extends FOSRestController
 {
@@ -30,7 +30,15 @@ class ProblemsController extends FOSRestController
      *
      * @return JsonResponse
      *
-     * @ApiDoc()
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Problem",
+     *   section="problem",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getProblemsAction()
     {
@@ -38,29 +46,10 @@ class ProblemsController extends FOSRestController
 
         $problems = $problemFetcher->fetch();
 
-        return $this->handleView($this->view(
-            array(
-                'problems' => $problems,
-                'count'    => count($problems)
-            )
-        ));
-
-        $data = [];
-        foreach ($problemFetcher->fetch() as $problem) {
-            $data[] = [
-                'id'            => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
-                'iconCls'       => $problem->getIconClass(),
-                'severity'      => $problem->getSeverity(),
-                'msg'           => $problem->getMessage(),
-                'hint'          => $problem->getHint(),
-                'link'          => $problem->getLink(),
-                'createdAt'     => $problem->getCreatedAt()->format('Y-m-d H:i:s'),
-                'lastCheckedAt' => $problem->getLastCheckedAt()->format('Y-m-d H:i:s'),
-                'source'        => $problem->isLive() ? 'live' : 'cached',
-            ];
-        }
-
-        return new JsonResponse($data);
+        return array(
+            'problems' => $problems,
+            'count'    => count($problems)
+        );
     }
 
     /**
@@ -70,7 +59,16 @@ class ProblemsController extends FOSRestController
      *
      * @return JsonResponse
      *
-     * @ApiDoc()
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Problem",
+     *   section="problem",
+     *   output="Phlexible\Bundle\ProblemBundle\Entity\Problem",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when problem was not found"
+     *   }
+     * )
      */
     public function getProblemAction($problemId)
     {
@@ -80,10 +78,10 @@ class ProblemsController extends FOSRestController
 
         foreach ($problems as $problem) {
             if ($problem->getId() === $problemId) {
-                return $problem;
+                return array('problem' => $problem);
             }
         }
 
-        return null;
+        throw new NotFoundHttpException('User not found');
     }
 }

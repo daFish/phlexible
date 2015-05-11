@@ -3,13 +3,10 @@
  */
 Ext.define('Phlexible.user.edit.Details', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-edit-details',
+    xtype: 'user.edit-details',
 
-    title: '_details',
     iconCls: Phlexible.Icon.get('card-address'),
-    bodyPadding: '5',
-    border: true,
-    hideMode: 'offsets',
+    bodyPadding: 10,
     defaultType: 'textfield',
     fieldDefaults:{
         labelWidth: 130,
@@ -54,6 +51,7 @@ Ext.define('Phlexible.user.edit.Details', {
             text: this.imageText + ':'
         },{
             xtype: 'container',
+            itemId: 'avatar',
             border: false,
             html: '<img width="80" height="80" style="margin-top: 10px; border: 1px solid #99bce8;" src="" />'
         }];
@@ -61,13 +59,13 @@ Ext.define('Phlexible.user.edit.Details', {
         this.callParent(arguments);
     },
 
-    loadRecord: function(record) {
-        this.getForm().loadRecord(record);
+    loadUser: function(user) {
+        this.getForm().loadRecord(user);
 
-        var src = 'http://www.gravatar.com/avatar/' + Jarvus.util.MD5.hash(record.get('email').trim().toLowerCase()) + '?s=80&d=mm';
+        var src = 'http://www.gravatar.com/avatar/' + Jarvus.util.MD5.hash(user.get('email').trim().toLowerCase()) + '?s=80&d=mm';
 
-        if (this.getComponent(5).rendered) {
-            this.getComponent(5).el.down('img').set({
+        if (this.getComponent('avatar').rendered) {
+            this.getComponent('avatar').el.down('img').set({
                 src: src
             });
         } else {
@@ -87,27 +85,27 @@ Ext.define('Phlexible.user.edit.Details', {
  */
 (function() {
 
-    var hex_chr = '0123456789abcdef'.split('')
-        ,add32 = function(a, b) {
+    var hex_chr = '0123456789abcdef'.split(''),
+        add32 = function(a, b) {
             return (a + b) & 0xFFFFFFFF;
-        }
-        ,cmn = function(q, a, b, x, s, t) {
+        },
+        cmn = function(q, a, b, x, s, t) {
             a = add32(add32(a, q), add32(x, t));
             return add32((a << s) | (a >>> (32 - s)), b);
-        }
-        ,ff = function(a, b, c, d, x, s, t) {
+        },
+        ff = function(a, b, c, d, x, s, t) {
             return cmn((b & c) | ((~b) & d), a, b, x, s, t);
-        }
-        ,gg = function(a, b, c, d, x, s, t) {
+        },
+        gg = function(a, b, c, d, x, s, t) {
             return cmn((b & d) | (c & (~d)), a, b, x, s, t);
-        }
-        ,hh = function(a, b, c, d, x, s, t) {
+        },
+        hh = function(a, b, c, d, x, s, t) {
             return cmn(b ^ c ^ d, a, b, x, s, t);
-        }
-        ,ii = function(a, b, c, d, x, s, t) {
+        },
+        ii = function(a, b, c, d, x, s, t) {
             return cmn(c ^ (b | (~d)), a, b, x, s, t);
-        }
-        ,md5cycle = function(x, k) {
+        },
+        md5cycle = function(x, k) {
             var a = x[0], b = x[1], c = x[2], d = x[3];
 
             a = ff(a, b, c, d, k[0], 7, -680876936);
@@ -182,8 +180,8 @@ Ext.define('Phlexible.user.edit.Details', {
             x[1] = add32(b, x[1]);
             x[2] = add32(c, x[2]);
             x[3] = add32(d, x[3]);
-        }
-        ,md5blk = function(s) {
+        },
+        md5blk = function(s) {
             /* there needs to be support for Unicode here,
              * unless we pretend that we can redefine the MD-5
              * algorithm for multi-byte characters (perhaps
@@ -207,13 +205,13 @@ Ext.define('Phlexible.user.edit.Details', {
                 + (s.charCodeAt(i+3) << 24);
             }
             return md5blks;
-        }
-        ,md51 = function(s) {
-            var txt = ''
-                ,n = s.length
-                ,state = [1732584193, -271733879, -1732584194, 271733878]
-                ,tail = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]
-                ,i;
+        },
+        md51 = function(s) {
+            var txt = '',
+                n = s.length,
+                state = [1732584193, -271733879, -1732584194, 271733878],
+                tail = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
+                i;
 
             for (i=64; i<=s.length; i+=64) {
                 md5cycle(state, md5blk(s.substring(i-64, i)));
@@ -235,21 +233,21 @@ Ext.define('Phlexible.user.edit.Details', {
             md5cycle(state, tail);
 
             return state;
-        }
-        ,rhex = function(n) {
+        },
+        rhex = function(n) {
             var s='', j=0;
             for(; j<4; j++)
                 s += hex_chr[(n >> (j * 8 + 4)) & 0x0F]
                 + hex_chr[(n >> (j * 8)) & 0x0F];
             return s;
-        }
-        ,hex = function (x) {
+        },
+        hex = function (x) {
             for (var i=0; i<x.length; i++)
                 x[i] = rhex(x[i]);
 
             return x.join('');
-        }
-        ,md5 = function (s) {
+        },
+        md5 = function (s) {
             return hex(md51(s));
         };
 
@@ -268,12 +266,10 @@ Ext.define('Phlexible.user.edit.Details', {
     }
 
     Ext.define('Jarvus.util.MD5', {
-        singleton: true
-
-        ,hash: md5
-
-        ,cache: {}
-        ,cachedHash: function(string) {
+        singleton: true,
+        hash: md5,
+        cache: {},
+        cachedHash: function(string) {
             var cache = this.cache;
             return cache[string] || (cache[string] = this.hash(string));
         }

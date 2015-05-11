@@ -57,26 +57,32 @@ class UserQuery implements UserQueryInterface
      * Return query result
      *
      * @param Criteria $criteria
+     * @param array    $sort
+     * @param int      $limit
+     * @param int      $offset
      *
      * @return Paginator
      */
-    public function getResult(Criteria $criteria)
+    public function getResult(Criteria $criteria, array $sort = null, $limit = null, $offset = null)
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('u')
             ->from($this->userClassname, 'u')
-            ->setFirstResult($criteria->getFirstResult())
-            ->setMaxResults($criteria->getMaxResults());
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
 
-        foreach ($criteria->getOrderings() as $field => $dir) {
-            $queryBuilder->addOrderBy("u.$field", $dir);
+        if ($sort) {
+            foreach ($sort as $field => $dir) {
+                $queryBuilder->addOrderBy("u.$field", $dir);
+            }
         }
 
         $this->eventDispatcher->dispatch(UserEvents::USER_QUERY_APPLY_CRITERIA, new UserQueryApplyCriteriaEvent($criteria));
 
         $this->applyCriteria($queryBuilder, $criteria);
 
-        return new Paginator($queryBuilder);
+        dump($queryBuilder->getDQL());
+        return new Paginator($queryBuilder, false);
     }
 
     /**

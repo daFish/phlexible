@@ -118,7 +118,7 @@ Ext.define('Phlexible.gui.util.Poller', {
         this.lastPoll = new Date();
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('gui_poll'),
+            url: Phlexible.Router.generate('phlexible_gui_poll'),
             disableCaching: true,
             scope: this,
             success: this.processResponse,

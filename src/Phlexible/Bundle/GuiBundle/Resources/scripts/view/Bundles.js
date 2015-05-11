@@ -92,7 +92,7 @@ Ext.define('Phlexible.gui.view.Bundles', {
                 model: 'Phlexible.gui.model.Bundle',
                 proxy: {
                     type: 'ajax',
-                    url: Phlexible.Router.generate('phlexible_gui_get_bundles'),
+                    url: Phlexible.Router.generate('phlexible_api_gui_get_bundles'),
                     reader: {
                         type: 'json',
                         idProperty: 'name',

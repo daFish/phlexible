@@ -39,6 +39,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 270px;
+    line-height: 14px;
 }
 
 /* large */
@@ -63,6 +64,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 114px;
+    line-height: 14px;
 }
 
 /* medium */
@@ -87,6 +89,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 114px;
+    line-height: 14px;
 }
 
 /* small */
@@ -102,9 +105,12 @@
     width: 16px;
     height: 16px;
 }
-.small-view .small-text .x-grid-cell-inner {
+.small-view .small-text {
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
     width: 200px;
+    line-height: 14px;
 }
 
 /* tile */

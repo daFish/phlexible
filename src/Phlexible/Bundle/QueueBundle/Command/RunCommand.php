@@ -216,9 +216,17 @@ class RunCommand extends ContainerAwareCommand
             $processBuilder->add('exec');
         }
 
+        $consoleDir = $this->getContainer()->getParameter('kernel.root_dir');
+        if (!file_exists("$consoleDir/console")) {
+            $consoleDir = $this->getContainer()->getParameter('kernel.root_dir') . '/../bin';
+            if (!file_exists("$consoleDir/console")) {
+                throw new \RuntimeException("console not found.");
+            }
+        }
+
         $processBuilder
             ->add('php')
-            ->add($this->getContainer()->getParameter('kernel.root_dir') . '/console')
+            ->add("$consoleDir/console")
             ->setEnv('phlexibleJobId', $job->getId())
             ->add($job->getCommand());
 
@@ -240,22 +248,18 @@ class RunCommand extends ContainerAwareCommand
     {
         switch ($job->getState()) {
             case Job::STATE_ABORTED:
-                $priority = QueueMessage::PRIORITY_HIGH;
                 $type = QueueMessage::TYPE_ERROR;
                 $readableStatus = 'aborted';
                 break;
             case Job::STATE_SUSPENDED:
-                $priority = QueueMessage::PRIORITY_HIGH;
                 $type = QueueMessage::TYPE_ERROR;
                 $readableStatus = 'suspended';
                 break;
             case Job::STATE_FAILED:
-                $priority = QueueMessage::PRIORITY_HIGH;
                 $type = QueueMessage::TYPE_ERROR;
                 $readableStatus = 'failed';
                 break;
             default:
-                $priority = QueueMessage::PRIORITY_LOW;
                 $type = QueueMessage::TYPE_INFO;
                 $readableStatus = 'finished';
         }
@@ -269,7 +273,7 @@ class RunCommand extends ContainerAwareCommand
             "Error output:" . PHP_EOL .
             $job->getErrorOutput();
 
-        $message = QueueMessage::create($subject, $body, $priority, $type);
+        $message = QueueMessage::create($subject, $body, $type);
         $this->getContainer()->get('phlexible_message.message_poster')->post($message);
     }
 }

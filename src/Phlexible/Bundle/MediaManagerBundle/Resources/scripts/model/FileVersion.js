@@ -1,5 +1,6 @@
 Ext.define('Phlexible.mediamanager.model.FileVersion', {
     extend: 'Ext.data.Model',
+    entityName: 'FileVersion',
     fields: [
         {name: 'id', type: 'string'},
         {name: 'folderId', type: 'string'},

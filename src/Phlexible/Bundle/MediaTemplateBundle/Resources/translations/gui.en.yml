@@ -15,7 +15,7 @@ Phlexible:
                 title: Media templates
 
             List:
-                title: Templates
+                title: Media templates
                 titleText: Title
                 addText: Add
                 imageText: Image
@@ -26,7 +26,6 @@ Phlexible:
             audio:
                 Main:
                     title: Audio template
-                    audioTemplateTitleText: 'Audio templatevorlage "{0}"'
 
                 Form:
                     title: Audio template
@@ -56,7 +55,6 @@ Phlexible:
             image:
                 Main:
                     title: Image template
-                    imageTemplateTitleText: 'Image template "{0}"'
 
                 Form:
                     title: Image template
@@ -133,7 +131,6 @@ Phlexible:
             video:
                 Form:
                     title: Video template
-                    videoTemplateTitleText: 'Video template "{0}"'
                     videoText: Video
                     widthText: Width
                     widthHelpText: 'Width of the generated video.'

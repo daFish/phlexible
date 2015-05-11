@@ -104,14 +104,14 @@ Ext.define('Phlexible.user.security.LoginWindow', {
             {
                 text: this.lostPasswordText,
                 handler: function() {
-                    document.location.href = this.resetUrl
+                    document.location.href = this.resetUrl;
                 },
                 scope: this
             },
             {
                 text: this.submitText,
                 formBind: true,
-                iconCls: 'p-user-login-icon',
+                iconCls: 'p-icon-login',
                 handler: this.submit,
                 scope: this
             }

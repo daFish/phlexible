@@ -2,21 +2,20 @@ Phlexible:
     mediatype:
         handler:
             MediaTypes:
-                text: Media Types
+                text: 'Media Types'
 
         view:
             Main:
-                title: Media types
+                title: 'Media types'
+                emptyText: 'No mimetypes'
+                mimetypesText: Mimetypes
+                mimetypeText: Mimetype
 
             List:
-                title: Media types
+                title: 'Media types'
                 nameText: Name
                 sizesText: Sizes
                 mimetypesText: Mimetypes
+                noMimetypesText: 'No mimetypes'
                 reloadText: Reload
                 iconsForText: 'Icons for "{0}"'
-
-            Mimetypes:
-                title: Mimetypes
-                emptyText: No mimetypes
-                mimetypeText: Mimetype

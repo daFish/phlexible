@@ -29,26 +29,18 @@ Ext.define('Phlexible.siteroot.view.Titles', {
             }
         ];
 
-        for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
+        Ext.each(Phlexible.Config.get('set.language.frontend'), function(language) {
             this.items[0].items.push({
-                fieldLabel: Phlexible.Icon.inline(Phlexible.Config.get('set.language.frontend')[i][2]) + ' ' + Phlexible.Config.get('set.language.frontend')[i][1],
-                name: Phlexible.Config.get('set.language.frontend')[i][0],
+                fieldLabel: Phlexible.Icon.inline(language[2]) + ' ' + language[1],
+                name: language[0],
                 xtype: 'textfield',
                 flex: 1,
-                allowBlank: false
+                allowBlank: false,
+                bind: {
+                    value: '{list.selection.titles.' + language[0] + '}'
+                }
             });
-        }
-    },
-
-    /**
-     * After the siteroot selection changes load the siteroot data.
-     *
-     * @param {Phlexible.siteroot.model.Siteroot} siteroot
-     */
-    loadData: function (siteroot) {
-        this.getComponent('titles').getForm().reset();
-        this.getComponent('titles').getForm().setValues(siteroot.data.titles);
-
+        }, this);
     },
 
     isValid: function () {

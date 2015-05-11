@@ -1,6 +1,15 @@
 .p-icon-phlexible {
     background-image: url(/COMPONENTSPATH/phlexiblegui/icons/phlexible.png) !important;
 }
+.p-icon-php {
+    background-image: url(/COMPONENTSPATH/phlexiblegui/icons/php.png) !important;
+}
 .p-icon-symfony {
     background-image: url(/COMPONENTSPATH/phlexiblegui/icons/symfony.png) !important;
+}
+.p-icon-flag-de {
+    background-image: url(/COMPONENTSPATH/phlexiblegui/icons/flags/de.png) !important;
+}
+.p-icon-flag-en {
+    background-image: url(/COMPONENTSPATH/phlexiblegui/icons/flags/en.png) !important;
 }

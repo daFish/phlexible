@@ -1,11 +1,6 @@
 Ext.define('Phlexible.mediamanager.view.FolderMeta', {
     extend: 'Phlexible.mediamanager.view.FileMeta',
-    requires: [
-        'Phlexible.mediamanager.view.FolderMetas'
-    ],
     xtype: 'mediamanager.folder-meta',
-
-    title: '_FolderMeta',
 
     checkRight: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
 
@@ -18,7 +13,7 @@ Ext.define('Phlexible.mediamanager.view.FolderMeta', {
         this.metasetUrls = {
             list: Phlexible.Router.generate('mediamanager_folder_meta_sets_list'),
             save: Phlexible.Router.generate('mediamanager_folder_meta_sets_save'),
-            available: Phlexible.Router.generate('phlexible_metaset_get_metasets')
+            available: Phlexible.Router.generate('phlexible_api_metaset_get_metasets')
         };
     },
 

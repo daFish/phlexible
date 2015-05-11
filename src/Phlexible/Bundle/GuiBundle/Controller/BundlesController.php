@@ -8,8 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -21,8 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @Security("is_granted('ROLE_BUNDLES')")
- * @Prefix("/gui")
- * @NamePrefix("phlexible_gui_")
+ * @Rest\NamePrefix("phlexible_api_gui_")
  */
 class BundlesController extends FOSRestController
 {
@@ -30,7 +28,16 @@ class BundlesController extends FOSRestController
      * Get bundles
      *
      * @return Response
-     * @ApiDoc()
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Bundle",
+     *   section="gui",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getBundlesAction()
     {
@@ -63,11 +70,9 @@ class BundlesController extends FOSRestController
         ksort($bundlesData);
         $bundlesData = array_values($bundlesData);
 
-        return $this->handleView($this->view(
-            array(
-                'bundles'  => $bundlesData,
-                'count'    => count($bundlesData),
-            )
-        ));
+        return array(
+            'bundles'  => $bundlesData,
+            'count'    => count($bundlesData),
+        );
     }
 }

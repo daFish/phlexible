@@ -1,8 +1,6 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
+Ext.require('Phlexible.element.ElementDataTabHelper');
 
-Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueStructure, element) {
+Phlexible.fields.Registry.register('tab', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'panel',
         title: item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
@@ -42,12 +40,13 @@ Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueS
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('tab', {
+Phlexible.fields.FieldTypes.register({
+    type: 'tab',
     titles: {
         de: 'Reiter',
         en: 'Tab'
     },
-    iconCls: 'p-elementtype-container_tab-icon',
+    iconCls: Phlexible.Icon.get('ui-tab'),
     allowedIn: [
         'root',
         'referenceroot'

@@ -24,8 +24,6 @@ Ext.define('Phlexible.gui.portlet.Load', {
 //            Phlexible.StartMessage.on('task', this.processMessage, this);
 //        }
 
-        ;
-
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.gui.model.LoadEntry',
             data: this.data

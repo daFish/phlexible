@@ -1,5 +1,6 @@
 Ext.define('Phlexible.mediatemplate.model.MediaTemplate', {
     extend: 'Ext.data.Model',
+    entityName: 'MediaTemplate',
 
     fields: [
         {name: 'key', type: 'string'},

@@ -32,7 +32,7 @@ Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
                 fields: ['id', 'title'],
                 proxy: {
                     type: 'ajax',
-                    url: Phlexible.Router.generate('phlexible_datasource_get_datasources'),
+                    url: Phlexible.Router.generate('phlexible_api_datasource_get_datasources'),
                     simpleSortMode: true,
                     reader: {
                         type: 'json',
@@ -77,7 +77,7 @@ Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
                                 return;
                             }
                             Ext.Ajax.request({
-                                url: Phlexible.Router.generate('phlexible_datasource_post_datasources'),
+                                url: Phlexible.Router.generate('phlexible_api_datasource_post_datasources'),
                                 params: {
                                     title: title
                                 },
@@ -91,7 +91,7 @@ Ext.define('Phlexible.metaset.window.SuggestConfigurationWindow', {
                                     }
                                 },
                                 scope: this
-                            })
+                            });
 
                         }, this);
                     },

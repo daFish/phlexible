@@ -8,22 +8,18 @@
 
 namespace Phlexible\Bundle\SearchBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Prefix;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Search controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @Prefix("/search")
- * @NamePrefix("phlexible_search_")
+ * @Rest\NamePrefix("phlexible_api_search_")
  */
 class SearchController extends FOSRestController
 {
@@ -34,10 +30,17 @@ class SearchController extends FOSRestController
      *
      * @return JsonResponse
      *
-     * @QueryParam(name="query", requirements=".+", description="Search query")
-     * @QueryParam(name="start", requirements="\d+", default=0, description="First results")
-     * @QueryParam(name="limit", requirements="\d+", default=8, description="Max results")
-     * @ApiDoc
+     * @Rest\QueryParam(name="query", requirements=".+", description="Search query")
+     * @Rest\QueryParam(name="start", requirements="\d+", default=0, description="First results")
+     * @Rest\QueryParam(name="limit", requirements="\d+", default=8, description="Max results")
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Search Results",
+     *   section="search",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getResultsAction(ParamFetcher $paramFetcher)
     {
@@ -48,11 +51,9 @@ class SearchController extends FOSRestController
         $search = $this->get('phlexible_search.search');
         $results = $search->search($query);
 
-        return $this->handleView($this->view(
-            array(
-                'results'    => array_slice($results, $start, $limit),
-                'totalCount' => count($results)
-            )
-        ));
+        return array(
+            'results'    => array_slice($results, $start, $limit),
+            'totalCount' => count($results)
+        );
     }
 }

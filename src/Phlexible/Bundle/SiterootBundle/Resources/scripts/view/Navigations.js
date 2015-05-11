@@ -1,5 +1,5 @@
 Ext.define('Phlexible.siteroot.view.Navigations', {
-    extend: 'Ext.grid.GridPanel',
+    extend: 'Ext.grid.Panel',
 
     xtype: 'siteroot.navigations',
 
@@ -16,19 +16,14 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
     removeDescriptionText: '_removeDescriptionText',
     addNavigationText: '_addNavigationText',
     emptyTitleText: '_emptyTitleText',
+    actionsText: '_actionsText',
 
     initComponent: function () {
-        this.initMyStore();
         this.initMyColumns();
+        this.initMyPlugins();
         this.initMyDockedItems();
 
         this.callParent(arguments);
-    },
-
-    initMyStore: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.siteroot.model.Navigation'
-        });
     },
 
     initMyColumns: function() {
@@ -51,7 +46,7 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
                 header: this.startTidText,
                 dataIndex: 'startTreeId',
                 editor: {
-                    xtype: 'textfield'
+                    xtype: 'numberfield'
                 },
                 width: 80
             },
@@ -83,6 +78,7 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
             },
             {
                 xtype: 'actioncolumn',
+                header: this.actionsText,
                 width: 60,
                 items: [
                     {
@@ -139,6 +135,13 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
         ];
     },
 
+    initMyPlugins: function() {
+        this.plugins = [{
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        }];
+    },
+
     initMyDockedItems: function() {
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -173,16 +176,6 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
         this.store.insert(0, navigation);
         this.selModel.selectFirstRow();
         this.startEditing(0, 0);
-    },
-
-    /**
-     * After the siteroot selection changes load the siteroot data.
-     *
-     * @param {Phlexible.siteroot.model.Siteroot} siteroot
-     */
-    loadData: function (siteroot) {
-        this.deletedRecords = [];
-        this.reconfigure(siteroot.navigations());
     },
 
     /**

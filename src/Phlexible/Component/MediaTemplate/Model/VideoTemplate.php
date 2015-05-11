@@ -13,7 +13,7 @@ namespace Phlexible\Component\MediaTemplate\Model;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class VideoTemplate extends AbstractTemplate
+class VideoTemplate extends MediaTemplate
 {
     const TYPE_VIDEO = 'video';
 
@@ -22,7 +22,7 @@ class VideoTemplate extends AbstractTemplate
      */
     public function __construct()
     {
-        $this->setType(self::TYPE_VIDEO);
+        parent::__construct(self::TYPE_VIDEO);
     }
 
     /**

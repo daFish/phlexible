@@ -4,7 +4,8 @@
 Ext.define('Phlexible.user.view.users.List', {
     extend: 'Ext.grid.GridPanel',
     requires: [
-        'Phlexible.user.model.User'
+        'Phlexible.user.model.User',
+        'Phlexible.user.window.UserWindow'
     ],
     xtype: 'user.users.list',
 
@@ -60,12 +61,11 @@ Ext.define('Phlexible.user.view.users.List', {
             model: 'Phlexible.user.model.User',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_user_get_users'),
+                url: Phlexible.Router.generate('phlexible_api_user_get_users'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
                     rootProperty: 'users',
-                    idProperty: 'id',
                     totalProperty: 'count'
                 },
                 extraParams: this.storeExtraParams
@@ -82,7 +82,7 @@ Ext.define('Phlexible.user.view.users.List', {
             }],
             listeners: {
                 beforeload: function(store) {
-                    store.getProxy().extraParams.search = Ext.encode(this.filterHelper.getSetValues());
+                    store.getProxy().extraParams = this.filterHelper.getSetValues();
 
                     // TODO: workaround due to extjs-4.2.1 buffered store load bug
                     this.getSelectionModel().deselectAll();
@@ -268,20 +268,12 @@ Ext.define('Phlexible.user.view.users.List', {
                     tb.getComponent(1).enable();
                 }
             },
-            rowdblclick: function(view, record){
+            rowdblclick: function(view, user){
                 if (!Phlexible.User.isGranted('ROLE_USER_ADMIN_UPDATE')) {
                     return;
                 }
-                var w = Ext.create('Phlexible.user.window.UserWindow', {
-                    listeners: {
-                        save: function(){
-                            this.store.load();
-                        },
-                        scope: this
-                    }
-                });
-                w.show(record);
 
+                this.editUser(user);
             },
             scope: this
         });
@@ -289,7 +281,7 @@ Ext.define('Phlexible.user.view.users.List', {
     },
 
     addUser: function(){
-        var record = Ext.create('Phlexible.user.model.User', {
+        var user = Ext.create('Phlexible.user.model.User', {
                 id: '',
                 username: '',
                 firstname: '',
@@ -309,6 +301,7 @@ Ext.define('Phlexible.user.view.users.List', {
             }),
             win = Ext.create('Phlexible.user.window.UserWindow', {
                 mode: 'add',
+                user: user,
                 listeners: {
                     save: function() {
                         this.store.load();
@@ -317,7 +310,21 @@ Ext.define('Phlexible.user.view.users.List', {
                 }
             });
 
-        win.show(record);
+        win.show();
+    },
+
+    editUser: function(user){
+        var w = Ext.create('Phlexible.user.window.UserWindow', {
+            mode: 'edit',
+            user: user,
+            listeners: {
+                save: function(){
+                    this.store.load();
+                },
+                scope: this
+            }
+        });
+        w.show();
     },
 
     deleteUser: function() {
@@ -345,7 +352,7 @@ Ext.define('Phlexible.user.view.users.List', {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('phlexible_user_delete_user'),
+                url: Phlexible.Router.generate('phlexible_api_user_delete_user'),
                 params: {
                     'ids[]': ids
                 },
@@ -366,7 +373,7 @@ Ext.define('Phlexible.user.view.users.List', {
         var selectionModel = this.getSelectionModel(),
             record = selectionModel.getSelection()[0];
 
-        document.location.href = Phlexible.Router.generate('gui_index', {"_switch_user": record.get('username')});
+        document.location.href = Phlexible.Router.generate('phlexible_gui', {"_switch_user": record.get('username')});
     },
 
     flagsRenderer: function(v, md, r) {

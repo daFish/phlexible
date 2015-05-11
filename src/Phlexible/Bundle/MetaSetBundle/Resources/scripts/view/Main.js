@@ -9,9 +9,27 @@ Ext.define('Phlexible.metaset.view.Main', {
     layout: 'border',
     border: false,
     iconCls: Phlexible.Icon.get('weather-clouds'),
+    referenceHolder: true,
+    viewModel: {
+        stores: {
+            metasets: {
+                model: 'MetaSet',
+                autoLoad: true,
+                sorters: [{
+                    property: 'name',
+                    direction: 'ASC'
+                }]
+            }
+        }
+    },
 
+    metaSet: null,
+
+    metaSetText: '_metaSetText',
+    metaSetsText: '_metaSetsText',
     idText: '_idText',
     nameText: '_nameText',
+    revisionText: '_revisionText',
     actionsText: '_actionsText',
     renameText: '_renameText',
     addText: '_addText',
@@ -45,29 +63,15 @@ Ext.define('Phlexible.metaset.view.Main', {
             {
                 xtype: 'grid',
                 region: 'west',
+                itemId: 'list',
+                bind: {
+                    store: '{metasets}'
+                },
+                reference: 'list',
+                title: this.metaSetsText,
+                iconCls: Phlexible.Icon.get('weather-clouds'),
                 width: 200,
                 padding: '5 0 5 5',
-                loadMask: true,
-                store: Ext.create('Ext.data.Store', {
-                    model: 'Phlexible.metaset.model.MetaSet',
-                    proxy: {
-                        type: 'ajax',
-                        url: Phlexible.Router.generate('phlexible_metaset_get_metasets'),
-                        simpleSortMode: true,
-                        reader: {
-                            type: 'json',
-                            rootProperty: 'metasets',
-                            idProperty: 'id',
-                            totalProperty: 'count'
-                        },
-                        extraParams: this.storeExtraParams
-                    },
-                    autoLoad: true,
-                    sorters: [{
-                        property: 'name',
-                        direction: 'ASC'
-                    }]
-                }),
                 columns: [
                     {
                         header: this.idText,
@@ -77,7 +81,20 @@ Ext.define('Phlexible.metaset.view.Main', {
                     {
                         header: this.nameText,
                         dataIndex: 'name',
-                        flex: 1
+                        flex: 1,
+                        renderer: function(v, md, metaSet) {
+                            if (!metaSet.get('revision')) {
+                                return Phlexible.Icon.inlineText('new', v);
+                            }
+
+                            return v;
+                        }
+                    },
+                    {
+                        header: this.revisionText,
+                        dataIndex: 'revision',
+                        width: 40,
+                        hidden: true
                     },
                     {
                         xtype: 'actioncolumn',
@@ -102,33 +119,33 @@ Ext.define('Phlexible.metaset.view.Main', {
                             iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                             handler: this.createSet,
                             scope: this
+                        },
+                        '->',
+                        {
+                            text: this.saveText,
+                            iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
+                            handler: this.save,
+                            scope: this
                         }
                     ]
-                }],
-                listeners: {
-                    itemdblclick: function (grid, metaSet) {
-                        var id = metaSet.get('id');
-                        this.getComponent(1).setId = id;
-                        this.getComponent(1).getStore().loadData(Ext.Object.getValues(metaSet.get('fields')));
-                        this.getComponent(1).enable();
-                    },
-                    scope: this
-                }
+                }]
             },
             {
                 xtype: 'grid',
                 region: 'center',
+                itemId: 'fields',
+                bind: {
+                    store: '{list.selection.fields}',
+                    title: '{list.selection.name}'
+                },
+                title: this.metaSetText,
                 padding: 5,
-                disabled: true,
                 enableDragDrop: true,
                 ddGroup: 'metasetitem_reorder',
-                loadMask: {
-                    text: 'blubb'
-                },
-                deferEmptyText: false,
-                emptyText: this.noFieldsText,
                 stripeRows: true,
+                emptyText: this.noFieldsText,
                 viewConfig: {
+                    deferEmptyText: false,
                     plugins: {
                         ptype: 'gridviewdragdrop',
                         dragText: 'Drag and drop to reorganize'
@@ -138,9 +155,6 @@ Ext.define('Phlexible.metaset.view.Main', {
                     ptype: 'cellediting',
                     clicksToEdit: 1
                 },
-                store: Ext.create('Ext.data.Store', {
-                    model: 'Phlexible.metaset.model.MetaSetField'
-                }),
                 columns: [
                     {
                         header: this.idText,
@@ -174,10 +188,10 @@ Ext.define('Phlexible.metaset.view.Main', {
                             triggerAction: 'all',
                             editable: false,
                             listeners: {
-                                change: function(field, newValue, oldValue) {
+                                change: function(combo, newValue, oldValue) {
                                     if (newValue !== 'select' && newValue !== 'suggest') {
-                                        var r = this.getComponent(1).getSelectionModel().getSelection()[0];
-                                        r.set('options', '');
+                                        var field = this.getComponent('fields').getSelectionModel().getSelection()[0];
+                                        field.set('options', '');
                                     }
                                 },
                                 scope: this
@@ -218,9 +232,8 @@ Ext.define('Phlexible.metaset.view.Main', {
                             {
                                 iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
                                 tooltip: this.configureText,
-                                isDisabled: function(view, rowIndex, colIndex, item, record) {
-                                    console.log(record.get('type'));
-                                    return record.get('type') !== 'select' && record.get('type') !== 'suggest';
+                                isDisabled: function(view, rowIndex, colIndex, item, field) {
+                                    return field.get('type') !== 'select' && field.get('type') !== 'suggest';
                                 },
                                 handler: this.configureField,
                                 scope: this
@@ -243,13 +256,6 @@ Ext.define('Phlexible.metaset.view.Main', {
                             iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                             handler: this.addField,
                             scope: this
-                        },
-                        '-',
-                        {
-                            text: this.saveText,
-                            iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
-                            handler: this.save,
-                            scope: this
                         }
                     ]
                 }]
@@ -258,32 +264,15 @@ Ext.define('Phlexible.metaset.view.Main', {
     },
 
     createSet: function() {
-        Ext.MessageBox.prompt(this.addSetText, this.addSetDescriptionText, function(btn, name) {
-            if (btn !== 'ok') {
-                return;
-            }
-            Ext.Ajax.request({
-                url: Phlexible.Router.generate('metaset_sets_create'),
-                params: {
-                    name: name
-                },
-                success: function (response) {
-                    var data = Ext.decode(response.responseText);
-
-                    if (data.success) {
-                        Phlexible.success(data.msg);
-
-                        this.getComponent(0).store.reload();
-                    } else {
-                        Ext.MessageBox.alert('Failure', data.msg);
-                    }
-                },
-                scope: this
-            });
-        }, this);
+        var metaSet = new Phlexible.metaset.model.MetaSet({
+            revision: 0,
+            name: 'metaset-' + Ext.id(null, '')
+        });
+        this.getComponent('list').getStore().add(metaSet);
+        this.getComponent('list').getSelectionModel().select(metaSet);
     },
 
-    renameSet: function(grid, record) {
+    renameSet: function(grid, metaSet) {
         Ext.MessageBox.prompt(this.renameSetText, this.renameSetDescriptionText, function(btn, name) {
             if (btn !== 'ok') {
                 return;
@@ -292,108 +281,135 @@ Ext.define('Phlexible.metaset.view.Main', {
                 url: Phlexible.Router.generate('metaset_sets_rename'),
                 params: {
                     name: name,
-                    id: record.get('id')
+                    id: metaSet.get('id')
                 },
                 success: function(response) {
                     var result = Ext.decode(response.responseText);
                     if (result.success) {
-                        this.getComponent(0).getStore().reload();
+                        this.getComponent('list').getStore().reload();
                         Phlexible.success(result.msg);
                     } else {
                         Phlexible.failure(result.msg);
                     }
                 },
                 scope: this
-            })
-        }, this, false, record.get('name'));
+            });
+        }, this, false, metaSet.get('name'));
     },
 
     addField: function() {
-        var r = new Ext.data.Record({
-            id: '',
-            key: '',
-            type: 'textfield',
-            required: false,
-            synchronized: false,
-            readonly: false,
-            options: ''
-        });
-        r.set('key', 'field-' + r.id);
-        this.getComponent(1).store.add(r);
+        var uuid = new Ext.data.identifier.Uuid(),
+            field = new Phlexible.metaset.model.MetaSetField({
+                id: uuid.generate(),
+                name: 'field-' + Ext.id(null, ''),
+                type: 'textfield',
+                required: false,
+                synchronized: false,
+                readonly: false,
+                options: ''
+            });
+
+        this.getComponent('fields').getStore().add(field);
     },
 
-    configureField: function(view, rowIndex, colIndex, item, e, record) {
-        if (record.get('type') === 'suggest') {
-            var w = Ext.create('Phlexible.metaset.window.SuggestConfigurationWindow', {
-                options: record.get('options'),
+    configureField: function(view, rowIndex, colIndex, item, e, field) {
+        var win;
+
+        if (field.get('type') === 'suggest') {
+            win = Ext.create('Phlexible.metaset.window.SuggestConfigurationWindow', {
+                options: field.get('options'),
                 listeners: {
                     select: function(options) {
-                        record.set('options', options);
+                        field.set('options', options);
                     },
                     scope: this
                 }
             });
-            w.show();
+            win.show();
         }
-        else if (record.get('type') === 'select') {
-            var w = Ext.create('Phlexible.metaset.window.SelectConfigurationWindow', {
-                options: record.get('options'),
+        else if (field.get('type') === 'select') {
+            win = Ext.create('Phlexible.metaset.window.SelectConfigurationWindow', {
+                options: field.get('options'),
                 listeners: {
                     store: function(options) {
-                        record.set('options', options);
+                        field.set('options', options);
                     },
                     scope: this
                 }
             });
-            w.show();
+            win.show();
         }
     },
 
-    removeField: function (grid, record) {
-        grid.getStore().remove(record);
+    removeField: function (grid, rowIndex, colIndex, item, e, field) {
+        grid.getStore().remove(field);
     },
 
     save: function () {
-        var params = [];
+        var error = false,
+            url,
+            method,
+            data = {
+                metaset: {
+                    name: this.metaSet.get('name'),
+                    fields: []
+                }
+            };
 
-        for (var i = 0; i < this.getComponent(1).store.getCount(); i++) {
-            var r = this.getComponent(1).store.getAt(i);
-
-            if (r.get('type') === 'select' && !r.get('options')) {
+        this.getComponent('fields').getStore().each(function(field) {
+            if (field.get('type') === 'select' && !field.get('options')) {
                 Phlexible.Notify.failure(this.selectNeedsOptionsText);
-                return;
+                error = true;
+                return false;
             }
-            if (r.get('type') === 'suggest' && !r.get('options')) {
+            if (field.get('type') === 'suggest' && !field.get('options')) {
                 Phlexible.Notify.failure(this.suggestNeedsOptionsText);
-                return;
+                error = true;
+                return false;
             }
 
-            params.push({
-                id: r.data.id,
-                key: r.data.key,
-                type: r.data.type,
-                required: r.data.required,
-                'synchronized': r.data['synchronized'],
-                readonly: r.data['readonly'],
-                options: r.data.options
+            data.metaset.fields.push({
+                id: field.data.id,
+                name: field.data.name,
+                type: field.data.type,
+                required: field.data.required,
+                synchronized: field.data.synchronized,
+                readonly: field.data.readonly,
+                options: field.data.options
             });
+        }, this);
+
+        if (error) {
+            return;
+        }
+
+        if (this.metaSet.get('revision')) {
+            url = Phlexible.Router.generate('phlexible_api_metaset_put_metaset', {metasetId: this.metaSet.get('id')});
+            method = 'PUT';
+        } else {
+            url = Phlexible.Router.generate('phlexible_api_metaset_post_metasets');
+            method = 'POST';
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('metaset_sets_save'),
-            params: {
-                id: this.getComponent(1).setId,
-                data: Ext.encode(params)
-            },
+            url: url,
+            method: method,
+            jsonData: data,
             success: function (response) {
-                var data = Ext.decode(response.responseText);
+                //var data = Ext.decode(response.responseText);
 
-                if (data.success) {
-                    this.getComponent(1).store.reload();
+                if (response.status === 201 || response.status === 204) {
+                    this.getComponent('list').getStore().reload({
+                        callback: function() {
+                            this.selectSet(this.getStore().getSelectionModel().getSelected()[0]);
+                        },
+                        scope: this
+                    });
 
-                    Phlexible.success(data.msg);
+                    //this.getComponent('fields').getStore().reload();
+                    Phlexible.Notify.success('succ');
                 } else {
-                    Ext.MessageBox.alert('Success', data.msg);
+                    Phlexible.Notify.failure('fail');
                 }
             },
             scope: this

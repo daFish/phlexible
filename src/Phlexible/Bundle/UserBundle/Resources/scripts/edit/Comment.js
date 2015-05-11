@@ -3,14 +3,11 @@
  */
 Ext.define('Phlexible.user.edit.Comment', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-edit-comment',
+    xtype: 'user.edit-comment',
 
-    title: '_comment',
     iconCls: Phlexible.Icon.get('sticky-note-text'),
+    bodyPadding: 10,
     layout: 'fit',
-    bodyPadding: 5,
-    border: true,
-    hideMode: 'offsets',
     defaultType: 'textfield',
     fieldDefaults:{
         labelWidth: 130,
@@ -26,15 +23,15 @@ Ext.define('Phlexible.user.edit.Comment', {
         this.items = [{
             xtype: 'textarea',
             name: 'comment',
-            hideLabel: true,
+            fieldLabel: this.commentText,
             emptyText: this.commentText
         }];
 
         this.callParent(arguments);
     },
 
-    loadRecord: function(record) {
-        this.getComponent(0).setValue(record.data.comment);
+    loadUser: function(user) {
+        this.getComponent(0).setValue(user.get('comment'));
     },
 
     isValid: function() {

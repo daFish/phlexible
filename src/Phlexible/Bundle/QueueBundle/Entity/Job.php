@@ -65,7 +65,7 @@ class Job
 
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="max_runtime", type="integer")
      */
     private $maxRuntime = PHP_INT_MAX;
 

@@ -102,8 +102,8 @@ class ScriptsBuilder
     private function buildScripts(array $bindings)
     {
         $entryPoints = array(
-            '/phlexible/phlexiblegui/scripts/global.js' => true,
-            '/phlexible/phlexiblegui/scripts/require.js' => true,
+            '/phlexible/phlexiblegui/scripts/globals.js' => true,
+            '/phlexible/phlexiblegui/scripts/requires.js' => true,
         );
 
         foreach ($bindings as $binding) {

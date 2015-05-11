@@ -88,23 +88,24 @@ Ext.define('Phlexible.problem.portlet.Problems', {
     },
 
     updateData: function (data) {
-        var problemsMap = [];
+        var problemsMap = [],
+            i, row, record;
 
-        for (var i = 0; i < data.length; i++) {
-            var row = data[i];
+        for (i = 0; i < data.length; i++) {
+            row = data[i];
             problemsMap.push(row.id);
-            var r = this.store.getById(row.id);
-            if (!r) {
+            record = this.store.getById(row.id);
+            if (!record) {
                 this.store.add(new Phlexible.problem.model.Problem(row));
 
                 Ext.fly('portal_problems_' + row.id).frame('#8db2e3', 1);
             }
         }
 
-        for (var i = this.store.getCount() - 1; i > 0; i--) {
-            var r = this.store.getAt(i);
-            if (problemsMap.indexOf(r.id) == -1) {
-                this.store.remove(r);
+        for (i = this.store.getCount() - 1; i > 0; i--) {
+            record = this.store.getAt(i);
+            if (problemsMap.indexOf(record.id) === -1) {
+                this.store.remove(record);
             }
         }
 

@@ -62,7 +62,7 @@ Ext.define('Ext.ux.form.field.PasswordMeter', {
 
         if (len > 0 && len <= 4) { // length 4 or
             // less
-            score += len
+            score += len;
         } else if (len >= 5 && len <= 7) {
             // length between 5 and 7
             score += 6;

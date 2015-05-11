@@ -20,9 +20,9 @@ use Phlexible\Bundle\SiterootBundle\SiterootsMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Siteroot identifier
+ * Siteroot manager
  *
- * @author Matthias Harmuth <mharmuth@brainbits.net>
+ * @author Stephan Wentz <swentz@brainbits.net>
  */
 class SiterootManager implements SiterootManagerInterface
 {
@@ -105,7 +105,7 @@ class SiterootManager implements SiterootManagerInterface
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::UPDATE_SITEROOT, $event);
 
-            $message = SiterootsMessage::create('Siteroot updated.', '', null, null, 'siteroot');
+            $message = SiterootsMessage::create('Siteroot updated.', '', null, 'siteroot');
             $this->messagePoster->post($message);
         } else {
             $event = new SiterootEvent($siteroot);
@@ -123,7 +123,7 @@ class SiterootManager implements SiterootManagerInterface
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::CREATE_SITEROOT, $event);
 
-            $message = SiterootsMessage::create('Siteroot created.', '', null, null, 'siteroot');
+            $message = SiterootsMessage::create('Siteroot created.', '', null, 'siteroot');
             $this->messagePoster->post($message);
         }
     }
@@ -144,7 +144,7 @@ class SiterootManager implements SiterootManagerInterface
         $event = new SiterootEvent($siteroot);
         $this->dispatcher->dispatch(SiterootEvents::DELETE_SITEROOT, $event);
 
-        $message = SiterootsMessage::create('Siteroot deleted.', '', null, null, 'siteroot');
+        $message = SiterootsMessage::create('Siteroot deleted.', '', null, 'siteroot');
         $this->messagePoster->post($message);
     }
 

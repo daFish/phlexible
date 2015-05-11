@@ -6,6 +6,7 @@ Ext.define('Phlexible.siteroot.model.Siteroot', {
         'Phlexible.siteroot.model.SpecialTid'
     ],
 
+    entityName: 'Siteroot',
     idProperty: 'id',
     fields: [
         {name: 'id', type: 'string'},
@@ -16,23 +17,17 @@ Ext.define('Phlexible.siteroot.model.Siteroot', {
         {name: 'modifiedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
         {name: 'modifyUserId', type: 'string'},
         {name: 'titles'},
-        {name: 'specialTids'},
         {name: 'properties'},
-        {name: 'navigations'},
-        {name: 'urls'}
-    ],
-    hasMany: [
-        {model: 'Phlexible.siteroot.model.Url', name: 'urls'},
-        {model: 'Phlexible.siteroot.model.Navigation', name: 'navigations'},
-        {model: 'Phlexible.siteroot.model.SpecialTid', name: 'specialTids'}
+        {name: 'title', type: 'string', calculate: function(data) {
+            return data.titles.de;
+        }}
     ],
     proxy: {
         type: 'rest',
-        url: Phlexible.Router.generate('phlexible_siteroot_get_siteroots'),
+        url: Phlexible.Router.generate('phlexible_api_siteroot_get_siteroots'),
         reader: {
             type: 'json',
             rootProperty: 'siteroots',
-            idProperty: 'id',
             totalProperty: 'count'
         }
     }

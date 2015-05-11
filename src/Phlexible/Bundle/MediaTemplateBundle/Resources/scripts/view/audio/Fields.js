@@ -142,6 +142,6 @@ Ext.define('Phlexible.mediatemplate.view.audio.Fields', {
                 triggerAction: 'all',
                 editable: false
             }
-        ]
+        ];
     }
 });

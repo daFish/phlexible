@@ -8,24 +8,27 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Prefix;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
+use Doctrine\Common\Collections\Criteria;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Phlexible\Bundle\MessageBundle\Form\Type\MessageType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Messages controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @Prefix("/message")
- * @NamePrefix("phlexible_message_")
+ * @Security("is_granted('ROLE_MESSAGES')")
+ * @Rest\NamePrefix("phlexible_api_message_")
  */
 class MessagesController extends FOSRestController
 {
@@ -36,13 +39,21 @@ class MessagesController extends FOSRestController
      *
      * @return Response
      *
-     * @QueryParam(name="start", requirements="\d+", default=0, description="First result")
-     * @QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
-     * @QueryParam(name="sort", requirements="\w+", default="createdAt", description="Sort field")
-     * @QueryParam(name="dir", requirements="\w+", default="DESC", description="Sort direction")
-     * @QueryParam(name="include", requirements="\w+", default="facets", description="Include optional values, like facets")
-     * @QueryParam(name="criteria", description="Search criteria.")
-     * @ApiDoc
+     * @Rest\QueryParam(name="start", requirements="\d+", default=0, description="First result")
+     * @Rest\QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
+     * @Rest\QueryParam(name="sort", requirements="\w+", default="createdAt", description="Sort field")
+     * @Rest\QueryParam(name="dir", requirements="\w+", default="DESC", description="Sort direction")
+     * @Rest\QueryParam(name="include", requirements="\w+", default="facets", description="Include optional values, like facets")
+     * @Rest\QueryParam(name="criteria", description="Search criteria.")
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Message",
+     *   section="message",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getMessagesAction(ParamFetcher $paramFetcher)
     {
@@ -55,10 +66,33 @@ class MessagesController extends FOSRestController
         $messageManager = $this->get('phlexible_message.message_manager');
         $criteria = $messageManager->createCriteria();
 
+        /* @var $criteria Criteria */
         $criteria
             ->orderBy(array($sort => $dir))
             ->setFirstResult($start)
             ->setMaxResults($limit);
+
+        if ($criteriaString) {
+            $criteriaArray = json_decode($criteriaString, true);
+            foreach ($criteriaArray['value'] as $values) {
+                switch ($values['op']) {
+                    case 'in':
+                        $x = $criteria->expr()->in($values['field'], $values['values']);
+                        break;
+                    case 'like':
+                        $x = $criteria->expr()->contains($values['field'], $values['value']);
+                        break;
+                    default:
+                        continue;
+                }
+
+                if ($criteriaArray['mode'] === 'AND') {
+                    $criteria->andWhere($x);
+                } else {
+                    $criteria->orWhere($x);
+                }
+            }
+        }
 
         //MessageCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
 
@@ -69,91 +103,131 @@ class MessagesController extends FOSRestController
             $messages[] = $message;
         }
 
-        $data = array(
+        return array(
             'messages' => $messages,
-            'count'    => count($messages),
+            'count'    => count($messageResult),
             'facets'   => $messageManager->getFacets($criteria),
         );
+    }
 
-        return $this->handleView($this->view($data));
+    /**
+     * Get message
+     *
+     * @param string $messageId
+     *
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Message",
+     *   section="message",
+     *   output="Phlexible\Bundle\MessageBundle\Entity\Message",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when message was not found"
+     *   }
+     * )
+     */
+    public function getMessageAction($messageId)
+    {
+        $messageManager = $this->get('phlexible_message.message_manager');
+        $message = $messageManager->find($messageId);
 
-        /*
-        $priorityFilter = [];
-        $typeFilter = [];
-        $channelFilter = [];
-        $roleFilter = [];
-
-        foreach ($filter as $key => $value) {
-            if ($key == 'subject' && !empty($value)) {
-                $criteria->addRaw(Criteria::CRITERIUM_SUBJECT_LIKE, $value);
-            } elseif ($key == 'text' && !empty($value)) {
-                $criteria->addRaw(Criteria::CRITERIUM_BODY_LIKE, $value);
-            } elseif (substr($key, 0, 9) == 'priority_') {
-                $priorityFilter[] = substr($key, 9);
-            } elseif (substr($key, 0, 5) == 'type_') {
-                $typeFilter[] = substr($key, 5);
-            } elseif (substr($key, 0, 8) == 'channel_') {
-                $channelFilter[] = substr($key, 8);
-            } elseif (substr($key, 0, 5) == 'role_') {
-                $roleFilter[] = substr($key, 9);
-            } elseif ($key == 'date_after' && !empty($value)) {
-                $criteria->addRaw(Criteria::CRITERIUM_START_DATE, $value);
-            } elseif ($key == 'date_before' && !empty($value)) {
-                $criteria->addRaw(Criteria::CRITERIUM_END_DATE, $value);
-            }
+        if (!$message instanceof Message) {
+            throw new NotFoundHttpException('Message not found');
         }
 
-        if (count($priorityFilter)) {
-            $criteria->addRaw(
-                Criteria::CRITERIUM_PRIORITY_IN,
-                implode(',', $priorityFilter)
-            );
-        }
-
-        if (count($typeFilter)) {
-            $criteria->addRaw(
-                Criteria::CRITERIUM_TYPE_IN,
-                implode(',', $typeFilter)
-            );
-        }
-
-        if (count($channelFilter)) {
-            $criteria->addRaw(
-                Criteria::CRITERIUM_CHANNEL_IN,
-                implode(',', $channelFilter)
-            );
-        }
-
-        if (count($roleFilter)) {
-            $criteria->addRaw(
-                Criteria::CRITERIUM_ROLE_IN,
-                implode(',', $roleFilter)
-            );
-        }
-        */
+        return array(
+            'message' => $message
+        );
     }
 
     /**
      * Create message
      *
-     * @param Message $message
+     * @param Request $request
      *
      * @return Response
      *
      * @ParamConverter("message", converter="fos_rest.request_body")
-     * @Post("/messages")
-     * @ApiDoc
+     * @Rest\Post("/messages")
+     * @ApiDoc(
+     *   description="Create a Message",
+     *   section="message",
+     *   input="Phlexible\Bundle\MessageBundle\Form\Type\MessageType",
+     *   statusCodes={
+     *     201="Returned when message was created",
+     *     404="Returned when message was not found"
+     *   }
+     * )
      */
-    public function postMessagesAction(Message $message)
+    public function postMessagesAction(Request $request)
     {
-        $messageManager = $this->get('phlexible_message.message_manager');
+        return $this->processForm($request);
+    }
 
-        $messageManager->updateMessage($message);
+    /**
+     * @param Request $request
+     * @param Message $message
+     *
+     * @return Rest\View|Response
+     */
+    private function processForm(Request $request, Message $message)
+    {
+        $statusCode = 201;
 
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-            )
-        ));
+        $form = $this->createForm(new MessageType(), $message);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $messageManager = $this->get('phlexible_siteroot.message_manager');
+            $messageManager->updateSiteroot($message);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set('Location',
+                    $this->generateUrl(
+                        'phlexible_api_message_get_message', array('siterootId' => $message->getId()),
+                        true // absolute
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
+    }
+
+    /**
+     * Delete message
+     *
+     * @param string $messageId
+     *
+     * @return Response
+     *
+     * @Rest\View(statusCode=204)
+     * @ApiDoc(
+     *   description="Delete a Message",
+     *   section="message",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when the siteroot is not found"
+     *   }
+     * )
+     */
+    public function deleteMessageAction($messageId)
+    {
+        $messageManager = $this->get('phlexible_siteroot.message_manager');
+        $message = $messageManager->find($messageId);
+
+        if (!$message instanceof Message) {
+            throw new NotFoundHttpException('Message not found');
+        }
+
+        $messageManager->deleteSiteroot($message);
     }
 }

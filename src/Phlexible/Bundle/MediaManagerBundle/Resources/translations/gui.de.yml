@@ -21,9 +21,6 @@ Phlexible:
                 metasetsText: Meta Sets
                 noValuesText: Keine Werte
                 fillRequiredFieldsText: 'Überprüfen Sie Ihre Eingaben.'
-
-            FileMetas:
-                title: 'Datei-Metadaten'
                 emptyText: 'Keine Werte'
                 keyText: Schlüssel
                 valueText: Wert

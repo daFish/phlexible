@@ -42,13 +42,19 @@ Ext.define('Phlexible.metaset.util.Fields', {
 
     initEditors: function () {
         this.editors = {
-            textfield: new Ext.form.TextField(),
-            textarea: new Ext.form.TextArea(),
-            date: new Ext.form.DateField({
+            textfield: {
+                xtype: 'textfield'
+            },
+            textarea: {
+                xtype: 'textarea'
+            },
+            date: {
+                xtype: 'datefield',
                 format: 'd.m.Y'
-            }),
-            'boolean': new Ext.form.ComboBox({
-                store: new Ext.data.SimpleStore({
+            },
+            'boolean': {
+                xtype: 'combo',
+                store: Ext.create('Ext.data.Store', {
                     fields: ['value'],
                     data: [
                         ['true'],
@@ -60,9 +66,9 @@ Ext.define('Phlexible.metaset.util.Fields', {
                 triggerAction: 'all',
                 editable: false,
                 typeAhead: false
-            }),
-            select: new Ext.form.ComboBox({
-                store: new Ext.data.SimpleStore({
+            },
+            select: {
+                store: Ext.create('Ext.data.Store', {
                     fields: ['key', 'value']
                 }),
                 valueField: 'key',
@@ -71,7 +77,7 @@ Ext.define('Phlexible.metaset.util.Fields', {
                 triggerAction: 'all',
                 editable: false,
                 typeAhead: false
-            })
+            }
         };
     },
 

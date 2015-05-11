@@ -62,13 +62,13 @@ Ext.define('Phlexible.mediamanager.window.FolderCreateWindow', {
 
                 if (data.success) {
                     Phlexible.Notify.success(data.msg);
-                    this.fireEvent('success', data.data)
+                    this.fireEvent('success', data.data);
                     this.close();
                 } else {
                     Phlexible.Notify.failure('Failure', data.msg);
                 }
             },
             scope: this
-        })
+        });
     }
 });

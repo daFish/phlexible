@@ -1,3 +1,5 @@
+"use strict";
+
 Ext.define('Phlexible.gui.app.Application', {
     extend: 'Ext.app.Application',
     requires: [
@@ -38,6 +40,17 @@ Ext.define('Phlexible.gui.app.Application', {
         this.requestListener.bind(this, Ext.Ajax);
         this.poller.bind(this);
 
+        if (Phlexible.User.isImpersonated()) {
+            this.getMenu().addTrayItem('impersonated', {
+                tooltip: 'Switch back to user "' + Phlexible.User.getPreviousUsername() + '"',
+                iconCls: Phlexible.Icon.get('user-thief'),
+                handler: function() {
+                    document.location.href = Phlexible.Router.generate('phlexible_gui', {"_switch_user": "_exit"});
+                },
+                scope: this
+            });
+        }
+
         Ext.get("loading").fadeOut({remove: true});
     },
 
@@ -54,14 +67,16 @@ Ext.define('Phlexible.gui.app.Application', {
     },
 
     onUnmatchedRoute: function(hash) {
-        Phlexible.Logger.info('Hash: ' + hash);
+        Phlexible.Logger.notice('Handling unmatched route: ' + hash);
         var parts = hash.split('/'),
             name = parts[0],
-            id = parts[1];
+            id = parts[1],
+            handlerName, handler;
 
         if (Phlexible.Handles.has(name)) {
-            var handlerName = Phlexible.Handles.get(name),
-                handler = Ext.create(handlerName);
+            handlerName = Phlexible.Handles.get(name);
+            handler = Ext.create(handlerName);
+
             handler.handle();
         }
     },
@@ -139,7 +154,8 @@ Ext.define('Phlexible.gui.app.Application', {
             lastname: Phlexible.Config.get('user.lastname'),
             displayName: Phlexible.Config.get('user.displayName'),
             properties: Phlexible.Config.get('user.properties'),
-            roles: Phlexible.Config.get('user.roles')
+            roles: Phlexible.Config.get('user.roles'),
+            previousUsername: Phlexible.Config.get('user.previousUsername')
         });
         Phlexible.User.getRoles();
     },
@@ -323,7 +339,7 @@ Ext.define('Phlexible.gui.util.xApplication', {
     initMenu: function() {
         this.menu = Extcreate('Phlexible.gui.menu.Menu', {
             menuData: Phlexible.menu
-        })
+        });
     },
 
     /**
@@ -531,7 +547,7 @@ Ext.define('Phlexible.gui.util.xApplication', {
      */
     getActivePanelsUri: function() {
         var config = [],
-            uri = Routing.generate('phlx_gui_index');
+            uri = Routing.generate('phlexible_gui');
 
         this.getMainPanel().items.each(function(item) {
             config.push(item.menuitem.getQueryConfig());

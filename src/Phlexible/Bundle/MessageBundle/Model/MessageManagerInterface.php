@@ -20,6 +20,15 @@ use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 interface MessageManagerInterface
 {
     /**
+     * Find message
+     *
+     * @param string $id
+     *
+     * @return Message
+     */
+    public function find($id);
+
+    /**
      * Find messages
      *
      * @param array $criteria
@@ -52,13 +61,6 @@ interface MessageManagerInterface
      * @return \Countable|\Iterator
      */
     public function query(Criteria $criteria);
-
-    /**
-     * Get priority map
-     *
-     * @return array
-     */
-    public function getPriorityNames();
 
     /**
      * Return type map

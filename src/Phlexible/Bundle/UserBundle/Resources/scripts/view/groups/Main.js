@@ -64,7 +64,7 @@ Ext.define('Phlexible.user.view.groups.Main', {
                 model: 'Phlexible.user.model.Group',
                 proxy: {
                     type: 'ajax',
-                    url: Phlexible.Router.generate('phlexible_user_get_groups'),
+                    url: Phlexible.Router.generate('phlexible_api_user_get_groups'),
                     reader: {
                         type: 'json',
                         rootProperty: 'groups'
@@ -178,7 +178,7 @@ Ext.define('Phlexible.user.view.groups.Main', {
                     }
 
                     Ext.Ajax.request({
-                        url: Phlexible.Router.generate('phlexible_user_post_groups'),
+                        url: Phlexible.Router.generate('phlexible_api_user_post_groups'),
                         params: {
                             data: Ext.encode(data)
                         },

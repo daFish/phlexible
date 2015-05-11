@@ -3,14 +3,13 @@
  */
 Ext.define('Phlexible.user.edit.Password', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-edit-password',
-    requires: ['Ext.ux.form.field.PasswordMeter'],
+    requires: [
+        'Ext.ux.form.field.PasswordMeter'
+    ],
+    xtype: 'user.edit-password',
 
-    title: '_password',
     iconCls: Phlexible.Icon.get('star'),
-    bodyPadding: '5',
-    border: true,
-    hideMode: 'offsets',
+    bodyPadding: 10,
     defaultType: 'textfield',
     fieldDefaults:{
         labelWidth: 130,
@@ -31,6 +30,7 @@ Ext.define('Phlexible.user.edit.Password', {
     initComponent: function() {
         this.items = [{
             xtype: 'ux.passwordmeterfield',
+            itemId: 'password',
             name: 'password',
             fieldLabel: this.passwordText,
             minLength: Phlexible.Config.get('users.system.password_min_length'),
@@ -40,12 +40,13 @@ Ext.define('Phlexible.user.edit.Password', {
                     if(this.mode === 'add') {
                         return;
                     }
-                    this.getComponent(2).enable();
+                    this.getComponent('notify').enable();
                 },
                 scope: this
             }
         },{
             name: 'repeat',
+            itemId: 'passwordRepeat',
             fieldLabel: this.passwordRepeatText,
             inputType: "password",
             minLength: Phlexible.Config.get('users.system.password_min_length'),
@@ -62,25 +63,30 @@ Ext.define('Phlexible.user.edit.Password', {
             }
         },{
             xtype: 'checkbox',
+            itemId: 'notify',
             name: 'notify',
             hideLabel: true,
             boxLabel: this.notifyUserText,
             disabled: true
         },{
             xtype: 'fieldset',
+            itemId: 'generateFieldset',
             title: this.generatePasswordText,
             items: [{
                 xtype: 'fieldcontainer',
+                itemId: 'generateContainer',
                 hideLabel: true,
                 layout: 'hbox',
                 items: [{
                     xtype: 'textfield',
+                    itemId: 'generated',
                     emptyText: this.generatedPasswordText,
                     readOnly: true,
                     width: 150,
                     padding: '0 5 0 0'
                 },{
                     xtype: 'button',
+                    itemId: 'generateBtn',
                     text: this.generateText,
                     iconCls: Phlexible.Icon.get('wand'),
                     handler: function(btn) {
@@ -88,13 +94,13 @@ Ext.define('Phlexible.user.edit.Password', {
                             length = Phlexible.Config.get('users.system.password_min_length'),
                             password = generator.create(length, false);
 
-                        this.getComponent(3).getComponent(0).getComponent(0).setValue(password);
+                        this.getComponent('generateFieldset').getComponent('generateContainer').getComponent('generated').setValue(password);
 
-                        this.getComponent(0).setValue(password);
-                        this.getComponent(1).setValue(password);
+                        this.getComponent('password').setValue(password);
+                        this.getComponent('passwordRepeat').setValue(password);
 
                         if (this.mode !== 'add') {
-                            this.getComponent(2).enable();
+                            this.getComponent('notify').enable();
                         }
                     },
                     scope: this
@@ -105,12 +111,12 @@ Ext.define('Phlexible.user.edit.Password', {
         this.callParent(arguments);
     },
 
-    loadRecord: function(record) {
+    loadUser: function(user) {
         if (this.mode === 'add') {
-            this.getComponent(2).hide();
+            this.getComponent('notify').hide();
         }
 
-        this.getForm().loadRecord(record);
+        this.getForm().loadRecord(user);
     },
 
     isValid: function() {

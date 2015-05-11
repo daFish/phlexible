@@ -202,9 +202,9 @@ class FolderController extends Controller
                 'files'       => $calculatedSize->getNumFiles(),
                 'folders'     => $calculatedSize->getNumFolders(),
                 'create_time' => $folder->getCreatedAt()->format('U') * 1000,
-                'create_user' => $folder->getCreateUserId(),
+                'create_user' => $folder->getCreateUser(),
                 'modify_time' => $folder->getModifiedAt()->format('U') * 1000,
-                'modify_user' => $folder->getModifyUserId(),
+                'modify_user' => $folder->getModifyUser(),
             ];
         } catch (\Exception $e) {
             $data = [];

@@ -225,13 +225,13 @@ Ext.define('Phlexible.mediamanager.view.Main', {
                     menu: [
                         {
                             text: this.downloadFolderText,
-                            iconCls: Phlexible.Icon.get('folder'),
+                            iconCls: Phlexible.Icon.get('folder-zipper'),
                             handler: this.onDownloadFolder,
                             scope: this
                         },
                         {
                             text: this.downloadFilesText,
-                            iconCls: Phlexible.Icon.get('documents'),
+                            iconCls: Phlexible.Icon.get('document-zipper'),
                             handler: this.onDownloadFiles,
                             scope: this
                         }

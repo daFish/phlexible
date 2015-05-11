@@ -192,14 +192,14 @@ interface FileInterface
     /**
      * @return string
      */
-    public function getCreateUserId();
+    public function getCreateUser();
 
     /**
-     * @param string $createUserId
+     * @param string $createUser
      *
      * @return $this
      */
-    public function setCreateUserId($createUserId);
+    public function setCreateUser($createUser);
 
     /**
      * @return \DateTime
@@ -216,12 +216,12 @@ interface FileInterface
     /**
      * @return string
      */
-    public function getModifyUserId();
+    public function getModifyUser();
 
     /**
-     * @param string $modifyUserId
+     * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUserId($modifyUserId);
+    public function setModifyUser($modifyUser);
 }

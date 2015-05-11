@@ -8,25 +8,26 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Prefix;
-use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\MessageBundle\Entity\Filter;
+use Phlexible\Bundle\MessageBundle\Form\Type\FilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Filters controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @Prefix("/message")
- * @NamePrefix("phlexible_message_")
+ * @Security("is_granted('ROLE_MESSAGE_FILTERS')")
+ * @Rest\NamePrefix("phlexible_api_message_")
  */
 class FiltersController extends FOSRestController
 {
@@ -37,8 +38,16 @@ class FiltersController extends FOSRestController
      *
      * @return Response
      *
-     * @QueryParam(name="userId", requirements=".+", description="User ID")
-     * @ApiDoc
+     * @Rest\QueryParam(name="userId", requirements=".+", description="User ID")
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Filter",
+     *   section="message",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getFiltersAction(ParamFetcher $paramFetcher)
     {
@@ -51,62 +60,136 @@ class FiltersController extends FOSRestController
 
         $filters = $filterManager->findBy($criteria);
 
-        return $this->handleView($this->view(
-            array(
-                'filters' => $filters,
-                'count'   => count($filters)
-            )
-        ));
+        return array(
+            'filters' => $filters,
+            'count'   => count($filters)
+        );
+    }
+
+    /**
+     * Get filter
+     *
+     * @param string $filterId
+     *
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Filter",
+     *   section="message",
+     *   output="Phlexible\Bundle\MessageBundle\Entity\Filter",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when filter was not found"
+     *   }
+     * )
+     */
+    public function getFilterAction($filterId)
+    {
+        $filterManager = $this->get('phlexible_message.filter_manager');
+        $filter = $filterManager->find($filterId);
+
+        if (!$filter instanceof Filter) {
+            throw new NotFoundHttpException('Filter not found');
+        }
+
+        return array(
+            'filter' => $filter
+        );
     }
 
     /**
      * Create filter
      *
-     * @param Filter $filter
+     * @param Request $request
      *
      * @return Response
      *
      * @ParamConverter("subscription", converter="fos_rest.request_body")
-     * @Post("/filters")
-     * @ApiDoc
+     * @Rest\Post("/filters")
+     * @ApiDoc(
+     *   description="Create a Filter",
+     *   section="message",
+     *   input="Phlexible\Bundle\MessageBundle\Form\Type\FilterType",
+     *   statusCodes={
+     *     201="Returned when filter was created",
+     *     204="Returned when filter was updated",
+     *     404="Returned when filter was not found"
+     *   }
+     * )
      */
-    public function postFiltersAction(Filter $filter)
+    public function postFiltersAction(Request $request)
     {
-        $filterManager = $this->get('phlexible_message.filter_manager');
-        $filterManager->updateFilter($filter);
-
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-            )
-        ));
+        return $this->processForm($request, new Filter());
     }
 
     /**
-     * Updates a Filter
+     * Update filter
      *
-     * @param Filter $filter
-     * @param string $filterId
+     * @param Request $request
+     * @param string  $filterId
      *
      * @return Response
      *
      * @ParamConverter("filter", converter="fos_rest.request_body")
-     * @Put("/filters/{filterId}")
-     * @ApiDoc
+     * @Rest\Put("/filters/{filterId}")
+     * @ApiDoc(
+     *   description="Update a Filter",
+     *   section="message",
+     *   input="Phlexible\Bundle\MessageBundle\Form\Type\FilterType",
+     *   statusCodes={
+     *     201="Returned when filter was created",
+     *     204="Returned when filter was updated",
+     *     404="Returned when filter was not found"
+     *   }
+     * )
      */
-    public function putFilterAction(Filter $filter, $filterId)
+    public function putFilterAction(Request $request, $filterId)
     {
         $filterManager = $this->get('phlexible_message.filter_manager');
-
         $filter = $filterManager->find($filterId);
 
-        $filterManager->updateFilter($filter);
+        if (!$filter instanceof Filter) {
+            throw new NotFoundHttpException('Filter not found');
+        }
 
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-            )
-        ));
+        return $this->processForm($request, $filter);
+    }
+
+    /**
+     * @param Request $request
+     * @param Filter  $filter
+     *
+     * @return Rest\View|Response
+     */
+    private function processForm(Request $request, Filter $filter)
+    {
+        $statusCode = !$filter->getId() ? 201 : 204;
+
+        $form = $this->createForm(new FilterType(), $filter);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $filterManager = $this->get('phlexible_message.filter_manager');
+            $filterManager->updateFilter($filter);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set('Location',
+                    $this->generateUrl(
+                        'phlexible_api_message_get_filter', array('filterId' => $filter->getId()),
+                        true // absolute
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
     }
 
     /**
@@ -116,7 +199,14 @@ class FiltersController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc
+     * @ApiDoc(
+     *   description="Delete a Filter",
+     *   section="message",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when message is not found"
+     *   }
+     * )
      */
     public function deleteFilterAction($filterId)
     {

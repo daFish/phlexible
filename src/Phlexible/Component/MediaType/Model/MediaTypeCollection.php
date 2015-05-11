@@ -37,7 +37,7 @@ class MediaTypeCollection
         $this->mediaTypes[$mediaType->getName()] = $mediaType;
 
         foreach ($mediaType->getMimetypes() as $mimetype) {
-            $this->mimetypeMap[$mimetype] = $mediaType->getName();
+            $this->mimetypeMap[$mimetype->toStringWithoutParameters()] = $mediaType->getName();
         }
 
         return $this;

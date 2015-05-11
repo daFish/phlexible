@@ -41,42 +41,44 @@ class FileMetaController extends Controller
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $meta = [];
+        $fileMetaSets = [];
 
         foreach ($fileMetaSetResolver->resolve($file) as $metaSet) {
             $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
 
-            $fieldDatas = [];
+            $fileMetas = [];
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fieldData = [
+                $fileMeta = [
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
+                    'values'       => array(),
+                    'leaf'         => true,
                 ];
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $language) {
-                        $fieldData["value_$language"] = $metaData->get($field->getName(), $language);
+                        $fileMeta['values'][$language] = $metaData->get($field->getName(), $language);
                     }
                 }
 
-                $fieldDatas[] = $fieldData;
+                $fileMetas[] = $fileMeta;
             }
 
-            $meta[] = [
-                'set_id' => $metaSet->getId(),
-                'title'  => $metaSet->getName(),
-                'fields' => $fieldDatas
+            $fileMetaSets[] = [
+                'id'       => $metaSet->getId(),
+                'title'    => $metaSet->getName(),
+                'children' => $fileMetas
             ];
         }
 
-        return new JsonResponse(['meta' => $meta]);
+        return new JsonResponse(['children' => $fileMetaSets]);
     }
 
     /**

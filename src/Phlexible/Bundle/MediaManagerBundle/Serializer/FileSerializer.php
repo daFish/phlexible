@@ -24,11 +24,6 @@ use Symfony\Component\Routing\RouterInterface;
 class FileSerializer
 {
     /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
-    /**
      * @var MediaTypeManagerInterface
      */
     private $mediaTypeManager;
@@ -49,21 +44,18 @@ class FileSerializer
     private $router;
 
     /**
-     * @param UserManagerInterface      $userManager
      * @param MediaTypeManagerInterface $mediaTypeManager
      * @param CacheManagerInterface     $cacheManager
      * @param FileUsageManager          $fileUsageManager
      * @param RouterInterface           $router
      */
     public function __construct(
-        UserManagerInterface $userManager,
         MediaTypeManagerInterface $mediaTypeManager,
         CacheManagerInterface $cacheManager,
         FileUsageManager $fileUsageManager,
         RouterInterface $router
     )
     {
-        $this->userManager = $userManager;
         $this->mediaTypeManager = $mediaTypeManager;
         $this->cacheManager = $cacheManager;
         $this->fileUsageManager = $fileUsageManager;
@@ -80,29 +72,11 @@ class FileSerializer
      */
     public function serialize(ExtendedFileInterface $file, $language, array $fields = array())
     {
-        $all = in_array('all', $fields);
+        $all = true;
 
         $volume = $file->getVolume();
         $folder = $volume->findFolder($file->getFolderId());
         $hasVersions = $volume->hasFeature('versions');
-
-        try {
-            $createUser = $this->userManager->find($file->getCreateUserId());
-            $createUserName = $createUser->getDisplayName();
-        } catch (\Exception $e) {
-            $createUserName = 'Unknown';
-        }
-
-        try {
-            if ($file->getModifyUserId()) {
-                $modifyUser = $this->userManager->find($file->getModifyUserId());
-                $modifyUserName = $modifyUser->getDisplayName();
-            } else {
-                $modifyUserName = 'Unknown';
-            }
-        } catch (\Exception $e) {
-            $modifyUserName = 'Unknown';
-        }
 
         $mediaType = $this->mediaTypeManager->find(strtolower($file->getMediaType()));
 
@@ -170,7 +144,7 @@ class FileSerializer
                     'version'         => $fileVersion->getVersion(),
                     'documentTypeKey' => $fileVersion->getMediaType(),
                     'assetType'       => $fileVersion->getMediaCategory(),
-                    'createUserId'    => $fileVersion->getCreateUserId(),
+                    'createUser'      => $fileVersion->getCreateUser(),
                     'createTime'      => $fileVersion->getCreatedAt()->format('Y-m-d'),
                 ];
             }
@@ -211,11 +185,9 @@ class FileSerializer
             'hidden'          => $file->isHidden() ? 1 : 0,
             'version'         => $version,
             'usageStatus'     => $usageStatus,
-            'createUser'      => $createUserName,
-            'createUserId'    => $file->getCreateUserId(),
+            'createUser'      => $file->getCreateUser(),
             'createTime'      => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-            'modifyUser'      => $modifyUserName,
-            'modifyUserId'    => $file->getModifyUserId(),
+            'modifyUser'      => $file->getModifyUser(),
             'modifyTime'      => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
             'cache'           => $cache,
             'meta'            => $meta,

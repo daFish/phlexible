@@ -33,7 +33,7 @@ Ext.define('Phlexible.mediatemplate.view.MainController', {
             }
 
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('phlexible_mediatemplate_post_mediatemplates'),
+                url: Phlexible.Router.generate('phlexible_api_mediatemplate_post_mediatemplates'),
                 params: {
                     type: type,
                     key: key

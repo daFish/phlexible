@@ -38,7 +38,7 @@ Phlexible:
 
             SpecialTids:
                 title: 'Special TIDs'
-                nameText: Key
+                nameText: Name
                 languageText: Language
                 treeIdText: TID
                 removeText: Remve

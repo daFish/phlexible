@@ -75,7 +75,7 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
     loadConfig: function () {
         // load config
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('gui_config'),
+            url: Phlexible.Router.generate('phlexible_gui_config'),
             success: function(response) {
                 var config = Ext.decode(response.responseText);
                 Phlexible.Config = new Phlexible.gui.util.Config(config);
@@ -317,7 +317,7 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                     xtype: i.handleTarget,
                     header: false,
                     params: i.params || {}
-                })
+                });
             }
         }
     },

@@ -1,18 +1,25 @@
 Phlexible:
     queue:
         handler:
-            Stats:
-                text: Queue Status
+            Queue:
+                text: Queue
 
-        window:
-            QueueStatsWindow:
+        view:
+            Main:
                 title: Warteschlange
+                queueText: Queue
                 noJobsText: 'Keine Jobs'
-                idText: Id
+                idText: ID
                 commandText: Kommando
                 priorityText: Priorität
-                statusText: Status
+                stateText: Status
                 createdAtText: 'Angelegt an'
                 startedAtText: 'Gestartet an'
                 finishedAtText: 'Beendet an'
+                runTimeText: Laufzeit
+                memoryUsageText: Speicherverbrauch
+                maxRuntimeText: 'Max. Laufzeit'
+                executeAfterText: 'Ausführen nach'
+                outputText: 'Ausgabe'
+                errorOutputText: 'Fehlerausgabe'
                 reloadText: 'Neu laden'

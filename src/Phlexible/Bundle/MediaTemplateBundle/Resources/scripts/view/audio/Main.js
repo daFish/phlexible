@@ -7,10 +7,7 @@ Ext.define('Phlexible.mediatemplate.view.audio.Main', {
 
     xtype: 'mediatemplate.audio.main',
 
-    header: false,
     layout: 'border',
-
-    audioTemplateTitleText: '_audioTemplateTitleText',
 
     initComponent: function () {
         this.initMyItems();
@@ -26,7 +23,6 @@ Ext.define('Phlexible.mediatemplate.view.audio.Main', {
                 region: 'west',
                 width: 320,
                 margin: 5,
-                header: false,
                 listeners: {
                     saveTemplate: function () {
                         this.fireEvent('saveTemplate');
@@ -48,7 +44,6 @@ Ext.define('Phlexible.mediatemplate.view.audio.Main', {
     },
 
     loadParameters: function (key, parameters) {
-        this.getComponent('form').setTitle(Ext.String.format(this.audioTemplateTitleText, key));
         this.getComponent('form').loadParameters(key, parameters);
     }
 });

@@ -95,7 +95,7 @@ class ExpressionVisitor extends BaseExpressionVisitor
                 return $this->qb->expr()->notIn($field, $this->literal($value));
 
             case Comparison::CONTAINS:
-                return $this->qb->expr()->like($field, $this->literal($value));
+                return $this->qb->expr()->like($field, $this->literal("%$value%"));
 
             default:
                 throw new \RuntimeException("Unknown comparison operator: " . $comparison->getOperator());

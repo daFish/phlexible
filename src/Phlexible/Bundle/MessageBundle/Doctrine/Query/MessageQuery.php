@@ -56,6 +56,7 @@ class MessageQuery implements MessageQueryInterface
 
         $this->applyCriteria($queryBuilder, $criteria);
 
+        //echo $queryBuilder->getQuery()->getSQL();die;
         return new Paginator($queryBuilder);
     }
 
@@ -76,9 +77,6 @@ class MessageQuery implements MessageQueryInterface
         $typeQb = clone $queryBuilder;
         $types = $typeQb->select('DISTINCT m.type')->getQuery()->getScalarResult();
 
-        $priorityQb = clone $queryBuilder;
-        $priorities = $priorityQb->select('DISTINCT m.priority')->getQuery()->getScalarResult();
-
         $roleQb = clone $queryBuilder;
         $roles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
@@ -87,7 +85,6 @@ class MessageQuery implements MessageQueryInterface
         };
 
         return [
-            'priorities' => array_map($toInt, array_column($priorities, 'priority')),
             'types'      => array_map($toInt, array_column($types, 'type')),
             'channels'   => array_column($channels, 'channel'),
             'roles'      => array_column($roles, 'role'),

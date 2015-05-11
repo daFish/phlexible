@@ -36,16 +36,6 @@ class UserEvents
     const UPDATE_USER = 'phlexible_user.update_user';
 
     /**
-     * Fired before a user is applied as a successor of another user
-     */
-    const BEFORE_APPLY_SUCCESSOR = 'phlexible_user.before_apply_successor';
-
-    /**
-     * Fired after a user has been applied as a successor of another user
-     */
-    const APPLY_SUCCESSOR = 'phlexible_user.apply_successor';
-
-    /**
      * Fired before a user has been deleted
      */
     const BEFORE_DELETE_USER = 'phlexible_user.before_delete_user';

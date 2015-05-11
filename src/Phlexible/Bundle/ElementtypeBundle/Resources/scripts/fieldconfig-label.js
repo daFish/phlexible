@@ -1,7 +1,4 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-
-Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valueStructure, element) {
+Phlexible.fields.Registry.register('label', function (parentConfig, item, valueStructure, element) {
     var contextHelp = item.labels.contextHelp || {},
         fieldLabel = item.labels.fieldLabel || {},
         config = {
@@ -21,12 +18,13 @@ Phlexible.fields.Registry.addFactory('label', function (parentConfig, item, valu
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('label', {
+Phlexible.fields.FieldTypes.register({
+    type: 'label',
     titles: {
         de: 'Label',
         en: 'Label'
     },
-    iconCls: 'p-elementtype-field_label-icon',
+    iconCls: Phlexible.Icon.get('ui-label'),
     allowedIn: [
         'tab',
         'accordion',

@@ -49,7 +49,9 @@ Ext.define('Phlexible.gui.menuhandle.handle.Menu', {
             }, this);
 
             if (subMenu.length) {
-                subMenu.sort(function(a,b) { return (a.text > b.text) - (b.text > a.text) } );
+                subMenu.sort(function(a,b) {
+                    return (a.text > b.text) - (b.text > a.text);
+                } );
                 config.menu = subMenu;
             } else {
                 config.hidden = true;

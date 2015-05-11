@@ -13,7 +13,7 @@ namespace Phlexible\Component\MediaTemplate\Model;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AudioTemplate extends AbstractTemplate
+class AudioTemplate extends MediaTemplate
 {
     const TYPE_AUDIO = 'audio';
 
@@ -22,7 +22,7 @@ class AudioTemplate extends AbstractTemplate
      */
     public function __construct()
     {
-        $this->setType(self::TYPE_AUDIO);
+        parent::__construct(self::TYPE_AUDIO);
     }
 
     /**

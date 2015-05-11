@@ -9,6 +9,8 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,25 +37,29 @@ class Elementtype implements IdentifiableInterface
     /**
      * @var string
      * @Assert\NotNull
+     * @Type("string")
      */
     private $uniqueId;
 
     /**
      * @var int
      * @Assert\NotNull
+     * @Type("integer")
      */
-    private $revision;
+    private $revision = 1;
 
     /**
      * @var string
      * @Assert\NotNull
      * @Assert\Choice(choices={"full", "part", "reference", "layout", "structure"})
+     * @Type("string")
      */
     private $type;
 
     /**
      * @var array
      * @Assert\Count(min=1)
+     * @Type("array<string>")
      */
     private $titles;
 
@@ -104,32 +110,46 @@ class Elementtype implements IdentifiableInterface
 
     /**
      * @var ElementtypeStructure
+     * @Exclude)
      */
     private $structure;
 
     /**
      * @var \DateTime
      * @Assert\NotNull()
+     * @Type("DateTime")
      */
     private $createdAt;
 
     /**
      * @var string
      * @Assert\NotNull()
+     * @Type("string")
      */
     private $createUser;
 
     /**
      * @var \DateTime
      * @Assert\NotNull()
+     * @Type("DateTime")
      */
     private $modifiedAt;
 
     /**
      * @var string
      * @Assert\NotNull()
+     * @Type("string")
      */
     private $modifyUser;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
+    }
 
     /**
      * @return string

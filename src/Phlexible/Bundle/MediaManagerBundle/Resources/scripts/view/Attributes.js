@@ -75,7 +75,7 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
             '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.create_date]}:</div>',
             '<div>{[Phlexible.Format.date(values.createTime)]}</div>',
             '</div>'
-        )
+        );
     },
 
     initMyAccordions: function() {
@@ -303,7 +303,7 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
                     }
                 }
             });
-        };
+        }
     },
 
     getPreviewPanel: function () {

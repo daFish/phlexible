@@ -8,6 +8,8 @@
 
 namespace Phlexible\Component\MetaSet\Model;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * Meta set field
  *
@@ -17,16 +19,20 @@ class MetaSetField implements MetaSetFieldInterface
 {
     /**
      * @var int
+     * @Assert\NotBlank
+     * @Assert\Uuid
      */
     private $id;
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @var string
+     * @Assert\NotBlank
      */
     private $type;
 
@@ -37,16 +43,19 @@ class MetaSetField implements MetaSetFieldInterface
 
     /**
      * @var bool
+     * @Assert\Type(type="bool")
      */
     private $synchronized = false;
 
     /**
      * @var bool
+     * @Assert\Type(type="bool")
      */
     private $readonly = false;
 
     /**
      * @var bool
+     * @Assert\Type(type="bool")
      */
     private $required = false;
 

@@ -3,10 +3,8 @@
  */
 Ext.define('Phlexible.user.options.Properties', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-options-properties',
+    xtype: 'user.options-properties',
 
-    title: '_properties', //MWF.strings.Users.personal_details,
-    //bodyStyle: 'padding: 15px',
     border: true,
     hideMode: 'offsets',
     labelWidth: 150,

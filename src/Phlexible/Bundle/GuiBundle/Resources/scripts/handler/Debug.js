@@ -3,4 +3,4 @@ Ext.define('Phlexible.gui.handler.Debug', {
 
     text: '_debug',
     iconCls: Phlexible.Icon.get('bug')
-})
+});

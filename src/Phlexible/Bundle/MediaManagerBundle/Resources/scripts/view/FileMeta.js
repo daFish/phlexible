@@ -1,13 +1,15 @@
 Ext.define('Phlexible.mediamanager.view.FileMeta', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.tree.Panel',
     requires: [
-        'Phlexible.mediamanager.view.FileMetas'
+        'Phlexible.mediamanager.model.FileMetaSet',
+        'Phlexible.mediamanager.model.FileMeta'
     ],
     xtype: 'mediamanager.file-meta',
 
-    title: '_FileMeta',
     cls: 'p-mediamanager-meta',
     iconCls: Phlexible.Icon.get('weather-cloud'),
+    rootVisible: false,
+    animate: false,
 
     small: false,
     checkRight: Phlexible.mediamanager.Rights.FILE_MODIFY,
@@ -18,10 +20,14 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
     metasetsText: '_metasetsText',
     noValuesText: '_noValuesText',
     fillRequiredFieldsText: '_fillRequiredFieldsText',
+    emptyText: '_emptyText',
+    keyText: '_keyText',
+    valueText: '_valueText',
 
     initComponent: function () {
         this.initMyUrls();
-        this.initMyItems();
+        this.initMyStore();
+        this.initMyColumns();
         this.initMyDockedItems();
 
         this.callParent(arguments);
@@ -43,26 +49,101 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
         this.metasetUrls = {
             list: Phlexible.Router.generate('mediamanager_file_meta_sets_list'),
             save: Phlexible.Router.generate('mediamanager_file_meta_sets_save'),
-            available: Phlexible.Router.generate('phlexible_metaset_get_metasets')
+            available: Phlexible.Router.generate('phlexible_api_metaset_get_metasets')
         };
     },
 
-    initMyItems: function() {
-        this.items = [{
-            html: 'empty'
-        }];
+    initMyStore: function() {
+        this.fieldData = this.fieldData || [];
+
+        this.store = Ext.create('Ext.data.TreeStore', {
+            model: 'Phlexible.mediamanager.model.FileMetaSet',
+            data: this.fieldData,
+            proxy: {
+                type: 'ajax',
+                reader: {
+                    type: 'json',
+                    typeProperty: 'mtype'
+                },
+                url: this.urls.load,
+                extraParams: {}
+            },
+            autoLoad: false,
+            listeners: {
+                load: function (store, records) {
+                    return; // TODO: check
+                    // if no required fields are present for a file
+                    // -> hide the 'required' column
+                    var hasRequiredFields = false,
+                        i;
+                    for (i = records.length - 1; i >= 0; --i) {
+                        if (1 == records[i].get('required')) {
+                            hasRequiredFields = true;
+                            break;
+                        }
+                    }
+                    this.getColumnModel().setHidden(1, !hasRequiredFields);
+
+                    this.validateMeta();
+                },
+                scope: this
+            }
+        });
+
+        delete this.fieldData;
+    },
+
+    initMyColumns: function() {
+        this.columns = [
+            {
+                xtype: 'treecolumn',
+                header: this.keyText,
+                dataIndex: 'name',
+                width: 100
+            },
+            {
+                header: '&nbsp;',
+                dataIndex: 'required',
+                width: 30,
+                renderer: function (v) {
+                    return v ? Phlexible.Icon.get('exclamation') : '&nbsp;';
+                }
+            }
+        ];
+
+        Ext.each(Phlexible.Config.get('set.language.meta'), function (language) {
+            this.columns.push({
+                header: this.valueText + ' ' + language[2] + ' ' + language [1],
+                language: language[0],
+                flex: 1,
+                hidden: false,//this.small && language[0] !== Phlexible.Config.get('language.metasets'),
+                renderer: function(v, md, r) {
+                    return r.get('de'); // TODO: language
+                },
+                xgetEditor: function(record) {
+                    var type = record.get('editType');
+
+                    if (type === 'text') {
+                        return Ext.create('Ext.grid.CellEditor', {
+                            field: Ext.create('Ext.form.field.Text')
+                        });
+                    } else if (type === 'combo') {
+                        return Ext.create('Ext.grid.CellEditor', {
+                            field: combo
+                        });
+                    }
+                }
+            });
+        }, this);
     },
 
     initMyDockedItems: function () {
         var languageBtns = [];
-        Ext.each(Phlexible.Config.get('set.language.meta'), function (item) {
-            var language = item[0];
-            var t9n = item[1];
-            var flag = item[2];
+        Ext.each(Phlexible.Config.get('set.language.meta'), function (language) {
             languageBtns.push({
-                text: t9n,
-                iconCls: flag,
-                language: language,
+                text: language[1],
+                iconCls: language[2],
+                language: language[0],
                 checked: Phlexible.Config.get('language.metasets') === language
             });
         }, this);
@@ -116,6 +197,12 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
 
     loadMeta: function (params) {
         this.params = params;
+        Ext.Object.each(params, function(key, value) {
+            this.getStore().getProxy().setExtraParam(key, value);
+        }, this);
+        console.info(this.getStore().getProxy());
+        this.getStore().load();
+        return;
         Ext.Ajax.request({
             url: this.urls.load,
             params: params,
@@ -191,7 +278,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
     },
 
     empty: function () {
-        this.removeAll();
+        this.getStore().removeAll();
     },
 
     save: function () {
@@ -200,7 +287,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
         var sources = {};
         this.items.each(function(p) {
             sources[p.setId] = p.getFieldData();
-        })
+        });
         var params = this.params;
         params.data = Ext.encode(sources);
 

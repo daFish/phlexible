@@ -21,9 +21,6 @@ Phlexible:
                 metasetsText: Meta sets
                 noValuesText: No values
                 fillRequiredFieldsText: 'Please check your input.'
-
-            FileMetas:
-                title: 'File meta data'
                 emptyText: 'No values'
                 keyText: Key
                 valueText: Value
@@ -47,7 +44,7 @@ Phlexible:
                 modifiedAtText: 'Modified at'
                 renameFileText: Rename file
                 deleteFilesText: 'Delete files'
-                deleteFileText: 'Delete files'
+                deleteFileText: 'Delete file'
                 hideFilesText: 'Hide files'
                 hideFileText: 'Hide file'
                 showFilesText: 'Show files'

@@ -11,6 +11,7 @@
         "/phlexible/phlexiblecontentchannel/scripts": "src/Phlexible/Bundle/ContentchannelBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/scripts": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/styles": "src/Phlexible/Bundle/DashboardBundle/Resources/styles",
+        "/phlexible/phlexibledatasource/scripts": "src/Phlexible/Bundle/DatasourceBundle/Resources/scripts",
         "/phlexible/phlexibleelement/menu": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
         "/phlexible/phlexibleelement/scripts": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
         "/phlexible/phlexibleelement/styles": "src/Phlexible/Bundle/ElementBundle/Resources/styles",
@@ -42,6 +43,7 @@
         "/phlexible/phlexibleproblem/styles": "src/Phlexible/Bundle/ProblemBundle/Resources/styles",
         "/phlexible/phlexiblequeue/menu": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
         "/phlexible/phlexiblequeue/scripts": "src/Phlexible/Bundle/QueueBundle/Resources/scripts",
+        "/phlexible/phlexiblequeue/styles": "src/Phlexible/Bundle/QueueBundle/Resources/styles",
         "/phlexible/phlexiblesearch/menu": "src/Phlexible/Bundle/SearchBundle/Resources/menu",
         "/phlexible/phlexiblesearch/scripts": "src/Phlexible/Bundle/SearchBundle/Resources/scripts",
         "/phlexible/phlexiblesearch/styles": "src/Phlexible/Bundle/SearchBundle/Resources/styles",
@@ -81,6 +83,10 @@
         "275795b7-4d09-52ab-8895-e3b35bedfc97": {
             "query": "/phlexible/phlexibledashboard/styles/**/*.css",
             "type": "phlexible/styles"
+        },
+        "23aa998c-6dc3-5367-ac0b-2823440d623d": {
+            "query": "/phlexible/phlexibledatasource/scripts/**/*.js",
+            "type": "phlexible/scripts"
         },
         "f5ee43fe-44b1-593e-8c79-1cc51b4dd5dc": {
             "query": "/phlexible/phlexibleelement/menu/*.yml",
@@ -205,6 +211,10 @@
         "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
             "query": "/phlexible/phlexiblequeue/scripts/**/*.js",
             "type": "phlexible/scripts"
+        },
+        "db47c1f0-77b3-50b1-8f25-f76dd788e356": {
+            "query": "/phlexible/phlexiblequeue/styles/**/*.css",
+            "type": "phlexible/styles"
         },
         "a040e763-9ed1-582c-8185-d89ff8122ee2": {
             "query": "/phlexible/phlexiblesearch/menu/*.yml",

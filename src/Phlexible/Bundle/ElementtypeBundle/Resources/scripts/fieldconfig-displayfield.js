@@ -1,8 +1,4 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.DisplayField');
-
-Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     // labels
     var hideLabel,
         label,
@@ -62,12 +58,13 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('displayfield', {
+Phlexible.fields.FieldTypes.register({
+    type: 'displayfield',
     titles: {
         de: 'Anzeigefeld',
         en: 'Displayfield'
     },
-    iconCls: 'p-elementtype-field_display-icon',
+    iconCls: Phlexible.Icon.get('ui-label'),
     allowedIn: [
         'tab',
         'accordion',

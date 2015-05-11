@@ -3,8 +3,9 @@
  */
 Ext.define('Phlexible.user.model.Group', {
     extend: 'Ext.data.Model',
+    idProperty: 'id',
     fields: [
-        'gid',
+        'id',
         'name',
         'comment',
         'readonly',

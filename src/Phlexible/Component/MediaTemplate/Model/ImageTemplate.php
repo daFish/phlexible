@@ -13,7 +13,7 @@ namespace Phlexible\Component\MediaTemplate\Model;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ImageTemplate extends AbstractTemplate
+class ImageTemplate extends MediaTemplate
 {
     const TYPE_IMAGE = 'image';
 
@@ -22,7 +22,7 @@ class ImageTemplate extends AbstractTemplate
      */
     public function __construct()
     {
-        $this->setType(self::TYPE_IMAGE);
+        parent::__construct(self::TYPE_IMAGE);
     }
 
     /**

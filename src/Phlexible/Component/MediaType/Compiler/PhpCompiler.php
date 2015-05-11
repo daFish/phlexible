@@ -37,10 +37,11 @@ class PhpCompiler implements CompilerInterface
         $constructorBody = '';
         foreach ($mediaTypes->all() as $mediaType) {
             $titles = count($mediaType->getTitles()) ? var_export($mediaType->getTitles(), true) : 'array()';
-            $mimetypes = count($mediaType->getMimetypes()) ? var_export(
-                $mediaType->getMimetypes(),
-                true
-            ) : 'array()';
+            $mimetypes = array();
+            foreach ($mediaType->getMimetypes() as $mimetype) {
+                $mimetypes[] = 'new \Brainbits\Mime\InternetMediaType("'.$mimetype->getType().'", "'.$mimetype->getSubType().'")';
+            }
+            $mimetypes = implode(',', $mimetypes);
             $icons = count($mediaType->getIcons()) ? var_export(
                 $mediaType->getIcons(),
                 true
@@ -51,8 +52,9 @@ class PhpCompiler implements CompilerInterface
             \$this->create()
                 ->setName("{$mediaType->getName()}")
                 ->setCategory("{$mediaType->getCategory()}")
+                ->setSvg("{$mediaType->getSvg()}")
                 ->setTitles({$titles})
-                ->setMimetypes({$mimetypes})
+                ->setMimetypes(array({$mimetypes}))
                 ->setIcons({$icons})
         );
 

@@ -41,6 +41,7 @@ Ext.define('Phlexible.gui.util.Notify', {
      *     Phlexible.Notify.success('Action succeeded!');
      *
      * @param {String} msg
+     * @param {String} headerText
      */
     success: function(msg, headerText) {
         if (!headerText) {
@@ -56,6 +57,7 @@ Ext.define('Phlexible.gui.util.Notify', {
      *     Phlexible.Notify.failure('Something went wrong...');
      *
      * @param {String} msg
+     * @param {String} headerText
      */
     failure: function(msg, headerText) {
         if (!headerText) {

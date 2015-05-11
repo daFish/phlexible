@@ -3,4 +3,4 @@ Ext.define('Phlexible.gui.handler.Tools', {
 
     text: '_tools',
     iconCls: 'p-gui-menu_tools-icon'
-})
+});

@@ -3,9 +3,8 @@
  */
 Ext.define('Phlexible.user.options.Password', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-options-password',
+    xtype: 'user.options-password',
 
-    title: '_password',
     iconCls: Phlexible.Icon.get('star'),
     bodyPadding: '15',
     border: true,

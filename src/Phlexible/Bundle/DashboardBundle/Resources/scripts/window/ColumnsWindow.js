@@ -78,7 +78,7 @@ Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
                 text: this.cancelText,
                 handler: function() {
                     this.fireEvent('columnsChange', this.columns);
-                    this.close()
+                    this.close();
                 },
                 scope: this
             },{

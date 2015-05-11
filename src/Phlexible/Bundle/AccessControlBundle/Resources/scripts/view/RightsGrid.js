@@ -540,7 +540,7 @@ Ext.define('Phlexible.accesscontrol.RightsGrid', {
             var above = record.get('above');
             var rights = record.get('rights');
 
-            rights = Phlexible.clone(above);
+            rights = Ext.clone(above);
 
             record.beginEdit();
             record.set('rights', false);
@@ -569,7 +569,7 @@ Ext.define('Phlexible.accesscontrol.RightsGrid', {
         var original = record.get('original');
         var rights = record.get('rights');
 
-        rights = Phlexible.clone(original);
+        rights = Ext.clone(original);
 
         record.beginEdit();
         record.set('rights', false);

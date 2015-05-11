@@ -72,7 +72,7 @@ Ext.define('Phlexible.gui.util.Router', {
             defaults = route.defaults;
 
         if (variables) {
-            parameters = Phlexible.clone(parameters || {});
+            parameters = Ext.clone(parameters || {});
             Ext.each(variables, function (variable) {
                 var placeholder = '{' + variable + '}';
                 if (parameters[variable] !== undefined) {

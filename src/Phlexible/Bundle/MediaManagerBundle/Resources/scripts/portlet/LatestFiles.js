@@ -77,39 +77,39 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     },
 
     updateData: function (data) {
-        var latestFilesMap = [];
+        var latestFilesMap = [],
+            i, j, row, record, needUpdate = false;
 
-        for (var i = 0; i < data.length; i++) {
-            var row = data[i];
+        for (i = 0; i < data.length; i++) {
+            row = data[i];
             latestFilesMap.push(row.id);
-            var r = this.store.getById(row.id);
-            if (!r) {
+            record = this.store.getById(row.id);
+            if (!record) {
                 row.time = new Date(row.time * 1000);
                 this.store.insert(0, new Phlexible.mediamanager.portlet.LatestFilesRecord(row, row.id));
 
                 Ext.fly('media_last_' + row.id).frame('#8db2e3', 1);
             }
             else {
-                var needUpdate = false;
-                for (var j in row.cache) {
+                for (j in row.cache) {
                     if (row.cache[j] != r.data.cache[j]) {
                         needUpdate = true;
                         break;
                     }
                 }
                 if (needUpdate) {
-                    r.beginEdit();
-                    r.set('cache', null);
-                    r.set('cache', row.cache);
-                    r.endEdit();
+                    record.beginEdit();
+                    record.set('cache', null);
+                    record.set('cache', row.cache);
+                    record.endEdit();
                 }
             }
         }
 
-        for (var i = this.store.getCount() - 1; i >= 0; i--) {
-            var r = this.store.getAt(i);
-            if (latestFilesMap.indexOf(r.id) == -1) {
-                this.store.remove(r);
+        for (i = this.store.getCount() - 1; i >= 0; i--) {
+            record = this.store.getAt(i);
+            if (latestFilesMap.indexOf(record.id) === -1) {
+                this.store.remove(record);
             }
         }
 

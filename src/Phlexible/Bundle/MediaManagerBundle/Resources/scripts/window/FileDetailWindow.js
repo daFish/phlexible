@@ -181,7 +181,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
                 listeners: {
                     versionSelect: this.onVersionSelect,
                     versionDownload: function (fileId, fileVersion) {
-                        var href = Phlexible.Router.generate('mediamanager_download_file', {id: fileId})
+                        var href = Phlexible.Router.generate('mediamanager_download_file', {id: fileId});
 
                         if (fileVersion) {
                             href += '/' + fileVersion;
@@ -259,7 +259,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
 
             },
             scope: this
-        })
+        });
     },
 
     setFile: function(file) {
@@ -301,7 +301,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
             this.next = {
                 fileId: file.get('nextId'),
                 fileVersion: file.get('nextVersion')
-            };;
+            };
             bbar.getComponent('nextBtn').show();
         } else {
             this.next = null;

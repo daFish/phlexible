@@ -8,25 +8,24 @@
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Prefix;
-use FOS\RestBundle\Controller\Annotations\Put;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\View\View;
 use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\UserBundle\Entity\User;
+use Phlexible\Bundle\UserBundle\Form\Type\UserType;
+use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\UsersMessage;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Users controller
@@ -34,8 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @Security("is_granted('ROLE_USERS')")
- * @Prefix("/user")
- * @NamePrefix("phlexible_user_")
+ * @Rest\NamePrefix("phlexible_api_user_")
  */
 class UsersController extends FOSRestController
 {
@@ -47,12 +45,20 @@ class UsersController extends FOSRestController
      * @return Response
      *
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @QueryParam(name="start", requirements="\d+", default=0, description="First result")
-     * @QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
-     * @QueryParam(name="sort", requirements="\w+", default="username", description="Sort field")
-     * @QueryParam(name="dir", requirements="\w+", default="ASC", description="Sort direction")
-     * @QueryParam(name="criteria", description="Search criteria.")
-     * @ApiDoc
+     * @Rest\QueryParam(name="start", requirements="\d+", default=0, description="First result")
+     * @Rest\QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
+     * @Rest\QueryParam(name="sort", requirements="\w+", default="username", description="Sort field")
+     * @Rest\QueryParam(name="dir", requirements="\w+", default="ASC", description="Sort direction")
+     * @Rest\QueryParam(name="criteria", description="Search criteria.")
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of User",
+     *   section="user",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getUsersAction(ParamFetcher $paramFetcher)
     {
@@ -60,31 +66,23 @@ class UsersController extends FOSRestController
         $limit = $paramFetcher->get('limit');
         $sort = $paramFetcher->get('sort');
         $dir = $paramFetcher->get('dir');
-        $criteriaString = $paramFetcher->get('criteria');
 
         $userManager = $this->container->get('phlexible_user.user_manager');
         $criteria = $userManager->createCriteria();
 
-        $criteria
-            ->orderBy(array($sort => $dir))
-            ->setFirstResult($start)
-            ->setMaxResults($limit);
+        UserCriteriaBuilder::applyFromParams($paramFetcher, $criteria);
 
-        //UserCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
-
-        $userResult = $userManager->query($criteria);
+        $userResult = $userManager->query($criteria, array($sort => $dir), $limit, $start);
 
         $users = array();
         foreach ($userResult as $user) {
             $users[] = $user;
         }
 
-        return $this->handleView($this->view(
-            array(
-                'users' => $users,
-                'count' => count($users)
-            )
-        ));
+        return array(
+            'users' => $users,
+            'count' => count($users)
+        );
     }
 
     /**
@@ -95,123 +93,150 @@ class UsersController extends FOSRestController
      * @return UserInterface
      *
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @View(templateVar="user")
-     * @ApiDoc
+     * @Rest\View(templateVar="user")
+     * @ApiDoc(
+     *   description="Returns a User",
+     *   section="user",
+     *   output="Phlexible\Bundle\UserBundle\Entity\User",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when user was not found"
+     *   }
+     * )
      */
     public function getUserAction($userId)
     {
         $userManager = $this->container->get('phlexible_user.user_manager');
         $user = $userManager->find($userId);
 
-        return $user;
+        if (!$user instanceof User) {
+            throw new NotFoundHttpException('User not found');
+        }
+
+        return array(
+            'user' => $user
+        );
     }
 
     /**
      * Create user
      *
-     * @param User         $user
-     * @param ParamFetcher $paramFetcher
+     * @param Request $request
      *
      * @return ResultResponse
      *
-     * @throws \Exception
      * @Security("is_granted('ROLE_USER_ADMIN_CREATE')")
-     * @ParamConverter("user", converter="fos_rest.request_body")
-     * @QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
-     * @Post("/users")
-     * @ApiDoc
+     * @Rest\QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
+     * @ApiDoc(
+     *   description="Create a User",
+     *   section="user",
+     *   input="Phlexible\Bundle\UserBundle\Form\Type\UserType",
+     *   statusCodes={
+     *     201="Returned when user was created",
+     *     204="Returned when user was updated",
+     *     404="Returned when user was not found"
+     *   }
+     * )
      */
-    public function postUsersAction(User $user, ParamFetcher $paramFetcher)
+    public function postUsersAction(Request $request)
     {
         $userManager = $this->get('phlexible_user.user_manager');
 
-        if ($userManager->checkUsername($user->getUsername())) {
-            throw new \Exception('Username "' . $user->getUsername() . '" already exists.');
-        }
-        if ($userManager->checkEmail($user->getEmail())) {
-            throw new \Exception('Email "' . $user->getEmail() . '" already exists.');
-        }
-
-        $user
-            ->setCreatedAt(new \DateTime())
-            ->setModifiedAt(new \DateTime());
-
-        $optin = $paramFetcher->get('optin');
-        if ($optin) {
-            $user->setPasswordToken(Uuid::generate());
-
-            $mailer = $this->get('phlexible_user.mailer');
-            $mailer->sendNewAccountEmailMessage($user);
-        }
-
-        $userManager->updateUser($user);
+        return $this->processForm($request, new User(), (bool) $request->get('optin'));
 
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
-
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-            )
-        ));
     }
 
     /**
      * Update user
      *
-     * @param User         $user
-     * @param ParamFetcher $paramFetcher
-     * @param string       $userId
+     * @param Request $request
+     * @param string  $userId
      *
      * @return ResultResponse
      * @throws \Exception
      *
-     * @ParamConverter("user", converter="fos_rest.request_body")
-     * @QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
      * @Security("is_granted('ROLE_USER_ADMIN_UPDATE')")
-     * @Put("/users/{userId}")
-     * @ApiDoc
+     * @Rest\QueryParam(name="optin", requirements="[01]", default=0, description="Optin")
+     * @ApiDoc(
+     *   description="Update a User",
+     *   section="user",
+     *   input="Phlexible\Bundle\UserBundle\Form\Type\UserType",
+     *   statusCodes={
+     *     201="Returned when user was created",
+     *     204="Returned when user was updated",
+     *     404="Returned when user was not found"
+     *   }
+     * )
      */
-    public function putUserAction(User $user, ParamFetcher $paramFetcher, $userId)
+    public function putUserAction(Request $request, $userId)
     {
         $userManager = $this->get('phlexible_user.user_manager');
-
         $user = $userManager->find($userId);
-        /* @var $user User */
 
-        if ($request->get('username') && $request->get('username') !== $user->getUsername()
-                && $userManager->checkUsername($request->get('username'))) {
-            throw new \Exception('Username "' . $request->get('username') . '" already exists.');
-        }
-        if ($request->get('email') && $request->get('email') !== $user->getEmail()
-                && $userManager->checkEmail($request->get('email'))) {
-            throw new \Exception('Email "' . $request->get('email') . '" already exists.');
+        if (!$user instanceof User) {
+            throw new NotFoundHttpException('User not found');
         }
 
-        $this->requestToUser($request, $user);
-
-        $user
-            ->setModifiedAt(new \DateTime());
-
-        $optin = (bool) $request->request->get('optin', false);
-        if ($optin) {
-            $user->setPasswordToken(Uuid::generate());
-
-            $mailer = $this->get('phlexible_user.mailer');
-            $mailer->sendNewPasswordEmailMessage($user);
-        }
-
-        $userManager->updateUser($user);
+        return $this->processForm($request, new User(), (bool) $request->get('optin'));
 
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
+    }
 
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-                'msg'     => "User {$user->getUsername()} updated."
-            )
-        ));
+    /**
+     * @param Request       $request
+     * @param UserInterface $user
+     * @param bool          $optin
+     *
+     * @return View|Response
+     */
+    private function processForm(Request $request, UserInterface $user, $optin = false)
+    {
+        $statusCode = !$user->getId() ? 201 : 204;
+
+        $form = $this->createForm(new UserType(), $user);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $userManager = $this->get('phlexible_user.user_manager');
+
+            if ($request->get('username') && $request->get('username') !== $user->getUsername()
+                && $userManager->checkUsername($request->get('username'))) {
+                throw new BadRequestHttpException('Username "' . $request->get('username') . '" already exists.');
+            }
+            if ($request->get('email') && $request->get('email') !== $user->getEmail()
+                && $userManager->checkEmail($request->get('email'))) {
+                throw new BadRequestHttpException('Email "' . $request->get('email') . '" already exists.');
+            }
+
+            if ($optin) {
+                $user->setPasswordToken(Uuid::generate());
+
+                $mailer = $this->get('phlexible_user.mailer');
+                $mailer->sendNewAccountEmailMessage($user);
+            }
+
+            $userManager->updateUser($user);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set('Location',
+                    $this->generateUrl(
+                        'phlexible_api_user_get_user', array('userId' => $user->getId()),
+                        true // absolute
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
     }
 
     /**
@@ -222,28 +247,29 @@ class UsersController extends FOSRestController
      *
      * @return Response
      * @Security("is_granted('ROLE_USER_ADMIN_DELETE')")
-     * @ApiDoc
+     * @Rest\View(statusCode=204)
+     * @ApiDoc(
+     *   description="Delete a User",
+     *   section="user",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when the user was not found"
+     *   }
+     * )
      */
     public function deleteUserAction(Request $request, $userId)
     {
-        $successorUserId = $request->request->get('successor');
-
         $userManager = $this->get('phlexible_user.user_manager');
-
-        $successorUser = $userManager->find($successorUserId);
         $user = $userManager->find($userId);
 
-        $userManager->deleteUser($user, $successorUser);
+        if (!$user instanceof User) {
+            throw new NotFoundHttpException('User not found');
+        }
+
+        $userManager->deleteUser($user);
 
         $this->get('phlexible_message.message_poster')
             ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));
-
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-                'msg'     => "User {$user->getUsername()} deleted."
-            )
-        ));
     }
 
     /**
@@ -252,21 +278,26 @@ class UsersController extends FOSRestController
      * @param int $userId
      *
      * @return JsonResponse
-     * @throws \Exception
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc
+     * @ApiDoc(
+     *   description="Returns a Users Roles",
+     *   section="user",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when user was not found"
+     *   }
+     * )
      */
     public function getUserRolesAction($userId)
     {
         $userManager = $this->get('phlexible_user.user_manager');
+        $user = $userManager->find($userId);
 
-        $roleData = $this->getRoleData();
-        $user = $userManager->findUserBy(array('id' => $userId));
-
-        if (!$user) {
-            throw new \Exception("User $userId not found");
+        if (!$user instanceof User) {
+            throw new NotFoundHttpException('User not found');
         }
 
+        $roleData = $this->getRoleData();
         $userRoles = $user->getRoles();
 
         foreach ($roleData as $key => $roleRow) {
@@ -287,50 +318,35 @@ class UsersController extends FOSRestController
      *
      * @return JsonResponse
      * @Security("is_granted('ROLE_USER_ADMIN_READ')")
-     * @ApiDoc
+     * @ApiDoc(
+     *   description="Returns a Users Groups",
+     *   section="user",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when user was not found"
+     *   }
+     * )
      */
     public function getUserGroupsAction($userId)
     {
+        $userManager = $this->get('phlexible_user.user_manager');
+        $user = $userManager->find($userId);
+
+        if (!$user instanceof User) {
+            throw new NotFoundHttpException('User not found');
+        }
+
         $groupData = $this->getGroupData();
 
         foreach ($groupData as $key => $groupRow) {
             $groupData['member'] = false;
         }
 
-
         return $this->handleView($this->view(
             array(
                 'groups' => $groupData
             )
         ));
-    }
-
-    /**
-     * Set successor
-     *
-     * @param Request $request
-     * @param string  $userId
-     *
-     * @return Response
-     *
-     * @ApiDoc(
-     *   requirements={
-     *     {"name"="successorUserId", "dataType"="string", "required"=true, "description"="Successor user ID"},
-     *   }
-     * )
-     */
-    public function successorUserAction(Request $request, $userId)
-    {
-        $successorUserId = $request->get('successorUserId');
-
-        $userManager = $this->get('phlexible_user.user_manager');
-        $user = $userManager->find($userId);
-        $successorUser = $userManager->find($successorUserId);
-
-        $successor = $this->get('phlexible_user.successor_service');
-        $successor->set($user, $successorUser);
-
-        return new ResultResponse(true, 'Successor set');
     }
 
     /**
@@ -379,79 +395,5 @@ class UsersController extends FOSRestController
     private function getGroupData()
     {
         return array();
-    }
-
-    /**
-     * @param Request $request
-     * @param User    $user
-     */
-    private function requestToUser(Request $request, User $user)
-    {
-        if ($request->request->get('firstname')) {
-            $user->setFirstname($request->get('firstname'));
-        }
-        if ($request->request->get('lastname')) {
-            $user->setLastname($request->get('lastname'));
-        }
-        if ($request->request->get('email')) {
-            $user->setEmail($request->get('email'));
-        }
-        if ($request->request->get('username')) {
-            $user->setUsername($request->get('username'));
-        }
-        if ($request->request->get('comment')) {
-            $user->setComment($request->get('comment'));
-        }
-
-        // password
-        if ($request->request->get('password')) {
-            $user->setPlainPassword($request->request->get('password'));
-        }
-
-        // expires
-        if ($request->request->get('expires')) {
-            $user->setExpiresAt(new \DateTime($request->get('expires')));
-        } else {
-            /**
-             * @TODO fix with FosUserBundle 2.0 -
-             * @SEE Issue fix here https://github.com/FriendsOfSymfony/FOSUserBundle/pull/957
-             */
-            $reflectedUser      = new \ReflectionClass(get_class($user));
-            $reflectionProperty = $reflectedUser->getProperty('expiresAt');
-            $reflectionProperty->setAccessible(true);
-            $reflectionProperty->setValue($user, null);
-        }
-
-        // properties
-        $properties = [];
-        foreach ($request->request->all() as $key => $value) {
-            if (substr($key, 0, 9) === 'property_') {
-                $key = substr($key, 9);
-                $properties[$key] = $value;
-            }
-        }
-        if (count($properties)) {
-            $user->setProperties($properties);
-        } else {
-            $user->setProperties([]);
-        }
-
-        // roles
-        $roles = $request->request->get('roles');
-        if ($roles) {
-            $user->setRoles(explode(',', $roles));
-        } else {
-            $user->setRoles([]);
-        }
-
-        // groups
-        $groups = $request->request->get('groups');
-        if ($groups) {
-            $groupManager = $this->get('phlexible_user.group_manager');
-            foreach (explode(',', $groups) as $groupId) {
-                $group = $groupManager->find($groupId);
-                $user->addGroup($group);
-            }
-        }
     }
 }

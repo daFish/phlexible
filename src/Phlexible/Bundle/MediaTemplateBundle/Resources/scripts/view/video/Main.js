@@ -7,7 +7,6 @@ Ext.define('Phlexible.mediatemplate.view.video.Main', {
 
     xtype: 'mediatemplate.video.main',
 
-    header: false,
     layout: 'border',
 
     initComponent: function () {
@@ -24,7 +23,6 @@ Ext.define('Phlexible.mediatemplate.view.video.Main', {
                 region: 'west',
                 width: 320,
                 margin: 5,
-                header: false,
                 listeners: {
                     saveTemplate: function () {
                         this.fireEvent('saveTemplate');
@@ -46,7 +44,6 @@ Ext.define('Phlexible.mediatemplate.view.video.Main', {
     },
 
     loadParameters: function (key, parameters) {
-        this.getComponent('form').setTitle(Ext.String.format(this.videoTemplateTitleText, key));
         this.getComponent('form').loadParameters(key, parameters);
     }
 });

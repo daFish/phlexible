@@ -16,7 +16,6 @@ use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
 use Phlexible\Bundle\UserBundle\Doctrine\Query\UserQuery;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
-use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
 use Phlexible\Bundle\UserBundle\UserEvents;
@@ -54,11 +53,6 @@ class UserManager extends BaseUserManager implements UserManagerInterface
      * @var string
      */
     private $everyoneGroupId;
-
-    /**
-     * @var string
-     */
-    private $userClass;
 
     /**
      * @param EncoderFactoryInterface  $encoderFactory
@@ -181,11 +175,11 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function query(Criteria $criteria)
+    public function query(Criteria $criteria, array $sort = null, $limit = null, $offset = null)
     {
         $query = new UserQuery($this->objectManager, $this->dispatcher, $this->getClass());
 
-        return $query->getResult($criteria);
+        return $query->getResult($criteria, $sort, $limit, $offset);
     }
 
     /**
@@ -276,13 +270,10 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     }
 
     /**
-     * @param UserInterface $user
-     * @param UserInterface $successorUser
+     * {@inheritdoc}
      */
-    public function deleteUserWithSuccessor(UserInterface $user, UserInterface $successorUser)
+    public function deleteUser(UserInterface $user)
     {
-        $this->successorService->set($user, $successorUser);
-
         $event = new UserEvent($user);
         if ($this->dispatcher->dispatch(UserEvents::BEFORE_DELETE_USER, $event)->isPropagationStopped()) {
             return;

@@ -1,5 +1,6 @@
 Ext.define('Phlexible.mediamanager.model.Rights', {
     extend: 'Ext.data.Model',
+    entityName: 'Rights',
     fields: [
         {name: 'id', type: 'string'},
         {name: 'name', type: 'string'},

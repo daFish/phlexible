@@ -2,16 +2,15 @@
  * User window
  */
 Ext.define('Phlexible.user.window.UserWindow', {
-    extend: 'Ext.Window',
+    extend: 'Ext.window.Window',
 
-    title: '_user',
     plain: true,
     iconCls: Phlexible.Icon.get('user'),
     width: 630,
     minWidth: 630,
     height: 420,
     minHeight: 420,
-    layout: 'border',
+    layout: 'fit',
     border: true,
     modal: true,
 
@@ -41,57 +40,33 @@ Ext.define('Phlexible.user.window.UserWindow', {
 
     initMyItems: function() {
         var xtypes = Phlexible.PluginManager.get('userEditCards'),
-            cards = [],
-            buttons = [],
-            cls;
+            tabs = [],
+            mode = this.mode,
+            user = this.user;
 
-        Ext.each(xtypes, function(xtype) {
-            cls = Ext.ClassManager.getByAlias('widget.' + xtype);
-            console.log(cls.prototype.title, cls.prototype.defaultConfig.iconCls);
-            buttons.push({
-                itemId: xtype,
-                text: cls.prototype.title,
-                iconCls: cls.prototype.defaultConfig.iconCls,
-                margin: '0 0 5 0',
-                width: 135,
-                textAlign: 'left',
-                toggleHandler: function(btn, state) {
-                    if (state) {
-                        this.getComponent('cards').getLayout().setActiveItem(xtype);
-                    }
-                },
-                scope: this
-            });
-            cards.push({
-                xtype: xtype,
-                itemId: xtype,
-                header: false,
-                mode: this.mode
-            });
-        }, this);
+        Ext.each(xtypes, function(config) {
+            config.mode = mode;
+            config.user = user;
+            config.border = false;
 
-        buttons[0].pressed = true;
+            tabs.push(config);
+        });
 
         this.items = [{
-            xtype: 'buttongroup',
-            region: 'west',
-            itemId: 'buttons',
-            width: 150,
-            columns: 1,
-            padding: 5,
-            margin: 5,
-            defaults: {
-                enableToggle: true,
-                toggleGroup: 'card'
+            xtype: 'tabpanel',
+            itemId: 'tabs',
+            tabPosition: 'left',
+            tabRotation: 0,
+            tabBar: {
+                border: false
             },
-            items: buttons
-        },{
-            region: 'center',
-            itemId: 'cards',
-            layout: 'card',
+            defaults: {
+                textAlign: 'left'
+            },
             border: false,
-            margin: '5 5 5 0',
-            items: cards
+            activeTab: 0,
+            deferredRender: false,
+            items: tabs
         }];
     },
 
@@ -137,55 +112,52 @@ Ext.define('Phlexible.user.window.UserWindow', {
             xtype: 'toolbar',
             dock: 'bottom',
             ui: 'footer',
-            items: [{
-                text: this.saveAndNotifyText,
-                iconCls: Phlexible.Icon.get('disk--arrow'),
-                hidden: this.mode !== 'add',
-                handler: this.saveAndNotify,
+            items: [
+                '->',
+            {
+                text: this.cancelText,
+                handler: this.close,
                 scope: this
-            },{
+            },
+                '-',
+            {
                 text: this.saveText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                 handler: this.save,
                 scope: this
             },{
-                text: this.cancelText,
-                handler: this.close,
+                text: this.saveAndNotifyText,
+                iconCls: Phlexible.Icon.get('disk--arrow'),
+                hidden: this.mode !== 'add',
+                handler: this.saveAndNotify,
                 scope: this
             }]
         }];
     },
 
-    show: function(record) {
-        this.record = record;
-        this.userId = record.get('id');
+    show: function() {
+        var user = this.user;
 
-        if (record.get('username')) {
-            this.setTitle(Ext.String.format(this.editUserText, record.get('username')));
-        } else {
-            this.setTitle(this.addUserText);
-        }
+        this.setTitle(Ext.String.format(this.editUserText, user.get('username')));
 
         this.callParent();
 
-        var cardPanel = this.getComponent(1);
-
-        cardPanel.items.each(function(panel) {
-            panel.loadRecord(record);
-        });
-
-        if (record.get('expired') || (record.get('expiresAt') && record.get('expiresAt') <= Ext.Date.format(new Date(), 'Y-m-d H:i:s'))) {
+        if (user.get('expired') || (this.mode === 'edit' && user.get('expiresAt') && user.get('expiresAt') <= Ext.Date.format(new Date(), 'Y-m-d H:i:s'))) {
             this.getDockedComponent('infoTbar').show();
             this.getDockedComponent('infoTbar').getComponent('expiredBtn').show();
         }
-        if (!record.get('enabled')) {
+        if (!user.get('enabled')) {
             this.getDockedComponent('infoTbar').show();
             this.getDockedComponent('infoTbar').getComponent('disabledBtn').show();
         }
-        if (record.get('locked')) {
+        if (user.get('locked')) {
             this.getDockedComponent('infoTbar').show();
             this.getDockedComponent('infoTbar').getComponent('lockedBtn').show();
         }
+
+        this.getComponent('tabs').items.each(function(panel) {
+            panel.loadUser(user);
+        });
     },
 
     saveAndNotify: function() {
@@ -197,13 +169,13 @@ Ext.define('Phlexible.user.window.UserWindow', {
     },
 
     doSave: function(notify) {
-        var cardPanel = this.getComponent(1),
+        var tabPanel = this.getComponent(1),
             valid = true,
             params = {},
             jsonData = {},
             url, method;
 
-        cardPanel.items.each(function(panel) {
+        tabPanel.items.each(function(panel) {
             if (!panel.isValid()) {
                 valid = false;
             }
@@ -217,7 +189,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
             params[notify] = notify;
         }
 
-        cardPanel.items.each(function(panel) {
+        tabPanel.items.each(function(panel) {
             var values = panel.getValues(),
                 key;
 
@@ -226,29 +198,29 @@ Ext.define('Phlexible.user.window.UserWindow', {
             });
         });
 
-        if (this.userId) {
+        if (this.user.id) {
             /*
-            Phlexible.Rest.put('phlexible_user_put_user', {userId: this.userId, notify: notify}, jsonData);
+            Phlexible.Rest.put('phlexible_api_user_put_user', {userId: this.userId, notify: notify}, jsonData);
             Phlexible.Rest.put({
-                route: 'phlexible_user_put_user',
+                route: 'phlexible_api_user_put_user',
                 params: {userId: this.userId, notify: notify},
                 jsonData: jsonData
             });
             */
 
-            url = Phlexible.Router.generate('phlexible_user_put_user', {userId: this.userId});
+            url = Phlexible.Router.generate('phlexible_api_user_put_user', {userId: this.user.id});
             method = 'PUT';
         } else {
             /*
-            Phlexible.Rest.put('phlexible_user_post_users', {notify: notify}, jsonData);
+            Phlexible.Rest.put('phlexible_api_user_post_users', {notify: notify}, jsonData);
             Phlexible.Rest.put({
-                route: 'phlexible_user_put_user',
+                route: 'phlexible_api_user_put_user',
                 params: {userId: this.userId, notify: notify},
                 jsonData: jsonData
             });
             */
 
-            url = Phlexible.Router.generate('phlexible_user_post_users');
+            url = Phlexible.Router.generate('phlexible_api_user_post_users');
             method = 'POST';
         }
         console.log(url);
@@ -270,8 +242,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
         var data = Ext.decode(response.responseText);
 
         if (data.success) {
-            this.userId = data.userId;
-            this.fireEvent('save', this.userId);
+            this.fireEvent('save', this.user.id);
             this.close();
         }
     }

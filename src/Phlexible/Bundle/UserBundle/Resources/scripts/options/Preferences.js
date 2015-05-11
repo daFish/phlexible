@@ -3,9 +3,8 @@
  */
 Ext.define('Phlexible.user.options.Preferences', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-options-preferences',
+    xtype: 'user.options-preferences',
 
-    title: '_preferences',
     iconCls: Phlexible.Icon.get('switch'),
     bodyPadding: '15',
     border: true,

@@ -8,16 +8,16 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Prefix;
-use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Phlexible\Bundle\DataSourceBundle\Form\Type\DataSourceType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Data sources controller
@@ -25,8 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @Security("is_granted('ROLE_DATA_SOURCES')")
- * @Prefix("/datasource")
- * @NamePrefix("phlexible_datasource_")
+ * @Rest\NamePrefix("phlexible_api_datasource_")
  */
 class DataSourcesController extends FOSRestController
 {
@@ -35,20 +34,25 @@ class DataSourcesController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of DataSource",
+     *   section="datasource",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getDatasourcesAction()
     {
         $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
-
         $dataSources = $dataSourceManager->findBy([]);
 
-        return $this->handleView($this->view(
-            array(
-                'datasources' => $dataSources,
-                'count'       => count($dataSources),
-            )
-        ));
+        return array(
+            'datasources' => $dataSources,
+            'count'       => count($dataSources),
+        );
     }
 
     /**
@@ -58,40 +62,52 @@ class DataSourcesController extends FOSRestController
      *
      * @return Response
      *
-     * @View(templateVar="dataSource")
-     * @ApiDoc
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a DataSource",
+     *   section="datasource",
+     *   output="Phlexible\Bundle\DataSourceBundle\Entity\DataSource",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when datasource was not found"
+     *   }
+     * )
      */
     public function getDatasourceAction($dataSourceId)
     {
         $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
-
         $dataSource = $dataSourceManager->find($dataSourceId);
 
-        return $dataSource;
+        if (!$dataSource instanceof DataSource) {
+            throw new NotFoundHttpException('Job not found');
+        }
+
+        return array(
+            'datasource' => $dataSource
+        );
     }
 
     /**
      * Create data source
      *
-     * @param DataSource $datasource
+     * @param Request $request
      *
      * @return Response
      *
-     * @ParamConverter("datasource", converter="fos_rest.request_body")
-     * @Post("/datasources")
-     * @ApiDoc
+     * @ApiDoc(
+     *   description="Create a DataSource",
+     *   section="datasource",
+     *   input="Phlexible\Bundle\DataSourceBundle\Form\Type\DataSourceType",
+     *   statusCodes={
+     *     201="Returned when datasource was created",
+     *     204="Returned when datasource was updated",
+     *     404="Returned when datasource was not found"
+     *   }
+     * )
      */
-    public function postDatasourcesAction(DataSource $datasource)
+    public function postDatasourcesAction(Request $request)
     {
-        $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
-
-        $dataSourceManager->updateDataSource($datasource);
-
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-            )
-        ));
+        return $this->processForm($request, new DataSource());
     }
 
     /**
@@ -109,7 +125,7 @@ class DataSourcesController extends FOSRestController
         $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
 
         // load
-        $source = $dataSourceManager->find($dataSourceId);
+        $source = $dataSourceManager->find($datasourceId);
 
         // add new key
         $source->addValueForLanguage($key, false);
@@ -122,5 +138,41 @@ class DataSourcesController extends FOSRestController
                 'success' => true,
             )
         ));
+    }
+
+    /**
+     * @param Request    $request
+     * @param DataSource $dataSource
+     *
+     * @return Rest\View|Response
+     */
+    private function processForm(Request $request, DataSource $dataSource)
+    {
+        $statusCode = !$dataSource->getId() ? 201 : 204;
+
+        $form = $this->createForm(new DataSourceType(), $dataSource);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
+            $dataSourceManager->updateTemplate($dataSource);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set('Location',
+                    $this->generateUrl(
+                        'phlexible_api_queue_get_job', array('datasourceId' => $dataSource->getId()),
+                        true // absolute
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
     }
 }

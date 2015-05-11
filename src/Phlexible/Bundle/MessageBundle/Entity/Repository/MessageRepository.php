@@ -96,14 +96,12 @@ class MessageRepository extends EntityRepository
     {
         $channels = $this->createQueryBuilder('m')->select('DISTINCT m.channel')->getQuery()->getScalarResult();
         $types = $this->createQueryBuilder('m')->select('DISTINCT m.type')->getQuery()->getScalarResult();
-        $priorities = $this->createQueryBuilder('m')->select('DISTINCT m.priority')->getQuery()->getScalarResult();
         $roles = $this->createQueryBuilder('m')->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
         return [
-            'channels'   => array_column($channels, 'channel'),
-            'types'      => array_column($types, 'type'),
-            'priorities' => array_column($priorities, 'priority'),
-            'roles'      => array_column($roles, 'role'),
+            'channels' => array_column($channels, 'channel'),
+            'types'    => array_column($types, 'type'),
+            'roles'    => array_column($roles, 'role'),
         ];
     }
 
@@ -122,16 +120,12 @@ class MessageRepository extends EntityRepository
         $typeQb = clone $qb;
         $types = $typeQb->select('DISTINCT m.type')->getQuery()->getScalarResult();
 
-        $priorityQb = clone $qb;
-        $priorities = $priorityQb->select('DISTINCT m.priority')->getQuery()->getScalarResult();
-
         $roleQb = clone $qb;
         $roles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
         return [
             'channels'   => array_column($channels, 'channel'),
             'types'      => array_column($types, 'type'),
-            'priorities' => array_column($priorities, 'priority'),
             'roles'      => array_column($roles, 'role'),
         ];
     }
@@ -224,18 +218,6 @@ class MessageRepository extends EntityRepository
 
             case Criteria::CRITERIUM_USER_NOT_LIKE:
                 $composite->add($qb->expr()->notLike("$prefix.user", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_PRIORITY_IS:
-                $composite->add($qb->expr()->eq("$prefix.priority", $value));
-                break;
-
-            case Criteria::CRITERIUM_PRIORITY_MIN:
-                $composite->add($qb->expr()->gte("$prefix.priority", $value));
-                break;
-
-            case Criteria::CRITERIUM_PRIORITY_IN:
-                $composite->add($qb->expr()->in("$prefix.priority", $value));
                 break;
 
             case Criteria::CRITERIUM_TYPE_IS:

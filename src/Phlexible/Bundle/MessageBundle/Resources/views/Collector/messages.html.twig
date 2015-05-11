@@ -11,8 +11,6 @@
 
 {% block panel %}
 
-    Priorities:<br/>{% for priority in collector.priorities %}- {{ priority.name }}: {{ priority.count }}
-    <br/>{% endfor %}<br/>
     Types:<br/>{% for type in collector.types %}- {{ type.name }}: {{ type.count }}<br/>{% endfor %}<br/>
     Errors: {{ collector.countErrors }}<br/>
     <br/>
@@ -20,7 +18,6 @@
         {{ message.createdAt }}
         {{ message.subject }}
         [{{ message.typeName }}]
-        [{{ message.priorityName }}]
         [{{ message.channel }}]
         [{{ message.role }}]
         by {{ message.user }}

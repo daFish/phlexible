@@ -8,16 +8,16 @@
 
 namespace Phlexible\Bundle\MediaTemplateBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Phlexible\Component\MediaTemplate\Model\MediaTemplate;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Media templates controller
@@ -25,8 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @author Stephan Wentz <sw@brainbits.net>
  *
  * @Security("is_granted('ROLE_MEDIA_TEMPLATES')")
- * @Prefix("/mediatemplate")
- * @NamePrefix("phlexible_mediatemplate_")
+ * @Rest\NamePrefix("phlexible_api_mediatemplate_")
  */
 class MediaTemplatesController extends FOSRestController
 {
@@ -35,134 +34,175 @@ class MediaTemplatesController extends FOSRestController
      *
      * @return Response
      *
-     * @ApiDoc
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of MediaTemplate",
+     *   section="mediatemplate",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
     public function getMediatemplatesAction()
     {
-        $repository = $this->get('phlexible_media_template.template_manager');
+        $mediaTemplateManager = $this->get('phlexible_media_template.template_manager');
+        $mediaTemplates = $mediaTemplateManager->findAll();
 
-        $mediaTemplates = $repository->findAll();
-
-        return $this->handleView($this->view(
-            array(
-                'mediatemplates' => array_values($mediaTemplates),
-                'count'          => count($mediaTemplates),
-            )
-        ));
+        return array(
+            'mediatemplates' => array_values($mediaTemplates),
+            'count'          => count($mediaTemplates),
+        );
     }
 
     /**
-     * Create mediatemplate
+     * Get media template
      *
-     * @param ImageTemplate $mediaTemplate
+     * @param string $mediaTemplateId
      *
      * @return Response
      *
-     * @ParamConverter("mediatemplate", converter="fos_rest.request_body")
-     * @Post("/mediatemplates")
-     * @ApiDoc
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a MediaTemplate",
+     *   section="mediatemplate",
+     *   output="Phlexible\Component\MediaTemplate\Model\TemplateInterface",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when mediatemplate was not found"
+     *   }
+     * )
      */
-    public function postMediatemplatesAction(ImageTemplate $mediaTemplate)
+    public function getMediatemplateAction($mediaTemplateId)
     {
-        $templateRepository = $this->get('phlexible_media_template.template_manager');
+        $mediaTemplateManager = $this->get('phlexible_media_template.template_manager');
+        $mediaTemplate = $mediaTemplateManager->find($mediaTemplateId);
 
-        $templateRepository->updateTemplate($mediaTemplate);
+        if (!$mediaTemplate instanceof TemplateInterface) {
+            throw new NotFoundHttpException('Media template not found');
+        }
 
-        return $this->handleView($this->view(
-            array(
-                'success' => true,
-            )
-        ));
+        return array(
+            'mediatemplate' => $mediaTemplate,
+        );
     }
 
     /**
-     * List variables
+     * Create media template
      *
      * @param Request $request
      *
      * @return Response
+     *
+     * @ApiDoc(
+     *   description="Create a MediaTemplate",
+     *   section="mediatemplate",
+     *   input="Phlexible\Bundle\MediaTemplateBundle\Form\Type\MediaTemplateType",
+     *   statusCodes={
+     *     201="Returned when mediatemplate was created",
+     *     204="Returned when mediatemplate was updated",
+     *     404="Returned when mediatemplate was not found"
+     *   }
+     * )
      */
-    public function loadAction(Request $request)
+    public function postMediatemplatesAction(Request $request)
     {
-        $repository = $this->get('phlexible_media_template.template_manager');
-
-        $templateKey = $request->get('template_key');
-
-        $template = $repository->find($templateKey);
-        $parameters = $template->getParameters();
-
-        if (isset($parameters['method'])) {
-            $parameters['xmethod'] = $parameters['method'];
-            unset($parameters['method']);
-        }
-
-        return new Response(['success' => true, 'data' => $parameters]);
+        return $this->processForm($request, new MediaTemplate());
     }
 
     /**
-     * Save variables
+     * Update media template
      *
      * @param Request $request
+     * @param string  $mediaTemplateId
      *
      * @return Response
+     *
+     * @ApiDoc(
+     *   description="Update a MediaTemplate",
+     *   section="mediatemplate",
+     *   input="Phlexible\Bundle\MediaTemplateBundle\Form\Type\MediaTemplateType",
+     *   statusCodes={
+     *     201="Returned when mediatemplate was created",
+     *     204="Returned when mediatemplate was updated",
+     *     404="Returned when mediatemplate was not found"
+     *   }
+     * )
      */
-    public function saveAction(Request $request)
+    public function putMediatemplateAction(Request $request, $mediaTemplateId)
     {
-        $repository = $this->get('phlexible_media_template.template_manager');
+        $mediaTemplateManager = $this->get('phlexible_media_template.template_manager');
+        $mediaTemplate = $mediaTemplateManager->find($mediaTemplateId);
 
-        $templateKey = $request->get('template_key');
-        $params = $request->request->all();
-
-        unset($params['template_key'],
-            $params['module'],
-            $params['controller'],
-            $params['action']);
-
-        $template = $repository->find($templateKey);
-
-        $params = $this->fixParams($params);
-
-        foreach ($params as $key => $value) {
-            $template->setParameter($key, $value);
+        if (!$mediaTemplate instanceof TemplateInterface) {
+            throw new NotFoundHttpException('Media template not found');
         }
 
-        $repository->updateTemplate($template);
-
-        return new Response(true, 'Media template "' . $template->getKey() . '" saved.');
+        return $this->processForm($request, $mediaTemplate);
     }
 
     /**
-     * @param array $params
+     * @param Request           $request
+     * @param TemplateInterface $mediaTemplate
      *
-     * @return array
+     * @return Rest\View|Response
      */
-    private function fixParams(array $params)
+    private function processForm(Request $request, TemplateInterface $mediaTemplate)
     {
-        $qualityOverride = false;
+        $statusCode = !$mediaTemplate->getId() ? 201 : 204;
 
-        foreach ($params as $key => $value) {
-            if ($key == 'xmethod') {
-                $params['method'] = $value;
-                unset($params['xmethod']);
-            } elseif ($key == 'backgroundcolor' && !preg_match('/^\#[0-9A-Za-z]{6}$/', $value)) {
-                $params['backgroundcolor'] = '';
-            } elseif ($key == 'compression') {
-                if (!$qualityOverride) {
-                    $params['quality'] = 0;
-                }
-                $params['quality'] = $params['quality'] + $value * 10;
-                $qualityOverride = true;
-                unset($params['compression']);
-            } elseif ($key == 'filtertype') {
-                if (!$qualityOverride) {
-                    $params['quality'] = 0;
-                }
-                $params['quality'] = $params['quality'] + $value;
-                $qualityOverride = true;
-                unset($params['filtertype']);
+        $form = $this->createForm(new MediaTemplateType(), $mediaTemplate);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $mediaTemplateManager = $this->get('phlexible_media_template.template_manager');
+            $mediaTemplateManager->updateTemplate($mediaTemplate);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set('Location',
+                    $this->generateUrl(
+                        'phlexible_api_mediatemplate_get_mediatemplate', array('mediaTemplateId' => $mediaTemplate->getId()),
+                        true // absolute
+                    )
+                );
             }
+
+            return $response;
         }
 
-        return $params;
+        return View::create($form, 400);
+    }
+
+    /**
+     * Delete media template
+     *
+     * @param string $mediaTemplateId
+     *
+     * @return Response
+     *
+     * @Rest\View(statusCode=204)
+     * @ApiDoc(
+     *   description="Delete a MediaTemplate",
+     *   section="mediatemplate",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when the mediatemplate is not found"
+     *   }
+     * )
+     */
+    public function deleteMediatemplateAction($mediaTemplateId)
+    {
+        $mediaTemplateManager = $this->get('phlexible_media_template.template_manager');
+        $mediaTemplate = $mediaTemplateManager->find($mediaTemplateId);
+
+        if (!$mediaTemplate instanceof TemplateInterface) {
+            throw new NotFoundHttpException('MediaTemplate not found');
+        }
+
+        $mediaTemplateManager->deleteMediaTemplate($mediaTemplate);
     }
 }

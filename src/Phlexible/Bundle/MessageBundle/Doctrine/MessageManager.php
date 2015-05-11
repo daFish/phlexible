@@ -56,6 +56,14 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function find($id)
+    {
+        return $this->getMessageRepository()->find($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
     {
         return $this->getMessageRepository()->findBy($criteria, $orderBy, $limit, $offset);
@@ -95,19 +103,6 @@ class MessageManager implements MessageManagerInterface
         $query = new MessageQuery($this->entityManager);
 
         return $query->getFacets($criteria);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPriorityNames()
-    {
-        return [
-            0 => 'low',
-            1 => 'normal',
-            2 => 'high',
-            3 => 'urgent',
-        ];
     }
 
     /**

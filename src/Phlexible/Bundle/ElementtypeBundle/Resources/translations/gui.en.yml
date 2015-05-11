@@ -1,3 +1,219 @@
+Phlexible:
+    elementtype:
+        configuration:
+            Field:
+                storeText: Update
+                resetText: Reset
+                propertiesText: Properties
+                checkInputText: 'Please check your input.'
+
+            Root:
+                storeText: Aktualisieren
+                resetText: Zurücksetzen
+                propertiesText: Eigenschaften
+                propertiesOfText: 'Eigenschaften von'
+                checkInputText: 'Please check your input.'
+
+            field:
+                Configurations:
+                    title: Configuration
+                    requiredText: Required
+                    notRequiredText: 'Not required'
+                    onPublishText: 'On publish'
+                    alwaysText: Always
+                    languageText: Language
+                    notSynchronizedText: 'Not synchronized'
+                    synchronizedText: 'Synchronized'
+                    synchronizedWithUnlinkText: 'Synchronized with unlink'
+                    widthText: Width
+                    heightText: Height
+                    readonlyText: 'Readonly'
+                    hideLabelText: 'Hide label'
+                    childItemsText: Children
+                    sortableText: 'Can be sorted'
+
+                ConfigurationAccordion:
+                    title: Accordion
+                    defaultCollapsedText: 'Default collapsed'
+
+                ConfigurationDefaultValue:
+                    title: 'Default value'
+                    defaultValueText: 'Default value'
+
+                ConfigurationGroup:
+                    title: Group
+                    minRepeatText: 'Minimum repeat'
+                    maxRepeatText: 'Maximum repeat'
+                    defaultRepeatText: 'Default repeat'
+                    showBorderText: 'Show border'
+                    singleRowText: 'Single line'
+                    labelWidthText: 'Label width'
+
+                ConfigurationLabel:
+                    title: Label
+                    germanText: German
+                    englishText: English
+
+                ConfigurationLink:
+                    title: Link
+                    linkTypesText: 'Link types'
+                    internalText: 'Siteroot internal'
+                    intraText: 'Overall siteroots'
+                    externalText: External
+                    emailText: Email
+                    elementtypesText: 'Element types'
+
+                ConfigurationSelect:
+                    title: Select
+                    sourceText: Source
+                    editableListText: 'Editable list'
+                    callbackText: Callback
+
+                Labels:
+                    title: Label
+                    fieldLabelText: 'Field label'
+                    germanText: German
+                    englishText: English
+                    boxLabelText: 'Box label'
+                    prefixText: Prefix
+                    suffixText: Suffix
+                    contextHelpText: 'Context help'
+
+                Properties:
+                    title: Properties
+                    typeText: Type
+                    titleText: Name
+                    titleHelpText: 'Valid chars are "a-z", "0-9", "-" and "_".'
+                    imageText: Image
+                    commentText: Comment
+
+                Validations:
+                    title: Validation
+                    textValidationText: Text validation
+                    minLengthText: 'Minimum length'
+                    maxLengthText: 'Maximal length'
+                    regularExpressionText: 'Regular expression'
+                    modifiersText: Modifiers
+                    globalText: Global
+                    ignoreCaseText: 'Ignore case'
+                    multilineText: Multiline
+                    contentValidationText: Content validation
+                    validatorText: Validator
+                    numberValidationText: Number validation
+                    valueText: Value
+                    allowNegativeText: 'Allow negative values'
+                    allowDecimalsText: 'Allow decimal values'
+                    minValueText: 'Minimum value'
+                    maxValueText: 'Maximum value'
+
+            root:
+                Properties:
+                    title: Properties
+                    titleText: Title
+                    uniqueIdText: 'Unique identifier'
+                    iconText: Icon
+                    defaultTabText: 'Default tab'
+                    noDefaultTabText: 'No default tab'
+                    defaultContentTabText: 'Default content tab'
+                    noDefaultContentTabText: 'No default content tab'
+                    metasetText: 'Meta set'
+                    noMetasetText: 'No meta set'
+                    templateText: Template
+                    hideChildrenText: 'Hide children'
+                    commentText: Comment
+
+                Mappings:
+                    title: 'Field mappings'
+                    actionsText: Actions
+                    removeText: Remove
+                    fieldText: Field
+                    chooseFieldText: 'Choose field'
+                    patternText: Pattern
+                    previewText: Preview
+
+                DateMapping:
+                    actionsText: Actions
+                    removeText: Remove
+                    dsIdText: DS ID
+                    fieldText: Field
+                    clearText: 'Remove all'
+
+                LinkMapping:
+                    actionsText: Actions
+                    removeText: Remove
+                    dsIdText: DS ID
+                    fieldText: Field
+                    clearText: 'Remove all'
+
+                TitleMapping:
+                    actionsText: Actions
+                    removeText: Remove
+                    indexText: Index
+                    dsIdText: DS ID
+                    fieldText: Field
+                    clearText: 'Remove all'
+
+        handler:
+            Elementtypes:
+                text: Element types
+
+        view:
+            List:
+                title: Element types
+                idText: ID
+                nameText: Name
+                versionText: Version
+                fullText: Full
+                structureText: Structure
+                referenceText: Reference
+                layoutText: Layout
+                partText: Part
+                createText: Create
+                deleteText: Delete
+                duplicateText: Duplicate
+                loadInTemplateTreeText: 'Load template'
+                confirmDeleteText: 'Do your really want to delete this element type?'
+
+            Main:
+                title: 'Element types'
+                structureText: Structure
+                templateText: Template
+
+            Tree:
+                saveText: Save
+                resetText: Reset
+                reloadText: Reload
+                addBeforeText: 'Add field before'
+                addAfterText: 'Add field after'
+                addChildText: 'Add field as child'
+                copyText: Copy
+                cutText: Cut
+                pasteText: Paste
+                transformText: 'Transform to reference'
+                removeText: Remove
+                removeReferenceText: 'Remove referenec'
+                elementtypeText: 'Element type'
+                templateElementtypeText: 'Element type template'
+
+            Usage:
+                title: Usage
+                emptyText: 'Not in use'
+                typeText: Type
+                asText: By
+                idText: ID
+                titleText: Title
+                latestVersionText: 'Last version'
+
+            Viability:
+                title: Viability
+                emptyText: 'No defined viability'
+                idText: ID
+                elementtypeText: 'Element type'
+                actionsText: Actions
+                saveText: Save
+                addElementtypeText: 'Add element type'
+                removeText: Remove
+
 elementtypes:
     elementtypes: 'Element types'
     elementtype: 'Element type'

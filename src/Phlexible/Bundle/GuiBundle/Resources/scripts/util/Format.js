@@ -20,17 +20,19 @@ Ext.define('Phlexible.gui.util.Format', {
             return 0;
         }
 
+        var result = size,
+            loop = 0,
+            suffix, divisor;
+
         if (!binarySuffix || binarySuffix === undefined) {
-            var suffix = ["Byte", "kB", "MB", "GB", "TB", "PB"];
-            var divisor = 1000;
+            suffix = ["Byte", "kB", "MB", "GB", "TB", "PB"];
+            divisor = 1000;
         } else {
-            var suffix = ["Byte", "KiB", "MiB", "GiB", "TiB", "PiB"];
-            var divisor = 1024;
+            suffix = ["Byte", "KiB", "MiB", "GiB", "TiB", "PiB"];
+            divisor = 1024;
         }
-        var result = size;
         size = parseInt(size, 10);
         result = size + " " + suffix[0];
-        var loop = 0;
         while (size / divisor > 1) {
             size = size / divisor;
             loop++;

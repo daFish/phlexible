@@ -63,7 +63,6 @@ Ext.define('Phlexible.mediamanager.view.FilePreview', {
             case Phlexible.mediamanager.IMAGE:
             default:
                 return this.createImage(256, 256, fileId, fileVersion, fileName, cache);
-                break;
         }
     },
 
@@ -77,12 +76,12 @@ Ext.define('Phlexible.mediamanager.view.FilePreview', {
             templateKey: templateKey
         };
         if (fileVersion) {
-            parameters['file_version'] = fileVersion;
+            parameters.fileVersion = fileVersion;
         }
         if (cache && cache[templateKey]) {
-            parameters['cache'] = cache[templateKey];
+            parameters.cache = cache[templateKey];
         } else if (cache !== false) {
-            parameters['waiting'] = 1;
+            parameters.waiting = 1;
         }
 
         return Phlexible.Router.generate('mediamanager_media', parameters);

@@ -3,7 +3,7 @@ Ext.define('Phlexible.message.view.list.Filter', {
     xtype: 'message.list.filter',
 
     cls: 'p-messages-list-filter',
-    iconCls: 'p-message-filter-icon',
+    iconCls: Phlexible.Icon.get('funnel'),
     bodyPadding: 5,
     autoScroll: true,
 
@@ -12,7 +12,6 @@ Ext.define('Phlexible.message.view.list.Filter', {
     bodyText: '_bodyText',
     userText: '_userText',
     resetText: '_resetText',
-    priorityText: '_priorityText',
     loadingText: '_loadingText',
     typeText: '_typeText',
     channelText: '_channelText',
@@ -25,7 +24,7 @@ Ext.define('Phlexible.message.view.list.Filter', {
         this.task = new Ext.util.DelayedTask(this.updateFilter, this);
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlexible_message_get_messages'),
+            url: Phlexible.Router.generate('phlexible_api_message_get_messages'),
             success: function (response) {
                 var data = Ext.decode(response.responseText);
 
@@ -112,23 +111,6 @@ Ext.define('Phlexible.message.view.list.Filter', {
                         }
                     }
                 ]
-            },
-            {
-                xtype: 'panel',
-                itemId: 'priorities',
-                title: this.priorityText,
-                layout: 'form',
-                margin: '5 0 0 0',
-                frame: true,
-                collapsible: true,
-                defaults: {
-                    hideLabel: true
-                },
-                items: [{
-                    plain: true,
-                    frame: false,
-                    html: '<div class="loading-indicator">' + this.loadingText + '...</div>'
-                }]
             },
             {
                 xtype: 'panel',
@@ -239,23 +221,6 @@ Ext.define('Phlexible.message.view.list.Filter', {
     },
 
     updateFacets: function (facets) {
-        if (facets.priorities && facets.priorities.length && Ext.isArray(facets.priorities)) {
-            this.getComponent('priorities').items.each(function (item) {
-                var found = false;
-                Ext.each(facets.priorities, function (priority) {
-                    if (item.name === 'priority_' + priority) {
-                        found = true;
-                        return false;
-                    }
-                }, this);
-                if (found) {
-                    item.enable();
-                } else {
-                    item.disable();
-                }
-            }, this);
-        }
-
         if (facets.types && facets.types.length && Ext.isArray(facets.types)) {
             this.getComponent('types').items.each(function (item) {
                 var found = false;
@@ -309,26 +274,6 @@ Ext.define('Phlexible.message.view.list.Filter', {
     },
 
     loadFacets: function (facets) {
-        if (facets.priorities && facets.priorities.length && Ext.isArray(facets.priorities)) {
-            var priorities = [];
-            Ext.each(facets.priorities, function (item) {
-                priorities.push({
-                    xtype: 'checkbox',
-                    name: 'priority_' + item,
-                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.PriorityIcons[item], Phlexible.Config.get('message.priorities')[item]),
-                    listeners: {
-                        change: this.updateFilter,
-                        scope: this
-                    }
-                });
-            }, this);
-            this.getComponent('priorities').removeAll();
-            this.getComponent('priorities').add(priorities);
-            this.getComponent('priorities').show();
-        } else {
-            this.getComponent('priorities').hide();
-        }
-
         if (facets.types && facets.types.length && Ext.isArray(facets.types)) {
             var types = [];
             Ext.each(facets.types, function (item) {
@@ -394,10 +339,6 @@ Ext.define('Phlexible.message.view.list.Filter', {
         this.getComponent('text').items.each(function (item) {
             item.setValue('');
         });
-        this.getComponent('priorities').items.each(function (item) {
-            item.enable();
-            item.setValue(false);
-        });
         this.getComponent('types').items.each(function (item) {
             item.enable();
             item.setValue(false);
@@ -415,25 +356,21 @@ Ext.define('Phlexible.message.view.list.Filter', {
     },
 
     updateFilter: function () {
-        debugger;
         this.getDockedComponent('tbar').getComponent('resetBtn').enable();
 
         var values = this.form.getValues(),
-            filter = {mode: 'AND', value: []},
-            priorities = [],
+            criteria = {mode: 'AND', value: []},
             types = [],
             channels = [],
             roles = [];
 
         Ext.Object.each(values, function(key, value) {
             if (key === 'subject' && value) {
-                filter.value.push({type: 'subjectLike', value: value})
+                criteria.value.push({op: 'like', field: 'subject', value: value});
             } else if (key === 'body' && value) {
-                filter.value.push({type: 'bodyLike', value: value})
+                criteria.value.push({op: 'like', field: 'body', value: value});
             } else if (key === 'user' && value) {
-                filter.value.push({type: 'userLike', value: value})
-            } else if (key.substr(0, 9) === 'priority_' && value) {
-                priorities.push(key.substr(9));
+                criteria.value.push({op: 'like', field: 'user', value: value});
             } else if (key.substr(0, 5) === 'type_' && value) {
                 types.push(key.substr(5));
             } else if (key.substr(0, 8) === 'channel_' && value) {
@@ -443,19 +380,16 @@ Ext.define('Phlexible.message.view.list.Filter', {
             }
         });
 
-        if (priorities.length) {
-            filter.value.push({type: 'priorityIn', value: priorities});
-        }
         if (types.length) {
-            filter.value.push({type: 'typeIn', value: types});
+            criteria.value.push({op: 'in', field: 'type', values: types});
         }
         if (channels.length) {
-            filter.value.push({type: 'channelIn', value: channels});
+            criteria.value.push({op: 'in', field: 'channel', values: channels});
         }
         if (roles.length) {
-            filter.value.push({type: 'rolesIn', value: roles});
+            criteria.value.push({op: 'in', field: 'role', values: roles});
         }
 
-        this.fireEvent('updateFilter', filter);
+        this.fireEvent('updateFilter', criteria);
     }
 });

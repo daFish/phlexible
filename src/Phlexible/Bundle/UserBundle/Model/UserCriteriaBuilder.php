@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\UserBundle\Model;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\Expr;
-use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Request\ParamFetcher;
 
 /**
  * User criteria builder
@@ -20,12 +20,12 @@ use Symfony\Component\HttpFoundation\Request;
 class UserCriteriaBuilder
 {
     /**
-     * @param Criteria $criteria
-     * @param Request  $request
+     * @param ParamFetcher $paramFetcher
+     * @param Criteria     $criteria
      */
-    public static function applyFromRequest(Criteria $criteria, Request $request)
+    public static function applyFromParams(ParamFetcher $paramFetcher, Criteria $criteria)
     {
-        $values = $request->query->all();
+        $values = $paramFetcher->all();
 
         $roles = array();
         $groups = array();
@@ -37,10 +37,10 @@ class UserCriteriaBuilder
             if ($key == 'text') {
                 $criteria->andWhere(
                     $criteria->expr()->orX(
-                        $criteria->expr()->contains('firstname', '%'.$value.'%'),
-                        $criteria->expr()->contains('lastname', '%'.$value.'%'),
-                        $criteria->expr()->contains('username', '%'.$value.'%'),
-                        $criteria->expr()->contains('email', '%'.$value.'%')
+                        $criteria->expr()->contains('firstname', "%$value%"),
+                        $criteria->expr()->contains('lastname', "%$value%"),
+                        $criteria->expr()->contains('username', "%$value%"),
+                        $criteria->expr()->contains('email', "%$value%")
                     )
                 );
             } elseif ($key == 'account_disabled') {

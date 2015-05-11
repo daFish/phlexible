@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\SiterootBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Siteroot navigation
@@ -31,6 +32,7 @@ class Navigation
     /**
      * @var string
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $title;
 
@@ -43,12 +45,15 @@ class Navigation
     /**
      * @var int
      * @ORM\Column(name="start_tree_id", type="integer")
+     * @Assert\Type(type="int")
+     * @Assert\NotBlank
      */
     private $startTreeId;
 
     /**
      * @var int
      * @ORM\Column(name="max_depth", type="integer")
+     * @Assert\Type(type="int")
      */
     private $maxDepth;
 

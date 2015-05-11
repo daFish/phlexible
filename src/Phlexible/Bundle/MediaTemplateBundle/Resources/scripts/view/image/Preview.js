@@ -78,7 +78,7 @@ Ext.define('Phlexible.mediatemplate.view.image.Preview', {
                     scope: this
                 }
             }]
-        }]
+        }];
     },
 
     toColor: function (r, g, b) {
@@ -110,9 +110,9 @@ Ext.define('Phlexible.mediatemplate.view.image.Preview', {
     },
 
     createPreview: function (params, debug) {
-        if (params['method']) {
-            params.xmethod = params['method'];
-            delete params['method'];
+        if (params.method) {
+            params.xmethod = params.method;
+            delete params.method;
         }
 
         this.callParent(arguments);

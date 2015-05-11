@@ -49,7 +49,7 @@ Ext.define('Phlexible.message.view.Main', {
     initMyItems: function() {
         this.items = {
             xtype: 'tabpanel',
-            deferredRender: true,
+            deferredRender: false,
             activeItem: 0,
             border: false,
             items: this.tabs

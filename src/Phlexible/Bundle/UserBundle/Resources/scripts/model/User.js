@@ -3,6 +3,7 @@
  */
 Ext.define('Phlexible.user.model.User', {
     extend: 'Ext.data.Model',
+    idProperty: 'id',
     fields: [
         {name: 'id', type: 'string'},
         {name: 'firstname', type: 'string'},

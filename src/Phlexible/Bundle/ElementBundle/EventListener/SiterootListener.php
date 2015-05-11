@@ -121,8 +121,6 @@ class SiterootListener
             ]
         ];
 
-        $user = $this->userManager->find($siteroot->getModifyUserId());
-
         $elementtype = $this->elementtypeService->createElementtype(
             'structure',
             'site_root_' . $siteroot->getId(),
@@ -130,13 +128,13 @@ class SiterootListener
             'www_root.gif',
             $elementtypeStructure,
             $mappings,
-            $user->getUsername(),
+            $siteroot->getModifyUser(),
             false
         );
 
         $elementSource = $this->elementService->createElementSource($elementtype);
 
-        $element = $this->elementService->createElement($elementSource, $this->masterLanguage, $siteroot->getModifyUserId());
+        $element = $this->elementService->createElement($elementSource, $this->masterLanguage, $siteroot->getModifyUser());
 
         $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
         $tree->init('element', $element->getEid(), $element->getCreateUserId());

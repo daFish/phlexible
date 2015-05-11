@@ -153,7 +153,7 @@ Ext.define('Phlexible.user.view.users.Filter', {
                     model: 'Phlexible.user.model.UserRole',
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('phlexible_user_get_roles'),
+                        url: Phlexible.Router.generate('phlexible_api_user_get_roles'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',
@@ -192,7 +192,7 @@ Ext.define('Phlexible.user.view.users.Filter', {
                     model: 'Phlexible.user.model.UserGroup',
                     proxy: {
                         type: 'ajax',
-                        url: Phlexible.Router.generate('phlexible_user_get_groups'),
+                        url: Phlexible.Router.generate('phlexible_api_user_get_groups'),
                         simpleSortMode: true,
                         reader: {
                             type: 'json',

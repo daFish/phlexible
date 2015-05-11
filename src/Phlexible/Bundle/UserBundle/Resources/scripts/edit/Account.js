@@ -3,14 +3,13 @@
  */
 Ext.define('Phlexible.user.edit.Account', {
     extend: 'Ext.form.FormPanel',
-    alias: 'widget.user-edit-account',
-    requires: ['Ext.ux.form.trigger.Clear'],
+    requires: [
+        'Ext.ux.form.trigger.Clear'
+    ],
+    xtype: 'user.edit-account',
 
-    title: '_account',
     iconCls: Phlexible.Icon.get('key'),
-    bodyPadding: '5',
-    border: true,
-    hideMode: 'offsets',
+    bodyPadding: 10,
     defaultType: 'textfield',
     fieldDefaults:{
         labelWidth: 130,
@@ -84,7 +83,7 @@ Ext.define('Phlexible.user.edit.Account', {
         this.callParent(arguments);
     },
 
-    loadRecord: function(user) {
+    loadUser: function(user) {
         this.getForm().setValues(user.data);
     },
 

@@ -7,6 +7,8 @@ Phlexible:
         view:
             Main:
                 title: 'Meta Sets'
+                metaSetText: 'Meta Set'
+                metaSetsText: 'Meta Sets'
                 idText: ID
                 nameText: Name
                 actionsText: Aktionen

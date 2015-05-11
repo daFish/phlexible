@@ -5,7 +5,6 @@ Ext.define('Phlexible.mediamanager.view.FileVersions', {
     ],
     xtype: 'mediamanager.file-versions',
 
-    title: '_FileVersionsPanel',
     iconCls: Phlexible.Icon.get('edit-number'),
     layout: 'fit',
     autoScroll: true,
@@ -31,12 +30,6 @@ Ext.define('Phlexible.mediamanager.view.FileVersions', {
         this.initMyStore();
         this.initMyItems();
         this.initMyContextMenu();
-
-        this.callParent(arguments);
-    },
-
-    onDestroy: function() {
-        this.contextMenu.destroy();
 
         this.callParent(arguments);
     },

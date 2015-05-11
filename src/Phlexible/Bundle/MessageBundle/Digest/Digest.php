@@ -127,7 +127,7 @@ class Digest
             $message = Message::create(
                 count($digests) . ' digest mail(s) sent.',
                 'Status: ' . PHP_EOL . print_r($digests, true),
-                Message::PRIORITY_NORMAL,
+                null,
                 null,
                 'ROLE_MESSAGES',
                 'cli'

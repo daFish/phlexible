@@ -7,10 +7,7 @@ Ext.define('Phlexible.mediatemplate.view.image.Main', {
 
     xtype: 'mediatemplate.image.main',
 
-    header: false,
     layout: 'border',
-
-    imageTemplateTitleText: '_imageTemplateTitleText',
 
     initComponent: function () {
         this.initMyItems();
@@ -26,7 +23,6 @@ Ext.define('Phlexible.mediatemplate.view.image.Main', {
                 itemId: 'form',
                 width: 320,
                 margin: 5,
-                header: false,
                 listeners: {
                     saveTemplate: function () {
                         this.fireEvent('paramssave');
@@ -48,7 +44,6 @@ Ext.define('Phlexible.mediatemplate.view.image.Main', {
     },
 
     loadParameters: function (key, parameters) {
-        this.getComponent('form').setTitle(Ext.String.format(this.imageTemplateTitleText, key));
         this.getComponent('form').loadParameters(key, parameters);
     }
 });

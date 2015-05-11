@@ -6,7 +6,7 @@ Ext.define('Phlexible.gui.window.PhpInfoWindow', {
     requires: ['Ext.window.Window', 'Phlexible.gui.panel.IframePanel'],
 
     title: '_PhpInfoWindow',
-    iconCls: 'p-gui-php-icon',
+    iconCls: 'p-icon-php',
     width: 940,
     height: 600,
     constrain: true,

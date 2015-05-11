@@ -8,6 +8,7 @@
 
 namespace Phlexible\Component\MetaSet\File;
 
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetCollection;
 use Phlexible\Component\MetaSet\Model\MetaSetField;
@@ -105,6 +106,10 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function updateMetaSet(MetaSetInterface $metaSet)
     {
+        if (!$metaSet->getId()) {
+            $metaSet->setId(Uuid::generate());
+        }
+
         $this->dumper->dumpMetaSet($metaSet);
     }
 }

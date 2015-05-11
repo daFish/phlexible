@@ -31,7 +31,7 @@ class FrameController extends Controller
      * @param Request $request
      *
      * @return array
-     * @Route("", name="gui_index")
+     * @Route("", name="phlexible_gui")
      * @Method("GET")
      * @Template
      */
@@ -51,7 +51,7 @@ class FrameController extends Controller
      * @param string $path
      *
      * @return Response
-     * @Route("/gui/load/{path}.js", name="gui_load", requirements={"path": ".*"})
+     * @Route("/gui/load/{path}.js", name="phlexible_gui_load", requirements={"path": ".*"})
      * @Method("GET")
      */
     public function loadAction($path)
@@ -71,7 +71,7 @@ class FrameController extends Controller
      * Return configuration
      *
      * @return JsonResponse
-     * @Route("/gui/config", name="gui_config")
+     * @Route("/gui/config", name="phlexible_gui_config")
      * @Method("GET")
      */
     public function configAction()
@@ -86,7 +86,7 @@ class FrameController extends Controller
      * Return menu
      *
      * @return JsonResponse
-     * @Route("/gui/menu", name="gui_menu")
+     * @Route("/gui/menu", name="phlexible_gui_menu")
      * @Method("GET")
      */
     public function menuAction()
@@ -104,7 +104,7 @@ class FrameController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/gui/routes", name="gui_routes")
+     * @Route("/gui/routes", name="phlexible_gui_routes")
      * @Method("GET")
      */
     public function routesAction(Request $request)

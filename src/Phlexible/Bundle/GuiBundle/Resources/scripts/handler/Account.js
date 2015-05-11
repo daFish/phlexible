@@ -5,4 +5,4 @@ Ext.define('Phlexible.gui.handler.Account', {
     getText: function () {
         return Phlexible.User.getDisplayName();
     }
-})
+});

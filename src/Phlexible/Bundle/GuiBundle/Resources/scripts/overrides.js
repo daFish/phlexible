@@ -9,10 +9,10 @@ function suppressBackspace(evt) {
     evt = evt || window.event;
     var target = evt.target || evt.srcElement;
 
-    if (evt.keyCode == 8
-        && !/input|textarea/i.test(target.nodeName)
-        && (target.getAttribute("class")
-        && target.getAttribute("class") !== "redactor_ redactor_editor")) {
+    if (evt.keyCode == 8 &&
+        !/input|textarea/i.test(target.nodeName) &&
+        (target.getAttribute("class") &&
+        target.getAttribute("class") !== "redactor_ redactor_editor")) {
         return false;
     }
 }

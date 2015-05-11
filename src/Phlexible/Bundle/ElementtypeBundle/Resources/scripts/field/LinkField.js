@@ -1,9 +1,7 @@
-Ext.provide('Phlexible.elementtypes.field.LinkField');
+Ext.define('Phlexible.elementtype.field.LinkField', {
+    extend: 'Ext.form.field.ComboBox',
+    xtype: 'field.link',
 
-Ext.require('Ext.ux.TwinComboBox');
-Ext.require('Phlexible.elements.LinkWindow');
-
-Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
     minChars: 2,
     //hideTrigger: true,
     trigger2Class: 'p-form-link-trigger',
@@ -33,19 +31,25 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
             this.language = this.element.language;
         }
 
-        this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elements_links_search'),
-            baseParams: {
-                language: this.language,
-                siteroot_id: this.siteroot_id,
-                allow_tid: this.allowed.tid ? 1 : 0,
-                allow_intrasiteroot: this.allowed.intrasiteroot ? 1 : 0,
-                element_type_ids: this.elementTypeIds || this.elementTypeIds
-            },
-            root: 'results',
-            totalProperty: 'totalCount',
-            id: 'id',
-            fields: ['id', 'type', 'eid', 'tid', 'title']
+        this.store = Ext.create('Ext.data.Store', {
+            fields: ['id', 'type', 'eid', 'tid', 'title'],
+            proxy: {
+                type: 'ajax',
+                url: Phlexible.Router.generate('elements_links_search'),
+                extraParams: {
+                    language: this.language,
+                    siteroot_id: this.siteroot_id,
+                    allow_tid: this.allowed.tid ? 1 : 0,
+                    allow_intrasiteroot: this.allowed.intrasiteroot ? 1 : 0,
+                    element_type_ids: this.elementTypeIds || this.elementTypeIds
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'results',
+                    idProperty: 'id',
+                    totalProperty: 'totalCount'
+                }
+            }
         });
 
         this.addListener({
@@ -69,7 +73,7 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
             this.ctCls = 'x-item-disabled';
         }
 
-        Phlexible.elementtypes.field.LinkField.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     setElementTypeIds: function (elementTypeIds) {
@@ -200,5 +204,3 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
         w.show(el);
     }
 });
-
-Ext.reg('linkfield', Phlexible.elementtypes.field.LinkField);

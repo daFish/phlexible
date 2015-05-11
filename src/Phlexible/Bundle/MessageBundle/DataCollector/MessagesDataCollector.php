@@ -115,15 +115,6 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
         ];
 
         foreach ($this->debugHandler->getMessages() as $message) {
-            if (isset($count['priorities'][$message['priority']])) {
-                ++$count['priorities'][$message['priority']]['count'];
-            } else {
-                $count['priorities'][$message['priority']] = [
-                    'count' => 1,
-                    'name'  => $message['priorityName'],
-                ];
-            }
-
             if (isset($count['types'][$message['type']])) {
                 ++$count['types'][$message['type']]['count'];
             } else {

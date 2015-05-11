@@ -42,7 +42,7 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
     },
 
     getLanguageData: function () {
-        var languageData = Phlexible.clone(Phlexible.Config.get('set.language.frontend'));
+        var languageData = Ext.clone(Phlexible.Config.get('set.language.frontend'));
         languageData.unshift(['_all_', this.strings.all, 'p-contentrights-all-icon']);
 
         return languageData;

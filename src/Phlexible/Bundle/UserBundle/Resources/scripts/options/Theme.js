@@ -3,9 +3,8 @@
  */
 Ext.define('Phlexible.user.options.Theme', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.user-options-theme',
+    xtype: 'user.options-theme',
 
-    title: '_theme',
     iconCls: Phlexible.Icon.get('image-empty'),
     bodyPadding: '15',
     border: true,
@@ -18,7 +17,7 @@ Ext.define('Phlexible.user.options.Theme', {
     initComponent: function() {
         this.initMyItems();
         this.initMyDockedItems();
-        this.initListeners();
+        this.initMyListeners();
 
         this.callParent(arguments);
     },
@@ -28,7 +27,7 @@ Ext.define('Phlexible.user.options.Theme', {
             xtype: 'dataview',
             store: Ext.create('Ext.data.Store', {
                 model: 'Phlexible.gui.model.KeyValueIconCls',
-                data: Phlexible.Config.get('resources.themes')
+                data: Phlexible.Config.get('set.themes')
             }),
             tpl: new Ext.XTemplate(
                 '<tpl for=".">',
@@ -50,7 +49,7 @@ Ext.define('Phlexible.user.options.Theme', {
     initMyListeners: function() {
         this.addListener({
             show: function (panel) {
-                var record = panel.getComponent(0).getStore().findRecord('key', Phlexible.Config.getOptions().theme);
+                var record = panel.getComponent(0).getStore().findRecord('key', Phlexible.Config.get('user.theme'));
 
                 if (record) {
                     panel.getComponent(0).select(record, false, true);

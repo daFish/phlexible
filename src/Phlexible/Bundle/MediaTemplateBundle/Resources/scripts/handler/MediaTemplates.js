@@ -3,6 +3,6 @@ Ext.define('Phlexible.mediatemplate.handler.MediaTemplates', {
     requires: ['Phlexible.mediatemplate.view.Main'],
 
     text: '_mediatemplates',
-    iconCls: Phlexible.Icon.get('image-select'),
+    iconCls: Phlexible.Icon.get('image-resize'),
     name: 'mediatemplate.main'
 });

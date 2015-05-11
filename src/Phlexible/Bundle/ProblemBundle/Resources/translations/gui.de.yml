@@ -13,7 +13,18 @@ Phlexible:
                 newProblemText: 'Neues Problem'
 
         view:
-            Problems:
+            Main:
+                title: Probleme
+                idtext: ID
+                problemText: Problem
+                severityText: Schwere
+                sourceText: Quelle
+                createdAtText: 'Erstellt an'
+                lastCheckedAtText: 'Zuletzt überprüft an'
+                linkText: Link
+                solutionText: Lösung
+
+            List:
                 title: Probleme
                 idtext: ID
                 problemText: Problem

@@ -26,9 +26,6 @@ class Criteria implements CriteriumInterface, \IteratorAggregate, \Countable
     const CRITERIUM_BODY_NOT_LIKE    = 'bodyNotLike';
     const CRITERIUM_USER_LIKE        = 'userLike';
     const CRITERIUM_USER_NOT_LIKE    = 'userNotLike';
-    const CRITERIUM_PRIORITY_IS      = 'priorityIs';
-    const CRITERIUM_PRIORITY_IN      = 'priorityIn';
-    const CRITERIUM_PRIORITY_MIN     = 'priorityMin';
     const CRITERIUM_TYPE_IS          = 'typeIs';
     const CRITERIUM_TYPE_IN          = 'typeIn';
     const CRITERIUM_CHANNEL_IS       = 'channelIs';
@@ -219,45 +216,6 @@ class Criteria implements CriteriumInterface, \IteratorAggregate, \Countable
     public function userNotLike($value)
     {
         $this->add(new Criterium(self::CRITERIUM_USER_NOT_LIKE, $value));
-
-        return $this;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @return $this
-     */
-    public function priorityIs($value)
-    {
-        $this->add(new Criterium(self::CRITERIUM_PRIORITY_IS, (int) $value));
-
-        return $this;
-    }
-
-    /**
-     * @param array $values
-     *
-     * @return $this
-     */
-    public function priorityIn(array $values)
-    {
-        foreach ($values as $index => $value) {
-            $values[$index] = (int) $value;
-        }
-        $this->add(new Criterium(self::CRITERIUM_PRIORITY_IN, $values));
-
-        return $this;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @return $this
-     */
-    public function priorityMin($value)
-    {
-        $this->add(new Criterium(self::CRITERIUM_PRIORITY_MIN, (int) $value));
 
         return $this;
     }

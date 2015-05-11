@@ -1,9 +1,7 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.Group');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
+Ext.require('Phlexible.elementtype.field.Group');
+Ext.require('Phlexible.element.ElementDataTabHelper');
 
-Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('group', function (parentConfig, item, valueStructure, element, repeatableId) {
     var minRepeat = parseInt(item.configuration.repeat_min, 10) || 0,
         maxRepeat = parseInt(item.configuration.repeat_max, 10) || 0,
         isRepeatable = minRepeat != maxRepeat || maxRepeat > 1,
@@ -88,12 +86,13 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('group', {
+Phlexible.fields.FieldTypes.register({
+    type: 'group',
     titles: {
         de: 'Gruppe',
         en: 'Group'
     },
-    iconCls: 'p-elementtype-container_group-icon',
+    iconCls: Phlexible.Icon.get('ui-group-box'),
     allowedIn: [
         'tab',
         'accordion',

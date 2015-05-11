@@ -1,5 +1,6 @@
 Ext.define('Phlexible.mediamanager.model.Folder', {
     extend: 'Ext.data.TreeModel',
+    entityName: 'Folder',
     fields: [
         {name: 'name', type: 'string'},
         {name: 'path', type: 'string'},

@@ -3,12 +3,9 @@
  */
 Ext.define('Phlexible.user.edit.Groups', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.user-edit-groups',
+    xtype: 'user.edit-groups',
 
-    title: '_groups',
     iconCls: Phlexible.Icon.get('users'),
-    border: true,
-    hideMode: 'offsets',
     viewConfig: {
         stripeRows: true,
         deferEmptyText: false
@@ -26,23 +23,19 @@ Ext.define('Phlexible.user.edit.Groups', {
             model: 'Phlexible.user.model.UserGroup',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_user_get_groups'),
+                url: Phlexible.Router.generate('phlexible_api_user_get_groups'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
                     rootProperty: 'groups',
-                    idProperty: 'id',
                     totalProperty: 'count'
-                },
-                extraParams: {
-                    id: null
                 }
             },
             sorters: [{
                 property: 'role',
                 direction: 'ASC'
             }],
-            autoLoad: true
+            autoLoad: this.mode !== 'edit'
         });
 
         this.columns = [{
@@ -61,9 +54,11 @@ Ext.define('Phlexible.user.edit.Groups', {
         this.callParent(arguments);
     },
 
-    loadRecord: function(record) {
-        this.getStore().getProxy().url = Phlexible.Router.generate('phlexible_user_get_user_groups', {userId: record.get('id')});
-        this.getStore().load();
+    loadUser: function(user) {
+        if (this.mode === 'edit') {
+            this.getStore().getProxy().url = Phlexible.Router.generate('phlexible_api_user_get_user_groups', {userId: user.get('id')});
+            this.getStore().load();
+        }
     },
 
     isValid: function() {

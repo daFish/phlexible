@@ -33,7 +33,6 @@ class PostCommand extends ContainerAwareCommand
                 [
                     new InputArgument('subject', InputArgument::OPTIONAL, 'Message subject'),
                     new InputOption('body', null, InputOption::VALUE_REQUIRED, 'Message body'),
-                    new InputOption('priority', null, InputOption::VALUE_REQUIRED, 'Message priority', 1),
                     new InputOption('type', null, InputOption::VALUE_REQUIRED, 'Message type', 0),
                     new InputOption('channel', null, InputOption::VALUE_REQUIRED, 'Message channel'),
                     new InputOption('role', null, InputOption::VALUE_REQUIRED, 'Message role'),
@@ -59,14 +58,6 @@ class PostCommand extends ContainerAwareCommand
             $body = 'body-' . $date;
         }
 
-        $priority = $input->getOption('priority');
-        $priorities = ['low', 'normal', 'high', 'urgent'];
-        if (in_array($priority, $priorities)) {
-            $priority = array_search($priority, $priorities);
-        } elseif (!in_array($priority, array_keys($priorities))) {
-            $priority = null;
-        }
-
         $type = $input->getOption('type');
         $types = ['info', 'error'];
         if (in_array($type, $types)) {
@@ -78,7 +69,7 @@ class PostCommand extends ContainerAwareCommand
         $channel = $input->getOption('channel');
         $role = $input->getOption('role');
 
-        $message = Message::create($subject, $body, $priority, $type, $channel, $role, 'cli');
+        $message = Message::create($subject, $body, $type, $channel, $role, 'cli');
         $messageService = $this->getContainer()->get('phlexible_message.message_poster');
         $messageService->post($message);
 

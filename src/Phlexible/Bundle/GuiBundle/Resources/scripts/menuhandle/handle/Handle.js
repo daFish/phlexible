@@ -60,9 +60,11 @@ Ext.define('Phlexible.gui.menuhandle.handle.Handle', {
      * @return {Object}
      */
     createBasicConfig: function () {
-        return btnConfig = {
+        var btnConfig = {
             text: this.getText(),
             iconCls: this.getIconCls()
         };
+
+        return btnConfig;
     }
 });

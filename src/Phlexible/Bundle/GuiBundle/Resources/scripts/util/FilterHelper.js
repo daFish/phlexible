@@ -75,7 +75,7 @@ Ext.define('Phlexible.gui.util.FilterHelper', {
             } else {
                 this.values[key] = null;
             }
-        };
+        }
     },
 
     getSetValues: function() {
@@ -85,7 +85,7 @@ Ext.define('Phlexible.gui.util.FilterHelper', {
             if (this.values[key]) {
                 values[key] = this.values[key];
             }
-        };
+        }
 
         return values;
     },
@@ -97,7 +97,7 @@ Ext.define('Phlexible.gui.util.FilterHelper', {
             if (!this.values[key]) {
                 values[key] = null;
             }
-        };
+        }
 
         return values;
     },
@@ -107,7 +107,7 @@ Ext.define('Phlexible.gui.util.FilterHelper', {
 
         for (key in this.values) {
             values[key] = null;
-        };
+        }
 
         return values;
     },

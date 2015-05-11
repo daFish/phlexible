@@ -34,7 +34,7 @@ Ext.define('Phlexible.message.view.filter.List', {
             model: 'Phlexible.message.model.Filter',
             proxy: {
                 type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_message_get_filters'),
+                url: Phlexible.Router.generate('phlexible_api_message_get_filters'),
                 simpleSortMode: true,
                 reader: {
                     type: 'json',
@@ -97,7 +97,7 @@ Ext.define('Phlexible.message.view.filter.List', {
         Ext.MessageBox.prompt(this.addFilterText, this.addFilterDescriptionText, function (btn, title) {
             if (btn === 'ok') {
                 Ext.Ajax.request({
-                    url: Phlexible.Router.generate('phlexible_message_post_filters'),
+                    url: Phlexible.Router.generate('phlexible_api_message_post_filters'),
                     params: {
                         title: title
                     },
@@ -127,7 +127,7 @@ Ext.define('Phlexible.message.view.filter.List', {
                 return;
             }
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('phlexible_message_delete_filter', {filterId: record.get('id')}),
+                url: Phlexible.Router.generate('phlexible_api_message_delete_filter', {filterId: record.get('id')}),
                 success: function (response) {
                     var data = Ext.decode(response.responseText);
 
