@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaManager\Upload;
 
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
  * Upload temp storage
@@ -29,15 +29,15 @@ class TempHandler
     private $tempStorage;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
     /**
-     * @param TempStorage   $tempStorage
-     * @param VolumeManager $volumeManager
+     * @param TempStorage            $tempStorage
+     * @param VolumeManagerInterface $volumeManager
      */
-    public function __construct(TempStorage $tempStorage, VolumeManager $volumeManager)
+    public function __construct(TempStorage $tempStorage, VolumeManagerInterface $volumeManager)
     {
         $this->tempStorage = $tempStorage;
         $this->volumeManager = $volumeManager;
@@ -140,8 +140,7 @@ class TempHandler
         do {
             $i++;
             $newName = sprintf($newNameFormat, $i);
-            $testFilename = $folder->getPath() . '/' . $newName;
-        } while ($volume->findFileByPath($testFilename));
+        } while ($volume->findFileByFolderAndName($folder, $newName));
 
         return $newName;
     }

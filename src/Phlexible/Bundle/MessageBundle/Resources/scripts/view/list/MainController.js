@@ -6,9 +6,9 @@ Ext.define('Phlexible.message.view.list.MainController', {
         this.getView().getComponent('filter').updateFacets(store.getProxy().getReader().rawData.facets);
     },
 
-    updateFilter: function (criteria) {
+    updateFilter: function (expression) {
         var store = this.getStore('messages');
-        store.getProxy().setExtraParam('criteria', criteria ? Ext.encode(criteria) : null);
+        store.getProxy().setExtraParam('expression', expression ? Ext.encode(expression) : null);
         store.reload();
     }
 });

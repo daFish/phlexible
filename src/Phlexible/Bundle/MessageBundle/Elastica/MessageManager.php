@@ -19,7 +19,6 @@ use Elastica\Query;
 use Elastica\Query\Wildcard;
 use Elastica\ResultSet;
 use Elastica\Type;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 

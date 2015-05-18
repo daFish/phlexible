@@ -12,7 +12,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class FileSearch implements SearchProviderInterface
 {
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -38,12 +38,12 @@ class FileSearch implements SearchProviderInterface
     private $authorizationChecker;
 
     /**
-     * @param VolumeManager                 $volumeManager
+     * @param VolumeManagerInterface        $volumeManager
      * @param UserManagerInterface          $userManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
-        VolumeManager $volumeManager,
+        VolumeManagerInterface $volumeManager,
         UserManagerInterface $userManager,
         AuthorizationCheckerInterface $authorizationChecker)
     {

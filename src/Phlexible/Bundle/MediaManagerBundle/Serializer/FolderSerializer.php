@@ -41,7 +41,7 @@ class FolderSerializer
      *
      * @return array
      */
-    public function serialize(ExtendedFolderInterface $folder, $language)
+    public function serialize(ExtendedFolderInterface $folder)
     {
         $volume = $folder->getVolume();
         $hasVersions = $volume->hasFeature('versions');

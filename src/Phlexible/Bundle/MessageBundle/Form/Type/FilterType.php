@@ -18,7 +18,7 @@ class FilterType extends AbstractType
         $builder->add('title', 'text');
         $builder->add('createdAt', 'datetime');
         $builder->add('modifiedAt', 'datetime');
-        $builder->add('criteria', 'text');
+        $builder->add('expression', 'text');
     }
 
     /**

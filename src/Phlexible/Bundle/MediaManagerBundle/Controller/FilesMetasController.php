@@ -8,37 +8,52 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * File meta controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/mediamanager/filemeta")
+ *
  * @Security("is_granted('ROLE_MEDIA')")
+ * @Rest\NamePrefix("phlexible_api_mediamanager_")
  */
-class FileMetaController extends Controller
+class FilesMetasController extends FOSRestController
 {
     /**
      * @param Request $request
+     * @param string  $fileId
      *
-     * @return JsonResponse
-     * @Route("", name="mediamanager_file_meta")
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of FileMeta",
+     *   section="mediamanager",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
-    public function metaAction(Request $request)
+    public function getMetasAction(Request $request, $fileId)
     {
-        $fileId = $request->get('fileId');
         $fileVersion = $request->get('fileVersion', 1);
 
-        $file = $this->get('phlexible_media_manager.volume_manager')->getByFileId($fileId)->findFile($fileId, $fileVersion);
-
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
+
+        $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
+
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
         $fileMetaSets = [];
@@ -78,18 +93,19 @@ class FileMetaController extends Controller
             ];
         }
 
-        return new JsonResponse(['children' => $fileMetaSets]);
+        return [
+            'metas' => $fileMetaSets
+        ];
     }
 
     /**
      * @param Request $request
+     * @param string  $fileId
      *
-     * @return ResultResponse
-     * @Route("/save", name="mediamanager_file_meta_save")
+     * @return Response
      */
-    public function saveAction(Request $request)
+    public function putMetaAction(Request $request, $fileId)
     {
-        $fileId = $request->get('fileId');
         $fileVersion = $request->get('fileVersion', 1);
         $data = $request->get('data');
         $data = json_decode($data, true);
@@ -153,59 +169,5 @@ class FileMetaController extends Controller
         */
 
         return new ResultResponse(true, 'File meta saved.');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/listsets", name="mediamanager_file_meta_sets_list")
-     */
-    public function listsetsAction(Request $request)
-    {
-        $fileId = $request->get('fileId');
-        $fileVersion = $request->get('fileVersion', 1);
-
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
-
-        $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
-        $metaSets = $fileMetaSetResolver->resolve($file);
-
-        $sets = [];
-        foreach ($metaSets as $metaSet) {
-            $sets[] = [
-                'id'   => $metaSet->getId(),
-                'name' => $metaSet->getName(),
-            ];
-        }
-
-        return new JsonResponse(['sets' => $sets]);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/savesets", name="mediamanager_file_meta_sets_save")
-     */
-    public function savesetsAction(Request $request)
-    {
-        $fileId = $request->get('fileId');
-        $fileVersion = $request->get('fileVersion', 1);
-        $joinedIds = $request->get('ids');
-        if ($joinedIds) {
-            $ids = explode(',', $joinedIds);
-        } else {
-            $ids = [];
-        }
-
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-
-        $volume = $volumeManager->getByFileId($fileId);
-        $file = $volume->findFile($fileId, $fileVersion);
-        $volume->setFileMetasets($file, $ids, $this->getUser()->getId());
-
-        return new ResultResponse(true, 'Set added.');
     }
 }

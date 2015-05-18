@@ -1,5 +1,6 @@
 Ext.define('Phlexible.mediamanager.model.File', {
     extend: 'Ext.data.Model',
+
     entityName: 'File',
     fields: [
         {name: 'id', type: 'string'},

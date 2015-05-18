@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Doctrine\Common\Collections\Criteria;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -16,6 +15,7 @@ use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Form\Type\MessageType;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +44,7 @@ class MessagesController extends FOSRestController
      * @Rest\QueryParam(name="sort", requirements="\w+", default="createdAt", description="Sort field")
      * @Rest\QueryParam(name="dir", requirements="\w+", default="DESC", description="Sort direction")
      * @Rest\QueryParam(name="include", requirements="\w+", default="facets", description="Include optional values, like facets")
-     * @Rest\QueryParam(name="criteria", description="Search criteria.")
+     * @Rest\QueryParam(name="expression", description="Search expression.")
      * @Rest\View
      * @ApiDoc(
      *   description="Returns a collection of Message",
@@ -61,52 +61,22 @@ class MessagesController extends FOSRestController
         $limit = $paramFetcher->get('limit');
         $sort = $paramFetcher->get('sort');
         $dir = $paramFetcher->get('dir');
-        $criteriaString = $paramFetcher->get('criteria');
+        $expression = $paramFetcher->get('expression');
 
         $messageManager = $this->get('phlexible_message.message_manager');
-        $criteria = $messageManager->createCriteria();
+        $expr = $messageManager->expr();
 
-        /* @var $criteria Criteria */
-        $criteria
-            ->orderBy(array($sort => $dir))
-            ->setFirstResult($start)
-            ->setMaxResults($limit);
-
-        if ($criteriaString) {
-            $criteriaArray = json_decode($criteriaString, true);
-            foreach ($criteriaArray['value'] as $values) {
-                switch ($values['op']) {
-                    case 'in':
-                        $x = $criteria->expr()->in($values['field'], $values['values']);
-                        break;
-                    case 'like':
-                        $x = $criteria->expr()->contains($values['field'], $values['value']);
-                        break;
-                    default:
-                        continue;
-                }
-
-                if ($criteriaArray['mode'] === 'AND') {
-                    $criteria->andWhere($x);
-                } else {
-                    $criteria->orWhere($x);
-                }
-            }
-        }
-
-        //MessageCriteriaBuilder::applyFromRequest($criteria, $criteriaString);
-
-        $messageResult = $messageManager->query($criteria);
-
-        $messages = array();
-        foreach ($messageResult as $message) {
-            $messages[] = $message;
+        if ($expression) {
+            $expression = json_decode($expression, true);
+            $serializer = new ArrayExpressionSerializer();
+            $expr = $serializer->deserialize($expression);
         }
 
         return array(
-            'messages' => $messages,
-            'count'    => count($messageResult),
-            'facets'   => $messageManager->getFacets($criteria),
+            'expr'     => (string) $expr,
+            'messages' => $messageManager->findByExpression($expr, array($sort => $dir), $limit, $start),
+            'count'    => $messageManager->countByExpression($expr),
+            'facets'   => $messageManager->getFacetsByExpression($expr),
         );
     }
 

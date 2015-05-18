@@ -86,7 +86,6 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                     channels: channels,
                     roles: roles
                 };
-                console.log(this.facets);
             },
             scope: this
         });
@@ -163,15 +162,21 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
      */
     save: function () {
         if (!this.getForm().isValid()) {
-            Phlexible.Notify.failure("Invalid Form");
+            Phlexible.Notify.failure("Validation failed");
+            return;
+        }
+
+        var expression = this.createExpression();
+        if(!expression) {
+            Phlexible.Notify.failure("Empty expression");
             return;
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlexible_api_message_put_filter', {id: this.record.id}),
-            params: {
+            url: Phlexible.Router.generate('phlexible_api_message_put_filter', {filterId: this.record.id}),
+            jsonData: {
                 title: this.getComponent(0).getComponent(0).getValue(),
-                criteria: Ext.encode(this.serializeCriteria())
+                expression: expression
             },
             success: this.saveSuccess,
             failure: this.saveFailure,
@@ -345,6 +350,8 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
         switch (criterium) {
             case 'typeIs':
                 field = {
+                    exprOp: 'equals',
+                    exprField: 'type',
                     xtype: 'iconcombo',
                     emptyText: this.selectTypeText,
                     store: Ext.create('Ext.data.Store', {
@@ -361,6 +368,8 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
             case 'typeIn':
                 field = {
+                    exprOp: 'in',
+                    exprField: 'type',
                     xtype: 'tagfield',
                     emptyText: this.selectTypeText,
                     store: Ext.create('Ext.data.Store', {
@@ -378,6 +387,8 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
             case 'channelIs':
                 field = {
+                    exprOp: 'equals',
+                    exprField: 'channel',
                     xtype: 'combo',
                     emptyText: this.selectChannelText,
                     store: Ext.create('Ext.data.Store', {
@@ -397,6 +408,8 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
             case 'channelIn':
                 field = {
+                    exprOp: 'in',
+                    exprField: 'channel',
                     xtype: 'tagfield',
                     emptyText: this.selectChannelText,
                     store: Ext.create('Ext.data.Store', {
@@ -413,6 +426,8 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
             case 'roleIs':
                 field = {
+                    exprOp: 'equals',
+                    exprField: 'role',
                     xtype: 'combo',
                     emptyText: this.selectRoleText,
                     store: Ext.create('Ext.data.Store', {
@@ -432,6 +447,8 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
             case 'roleIn':
                 field = {
+                    exprOp: 'in',
+                    exprField: 'role',
                     xtype: 'tagfield',
                     emptyText: this.selectRoleText,
                     store: Ext.create('Ext.data.Store', {
@@ -447,6 +464,12 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 break;
 
             case 'minAge':
+                field = {
+                    xtype: 'numberfield',
+                    emptyText: this.numberOfDaysText
+                };
+                break;
+
             case 'maxAge':
                 field = {
                     xtype: 'numberfield',
@@ -455,8 +478,19 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 break;
 
             case 'startDate':
+                field = {
+                    exprOp: 'greaterThanEqual',
+                    exprField: 'createdAt',
+                    xtype: 'datefield',
+                    format: 'Y-m-d',
+                    editable: false
+                };
+                break;
+
             case 'endDate':
                 field = {
+                    exprOp: 'lessThanEqual',
+                    exprField: 'createdAt',
                     xtype: 'datefield',
                     format: 'Y-m-d',
                     editable: false
@@ -465,6 +499,8 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
             case 'dateIs':
                 field = {
+                    exprOp: 'equals',
+                    exprField: 'createdAt',
                     xtype: 'datefield',
                     format: 'Y-m-d 00:00:00',
                     editable: false
@@ -472,10 +508,33 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 break;
 
             case 'subjectLike':
+                field = {
+                    exprOp: 'contains',
+                    exprField: 'subject',
+                    xtype: 'textfield'
+                };
+                break;
+
             case 'subjectNotLike':
+                field = {
+                    exprOp: 'containsNot',
+                    exprField: 'subject',
+                    xtype: 'textfield'
+                };
+                break;
+
             case 'bodyLike':
+                field = {
+                    exprOp: 'contains',
+                    exprField: 'body',
+                    xtype: 'textfield'
+                };
+                break;
+
             case 'bodyNotLike':
                 field = {
+                    exprOp: 'containsNot',
+                    exprField: 'body',
                     xtype: 'textfield'
                 };
                 break;
@@ -499,29 +558,36 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     },
 
     refreshPreview: function () {
-        this.fireEvent('refreshPreview', this.serializeCriteria(), this.record.data.title);
+        this.fireEvent('refreshPreview', this.createExpression(), this.record.data.title);
     },
 
-    serializeCriteria: function (all) {
-        var criteria = {mode: 'OR', type: 'collection', value: []};
+    createExpression: function (all) {
+        var criteria = {op: 'or', expressions: []};
 
         this.getComponent('criteria').items.each(function (block) {
-            var orBlock = {mode: 'AND', type: 'collection', value: []};
+            var orBlock = {op: 'and', expressions: []};
             block.items.each(function (row) {
-                if (!row.getComponent('criterium').getValue()) {
+                var opField = row.getComponent('criterium'),
+                    valueField;
+                if (!opField.getValue()) {
                     return;
                 }
-                orBlock.value.push({
-                    type: row.getComponent('criterium').getValue(),
-                    value: row.getComponent('value').getValue()
+                valueField = row.getComponent('value');
+                if (!valueField.exprField || !valueField.exprOp) {
+                    return;
+                }
+                orBlock.expressions.push({
+                    field: valueField.exprField,
+                    op: valueField.exprOp,
+                    value: valueField.getValue()
                 });
             }, this);
-            if (orBlock.value.length) {
-                criteria.value.push(orBlock);
+            if (orBlock.expressions.length) {
+                criteria.expressions.push(orBlock);
             }
         }, this);
 
-        if (!criteria.value.length) {
+        if (!criteria.expressions.length) {
             criteria = null;
         }
 

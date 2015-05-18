@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Portlet;
 
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class LatestFilesPortlet extends Portlet
 {
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -46,14 +46,14 @@ class LatestFilesPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param VolumeManager                 $volumeManager
+     * @param VolumeManagerInterface        $volumeManager
      * @param CacheManagerInterface         $cacheManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param string                        $style
      * @param int                           $numItems
      */
     public function __construct(
-        VolumeManager $volumeManager,
+        VolumeManagerInterface $volumeManager,
         CacheManagerInterface $cacheManager,
         AuthorizationCheckerInterface $authorizationChecker,
         $style,
@@ -94,12 +94,10 @@ class LatestFilesPortlet extends Portlet
         $data = [];
 
         try {
-            $volumes = $this->volumeManager->all();
-            $volume = current($volumes);
-            $files = $volume->findLatestFiles($this->numItems);
+            $files = $this->volumeManager->findFilesBy(array(), array('createdAt' => 'DESC'), 20);
 
             foreach ($files as $file) {
-                $folder = $volume->findFolder($file->getFolderId());
+                $folder = $this->volumeManager->findFolder($file->getFolderId());
 
                 if (!$this->authorizationChecker->isGranted('FILE_READ', $folder)) {
                     continue;

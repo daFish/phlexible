@@ -36,7 +36,7 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
             throw new IOException("Move folder {$folder->getName()} cancelled.");
         }
 
-        $this->getDriver()->updateFolder($folder);
+        $this->getVolumeManager()->updateFolder($folder);
 
         $event = new FolderEvent($folder);
         $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FOLDER_METASETS, $event);
@@ -47,19 +47,19 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
     /**
      * {@inheritdoc}
      */
-    public function setFileMetasets(ExtendedFileInterface $file, array $metasets, $userId)
+    public function setFileMetasets(ExtendedFileInterface $file, array $metasets, $user)
     {
         $file
             ->setMetasets($metasets)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
         $event = new FileEvent($file);
         if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_METASETS, $event)->isPropagationStopped()) {
             throw new IOException("Set file meta sets {$file->getName()} cancelled.");
         }
 
-        $this->getDriver()->updateFile($file);
+        $this->getVolumeManager()->updateFile($file);
 
         $event = new FileEvent($file);
         $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_METASETS, $event);
@@ -70,19 +70,19 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
     /**
      * {@inheritdoc}
      */
-    public function setFileMediaType(ExtendedFileInterface $file, $mediaType, $userId)
+    public function setFileMediaType(ExtendedFileInterface $file, $mediaType, $user)
     {
         $file
             ->setMediaType($mediaType)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
         $event = new FileEvent($file);
         if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_MEDIA_TYPE, $event)->isPropagationStopped()) {
             throw new IOException("Set file media type {$file->getName()} cancelled.");
         }
 
-        $this->getDriver()->updateFile($file);
+        $this->getVolumeManager()->updateFile($file);
 
         $event = new FileEvent($file);
         $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_MEDIA_TYPE, $event);

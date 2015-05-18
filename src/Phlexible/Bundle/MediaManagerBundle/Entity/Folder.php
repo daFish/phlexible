@@ -17,7 +17,7 @@ use Phlexible\Component\Volume\Model\Folder as BaseFolder;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass = "Phlexible\Bundle\MediaManagerBundle\Entity\Repository\FolderRepository")
  * @ORM\Table(name="media_folder")
  */
 class Folder extends BaseFolder implements ExtendedFolderInterface

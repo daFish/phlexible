@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MessageBundle\Command;
 
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,11 +44,12 @@ class CleanCommand extends ContainerAwareCommand
 
         $messageManager = $this->getContainer()->get('phlexible_message.message_manager');
 
-        $criteria = new Criteria();
-        $criteria->maxAge($days);
+        $date = new \DateTime("-$days days");
+        $expr = $messageManager->expr()
+            ->lessThan($date->format('Y-m-d H:i:s'), 'createdAt');
 
         $count = 0;
-        while ($messages = $messageManager->findByCriteria($criteria, ['createdAt' => 'ASC'], 100, null)) {
+        while ($messages = $messageManager->findByExpr($expr, ['createdAt' => 'ASC'])) {
             foreach ($messages as $message) {
                 $messageManager->deleteMessage($message);
                 $count++;

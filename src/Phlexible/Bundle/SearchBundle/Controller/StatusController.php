@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Status controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/status/search")
+ * @Route("/search/status")
  * @Security("is_granted('ROLE_SUPER_ADMIN')")
  */
 class StatusController extends Controller
@@ -29,7 +29,7 @@ class StatusController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("", name="search_status")
+     * @Route("", name="phlexible_search_status")
      */
     public function indexAction(Request $request)
     {

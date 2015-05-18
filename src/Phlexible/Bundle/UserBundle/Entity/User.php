@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass = "Phlexible\Bundle\UserBundle\Entity\Repository\UserRepository")
  * @ORM\Table(name="user")
  */
 class User extends BaseUser

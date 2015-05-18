@@ -23,16 +23,6 @@ Ext.define('Phlexible.message.view.list.Filter', {
     initComponent: function () {
         this.task = new Ext.util.DelayedTask(this.updateFilter, this);
 
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlexible_api_message_get_messages'),
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-
-                this.loadFacets(data.facets);
-            },
-            scope: this
-        });
-
         this.initMyItems();
         this.initMyDockedItems();
 
@@ -221,6 +211,12 @@ Ext.define('Phlexible.message.view.list.Filter', {
     },
 
     updateFacets: function (facets) {
+        if (!this.facetsLoaded) {
+            this.loadFacets(facets);
+            this.facetsLoaded = true;
+            return;
+        }
+
         if (facets.types && facets.types.length && Ext.isArray(facets.types)) {
             this.getComponent('types').items.each(function (item) {
                 var found = false;
@@ -359,18 +355,18 @@ Ext.define('Phlexible.message.view.list.Filter', {
         this.getDockedComponent('tbar').getComponent('resetBtn').enable();
 
         var values = this.form.getValues(),
-            criteria = {mode: 'AND', value: []},
+            expression = {op: 'and', expressions: []},
             types = [],
             channels = [],
             roles = [];
 
         Ext.Object.each(values, function(key, value) {
             if (key === 'subject' && value) {
-                criteria.value.push({op: 'like', field: 'subject', value: value});
+                expression.expressions.push({field: 'subject', op: 'contains', value: value});
             } else if (key === 'body' && value) {
-                criteria.value.push({op: 'like', field: 'body', value: value});
+                expression.expressions.push({field: 'body', op: 'contains', value: value});
             } else if (key === 'user' && value) {
-                criteria.value.push({op: 'like', field: 'user', value: value});
+                expression.expressions.push({field: 'user', op: 'contains', value: value});
             } else if (key.substr(0, 5) === 'type_' && value) {
                 types.push(key.substr(5));
             } else if (key.substr(0, 8) === 'channel_' && value) {
@@ -381,15 +377,15 @@ Ext.define('Phlexible.message.view.list.Filter', {
         });
 
         if (types.length) {
-            criteria.value.push({op: 'in', field: 'type', values: types});
+            expression.expressions.push({field: 'type', op: 'in', value: types});
         }
         if (channels.length) {
-            criteria.value.push({op: 'in', field: 'channel', values: channels});
+            expression.expressions.push({field: 'channel', op: 'in', value: channels});
         }
         if (roles.length) {
-            criteria.value.push({op: 'in', field: 'role', values: roles});
+            expression.expressions.push({field: 'role', op: 'in', value: roles});
         }
 
-        this.fireEvent('updateFilter', criteria);
+        this.fireEvent('updateFilter', expression);
     }
 });

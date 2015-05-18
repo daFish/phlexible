@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Twig\Extension;
 
 use Phlexible\Component\MediaManager\Meta\FileMetaDataManager;
 use Phlexible\Component\MediaManager\Meta\FileMetaSetResolver;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -27,7 +27,7 @@ class MediaExtension extends \Twig_Extension
     private $router;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -42,12 +42,17 @@ class MediaExtension extends \Twig_Extension
     private $metaDataManager;
 
     /**
-     * @param RouterInterface     $router
-     * @param VolumeManager       $volumeManager
-     * @param FileMetaSetResolver $metaSetResolver
-     * @param FileMetaDataManager $metaDataManager
+     * @param RouterInterface        $router
+     * @param VolumeManagerInterface $volumeManager
+     * @param FileMetaSetResolver    $metaSetResolver
+     * @param FileMetaDataManager    $metaDataManager
      */
-    public function __construct(RouterInterface $router, VolumeManager $volumeManager, FileMetaSetResolver $metaSetResolver, FileMetaDataManager $metaDataManager)
+    public function __construct(
+        RouterInterface $router,
+        VolumeManagerInterface $volumeManager,
+        FileMetaSetResolver $metaSetResolver,
+        FileMetaDataManager $metaDataManager
+    )
     {
         $this->router = $router;
         $this->volumeManager = $volumeManager;

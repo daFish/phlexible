@@ -14,6 +14,8 @@ use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaManager\Usage\FileUsageManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Phlexible\Component\Volume\Model\FileInterface;
+use Phlexible\Component\Volume\VolumeInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -65,27 +67,19 @@ class FileSerializer
     /**
      * Serialize file
      *
-     * @param ExtendedFileInterface $file
-     * @param string                $language
+     * @param VolumeInterface $volume
+     * @param FileInterface   $file
+     * @param string          $language
+     * @param array           $fields
      *
      * @return array
      */
-    public function serialize(ExtendedFileInterface $file, $language, array $fields = array())
+    public function serialize(VolumeInterface $volume, FileInterface $file, $language, array $fields = array())
     {
         $all = true;
 
-        $volume = $file->getVolume();
         $folder = $volume->findFolder($file->getFolderId());
         $hasVersions = $volume->hasFeature('versions');
-
-        $mediaType = $this->mediaTypeManager->find(strtolower($file->getMediaType()));
-
-        if (!$mediaType) {
-            $mediaType = $this->mediaTypeManager->create();
-            $mediaType->setName('unknown');
-        }
-
-        $mediaTypeTitle = $mediaType->getTitle($language);
 
         $version = 1;
         if ($hasVersions) {
@@ -109,16 +103,22 @@ class FileSerializer
             $cacheItems = $this->cacheManager->findByFile($file->getID(), $version);
             foreach ($cacheItems as $cacheItem) {
                 if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
-                    $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media', [
-                        'fileId'      => $file->getId(),
-                        'fileVersion' => $file->getVersion(),
-                        'templateKey' => $cacheItem->getTemplateKey(),
-                    ]);
+                    $cache[$cacheItem->getTemplateKey()] = $this->router->generate(
+                        'phlexible_mediamanager_media',
+                        [
+                            'fileId'      => $file->getId(),
+                            'fileVersion' => $file->getVersion(),
+                            'templateKey' => $cacheItem->getTemplateKey(),
+                        ]
+                    );
                 } else {
-                    $cache[$cacheItem->getTemplateKey()] = $this->router->generate('mediamanager_media_delegate', [
-                        'mediaTypeName' => $file->getMediaType(),
-                        'templateKey'   => $cacheItem->getTemplateKey(),
-                    ]);
+                    $cache[$cacheItem->getTemplateKey()] = $this->router->generate(
+                        'phlexible_mediamanager_media_delegate',
+                        [
+                            'mediaTypeName' => $file->getMediaType(),
+                            'templateKey'   => $cacheItem->getTemplateKey(),
+                        ]
+                    );
                 }
             }
         }
@@ -136,17 +136,24 @@ class FileSerializer
         $versions = array();
         if ($all || in_array('versions', $fields)) {
             foreach ($volume->findFileVersions($file->getId()) as $fileVersion) {
-                $versions[] = [
-                    'id'              => $fileVersion->getId(),
-                    'folderId'        => $fileVersion->getFolderId(),
-                    'name'            => $fileVersion->getName(),
-                    'size'            => $fileVersion->getSize(),
-                    'version'         => $fileVersion->getVersion(),
-                    'documentTypeKey' => $fileVersion->getMediaType(),
-                    'assetType'       => $fileVersion->getMediaCategory(),
-                    'createUser'      => $fileVersion->getCreateUser(),
-                    'createTime'      => $fileVersion->getCreatedAt()->format('Y-m-d'),
-                ];
+                $version = array(
+                    'id'            => $fileVersion->getId(),
+                    'folderId'      => $fileVersion->getFolderId(),
+                    'name'          => $fileVersion->getName(),
+                    'size'          => $fileVersion->getSize(),
+                    'version'       => $fileVersion->getVersion(),
+                    'mediaType'     => null,
+                    'mediaCategory' => null,
+                    'createUser'    => $fileVersion->getCreateUser(),
+                    'createTime'    => $fileVersion->getCreatedAt()->format('Y-m-d'),
+                );
+
+                if ($fileVersion instanceof ExtendedFileInterface) {
+                    $version['mediaType'] = $fileVersion->getMediaType();
+                    $version['mediaCategory'] = $fileVersion->getMediaCategory();
+                }
+
+                $versions[] = $version;
             }
         }
 
@@ -177,10 +184,10 @@ class FileSerializer
             'folderPath'      => '/' . $folder->getPath(),
             'hasVersions'     => $hasVersions,
             'mimeType'        => $file->getMimetype(),
-            'mediaCategory'   => $file->getMediaCategory(),
-            'mediaType'       => $file->getMediaType(),
-            'mediaTypeTitle'  => $mediaTypeTitle,
-            'present'         => file_exists($file->getPhysicalPath()),
+            'mediaCategory'   => null,
+            'mediaType'       => null,
+            'mediaTypeTitle'  => null,
+            'present'         => file_exists($volume->getPhysicalPath($file)),
             'size'            => $file->getSize(),
             'hidden'          => $file->isHidden() ? 1 : 0,
             'version'         => $version,
@@ -196,6 +203,19 @@ class FileSerializer
             'versions'        => $versions,
             'navigation'      => $navigation,
         ];
+
+        if ($file instanceof ExtendedFileInterface) {
+            $mediaType = $this->mediaTypeManager->find(strtolower($file->getMediaType()));
+            if (!$mediaType) {
+                $mediaType = $this->mediaTypeManager->create();
+                $mediaType->setName('unknown');
+            }
+            $mediaTypeTitle = $mediaType->getTitle($language);
+
+            $data['mediaType'] = $file->getMediaType();
+            $data['mediaTypeTitle'] = $mediaTypeTitle;
+            $data['mediaCategory'] = $file->getMediaCategory();
+        }
 
         return $data;
     }

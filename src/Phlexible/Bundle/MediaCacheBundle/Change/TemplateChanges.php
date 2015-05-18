@@ -14,7 +14,7 @@ use Phlexible\Component\MediaCache\Queue\BatchResolver;
 use Phlexible\Component\MediaCache\Queue\Queue;
 use Phlexible\Component\MediaCache\Queue\QueueProcessor;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
  * Template changes
@@ -34,7 +34,7 @@ class TemplateChanges
     private $cacheManager;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -56,17 +56,19 @@ class TemplateChanges
     /**
      * @param TemplateManagerInterface $templateManager
      * @param CacheManagerInterface    $cacheManager
-     * @param VolumeManager            $volumeManager
+     * @param VolumeManagerInterface   $volumeManager
      * @param BatchBuilder             $batchBuilder
      * @param BatchResolver            $batchResolver
      * @param QueueProcessor           $queueProcessor
      */
-    public function __construct(TemplateManagerInterface $templateManager,
-                                CacheManagerInterface $cacheManager,
-                                VolumeManager $volumeManager,
-                                BatchBuilder $batchBuilder,
-                                BatchResolver $batchResolver,
-                                QueueProcessor $queueProcessor)
+    public function __construct(
+        TemplateManagerInterface $templateManager,
+        CacheManagerInterface $cacheManager,
+        VolumeManagerInterface $volumeManager,
+        BatchBuilder $batchBuilder,
+        BatchResolver $batchResolver,
+        QueueProcessor $queueProcessor
+    )
     {
         $this->templateManager = $templateManager;
         $this->cacheManager = $cacheManager;

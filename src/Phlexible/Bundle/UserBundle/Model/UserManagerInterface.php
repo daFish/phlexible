@@ -8,10 +8,9 @@
 
 namespace Phlexible\Bundle\UserBundle\Model;
 
-use Doctrine\Common\Collections\Criteria;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface as BaseUserManagerInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Webmozart\Expression\Expression;
 
 /**
  * User manager interface
@@ -76,19 +75,34 @@ interface UserManagerInterface extends BaseUserManagerInterface
     public function findOneBy(array $criteria, $order = []);
 
     /**
-     * @return Criteria
+     * @return Expression
      */
-    public function createCriteria();
+    public function expr();
 
     /**
-     * @param Criteria   $criteria
+     * @param Expression $expression
      * @param array|null $sort
      * @param int|null   $limit
      * @param int|null   $offset
      *
-     * @return \Countable|\Iterator
+     * @return UserInterface[]
      */
-    public function query(Criteria $criteria, array $sort = null, $limit = null, $offset = null);
+    public function findByExpression(Expression $expression, array $sort = null, $limit = null, $offset = null);
+
+    /**
+     * @param Expression $expression
+     *
+     * @return int
+     */
+    public function countByExpression(Expression $expression);
+
+    /**
+     * @param Expression $expression
+     * @param array|null $sort
+     *
+     * @return UserInterface
+     */
+    public function findOneByExpression(Expression $expression, array $sort = null);
 
     /**
      * @return string

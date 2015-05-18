@@ -17,7 +17,7 @@ use Phlexible\Component\Volume\Model\File as BaseFile;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass = "Phlexible\Bundle\MediaManagerBundle\Entity\Repository\FileRepository")
  * @ORM\Table(name="media_file")
  */
 class File extends BaseFile implements ExtendedFileInterface

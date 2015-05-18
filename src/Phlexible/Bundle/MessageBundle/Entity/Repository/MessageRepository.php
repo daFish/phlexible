@@ -9,12 +9,10 @@
 namespace Phlexible\Bundle\MessageBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\Expr\Composite;
 use Doctrine\ORM\QueryBuilder;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
-use Phlexible\Bundle\MessageBundle\Criteria\Criterium;
-use Phlexible\Bundle\MessageBundle\Entity\Filter;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Phlexible\Component\Expression\Traversal\QueryBuilderExpressionVisitor;
+use Webmozart\Expression\Expression;
 
 /**
  * Message repository
@@ -24,69 +22,80 @@ use Phlexible\Bundle\MessageBundle\Entity\Message;
 class MessageRepository extends EntityRepository
 {
     /**
-     * Find messages by criteria
+     * Find messages by expression
      *
-     * @param Criteria $criteria
-     * @param array    $order
-     * @param int      $limit
-     * @param int      $offset
-     *
-     * @return Filter
-     */
-    public function findByCriteria(Criteria $criteria, $order = null, $limit = null, $offset = 0)
-    {
-        $qb = $this->createCriteriaQueryBuilder($criteria, 'm');
-
-        if ($order) {
-            foreach ($order as $field => $dir) {
-                $qb->orderBy("m.$field", $dir);
-            }
-        }
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-        if ($offset) {
-            $qb->setFirstResult($offset);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Criteria $criteria
-     *
-     * @return int
-     */
-    public function countByCriteria(Criteria $criteria)
-    {
-        $qb = $this->createCriteriaQueryBuilder($criteria, 'm');
-
-        $qb->select('COUNT(m.id)');
-
-        return $qb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * @param Filter $filter
-     * @param int    $limit
-     * @param int    $offset
-     * @param string $order
+     * @param Expression $expression
+     * @param array      $orderBy
+     * @param int        $limit
+     * @param int        $offset
      *
      * @return Message[]
      */
-    public function findByFilter(Filter $filter, $limit = null, $offset = 0, $order = null)
+    public function findByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null)
     {
-        return $this->findByCriteria($filter->getCriteria(), $limit, $offset, $order);
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->select('m')
+            ->from('PhlexibleMessageBundle:Message', 'm');
+
+        if ($offset) {
+            $queryBuilder
+                ->setFirstResult($offset);
+        }
+
+        if ($limit) {
+            $queryBuilder
+                ->setMaxResults($limit);
+        }
+
+        foreach ($orderBy as $field => $dir) {
+            $queryBuilder->addOrderBy("m.$field", $dir);
+        }
+
+        $this->applyExpression($queryBuilder, $expression);
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
-     * @param Filter $filter
+     * Count messages by expression
+     *
+     * @param Expression $expression
      *
      * @return int
      */
-    public function countByFilter(Filter $filter)
+    public function countByExpression(Expression $expression)
     {
-        return $this->countByCriteria($filter->getCriteria());
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->select('COUNT(m)')
+            ->from('PhlexibleMessageBundle:Message', 'm');
+
+        $this->applyExpression($queryBuilder, $expression);
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Find message by expression
+     *
+     * @param Expression $expression
+     * @param array      $orderBy
+     *
+     * @return Message|null
+     */
+    public function findOneByExpression(Expression $expression, $orderBy = array())
+    {
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->select('m')
+            ->from('PhlexibleMessageBundle:Message', 'm')
+            ->setMaxResults(1);
+
+        foreach ($orderBy as $field => $dir) {
+            $queryBuilder->addOrderBy("m.$field", $dir);
+        }
+
+        $this->applyExpression($queryBuilder, $expression);
+
+        return $queryBuilder->getQuery()->getSingleResult();
     }
 
     /**
@@ -106,203 +115,55 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * @param Criteria $criteria
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function getFacetsByCriteria(Criteria $criteria)
+    public function getFacetsByExpression(Expression $expression)
     {
-        $qb = $this->createCriteriaQueryBuilder($criteria, 'm');
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->select('m')
+            ->from('PhlexibleMessageBundle:Message', 'm');
 
-        $channelsQb = clone $qb;
-        $channels = $channelsQb->select('DISTINCT m.channel')->getQuery()->getScalarResult();
+        $this->applyExpression($queryBuilder, $expression);
 
-        $typeQb = clone $qb;
-        $types = $typeQb->select('DISTINCT m.type')->getQuery()->getScalarResult();
+        $channelsQb = clone $queryBuilder;
+        $fullChannels = $channelsQb->select('DISTINCT m.channel')->getQuery()->getScalarResult();
 
-        $roleQb = clone $qb;
-        $roles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
+        $typeQb = clone $queryBuilder;
+        $fullTypes = $typeQb->select('DISTINCT m.type')->getQuery()->getScalarResult();
+
+        $roleQb = clone $queryBuilder;
+        $fullRoles = $roleQb->select('DISTINCT m.role')->getQuery()->getScalarResult();
+
+        $channels = array();
+        foreach ($fullChannels as $channel) {
+            $channels[] = $channel['channel'] ?: '-';
+        }
+        sort($channels);
+
+        $roles = array();
+        foreach ($fullRoles as $role) {
+            $roles[] = $role['role'] ?: '-';
+        }
+        sort($roles);
 
         return [
-            'channels'   => array_column($channels, 'channel'),
-            'types'      => array_column($types, 'type'),
-            'roles'      => array_column($roles, 'role'),
+            'types'      => array_map(function($v) {
+                return (int) $v;
+            }, array_column($fullTypes, 'type')),
+            'channels'   => $channels,
+            'roles'      => $roles,
         ];
     }
 
     /**
-     * @param Criteria $criteria
-     * @param string   $prefix
+     * Apply expression
      *
-     * @return QueryBuilder
+     * @param QueryBuilder $queryBuilder
+     * @param Expression   $expression
      */
-    private function createCriteriaQueryBuilder(Criteria $criteria, $prefix)
+    private function applyExpression(QueryBuilder $queryBuilder, Expression $expression)
     {
-        $qb = $this->createQueryBuilder($prefix);
-
-        if ($criteria->count()) {
-            $composite = $this->applyCriteriaToQueryBuilder($criteria, $qb, $prefix);
-
-            if ($composite->count()) {
-                $qb->where($composite);
-            }
-        }
-
-        return $qb;
-    }
-
-    /**
-     * Apply criteria to select
-     *
-     * @param Criteria     $criteria
-     * @param QueryBuilder $qb
-     * @param string       $prefix
-     *
-     * @return Composite
-     */
-    private function applyCriteriaToQueryBuilder(Criteria $criteria, QueryBuilder $qb, $prefix)
-    {
-        if ($criteria->getMode() === Criteria::MODE_OR) {
-            $expr = $qb->expr()->orX();
-        } else {
-            $expr = $qb->expr()->andX();
-        }
-        foreach ($criteria as $criterium) {
-            if ($criterium instanceof Criteria) {
-                $expr->add(
-                    $this->applyCriteriaToQueryBuilder($criterium, $qb, $prefix)
-                );
-            } else {
-                $this->applyCriteriumToQueryBuilder($criterium, $qb, $expr, $prefix);
-            }
-        }
-
-        return $expr;
-    }
-
-    /**
-     * @param Criterium    $criterium
-     * @param QueryBuilder $qb
-     * @param Composite    $composite
-     * @param string       $prefix
-     */
-    private function applyCriteriumToQueryBuilder(Criterium $criterium, QueryBuilder $qb, Composite $composite, $prefix)
-    {
-        $type = $criterium->getType();
-        $value = $criterium->getValue();
-
-        if (is_string($value) && !strlen($value)) {
-            return;
-        }
-
-        switch ($type) {
-            case Criteria::CRITERIUM_SUBJECT_LIKE:
-                $composite->add($qb->expr()->like("$prefix.subject", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_SUBJECT_NOT_LIKE:
-                $composite->add($qb->expr()->notLike("$prefix.subject", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_BODY_LIKE:
-                $composite->add($qb->expr()->like("$prefix.body", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_BODY_NOT_LIKE:
-                $composite->add($qb->expr()->notLike("$prefix.body", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_USER_LIKE:
-                $composite->add($qb->expr()->like("$prefix.user", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_USER_NOT_LIKE:
-                $composite->add($qb->expr()->notLike("$prefix.user", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_TYPE_IS:
-                $composite->add($qb->expr()->eq("$prefix.type", $value));
-                break;
-
-            case Criteria::CRITERIUM_TYPE_IN:
-                $composite->add($qb->expr()->in("$prefix.type", $value));
-                break;
-
-            case Criteria::CRITERIUM_CHANNEL_IS:
-                $composite->add($qb->expr()->eq("$prefix.channel", $qb->expr()->literal("value")));
-                break;
-
-            case Criteria::CRITERIUM_CHANNEL_LIKE:
-                $composite->add($qb->expr()->like("$prefix.channel", $qb->expr()->literal("%$value%")));
-                break;
-
-            case Criteria::CRITERIUM_CHANNEL_IN:
-                $value = (array) $value;
-                $values = array_map(
-                    function ($value) use ($qb) {
-                        return $qb->expr()->literal($value);
-                    },
-                    $value
-                );
-                $composite->add($qb->expr()->in("$prefix.channel", $values));
-                break;
-
-            case Criteria::CRITERIUM_ROLE_IS:
-                $composite->add($qb->expr()->eq("$prefix.role", $qb->expr()->literal("value")));
-                break;
-
-            case Criteria::CRITERIUM_ROLE_IN:
-                $value = (array) $value;
-                $values = array_map(
-                    function ($value) use ($qb) {
-                        return $qb->expr()->literal($value);
-                    },
-                    $value
-                );
-                $composite->add($qb->expr()->in("$prefix.role", $values));
-                break;
-
-            case Criteria::CRITERIUM_MAX_AGE:
-                $composite->add(
-                    $qb->expr()->gte(
-                        "$prefix.createdAt",
-                        $qb->expr()->literal(date('Y-m-d H:i:s', time() - ($value * 24 * 60 * 60)))
-                    )
-                );
-                break;
-
-            case Criteria::CRITERIUM_MIN_AGE:
-                $composite->add(
-                    $qb->expr()->lte(
-                        "$prefix.createdAt",
-                        $qb->expr()->literal(date('Y-m-d H:i:s', time() - ($value * 24 * 60 * 60)))
-                    )
-                );
-                break;
-
-            case Criteria::CRITERIUM_START_DATE:
-                $composite->add(
-                    $qb->expr()->gte("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s')))
-                );
-                break;
-
-            case Criteria::CRITERIUM_END_DATE:
-                $composite->add(
-                    $qb->expr()->lte("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s')))
-                );
-                break;
-
-            case Criteria::CRITERIUM_DATE_IS:
-                $composite->add(
-                    $qb->expr()->andX(
-                        $qb->expr()->gte("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s'))),
-                        $qb->expr()->lt("$prefix.createdAt", $qb->expr()->literal($value->format('Y-m-d H:i:s')))
-                    )
-                );
-                break;
-
-            default:
-                throw new \InvalidArgumentException("Unknown criterium type $type");
-        }
+        $visitor = new QueryBuilderExpressionVisitor($queryBuilder, 'm');
+        $visitor->apply($expression);
     }
 }

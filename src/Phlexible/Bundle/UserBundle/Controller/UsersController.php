@@ -20,6 +20,7 @@ use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Form\Type\UserType;
 use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\UsersMessage;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +50,7 @@ class UsersController extends FOSRestController
      * @Rest\QueryParam(name="limit", requirements="\d+", default=20, description="Max results")
      * @Rest\QueryParam(name="sort", requirements="\w+", default="username", description="Sort field")
      * @Rest\QueryParam(name="dir", requirements="\w+", default="ASC", description="Sort direction")
-     * @Rest\QueryParam(name="criteria", description="Search criteria.")
+     * @Rest\QueryParam(name="expression", description="Search expression.")
      * @Rest\View
      * @ApiDoc(
      *   description="Returns a collection of User",
@@ -66,22 +67,21 @@ class UsersController extends FOSRestController
         $limit = $paramFetcher->get('limit');
         $sort = $paramFetcher->get('sort');
         $dir = $paramFetcher->get('dir');
+        $expression = $paramFetcher->get('expression');
 
         $userManager = $this->container->get('phlexible_user.user_manager');
-        $criteria = $userManager->createCriteria();
+        $expr = $userManager->expr();
 
-        UserCriteriaBuilder::applyFromParams($paramFetcher, $criteria);
-
-        $userResult = $userManager->query($criteria, array($sort => $dir), $limit, $start);
-
-        $users = array();
-        foreach ($userResult as $user) {
-            $users[] = $user;
+        if ($expression) {
+            $expression = json_decode($expression, true);
+            $serializer = new ArrayExpressionSerializer();
+            $expr = $serializer->deserialize($expression);
         }
 
         return array(
-            'users' => $users,
-            'count' => count($users)
+            'expr'  => (string) $expr,
+            'users' => $userManager->findByExpression($expr, array($sort => $dir), $limit, $start),
+            'count' => $userManager->countByExpression($expr)
         );
     }
 

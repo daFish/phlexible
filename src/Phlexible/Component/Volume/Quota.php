@@ -9,7 +9,6 @@
 namespace Phlexible\Component\Volume;
 
 use Phlexible\Component\Volume\Folder\SizeCalculator;
-use Phlexible\Component\Volume\VolumeInterface;
 
 /**
  * Quota

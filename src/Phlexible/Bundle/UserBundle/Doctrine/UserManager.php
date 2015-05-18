@@ -8,19 +8,19 @@
 
 namespace Phlexible\Bundle\UserBundle\Doctrine;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityRepository;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
-use Phlexible\Bundle\UserBundle\Doctrine\Query\UserQuery;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Webmozart\Expression\Expr;
+use Webmozart\Expression\Expression;
 
 /**
  * User manager
@@ -167,19 +167,33 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createCriteria()
+    public function expr()
     {
-        return new Criteria();
+        return Expr::true();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function query(Criteria $criteria, array $sort = null, $limit = null, $offset = null)
+    public function findByExpression(Expression $expr, array $sort = null, $limit = null, $offset = null)
     {
-        $query = new UserQuery($this->objectManager, $this->dispatcher, $this->getClass());
+        return $this->getUserRepository()->findByExpression($expr, $sort, $limit, $offset);
+    }
 
-        return $query->getResult($criteria, $sort, $limit, $offset);
+    /**
+     * {@inheritdoc}
+     */
+    public function countByExpression(Expression $expr)
+    {
+        return $this->getUserRepository()->countByExpression($expr);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneByExpression(Expression $expr, array $sort = null)
+    {
+        return $this->getUserRepository()->findOneByExpression($expr, $sort);
     }
 
     /**

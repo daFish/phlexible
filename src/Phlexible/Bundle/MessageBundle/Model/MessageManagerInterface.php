@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\MessageBundle\Model;
 use Doctrine\Common\Collections\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
+use Webmozart\Expression\Expression;
 
 /**
  * Message manager
@@ -46,21 +47,39 @@ interface MessageManagerInterface
      * @param array $criteria
      * @param null  $orderBy
      *
-     * @return Message[]
+     * @return Message
      */
     public function findOneBy(array $criteria, $orderBy = null);
 
     /**
-     * @return Criteria
+     * @return Expression
      */
-    public function createCriteria();
+    public function expr();
 
     /**
-     * @param Criteria $criteria
+     * @param Expression $expression
+     * @param array      $orderBy
+     * @param int        $limit
+     * @param int        $offset
      *
-     * @return \Countable|\Iterator
+     * @return Message[]
      */
-    public function query(Criteria $criteria);
+    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null);
+
+    /**
+     * @param Expression $expression
+     *
+     * @return int
+     */
+    public function countByExpression(Expression $expression);
+
+    /**
+     * @param Expression $expression
+     * @param array      $orderBy
+     *
+     * @return Message
+     */
+    public function findOneByExpression(Expression $expression, $orderBy = null);
 
     /**
      * Return type map
@@ -72,11 +91,18 @@ interface MessageManagerInterface
     /**
      * Return facets
      *
-     * @param Criteria $criteria
+     * @return array
+     */
+    public function getFacets();
+
+    /**
+     * Return facets by expression
+     *
+     * @param Expression $expression
      *
      * @return array
      */
-    public function getFacets(Criteria $criteria);
+    public function getFacetsByExpression(Expression $expression);
 
     /**
      * Update message

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MessageBundle\Command;
 
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,6 +34,7 @@ class TailCommand extends ContainerAwareCommand
                     new InputOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Show latest <limit> messages.', 20),
                     new InputOption('follow', 'f', InputOption::VALUE_NONE, 'Follow output'),
                     new InputOption('body', 'b', InputOption::VALUE_NONE, 'Show body'),
+                    new InputOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep time', 5),
                 ]
             );
     }
@@ -47,6 +47,7 @@ class TailCommand extends ContainerAwareCommand
         $limit = $input->getOption('limit');
         $follow = $input->getOption('follow');
         $showBody = $input->getOption('body');
+        $sleepTime = $input->getOption('sleep');
 
         $messageManager = $this->getContainer()->get('phlexible_message.message_manager');
         $types = $messageManager->getTypeNames();
@@ -75,15 +76,14 @@ class TailCommand extends ContainerAwareCommand
             return 0;
         }
 
-        $message = $messageManager->findOneBy([], ['createdAt' => 'ASC']);
+        $message = $messageManager->findOneBy([], ['createdAt' => 'DESC']);
         $minTime = $message->getCreatedAt();
 
         while (1) {
-            $criteria = new Criteria();
-            $criteria->dateFrom($minTime);
+            $expr = $messageManager->expr()
+                ->andGreaterThan($minTime->format('Y-m-d H:i:s'), 'createdAt');
 
-            $messages = $messageManager->findByCriteria($criteria, ['createdAt' => 'ASC'], null, null);
-            //$output->writeln($minTime->format('Y-m-d H:i:s').' '.count($messages));
+            $messages = $messageManager->findByExpression($expr, ['createdAt' => 'ASC'], 5);
 
             foreach ($messages as $message) {
                 /* @var $message Message */
@@ -112,7 +112,7 @@ class TailCommand extends ContainerAwareCommand
                 }
             }
 
-            sleep(1);
+            sleep($sleepTime);
         }
 
         return 0;

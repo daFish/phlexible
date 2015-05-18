@@ -14,7 +14,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FileUsage;
 use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
 use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
  * File usage updater
@@ -39,21 +39,21 @@ class FileUsageUpdater
     private $teaserManager;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
     /**
-     * @param EntityManager  $entityManager
-     * @param TreeManager    $treeManager
-     * @param TeaserManager  $teaserManager
-     * @param VolumeManager  $volumeManager
+     * @param EntityManager          $entityManager
+     * @param TreeManager            $treeManager
+     * @param TeaserManager          $teaserManager
+     * @param VolumeManagerInterface $volumeManager
      */
     public function __construct(
         EntityManager $entityManager,
         TreeManager $treeManager,
         TeaserManager $teaserManager,
-        VolumeManager $volumeManager)
+        VolumeManagerInterface $volumeManager)
     {
         $this->entityManager = $entityManager;
         $this->treeManager = $treeManager;

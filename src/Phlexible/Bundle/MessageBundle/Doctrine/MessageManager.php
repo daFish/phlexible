@@ -8,13 +8,14 @@
 
 namespace Phlexible\Bundle\MessageBundle\Doctrine;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\MessageBundle\Doctrine\Query\MessageQuery;
+use Phlexible\Bundle\MessageBundle\Doctrine\Query\MessageExpressionQuery;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Entity\Repository\MessageRepository;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
+use Webmozart\Expression\Expr;
+use Webmozart\Expression\Expression;
 
 /**
  * Doctrine message manager
@@ -80,29 +81,49 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createCriteria()
+    public function expr()
     {
-        return new Criteria();
+        return Expr::true();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function query(Criteria $criteria)
+    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
     {
-        $query = new MessageQuery($this->entityManager);
-
-        return $query->getResult($criteria);
+        return $this->getMessageRepository()->findByExpression($expression, $orderBy, $limit, $offset);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFacets(Criteria $criteria)
+    public function countByExpression(Expression $expression)
     {
-        $query = new MessageQuery($this->entityManager);
+        return $this->getMessageRepository()->countByExpression($expression);
+    }
 
-        return $query->getFacets($criteria);
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->getMessageRepository()->findOneByExpression($expression, $orderBy);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFacets()
+    {
+        return $this->getMessageRepository()->getFacets();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFacetsByExpression(Expression $expression)
+    {
+        return $this->getMessageRepository()->getFacetsByExpression($expression);
     }
 
     /**

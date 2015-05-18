@@ -10,7 +10,7 @@ namespace Phlexible\Component\MediaManager\Usage;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
  * File usage manager
@@ -41,11 +41,11 @@ class FileUsageManager
     /**
      * Return aggregated status
      *
-     * @param ExtendedFileInterface $file
+     * @param FileInterface $file
      *
      * @return int
      */
-    public function getStatus(ExtendedFileInterface $file)
+    public function getStatus(FileInterface $file)
     {
         $status = 0;
         foreach ($this->findStatusByFile($file) as $status) {
@@ -58,11 +58,11 @@ class FileUsageManager
     /**
      * Return highest aggregated status
      *
-     * @param ExtendedFileInterface $file
+     * @param FileInterface $file
      *
      * @return int
      */
-    public function getHighestStatus(ExtendedFileInterface $file)
+    public function getHighestStatus(FileInterface $file)
     {
         $status = $this->getStatus($file);
 
@@ -82,11 +82,11 @@ class FileUsageManager
     /**
      * Return aggregated status
      *
-     * @param ExtendedFileInterface $file
+     * @param FileInterface $file
      *
      * @return array
      */
-    public function getUsedIn(ExtendedFileInterface $file)
+    public function getUsedIn(FileInterface $file)
     {
         $qb = $this->fileUsageRepository->createQueryBuilder('u');
         $qb
@@ -108,11 +108,11 @@ class FileUsageManager
     }
 
     /**
-     * @param ExtendedFileInterface $file
+     * @param FileInterface $file
      *
      * @return array
      */
-    private function findStatusByFile(ExtendedFileInterface $file)
+    private function findStatusByFile(FileInterface $file)
     {
         $qb = $this->fileUsageRepository->createQueryBuilder('u');
         $qb

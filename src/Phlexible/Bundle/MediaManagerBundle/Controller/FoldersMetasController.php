@@ -8,32 +8,42 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Folder meta controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/mediamanager/foldermeta")
+ *
  * @Security("is_granted('ROLE_MEDIA')")
+ * @Rest\NamePrefix("phlexible_api_mediamanager_")
  */
-class FolderMetaController extends Controller
+class FoldersMetasController extends FOSRestController
 {
     /**
      * @param Request $request
+     * @param string  $folderId
      *
-     * @return JsonResponse
-     * @Route("", name="mediamanager_folder_meta")
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of FolderMeta",
+     *   section="mediamanager",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
-    public function metaAction(Request $request)
+    public function getMetasAction(Request $request, $folderId)
     {
-        $folderId = $request->get('folderId');
-
         $folder = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($folderId)->findFolder($folderId);
 
         $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
@@ -75,18 +85,19 @@ class FolderMetaController extends Controller
             ];
         }
 
-        return new JsonResponse(['meta' => $meta]);
+        return [
+            'meta' => $meta
+        ];
     }
 
     /**
      * @param Request $request
+     * @param string  $folderId
      *
-     * @return ResultResponse
-     * @Route("/save", name="mediamanager_folder_meta_save")
+     * @return Response
      */
-    public function saveAction(Request $request)
+    public function putMetaAction(Request $request, $folderId)
     {
-        $folderId = $request->get('folderId');
         $data = $request->get('data');
         $data = json_decode($data, true);
 
@@ -149,60 +160,5 @@ class FolderMetaController extends Controller
         */
 
         return new ResultResponse(true, 'Folder meta saved.');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/listsets", name="mediamanager_folder_meta_sets_list")
-     */
-    public function listsetsAction(Request $request)
-    {
-        $folderId = $request->get('folderId');
-
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
-
-        $folder = $volumeManager->getByFolderId($folderId)->findFolder($folderId);
-        $metaSets = $folderMetaSetResolver->resolve($folder);
-
-        $sets = [];
-        foreach ($metaSets as $metaSet) {
-            $sets[] = [
-                'id'   => $metaSet->getId(),
-                'name' => $metaSet->getName(),
-            ];
-        }
-
-        return new JsonResponse(['sets' => $sets]);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/savesets", name="mediamanager_folder_meta_sets_save")
-     */
-    public function savesetsAction(Request $request)
-    {
-        $folderId = $request->get('folderId');
-        $joinedIds = $request->get('ids');
-        if ($joinedIds) {
-            $ids = explode(',', $joinedIds);
-        } else {
-            $ids = [];
-        }
-
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-
-        $volume = $volumeManager->getByFolderId($folderId);
-        $folder = $volume->findFolder($folderId);
-
-        $attributes = $folder->getAttributes();
-        $attributes->set('metasets', $ids);
-        $volume->setFolderAttributes($folder, $attributes, $this->getUser()->getId());
-
-        return new ResultResponse(true, 'Set added.');
     }
 }

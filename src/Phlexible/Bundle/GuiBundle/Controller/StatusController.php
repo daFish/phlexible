@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Route as RoutingRoute;
  * Status controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/status/gui")
+ * @Route("/gui/status")
  * @Security("is_granted('ROLE_SUPER_ADMIN')")
  */
 class StatusController extends Controller
@@ -28,37 +28,19 @@ class StatusController extends Controller
      * List status actions
      *
      * @return Response
-     * @Route("", name="gui_status")
+     * @Route("", name="phlexible_gui_status")
      */
     public function indexAction()
     {
         $output = '';
-        $output .= '<a href="'.$this->generateUrl('gui_status_components').'">components</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('gui_status_callbacks').'">callbacks</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('gui_status_listeners').'">listeners</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('gui_status_routes').'">routes</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('gui_status_php').'">php</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('gui_status_versions').'">versions</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('gui_status_load').'">load</a><br/>';
-
-        return new Response($output);
-    }
-
-    /**
-     * List components
-     *
-     * @return Response
-     * @Route("/components", name="gui_status_components")
-     */
-    public function componentsAction()
-    {
-        $components = $this->container->getParameter('kernel.bundles');
-
-        $output = '<pre>Components:'.PHP_EOL.PHP_EOL;
-
-        foreach ($components as $id => $class) {
-            $output .= str_pad($id.':', 25).str_pad($class, 65).PHP_EOL;
-        }
+        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_callbacks').'">Callbacks (deprecated)</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_listeners').'">Listeners</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_routes').'">Routes</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_php').'">PHP</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_versions').'">Versions</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_load').'">Load</a><br/>';
+        $output .= '<a href="' . $this->generateUrl('phlexible_gui_status_context') . '">Context</a><br />';
+        $output .= '<a href="' . $this->generateUrl('phlexible_gui_status_session') . '">Session</a>';
 
         return new Response($output);
     }
@@ -67,7 +49,7 @@ class StatusController extends Controller
      * Show callbacks
      *
      * @return Response
-     * @Route("/callbacks", name="gui_status_callbacks")
+     * @Route("/callbacks", name="phlexible_gui_status_callbacks")
      */
     public function callbacksAction()
     {
@@ -125,7 +107,7 @@ class StatusController extends Controller
      * @param string $component
      *
      * @return Response
-     * @Route("/callback", name="gui_status_callback")
+     * @Route("/callback", name="phlexible_gui_status_callback")
      */
     public function callbackAction($callback, $component = null)
     {
@@ -164,7 +146,7 @@ class StatusController extends Controller
      * Show events
      *
      * @return Response
-     * @Route("/listeners", name="gui_status_listeners")
+     * @Route("/listeners", name="phlexible_gui_status_listeners")
      */
     public function listenersAction()
     {
@@ -214,7 +196,7 @@ class StatusController extends Controller
      * Show routes
      *
      * @return Response
-     * @Route("/routes", name="gui_status_routes")
+     * @Route("/routes", name="phlexible_gui_status_routes")
      */
     public function routesAction()
     {
@@ -241,15 +223,27 @@ class StatusController extends Controller
                 }
             }
 
-            $paths[$name] = $route->getPath();
+            $paths[$name] = $route;
         }
 
         ksort($paths);
 
-        $output = '<pre>';
+        $output = '<pre>' .
+            str_pad('Name', 60) . ' ' .
+            str_pad('Method', 10) . ' ' .
+            str_pad('Scheme', 10) . ' ' .
+            str_pad('Host', 10) . ' ' .
+            'Path' . ' ' .
+            PHP_EOL;
 
-        foreach ($paths as $name => $path) {
-            $output .= str_pad($name, 50) . ' ' . $path . PHP_EOL;
+        foreach ($paths as $name => $route) {
+            $output .=
+                str_pad($name, 60) . ' ' .
+                str_pad($route->getMethods() ? implode(',', $route->getMethods()) : 'ANY', 10) . ' ' .
+                str_pad($route->getSchemes() ? implode(',', $route->getSchemes()) : 'ANY', 10) . ' ' .
+                str_pad($route->getHost() ? $route->getHost() : 'ANY', 10) . ' ' .
+                $route->getPath() . ' ' .
+                PHP_EOL;
         }
 
         return new Response($output);
@@ -261,7 +255,7 @@ class StatusController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/php", name="gui_status_php")
+     * @Route("/php", name="phlexible_gui_status_php")
      */
     public function phpAction(Request $request)
     {
@@ -278,12 +272,17 @@ class StatusController extends Controller
      * Show versions
      *
      * @return Response
-     * @Route("/versions", name="gui_status_versions")
+     * @Route("/versions", name="phlexible_gui_status_versions")
      */
     public function versionsAction()
     {
         $output = '';
         $output .= '<div>PHP: ' . PHP_VERSION . '</div>';
+        $output .= '<div>phlexible: 1.0.0</div>';
+        $output .= '<div>Symfony: ' . \Symfony\Component\HttpKernel\Kernel::VERSION . '</div>';
+        $output .= '<div>Doctrine DBAL: ' . \Doctrine\DBAL\Version::VERSION . '</div>';
+        $output .= '<div>Doctrine ORM: ' . \Doctrine\ORM\Version::VERSION . '</div>';
+
 
         return new Response($output);
     }
@@ -292,11 +291,71 @@ class StatusController extends Controller
      * Show load
      *
      * @return Response
-     * @Route("/load", name="gui_status_load")
+     * @Route("/load", name="phlexible_gui_status_load")
      */
     public function loadAction()
     {
-        $output = print_r(sys_getloadavg(), true);
+        $output = json_encode(sys_getloadavg());
+
+        return new Response($output);
+    }
+
+    /**
+     * Show security context
+     *
+     * @return Response
+     * @Route("/context", name="phlexible_gui_status_context")
+     */
+    public function contextAction()
+    {
+        $tokenStorage = $this->get('security.token_storage');
+
+        $token = $tokenStorage->getToken();
+        $user = $token->getUser();
+
+        $output = '<pre>';
+        $output .= 'Token class: ' . get_class($token) . PHP_EOL;
+        $output .= 'User class:  ' . (is_object($user) ? get_class($user) : $user) . PHP_EOL;
+        $output .= PHP_EOL;
+        $output .= 'Token username: ';
+        $output .= print_r($token->getUsername(), 1).PHP_EOL;
+        $output .= 'Token attributes: ';
+        $output .= print_r($token->getAttributes(), 1).PHP_EOL;
+        $output .= 'Token credentials: ';
+        $output .= print_r($token->getCredentials(), 1).PHP_EOL;
+        $output .= 'Token roles: ';
+        $output .= print_r($token->getRoles(), 1).PHP_EOL;
+
+        return new Response($output);
+    }
+
+    /**
+     * Show session
+     *
+     * @param Request $request
+     *
+     * @return Response
+     * @Route("/session", name="phlexible_gui_status_session")
+     */
+    public function sessionAction(Request $request)
+    {
+        $output = '<pre>';
+        $output .= 'Security session namespace:'.PHP_EOL;
+        $output .= '<ul>';
+        foreach ($request->getSession()->all() as $key => $value) {
+            if (is_object($value)) {
+                $o = get_class($value);
+            } elseif (is_array($value)) {
+                $o = 'array ' . count($value);
+            } else {
+                $o = $value;
+                if (@unserialize($o)) {
+                    $o = unserialize($o);
+                }
+            }
+            $output .= '<li>'.$key . ': ' . $o . '</li>';
+        }
+        $output .= '</ul>';
 
         return new Response($output);
     }

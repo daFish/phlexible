@@ -153,6 +153,14 @@ class Folder implements FolderInterface
     /**
      * {@inheritdoc}
      */
+    public function getVolumeId()
+    {
+        return $this->volumeId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getVolume()
     {
         return $this->volume;

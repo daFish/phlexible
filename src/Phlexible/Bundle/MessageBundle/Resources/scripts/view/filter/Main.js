@@ -60,8 +60,8 @@ Ext.define('Phlexible.message.view.filter.Main', {
                             reload: function () {
                                 this.getListPanel().getStore().reload();
                             },
-                            refreshPreview: function (values) {
-                                this.getPreviewPanel().setFilter(values);
+                            refreshPreview: function (expression, title) {
+                                this.getPreviewPanel().setExpression(expression);
                             },
                             scope: this
                         }

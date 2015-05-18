@@ -9,10 +9,6 @@ parameters:
     phlexible_media_manager.delete_policy: hide_old
 
 services:
-    phlexible_media_manager.volume_manager:
-        class: Phlexible\Component\Volume\VolumeManager
-        arguments: [[]]
-
     phlexible_media_manager.file_serializer:
         class: Phlexible\Bundle\MediaManagerBundle\Serializer\FileSerializer
         arguments:
@@ -42,15 +38,6 @@ services:
 
     phlexible_media_manager.hash_calculator:
         class: Phlexible\Component\Volume\HashCalculator\MessageDigestHashCalculator
-
-    phlexible_media_manager.driver.doctrine:
-        class: Phlexible\Component\Volume\Driver\DoctrineDriver
-        scope: prototype
-        arguments:
-            - @doctrine.orm.entity_manager
-            - @phlexible_media_manager.hash_calculator
-            - Phlexible\Bundle\MediaManagerBundle\Entity\Folder
-            - Phlexible\Bundle\MediaManagerBundle\Entity\File
 
     phlexible_media_manager.upload.temp_storage:
         class: Phlexible\Component\MediaManager\Upload\TempStorage

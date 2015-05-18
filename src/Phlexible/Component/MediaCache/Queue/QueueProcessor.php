@@ -15,7 +15,7 @@ use Phlexible\Component\MediaCache\Queue as BaseQueue;
 use Phlexible\Component\MediaCache\Worker\WorkerResolver;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Filesystem\LockHandler;
 
 /**
@@ -31,7 +31,7 @@ class QueueProcessor
     private $workerResolver;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -57,7 +57,7 @@ class QueueProcessor
 
     /**
      * @param WorkerResolver            $workerResolver
-     * @param VolumeManager             $volumeManager
+     * @param VolumeManagerInterface    $volumeManager
      * @param TemplateManagerInterface  $templateManager
      * @param MediaTypeManagerInterface $mediaTypeManager
      * @param Properties                $properties
@@ -65,7 +65,7 @@ class QueueProcessor
      */
     public function __construct(
         WorkerResolver $workerResolver,
-        VolumeManager $volumeManager,
+        VolumeManagerInterface $volumeManager,
         TemplateManagerInterface $templateManager,
         MediaTypeManagerInterface $mediaTypeManager,
         Properties $properties,

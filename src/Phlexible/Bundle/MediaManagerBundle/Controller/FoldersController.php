@@ -8,41 +8,53 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\MediaManagerBundle\Event\GetSlotsEvent;
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
 use Phlexible\Component\MediaManager\Slot\SiteSlot;
 use Phlexible\Component\MediaManager\Slot\Slots;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
-use Phlexible\Component\Volume\Exception\AlreadyExistsException;
 use Phlexible\Component\Volume\Folder\SizeCalculator;
+use Phlexible\Component\Volume\Model\FolderInterface;
 use Phlexible\Component\Volume\VolumeInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Folder controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/mediamanager/folder")
+ *
  * @Security("is_granted('ROLE_MEDIA')")
+ * @Rest\NamePrefix("phlexible_api_mediamanager_")
  */
-class FolderController extends Controller
+class FoldersController extends FOSRestController
 {
     /**
      * List folders
      *
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("", name="mediamanager_folder_list")
-     * @Method("GET")
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Folder",
+     *   section="mediamanager",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
-    public function listAction(Request $request)
+    public function getFoldersAction(Request $request)
     {
         $folderId = $request->get('node', null);
 
@@ -51,17 +63,18 @@ class FolderController extends Controller
         $slots = new Slots();
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $dispatcher = $this->get('event_dispatcher');
-        $securityContext = $this->get('security.context');
+        $authorizationChecker = $this->get('security.authorization_checker');
         $permissions = $this->get('phlexible_access_control.permissions');
         $folderSerializer = $this->get('phlexible_media_manager.folder_serializer');
-
-        $user = $this->getUser();
 
         if (!$folderId || $folderId === 'root') {
             foreach ($volumeManager->all() as $volume) {
                 $rootFolder = $volume->findRootFolder();
 
-                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                if (
+                    !$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
+                    !$authorizationChecker->isGranted('FOLDER_READ', $rootFolder)
+                ) {
                     continue;
                 }
 
@@ -76,7 +89,7 @@ class FolderController extends Controller
                 */
                 $userRights = array_keys($permissions->getByContentClass(get_class($rootFolder)));
 
-                $data = $folderSerializer->serialize($rootFolder, $request->getLocale());
+                $data = $folderSerializer->serialize($rootFolder);
                 $data['rights'] = $userRights;
                 $data['text'] = $data['name'];
                 $data['expanded'] = true;
@@ -95,36 +108,21 @@ class FolderController extends Controller
             $dispatcher->dispatch(MediaManagerEvents::GET_SLOTS, $event);
 
             $data = $slots->getAllData();
-
-            //            $data[] = array(
-            //                'id'        => 'tags',
-            //                'text'      => 'Tags',
-            //                'iconCls'   => 'p-mediamanager-tag-icon',
-            //                'cls'       => 't-mediamanager-root',
-            //                'leaf'      => false,
-            //                'children' => array(array(
-            //                    'id' => 'tag1',
-            //                    'text' => 'tag1',
-            //                    'leaf' => true
-            //                )),
-            //                'draggable' => false,
-            //                'expanded'  => true,
-            //                'allowDrag' => false,
-            //                'allowDrop' => false,
-            //                'module'    => true,
-            //            );
         } else {
             $slotKey = $request->get('slot', null);
             if (!$slotKey) {
                 $volume = $volumeManager->getByFolderId($folderId);
                 $folder = $volume->findFolder($folderId);
 
-                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$authorizationChecker->isGranted('FOLDER_READ', $rootFolder)) {
                     return new JsonResponse([]);
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-                    if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                    if (
+                        !$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
+                        !$authorizationChecker->isGranted('FOLDER_READ', $rootFolder)
+                    ) {
                         continue;
                     }
 
@@ -143,7 +141,7 @@ class FolderController extends Controller
                     $usedIn = $folderUsageService->getUsedIn($folder);
                     // TODO: also files in folder!
 
-                    $tmp = $folderSerializer->serialize($subFolder, $request->getLocale());
+                    $tmp = $folderSerializer->serialize($subFolder);
 
                     $tmp['rights'] = $userRights;
                     $tmp['text'] = $tmp['name'];
@@ -169,7 +167,43 @@ class FolderController extends Controller
             }
         }
 
-        return new JsonResponse($data);
+        return array(
+            'folders' => $data
+        );
+    }
+
+    /**
+     * Return folder
+     *
+     * @param Request $request
+     * @param string  $folderId
+     *
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Folder",
+     *   section="mediamanager",
+     *   output="Phlexible\Component\MediaManager\Model\ExtendedFolderInterface",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when file was not found"
+     *   }
+     * )
+     */
+    public function getFolderAction(Request $request, $folderId)
+    {
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $folderSerializer = $this->get('phlexible_media_manager.folder_serializer');
+
+        $volume = $volumeManager->getByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
+
+        $data = $folderSerializer->serialize($folder);
+
+        return array(
+            'folder' => $data,
+        );
     }
 
     /**
@@ -178,39 +212,49 @@ class FolderController extends Controller
      * @param Request $request
      * @param string  $folderId
      *
-     * @return JsonResponse
-     * @Route("/{folderId}/size", name="mediamanager_folder_size")
-     * @Method("GET")
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Folder",
+     *   section="mediamanager",
+     *   output="Phlexible\Component\MediaManager\Model\ExtendedFolderInterface",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when folder was not found"
+     *   }
+     * )
      */
-    public function sizeAction(Request $request, $folderId)
+    public function getFolderSizeAction(Request $request, $folderId)
     {
-        $folderId = $request->get('folderId');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $volume = $volumeManager->getByFolderId($folderId);
 
-        try {
-            $folder = $volume->findFolder($folderId);
+        $folder = $volume->findFolder($folderId);
 
-            $calculator = new SizeCalculator();
-            $calculatedSize = $calculator->calculate($volume, $folder);
-
-            $data = [
-                'title'       => $folder->getName(),
-                'type'        => 'folder',
-                'path'        => '/' . $folder->getPath(),
-                'size'        => $calculatedSize->getSize(),
-                'files'       => $calculatedSize->getNumFiles(),
-                'folders'     => $calculatedSize->getNumFolders(),
-                'create_time' => $folder->getCreatedAt()->format('U') * 1000,
-                'create_user' => $folder->getCreateUser(),
-                'modify_time' => $folder->getModifiedAt()->format('U') * 1000,
-                'modify_user' => $folder->getModifyUser(),
-            ];
-        } catch (\Exception $e) {
-            $data = [];
+        if (!$folder instanceof FolderInterface) {
+            throw new NotFoundHttpException("Folder not found");
         }
 
-        return new JsonResponse($data);
+        $calculator = new SizeCalculator();
+        $calculatedSize = $calculator->calculate($volume, $folder);
+
+        $data = [
+            'title'       => $folder->getName(),
+            'type'        => 'folder',
+            'path'        => '/' . $folder->getPath(),
+            'size'        => $calculatedSize->getSize(),
+            'files'       => $calculatedSize->getNumFiles(),
+            'folders'     => $calculatedSize->getNumFolders(),
+            'create_time' => $folder->getCreatedAt()->format('U') * 1000,
+            'create_user' => $folder->getCreateUser(),
+            'modify_time' => $folder->getModifiedAt()->format('U') * 1000,
+            'modify_user' => $folder->getModifyUser(),
+        ];
+
+        return array(
+            'size' => $data
+        );
     }
 
     /**
@@ -218,11 +262,19 @@ class FolderController extends Controller
      *
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("", name="mediamanager_folder_create")
-     * @Method("POST")
+     * @return Response
+     *
+     * @Rest\View(statusCode=201)
+     * @ApiDoc(
+     *   description="Create a Folder",
+     *   section="mediamanager",
+     *   statusCodes={
+     *     201="Returned when successful",
+     *     404="Returned when folder was not found"
+     *   }
+     * )
      */
-    public function createAction(Request $request)
+    public function postFoldersAction(Request $request)
     {
         $name = $request->get('name');
         $parentId = $request->get('parentId');
@@ -230,32 +282,29 @@ class FolderController extends Controller
         $volume = $this->getVolumeByFolderId($parentId);
         $parentFolder = $volume->findFolder($parentId);
 
-        try {
-            $folder = $parentFolder->getVolume()
-                ->createFolder($parentFolder, $name, array(), $this->getUser()->getId());
-
-            return new ResultResponse(true, 'Folder created.', [
-                'folderId'   => $folder->getId(),
-                'folderName' => $folder->getName()
-            ]);
-        } catch (AlreadyExistsException $e) {
-            return new ResultResponse(false, $e->getMessage(), [
-                'name' => 'Folder already exists.'
-            ]);
-        }
+        $parentFolder->getVolume()
+            ->createFolder($parentFolder, $name, array(), $this->getUser()->getUsername());
     }
 
     /**
-     * Path folder
+     * Update folder
      *
      * @param Request $request
      * @param string  $folderId
      *
-     * @return ResultResponse
-     * @Route("/{folderId}", name="mediamanager_folder_patch")
-     * @Method("PATCH")
+     * @return Response
+     *
+     * @Rest\View(statusCode=204)
+     * @ApiDoc(
+     *   description="Update a Folder",
+     *   section="mediamanager",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when folder was not found"
+     *   }
+     * )
      */
-    public function patchAction(Request $request, $folderId)
+    public function putFolderAction(Request $request, $folderId)
     {
         $name = $request->get('name', false);
         $parentId = $request->get('targetId', false);
@@ -263,18 +312,18 @@ class FolderController extends Controller
         $volume = $this->getVolumeByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
 
+        if (!$folder instanceof FolderInterface) {
+            throw new NotFoundHttpException("Folder not found");
+        }
+
         if ($name) {
             $volume->renameFolder($folder, $name, $this->getUser()->getId());
         }
 
         if ($parentId) {
             $targetFolder = $volume->findFolder($parentId);
-            $volume->moveFolder($folder, $targetFolder, $this->getUser()->getId());
+            $volume->moveFolder($folder, $targetFolder, $this->getUser()->getUsername());
         }
-
-        return new ResultResponse(true, 'Folder patched.', [
-            'name' => $folder->getName(),
-        ]);
     }
 
     /**
@@ -283,22 +332,31 @@ class FolderController extends Controller
      * @param Request $request
      * @param string  $folderId
      *
-     * @return ResultResponse
-     * @Route("/rename/{folderId}", name="mediamanager_folder_rename")
-     * @Method("PUT")
+     * @return Response
+     * @deprecated
+     *
+     * @Rest\View(statusCode=204)
+     * @ApiDoc(
+     *   description="Rename a Folder",
+     *   section="mediamanager",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when folder was not found"
+     *   }
+     * )
      */
-    public function renameAction(Request $request, $folderId)
+    public function renameFolderAction(Request $request, $folderId)
     {
         $folderName = $request->get('name');
 
         $volume = $this->getVolumeByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
 
-        $volume->renameFolder($folder, $folderName, $this->getUser()->getId());
+        if (!$folder instanceof FolderInterface) {
+            throw new NotFoundHttpException("Folder not found");
+        }
 
-        return new ResultResponse(true, 'Folder renamed.', [
-            'folderName' => $folderName
-        ]);
+        $volume->renameFolder($folder, $folderName, $this->getUser()->getUsername());
     }
 
     /**
@@ -306,21 +364,34 @@ class FolderController extends Controller
      *
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("/move", name="mediamanager_folder_move")
-     * @Method("PUT")
+     * @return Response
+     * @deprecated
+     *
+     * @Rest\View(statusCode=204)
+     * @ApiDoc(
+     *   description="Move a Folder",
+     *   section="mediamanager",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when folder was not found"
+     *   }
+     * )
      */
-    public function moveAction(Request $request)
+    public function moveFolderAction(Request $request, $folderId)
     {
         $volumeId = $request->get('volumeId');
         $targetId = $request->get('targetId');
-        $sourceId = $request->get('id');
 
         $volume = $this->getVolume($volumeId);
-        $folder = $volume->findFolder($sourceId);
+        $folder = $volume->findFolder($folderId);
+
+        if (!$folder instanceof FolderInterface) {
+            throw new NotFoundHttpException("Folder not found");
+        }
+
         $targetFolder = $volume->findFolder($targetId);
 
-        $volume->moveFolder($folder, $targetFolder, $this->getUser()->getId());
+        $volume->moveFolder($folder, $targetFolder, $this->getUser()->getUsername());
 
         return new ResultResponse(true);
     }
@@ -331,22 +402,33 @@ class FolderController extends Controller
      * @param Request $request
      * @param string  $folderId
      *
-     * @return ResultResponse
-     * @Route("/delete", name="mediamanager_folder_delete")
-     * @Method("DELETE")
+     * @return Response
+     * @deprecated
+     *
+     * @Rest\View(statusCode=204)
+     * @ApiDoc(
+     *   description="Move a Folder",
+     *   section="mediamanager",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when folder was not found"
+     *   }
+     * )
      */
-    public function deleteAction(Request $request, $folderId)
+    public function deleteFolderAction(Request $request, $folderId)
     {
         $volume = $this->getVolumeByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
 
-        if ($folder->isRoot()) {
-            return new ResultResponse(false, "Can't delete the root folder.");
+        if (!$folder instanceof FolderInterface) {
+            throw new NotFoundHttpException("Folder not found");
         }
 
-        $volume->deleteFolder($folder, $this->getUser()->getId());
+        if ($folder->isRoot()) {
+            return new BadRequestHttpException("Can't delete the root folder.");
+        }
 
-        return new ResultResponse(true, 'Folder deleted', ['parent_id' => $folder->getParentId()]);
+        $volume->deleteFolder($folder, $this->getUser()->getUsername());
     }
 
     /**

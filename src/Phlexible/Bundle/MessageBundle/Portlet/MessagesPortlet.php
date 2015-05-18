@@ -78,7 +78,7 @@ class MessagesPortlet extends Portlet
             return [];
         }
 
-        $messages = $this->messageManager->findByCriteria($filter->getCriteria(), ['createdAt' => 'DESC'], 20);
+        $messages = $this->messageManager->findByExpression($filter->getExpression(), ['createdAt' => 'DESC'], 20);
 
         $typeList = $this->messageManager->getTypeNames();
 

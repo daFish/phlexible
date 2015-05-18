@@ -11,7 +11,7 @@ namespace Phlexible\Component\MediaCache\Queue;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
  * Queue batch
@@ -21,7 +21,7 @@ use Phlexible\Component\Volume\VolumeManager;
 class BatchBuilder
 {
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -31,10 +31,10 @@ class BatchBuilder
     private $templateManager;
 
     /**
-     * @param VolumeManager            $volumeManager
+     * @param VolumeManagerInterface   $volumeManager
      * @param TemplateManagerInterface $templateManager
      */
-    public function __construct(VolumeManager $volumeManager, TemplateManagerInterface $templateManager)
+    public function __construct(VolumeManagerInterface $volumeManager, TemplateManagerInterface $templateManager)
     {
         $this->volumeManager = $volumeManager;
         $this->templateManager = $templateManager;

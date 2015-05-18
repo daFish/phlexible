@@ -33,6 +33,7 @@ class RolesController extends FOSRestController
      * @ApiDoc(
      *   description="Returns a collection of Role",
      *   section="user",
+     *   resource=true,
      *   statusCodes={
      *     200="Returned when successful",
      *   }

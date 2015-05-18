@@ -20,7 +20,7 @@ interface AccessManagerInterface
     /**
      * @param array $criteria
      *
-     * @return array
+     * @return AccessControlEntry[]
      */
     public function findBy(array $criteria);
 

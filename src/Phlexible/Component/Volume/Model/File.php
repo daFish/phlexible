@@ -115,6 +115,14 @@ class File implements FileInterface
     /**
      * {@inheritdoc}
      */
+    public function getVolumeId()
+    {
+        return $this->volumeId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getVolume()
     {
         return $this->volume;
@@ -228,25 +236,6 @@ class File implements FileInterface
     {
         $this->mimeType = $mimeType;
 
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPhysicalPath()
-    {
-        $rootDir = rtrim($this->getVolume()->getRootDir(), '/');
-        $physicalPath = $rootDir . '/' . $this->hash;
-
-        return $physicalPath;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPhysicalPath($physicalPath)
-    {
         return $this;
     }
 

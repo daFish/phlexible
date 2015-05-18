@@ -31,7 +31,7 @@ class MediaController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("", name="mediamanager_media")
+     * @Route("", name="phlexible_mediamanager_media")
      */
     public function mediaAction(Request $request)
     {
@@ -125,7 +125,7 @@ class MediaController extends Controller
      * @param string $mediaTypeName
      *
      * @return Response
-     * @Route("/delegate/{templateKey}/{mediaTypeName}", name="mediamanager_media_delegate")
+     * @Route("/delegate/{templateKey}/{mediaTypeName}", name="phlexible_mediamanager_media_delegate")
      */
     public function delegateAction($templateKey, $mediaTypeName)
     {

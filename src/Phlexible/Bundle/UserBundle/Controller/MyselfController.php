@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\UserBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,11 +27,11 @@ class MyselfController extends Controller
      *
      * @return Response
      *
-     * @Rest\Get
      * @Rest\View
      * @ApiDoc(
      *   description="Returns current User",
      *   section="user",
+     *   resource=true,
      *   output="Phlexible\Bundle\UserBundle\Entity\User",
      *   statusCodes={
      *     200="Returned when successful",
@@ -53,15 +52,13 @@ class MyselfController extends Controller
      *
      * @return Response
      *
-     * @Rest\Put
+     * @Rest\View(statusCode=204)
      * @ApiDoc(
      *   description="Update current User",
      *   section="user",
-     *   input="Phlexible\Bundle\UserBundle\Form\Type\GroupType",
+     *   input="Phlexible\Bundle\UserBundle\Form\Type\UserType",
      *   statusCodes={
-     *     201="Returned when group was created",
-     *     204="Returned when group was updated",
-     *     404="Returned when group was not found"
+     *     204="Returned when user was updated",
      *   }
      * )
      */
@@ -95,7 +92,5 @@ class MyselfController extends Controller
 
         $userManager = $this->get('phlexible_user.user_manager');
         $userManager->updateUser($user);
-
-        return new ResultResponse(true, 'User updated.');
     }
 }

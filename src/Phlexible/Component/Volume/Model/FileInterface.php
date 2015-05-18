@@ -95,18 +95,6 @@ interface FileInterface
     public function setMimeType($mimeType);
 
     /**
-     * @return string
-     */
-    public function getPhysicalPath();
-
-    /**
-     * @param string $physicalPath
-     *
-     * @return $this
-     */
-    public function setPhysicalPath($physicalPath);
-
-    /**
      * @return int
      */
     public function getSize();

@@ -11,7 +11,7 @@ namespace Phlexible\Component\MediaManager\Upload;
 use Brainbits\Mime\MimeDetector;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\FileSource\UploadedFileSource;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class UploadHandler
 {
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -37,11 +37,15 @@ class UploadHandler
     private $mimeDetector;
 
     /**
-     * @param VolumeManager  $volumeManager
-     * @param TempStorage    $tempStorage
-     * @param MimeDetector   $mimeDetector
+     * @param VolumeManagerInterface $volumeManager
+     * @param TempStorage            $tempStorage
+     * @param MimeDetector           $mimeDetector
      */
-    public function __construct(VolumeManager $volumeManager, TempStorage $tempStorage, MimeDetector $mimeDetector)
+    public function __construct(
+        VolumeManagerInterface $volumeManager,
+        TempStorage $tempStorage,
+        MimeDetector $mimeDetector
+    )
     {
         $this->volumeManager = $volumeManager;
         $this->tempStorage = $tempStorage;
@@ -72,7 +76,7 @@ class UploadHandler
 
         $volume = $this->volumeManager->getByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
-        $file = $volume->findFileByPath($folder->getPath() . '/' . $uploadFileSource->getName());
+        $file = $volume->findFileByFolderAndName($folder, $uploadFileSource->getName());
         $originalFileId = null;
 
         if ($file) {

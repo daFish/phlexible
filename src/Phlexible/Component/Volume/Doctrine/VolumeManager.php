@@ -6,13 +6,15 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\Volume\Driver;
+namespace Phlexible\Component\Volume\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Phlexible\Component\MediaManager\Volume\ExtendedVolume;
 use Phlexible\Component\Volume\Exception\AlreadyExistsException;
 use Phlexible\Component\Volume\Exception\IOException;
+use Phlexible\Component\Volume\Exception\NotFoundException;
 use Phlexible\Component\Volume\Exception\NotWritableException;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
@@ -20,19 +22,28 @@ use Phlexible\Component\Volume\FileSource\StreamSourceInterface;
 use Phlexible\Component\Volume\HashCalculator\HashCalculatorInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
+use Phlexible\Component\Volume\VolumeInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\Expression\Expression;
 
 /**
- * Database driver
+ * Doctrine volume manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class DoctrineDriver extends AbstractDriver
+class VolumeManager implements VolumeManagerInterface
 {
     /**
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * @var Connection
@@ -50,17 +61,33 @@ class DoctrineDriver extends AbstractDriver
     private $fileClass;
 
     /**
-     * @param EntityManager           $entityManager
-     * @param HashCalculatorInterface $hashCalculator
-     * @param string                  $folderClass
-     * @param string                  $fileClass
+     * @var array
      */
-    public function __construct(EntityManager $entityManager, HashCalculatorInterface $hashCalculator, $folderClass, $fileClass)
+    private $volumeConfigs;
+
+    /**
+     * @param EntityManager            $entityManager
+     * @param HashCalculatorInterface  $hashCalculator
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param string                   $folderClass
+     * @param string                   $fileClass
+     * @param array                    $volumeConfigs
+     */
+    public function __construct(
+        EntityManager $entityManager,
+        HashCalculatorInterface $hashCalculator,
+        EventDispatcherInterface $eventDispatcher,
+        $folderClass,
+        $fileClass,
+        array $volumeConfigs = array()
+    )
     {
         $this->entityManager = $entityManager;
         $this->hashCalculator = $hashCalculator;
+        $this->eventDispatcher = $eventDispatcher;
         $this->folderClass = $folderClass;
         $this->fileClass = $fileClass;
+        $this->volumeConfigs = $volumeConfigs;
 
         $this->connection = $entityManager->getConnection();
     }
@@ -79,6 +106,115 @@ class DoctrineDriver extends AbstractDriver
     private function getFolderRepository()
     {
         return $this->entityManager->getRepository($this->folderClass);
+    }
+
+    public function hasFeature($name)
+    {
+        return true;
+    }
+
+    /**
+     * @var VolumeInterface[]
+     */
+    private $volumes = array();
+
+    /**
+     * @param string $name
+     *
+     * @return VolumeInterface
+     */
+    private function getOrCreateVolume($name)
+    {
+        if (!isset($this->volumes[$name])) {
+            $volumeConfig = $this->volumeConfigs[$name];
+            $class = $volumeConfig['class'];
+
+            $volume = new $class(
+                $volumeConfig['id'],
+                $volumeConfig['name'],
+                $volumeConfig['root_dir'],
+                $volumeConfig['quota'],
+                $this->eventDispatcher
+            );
+            $volume->setVolumeManager($this);
+            $this->volumes[$name] = $volume;
+        }
+
+        return $this->volumes[$name];
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return VolumeInterface
+     */
+    public function get($name)
+    {
+        return $this->getOrCreateVolume($name);
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return VolumeInterface
+     */
+    public function getById($id)
+    {
+        foreach ($this->volumeConfigs as $volumeConfig) {
+            if ($volumeConfig['id'] === $id) {
+                return $this->getOrCreateVolume($volumeConfig['name']);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return volume by file ID
+     *
+     * @param string $fileId
+     *
+     * @return VolumeInterface
+     * @throws NotFoundException
+     */
+    public function getByFileId($fileId)
+    {
+        $file = $this->findFileBy(array('id' => $fileId));
+
+        if (!$file) {
+            throw new NotFoundException("Volume for file ID $fileId not found.");
+        }
+
+        return $this->getById($file->getVolumeId());
+    }
+
+    /**
+     * Return volume by folder ID
+     *
+     * @param string $folderId
+     *
+     * @return VolumeInterface
+     * @throws NotFoundException
+     */
+    public function getByFolderId($folderId)
+    {
+        $file = $this->findFolderBy(array('id' => $folderId));
+
+        if (!$file) {
+            throw new NotFoundException("Volume for folder ID $folderId not found.");
+        }
+
+        return $this->getById($file->getVolumeId());
+    }
+
+    /**
+     * Return all volumes
+     *
+     * @return VolumeInterface[]
+     */
+    public function all()
+    {
+        return $this->volumes;
     }
 
     /**
@@ -110,372 +246,87 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findFolder($id)
     {
-        if ($id === -1) {
-            return $this->findRootFolder();
-        }
-
-        $folder = $this->getFolderRepository()->findOneBy(
-            [
-                'volumeId' => $this->getVolume()->getId(),
-                'id'       => $id
-            ]
-        );
-
-        if ($folder) {
-            $folder->setVolume($this->getVolume());
-        }
-
-        return $folder;
+        return $this->getFolderRepository()->find($id);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findRootFolder()
+    public function findFoldersBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null)
     {
-        $folder = $this->getFolderRepository()->findOneBy(
-            [
-                'volumeId' => $this->getVolume()->getId(),
-                'parentId' => null
-            ]
-        );
-
-        if ($folder) {
-            $folder->setVolume($this->getVolume());
-        }
-
-        return $folder;
+        return $this->getFolderRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFolderByPath($path)
+    public function countFoldersBy(array $criteria = array())
     {
-        $path = ltrim($path, '/');
-
-        $folder = $this->getFolderRepository()->findOneBy(
-            [
-                'volumeId' => $this->getVolume()->getId(),
-                'path'     => $path
-            ]
-        );
-
-        if ($folder) {
-            $folder->setVolume($this->getVolume());
-        }
-
-        return $folder;
+        return $this->getFolderRepository()->countBy($criteria);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFoldersByParentFolder(FolderInterface $parentFolder)
+    public function findFolderBy(array $criteria = array(), $orderBy = null)
     {
-        $folders = $this->getFolderRepository()->findBy(
-            [
-                'parentId' => $parentFolder->getId(),
-            ]
-        );
-
-        foreach ($folders as $folder) {
-            /* @var $folder FolderInterface */
-            $folder->setVolume($this->getVolume());
-        }
-
-        return $folders;
+        return $this->getFolderRepository()->findOneBy($criteria, $orderBy);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function countFoldersByParentFolder(FolderInterface $parentFolder)
+    public function findFoldersByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
     {
-        $qb = $this->getFolderRepository()->createQueryBuilder('fo');
-        $qb
-            ->select('COUNT(fo.id)')
-            ->where($qb->expr()->eq('fo.parentId', $qb->expr()->literal($parentFolder->getId())));
-
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return $this->getFolderRepository()->findByExpression($expression, $orderBy, $limit, $offset);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFolderByFileId($fileId)
+    public function countFoldersByExpression(Expression $expression)
     {
-        $file = $this->findFile($fileId);
-
-        if (!$file) {
-            return null;
-        }
-
-        $folder = $file->getFolder();
-        $folder->setVolume($this->getVolume());
-
-        return $folder;
+        return $this->getFolderRepository()->countByExpression($expression);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFile($id, $version = 1)
+    public function findFilesBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null)
     {
-        $file = $this->getFileRepository()->findOneBy(
-            [
-                'id'      => $id,
-                'version' => $version
-            ]
-        );
-
-        if ($file) {
-            $file->setVolume($this->getVolume());
-        }
-
-        return $file;
+        return $this->getFileRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFiles(array $criteria, $order = null, $limit = null, $start = null, $includeHidden = false)
+    public function countFilesBy(array $criteria = array())
     {
-        $qb = $this->getFileRepository()->createQueryBuilder('fi');
-
-        foreach ($criteria as $field => $value) {
-            switch ($field) {
-                case 'folder':
-                    $qb->andWhere($qb->expr()->eq('fi.folder', $qb->expr()->literal($value->getId())));
-                    break;
-
-                case 'assetType':
-                    $qb->andWhere($qb->expr()->eq('fi.assetType', $qb->expr()->literal($value)));
-                    break;
-
-                case 'documenttypes':
-                    $qb->andWhere($qb->expr()->in('fi.documenttype', explode(',', $value)));
-                    break;
-
-                case 'timeCreated':
-                    $qb->andWhere($qb->expr()->gte('fi.createdAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
-                    break;
-
-                case 'timeModified':
-                    $qb->andWhere($qb->expr()->gte('fi.modifiedAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
-                    break;
-
-                case 'hidden':
-                    $qb->andWhere($qb->expr()->eq('fi.hidden', $value ? 1 : 0));
-                    break;
-
-                case 'notCreateUserId':
-                    $qb->andWhere($qb->expr()->neq('fi.createUserId', $qb->expr()->literal($value)));
-                    break;
-
-                case 'notModifyUserId':
-                    $qb->andWhere($qb->expr()->neq('fi.modifyUserId', $qb->expr()->literal($value)));
-                    break;
-
-                default:
-                    $qb->andWhere($qb->expr()->eq("fi.$field", $qb->expr()->literal($value)));
-            }
-        }
-
-        if ($order) {
-            foreach ($order as $field => $dir) {
-                $qb->addOrderBy("fi.$field", $dir);
-            }
-        }
-
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-
-        if ($start) {
-            $qb->setFirstResult($start);
-        }
-
-        $files = $qb->getQuery()->getResult();
-
-        foreach ($files as $file) {
-            $file->setVolume($this->getVolume());
-        }
-
-        return $files;
+        return $this->getFileRepository()->countBy($criteria);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function countFiles(array $criteria)
+    public function findFileBy(array $criteria = array(), $orderBy = null)
     {
-
-        $qb = $this->getFileRepository()->createQueryBuilder('fi');
-        $qb->select('COUNT(fi.id)');
-
-        foreach ($criteria as $field => $value) {
-            switch ($field) {
-                case 'folder':
-                    $qb->andWhere($qb->expr()->eq('fi.folder', $qb->expr()->literal($value->getId())));
-                    break;
-
-                case 'assetType':
-                    $qb->andWhere($qb->expr()->eq('fi.assetType', $qb->expr()->literal($value)));
-                    break;
-
-                case 'documenttypes':
-                    $qb->andWhere($qb->expr()->in('fi.documenttype', explode(',', $value)));
-                    break;
-
-                case 'timeCreated':
-                    $qb->andWhere($qb->expr()->gte('fi.createdAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
-                    break;
-
-                case 'timeModified':
-                    $qb->andWhere($qb->expr()->gte('fi.modifiedAt', $qb->expr()->literal(\DateTime::createFromFormat('U', $value)->format('Y-m-d H:i:s'))));
-                    break;
-
-                case 'hidden':
-                    $qb->andWhere($qb->expr()->eq('fi.hidden', $value ? 1 : 0));
-                    break;
-
-                case 'notCreateUserId':
-                    $qb->andWhere($qb->expr()->neq('fi.createUserId', $qb->expr()->literal($value)));
-                    break;
-
-                case 'notModifyUserId':
-                    $qb->andWhere($qb->expr()->neq('fi.modifyUserId', $qb->expr()->literal($value)));
-                    break;
-
-                default:
-                    $qb->andWhere($qb->expr()->eq("fi.$field", $qb->expr()->literal($value)));
-            }
-        }
-
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return $this->getFileRepository()->findOneBy($criteria, $orderBy);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFileByPath($path, $version = 1)
+    public function findFilesByExpression(Expression $expression, $order = null, $limit = null, $start = null)
     {
-        $name = basename($path);
-        $folderPath = trim(dirname($path), '/');
-
-        $folder = $this->findFolderByPath($folderPath);
-
-        $file = $this->getFileRepository()->findOneBy(
-            [
-                'name'   => $name,
-                'folder' => $folder
-            ]
-        );
-
-        if ($file) {
-            $file->setVolume($this->getVolume());
-        }
-
-        return $file;
+        return $this->getFileRepository()->findByExpression($expression, $order, $limit, $start);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFileVersions($id)
+    public function countFilesByExpression(Expression $expression)
     {
-        $files = $this->getFileRepository()->findBy(
-            [
-                'id' => $id
-            ]
-        );
-
-        foreach ($files as $file) {
-            /* @var $file FileInterface */
-            $file->setVolume($this->getVolume());
-        }
-
-        return $files;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findFilesByFolder(
-        FolderInterface $folder,
-        $order = null,
-        $limit = null,
-        $start = null,
-        $includeHidden = false)
-    {
-        $criteria = [
-            'folder' => $folder
-        ];
-
-        if (!$includeHidden) {
-            $criteria['hidden'] = false;
-        }
-
-        $files = $this->getFileRepository()->findBy(
-            $criteria,
-            $order,
-            $limit,
-            $start
-        );
-
-        foreach ($files as $file) {
-            /* @var $file FileInterface */
-            $file->setVolume($this->getVolume());
-        }
-
-        return $files;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function countFilesByFolder(FolderInterface $folder)
-    {
-        $qb = $this->getFileRepository()->createQueryBuilder('fi');
-        $qb
-            ->select('COUNT(fi.id)')
-            ->where($qb->expr()->eq('fi.folder', $qb->expr()->literal($folder->getId())));
-
-        return (int) $qb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findLatestFiles($limit = 20)
-    {
-        $files = $this->getFileRepository()->findBy([], ['createdAt' => 'DESC'], $limit);
-
-        foreach ($files as $file) {
-            /* @var $file FileInterface */
-            $file->setVolume($this->getVolume());
-        }
-
-        return $files;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function search($query)
-    {
-        $qb = $this->getFileRepository()->createQueryBuilder('fi');
-        $qb->where($qb->expr()->like('fi.name', $qb->expr()->literal("%$query%")));
-
-        $files = $qb->getQuery()->getResult();
-
-        foreach ($files as $file) {
-            /* @var $file FileInterface */
-            $file->setVolume($this->getVolume());
-        }
-
-        return $files;
+        return $this->getFileRepository()->countByExpression($expression);
     }
 
     /**
@@ -591,7 +442,7 @@ class DoctrineDriver extends AbstractDriver
 
         $qb = $this->getFolderRepository()->createQueryBuilder('fo');
         $qb
-            ->where($qb->expr()->eq('fo.volumeId', $qb->expr()->literal($this->getVolume()->getId())))
+            ->where($qb->expr()->eq('fo.volumeId', $qb->expr()->literal($folder->getVolume()->getId())))
             ->andWhere(
                 $qb->expr()->eq(
                     $qb->expr()->substring('fo.path', 1, mb_strlen($oldPath)),
@@ -618,7 +469,7 @@ class DoctrineDriver extends AbstractDriver
 
         $qb = $this->getFolderRepository()->createQueryBuilder('fo');
         $qb
-            ->where($qb->expr()->eq('fo.volumeId', $qb->expr()->literal($this->getVolume()->getId())))
+            ->where($qb->expr()->eq('fo.volumeId', $qb->expr()->literal($folder->getVolume()->getId())))
             ->andWhere(
                 $qb->expr()->eq(
                     $qb->expr()->substring('fo.path', 1, mb_strlen($oldPath)),
@@ -752,7 +603,7 @@ class DoctrineDriver extends AbstractDriver
     {
         $filesystem = new Filesystem();
 
-        $physicalPath = $this->getVolume()->getRootDir() . $folder->getPath();
+        $physicalPath = $folder->getVolume()->getRootDir() . $folder->getPath();
 
         if ($filesystem->exists($physicalPath) && !is_dir($physicalPath)) {
             throw new IOException('Delete folder failed, not a folder.');

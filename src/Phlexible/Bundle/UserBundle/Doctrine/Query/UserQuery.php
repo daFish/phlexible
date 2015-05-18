@@ -15,16 +15,16 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Phlexible\Bundle\UserBundle\Event;
 use Phlexible\Bundle\UserBundle\Event\UserQueryApplyCriteriaEvent;
-use Phlexible\Bundle\UserBundle\Model\UserQueryInterface;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webmozart\Expression\Expression;
 
 /**
  * User query
  *
  * @author  Stephan Wentz <sw@brainbits.net>
  */
-class UserQuery implements UserQueryInterface
+class UserQuery
 {
     /**
      * @var EntityManager
@@ -56,14 +56,14 @@ class UserQuery implements UserQueryInterface
     /**
      * Return query result
      *
-     * @param Criteria $criteria
-     * @param array    $sort
-     * @param int      $limit
-     * @param int      $offset
+     * @param Expression $expression
+     * @param array      $sort
+     * @param int        $limit
+     * @param int        $offset
      *
      * @return Paginator
      */
-    public function getResult(Criteria $criteria, array $sort = null, $limit = null, $offset = null)
+    public function getResult(Expression $expression, array $sort = null, $limit = null, $offset = null)
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('u')

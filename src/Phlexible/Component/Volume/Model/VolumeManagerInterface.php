@@ -6,20 +6,19 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\Volume\Driver;
+namespace Phlexible\Component\Volume\Model;
 
 use Phlexible\Component\Volume\Exception\AlreadyExistsException;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\HashCalculator\HashCalculatorInterface;
-use Phlexible\Component\Volume\Model\FileInterface;
-use Phlexible\Component\Volume\Model\FolderInterface;
+use Webmozart\Expression\Expression;
 
 /**
- * Driver interface
+ * Volume Manager interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface DriverInterface
+interface VolumeManagerInterface
 {
     const FEATURE_VERSIONS = 'versions';
 
@@ -46,11 +45,6 @@ interface DriverInterface
     public function getHashCalculator();
 
     /**
-     * @return FolderInterface
-     */
-    public function findRootFolder();
-
-    /**
      * @param string $id
      *
      * @return FolderInterface
@@ -58,109 +52,88 @@ interface DriverInterface
     public function findFolder($id);
 
     /**
-     * @param int $fileId
-     *
-     * @return FolderInterface
-     */
-    public function findFolderByFileId($fileId);
-
-    /**
-     * @param string $path
-     *
-     * @return FolderInterface
-     */
-    public function findFolderByPath($path);
-
-    /**
-     * @param FolderInterface $parentFolder
+     * @param array      $criteria
+     * @param array|null $orderBy
+     * @param int|null   $limit
+     * @param int|null   $offset
      *
      * @return FolderInterface[]
      */
-    public function findFoldersByParentFolder(FolderInterface $parentFolder);
-
-    /**
-     * @param FolderInterface $parentFolder
-     *
-     * @return int
-     */
-    public function countFoldersByParentFolder(FolderInterface $parentFolder);
-
-    /**
-     * @param int $id
-     * @param int $version
-     *
-     * @return FileInterface
-     */
-    public function findFile($id, $version = 1);
-
-    /**
-     * @param array      $criteria
-     * @param array|null $order
-     * @param int|null   $limit
-     * @param int|null   $start
-     *
-     * @return FileInterface[]
-     */
-    public function findFiles(array $criteria, $order = null, $limit = null, $start = null);
+    public function findFoldersBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null);
 
     /**
      * @param array $criteria
      *
      * @return int
      */
-    public function countFiles(array $criteria);
+    public function countFoldersBy(array $criteria = array());
 
     /**
-     * @param string $path
-     * @param int    $version
+     * @param array      $criteria
+     * @param array|null $orderBy
      *
-     * @return FileInterface
+     * @return FolderInterface|null
      */
-    public function findFileByPath($path, $version = 1);
+    public function findFolderBy(array $criteria = array(), $orderBy = null);
 
     /**
-     * @param int $id
+     * @param Expression $expression
+     * @param array|null $orderBy
+     * @param int|null   $limit
+     * @param int|null   $offset
      *
-     * @return FileInterface[]
+     * @return FolderInterface[]
      */
-    public function findFileVersions($id);
+    public function findFoldersByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param FolderInterface $folder
-     * @param string          $order
-     * @param int             $limit
-     * @param int             $start
-     * @param bool            $includeHidden
-     *
-     * @return FileInterface[]
-     */
-    public function findFilesByFolder(
-        FolderInterface $folder,
-        $order = null,
-        $limit = null,
-        $start = null,
-        $includeHidden = false);
-
-    /**
-     * @param FolderInterface $folder
+     * @param Expression $expression
      *
      * @return int
      */
-    public function countFilesByFolder(FolderInterface $folder);
+    public function countFoldersByExpression(Expression $expression);
 
     /**
-     * @param int $limit
+     * @param array      $criteria
+     * @param array|null $orderBy
+     * @param int|null   $limit
+     * @param int|null   $offset
      *
      * @return FileInterface[]
      */
-    public function findLatestFiles($limit = 20);
+    public function findFilesBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param string $query
+     * @param array $criteria
+     *
+     * @return int
+     */
+    public function countFilesBy(array $criteria = array());
+
+    /**
+     * @param array      $criteria
+     * @param array|null $orderBy
+     *
+     * @return FileInterface|null
+     */
+    public function findFileBy(array $criteria = array(), $orderBy = null);
+
+    /**
+     * @param Expression $expression
+     * @param array|null $order
+     * @param int|null   $limit
+     * @param int|null   $start
      *
      * @return FileInterface[]
      */
-    public function search($query);
+    public function findFilesByExpression(Expression $expression, $order = null, $limit = null, $start = null);
+
+    /**
+     * @param Expression $expression
+     *
+     * @return int
+     */
+    public function countFilesByExpression(Expression $expression);
 
     /**
      * @param FolderInterface $folder
