@@ -8,8 +8,10 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Twig\Extension;
 
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
+use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootsAccessor;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -30,6 +32,11 @@ class SiterootExtension extends \Twig_Extension
     private $siterootRequestMatcher;
 
     /**
+     * @var SiterootsAccessor
+     */
+    private $siterootsAccessor;
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -37,16 +44,19 @@ class SiterootExtension extends \Twig_Extension
     /**
      * @param SiterootManagerInterface $siterootManager
      * @param SiterootRequestMatcher   $siterootRequestMatcher
+     * @param SiterootsAccessor        $siterootsAccessor
      * @param RequestStack             $requestStack
      */
     public function __construct(
         SiterootManagerInterface $siterootManager,
         SiterootRequestMatcher $siterootRequestMatcher,
+        SiterootsAccessor $siterootsAccessor,
         RequestStack $requestStack
     )
     {
         $this->siterootManager = $siterootManager;
         $this->siterootRequestMatcher = $siterootRequestMatcher;
+        $this->siterootsAccessor = $siterootsAccessor;
         $this->requestStack = $requestStack;
     }
 
@@ -57,7 +67,34 @@ class SiterootExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('special_tid', [$this, 'specialTid']),
+            new \Twig_SimpleFunction('current_siteroot', [$this, 'currentSiteroot']),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getGlobals()
+    {
+        return array(
+            'siteroots' => $this->siterootsAccessor
+        );
+    }
+
+    /**
+     * @return Siteroot
+     */
+    public function currentSiteroot()
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($request->attributes->has('siterootUrl')) {
+            $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
+        } else {
+            $siteroot = $this->siterootRequestMatcher->matchRequest($request);
+        }
+
+        return $siteroot;
     }
 
     /**
@@ -68,16 +105,10 @@ class SiterootExtension extends \Twig_Extension
      */
     public function specialTid($name, $language = null)
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if ($request->attributes->has('siterootUrl')) {
-            $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
-        } else {
-            $siteroot = $this->siterootRequestMatcher->matchRequest($request);
-        }
+        $siteroot = $this->currentSiteroot();
 
         if (!$language) {
-            $language = $request->getLocale();
+            $language = $this->requestStack->getCurrentRequest()->getLocale();
         }
 
         return $siteroot->getSpecialTid($language, $name);
