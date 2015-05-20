@@ -217,7 +217,10 @@ class FolderController extends Controller
                     }
                     $userRights = array();
                     */
-                    $userRights = array_keys($permissions->getByContentClass(get_class($subFolder)));;
+                    $userRights = array();
+                    foreach ($permissionRegistry->get(get_class($subFolder)) as $permission) {
+                        $userRights[] = $permission->getName();
+                    }
 
                     $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);

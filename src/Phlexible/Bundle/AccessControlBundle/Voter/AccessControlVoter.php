@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\AccessControl\Rights;
+namespace Phlexible\Bundle\AccessControlBundle\Voter;
 
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
@@ -18,7 +18,6 @@ use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\UserSecurityIdentity;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Phlexible\Component\AccessControl\Rights\CalculatedRights;
-use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -26,9 +25,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  * Rights voter
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @author Marco Fischer <mf@brainbits.net>
  */
-class RightsVoter implements VoterInterface
+class AccessControlVoter implements VoterInterface
 {
     const RIGHT_STATUS_UNSET = -1;
     const RIGHT_STATUS_STOPPED = 0;
@@ -43,18 +41,18 @@ class RightsVoter implements VoterInterface
     private $accessManager;
 
     /**
-     * @var PermissionCollection
+     * @var PermissionRegistry
      */
-    private $permissions;
+    private $permissionRegistry;
 
     /**
      * @param AccessManagerInterface $accessManager
-     * @param PermissionCollection   $permissions
+     * @param PermissionRegistry     $permissionRegistry
      */
-    public function __construct(AccessManagerInterface $accessManager, PermissionCollection $permissions)
+    public function __construct(AccessManagerInterface $accessManager, PermissionRegistry $permissionRegistry)
     {
         $this->accessManager = $accessManager;
-        $this->permissions = $permissions;
+        $this->permissionRegistry = $permissionRegistry;
     }
 
     /**
