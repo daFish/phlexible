@@ -30,9 +30,12 @@ class PhlexibleMediaExtension extends Extension
         $loader->load('ffmpeg.yml');
         $loader->load('swftools.yml');
         $loader->load('poppler.yml');
-        $loader->load('image_analyzer.yml');
-        $loader->load('imagine.yml');
         $loader->load('exiftool.yml');
+        $loader->load('image_analyzer.yml');
+        $loader->load('media_classifier.yml');
+        $loader->load('media_converter.yml');
+        $loader->load('meta_reader.yml');
+        $loader->load('imagine.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);

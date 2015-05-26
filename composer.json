@@ -33,6 +33,7 @@
         "twig/twig": "~1.15",
         "temp/image-analyzer": "~1.0",
         "temp/media-classifier": "~1.0",
+        "temp/media-converter": "~1.0",
         "temp/meta-reader": "~1.0",
         "temp/mime-sniffer": "~1.0",
         "php-poppler/php-poppler": "~1.0",

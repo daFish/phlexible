@@ -1,0 +1,4 @@
+services:
+    phlexible_media.transmuter:
+        class: Temp\MediaConverter\Transmuter
+

@@ -1,0 +1,4 @@
+services:
+    phlexible_media.media_classifier:
+        class: Temp\MediaClassifier\MediaClassifier
+

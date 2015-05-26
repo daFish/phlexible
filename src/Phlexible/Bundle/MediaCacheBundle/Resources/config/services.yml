@@ -12,7 +12,7 @@ services:
         class: Phlexible\Component\MediaCache\Worker\Worker
         public: false
         arguments:
-            - @phlexible_media.transmutor
+            - @phlexible_media.transmuter
             - @phlexible_media_cache.storage_manager
             - @phlexible_media_cache.cache_manager
             - @phlexible_media_type.media_type_manager
