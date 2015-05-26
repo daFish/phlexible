@@ -6,11 +6,7 @@ services:
     phlexible_media_cache.specifier_resolver:
         class: Phlexible\Component\MediaCache\Specifier\SpecifierResolver
         public: false
-        arguments:
-            -
-                - @phlexible_media_cache.audio_specifier
-                - @phlexible_media_cache.image_specifier
-                - @phlexible_media_cache.video_specifier
+        arguments: [[]]
 
     phlexible_media_cache.audio_specifier:
         class: Phlexible\Component\MediaCache\Specifier\AudioSpecifier

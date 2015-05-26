@@ -35,6 +35,7 @@
         "temp/media-classifier": "~1.0",
         "temp/media-converter": "~1.0",
         "temp/meta-reader": "~1.0",
+        "temp/mime-sniffer": "~1.0",
         "php-poppler/php-poppler": "~1.0",
         "imagine/imagine": "~0.6",
         "ramsey/uuid": "~2.7",

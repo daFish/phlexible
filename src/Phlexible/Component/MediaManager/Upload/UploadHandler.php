@@ -13,6 +13,7 @@ use Phlexible\Component\Volume\FileSource\UploadedFileSource;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Temp\MimeSniffer\MimeSniffer;
 
 /**
  * Upload handler
