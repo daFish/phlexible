@@ -8,26 +8,24 @@
 
 namespace Phlexible\Component\MediaCache\Worker;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaType\Model\MediaType;
 
 /**
- * Cache worker interface
+ * Audio specifier
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface WorkerInterface
+class AudioSpecifier implements SpecifierInterface
 {
     /**
-     * Process template and file
-     *
-     * @param TemplateInterface     $template
-     * @param ExtendedFileInterface $file
-     * @param MediaType             $mediaType
-     *
-     * @return CacheItem
+     * {@inheritdoc}
      */
-    public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType);
+    public function specify(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    {
+        $spec = new Audio();
+
+        return $spec;
+    }
 }

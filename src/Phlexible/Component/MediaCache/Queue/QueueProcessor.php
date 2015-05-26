@@ -12,7 +12,7 @@ use Phlexible\Bundle\GuiBundle\Properties\Properties;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
 use Phlexible\Component\MediaCache\Queue as BaseQueue;
-use Phlexible\Component\MediaCache\Worker\WorkerResolver;
+use Phlexible\Component\MediaCache\Worker\WorkerInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
@@ -26,9 +26,9 @@ use Symfony\Component\Filesystem\LockHandler;
 class QueueProcessor
 {
     /**
-     * @var WorkerResolver
+     * @var WorkerInterface
      */
-    private $workerResolver;
+    private $worker;
 
     /**
      * @var VolumeManager
@@ -56,7 +56,7 @@ class QueueProcessor
     private $lockDir;
 
     /**
-     * @param WorkerResolver            $workerResolver
+     * @param WorkerInterface           $worker
      * @param VolumeManager             $volumeManager
      * @param TemplateManagerInterface  $templateManager
      * @param MediaTypeManagerInterface $mediaTypeManager
@@ -64,14 +64,14 @@ class QueueProcessor
      * @param string                    $lockDir
      */
     public function __construct(
-        WorkerResolver $workerResolver,
+        WorkerInterface $worker,
         VolumeManager $volumeManager,
         TemplateManagerInterface $templateManager,
         MediaTypeManagerInterface $mediaTypeManager,
         Properties $properties,
         $lockDir)
     {
-        $this->workerResolver = $workerResolver;
+        $this->worker = $worker;
         $this->volumeManager = $volumeManager;
         $this->templateManager = $templateManager;
         $this->mediaTypeManager = $mediaTypeManager;
@@ -138,22 +138,13 @@ class QueueProcessor
 
         $mediaType = $this->mediaTypeManager->find($file->getMediaType());
 
-        $worker = $this->workerResolver->resolve($template, $file, $mediaType);
-        if (!$worker) {
-            if ($callback) {
-                call_user_func($callback, 'no_worker', null, $cacheItem);
-            }
-
-            return null;
-        }
-
-        $cacheItem = $worker->process($template, $file, $mediaType);
+        $cacheItem = $this->worker->process($template, $file, $mediaType);
 
         if ($callback) {
             if (!$cacheItem) {
-                call_user_func($callback, 'no_cacheitem', $worker, $cacheItem);
+                call_user_func($callback, 'no_cacheitem', $this->worker, $cacheItem);
             } else {
-                call_user_func($callback, $cacheItem->getCacheStatus(), $worker, $cacheItem);
+                call_user_func($callback, $cacheItem->getCacheStatus(), $this->worker, $cacheItem);
             }
         }
 

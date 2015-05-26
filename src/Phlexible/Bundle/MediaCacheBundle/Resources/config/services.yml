@@ -3,6 +3,25 @@ parameters:
     phlexible_media_cache.cache_dir: %kernel.cache_dir%/mediacache/
 
 services:
+    phlexible_media_cache.specifier_resolver:
+        class: Phlexible\Component\MediaCache\Worker\SpecifierResolver
+        public: false
+        arguments: [[]]
+
+    phlexible_media_cache.worker:
+        class: Phlexible\Component\MediaCache\Worker\Worker
+        public: false
+        arguments:
+            - @phlexible_media.transmutor
+            - @phlexible_media_cache.storage_manager
+            - @phlexible_media_cache.cache_manager
+            - @phlexible_media_type.media_type_manager
+            - @phlexible_media_cache.id_strategy.default
+            - @logger
+            - %phlexible_media_cache.temp_dir%
+        tags:
+            - {name: monolog.logger, channel:media_cache}
+
     phlexible_media_cache.storage.local:
         class: Phlexible\Component\MediaCache\Storage\LocalStorage
         arguments: [[], @phlexible_media_cache.cache_manager]

@@ -8,11 +8,11 @@
 
 namespace Phlexible\Component\MediaManager\Upload;
 
-use Brainbits\Mime\MimeDetector;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\FileSource\UploadedFileSource;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Temp\MimeSniffer\MimeSniffer;
 
 /**
  * Upload handler
@@ -32,20 +32,20 @@ class UploadHandler
     private $tempStorage;
 
     /**
-     * @var MimeDetector
+     * @var MimeSniffer
      */
-    private $mimeDetector;
+    private $mimeSniffer;
 
     /**
-     * @param VolumeManager  $volumeManager
-     * @param TempStorage    $tempStorage
-     * @param MimeDetector   $mimeDetector
+     * @param VolumeManager $volumeManager
+     * @param TempStorage   $tempStorage
+     * @param MimeSniffer   $mimeSniffer
      */
-    public function __construct(VolumeManager $volumeManager, TempStorage $tempStorage, MimeDetector $mimeDetector)
+    public function __construct(VolumeManager $volumeManager, TempStorage $tempStorage, MimeSniffer $mimeSniffer)
     {
         $this->volumeManager = $volumeManager;
         $this->tempStorage = $tempStorage;
-        $this->mimeDetector = $mimeDetector;
+        $this->mimeSniffer = $mimeSniffer;
     }
 
     /**
@@ -67,8 +67,8 @@ class UploadHandler
      */
     public function handle(UploadedFile $uploadedFile, $folderId, $userId)
     {
-        $mimetype = $this->mimeDetector->detect($uploadedFile->getPathname(), MimeDetector::RETURN_STRING);
-        $uploadFileSource = new UploadedFileSource($uploadedFile, $mimetype);
+        $mimetype = $this->mimeSniffer->detect($uploadedFile->getPathname());
+        $uploadFileSource = new UploadedFileSource($uploadedFile, (string) $mimetype);
 
         $volume = $this->volumeManager->getByFolderId($folderId);
         $folder = $volume->findFolder($folderId);

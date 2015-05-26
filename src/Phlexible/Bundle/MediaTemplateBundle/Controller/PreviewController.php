@@ -127,8 +127,8 @@ class PreviewController extends Controller
         $filename = $request->get('file');
         $filename = $this->container->getParameter('phlexible_media_template.previewer.temp_dir') . basename($filename);
 
-        $mimeType = $this->get('phlexible_media_tool.mime.detector')->detect($filename, 'string');
+        $mimeType = $this->get('phlexible_media.mime_sniffer')->detect($filename);
 
-        return new Response(file_get_contents($filename), 200, ['Content-type' => $mimeType]);
+        return new Response(file_get_contents($filename), 200, ['Content-type' => (string) $mimeType]);
     }
 }

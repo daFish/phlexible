@@ -96,7 +96,7 @@ class ReadCommand extends ContainerAwareCommand
         $output->writeln('  * ' . $file->getId() . ' ' . $file->getPhysicalPath() . ': ');
         $output->write('    > ');
 
-        $mimeDetector = $this->getContainer()->get('phlexible_media_tool.mime.detector');
+        $mimeSniffer = $this->getContainer()->get('phlexible_media.mime_sniffer');
         $mediaTypeManager = $this->getContainer()->get('phlexible_media_type.media_type_manager');
         $attributeReader = $this->getContainer()->get('phlexible_media_manager.attribute_reader');
 
@@ -106,7 +106,7 @@ class ReadCommand extends ContainerAwareCommand
             return;
         }
 
-        $mimetype = $mimeDetector->detect($file->getPhysicalPath(), MimeDetector::RETURN_STRING);
+        $mimetype = $mimeSniffer->detect($file->getPhysicalPath());
         $attributes = array();
 
         if (!$mimetype) {
@@ -114,15 +114,13 @@ class ReadCommand extends ContainerAwareCommand
             $mimetype = 'application/octet-stream';
             $mediaTypeName = 'binary';
         } else {
-            $mediaType = $mediaTypeManager->findByMimetype($mimetype);
+            $mediaType = $mediaTypeManager->findByMimetype((string) $mimetype);
             if ($mediaType) {
                 $mediaTypeName = $mediaType->getName();
 
-                $fileSource = new FilesystemFileSource($file->getPhysicalPath(), $mimetype, filesize($file->getPhysicalPath()));
-                if ($attributeReader->supports($fileSource, $mediaType)) {
-                    $attributeBag = new AttributeBag($file->getAttributes());
-                    $attributeReader->read($fileSource, $mediaType, $attributeBag);
-                    $attributes = $attributeBag->all();
+                if ($attributeReader->supports($file->getPhysicalPath())) {
+                    $valueBag = $attributeReader->read($file->getPhysicalPath());
+                    $attributes = $valueBag->toArray();
                     $volume->setFileAttributes($file, $attributes, null);
                 }
 

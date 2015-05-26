@@ -70,7 +70,7 @@ class PhlexibleRequirements extends RequirementCollection
         );
 
         try {
-            $container->get('phlexible_media_tool.ffprobe')->getFFProbeDriver()->command('-version');
+            $container->get('phlexible_media.ffprobe')->getFFProbeDriver()->command('-version');
             $valid = true;
         } catch (\Exception $e) {
             $valid = false;
@@ -78,7 +78,7 @@ class PhlexibleRequirements extends RequirementCollection
         $this->addRequirement($valid, 'Path to ffprobe executable has to be configured.', 'Set ffprobe path.');
 
         try {
-            $container->get('phlexible_media_tool.ffmpeg')->getFFMpegDriver()->command('-version');
+            $container->get('phlexible_media.ffmpeg')->getFFMpegDriver()->command('-version');
             $valid = true;
         } catch (\Exception $e) {
             $valid = false;
@@ -86,7 +86,7 @@ class PhlexibleRequirements extends RequirementCollection
         $this->addRequirement($valid, 'Path to ffmpeg executable has to be configured.', 'Set ffmpeg path.');
 
         try {
-            $container->get('phlexible_media_tool.poppler.pdfinfo')->command('-v');
+            $container->get('phlexible_media.poppler.pdfinfo')->command('-v');
             $valid = true;
         } catch (\Exception $e) {
             $valid = false;
@@ -94,7 +94,7 @@ class PhlexibleRequirements extends RequirementCollection
         $this->addRequirement($valid, 'Path to pdfinfo executable has to be configured.', 'Set pdfinfo path.');
 
         try {
-            $container->get('phlexible_media_tool.poppler.pdftotext')->command('-v');
+            $container->get('phlexible_media.poppler.pdftotext')->command('-v');
             $valid = true;
         } catch (\Exception $e) {
             $valid = false;

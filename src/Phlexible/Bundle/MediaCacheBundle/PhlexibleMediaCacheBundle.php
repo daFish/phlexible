@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle;
 
-use Phlexible\Bundle\MediaCacheBundle\DependencyInjection\Compiler\AddWorkersPass;
+use Phlexible\Bundle\MediaCacheBundle\DependencyInjection\Compiler\AddSpecifiersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,6 +26,6 @@ class PhlexibleMediaCacheBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new AddWorkersPass());
+        $container->addCompilerPass(new AddSpecifiersPass());
     }
 }

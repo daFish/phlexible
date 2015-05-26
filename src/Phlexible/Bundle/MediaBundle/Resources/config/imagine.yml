@@ -1,0 +1,12 @@
+services:
+    phlexible_media.imagine.imagick:
+        class: Imagine\Imagick\Imagine
+
+
+    phlexible_media.imagine.gmagick:
+        class: Imagine\Gmagick\Imagine
+
+
+    phlexible_media.imagine.gd:
+        class: Imagine\Gd\Imagine
+

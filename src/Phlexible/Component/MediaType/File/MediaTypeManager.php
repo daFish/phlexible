@@ -8,9 +8,9 @@
 
 namespace Phlexible\Component\MediaType\File;
 
-use Brainbits\Mime\MimeDetector;
 use Phlexible\Component\MediaType\Model\MediaTypeCollection;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Temp\MimeSniffer\MimeSniffer;
 
 /**
  * Media type manager
@@ -25,9 +25,9 @@ class MediaTypeManager implements MediaTypeManagerInterface
     private $loader;
 
     /**
-     * @var MimeDetector
+     * @var MimeSniffer
      */
-    private $mimeDetector;
+    private $mimeSniffer;
 
     /**
      * @var MediaTypeCollection
@@ -35,13 +35,13 @@ class MediaTypeManager implements MediaTypeManagerInterface
     private $mediaTypes;
 
     /**
-     * @param PuliLoader   $loader
-     * @param MimeDetector $mimeDetector
+     * @param PuliLoader  $loader
+     * @param MimeSniffer $mimeSniffer
      */
-    public function __construct(PuliLoader $loader, MimeDetector $mimeDetector)
+    public function __construct(PuliLoader $loader, MimeSniffer $mimeSniffer)
     {
         $this->loader = $loader;
-        $this->mimeDetector = $mimeDetector;
+        $this->mimeSniffer = $mimeSniffer;
     }
 
     /**
@@ -101,8 +101,8 @@ class MediaTypeManager implements MediaTypeManagerInterface
      */
     public function findByFilename($filename)
     {
-        $mimetype = $this->mimeDetector->detect($filename, MimeDetector::RETURN_STRING);
+        $mimetype = $this->mimeSniffer->detect($filename);
 
-        return $this->findByMimetype($mimetype);
+        return $this->findByMimetype((string) $mimetype);
     }
 }

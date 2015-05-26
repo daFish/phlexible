@@ -1,0 +1,16 @@
+services:
+    phlexible_media.ffprobe:
+        class: FFMpeg\FFProbe
+        factory_class: FFMpeg\FFProbe
+        factory_method: create
+        arguments: [%phlexible_media.ffmpeg.configuration%, @logger]
+        tags:
+            - {name: monolog.logger, channel: media}
+
+    phlexible_media.ffmpeg:
+        class: FFMpeg\FFMpeg
+        factory_class: FFMpeg\FFMpeg
+        factory_method: create
+        arguments: [%phlexible_media.ffmpeg.configuration%, @logger, @phlexible_media.ffprobe]
+        tags:
+            - {name: monolog.logger, channel: media}

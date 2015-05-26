@@ -129,9 +129,9 @@ class UploadController extends Controller
             $volume = $volumeManager->getByFolderId($tempFile->getFolderId());
             $supportsVersions = $volume->hasFeature('versions');
             $newName = basename($tempFile->getName());
-            $mimetype = $this->get('phlexible_media_tool.mime.detector')->detect($tempFile->getPath(), MimeDetector::RETURN_STRING);
-            if (trim($mimetype)) {
-                $newType = $mediaTypeManager->findByMimetype($mimetype);
+            $mimetype = $this->get('phlexible_media.mime_sniffer')->detect($tempFile->getPath());
+            if ($mimetype) {
+                $newType = $mediaTypeManager->findByMimetype((string) $mimetype);
             } else {
                 $newType = $mediaTypeManager->find('binary');
             }

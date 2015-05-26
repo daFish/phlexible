@@ -20,4 +20,4 @@ services:
     phlexible_media_type.file.media_type_manager:
         class: Phlexible\Component\MediaType\File\MediaTypeManager
         public: false
-        arguments: [@phlexible_media_type.file.puli_loader, @phlexible_media_tool.mime.detector]
+        arguments: [@phlexible_media_type.file.puli_loader, @phlexible_media.mime_sniffer]
