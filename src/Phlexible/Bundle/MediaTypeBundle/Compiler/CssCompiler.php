@@ -6,9 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaType\Compiler;
+namespace Phlexible\Bundle\MediaTypeBundle\Compiler;
 
-use Phlexible\Component\MediaType\Model\MediaTypeCollection;
+use Temp\MediaClassifier\Model\MediaTypeCollection;
 
 /**
  * CSS generator
@@ -22,7 +22,7 @@ class CssCompiler implements CompilerInterface
      */
     public function getClassname()
     {
-        return 'documenttype';
+        return 'mediatype';
     }
 
     /**
@@ -39,7 +39,12 @@ class CssCompiler implements CompilerInterface
             $name = $mediaType->getName();
 
             foreach ($sizes as $size => $sizeTitle) {
-                $styles[] = sprintf('.p-%s-%s-small {background-image:url(//COMPONENTSPATH/phlexiblemediatype/mimetypes16/%s.gif) !important;}', $classname, $name, $name);
+                $styles[] = sprintf(
+                    '.p-%s-%s-small {background-image:url(//COMPONENTSPATH/phlexiblemediatype/mimetypes16/%s.gif) !important;}',
+                    $classname,
+                    str_replace(':', '-', (string) $mediaType),
+                    $name
+                );
             }
         }
 

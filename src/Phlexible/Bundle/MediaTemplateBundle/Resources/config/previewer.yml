@@ -5,17 +5,21 @@ services:
     phlexible_media_template.previewer.audio:
         class: Phlexible\Component\MediaTemplate\Previewer\AudioPreviewer
         arguments:
-            - @phlexible_media_template.applier.audio
+            - @phlexible_media_cache.audio_specifier
+            - @phlexible_media.transmuter
             - %phlexible_media_template.previewer.temp_dir%
 
     phlexible_media_template.previewer.image:
         class: Phlexible\Component\MediaTemplate\Previewer\ImagePreviewer
         arguments:
-            - @phlexible_media_template.applier.image
+            - @phlexible_media_cache.image_specifier
+            - @phlexible_media.transmuter
             - %phlexible_media_template.previewer.temp_dir%
 
     phlexible_media_template.previewer.video:
         class: Phlexible\Component\MediaTemplate\Previewer\VideoPreviewer
         arguments:
-            - @phlexible_media_template.applier.video
+            - @phlexible_media_cache.video_specifier
+            - @phlexible_media.transmuter
+            - @phlexible_media.ffprobe
             - %phlexible_media_template.previewer.temp_dir%

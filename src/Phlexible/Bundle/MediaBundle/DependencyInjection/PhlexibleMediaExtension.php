@@ -26,8 +26,8 @@ class PhlexibleMediaExtension extends Extension
     public function load(array $config, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('mime_sniffer.yml');
         $loader->load('ffmpeg.yml');
+        $loader->load('mp4box.yml');
         $loader->load('swftools.yml');
         $loader->load('poppler.yml');
         $loader->load('exiftool.yml');
@@ -55,13 +55,15 @@ class PhlexibleMediaExtension extends Extension
         ));
 
         $container->setParameter('phlexible_media.ffmpeg.configuration', array(
-            'ffprobe.binaries' => $config['ffmpeg']['ffprobe'],
             'ffmpeg.binaries'  => $config['ffmpeg']['ffmpeg'],
+            'ffprobe.binaries' => $config['ffmpeg']['ffprobe'],
+            'timeout'          => $config['ffmpeg']['timeout']
         ));
 
-        $container->setParameter('phlexible_media.mime_sniffer.file', $config['mime_sniffer']['file']);
-        $container->setParameter('phlexible_media.mime_sniffer.magicfile', $config['mime_sniffer']['magicfile']);
-        $container->setAlias('phlexible_media.mime_sniffer.adapter', $config['mime_sniffer']['adapter']);
+        $container->setParameter('phlexible_media.mp4box.configuration', array(
+            'mp4box.binaries' => $config['mp4box']['mp4box'],
+            'timeout'         => $config['mp4box']['timeout']
+        ));
 
         $container->setAlias('phlexible_media.image_analyzer.driver', 'phlexible_media.image_analyzer.driver.' . $config['image_analyzer']['driver']);
 

@@ -92,7 +92,7 @@ Phlexible.mediamanager.FileVersionsTemplate = new Ext.XTemplate(
     '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {file_id: values.id, template_key: \"_mm_medium\", file_version: values.version})]}" width="48" height="48"></div>',
     '<div class="text">',
     '<span><b qtip="{name}">{[values.name.shorten(25)]}</b></span><br />',
-    '<span>[v{version}] {[Phlexible.documenttypes.DocumentTypes.getText(values.document_type_key)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
+    '<span>[v{version}] {[Phlexible.mediatype.MediaTypes.getText(values.media_type)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
     //'<span>Create User: {create_user_id}</span><br />',
     '<span>{create_time}</span><br />',
     '</div>',
@@ -146,8 +146,7 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
                         'name',
                         'size',
                         'version',
-                        'document_type_key',
-                        'asset_type',
+                        'media_type',
                         'create_user_id',
                         'create_time'
                     ],
@@ -210,10 +209,9 @@ Phlexible.mediamanager.FileVersionsPanel = Ext.extend(Ext.Panel, {
         var file_version = r.data.version;
         var file_name = r.data.name;
         var folder_id = r.data.folder_id;
-        var document_type_key = r.data.document_type_key;
-        var asset_type = r.data.asset_type;
+        var media_type = r.data.media_type;
 
-        this.fireEvent('versionSelect', file_id, file_version, file_name, folder_id, document_type_key, asset_type);
+        this.fireEvent('versionSelect', file_id, file_version, file_name, folder_id, media_type);
     },
 
     loadFile: function (file_id, file_version) {

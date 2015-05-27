@@ -9,9 +9,11 @@
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
 use Monolog\Handler\TestHandler;
-use Phlexible\Component\MediaTemplate\Applier\AudioTemplateApplier;
+use Phlexible\Component\MediaCache\Specifier\AudioSpecifier;
 use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Temp\MediaConverter\Transmuter;
 
 /**
  * Audio preview
@@ -21,9 +23,14 @@ use Symfony\Component\Filesystem\Filesystem;
 class AudioPreviewer implements PreviewerInterface
 {
     /**
-     * @var AudioTemplateApplier
+     * @var AudioSpecifier
      */
-    private $applier;
+    private $specifier;
+
+    /**
+     * @var Transmuter
+     */
+    private $transmuter;
 
     /**
      * @var string
@@ -31,12 +38,14 @@ class AudioPreviewer implements PreviewerInterface
     private $cacheDir;
 
     /**
-     * @param AudioTemplateApplier $applier
-     * @param string               $cacheDir
+     * @param AudioSpecifier $specifier
+     * @param Transmuter     $transmuter
+     * @param string         $cacheDir
      */
-    public function __construct(AudioTemplateApplier $applier, $cacheDir)
+    public function __construct(AudioSpecifier $specifier, Transmuter $transmuter, $cacheDir)
     {
-        $this->applier = $applier;
+        $this->specifier = $specifier;
+        $this->transmuter = $transmuter;
         $this->cacheDir = $cacheDir;
     }
 
@@ -52,7 +61,6 @@ class AudioPreviewer implements PreviewerInterface
 
         $template = new AudioTemplate();
         $templateKey = 'unknown';
-        $debug = false;
         foreach ($params as $key => $value) {
             if ($key === 'template') {
                 $templateKey = $value;
@@ -60,43 +68,45 @@ class AudioPreviewer implements PreviewerInterface
             } elseif ($key === '_dc') {
                 continue;
             } elseif ($key === 'debug') {
-                $debug = true;
                 continue;
             }
 
-            $template->setParameter($key, $value);
+            $method = 'set' . $this->toCamelCase($key);
+            $template->$method($value);
         }
 
-        if ($debug) {
-            $logger = $this->applier->getLogger();
-            $logger->pushHandler(new TestHandler());
-        }
-
-        $extension = $this->applier->getExtension($template);
+        $spec = $this->specifier->specify($template);
+        $extension = $this->specifier->getExtension($template);
         $cacheFilename = $this->cacheDir . 'preview_audio.' . $extension;
-        $this->applier->apply($template, $filePath, $cacheFilename);
+        $this->transmuter->transmute($filePath, $spec, $cacheFilename);
 
-        if ($debug) {
-            /* @var $logger \Monolog\Logger */
-            $handler = $this->applier->getLogger()->popHandler();
+        $file = new File($cacheFilename);
 
-            $debug = '';
-            foreach ($handler->getRecords() as $record) {
-                $debug .= $record['message'] . PHP_EOL;
-            }
-        } else {
-            $debug = '';
-        }
+        $debug = json_encode($template->toArray(), JSON_PRETTY_PRINT);
 
         $data = [
+            'path'     => $cacheFilename,
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
             'format'   => $extension,
-            'mimetype' => $this->applier->getMimetype($template),
+            'mimetype' => $file->getMimeType(),
             'debug'    => $debug,
         ];
 
         return $data;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function toCamelCase($value)
+    {
+        $chunks    = explode('_', $value);
+        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+
+        return implode('', $ucfirsted);
     }
 }

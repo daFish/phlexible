@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle;
 
-use Phlexible\Bundle\MediaManagerBundle\DependencyInjection\Compiler\AddAttributeReadersPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -19,11 +17,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleMediaManagerBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new AddAttributeReadersPass());
-    }
 }

@@ -90,7 +90,7 @@ Phlexible.mediamanager.FileUploadWizard = Ext.extend(Ext.Window, {
                         dataIndex: 'type',
                         width: 120,
                         renderer: function (v) {
-                            return Phlexible.documenttypes.DocumentTypes.getText(v);
+                            return Phlexible.mediatype.MediaTypes.getText(v);
                         }
                     },
                     {

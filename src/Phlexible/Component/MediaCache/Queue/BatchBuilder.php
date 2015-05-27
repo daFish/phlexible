@@ -124,7 +124,6 @@ class BatchBuilder
     {
         foreach ($this->templateManager->findAll() as $template) {
             if ($template->getCache()) {
-                echo $template->getKey().PHP_EOL;
                 $batch->addTemplate($template);
             }
         }

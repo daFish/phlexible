@@ -21,7 +21,7 @@ Phlexible.mediamanager.FileReplaceWindowTemplate = new Ext.XTemplate(
                 '</div>',
                 '<div class="p-filereplace-desc">',
                     '<div class="p-filereplace-name" style="font-weight: bold">{[values.name.shorten(50)]}</div>',
-                    '<div class="p-filereplace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
+                    '<div class="p-filereplace-type">{[Phlexible.mediatype.MediaTypes.getText(values.type)]}</div>',
                     '<div class="p-filereplace-size">' + Phlexible.mediamanager.Strings.size + ': {[Phlexible.Format.size(values.size)]}</div>',
                 '</div>',
             '</div>',

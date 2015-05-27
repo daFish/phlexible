@@ -120,7 +120,7 @@ class UploadController extends Controller
         $tempHandler = $this->get('phlexible_media_manager.upload.temp_handler');
         $tempStorage = $this->get('phlexible_media_manager.upload.temp_storage');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
 
         $data = [];
 
@@ -129,11 +129,12 @@ class UploadController extends Controller
             $volume = $volumeManager->getByFolderId($tempFile->getFolderId());
             $supportsVersions = $volume->hasFeature('versions');
             $newName = basename($tempFile->getName());
-            $mimetype = $this->get('phlexible_media.mime_sniffer')->detect($tempFile->getPath());
+            $file = new \Symfony\Component\HttpFoundation\File\File($tempFile->getPath());
+            $mimetype = $file->getMimeType();
             if ($mimetype) {
-                $newType = $mediaTypeManager->findByMimetype((string) $mimetype);
+                $newType = $mediaClassifier->getCollection()->lookup($mimetype);
             } else {
-                $newType = $mediaTypeManager->find('binary');
+                $newType = $mediaClassifier->getCollection()->lookup('binary');
             }
 
             $data = [

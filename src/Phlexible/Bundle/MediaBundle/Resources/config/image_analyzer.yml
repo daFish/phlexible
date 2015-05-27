@@ -5,9 +5,12 @@ services:
 
     phlexible_media.image_analyzer.driver.gd:
         class: Temp\ImageAnalyzer\Driver\GdDriver
+        public: false
 
     phlexible_media.image_analyzer.driver.gmagick:
         class: Temp\ImageAnalyzer\Driver\GmagickDriver
+        public: false
 
     phlexible_media.image_analyzer.driver.imagick:
         class: Temp\ImageAnalyzer\Driver\ImagickDriver
+        public: false

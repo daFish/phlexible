@@ -8,10 +8,14 @@
 
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
+use FFMpeg\FFProbe;
 use Monolog\Handler\TestHandler;
+use Phlexible\Component\MediaCache\Specifier\VideoSpecifier;
 use Phlexible\Component\MediaTemplate\Applier\VideoTemplateApplier;
 use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Temp\MediaConverter\Transmuter;
 
 /**
  * Video previewer
@@ -21,9 +25,19 @@ use Symfony\Component\Filesystem\Filesystem;
 class VideoPreviewer implements PreviewerInterface
 {
     /**
-     * @var VideoTemplateApplier
+     * @var VideoSpecifier
      */
-    private $applier;
+    private $specifier;
+
+    /**
+     * @var Transmuter
+     */
+    private $transmuter;
+
+    /**
+     * @var Ffprobe
+     */
+    private $ffprobe;
 
     /**
      * @var string
@@ -31,12 +45,16 @@ class VideoPreviewer implements PreviewerInterface
     private $cacheDir;
 
     /**
-     * @param VideoTemplateApplier $applier
-     * @param string               $cacheDir
+     * @param VideoSpecifier $specifier
+     * @param Transmuter     $transmuter
+     * @param Ffprobe        $ffprobe
+     * @param string         $cacheDir
      */
-    public function __construct(VideoTemplateApplier $applier, $cacheDir)
+    public function __construct(VideoSpecifier $specifier, Transmuter $transmuter, Ffprobe $ffprobe, $cacheDir)
     {
-        $this->applier = $applier;
+        $this->specifier = $specifier;
+        $this->transmuter = $transmuter;
+        $this->ffprobe = $ffprobe;
         $this->cacheDir = $cacheDir;
     }
 
@@ -52,7 +70,6 @@ class VideoPreviewer implements PreviewerInterface
 
         $template = new VideoTemplate();
         $templateKey = 'unknown';
-        $debug = false;
         foreach ($params as $key => $value) {
             if ($key === 'template') {
                 $templateKey = $value;
@@ -60,48 +77,49 @@ class VideoPreviewer implements PreviewerInterface
             } elseif ($key === '_dc') {
                 continue;
             } elseif ($key === 'debug') {
-                $debug = true;
                 continue;
             }
 
-            $template->setParameter($key, $value);
+            $method = 'set' . $this->toCamelCase($key);
+            $template->$method($value);
         }
 
-        if ($debug) {
-            $logger = $this->applier->getLogger();
-            $logger->pushHandler(new TestHandler());
-        }
+        $spec = $this->specifier->specify($template);
+        $extension = $this->specifier->getExtension($template);
+        $cacheFilename = $this->cacheDir . 'preview_image.' . $extension;
+        $this->transmuter->transmute($filePath, $spec, $cacheFilename);
 
-        $extension = $this->applier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_video.' . $extension;
-        $video = $this->applier->apply($template, $filePath, $cacheFilename);
+        $file = new File($cacheFilename);
 
-        if ($debug) {
-            /* @var $logger \Monolog\Logger */
-            $handler = $this->applier->getLogger()->popHandler();
+        $debug = json_encode($template->toArray(), JSON_PRETTY_PRINT);
 
-            $debug = '';
-            foreach ($handler->getRecords() as $record) {
-                $debug .= $record['message'] . PHP_EOL;
-            }
+        $videoStream = $this->ffprobe->streams($cacheFilename)->videos()->first();
 
-            //$debug .= print_r($video->getStreams()->videos()->first(), 1);
-        } else {
-            $debug = '';
-        }
-
-        $videoStream = $video->getStreams()->videos()->first();
         $data = [
+            'path'     => $cacheFilename,
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
+            'format'   => $extension,
+            'mimetype' => $file->getMimeType(),
+            'debug'    => $debug,
             'width'    => $videoStream->get('width'),
             'height'   => $videoStream->get('height'),
-            'format'   => $extension,
-            'mimetype' => $this->applier->getMimetype($template),
-            'debug'    => $debug
         ];
 
         return $data;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function toCamelCase($value)
+    {
+        $chunks    = explode('_', $value);
+        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+
+        return implode('', $ucfirsted);
     }
 }

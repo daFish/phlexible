@@ -8,13 +8,9 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
-use Phlexible\Component\MediaManager\AttributeReader\AttributeBag;
-use Phlexible\Component\MediaManager\AttributeReader\AttributeReaderInterface;
 use Phlexible\Component\MediaManager\Volume\DeleteFileChecker;
 use Phlexible\Component\MediaManager\Volume\DeleteFolderChecker;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
-use Phlexible\Component\MediaType\Model\MediaType;
-use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
 use Phlexible\Component\Volume\Event\FileEvent;
@@ -23,6 +19,9 @@ use Phlexible\Component\Volume\Event\ReplaceFileEvent;
 use Phlexible\Component\Volume\FileSource\PathSourceInterface;
 use Phlexible\Component\Volume\VolumeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Temp\MediaClassifier\MediaClassifier;
+use Temp\MediaClassifier\Model\MediaType;
+use Temp\MetaReader\ReaderInterface;
 
 /**
  * Media site listener
@@ -32,9 +31,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MediaSiteListener implements EventSubscriberInterface
 {
     /**
-     * @var MediaTypeManagerInterface
+     * @var MediaClassifier
      */
-    private $mediaTypeManager;
+    private $mediaClassifier;
 
     /**
      * @var MetaSetManagerInterface
@@ -42,9 +41,9 @@ class MediaSiteListener implements EventSubscriberInterface
     private $metaSetManager;
 
     /**
-     * @var AttributeReaderInterface
+     * @var ReaderInterface
      */
-    private $attributeReader;
+    private $metaReader;
 
     /**
      * @var DeleteFileChecker
@@ -62,24 +61,24 @@ class MediaSiteListener implements EventSubscriberInterface
     private $metasetMapping;
 
     /**
-     * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param MetaSetManagerInterface   $metaSetManager
-     * @param AttributeReaderInterface  $attributeReader
-     * @param DeleteFileChecker         $deleteFileChecker
-     * @param DeleteFolderChecker       $deleteFolderChecker
-     * @param array                     $metasetMapping
+     * @param MediaClassifier         $mediaClassifier
+     * @param MetaSetManagerInterface $metaSetManager
+     * @param ReaderInterface         $metaReader
+     * @param DeleteFileChecker       $deleteFileChecker
+     * @param DeleteFolderChecker     $deleteFolderChecker
+     * @param array                   $metasetMapping
      */
     public function __construct(
-        MediaTypeManagerInterface $mediaTypeManager,
+        MediaClassifier $mediaClassifier,
         MetaSetManagerInterface $metaSetManager,
-        AttributeReaderInterface $attributeReader,
+        ReaderInterface $metaReader,
         DeleteFileChecker $deleteFileChecker,
         DeleteFolderChecker $deleteFolderChecker,
         array $metasetMapping)
     {
-        $this->mediaTypeManager = $mediaTypeManager;
+        $this->mediaClassifier = $mediaClassifier;
         $this->metaSetManager = $metaSetManager;
-        $this->attributeReader = $attributeReader;
+        $this->metaReader = $metaReader;
         $this->deleteFileChecker = $deleteFileChecker;
         $this->deleteFolderChecker = $deleteFolderChecker;
         $this->metasetMapping = $metasetMapping;
@@ -128,18 +127,8 @@ class MediaSiteListener implements EventSubscriberInterface
      */
     private function processFile(ExtendedFileInterface $file, PathSourceInterface $fileSource)
     {
-        try {
-            $mediaType = $this->mediaTypeManager->findByMimetype($fileSource->getMimeType());
-        } catch (\Exception $e) {
-            $mediaType = null;
-        }
-
-        if (!$mediaType) {
-            $mediaType = $this->mediaTypeManager->find('binary');
-        }
-
-        $file->setMediaCategory($mediaType->getCategory());
-        $file->setMediaType($mediaType->getName());
+        $mediaType = $this->mediaClassifier->classify($fileSource->getPath());
+        $file->setMediaType((string) $mediaType);
 
         foreach ($this->metasetMapping as $metasetName => $mapping) {
             if ($this->matches($mediaType, $mapping)) {
@@ -150,16 +139,10 @@ class MediaSiteListener implements EventSubscriberInterface
             }
         }
 
-        $attributes = new AttributeBag($file->getAttributes());
-
-        $mediaTypeName = $file->getMediaType();
-        $mediaType = $this->mediaTypeManager->find($mediaTypeName);
-
-        if ($this->attributeReader->supports($fileSource, $mediaType)) {
-            $this->attributeReader->read($fileSource, $mediaType, $attributes);
+        if ($this->metaReader->supports($fileSource->getPath())) {
+            $attributes = $this->metaReader->read($fileSource->getPath());
+            $file->setAttributes($attributes->toArray());
         }
-
-        $file->setAttributes($attributes->all());
     }
 
     /**

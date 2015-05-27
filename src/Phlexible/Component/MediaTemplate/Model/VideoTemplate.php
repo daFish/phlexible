@@ -13,9 +13,59 @@ namespace Phlexible\Component\MediaTemplate\Model;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class VideoTemplate extends AbstractTemplate
+class VideoTemplate extends AudioTemplate
 {
     const TYPE_VIDEO = 'video';
+
+    /**
+     * @var bool
+     */
+    private $matchFormat = false;
+
+    /**
+     * @var bool
+     */
+    private $forWeb = false;
+
+    /**
+     * @var string
+     */
+    private $format = 'flv';
+
+    /**
+     * @var bool
+     */
+    private $deinterlace = false;
+
+    /**
+     * @var string
+     */
+    private $resizeMethod;
+
+    /**
+     * @var int
+     */
+    private $videoWidth;
+
+    /**
+     * @var int
+     */
+    private $videoHeight;
+
+    /**
+     * @var string
+     */
+    private $videoFormat = 'mp4';
+
+    /**
+     * @var string
+     */
+    private $videoBitrate;
+
+    /**
+     * @var string
+     */
+    private $videoFramerate;
 
     /**
      * Constructor.
@@ -26,92 +76,223 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * {@inheritdoc}
+     * @return boolean
      */
-    public function getDefaultParameters()
+    public function getMatchFormat()
     {
-        return [
-            'match_format'     => 0,
-            'for_web'          => 0,
-            'format'           => 'flv',
-            'deinterlace'      => 'flv',
-            'video_width'      => 0,
-            'video_height'     => 0,
-            'video_format'     => 'flv',
-            'video_bitrate'    => 0,
-            'video_framerate'  => 0,
-            'audio_format'     => 'mp3',
-            'audio_bitrate'    => 0,
-            'audio_samplerate' => 0,
-            'audio_samplebits' => 0,
-            'audio_channels'   => 0,
-        ];
+        return $this->matchFormat;
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getAllowedParameters()
-    {
-        return [
-            'match_format',
-            'for_web',
-            'format',
-            'deinterlace',
-            'video_width',
-            'video_height',
-            'video_format',
-            'video_bitrate',
-            'video_framerate',
-            'audio_format',
-            'audio_bitrate',
-            'audio_samplerate',
-            'audio_samplebits',
-            'audio_channels',
-        ];
-    }
-
-    /**
-     * Set width
-     *
-     * @param int $width
+     * @param boolean $matchFormat
      *
      * @return $this
      */
-    public function setWidth($width)
+    public function setMatchFormat($matchFormat)
     {
-        return $this->setParameter('video_width', $width);
+        $this->matchFormat = $matchFormat;
+
+        return $this;
     }
 
     /**
-     * Return width
-     *
-     * @return int
+     * @return boolean
      */
-    public function getWidth()
+    public function getForWeb()
     {
-        return $this->getParameter('video_width');
+        return $this->forWeb;
     }
 
     /**
-     * Set height
-     *
-     * @param int $height
+     * @param boolean $forWeb
      *
      * @return $this
      */
-    public function setHeight($height)
+    public function setForWeb($forWeb)
     {
-        return $this->setParameters('video_height', $height);
+        $this->forWeb = $forWeb;
+
+        return $this;
     }
 
     /**
-     * Return height
+     * @return string
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * @param string $format
      *
+     * @return $this
+     */
+    public function setFormat($format)
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDeinterlace()
+    {
+        return $this->deinterlace;
+    }
+
+    /**
+     * @param boolean $deinterlace
+     *
+     * @return $this
+     */
+    public function setDeinterlace($deinterlace)
+    {
+        $this->deinterlace = $deinterlace;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResizeMethod()
+    {
+        return $this->resizeMethod;
+    }
+
+    /**
+     * @param string $resizeMethod
+     *
+     * @return $this
+     */
+    public function setResizeMethod($resizeMethod)
+    {
+        $this->resizeMethod = $resizeMethod;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
-    public function getHeight()
+    public function getVideoWidth()
     {
-        return $this->getParameter('video_height');
+        return $this->videoWidth;
+    }
+
+    /**
+     * @param int $videoWidth
+     *
+     * @return $this
+     */
+    public function setVideoWidth($videoWidth)
+    {
+        $this->videoWidth = $videoWidth;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVideoHeight()
+    {
+        return $this->videoHeight;
+    }
+
+    /**
+     * @param int $videoHeight
+     *
+     * @return $this
+     */
+    public function setVideoHeight($videoHeight)
+    {
+        $this->videoHeight = $videoHeight;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVideoFormat()
+    {
+        return $this->videoFormat;
+    }
+
+    /**
+     * @param string $videoFormat
+     *
+     * @return $this
+     */
+    public function setVideoFormat($videoFormat)
+    {
+        $this->videoFormat = $videoFormat;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVideoBitrate()
+    {
+        return $this->videoBitrate;
+    }
+
+    /**
+     * @param string $videoBitrate
+     *
+     * @return $this
+     */
+    public function setVideoBitrate($videoBitrate)
+    {
+        $this->videoBitrate = $videoBitrate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVideoFramerate()
+    {
+        return $this->videoFramerate;
+    }
+
+    /**
+     * @param string $videoFramerate
+     *
+     * @return $this
+     */
+    public function setVideoFramerate($videoFramerate)
+    {
+        $this->videoFramerate = $videoFramerate;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return array_merge(
+            array(
+                'match_format'    => $this->matchFormat,
+                'for_web'         => $this->forWeb,
+                'format'          => $this->format,
+                'deinterlace'     => $this->deinterlace,
+                'video_width'     => $this->videoWidth,
+                'video_height'    => $this->videoHeight,
+                'video_format'    => $this->videoFormat,
+                'video_bitrate'   => $this->videoBitrate,
+                'video_framerate' => $this->videoFramerate,
+            ),
+            parent::toArray()
+        );
     }
 }

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
-use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,10 +54,10 @@ class MediaController extends Controller
                     return new Response('Not found', 404);
                 }
 
-                $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+                $mediaClassifier = $this->get('phlexible_media.media_classifier');
                 $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
 
-                $mediaType = $mediaTypeManager->find($file->getMediaType());
+                $mediaType = $mediaClassifier->getCollection()->get($file->getMediaType());
                 $outfile = $delegateService->getClean($template, $mediaType, true);
                 $mimeType = 'image/gif';
             }
@@ -121,14 +121,15 @@ class MediaController extends Controller
     public function iconAction($fileId, $size = 16)
     {
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
+        $iconResolver = $this->get('phlexible_media_type.icon_resolver');
 
         $volume = $volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId);
         $mimeType = $file->getMimeType();
 
-        $mediaType = $mediaTypeManager->findByMimetype($mimeType);
-        $icon = $mediaType->getIcon($size);
+        $mediaType = $mediaClassifier->getCollection()->lookup($mimeType);
+        $icon = $iconResolver->resolve($mediaType, $size);
 
         return $this->get('igorw_file_serve.response_factory')
             ->create($icon, 'image/gif', ['absolute_path' => true]);

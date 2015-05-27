@@ -67,8 +67,8 @@ Phlexible.mediamanager.UploadStatusBar = Ext.extend(Ext.Toolbar, {
         Phlexible.console.log('UploadStatusBar::addFile(' + id + ')');
         var iconCls = 'm-mediamanager-file-icon';
         var ext = name.split('.').pop();
-        if (Phlexible.documenttypes.DocumentTypes.classMap[ext]) {
-            iconCls = Phlexible.documenttypes.DocumentTypes.classMap[ext].cls + '-small';
+        if (Phlexible.mediatype.MediaTypes.has(ext)) {
+            iconCls = Phlexible.mediatype.MediaTypes.getClass(ext).cls + '-small';
         }
         var text = name;
         if (size) {

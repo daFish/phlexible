@@ -11,8 +11,8 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
 
     // private
     initComponent: function () {
-        if (this.file_id && this.file_version && this.file_name && this.document_type_key && this.cache) {
-            this.html = this.getHtml(this.file_id, this.file_version, this.file_name, this.document_type_key, this.asset_type, this.cache);
+        if (this.file_id && this.file_version && this.file_name && this.media_type && this.cache) {
+            this.html = this.getHtml(this.file_id, this.file_version, this.file_name, this.media_type, this.cache);
         }
         else {
             this.html = this.createNoPreview();
@@ -25,37 +25,32 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
         var file_id = r.get('id');
         var file_name = r.get('name');
         var file_version = r.get('version');
-        var document_type_key = r.get('document_type_key');
-        var asset_type = r.get('asset_type');
+        var media_type = r.get('media_type');
         var cache = r.get('cache');
 
-        this.load(file_id, file_version, file_name, document_type_key, asset_type, cache);
+        this.load(file_id, file_version, file_name, media_type, cache);
     },
 
-    load: function (file_id, file_version, file_name, document_type_key, asset_type, cache) {
+    load: function (file_id, file_version, file_name, media_type, cache) {
         if (this.file_id != file_id || this.file_version != file_version) {
             this.file_id = file_id;
             this.file_version = file_version;
             this.body.update('');
-            this.body.insertFirst(this.getHtml(file_id, file_version, file_name, document_type_key, asset_type, cache));
+            this.body.insertFirst(this.getHtml(file_id, file_version, file_name, media_type, cache));
         }
     },
 
-    getHtml: function (file_id, file_version, file_name, document_type_key, asset_type, cache) {
-        switch (asset_type.toUpperCase()) {
-            case Phlexible.mediamanager.AUDIO:
+    getHtml: function (file_id, file_version, file_name, media_type, cache) {
+        switch (media_type.substr(0, 5)) {
+            case 'audio':
                 return this.createAudioPlayer(256, 256, file_id, file_version, file_name, cache);
                 break;
 
-            case Phlexible.mediamanager.VIDEO:
+            case 'video':
                 return this.createVideoPlayer(256, 256, file_id, file_version, file_name, cache);
                 break;
 
-            case Phlexible.mediamanager.FLASH:
-                return this.createFlashPlayer(256, 256, file_id, file_version, file_name, cache);
-                break;
-
-            case Phlexible.mediamanager.IMAGE:
+            case 'image':
             default:
                 return this.createImage(256, 256, file_id, file_version, file_name, cache);
                 break;

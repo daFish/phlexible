@@ -9,7 +9,7 @@ Ext.require('Phlexible.mediamanager.FolderMeta');
 Phlexible.mediamanager.templates.Details = new Ext.XTemplate(
     '<div style="padding: 4px;">',
     '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.version]}:</div> {[values.version]}</div>',
-    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {[values.document_type]}</div>',
+    '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {[values.media_type]}</div>',
     '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
     '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {[values.create_user]}</div>',
     '<div><div style="float: left; width: 120px; text-align: right; margin-right: 4px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
@@ -358,7 +358,7 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
 //        this.attributesPanel.setTitle(this.strings.attributes + ' [' + properties.attributesCnt + ']');
 //        this.attributesPanel.setSource(properties.attributes);
         var details = {
-            document_type: r.get('document_type'),
+            media_type: r.get('media_type'),
             version: r.get('version'),
             size: r.get('size'),
             create_time: r.get('create_time'),
@@ -391,9 +391,7 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
                 ['folderId', r.get('folder_id')],
                 ['folder', r.get('folder')],
                 ['mimeType', r.get('mime_type')],
-                ['documentTypeKey', r.get('document_type_key')],
-                ['documentType', r.get('document_type')],
-                ['assetType', r.get('asset_type')]
+                ['mediaType', r.get('media_type')]
             ];
             this.getFileDebugPanel().store.loadData(debugData);
 

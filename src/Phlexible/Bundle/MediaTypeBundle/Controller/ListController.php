@@ -33,18 +33,21 @@ class ListController extends Controller
      */
     public function listAction(Request $request)
     {
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
         $iconResolver = $this->get('phlexible_media_type.icon_resolver');
+        $translator = $this->get('translator');
 
         $mediaTypes = [];
-        foreach ($mediaTypeManager->findAll() as $mediaType) {
+        foreach ($mediaClassifier->getCollection()->all() as $mediaType) {
+            $key = str_replace(':', '-', (string) $mediaType);
+
             $mediaTypes[] = [
                 'id'        => $mediaType->getName(),
                 'key'       => $mediaType->getName(),
                 'upperkey'  => strtoupper($mediaType->getName()),
                 'type'      => $mediaType->getCategory(),
-                'de'        => $mediaType->getTitle('de'),
-                'en'        => $mediaType->getTitle('en'),
+                'de'        => $translator->trans($key, array(), 'mediatypes', 'de'),
+                'en'        => $translator->trans($key, array(), 'mediatypes', 'de'),
                 'mimetypes' => $mediaType->getMimetypes(),
                 'icon16'    => (bool) $iconResolver->resolve($mediaType, 16),
                 'icon32'    => (bool) $iconResolver->resolve($mediaType, 32),

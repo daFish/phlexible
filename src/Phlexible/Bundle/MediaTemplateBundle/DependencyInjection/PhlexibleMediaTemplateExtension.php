@@ -27,7 +27,6 @@ class PhlexibleMediaTemplateExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        $loader->load('applier.yml');
         $loader->load('previewer.yml');
 
         $loader->load('file.yml');

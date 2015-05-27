@@ -6,9 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaType\Compiler;
+namespace Phlexible\Bundle\MediaTypeBundle\Compiler;
 
-use Phlexible\Component\MediaType\Model\MediaTypeCollection;
+use Temp\MediaClassifier\Model\MediaTypeCollection;
 
 /**
  * Compiler interface

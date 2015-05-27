@@ -6,9 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaType\Compiler;
+namespace Phlexible\Bundle\MediaTypeBundle\Compiler;
 
-use Phlexible\Component\MediaType\Model\MediaTypeCollection;
+use Temp\MediaClassifier\Model\MediaTypeCollection;
 
 /**
  * PHP compiler
@@ -22,7 +22,7 @@ class PhpCompiler implements CompilerInterface
      */
     public function getClassname()
     {
-        return 'Phlexible\Component\MediaType\Model\MediaTypeCollectionCompiled';
+        return 'Phlexible\Bundle\MediaTypeBundle\MediaTypeCollectionCompiled';
     }
 
     /**
@@ -36,13 +36,8 @@ class PhpCompiler implements CompilerInterface
 
         $constructorBody = '';
         foreach ($mediaTypes->all() as $mediaType) {
-            $titles = count($mediaType->getTitles()) ? var_export($mediaType->getTitles(), true) : 'array()';
             $mimetypes = count($mediaType->getMimetypes()) ? var_export(
                 $mediaType->getMimetypes(),
-                true
-            ) : 'array()';
-            $icons = count($mediaType->getIcons()) ? var_export(
-                $mediaType->getIcons(),
                 true
             ) : 'array()';
 
@@ -51,9 +46,7 @@ class PhpCompiler implements CompilerInterface
             \$this->create()
                 ->setName("{$mediaType->getName()}")
                 ->setCategory("{$mediaType->getCategory()}")
-                ->setTitles({$titles})
                 ->setMimetypes({$mimetypes})
-                ->setIcons({$icons})
         );
 
 EOF;

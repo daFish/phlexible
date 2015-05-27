@@ -42,7 +42,7 @@ class MediaController extends Controller
         $cacheManager = $this->get('phlexible_media_cache.cache_manager');
         $storageManager = $this->get('phlexible_media_cache.storage_manager');
         $templateManager = $this->get('phlexible_media_template.template_manager');
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
 
@@ -55,10 +55,7 @@ class MediaController extends Controller
         $template = $templateManager->find($templateKey);
 
         if ($cacheItem) {
-            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING) {
-                $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
-                $queueProcessor->processItem($cacheItem);
-            } elseif ($cacheItem->getCacheStatus() === CacheItem::STATUS_MISSING) {
+            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING || $cacheItem->getCacheStatus() === CacheItem::STATUS_MISSING) {
                 $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
                 if (file_exists($file->getPhysicalPath())) {
                     $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
@@ -111,7 +108,7 @@ class MediaController extends Controller
             }
 
             $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
-            $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
+            $mediaType = $mediaClassifier->getCollection()->get($file->getMediaType());
             $filePath = $delegateService->getClean($template, $mediaType, true);
             $mimeType = 'image/gif';
         }
@@ -122,22 +119,21 @@ class MediaController extends Controller
 
     /**
      * @param string $templateKey
-     * @param string $mediaTypeName
+     * @param string $mediaType
      *
      * @return Response
-     * @Route("/delegate/{templateKey}/{mediaTypeName}", name="mediamanager_media_delegate")
+     * @Route("/delegate/{templateKey}/{mediaType}", name="mediamanager_media_delegate")
      */
-    public function delegateAction($templateKey, $mediaTypeName)
+    public function delegateAction($templateKey, $mediaType)
     {
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
         $templateManager = $this->get('phlexible_media_template.template_manager');
         $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
 
         $template = $templateManager->find($templateKey);
+        $mediaType = $mediaClassifier->getCollection()->get($mediaType);
 
-        $mediaType = $mediaTypeManager->find(strtolower($mediaTypeName));
         $filePath = $delegateService->getClean($template, $mediaType);
-        $fileSize = filesize($filePath);
         $mimeType = 'image/gif';
 
         return $this->get('igorw_file_serve.response_factory')

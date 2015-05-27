@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\MediaTypeBundle\Controller;
 
-use Phlexible\Component\MediaType\Compiler\CssCompiler;
-use Phlexible\Component\MediaType\Compiler\ScriptCompiler;
+use Phlexible\Bundle\MediaTypeBundle\Compiler\CssCompiler;
+use Phlexible\Bundle\MediaTypeBundle\Compiler\ScriptCompiler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,18 +29,29 @@ class AssetController extends Controller
     /**
      * @param Request $request
      *
-     * @return Response
-     * @Route("/scripts", name="mediatypes_asset_scripts")
+     * @return JsonResponse
+     * @Route("/mediatypes", name="mediatypes_asset_mediatypes")
      */
-    public function scriptsAction(Request $request)
+    public function mediatypesAction(Request $request)
     {
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
+        $translator = $this->get('translator');
 
-        $compiler = new ScriptCompiler();
+        $data = array();
+        foreach ($mediaClassifier->getCollection()->all() as $mediaType) {
+            $key = str_replace(':', '-', (string) $mediaType);
+            $item = [
+                'cls' => sprintf('p-mediatype-%s', $key),
+                'de'  => $translator->trans($key, array(), 'mediatypes', 'de'),
+                'en'  => $translator->trans($key, array(), 'mediatypes', 'en'),
+            ];
 
-        $scripts = $compiler->compile($mediaTypeManager->getCollection());
+            $data[(string) $mediaType] = $item;
+        }
 
-        return new Response($scripts, 200, array('Content-type' => 'text/javascript'));
+        $content = sprintf('Ext.onReady(function () {Phlexible.mediatype.MediaTypes.setData(%s);});', json_encode($data));
+
+        return new Response($content, 200, array('Content-type' => 'text/javascript'));
     }
 
     /**
@@ -51,13 +62,13 @@ class AssetController extends Controller
      */
     public function cssAction(Request $request)
     {
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
         $basePath = $request->getBasePath();
         $baseUrl = $request->getBaseUrl();
 
         $compiler = new CssCompiler();
 
-        $css = $compiler->compile($mediaTypeManager->getCollection());
+        $css = $compiler->compile($mediaClassifier->getCollection());
         $css = str_replace(
             ['/makeweb/', '/BASEPATH/', '/BASEURL/', '/COMPONENTSPATH/'],
             [$basePath, $basePath, $baseUrl, $basePath . 'bundles/'],

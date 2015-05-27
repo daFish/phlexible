@@ -6,9 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaType\Model;
+namespace Phlexible\Bundle\MediaTypeBundle\Icon;
 
 use Symfony\Component\Config\FileLocatorInterface;
+use Temp\MediaClassifier\Model\MediaType;
 
 /**
  * Media type icon resolver
@@ -40,28 +41,24 @@ class IconResolver
      */
     public function resolve(MediaType $mediaType, $requestedSize = null)
     {
-        $icons = $mediaType->getIcons();
-        if (!count($icons)) {
-            return null;
-        }
-        ksort($icons);
+        $name = $mediaType->getName();
 
-        if (isset($icons[$requestedSize])) {
-            $icon = $icons[$requestedSize];
-        } else {
-            $icon = null;
-            foreach ($icons as $size => $dummyIcon) {
-                if ($size > $requestedSize) {
-                    $icon = $dummyIcon;
-                    break;
-                }
-            }
-            if (!$icon) {
-                $icon = end($icons);
-                //return null;
+        $sizes = array(16, 32, 48, 256);
+        $size = $requestedSize;
+        $icon = $this->locator->locate("@PhlexibleMediaTypeBundle/Resources/public/mimetypes$size/$name.gif", null, true);
+
+        if ($icon) {
+            return $icon;
+        }
+
+        $icons = null;
+        foreach ($sizes as $size) {
+            if ($size > $requestedSize) {
+                $icon = $this->locator->locate("@PhlexibleMediaTypeBundle/Resources/public/mimetypes$size/$name.gif", null, true);
+                break;
             }
         }
 
-        return $this->locator->locate($icon, null, true);
+        return $icon;
     }
 }

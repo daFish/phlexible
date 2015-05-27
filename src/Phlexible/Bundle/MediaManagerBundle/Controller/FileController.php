@@ -119,7 +119,7 @@ class FileController extends Controller
     {
         $data = [];
         $userManager = $this->get('phlexible_user.user_manager');
-        $mediaTypeManager = $this->get('phlexible_media_type.media_type_manager');
+        $mediaClassifier = $this->get('phlexible_media.media_classifier');
 
         $hasVersions = $volume->hasFeature('versions');
 
@@ -147,11 +147,10 @@ class FileController extends Controller
                 //'attributesCnt' => 0,
                 'versions' => $hasVersions,
                 'debug'    => [
-                    'mimeType'      => $file->getMimeType(),
-                    'mediaCategory' => strtolower($file->getMediaCategory()),
-                    'mediaType'     => strtolower($file->getMediaType()),
-                    'fileId'        => $file->getID(),
-                    'folderId'      => $file->getFolderId(),
+                    'mimeType'  => $file->getMimeType(),
+                    'mediaType' => $file->getMediaType(),
+                    'fileId'    => $file->getID(),
+                    'folderId'  => $file->getFolderId(),
                 ]
             ];
 
@@ -165,15 +164,7 @@ class FileController extends Controller
             $properties['meta'] = $meta;
             $properties['metaCnt'] = count($properties['meta']);
 
-            $mediaType = $mediaTypeManager->find(strtolower($file->getMediaType()));
-
-            if (!$mediaType) {
-                $mediaType = $mediaTypeManager->create();
-                $mediaType->setName('unknown');
-            }
-
-            $interfaceLanguage = $this->getUser()->getInterfaceLanguage('en');
-            $mediaTypeTitle = $mediaType->getTitle($interfaceLanguage);
+            $mediaType = $mediaClassifier->getCollection()->get($file->getMediaType());
 
             $version = 1;
             if ($hasVersions) {
@@ -183,7 +174,11 @@ class FileController extends Controller
             $cacheItems = $this->get('phlexible_media_cache.cache_manager')->findByFile($file->getID(), $version);
             $cache = [];
             foreach ($cacheItems as $cacheItem) {
-                if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+                if (
+                    $cacheItem->getCacheStatus() === CacheItem::STATUS_OK ||
+                    $cacheItem->getCacheStatus() === CacheItem::STATUS_WAITING ||
+                    $cacheItem->getCacheStatus() === CacheItem::STATUS_MISSING
+                ) {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media', [
                         'file_id'      => $file->getId(),
                         'file_version' => $file->getVersion(),
@@ -191,8 +186,8 @@ class FileController extends Controller
                     ]);
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->generateUrl('mediamanager_media_delegate', [
-                        'mediaTypeName' => $file->getMediaType(),
-                        'templateKey'   => $cacheItem->getTemplateKey(),
+                        'mediaType'   => $file->getMediaType(),
+                        'templateKey' => $cacheItem->getTemplateKey(),
                     ]);
                 }
             }
@@ -215,10 +210,8 @@ class FileController extends Controller
                 'site_id'           => $volume->getId(),
                 'folder_id'         => $file->getFolderID(),
                 'folder'            => '/Root/' . $folder->getPath(),
-                'asset_type'        => strtolower($file->getMediaCategory()),
+                'media_type'        => $file->getMediaType(),
                 'mime_type'         => $file->getMimetype(),
-                'document_type'     => $mediaTypeTitle,
-                'document_type_key' => strtolower($file->getMediaType()),
                 'present'           => file_exists($file->getPhysicalPath()),
                 'size'              => $file->getSize(),
                 'hidden'            => $file->isHidden() ? 1 : 0,

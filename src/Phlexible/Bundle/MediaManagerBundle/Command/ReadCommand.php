@@ -8,17 +8,15 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
-use Brainbits\Mime\MimeDetector;
-use Phlexible\Component\MediaManager\AttributeReader\AttributeBag;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedVolumeInterface;
-use Phlexible\Component\Volume\FileSource\FilesystemFileSource;
 use Phlexible\Component\Volume\Model\FolderIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Read command
@@ -84,7 +82,7 @@ class ReadCommand extends ContainerAwareCommand
 
         $rii = new \RecursiveIteratorIterator(new FolderIterator($target), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $folder) {
-            $output->writeln('+ ' . $folder->getName());
+            $output->writeln('+ <fg=green>' . $folder->getName() . '</fg=green>');
             foreach ($volume->findFilesByFolder($folder) as $file) {
                 $this->readFile($output, $volume, $file);
             }
@@ -93,12 +91,11 @@ class ReadCommand extends ContainerAwareCommand
 
     private function readFile(OutputInterface $output, ExtendedVolumeInterface $volume, ExtendedFileInterface $file)
     {
-        $output->writeln('  * ' . $file->getId() . ' ' . $file->getPhysicalPath() . ': ');
+        $output->writeln('  + <fg=green>' . $file->getName() . '</fg=green> ' . $file->getId() . ' ' . $file->getPhysicalPath());
         $output->write('    > ');
 
-        $mimeSniffer = $this->getContainer()->get('phlexible_media.mime_sniffer');
-        $mediaTypeManager = $this->getContainer()->get('phlexible_media_type.media_type_manager');
-        $attributeReader = $this->getContainer()->get('phlexible_media_manager.attribute_reader');
+        $mediaClassifier = $this->getContainer()->get('phlexible_media.media_classifier');
+        $attributeReader = $this->getContainer()->get('phlexible_media.meta_reader');
 
         if (!file_exists($file->getPhysicalPath())) {
             $output->writeln("<error>File not found</error>");
@@ -106,33 +103,33 @@ class ReadCommand extends ContainerAwareCommand
             return;
         }
 
-        $mimetype = $mimeSniffer->detect($file->getPhysicalPath());
-        $attributes = array();
+        $xfile = new File($file->getPhysicalPath());
+        $mimetype = $xfile->getMimeType();
+        $output->write('<fg=yellow>' . $mimetype . "</fg=yellow>, ");
 
         if (!$mimetype) {
-            $output->write("<error>No mimetype</error> ");
             $mimetype = 'application/octet-stream';
-            $mediaTypeName = 'binary';
-        } else {
-            $mediaType = $mediaTypeManager->findByMimetype((string) $mimetype);
-            if ($mediaType) {
-                $mediaTypeName = $mediaType->getName();
-
-                if ($attributeReader->supports($file->getPhysicalPath())) {
-                    $valueBag = $attributeReader->read($file->getPhysicalPath());
-                    $attributes = $valueBag->toArray();
-                    $volume->setFileAttributes($file, $attributes, null);
-                }
-
-            } else {
-                $output->write("<error>No media type found</error> ");
-                $mediaTypeName = 'binary';
-            }
         }
 
-        $volume->setFileMediaType($file, $mediaTypeName, null);
-        //$volume->setFileMimetype($file, $mimetype, null);
+        $mediaType = $mediaClassifier->getCollection()->lookup($mimetype);
+        if ($mediaType) {
+            $output->write((string) $mediaType . ', ');
 
-        $output->writeln("$mimetype, $mediaTypeName, " . json_encode($attributes));
+            if ($attributeReader->supports($file->getPhysicalPath())) {
+                $valueBag = $attributeReader->read($file->getPhysicalPath());
+                $attributes = $valueBag->toArray();
+                $volume->setFileAttributes($file, $attributes, null);
+
+                $output->write(count($attributes) . " attributes.");
+            }
+
+        } else {
+            $output->write("<error>No media type found</error> ");
+        }
+
+        $volume->setFileMediaType($file, (string) $mediaType, null);
+        $volume->setFileMimetype($file, $mimetype, null);
+
+        $output->writeln('');
     }
 }

@@ -1,4 +1,69 @@
 services:
     phlexible_media.transmuter:
         class: Temp\MediaConverter\Transmuter
+        arguments:
+            - @phlexible_media.transmuter.extractor
+            - @phlexible_media.transmuter.converter
+
+    phlexible_media.transmuter.extractor:
+        class: Temp\MediaConverter\Extractor\DelegatingExtractor
+        public: false
+        arguments:
+            - @phlexible_media.transmuter.extractor_resolver
+            - @phlexible_media.media_classifier
+
+    phlexible_media.transmuter.extractor_resolver:
+        class: Temp\MediaConverter\Extractor\ExtractorResolver
+        public: false
+        arguments:
+            -
+                - @phlexible_media.transmuter.raw_audio_extractor
+                - @phlexible_media.transmuter.raw_image_extractor
+                - @phlexible_media.transmuter.raw_video_extractor
+
+    phlexible_media.transmuter.raw_audio_extractor:
+        class: Temp\MediaConverter\Extractor\RawAudioExtractor
+        public: false
+
+    phlexible_media.transmuter.raw_image_extractor:
+        class: Temp\MediaConverter\Extractor\RawImageExtractor
+        public: false
+
+    phlexible_media.transmuter.raw_video_extractor:
+        class: Temp\MediaConverter\Extractor\RawVideoExtractor
+        public: false
+
+    phlexible_media.transmuter.converter:
+        class: Temp\MediaConverter\Converter\DelegatingConverter
+        public: false
+        arguments:
+            - @phlexible_media.transmuter.converter_resolver
+
+    phlexible_media.transmuter.converter_resolver:
+        class: Temp\MediaConverter\Converter\ConverterResolver
+        public: false
+        arguments:
+            -
+                - @phlexible_media.transmuter.audio_converter
+                - @phlexible_media.transmuter.image_converter
+                - @phlexible_media.transmuter.video_converter
+
+    phlexible_media.transmuter.audio_converter:
+        class: Temp\MediaConverter\Converter\AudioConverter
+        public: false
+        arguments:
+            - @phlexible_media.ffmpeg
+
+    phlexible_media.transmuter.image_converter:
+        class: Temp\MediaConverter\Converter\ImageConverter
+        public: false
+        arguments:
+            - @phlexible_media.imagine
+
+    phlexible_media.transmuter.video_converter:
+        class: Temp\MediaConverter\Converter\VideoConverter
+        public: false
+        arguments:
+            - @phlexible_media.ffmpeg
+            - @phlexible_media.mp4box
 

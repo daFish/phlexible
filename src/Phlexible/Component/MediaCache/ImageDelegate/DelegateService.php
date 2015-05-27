@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaCache\ImageDelegate;
 
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Phlexible\Component\MediaType\Model\MediaType;
+use Temp\MediaClassifier\Model\MediaType;
 
 /**
  * Delegate worker

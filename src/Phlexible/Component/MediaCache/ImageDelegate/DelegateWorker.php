@@ -8,16 +8,16 @@
 
 namespace Phlexible\Component\MediaCache\ImageDelegate;
 
-use Phlexible\Bundle\MediaManagerBundle\Entity\File;
+use Phlexible\Bundle\MediaTypeBundle\Icon\IconResolver;
 use Phlexible\Component\MediaCache\Exception\CreateDelegateFailed;
-use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
+use Phlexible\Component\MediaCache\Specifier\ImageSpecifier;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\MediaType\Model\IconResolver;
-use Phlexible\Component\MediaType\Model\MediaType;
-use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Temp\MediaClassifier\MediaClassifier;
+use Temp\MediaClassifier\Model\MediaType;
+use Temp\MediaConverter\Transmuter;
 
 /**
  * Delegate worker
@@ -32,14 +32,14 @@ class DelegateWorker
     private $templateManager;
 
     /**
-     * @var MediaTypeManagerInterface
+     * @var MediaClassifier
      */
-    private $mediaTypeManager;
+    private $mediaClassifier;
 
     /**
-     * @var ImageTemplateApplier
+     * @var Transmuter
      */
-    private $applier;
+    private $transmuter;
 
     /**
      * @var IconResolver
@@ -62,25 +62,25 @@ class DelegateWorker
     private $delegateDirWaiting;
 
     /**
-     * @param TemplateManagerInterface  $templateManager
-     * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param ImageTemplateApplier      $applier
-     * @param IconResolver              $iconResolver
-     * @param FileLocatorInterface      $locator
-     * @param string                    $delegateDir
+     * @param TemplateManagerInterface $templateManager
+     * @param MediaClassifier          $mediaClassifier
+     * @param Transmuter               $transmuter
+     * @param IconResolver             $iconResolver
+     * @param FileLocatorInterface     $locator
+     * @param string                   $delegateDir
      */
     public function __construct(
         TemplateManagerInterface $templateManager,
-        MediaTypeManagerInterface $mediaTypeManager,
-        ImageTemplateApplier $applier,
+        MediaClassifier $mediaClassifier,
+        Transmuter $transmuter,
         IconResolver $iconResolver,
         FileLocatorInterface $locator,
         $delegateDir
     )
     {
         $this->templateManager = $templateManager;
-        $this->mediaTypeManager = $mediaTypeManager;
-        $this->applier = $applier;
+        $this->mediaClassifier = $mediaClassifier;
+        $this->transmuter = $transmuter;
         $this->iconResolver = $iconResolver;
         $this->locator = $locator;
 
@@ -95,7 +95,7 @@ class DelegateWorker
     public function writeAll($force = false, callable $callback = null)
     {
         $templates  = $this->templateManager->findBy(['type' => 'image']);
-        $mediaTypes = $this->mediaTypeManager->findAll();
+        $mediaTypes = $this->mediaClassifier->getCollection();
 
         $cnt = count($templates) * count($mediaTypes);
 
@@ -104,7 +104,7 @@ class DelegateWorker
         }
 
         foreach ($templates as $template) {
-            foreach ($mediaTypes as $mediaType) {
+            foreach ($mediaTypes->all() as $mediaType) {
                 $this->write($mediaType, $template, $force);
 
                 if (is_callable($callback)) {
@@ -205,7 +205,9 @@ class DelegateWorker
         if ($force || !$filesystem->exists($filePathClean)
                 || !filesize($filePathClean)
                 || filemtime($filePathClean) < $templateModifyTime) {
-            $this->applier->apply($template, new File(), $icon, $filePathClean);
+            $specifier = new ImageSpecifier();
+            $spec = $specifier->specify($template);
+            $this->transmuter->transmute($icon, $spec, $filePathClean);
 
             if (!$filesystem->exists($filePathClean)) {
                 throw new CreateDelegateFailed('"Clean" delegate image not created: ' . $filePathClean);

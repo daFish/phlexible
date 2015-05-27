@@ -60,9 +60,24 @@ class XmlLoader implements LoaderInterface
             $parameterNodeAttributes = $parameterNode->attributes();
             $key = (string) $parameterNodeAttributes['key'];
             $value = (string) $parameterNode;
-            $template->setParameter($key, $value);
+            $method = 'set' . $this->toCamelCase($key);
+
+            $template->$method($value);
         }
 
         return $template;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function toCamelCase($value)
+    {
+        $chunks    = explode('_', $value);
+        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+
+        return implode('', $ucfirsted);
     }
 }

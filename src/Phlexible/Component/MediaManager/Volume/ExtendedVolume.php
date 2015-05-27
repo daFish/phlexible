@@ -89,4 +89,27 @@ class ExtendedVolume extends Volume implements ExtendedVolumeInterface
 
         return $file;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFileMimeType(ExtendedFileInterface $file, $mimeType, $userId)
+    {
+        $file
+            ->setMimeType($mimeType)
+            ->setModifiedAt(new \DateTime())
+            ->setModifyUserId($userId);
+
+        $event = new FileEvent($file);
+        if ($this->getEventDispatcher()->dispatch(MediaManagerEvents::BEFORE_SET_FILE_MIME_TYPE, $event)->isPropagationStopped()) {
+            throw new IOException("Set file mime type {$file->getName()} cancelled.");
+        }
+
+        $this->getDriver()->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->getEventDispatcher()->dispatch(MediaManagerEvents::SET_FILE_MIME_TYPE, $event);
+
+        return $file;
+    }
 }

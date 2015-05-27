@@ -50,7 +50,7 @@ Phlexible.mediamanager.templates.NameString =
 Phlexible.mediamanager.templates.GridRowExtra = new Ext.XTemplate(
     '<div class="p-item x-grid3-row p-mediamanager-box-default p-mediamanager-extralarge-box">',
     '<div class="p-mediamanager-extralarge-thumbs">',
-    '<div class="p-icon-area {[Phlexible.documenttypes.DocumentTypes.getClass(values.record.data.document_type_key)]}">',
+    '<div class="p-icon-area {[Phlexible.mediatype.MediaTypes.getClass(values.record.data.media_type)]}">',
     '<table cellspacing="0" align="center">',
     '<tr>',
     '<td>',
@@ -70,7 +70,7 @@ Phlexible.mediamanager.templates.GridRowExtra = new Ext.XTemplate(
 Phlexible.mediamanager.templates.GridRowLarge = new Ext.XTemplate(
     '<div class="p-item x-grid3-row p-mediamanager-box-default p-mediamanager-large-box">',
     '<div class="p-mediamanager-large-thumbs">',
-    '<div class="p-icon-area {[Phlexible.documenttypes.DocumentTypes.getClass(values.record.data.document_type_key)]}">',
+    '<div class="p-icon-area {[Phlexible.mediatype.MediaTypes.getClass(values.record.data.media_type)]}">',
     '<table cellspacing="0" align="center">',
     '<tr>',
     '<td>',
@@ -90,7 +90,7 @@ Phlexible.mediamanager.templates.GridRowLarge = new Ext.XTemplate(
 Phlexible.mediamanager.templates.GridRowMedium = new Ext.XTemplate(
     '<div class="p-item x-grid3-row p-mediamanager-box-default p-mediamanager-medium-box">',
     '<div class="p-mediamanager-medium-thumbs">',
-    '<div class="p-icon-area {[Phlexible.documenttypes.DocumentTypes.getClass(values.record.data.document_type_key)]}">',
+    '<div class="p-icon-area {[Phlexible.mediatype.MediaTypes.getClass(values.record.data.media_type)]}">',
     '<table cellspacing="0" align="center">',
     '<tr>',
     '<td>',
@@ -110,7 +110,7 @@ Phlexible.mediamanager.templates.GridRowMedium = new Ext.XTemplate(
 Phlexible.mediamanager.templates.GridRowSmall = new Ext.XTemplate(
     '<div class="p-item x-grid3-row p-mediamanager-box-default p-mediamanager-small-box">',
     '<div class="p-mediamanager-small-thumbs">',
-    '<div class="p-icon-area {[Phlexible.documenttypes.DocumentTypes.getClass(values.record.data.document_type_key)]}-small">',
+    '<div class="p-icon-area {[Phlexible.mediatype.MediaTypes.getClass(values.record.data.media_type)]}-small">',
     '<table cellspacing="0" align="center">',
     '<tr>',
     '<td>',
@@ -131,7 +131,7 @@ Phlexible.mediamanager.templates.GridRowSmall = new Ext.XTemplate(
 Phlexible.mediamanager.templates.GridRowTile = new Ext.XTemplate(
     '<div class="p-item x-grid3-row p-mediamanager-box-default p-mediamanager-tile-box">',
     '<div class="p-mediamanager-tile-thumbs">',
-    '<div class="p-icon-area {[Phlexible.documenttypes.DocumentTypes.getClass(values.record.data.document_type_key)]}">',
+    '<div class="p-icon-area {[Phlexible.mediatype.MediaTypes.getClass(values.record.data.media_type)]}">',
     '<table cellspacing="0" align="center">',
     '<tr>',
     '<td>',
@@ -143,7 +143,7 @@ Phlexible.mediamanager.templates.GridRowTile = new Ext.XTemplate(
     '<div class="p-text-area">',
     '<div class="p-text x-grid3-cell x-grid3-td-name">',
     '<div class="p-name">' + Phlexible.mediamanager.templates.UsedString + Phlexible.mediamanager.templates.NameString + '</div>',
-    '<div class="p-mimeType">{values.record.data.document_type}</div>',
+    '<div class="p-mimeType">{[Phlexible.mediatype.MediaTypes.getText(values.record.data.media_type)]}</div>',
     '<div class="p-fileSize">{[Phlexible.Format.size(values.record.data.size)]}</div>',
     '</div>',
     '</div>',

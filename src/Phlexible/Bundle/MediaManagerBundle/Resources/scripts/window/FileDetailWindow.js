@@ -7,7 +7,7 @@ Phlexible.mediamanager.FileDetailAttributesTemplate = new Ext.XTemplate(
     '<div style="padding: 4px 4px 8px 4px;">',
     '<div>',
     '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div> {[values.name.shorten(80)]}</div>',
-    '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {document_type_key}</div>',
+    '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.type]}:</div> {media_type}</div>',
     '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.size]}:</div> {[Phlexible.Format.size(values.size)]}</div>',
     '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.created_by]}:</div> {create_user_id}</div>',
     '<div><div style="float: left; width: 120px; color: grey;">{[Phlexible.mediamanager.Strings.create_date]}:</div> {[Phlexible.Format.date(values.create_time)]}</div>',
@@ -30,8 +30,7 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
     file_id: null,
     file_version: null,
     file_name: null,
-    document_type_key: null,
-    asset_type: null,
+    media_type: null,
     cache: null,
     rights: [],
 
@@ -80,8 +79,7 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
                         file_id: this.file_id,
                         file_version: this.file_version,
                         file_name: this.file_name,
-                        document_type_key: this.document_type_key,
-                        asset_type: this.asset_type,
+                        media_type: this.media_type,
                         cache: this.cache
                     },
                     {
@@ -210,8 +208,8 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
         return this.getTabPanel().getComponent(2);
     },
 
-    onVersionSelect: function (file_id, file_version, file_name, folder_id, document_type_key, asset_type) {
-        this.getPreviewPanel().load(file_id, file_version, file_name, document_type_key, asset_type);
+    onVersionSelect: function (file_id, file_version, file_name, folder_id, media_type) {
+        this.getPreviewPanel().load(file_id, file_version, file_name, media_type);
         this.loadProperties(file_id, file_version);
     },
 
@@ -226,8 +224,8 @@ Phlexible.mediamanager.FileDetailWindow = Ext.extend(Ext.Window, {
             success: function (response) {
                 var data = Ext.decode(response.responseText);
                 this.setTitle(data.name);
-                this.setIconClass(Phlexible.documenttypes.DocumentTypes.getClass(data.document_type_key) + "-small");
-                this.getPreviewPanel().load(data.id, data.version, data.name, data.document_type_key);
+                this.setIconClass(Phlexible.mediatype.MediaTypes.getClass(data.media_type) + "-small");
+                this.getPreviewPanel().load(data.id, data.version, data.name, data.media_type);
                 Phlexible.mediamanager.FileDetailAttributesTemplate.overwrite(this.getDetailsPanel().body, data.detail);
                 this.getAttributesPanel().setSource(data.attributes);
                 //var html = Phlexible.mediamanager.FileDetailAttributesTemplate.applyTemplate(data);

@@ -148,7 +148,7 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
             },
             {
                 header: this.strings.type,
-                dataIndex: 'document_type_key',
+                dataIndex: 'media_type',
                 sortable: true,
                 renderer: this.typeRenderer,
                 width: 80
@@ -475,8 +475,8 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
     },
 
     nameRenderer: function (name, e, r) {
-        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(r.data.document_type_key) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
-        documentTypeClass += "-small";
+        var mediaTypeClass = Phlexible.mediatype.MediaTypes.getClass(r.data.media_type);
+        mediaTypeClass += "-small";
 
         var prefix = '';
         var style = '';
@@ -486,11 +486,11 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
         if (r.data.hidden) {
             style += 'text-decoration: line-through;';
         }
-        return '<span class="m-mimetype ' + documentTypeClass + '" style="' + style + '"><div>' + prefix + name + '<\/div><\/span>';
+        return '<span class="m-mimetype ' + mediaTypeClass + '" style="' + style + '"><div>' + prefix + name + '<\/div><\/span>';
     },
 
     typeRenderer: function (name, e, r) {
-        return r.data.document_type;
+        return r.data.media_type;
     },
 
     createdByRenderer: function (name, e, r) {
@@ -527,8 +527,7 @@ Phlexible.mediamanager.FilesGrid = Ext.extend(Ext.grid.GridPanel, {
             file_id: selFile.data.id,
             file_version: selFile.data.version,
             file_name: selFile.data.name,
-            document_type_key: selFile.data.document_type_key,
-            asset_type: selFile.data.asset_type,
+            media_type: selFile.data.media_type,
             cache: selFile.data.cache,
             rights: this.folder_rights
         });

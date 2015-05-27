@@ -39,7 +39,7 @@ class FormController extends Controller
         $templateKey = $request->get('template_key');
 
         $template = $repository->find($templateKey);
-        $parameters = $template->getParameters();
+        $parameters = $template->toArray();
 
         if (isset($parameters['method'])) {
             $parameters['xmethod'] = $parameters['method'];
@@ -74,12 +74,26 @@ class FormController extends Controller
         $params = $this->fixParams($params);
 
         foreach ($params as $key => $value) {
-            $template->setParameter($key, $value);
+            $method = 'set' . $this->toCamelCase($key);
+            $template->$method($value);
         }
 
         $repository->updateTemplate($template);
 
         return new ResultResponse(true, 'Media template "' . $template->getKey() . '" saved.');
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function toCamelCase($value)
+    {
+        $chunks    = explode('_', $value);
+        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+
+        return implode('', $ucfirsted);
     }
 
     /**

@@ -126,48 +126,5 @@ interface TemplateInterface
     /**
      * @return array
      */
-    public function getParameters();
-
-    /**
-     * @param array $parameters
-     * @param bool  $strict
-     *
-     * @return $this
-     */
-    public function setParameters(array $parameters, $strict = true);
-
-    /**
-     * @param string $key
-     * @param string $value
-     * @param bool   $strict
-     *
-     * @return $this
-     */
-    public function setParameter($key, $value, $strict = true);
-
-    /**
-     * @param string $key
-     * @param string $defaultValue
-     *
-     * @return string
-     */
-    public function getParameter($key, $defaultValue = null);
-
-    /**
-     * @param string $key
-     * @param bool   $notEmpty
-     *
-     * @return bool
-     */
-    public function hasParameter($key, $notEmpty = false);
-
-    /**
-     * @return array
-     */
-    public function getAllowedParameters();
-
-    /**
-     * @return array
-     */
-    public function getDefaultParameters();
+    public function toArray();
 }

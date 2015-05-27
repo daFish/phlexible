@@ -4,18 +4,41 @@ parameters:
 
 services:
     phlexible_media_cache.specifier_resolver:
-        class: Phlexible\Component\MediaCache\Worker\SpecifierResolver
+        class: Phlexible\Component\MediaCache\Specifier\SpecifierResolver
         public: false
-        arguments: [[]]
+        arguments:
+            -
+                - @phlexible_media_cache.audio_specifier
+                - @phlexible_media_cache.image_specifier
+                - @phlexible_media_cache.video_specifier
+
+    phlexible_media_cache.audio_specifier:
+        class: Phlexible\Component\MediaCache\Specifier\AudioSpecifier
+        public: false
+        tags:
+            - {name: phlexible_media_cache.specifier}
+
+    phlexible_media_cache.image_specifier:
+        class: Phlexible\Component\MediaCache\Specifier\ImageSpecifier
+        public: false
+        tags:
+            - {name: phlexible_media_cache.specifier}
+
+    phlexible_media_cache.video_specifier:
+        class: Phlexible\Component\MediaCache\Specifier\VideoSpecifier
+        public: false
+        tags:
+            - {name: phlexible_media_cache.specifier}
 
     phlexible_media_cache.worker:
         class: Phlexible\Component\MediaCache\Worker\Worker
         public: false
         arguments:
             - @phlexible_media.transmuter
+            - @phlexible_media_cache.specifier_resolver
             - @phlexible_media_cache.storage_manager
             - @phlexible_media_cache.cache_manager
-            - @phlexible_media_type.media_type_manager
+            - @phlexible_media.media_classifier
             - @phlexible_media_cache.id_strategy.default
             - @logger
             - %phlexible_media_cache.temp_dir%
@@ -37,8 +60,8 @@ services:
         class: Phlexible\Component\MediaCache\ImageDelegate\DelegateWorker
         arguments:
             - @phlexible_media_template.template_manager
-            - @phlexible_media_type.media_type_manager
-            - @phlexible_media_template.applier.image
+            - @phlexible_media.media_classifier
+            - @phlexible_media.transmuter
             - @phlexible_media_type.icon_resolver
             - @file_locator
             - %phlexible_media_cache.cache_dir%

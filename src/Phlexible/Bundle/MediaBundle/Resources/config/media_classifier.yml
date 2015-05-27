@@ -1,4 +1,31 @@
 services:
     phlexible_media.media_classifier:
         class: Temp\MediaClassifier\MediaClassifier
+        arguments:
+            - @phlexible_media.media_classifier.collection
+
+    phlexible_media.media_classifier.collection:
+        class: Temp\MediaClassifier\Model\MediaTypeCollection
+        public: false
+        factory_service: phlexible_media.media_classifier.loader
+        factory_method: load
+        arguments:
+            - /Users/swentz/git/temp/media-classifier/src/mediatypes/all.xml
+
+    phlexible_media.media_classifier.loader:
+        class: Temp\MediaClassifier\Loader\DelegatingLoader
+        public: false
+        arguments:
+            - @phlexible_media.media_classifier.loader_resolver
+
+    phlexible_media.media_classifier.loader_resolver:
+        class: Temp\MediaClassifier\Loader\LoaderResolver
+        public: false
+        arguments:
+            -
+                - @phlexible_media.media_classifier.xml_loader
+
+    phlexible_media.media_classifier.xml_loader:
+        class: Temp\MediaClassifier\Loader\XmlLoader
+        public: false
 

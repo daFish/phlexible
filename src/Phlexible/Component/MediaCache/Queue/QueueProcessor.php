@@ -14,9 +14,9 @@ use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
 use Phlexible\Component\MediaCache\Queue as BaseQueue;
 use Phlexible\Component\MediaCache\Worker\WorkerInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Filesystem\LockHandler;
+use Temp\MediaClassifier\MediaClassifier;
 
 /**
  * Queue processor
@@ -41,9 +41,9 @@ class QueueProcessor
     private $templateManager;
 
     /**
-     * @var MediaTypeManagerInterface
+     * @var MediaClassifier
      */
-    private $mediaTypeManager;
+    private $mediaClassifier;
 
     /**
      * @var Properties
@@ -51,47 +51,48 @@ class QueueProcessor
     private $properties;
 
     /**
-     * @var string
+     * @var LockHandler
      */
-    private $lockDir;
+    private $lockHandler;
 
     /**
-     * @param WorkerInterface           $worker
-     * @param VolumeManager             $volumeManager
-     * @param TemplateManagerInterface  $templateManager
-     * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param Properties                $properties
-     * @param string                    $lockDir
+     * @param WorkerInterface          $worker
+     * @param VolumeManager            $volumeManager
+     * @param TemplateManagerInterface $templateManager
+     * @param MediaClassifier          $mediaClassifier
+     * @param Properties               $properties
+     * @param string                   $lockDir
      */
     public function __construct(
         WorkerInterface $worker,
         VolumeManager $volumeManager,
         TemplateManagerInterface $templateManager,
-        MediaTypeManagerInterface $mediaTypeManager,
+        MediaClassifier $mediaClassifier,
         Properties $properties,
         $lockDir)
     {
         $this->worker = $worker;
         $this->volumeManager = $volumeManager;
         $this->templateManager = $templateManager;
-        $this->mediaTypeManager = $mediaTypeManager;
+        $this->mediaClassifier = $mediaClassifier;
         $this->properties = $properties;
-        $this->lockDir = $lockDir;
+        $this->lockHandler = new LockHandler('mediacache_lock', $lockDir);
     }
 
     /**
      * @param Queue    $queue
      * @param callable $callback
-     *
-     * @return CacheItem
      */
     public function processQueue(Queue $queue, callable $callback = null)
     {
-        $lock = $this->lock();
+        if (!$this->lockHandler->lock(false)) {
+            throw new AlreadyRunningException('Another cache worker process running.');
+        }
+
         foreach ($queue->all() as $cacheItem) {
             $this->doProcess($cacheItem, $callback);
         }
-        $lock->release();
+        $this->lockHandler->release();
     }
 
     /**
@@ -102,25 +103,14 @@ class QueueProcessor
      */
     public function processItem(CacheItem $cacheItem, callable $callback = null)
     {
-        $lock = $this->lock();
-        $cacheItem = $this->doProcess($cacheItem, $callback);
-        $lock->release();
-
-        return $cacheItem;
-    }
-
-    /**
-     * @return LockHandler
-     * @throws AlreadyRunningException
-     */
-    private function lock()
-    {
-        $lock = new LockHandler('mediacache_lock', $this->lockDir);
-        if (!$lock->lock(false)) {
+        if (!$this->lockHandler->lock(false)) {
             throw new AlreadyRunningException('Another cache worker process running.');
         }
 
-        return $lock;
+        $cacheItem = $this->doProcess($cacheItem, $callback);
+        $this->lockHandler->release();
+
+        return $cacheItem;
     }
 
     /**
@@ -136,7 +126,7 @@ class QueueProcessor
 
         $template = $this->templateManager->find($cacheItem->getTemplateKey());
 
-        $mediaType = $this->mediaTypeManager->find($file->getMediaType());
+        $mediaType = $this->mediaClassifier->getCollection()->get($file->getMediaType());
 
         $cacheItem = $this->worker->process($template, $file, $mediaType);
 

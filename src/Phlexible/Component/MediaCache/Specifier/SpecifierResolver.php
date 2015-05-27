@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaCache\Worker;
+namespace Phlexible\Component\MediaCache\Specifier;
 
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
@@ -29,13 +29,9 @@ class SpecifierResolver
      */
     public function __construct(array $specifiers = [])
     {
-        foreach ($specifiers as $worker) {
-            $this->addSpecifier($worker);
+        foreach ($specifiers as $specifier) {
+            $this->addSpecifier($specifier);
         }
-
-        $this->addSpecifier(new AudioSpecifier());
-        $this->addSpecifier(new ImageSpecifier());
-        $this->addSpecifier(new VideoSpecifier());
     }
 
     /**
@@ -53,16 +49,14 @@ class SpecifierResolver
     /**
      * Determine and return worker
      *
-     * @param TemplateInterface     $template
-     * @param ExtendedFileInterface $file
-     * @param MediaType             $mediaType
+     * @param TemplateInterface $template
      *
-     * @return WorkerInterface
+     * @return SpecifierInterface
      */
-    public function resolve(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
+    public function resolve(TemplateInterface $template)
     {
         foreach ($this->specifiers as $specifier) {
-            if ($specifier->accept($template, $file, $mediaType)) {
+            if ($specifier->accept($template)) {
                 return $specifier;
             }
         }

@@ -637,18 +637,17 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
             collapsed: this.params.hide_properties || false,
             mode: this.mode,
             listeners: {
-                versionSelect: function (file_id, file_version, file_name, folder_id, document_type_key, asset_type) {
+                versionSelect: function (file_id, file_version, file_name, folder_id, media_type) {
                     if (this.mode == 'select') {
                         this.fireEvent('fileSelect', file_id, file_version, file_name, folder_id);
                     }
                     else {
                         var w = new Phlexible.mediamanager.FileDetailWindow({
-                            iconCls: document_type_key,
+                            iconCls: media_type,
                             file_id: file_id,
                             file_version: file_version,
                             file_name: file_name,
-                            document_type_key: document_type_key,
-                            asset_type: asset_type
+                            media_type: media_type
                         });
                         w.show();
                     }
@@ -847,8 +846,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 file_id: r.data.id,
                 file_version: r.data.version,
                 file_name: r.data.name,
-                document_type_key: r.data.document_type_key,
-                asset_type: r.data.asset_type,
+                media_type: r.data.media_type,
                 cache: r.data.cache,
                 rights: grid.folder_rights
             });
@@ -877,7 +875,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 s = 'age_modified';
                 break;
 
-            case 'asset_type':
+            case 'media_type':
                 s = value.toLowerCase();
                 break;
 

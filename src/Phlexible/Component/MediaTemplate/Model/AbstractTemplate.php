@@ -8,8 +8,6 @@
 
 namespace Phlexible\Component\MediaTemplate\Model;
 
-use Phlexible\Component\MediaTemplate\Exception\InvalidArgumentException;
-
 /**
  * Abstract template
  *
@@ -51,11 +49,6 @@ abstract class AbstractTemplate implements TemplateInterface
      * @var int
      */
     private $revision = 0;
-
-    /**
-     * @var array
-     */
-    private $parameters = [];
 
     /**
      * @var \DateTime
@@ -227,74 +220,5 @@ abstract class AbstractTemplate implements TemplateInterface
         $this->modifiedAt = $modifiedAt;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setParameters(array $parameters, $strict = true)
-    {
-        foreach ($parameters as $key => $value) {
-            $this->setParameter($key, $value, $strict);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     * @throws InvalidArgumentException
-     */
-    public function setParameter($key, $value, $strict = true)
-    {
-        $allowedParameters = $this->getAllowedParameters();
-        if (!in_array($key, $allowedParameters)) {
-            if ($strict) {
-                throw new InvalidArgumentException("Parameter $key not allowed in " . get_class($this) . ".");
-            }
-
-            return $this;
-        }
-
-        $this->parameters[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameter($key, $defaultValue = null)
-    {
-        if (!isset($this->parameters[$key])) {
-            $defaultParameters = $this->getDefaultParameters();
-            if (isset($defaultParameters[$key])) {
-                return $defaultParameters[$key];
-            }
-
-            if ($defaultValue !== null) {
-                return $defaultValue;
-            }
-
-            return null;
-        }
-
-        return $this->parameters[$key];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasParameter($key, $notEmpty = false)
-    {
-        return isset($this->parameters[$key]) && (!$notEmpty || $this->parameters[$key]);
     }
 }

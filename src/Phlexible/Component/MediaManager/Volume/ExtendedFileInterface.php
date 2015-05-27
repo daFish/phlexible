@@ -18,18 +18,6 @@ use Phlexible\Component\Volume\Model\FileInterface;
 interface ExtendedFileInterface extends FileInterface
 {
     /**
-     * @param string $mediaCategory
-     *
-     * @return $this
-     */
-    public function setMediaCategory($mediaCategory);
-
-    /**
-     * @return string
-     */
-    public function getMediaCategory();
-
-    /**
      * @param string $mediaType
      *
      * @return $this

@@ -8,10 +8,11 @@
 
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
-use Phlexible\Bundle\MediaManagerBundle\Entity\File;
-use Phlexible\Component\MediaTemplate\Applier\ImageTemplateApplier;
+use Phlexible\Component\MediaCache\Specifier\ImageSpecifier;
 use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Temp\MediaConverter\Transmuter;
 
 /**
  * Image previewer
@@ -21,9 +22,14 @@ use Symfony\Component\Filesystem\Filesystem;
 class ImagePreviewer implements PreviewerInterface
 {
     /**
-     * @var ImageTemplateApplier
+     * @var ImageSpecifier
      */
-    private $applier;
+    private $specifier;
+
+    /**
+     * @var Transmuter
+     */
+    private $transmuter;
 
     /**
      * @var string
@@ -31,12 +37,14 @@ class ImagePreviewer implements PreviewerInterface
     private $cacheDir;
 
     /**
-     * @param ImageTemplateApplier $applier
-     * @param string               $cacheDir
+     * @param ImageSpecifier $specifier
+     * @param Transmuter     $transmuter
+     * @param string         $cacheDir
      */
-    public function __construct(ImageTemplateApplier $applier, $cacheDir)
+    public function __construct(ImageSpecifier $specifier, Transmuter $transmuter, $cacheDir)
     {
-        $this->applier = $applier;
+        $this->specifier = $specifier;
+        $this->transmuter = $transmuter;
         $this->cacheDir = $cacheDir;
     }
 
@@ -52,7 +60,6 @@ class ImagePreviewer implements PreviewerInterface
 
         $template = new ImageTemplate();
         $templateKey = 'unknown';
-        $debug = false;
         foreach ($params as $key => $value) {
             if ($key === 'xmethod') {
                 $key = 'method';
@@ -64,31 +71,49 @@ class ImagePreviewer implements PreviewerInterface
             } elseif ($key === '_dc') {
                 continue;
             } elseif ($key === 'debug') {
-                $debug = true;
                 continue;
             }
 
-            $template->setParameter($key, $value);
+            $method = 'set' . $this->toCamelCase($key);
+            $template->$method($value);
         }
-        //$template->setNoCache();
 
-        $extension = $this->applier->getExtension($template);
+        $spec = $this->specifier->specify($template);
+        $extension = $this->specifier->getExtension($template);
         $cacheFilename = $this->cacheDir . 'preview_image.' . $extension;
-        $image = $this->applier->apply($template, new File(), $filePath, $cacheFilename);
+        $this->transmuter->transmute($filePath, $spec, $cacheFilename);
 
-        $debug = json_encode($template->getParameters());
+        $file = new File($cacheFilename);
+
+        $size = getimagesize($cacheFilename);
+
+        $debug = json_encode($template->toArray(), JSON_PRETTY_PRINT);
 
         $data = [
+            'path'     => $cacheFilename,
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
-            'width'    => $image->getSize()->getWidth(),
-            'height'   => $image->getSize()->getHeight(),
             'format'   => $extension,
-            'mimetype' => $this->applier->getMimetype($template),
+            'mimetype' => $file->getMimeType(),
             'debug'    => $debug,
+            'width'    => $size[0],
+            'height'   => $size[1],
         ];
 
         return $data;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function toCamelCase($value)
+    {
+        $chunks    = explode('_', $value);
+        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+
+        return implode('', $ucfirsted);
     }
 }

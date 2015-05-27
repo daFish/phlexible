@@ -43,4 +43,13 @@ interface ExtendedVolumeInterface extends VolumeInterface
      * @return ExtendedFileInterface
      */
     public function setFileMediaType(ExtendedFileInterface $file, $mediaType, $userId);
+
+    /**
+     * @param ExtendedFileInterface $file
+     * @param string                $mimeType
+     * @param string                $userId
+     *
+     * @return ExtendedFileInterface
+     */
+    public function setFileMimeType(ExtendedFileInterface $file, $mimeType, $userId);
 }
