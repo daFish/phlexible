@@ -75,7 +75,7 @@ class FileCommand extends ContainerAwareCommand
             $table = new Table($output);
             $table->setHeaders(array('Key', 'Value'));
             foreach ($file->getAttributes() as $key => $value) {
-                $table->addRow(array($key, $value));
+                $table->addRow(array($key, substr($value, 0, 60)));
             }
             $table->render();
         }

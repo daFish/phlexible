@@ -9,11 +9,14 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
 use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
+use Phlexible\Component\Volume\FileSource\FilesystemFileSource;
+use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Import command
@@ -46,15 +49,15 @@ class ImportCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $source = $input->getArgument('source');
-        $delete = $input->getArgument('delete');
+        $delete = $input->getOption('delete');
 
         $volume = $input->getOption('volume');
         $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
 
         if ($volume) {
-            $volume = $volumeManager->get($volume);
+            $volume = $volumeManager->getById($volume);
         } else {
-            $volume = $volumeManager->get('mediamanager');
+            $volume = $volumeManager->get('default');
         }
 
         $targetDir = $input->getArgument('dir');
@@ -64,53 +67,58 @@ class ImportCommand extends ContainerAwareCommand
             }
 
             try {
-                $targetFolder = $volume->getFolderPeer()->getByPath($targetDir);
+                $targetFolder = $volume->findFolderByPath($targetDir);
             } catch (\Exception $e) {
                 $output->writeln('Folder "' . $targetDir . '" not found.');
 
                 return 1;
             }
         } else {
-            $targetFolder = $volume->getFolderPeer()->getRoot();
+            $targetFolder = $volume->findRootFolder();
         }
-
-        MWF_Env::setUser(MWF_Core_Users_User_Peer::getSystemUser());
 
         if (is_dir($source)) {
-            $output = $this->importDir($source, $targetFolder);
+            $this->importDir($output, $source, $targetFolder);
         } else {
-            $output = $this->importFile($source, $targetFolder, $delete);
+            $this->importFile($output, $source, $targetFolder, $delete);
         }
-
-        $output->writeln($output);
 
         return 0;
     }
 
-    protected function importFile($sourceFile, Folder $targetFolder, $delete = false)
+    private function importFile(OutputInterface $output, $sourceFile, FolderInterface $targetFolder, $delete = false)
     {
         try {
-            $fileName = basename($sourceFile);
+            $file = new File($sourceFile);
+            $fileSource = new FilesystemFileSource($sourceFile, $file->getMimeType(), filesize($sourceFile));
 
-            $targetFolder->importFile($sourceFile, $fileName);
+            $targetFolder->getVolume()->createFile(
+                $targetFolder,
+                $fileSource,
+                array(),
+                '465d7b7b-5371-11e4-b400-001e677a6817'
+            );
 
-            $output = $sourceFile . ' imported';
+            $output->write($sourceFile . ' imported');
 
             if ($delete) {
                 if (unlink($sourceFile)) {
-                    $output .= ' and removed';
+                    $output->write(' and removed');
                 } else {
-                    $output .= ', but removing failed';
+                    $output->write(', but removing failed');
                 }
             }
+            $output->writeln('');
         } catch (\Exception $e) {
-            $output = 'Could not import file:' . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+            $output->writeln('Could not import file:');
+            $output->writeln($e->getMessage());
+            $output->writeln($e->getTraceAsString());
         }
 
         return $output;
     }
 
-    protected function importDir($sourceDir, Folder $targetFolder)
+    private function importDir(OutputInterface $output, $sourceDir, FolderInterface $targetFolder)
     {
         try {
             $baseDir = new \DirectoryIterator($sourceDir);
@@ -124,23 +132,26 @@ class ImportCommand extends ContainerAwareCommand
                     $dirName = (string) $file->getFileName();
                     $pathName = (string) $file->getPathName();
 
-                    $newFolder = $targetFolder->createSubFolder($dirName);
+                    $newFolder = $targetFolder->getVolume()->createFolder(
+                        $targetFolder,
+                        $dirName,
+                        array(),
+                        '465d7b7b-5371-11e4-b400-001e677a6817'
+                    );
 
-                    $this->importDir($pathName, $newFolder);
+                    $this->importDir($output, $pathName, $newFolder);
                 } elseif ($file->isFile()) {
                     $sourceFile = (string) $file->getPathName();
-                    $fileName = (string) $file->getFileName();
 
-                    $targetFolder->importFile($sourceFile, $fileName);
-
-                    $message = new MediaManagerMessage('File "' . basename($sourceFile) . '" imported.');
-                    $message->post();
+                    $this->importFile($output, $sourceFile, $targetFolder);
                 }
             }
 
-            $output = $sourceDir . ' imported';
+            $output->writeln($sourceDir . ' imported');
         } catch (\Exception $e) {
-            $output = 'Could not import directory:' . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+            $output->writeln('Could not import directory:');
+            $output->writeln($e->getMessage());
+            $output->writeln($e->getTraceAsString());
         }
 
         return $output;
