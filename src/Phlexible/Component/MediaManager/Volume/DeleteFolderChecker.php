@@ -9,7 +9,8 @@
 namespace Phlexible\Component\MediaManager\Volume;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Component\MediaManager\Entity\FolderUsage;
+use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -57,7 +58,10 @@ class DeleteFolderChecker
      */
     public function isDeleteAllowed(FolderInterface $folder)
     {
-        if (!$this->authorizationChecker->isGranted('FOLDER_DELETE', $folder)) {
+        if (
+            !$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
+            !$this->authorizationChecker->isGranted('FOLDER_DELETE', $folder)
+        ) {
             return false;
         }
 

@@ -13,7 +13,7 @@ namespace Phlexible\Component\MediaTemplate\Model;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class VideoTemplate extends AudioTemplate
+class VideoTemplate extends AbstractTemplate
 {
     const TYPE_VIDEO = 'video';
 
@@ -68,11 +68,36 @@ class VideoTemplate extends AudioTemplate
     private $videoFramerate;
 
     /**
-     * Constructor.
+     * @var string
      */
-    public function __construct()
+    private $audioFormat;
+
+    /**
+     * @var string
+     */
+    private $audioBitrate;
+
+    /**
+     * @var string
+     */
+    private $audioSamplerate;
+
+    /**
+     * @var string
+     */
+    private $audioSamplebits;
+
+    /**
+     * @var int
+     */
+    private $audioChannels;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
     {
-        $this->setType(self::TYPE_VIDEO);
+        return self::TYPE_VIDEO;
     }
 
     /**
@@ -276,23 +301,124 @@ class VideoTemplate extends AudioTemplate
     }
 
     /**
+     * @return string
+     */
+    public function getAudioFormat()
+    {
+        return $this->audioFormat;
+    }
+
+    /**
+     * @param string $audioFormat
+     *
+     * @return $this
+     */
+    public function setAudioFormat($audioFormat)
+    {
+        $this->audioFormat = $audioFormat;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAudioBitrate()
+    {
+        return $this->audioBitrate;
+    }
+
+    /**
+     * @param string $audioBitrate
+     *
+     * @return $this
+     */
+    public function setAudioBitrate($audioBitrate)
+    {
+        $this->audioBitrate = $audioBitrate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAudioSamplerate()
+    {
+        return $this->audioSamplerate;
+    }
+
+    /**
+     * @param string $audioSamplerate
+     *
+     * @return $this
+     */
+    public function setAudioSamplerate($audioSamplerate)
+    {
+        $this->audioSamplerate = $audioSamplerate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAudioSamplebits()
+    {
+        return $this->audioSamplebits;
+    }
+
+    /**
+     * @param string $audioSamplebits
+     *
+     * @return $this
+     */
+    public function setAudioSamplebits($audioSamplebits)
+    {
+        $this->audioSamplebits = $audioSamplebits;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAudioChannels()
+    {
+        return $this->audioChannels;
+    }
+
+    /**
+     * @param int $audioChannels
+     *
+     * @return $this
+     */
+    public function setAudioChannels($audioChannels)
+    {
+        $this->audioChannels = $audioChannels;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray()
     {
-        return array_merge(
-            array(
-                'match_format'    => $this->matchFormat,
-                'for_web'         => $this->forWeb,
-                'format'          => $this->format,
-                'deinterlace'     => $this->deinterlace,
-                'video_width'     => $this->videoWidth,
-                'video_height'    => $this->videoHeight,
-                'video_format'    => $this->videoFormat,
-                'video_bitrate'   => $this->videoBitrate,
-                'video_framerate' => $this->videoFramerate,
-            ),
-            parent::toArray()
+        return array(
+            'match_format'    => $this->matchFormat,
+            'for_web'         => $this->forWeb,
+            'format'          => $this->format,
+            'deinterlace'     => $this->deinterlace,
+            'video_width'     => $this->videoWidth,
+            'video_height'    => $this->videoHeight,
+            'video_format'    => $this->videoFormat,
+            'video_bitrate'   => $this->videoBitrate,
+            'video_framerate' => $this->videoFramerate,
+            'audio_bitrate'    => $this->audioBitrate,
+            'audio_channels'   => $this->audioChannels,
+            'audio_samplebits' => $this->audioSamplebits,
+            'audio_samplerate' => $this->audioSamplerate,
         );
     }
 }

@@ -17,6 +17,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaClassifier\MediaClassifier;
 use Temp\MediaClassifier\Model\MediaType;
 use Temp\MediaConverter\Transmuter;
@@ -161,16 +162,28 @@ class Worker implements WorkerInterface
 
         try {
             $spec = $specifier->specify($template);
-            $this->transmuter->transmute($file->getPhysicalPath(), $spec, $tempFilename);
+            $tempFilename = $this->transmuter->transmute($file->getPhysicalPath(), $spec, $tempFilename);
+
+            if (!$tempFilename) {
+                return $this->applyError(
+                    $cacheItem,
+                    CacheItem::STATUS_INAPPLICABLE,
+                    'File type '.((string) $mediaType).' not convertable to ' . $template->getType() . ' template ' . $template->getKey() . '.',
+                    $file->getPhysicalPath(),
+                    $template,
+                    $file
+                );
+            }
 
             $filesystem->chmod($tempFilename, 0777);
 
+            $xfile = new File($tempFilename);
             $mediaType = $this->mediaClassifier->classify($tempFilename);
 
             $cacheItem
                 ->setCacheStatus(CacheItem::STATUS_OK)
                 ->setQueueStatus(CacheItem::QUEUE_DONE)
-                ->setMimeType($mediaType->getMimetype())
+                ->setMimeType($xfile->getMimeType())
                 ->setMediaType((string) $mediaType)
                 ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
                 ->setFilesize(filesize($tempFilename))

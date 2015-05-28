@@ -28,7 +28,7 @@ use Temp\MetaReader\ReaderInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MediaSiteListener implements EventSubscriberInterface
+class VolumeListener implements EventSubscriberInterface
 {
     /**
      * @var MediaClassifier

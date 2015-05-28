@@ -20,11 +20,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CacheItem
 {
-    const STATUS_WAITING  = 'waiting';
-    const STATUS_OK       = 'ok';
-    const STATUS_DELEGATE = 'delegate';
-    const STATUS_ERROR    = 'error';
-    const STATUS_MISSING  = 'missing';
+    const STATUS_WAITING      = 'waiting';
+    const STATUS_OK           = 'ok';
+    const STATUS_DELEGATE     = 'delegate';
+    const STATUS_ERROR        = 'error';
+    const STATUS_MISSING      = 'missing';
+    const STATUS_INAPPLICABLE = 'inapplicable';
 
     const QUEUE_WAITING = 'waiting';
     const QUEUE_ERROR   = 'error';

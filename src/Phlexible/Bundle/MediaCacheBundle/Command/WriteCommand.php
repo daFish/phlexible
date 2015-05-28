@@ -57,7 +57,7 @@ class WriteCommand extends ContainerAwareCommand
         }
 
         $current = 0;
-        foreach ($cacheManager->findBy(array('queue_status' => CacheItem::QUEUE_WAITING)) as $cacheItem) {
+        foreach ($cacheManager->findBy(array('queueStatus' => CacheItem::QUEUE_WAITING)) as $cacheItem) {
             $current++;
             if ($progress) {
                 $progress->advance();

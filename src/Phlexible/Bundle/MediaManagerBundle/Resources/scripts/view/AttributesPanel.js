@@ -391,7 +391,8 @@ Phlexible.mediamanager.AttributesPanel = Ext.extend(Ext.Panel, {
                 ['folderId', r.get('folder_id')],
                 ['folder', r.get('folder')],
                 ['mimeType', r.get('mime_type')],
-                ['mediaType', r.get('media_type')]
+                ['mediaType', r.get('media_type')],
+                ['hash', r.get('hash')]
             ];
             this.getFileDebugPanel().store.loadData(debugData);
 

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mediatypes>
+    <mediatype name="empty" category="document">
+        <mimetypes>
+            <mimetype>application/x-empty</mimetype>
+            <mimetype>inode/x-empty</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="ai" category="document">
+        <mimetypes>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="aif" category="audio">
+        <mimetypes>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="avi" category="video">
+        <mimetypes>
+            <mimetype>video/x-msvideo</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="binary" category="document">
+        <mimetypes>
+            <mimetype>application/octet-stream</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="bmp" category="image">
+        <mimetypes>
+            <mimetype>image/bmp</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="css" category="document">
+        <mimetypes>
+            <mimetype>text/css</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="csv" category="document">
+        <mimetypes>
+            <mimetype>text/csv</mimetype>
+            <mimetype>application/csv</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="db" category="document">
+        <mimetypes>
+            <mimetype>application/commonground</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="doc" category="document">
+        <mimetypes>
+            <mimetype>application/doc</mimetype>
+            <mimetype>application/msword</mimetype>
+            <mimetype>application/vnd.msword</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="docm" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.ms-word.document.macroEnabled.12</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="docx" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.openxmlformats-officedocument.wordprocessingml.document</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="dot" category="document">
+        <mimetypes>
+            <mimetype>application/x-dot</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="dotx" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.openxmlformats-officedocument.wordprocessingml.template</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="eps" category="video">
+        <mimetypes>
+            <mimetype>application/postscript-eps</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="exe" category="document">
+        <mimetypes>
+            <mimetype>application/x-dosexec</mimetype>
+            <mimetype>application/x-msdos-program</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="flv" category="video">
+        <mimetypes>
+            <mimetype>video/x-flv</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="gif" category="image">
+        <mimetypes>
+            <mimetype>image/gif</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="hlp" category="document">
+        <mimetypes>
+            <mimetype>application/mshelp</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="html" category="document">
+        <mimetypes>
+            <mimetype>text/html</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="jpg" category="image">
+        <mimetypes>
+            <mimetype>image/jpg</mimetype>
+            <mimetype>image/jpeg</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="js" category="document">
+        <mimetypes>
+            <mimetype>application/x-javascript</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="m4a" category="audio">
+        <mimetypes>
+            <mimetype>audio/mp4</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="m4v" category="video">
+        <mimetypes>
+            <mimetype>video/mp4</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="mid" category="audio">
+        <mimetypes>
+            <mimetype>audio/midi</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="mka" category="audio">
+        <mimetypes>
+            <mimetype>audio/x-matroska</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="mkv" category="video">
+        <mimetypes>
+            <mimetype>video/x-matroska</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="mmap" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.mindjet.mindmanager</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="mov" category="video">
+        <mimetypes>
+            <mimetype>video/quicktime</mimetype>
+            <mimetype>video/x-quicktime</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="mp3" category="audio">
+        <mimetypes>
+            <mimetype>audio/mpeg</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="mpg" category="video">
+        <mimetypes>
+            <mimetype>video/mpeg</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="odb" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.database</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="odt" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.chart</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="odf" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.formula</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="odg" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.graphics</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="odi" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.image</mimetype>
+        </mimetypes>
+        <icons>
+        </icons>
+    </mediatype>
+    <mediatype name="odm" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.text-master</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="odp" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.presentation</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="ods" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.spreadsheet</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="odt" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.text</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="otg" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.graphics-template</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="oth" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.text-web</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="otp" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.presentation-template</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="ots" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.spreadsheet-template</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="ott" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.oasis.opendocument.text-template</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="pdf" category="document">
+        <mimetypes>
+            <mimetype>application/pdf</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="png" category="image">
+        <mimetypes>
+            <mimetype>image/png</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="pot" category="document">
+        <mimetypes>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="potx" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.openxmlformats-officedocument.presentationml.template</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="ppt" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.ms-powerpoint</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="pptm" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.ms-powerpoint.presentation.macroEnabled.12</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="pptx" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.openxmlformats-officedocument.presentationml.presentation</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="ps" category="image">
+        <mimetypes>
+            <mimetype>application/postscript</mimetype>
+            <mimetype>application/postscript-ps</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="psd" category="image">
+        <mimetypes>
+            <mimetype>image/x-photoshop</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="rar" category="archive">
+        <mimetypes>
+            <mimetype>application/rar</mimetype>
+            <mimetype>application/x-rar</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="rtf" category="document">
+        <mimetypes>
+            <mimetype>application/rtf</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="svg" category="document">
+        <mimetypes>
+            <mimetype>image/svg</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="swf" category="flash">
+        <mimetypes>
+            <mimetype>application/x-shockwave-flash</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="tif" category="image">
+        <mimetypes>
+            <mimetype>image/tiff</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="ttf" category="document">
+        <mimetypes>
+            <mimetype>font/ttf</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="txt" category="document">
+        <mimetypes>
+            <mimetype>text/plain</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="wav" category="audio">
+        <mimetypes>
+            <mimetype>audio/x-wav</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="wma" category="audio">
+        <mimetypes>
+            <mimetype>Audio/x-ms-wma</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="wmv" category="video">
+        <mimetypes>
+            <mimetype>video/x-ms-wmv</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="xls" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.ms-excel</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="xlsm" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.ms-excel.sheet.macroEnabled.12</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="xlsx" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="xls" category="document">
+    </mediatype>
+    <mediatype name="xltx" category="document">
+        <mimetypes>
+            <mimetype>application/vnd.openxmlformats-officedocument.spreadsheetml.template</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="xml" category="document">
+        <mimetypes>
+            <mimetype>text/xml</mimetype>
+        </mimetypes>
+    </mediatype>
+    <mediatype name="zip" category="archive">
+        <mimetypes>
+            <mimetype>application/x-zip</mimetype>
+            <mimetype>application/zip</mimetype>
+        </mimetypes>
+    </mediatype>
+</mediatypes>

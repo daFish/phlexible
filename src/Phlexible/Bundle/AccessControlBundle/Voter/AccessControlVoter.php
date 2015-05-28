@@ -8,13 +8,14 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\Voter;
 
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
+use Phlexible\Component\AccessControl\Model\ObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\UserSecurityIdentity;
-use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Phlexible\Component\AccessControl\Rights\CalculatedRights;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -57,21 +58,26 @@ class AccessControlVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function vote(TokenInterface $token, $identity, array $attributes)
     {
-        if (!$object instanceof ObjectIdentityInterface) {
-            return self::ACCESS_ABSTAIN;
+        if (!$identity instanceof ObjectIdentityInterface) {
+            if ($identity instanceof HierarchicalDomainObjectInterface) {
+                $identity = HierarchicalObjectIdentity::fromDomainObject($identity);
+            } elseif ($identity instanceof DomainObjectInterface) {
+                $identity = ObjectIdentity::fromDomainObject($identity);
+            } else {
+                return self::ACCESS_ABSTAIN;
+            }
         }
 
-        $objectType = get_class($object);//$object->getObjectType();
         $permissionName = !empty($attributes['permission']) ? $attributes['permission'] : $attributes[0];
         $objectLanguage = !empty($attributes['language']) ? $attributes['language'] : null;
 
-        if (!$this->permissionRegistry->has($objectType)) {
+        if (!$this->permissionRegistry->has($identity->getType())) {
             return self::ACCESS_ABSTAIN;
         }
 
-        $permissions = $this->permissionRegistry->get($objectType);
+        $permissions = $this->permissionRegistry->get($identity->getType());
 
         if (!$permissions->has($permissionName)) {
             return self::ACCESS_ABSTAIN;
@@ -79,7 +85,7 @@ class AccessControlVoter implements VoterInterface
 
         $permission = $permissions->get($permissionName);
 
-        $acl = $this->accessManager->findAcl($object);
+        $acl = $this->accessManager->findAcl($identity);
 
         $securityIdentity = UserSecurityIdentity::fromToken($token);
 

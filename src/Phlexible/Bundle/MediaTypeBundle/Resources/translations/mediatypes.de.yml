@@ -7,10 +7,7 @@ audio-mka: 'Matroshka Audio'
 audio-mp3: 'MP3 Datei'
 audio-wav: 'Wave Datei'
 audio-wma: 'Windows Media Audio'
-document-_empty: 'Leere Datei'
-document-_fallback: Unbekannt
-document-_folder: Ordner
-document-_unknown: 'Unbekannte Datei'
+document-empty: 'Leere Datei'
 document-ai: 'Illustrator Dokument'
 document-binary: 'Binär Datei'
 document-css: 'CSS Dokument'

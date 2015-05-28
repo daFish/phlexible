@@ -43,11 +43,11 @@ class AudioTemplate extends AbstractTemplate
     private $audioChannels;
 
     /**
-     * Constructor.
+     * {@inheritdoc}
      */
-    public function __construct()
+    public function getType()
     {
-        $this->setType(self::TYPE_AUDIO);
+        return self::TYPE_AUDIO;
     }
 
     /**

@@ -148,7 +148,7 @@ class FolderController extends Controller
                 $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
                 */
                 $userRights = array();
-                foreach ($permissionRegistry->get(get_class($rootFolder)) as $permission) {
+                foreach ($permissionRegistry->get(get_class($rootFolder))->all() as $permission) {
                     $userRights[] = $permission->getName();
                 }
 
@@ -220,10 +220,9 @@ class FolderController extends Controller
                     $userRights = array();
                     */
                     $userRights = array();
-                    foreach ($permissionRegistry->get(get_class($subFolder)) as $permission) {
+                    foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
                         $userRights[] = $permission->getName();
                     }
-
                     $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);
                     $usedIn = $folderUsageService->getUsedIn($folder);

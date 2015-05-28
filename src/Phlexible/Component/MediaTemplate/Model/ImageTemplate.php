@@ -73,14 +73,6 @@ class ImageTemplate extends AbstractTemplate
     private $backgroundcolor;
 
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this->setType(self::TYPE_IMAGE);
-    }
-
-    /**
      * @return int
      */
     public function getWidth()

@@ -1,3 +1,6 @@
+parameters:
+    phlexible_media.temp_dir: "%kernel.cache_dir%/media"
+
 services:
     phlexible_media.transmuter:
         class: Temp\MediaConverter\Transmuter
@@ -20,6 +23,18 @@ services:
                 - @phlexible_media.transmuter.raw_audio_extractor
                 - @phlexible_media.transmuter.raw_image_extractor
                 - @phlexible_media.transmuter.raw_video_extractor
+                - @phlexible_media.transmuter.ffmpeg_image_extractor
+                - @phlexible_media.transmuter.exiftool_image_extractor
+
+    phlexible_media.transmuter.exiftool_image_extractor:
+        class: Temp\MediaConverter\Extractor\ExiftoolImageExtractor
+        arguments: [@phlexible_media.exiftool, %phlexible_media.temp_dir%]
+        public: false
+
+    phlexible_media.transmuter.ffmpeg_image_extractor:
+        class: Temp\MediaConverter\Extractor\FfmpegImageExtractor
+        arguments: [@phlexible_media.ffmpeg, %phlexible_media.temp_dir%]
+        public: false
 
     phlexible_media.transmuter.raw_audio_extractor:
         class: Temp\MediaConverter\Extractor\RawAudioExtractor

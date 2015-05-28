@@ -71,14 +71,14 @@ services:
         arguments: [@phlexible_media_cache.image_delegate.worker]
 
     # event listeners
-    phlexible_media_cache.listener.file:
-        class: Phlexible\Bundle\MediaCacheBundle\EventListener\FileListener
+    phlexible_media_cache.listener.volume:
+        class: Phlexible\Bundle\MediaCacheBundle\EventListener\VolumeListener
         arguments:
             - @phlexible_media_template.template_manager
             - @phlexible_media_cache.queue_processor
             - @phlexible_media_cache.batch_resolver
             - @phlexible_media_cache.cache_manager
-            - %phlexible_media_cache.immediately_cache_system_templates%
+            - %phlexible_media_cache.process_on_add%
         tags:
             - {name: kernel.event_subscriber}
 

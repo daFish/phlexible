@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class FileListener implements EventSubscriberInterface
+class VolumeListener implements EventSubscriberInterface
 {
     /**
      * @var TemplateManagerInterface
@@ -127,7 +127,7 @@ class FileListener implements EventSubscriberInterface
 
         $batch = new Batch();
 
-        if ($this->immediatelyCacheSystemTemplates) {
+        if (0 && $this->immediatelyCacheSystemTemplates) {
             $batch
                 ->addFile($file)
                 ->addTemplates($systemTemplates);

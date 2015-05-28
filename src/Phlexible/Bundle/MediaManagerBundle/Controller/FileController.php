@@ -79,6 +79,8 @@ class FileController extends Controller
                 $sort = 'created_at';
             } elseif ($sort === 'document_type_key') {
                 $sort = 'mime_type';
+            } elseif ($sort === 'create_user_id') {
+                $sort = 'createUserId';
             }
 
             if ($filter) {
@@ -212,6 +214,7 @@ class FileController extends Controller
                 'folder'            => '/Root/' . $folder->getPath(),
                 'media_type'        => $file->getMediaType(),
                 'mime_type'         => $file->getMimetype(),
+                'hash'              => $file->getHash(),
                 'present'           => file_exists($file->getPhysicalPath()),
                 'size'              => $file->getSize(),
                 'hidden'            => $file->isHidden() ? 1 : 0,
@@ -343,8 +346,7 @@ class FileController extends Controller
         $properties['path'] = '/' . $folder->getPath();
         $properties['name'] = $file->getName();
         $properties['size'] = $file->getSize();
-        $properties['document_type_key'] = strtolower($file->getMediaType());
-        $properties['asset_type'] = strtolower($file->getMediaCategory());
+        $properties['media_type'] = $file->getMediaType();
         $properties['create_user_id'] = $file->getCreateUserId();
         $properties['create_time'] = $file->getCreatedAt()->format('U');
 
@@ -359,8 +361,7 @@ class FileController extends Controller
 
         $properties['debug'] = [
             'mimeType'     => $file->getMimeType(),
-            'documentType' => strtolower($file->getMediaType()),
-            'assetType'    => strtolower($file->getMediaCategory()),
+            'mediaType'    => $file->getMediaType(),
             'fileId'       => $fileId,
             'folderId'     => $folder->getId(),
         ];
@@ -371,8 +372,7 @@ class FileController extends Controller
             'name'              => $file->getName(),
             'size'              => $file->getSize(),
             'version'           => $file->getVersion(),
-            'document_type_key' => strtolower($file->getMediaType()),
-            'asset_type'        => strtolower($file->getMediaCategory()),
+            'media_type'        => $file->getMediaType(),
             'create_user_id'    => $file->getCreateUserId(),
             'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
         ];
@@ -416,15 +416,14 @@ class FileController extends Controller
         $detail = [];
         foreach ($volume->findFileVersions($id) as $file) {
             $detail[] = [
-                'id'                => $file->getId(),
-                'folder_id'         => $file->getFolderId(),
-                'name'              => $file->getName(),
-                'size'              => $file->getSize(),
-                'version'           => $file->getVersion(),
-                'document_type_key' => strtolower($file->getMediaType()),
-                'asset_type'        => strtolower($file->getMediaCategory()),
-                'create_user_id'    => $file->getCreateUserId(),
-                'create_time'       => $file->getCreatedAt()->format('Y-m-d'),
+                'id'             => $file->getId(),
+                'folder_id'      => $file->getFolderId(),
+                'name'           => $file->getName(),
+                'size'           => $file->getSize(),
+                'version'        => $file->getVersion(),
+                'media_type'     => $file->getMediaType(),
+                'create_user_id' => $file->getCreateUserId(),
+                'create_time'    => $file->getCreatedAt()->format('Y-m-d'),
             ];
         }
 

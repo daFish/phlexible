@@ -103,97 +103,106 @@ Phlexible.mediamanager.FilePreviewPanel = Ext.extend(Ext.Panel, {
                 }
             ]
         };
-        return '<table border="0" width="100%" height="100%"><tr><td align="center" valign="middle">' + this.strings.no_preview_available + '</td></tr></table>';
-    },
-
-    createFlashPlayer: function (width, height, file_id, file_version, file_name, cache) {
-        var link = this.getLink(file_id, file_version) + '/' + file_name + '.swf';
-
-        return {
-            tag: 'embed',
-            src: link,
-            width: width,
-            height: height,
-            allowfullscreen: 'true',
-            allowscriptaccess: 'always',
-            wmode: 'transparent',
-            flashvars: link
-        };
-        return '<embed src="' + link + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
+        //return '<table border="0" width="100%" height="100%"><tr><td align="center" valign="middle">' + this.strings.no_preview_available + '</td></tr></table>';
     },
 
     createAudioPlayer: function (width, height, file_id, file_version, file_name, cache) {
-        if (!cache._mm_preview_audio || cache._mm_preview_audio.substr(0, 2) !== 'ok') {
+        if (!cache._mm_preview_audio) {
             return this.createImage(256, 256, file_id, file_version, file_name, cache);
         }
 
-        var image = this.getLink(file_id, '_mm_preview_player', file_version, cache);
-        var audio = this.getLink(file_id, '_mm_preview_audio', file_version, false) + '/name/' + file_name + '.mp3';
+        //var image = this.getLink(file_id, '_mm_preview_player', file_version, cache);
+        //var audio = cache._mm_preview_audio;//this.getLink(file_id, '_mm_preview_audio', file_version, false) + '/name/' + file_name + '.mp3';
         //var link = '&file=' + audio + '&image=' + image + '&height=' + height + '&width=' + width + '';
 
-        return {
+        var config = {
             tag: 'audio',
             controls: 'controls',
-            poster: image,
-            children: [
-                {
-                    tag: 'source',
-                    src: audio,
-                    type: 'audio/mpeg'
-                }
-            ]
+            style: {
+                width: '256px',
+                height: '256px'
+            },
+            children: []
         };
-        return '<embed src="' + Phlexible.bundleAsset('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
+
+        if (cache._mm_preview_player) {
+            config.poster = cache._mm_preview_player;
+            config.style["background-image"] = "url('" + cache._mm_preview_player + "')";
+        }
+
+        if (cache._mm_preview_audio) {
+            config.children.push({
+                tag: 'source',
+                src: cache._mm_preview_audio,
+                type: 'audio/mpeg'
+            });
+        }
+
+        return config;
+        //return '<embed src="' + Phlexible.bundleAsset('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
     createVideoPlayer: function (width, height, file_id, file_version, file_name, cache) {
-        if (!cache._mm_preview_video || cache._mm_preview_video_mp4.substr(0, 2) !== 'ok' || cache._mm_preview_video_ogg.substr(0, 2) !== 'ok') {
+        if (!cache._mm_preview_video_mp4 || !cache._mm_preview_video_ogg) {
             return this.createImage(256, 256, file_id, file_version, file_name, cache);
         }
 
-        var image = this.getLink(file_id, '_mm_preview_player', file_version, cache);
-        var video_mp4 = this.getLink(file_id, '_mm_preview_video_mp4', file_version, false) + '/name/' + file_name + '.mp4';
-        var video_ogg = this.getLink(file_id, '_mm_preview_video_ogg', file_version, false) + '/name/' + file_name + '.ogv';
+        //var image = cache._mm_preview_player || null; //this.getLink(file_id, '_mm_preview_player', file_version, cache);
+        //var video_mp4 = cache._mm_preview_video_mp4 || null; //this.getLink(file_id, '_mm_preview_video_mp4', file_version, false) + '/name/' + file_name + '.mp4';
+        //var video_ogg = cache._mm_preview_video_ogg || null; //this.getLink(file_id, '_mm_preview_video_ogg', file_version, false) + '/name/' + file_name + '.ogv';
         //var link = '&file=' + video + '&image=' + image + '&height=' + height + '&width=' + width + '&overstretch=false';
 
-        return {
+        var config = {
             tag: 'video',
             controls: 'controls',
-            poster: image,
-            width: width,
-            height: height,
-            children: [
-                {
-                    tag: 'source',
-                    src: video_mp4,
-                    type: 'video/mp4'
-                },
-                {
-                    tag: 'source',
-                    src: video_ogg,
-                    type: 'video/ogg'
-                }
-            ]
+            //width: width,
+            //height: height,
+            style: {
+                width: '256px',
+                height: '256px'
+            },
+            children: []
         };
-        return '<embed src="' + Phlexible.bundleAsset('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
+
+        if (cache._mm_preview_player) {
+            config.poster = cache._mm_preview_player;
+        }
+        if (cache._mm_preview_video_mp4) {
+            config.children.push({
+                tag: 'source',
+                src: cache._mm_preview_video_mp4,
+                type: 'video/mp4'
+            })
+        }
+
+        if (cache._mm_preview_video_ogg) {
+            config.children.push({
+                tag: 'source',
+                src: cache._mm_preview_video_ogg,
+                type: 'video/mp4'
+            })
+        }
+
+        return config;
+        //return '<embed src="' + Phlexible.bundleAsset('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
     createImage: function (width, height, file_id, file_version, file_name, cache) {
-        var link = this.getLink(file_id, '_mm_extra', file_version, cache);
+        //if (!cache._mm_extra) {
+        //    return this.createNoPreview();
+        //}
+
+        //var link = this.getLink(file_id, '_mm_extra', file_version, cache);
 
         return {
             tag: 'img',
             style: 'border: 1px solid lightgray;',
             alt: file_name,
-            src: link,
+            src: this.getLink(file_id, '_mm_extra', file_version, cache), //cache._mm_extra, //link,
             width: width,
             height: height
         };
-        return '<img style="border: 1px solid lightgray;" alt="' + file_name + '" src="' + link + '" width="' + width + '" height="' + height + '" />';
-    },
-
-    createText: function (width, height, file_id, file_name) {
-
+        //return '<img style="border: 1px solid lightgray;" alt="' + file_name + '" src="' + link + '" width="' + width + '" height="' + height + '" />';
     }
 });
 
