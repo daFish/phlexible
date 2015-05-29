@@ -287,7 +287,6 @@ class MediaExtension extends \Twig_Extension
         $info = [
             'name'          => $file->getName(),
             'mimetype'      => $file->getMimeType(),
-            'mediaCategory' => $file->getMediaCategory(),
             'mediaType'     => $file->getMediaType(),
             'size'          => $file->getSize(),
             'attributes'    => $file->getAttributes(),
