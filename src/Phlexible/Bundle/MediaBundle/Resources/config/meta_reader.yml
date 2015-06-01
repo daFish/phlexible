@@ -9,31 +9,31 @@ services:
                 #- @phlexible_media.meta_reader.pdfinfo
                 #- @phlexible_media.meta_reader.zip_extension
 
-    phlexible_media.meta_reader.exif_extension:
-        class: Temp\MetaReader\ExifExtensionReader
+    #phlexible_media.meta_reader.exif_extension:
+    #    class: Temp\MetaReader\ExifExtensionReader
+    #    public: false
 
-        public: false
     phlexible_media.meta_reader.exiftool:
         class: Temp\MetaReader\ExiftoolReader
         public: false
         arguments: [@phlexible_media.exiftool]
 
-    phlexible_media.meta_reader.ffprobe:
-        class: Temp\MetaReader\FfprobeReader
-        public: false
-        arguments: [@phlexible_media.ffprobe]
+    #phlexible_media.meta_reader.ffprobe:
+    #    class: Temp\MetaReader\FfprobeReader
+    #    public: false
+    #    arguments: [@phlexible_media.ffprobe]
 
-    phlexible_media.meta_reader.image_analyzer:
-        class: Temp\MetaReader\ImageAnalyzerReader
-        public: false
-        arguments: [@phlexible_media.image_analyzer]
+    #phlexible_media.meta_reader.image_analyzer:
+    #    class: Temp\MetaReader\ImageAnalyzerReader
+    #    public: false
+    #    arguments: [@phlexible_media.image_analyzer]
 
-    phlexible_media.meta_reader.pdfinfo:
-        class: Temp\MetaReader\PdfInfoReader
-        public: false
-        arguments: [@phlexible_media.poppler.pdf_file]
+    #phlexible_media.meta_reader.pdfinfo:
+    #    class: Temp\MetaReader\PdfInfoReader
+    #    public: false
+    #    arguments: [@phlexible_media.poppler.pdf_file]
 
-    phlexible_media.meta_reader.zip_extension:
-        class: Temp\MetaReader\ZipExtensionReader
-        public: false
+    #phlexible_media.meta_reader.zip_extension:
+    #    class: Temp\MetaReader\ZipExtensionReader
+    #    public: false
 
