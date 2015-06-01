@@ -3,6 +3,7 @@ services:
         class: Temp\MediaClassifier\MediaClassifier
         arguments:
             - @phlexible_media.media_classifier.collection
+            - document:binary
 
     phlexible_media.media_classifier.collection:
         class: Temp\MediaClassifier\Model\MediaTypeCollection
