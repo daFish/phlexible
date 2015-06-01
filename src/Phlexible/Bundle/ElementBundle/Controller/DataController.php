@@ -374,7 +374,7 @@ class DataController extends Controller
 
         if (in_array($elementtype->getType(), [Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART])) {
             if ($type == Elementtype::TYPE_FULL) {
-                $urls['preview'] = $this->generateUrl('frontend_preview', ['treeId' => $node->getId(), '_locale' => $language]);
+                $urls['preview'] = $this->generateUrl('cms_preview', ['treeId' => $node->getId(), '_locale' => $language]);
 
                 if ($isPublished) {
                     $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
@@ -856,7 +856,7 @@ class DataController extends Controller
         ];
 
         if ($node) {
-            $urls['preview'] = $this->generateUrl('frontend_preview', ['treeId' => $tid, '_locale' => $language]);
+            $urls['preview'] = $this->generateUrl('cms_preview', ['treeId' => $tid, '_locale' => $language]);
 
             if ($stateManager->isPublished($node, $language)) {
                 try {

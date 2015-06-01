@@ -1,3 +1,0 @@
-services:
-    frontendmediamanagerFrontendPublishItems:
-        class: Makeweb_Frontendmediamanager_FrontendPublish_Items

@@ -4,3 +4,7 @@ cms:
     statistics: Statistiken
     quickstart: Schnellstart
     quickstart_description: 'Ändern Sie Ihre Schnellstart Einträge.'
+    file: Datei
+    asset_type: Assettyp
+    documenttypes: Dokumenttypen
+    view_mode: Ansicht

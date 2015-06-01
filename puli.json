@@ -21,9 +21,6 @@
         "/phlexible/phlexibleelementtype/menu": "src/Phlexible/Bundle/ElementtypeBundle/Resources/menu",
         "/phlexible/phlexibleelementtype/scripts": "src/Phlexible/Bundle/ElementtypeBundle/Resources/scripts",
         "/phlexible/phlexibleelementtype/styles": "src/Phlexible/Bundle/ElementtypeBundle/Resources/styles",
-        "/phlexible/phlexiblefrontendmedia/icons": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/public/icons",
-        "/phlexible/phlexiblefrontendmedia/scripts": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/scripts",
-        "/phlexible/phlexiblefrontendmedia/styles": "src/Phlexible/Bundle/FrontendMediaBundle/Resources/styles",
         "/phlexible/phlexiblegui/icons": "src/Phlexible/Bundle/GuiBundle/Resources/public/icons",
         "/phlexible/phlexiblegui/menu": "src/Phlexible/Bundle/GuiBundle/Resources/menu",
         "/phlexible/phlexiblegui/scripts": "src/Phlexible/Bundle/GuiBundle/Resources/scripts",
@@ -154,18 +151,6 @@
         },
         "43a612f4-1059-5375-bace-94816dc79db8": {
             "query": "/phlexible/phlexibleelementtype/styles/**/*.css",
-            "type": "phlexible/styles"
-        },
-        "105703e0-db92-515c-be33-7c409edf96c4": {
-            "query": "/phlexible/phlexiblefrontendmedia/icons/*.png",
-            "type": "phlexible/icons"
-        },
-        "b2d4128b-ca98-55b8-846e-e859adcf23a9": {
-            "query": "/phlexible/phlexiblefrontendmedia/scripts/**/*.js",
-            "type": "phlexible/scripts"
-        },
-        "a80bd044-07cc-5ed2-88f2-12756caf0e1c": {
-            "query": "/phlexible/phlexiblefrontendmedia/styles/**/*.css",
             "type": "phlexible/styles"
         },
         "f4f815d8-eb5c-5b2a-90ef-ef53de03e382": {

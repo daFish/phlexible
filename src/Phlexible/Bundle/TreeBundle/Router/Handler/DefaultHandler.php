@@ -307,7 +307,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             $attributes['_route'] = $path;
             $attributes['_route_object'] = $treeNode;
             $attributes['_content'] = $treeNode;
-            $attributes['_controller'] = 'PhlexibleFrontendBundle:Online:index';
+            $attributes['_controller'] = 'PhlexibleCmsBundle:Online:index';
         }
 
         $request->setLocale($language);

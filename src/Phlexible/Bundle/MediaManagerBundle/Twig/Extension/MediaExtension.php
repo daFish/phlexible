@@ -92,7 +92,7 @@ class MediaExtension extends \Twig_Extension
         }
 
         // deliver original file
-        $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
+        $src = $this->router->generate('cms_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $src;
     }
@@ -116,7 +116,7 @@ class MediaExtension extends \Twig_Extension
         }
 
         // deliver original file
-        $src = $this->router->generate('frontendmedia_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
+        $src = $this->router->generate('cms_inline', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         return $src;
     }
@@ -140,7 +140,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_URL);
+        $src = $this->router->generate('cms_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $src;
     }
@@ -164,7 +164,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_PATH);
+        $src = $this->router->generate('cms_icon', ['fileId' => $fileId, 'size' => $size], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         return $src;
     }
@@ -188,7 +188,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_URL);
+        $src = $this->router->generate('cms_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $src;
     }
@@ -212,7 +212,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_PATH);
+        $src = $this->router->generate('cms_thumbnail', ['fileId' => $fileId, 'template' => $template], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         return $src;
     }
@@ -235,7 +235,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
+        $src = $this->router->generate('cms_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $src;
     }
@@ -258,7 +258,7 @@ class MediaExtension extends \Twig_Extension
             $fileVersion = $parts[1];
         }
 
-        $src = $this->router->generate('frontendmedia_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
+        $src = $this->router->generate('cms_download', ['fileId' => $fileId], UrlGeneratorInterface::ABSOLUTE_PATH);
 
         return $src;
     }

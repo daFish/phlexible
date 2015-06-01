@@ -13,6 +13,33 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
+    phlexible_cms.listener.element:
+        class: Phlexible\Bundle\CmsBundle\EventListener\ElementListener
+        arguments: [@phlexible_cms.usage_updater]
+        tags:
+            - {name: kernel.event_subscriber}
+
+    # fields
+    phlexible_cms.field.folder:
+        class: Phlexible\Bundle\CmsBundle\Field\FolderField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: folder}
+
+    phlexible_cms.field.file:
+        class: Phlexible\Bundle\CmsBundle\Field\FileField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: file}
+
+    # problem checkers
+    phlexible_cms.problem.specialtidcheck:
+        class: Phlexible\Bundle\CmsBundle\ProblemChecker\SpecialTidChecker
+        public: false
+        arguments: [@doctrine.orm.entity_manager]
+        tags:
+            - {name: problem.checker}
+
     # role providers
     phlexible_cms.role_provider:
         class: Phlexible\Bundle\CmsBundle\RoleProvider\CmsRoleProvider

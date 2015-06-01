@@ -4,3 +4,7 @@ cms:
     statistics: Statistics
     quickstart: Quickstart
     quickstart_description: 'Change your quickstart items.'
+    file: File
+    asset_type: Asset type
+    documenttypes: Document types
+    view_mode: View mode
