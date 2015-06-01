@@ -185,8 +185,8 @@ class Worker implements WorkerInterface
                 ->setQueueStatus(CacheItem::QUEUE_DONE)
                 ->setMimeType($xfile->getMimeType())
                 ->setMediaType((string) $mediaType)
-                ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
-                ->setFilesize(filesize($tempFilename))
+                ->setExtension($xfile->getExtension())
+                ->setFilesize($xfile->getSize())
                 ->setFinishedAt(new \DateTime());
         } catch (\Exception $e) {
             $cacheItem
@@ -240,7 +240,8 @@ class Worker implements WorkerInterface
 
         $cacheItem
             ->setCacheStatus($status)
-            ->setError($error);
+            ->setError($error)
+            ->setFinishedAt(new \DateTime());
 
         $this->logger->error($message);
 
