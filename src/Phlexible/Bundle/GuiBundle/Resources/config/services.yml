@@ -35,8 +35,7 @@ services:
 
     security.role_hierarchy:
         class: Symfony\Component\Security\Core\Role\RoleHierarchy
-        factory_service: phlexible_gui.security.role_hierarchy_factory
-        factory_method: factory
+        factory: [@phlexible_gui.security.role_hierarchy_factory, factory]
         public: false
 
     phlexible_gui.security.access.role_hierarchy_voter:

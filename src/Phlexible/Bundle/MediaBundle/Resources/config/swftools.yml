@@ -9,24 +9,21 @@ services:
 
     phlexible_media.swftools.pdf2swf:
         class: SwfTools\Binary\Pdf2swf
-        factory_class: SwfTools\Binary\Pdf2swf
-        factory_method: create
+        factory: [SwfTools\Binary\Pdf2swf, create]
         arguments: [%phlexible_media.swftools.configuration%, @logger]
         tags:
             - {name: monolog.logger, channel: media}
 
     phlexible_media.swftools.swfrender:
         class: SwfTools\Binary\Swfrender
-        factory_class: SwfTools\Binary\Swfrender
-        factory_method: create
+        factory: [SwfTools\Binary\Swfrender, create]
         arguments: [%phlexible_media.swftools.configuration%, @logger]
         tags:
             - {name: monolog.logger, channel: media}
 
     phlexible_media.swftools.swfextract:
         class: SwfTools\Binary\Swfextract
-        factory_class: SwfTools\Binary\Swfextract
-        factory_method: create
+        factory: [SwfTools\Binary\Swfextract, create]
         arguments: [%phlexible_media.swftools.configuration%, @logger]
         tags:
             - {name: monolog.logger, channel: media}

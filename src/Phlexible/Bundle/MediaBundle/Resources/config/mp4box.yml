@@ -1,8 +1,7 @@
 services:
     phlexible_media.mp4box:
         class: MP4Box\MP4Box
-        factory_class: MP4Box\MP4Box
-        factory_method: create
+        factory: [MP4Box\MP4Box, create]
         arguments: [%phlexible_media.mp4box.configuration%, @logger]
         tags:
             - {name: monolog.logger, channel: media}
