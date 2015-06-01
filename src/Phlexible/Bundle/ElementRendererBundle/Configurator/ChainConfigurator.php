@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\ElementRendererBundle\Configurator;
 
-use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

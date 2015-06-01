@@ -12,7 +12,6 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Mediator\Mediator;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 // TODO: interface
 

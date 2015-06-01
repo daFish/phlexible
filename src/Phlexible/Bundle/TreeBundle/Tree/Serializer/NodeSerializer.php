@@ -12,8 +12,6 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
-use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 

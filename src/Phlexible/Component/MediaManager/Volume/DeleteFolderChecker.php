@@ -10,7 +10,6 @@ namespace Phlexible\Component\MediaManager\Volume;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
-use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 

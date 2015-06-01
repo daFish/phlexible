@@ -17,7 +17,6 @@ use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Component\Identifier\IdentifiableInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * XML content tree

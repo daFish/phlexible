@@ -64,7 +64,6 @@ class DataController extends Controller
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
         $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
-        $securityContext = $this->get('security.context');
 
         $teaser = null;
         if ($teaserId) {
@@ -249,8 +248,8 @@ class DataController extends Controller
         }
 
         if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') &&
-                !$securityContext->isGranted(['right' => 'EDIT', 'language' => $language], $node)
+            if (!$this->isGranted('ROLE_SUPER_ADMIN') &&
+                !$this->isGranted(['right' => 'EDIT', 'language' => $language], $node)
             ) {
                 $doLock = false;
             }
@@ -458,10 +457,10 @@ class DataController extends Controller
 
         $userRights = [];
         if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if ($this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 

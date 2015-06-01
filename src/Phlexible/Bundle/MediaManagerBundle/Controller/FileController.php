@@ -70,11 +70,10 @@ class FileController extends Controller
         $total = 0;
 
         $volume = $this->getVolumeByFolderId($folderId);
-        $securityContext = $this->get('security.context');
 
         $folder = $volume->findFolder($folderId);
 
-        if ($securityContext->isGranted('ROLE_SUPER_ADMIN') || $securityContext->isGranted('FILE_READ', $folder)) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN') || $this->isGranted('FILE_READ', $folder)) {
             if ($sort === 'create_time') {
                 $sort = 'created_at';
             } elseif ($sort === 'document_type_key') {

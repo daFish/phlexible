@@ -20,12 +20,12 @@ interface LoaderInterface
     /**
      * @param string $elementtypeId
      *
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype
+     * @return Elementtype
      */
     public function load($elementtypeId);
 
     /**
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype[]
+     * @return Elementtype[]
      */
     public function loadAll();
 }

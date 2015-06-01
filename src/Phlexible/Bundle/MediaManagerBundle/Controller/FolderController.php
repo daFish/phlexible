@@ -58,7 +58,6 @@ class FolderController extends Controller
         $volume = $folder->getVolume();
         $subFolders = $volume->findFoldersByParentFolder($folder);
 
-        $securityContext = $this->get('security.context');
         $permissions = $this->get('phlexible_access_control.permissions');
 
         $user = $this->getUser();
@@ -67,7 +66,7 @@ class FolderController extends Controller
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder ExtendedFolderInterface */
 
-            if (!$securityContext->isGranted('FOLDER_READ', $folder)) {
+            if (!$this->isGranted('FOLDER_READ', $folder)) {
                 continue;
             }
 
@@ -125,7 +124,6 @@ class FolderController extends Controller
         $slots = new Slots();
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $dispatcher = $this->get('event_dispatcher');
-        $securityContext = $this->get('security.context');
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $user = $this->getUser();
@@ -134,7 +132,7 @@ class FolderController extends Controller
             foreach ($volumeManager->all() as $volume) {
                 $rootFolder = $volume->findRootFolder();
 
-                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $rootFolder)) {
                     continue;
                 }
 
@@ -202,12 +200,12 @@ class FolderController extends Controller
                 $volume = $volumeManager->getByFolderId($folderId);
                 $folder = $volume->findFolder($folderId);
 
-                if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $rootFolder)) {
                     return new JsonResponse([]);
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-                    if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') && !$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+                    if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $rootFolder)) {
                         continue;
                     }
 

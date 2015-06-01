@@ -32,12 +32,10 @@ class FolderController extends Controller
     {
         $data = [];
 
-        $securityContext = $this->get('security.context');
-
         foreach ($this->get('phlexible_media_manager.volume_manager')->all() as $volume) {
             $rootFolder = $volume->findRootFolder();
 
-            if (!$securityContext->isGranted('FOLDER_READ', $rootFolder)) {
+            if (!$this->isGranted('FOLDER_READ', $rootFolder)) {
                 // TODO: uncomment
                 //continue;
             }
@@ -67,10 +65,8 @@ class FolderController extends Controller
     {
         $data = [];
 
-        $securityContext = $this->get('security.context');
-
         foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-            if (!$securityContext->isGranted('FOLDER_READ', $subFolder)) {
+            if (!$this->isGranted('FOLDER_READ', $subFolder)) {
                 // TODO: uncomment
                 //continue;
             }

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
-use Monolog\Handler\TestHandler;
 use Phlexible\Component\MediaCache\Specifier\AudioSpecifier;
 use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
 use Symfony\Component\Filesystem\Filesystem;

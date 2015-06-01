@@ -12,7 +12,6 @@ use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Password\PasswordGenerator;
 use Phlexible\Bundle\UserBundle\UsersMessage;
@@ -22,7 +21,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Users controller
@@ -64,7 +62,6 @@ class UsersController extends Controller
         }
 
         $userManager = $this->get('phlexible_user.user_manager');
-        $securityContext = $this->get('security.context');
 
         $allUsers = $userManager->findAll();
         $systemUserUid = $userManager->getSystemUserId();
@@ -75,11 +72,11 @@ class UsersController extends Controller
         foreach ($allUsers as $user) {
             /* @var $user UserInterface */
 
-            //if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            //if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             //    continue;
             //}
 
-            if ($user->getId() === $systemUserUid && !$securityContext->isGranted('ROLE_SUPER_ADMIN')
+            if ($user->getId() === $systemUserUid && !$this->isGranted('ROLE_SUPER_ADMIN')
             ) {
                 continue;
             }
@@ -412,7 +409,6 @@ class UsersController extends Controller
      */
     public function filtervaluesAction()
     {
-        $securityContext = $this->get('security.context');
         $groupManager = $this->get('phlexible_user.group_manager');
 
         $allGroups = $groupManager->findAll();
@@ -432,7 +428,7 @@ class UsersController extends Controller
 
         $roles = [];
         foreach ($this->container->getParameter('security.role_hierarchy.roles') as $role => $subRoles) {
-            if (!$securityContext->isGranted($role)) {
+            if (!$this->isGranted($role)) {
                 continue;
             }
 

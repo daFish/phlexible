@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Command;
 
-use Phlexible\Bundle\MediaManagerBundle\MediaManagerMessage;
 use Phlexible\Component\Volume\FileSource\FilesystemFileSource;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
-use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\FrontendMediaBundle\Usage\UsageUpdater;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

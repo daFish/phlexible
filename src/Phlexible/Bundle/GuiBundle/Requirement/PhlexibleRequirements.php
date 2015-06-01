@@ -3,7 +3,6 @@
 namespace Phlexible\Bundle\GuiBundle\Requirement;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * This class specifies all requirements and optional recommendations that

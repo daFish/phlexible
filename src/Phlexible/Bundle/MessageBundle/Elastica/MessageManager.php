@@ -138,7 +138,7 @@ class MessageManager implements MessageManagerInterface
         $handlerFilter->setTerm('handler', $handler);
 
         $query = new Query();
-        $query->setFilter($handlerFilter);
+        $query->setPostFilter($handlerFilter);
 
         $documents = $this->getType()->search($query);
         $mesages = $this->mapDocuments($documents);
@@ -186,7 +186,7 @@ class MessageManager implements MessageManagerInterface
             foreach ($criteria as $key => $value) {
                 $andFilter->addFilter(new Term([$key => $value]));
             }
-            $query->setFilter($andFilter);
+            $query->setPostFilter($andFilter);
         }
 
         if ($limit !== null && $offset !== null) {
@@ -447,6 +447,6 @@ class MessageManager implements MessageManagerInterface
             }
         }
 
-        $query->setFilter($andFilter);
+        $query->setPostFilter($andFilter);
     }
 }

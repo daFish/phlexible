@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\TeaserBundle\Event;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Teaser event

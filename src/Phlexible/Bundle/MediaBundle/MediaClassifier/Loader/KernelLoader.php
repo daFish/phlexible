@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\MediaBundle\MediaClassifier\Loader;
 
 use Symfony\Component\Config\FileLocatorInterface;
 use Temp\MediaClassifier\Loader\LoaderInterface;
-use Temp\MediaClassifier\Model\MediaTypeCollection;
 
 /**
  * Media bundle

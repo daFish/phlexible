@@ -52,7 +52,6 @@ class ListController extends Controller
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $securityContext = $this->get('security.context');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
         $tree = $treeManager->getByNodeID($tid);
@@ -71,10 +70,10 @@ class ListController extends Controller
         $userRights = [];
         $userAdminRights = null;
         if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if ($this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 
@@ -137,7 +136,7 @@ class ListController extends Controller
             if (!$userAdminRights) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if ($this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                     return null;
                 }
 

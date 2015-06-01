@@ -12,7 +12,6 @@ use Phlexible\Bundle\GuiBundle\Asset\Cache\ResourceCollectionCache;
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Puli\Discovery\Api\Binding\ResourceBinding;
 use Puli\Discovery\Api\ResourceDiscovery;
-use Puli\Repository\Api\ResourceCollection;
 
 /**
  * Icons builder

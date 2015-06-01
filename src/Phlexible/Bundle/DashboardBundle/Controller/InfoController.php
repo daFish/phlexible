@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\DashboardBundle\Controller;
 
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,11 +31,9 @@ class InfoController extends Controller
      */
     public function infoAction(Request $request)
     {
-        $securityContext = $this->get('security.context');
-
         $lines = [];
 
-        if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->isGranted('ROLE_SUPER_ADMIN')) {
             $lines[] = [
                 'Project:',
                 $this->container->getParameter('phlexible_gui.project.title') . ' '
