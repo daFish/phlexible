@@ -124,7 +124,12 @@ class FolderController extends Controller
         $slots = new Slots();
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $dispatcher = $this->get('event_dispatcher');
+<<<<<<< HEAD
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
+=======
+        $securityContext = $this->get('security.context');
+        $permissions = $this->get('phlexible_access_control.permissions');
+>>>>>>> origin/master
 
         $user = $this->getUser();
 
@@ -145,10 +150,14 @@ class FolderController extends Controller
                 }
                 $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
                 */
+<<<<<<< HEAD
                 $userRights = array();
                 foreach ($permissionRegistry->get(get_class($rootFolder))->all() as $permission) {
                     $userRights[] = $permission->getName();
                 }
+=======
+                $userRights = array_keys($permissions->getByContentClass(get_class($rootFolder)));
+>>>>>>> origin/master
 
                 $slot = new SiteSlot();
                 $slot->setData(
@@ -217,10 +226,15 @@ class FolderController extends Controller
                     }
                     $userRights = array();
                     */
+<<<<<<< HEAD
                     $userRights = array();
                     foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
                         $userRights[] = $permission->getName();
                     }
+=======
+                    $userRights = array_keys($permissions->getByContentClass(get_class($subFolder)));;
+
+>>>>>>> origin/master
                     $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);
                     $usedIn = $folderUsageService->getUsedIn($folder);

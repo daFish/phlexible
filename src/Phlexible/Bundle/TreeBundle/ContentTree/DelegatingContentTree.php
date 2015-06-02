@@ -442,14 +442,6 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getTemplate(TreeNodeInterface $node)
-    {
-        return $this->mediator->getTemplate($node);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getField(TreeNodeInterface $node, $field, $language = null)
     {
         return $this->mediator->getField($node, $field, $language ?: $this->language);
