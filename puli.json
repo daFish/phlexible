@@ -279,6 +279,10 @@
             "install-path": "vendor/alchemy/binary-driver",
             "installer": "composer"
         },
+        "brainbits/fugue-icons-bundle": {
+            "install-path": "vendor/brainbits/fugue-icons-bundle",
+            "installer": "composer"
+        },
         "brainbits/image-analyzer": {
             "install-path": "vendor/brainbits/image-analyzer",
             "installer": "composer"
@@ -339,6 +343,10 @@
             "install-path": "vendor/fluentdom/fluentdom",
             "installer": "composer"
         },
+        "friendsofsymfony/rest-bundle": {
+            "install-path": "vendor/friendsofsymfony/rest-bundle/FOS/RestBundle",
+            "installer": "composer"
+        },
         "friendsofsymfony/user-bundle": {
             "install-path": "vendor/friendsofsymfony/user-bundle/FOS/UserBundle",
             "installer": "composer"
@@ -349,6 +357,22 @@
         },
         "imagine/imagine": {
             "install-path": "vendor/imagine/imagine",
+            "installer": "composer"
+        },
+        "jms/metadata": {
+            "install-path": "vendor/jms/metadata",
+            "installer": "composer"
+        },
+        "jms/parser-lib": {
+            "install-path": "vendor/jms/parser-lib",
+            "installer": "composer"
+        },
+        "jms/serializer": {
+            "install-path": "vendor/jms/serializer",
+            "installer": "composer"
+        },
+        "jms/serializer-bundle": {
+            "install-path": "vendor/jms/serializer-bundle/JMS/SerializerBundle",
             "installer": "composer"
         },
         "justinrainbow/json-schema": {
@@ -379,6 +403,14 @@
             "install-path": "vendor/nikic/php-parser",
             "installer": "composer"
         },
+        "padraic/humbug_get_contents": {
+            "install-path": "vendor/padraic/humbug_get_contents",
+            "installer": "composer"
+        },
+        "padraic/phar-updater": {
+            "install-path": "vendor/padraic/phar-updater",
+            "installer": "composer"
+        },
         "php-ffmpeg/extras": {
             "install-path": "vendor/php-ffmpeg/extras",
             "installer": "composer"
@@ -391,6 +423,10 @@
             "install-path": "vendor/php-poppler/php-poppler",
             "installer": "composer"
         },
+        "phpcollection/phpcollection": {
+            "install-path": "vendor/phpcollection/phpcollection",
+            "installer": "composer"
+        },
         "phpdocumentor/reflection-docblock": {
             "install-path": "vendor/phpdocumentor/reflection-docblock",
             "installer": "composer"
@@ -401,6 +437,10 @@
         },
         "phpexiftool/phpexiftool": {
             "install-path": "vendor/phpexiftool/phpexiftool",
+            "installer": "composer"
+        },
+        "phpoption/phpoption": {
+            "install-path": "vendor/phpoption/phpoption",
             "installer": "composer"
         },
         "phpspec/prophecy": {
@@ -455,10 +495,6 @@
             "install-path": "vendor/puli/discovery",
             "installer": "composer"
         },
-        "puli/factory": {
-            "install-path": "vendor/puli/factory",
-            "installer": "composer"
-        },
         "puli/manager": {
             "install-path": "vendor/puli/manager",
             "installer": "composer"
@@ -479,12 +515,12 @@
             "install-path": "vendor/puli/twig-extension",
             "installer": "composer"
         },
-        "ramsey/uuid": {
-            "install-path": "vendor/ramsey/uuid",
+        "puli/url-generator": {
+            "install-path": "vendor/puli/url-generator",
             "installer": "composer"
         },
-        "rhumsaa/uuid": {
-            "install-path": "vendor/rhumsaa/uuid",
+        "ramsey/uuid": {
+            "install-path": "vendor/ramsey/uuid",
             "installer": "composer"
         },
         "sami/sami": {
@@ -565,6 +601,14 @@
         },
         "webmozart/path-util": {
             "install-path": "vendor/webmozart/path-util",
+            "installer": "composer"
+        },
+        "willdurand/jsonp-callback-validator": {
+            "install-path": "vendor/willdurand/jsonp-callback-validator",
+            "installer": "composer"
+        },
+        "willdurand/negotiation": {
+            "install-path": "vendor/willdurand/negotiation",
             "installer": "composer"
         },
         "zf1/zend-exception": {
