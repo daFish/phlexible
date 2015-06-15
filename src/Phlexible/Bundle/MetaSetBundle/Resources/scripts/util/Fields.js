@@ -84,7 +84,11 @@ Ext.define('Phlexible.metaset.util.Fields', {
     initSelectEditorCallbacks: function () {
         this.selectEditorCallbacks = {
             select: function (editor, record) {
-                editor.field.store.loadData(record.data.options);
+                var options = Phlexible.clone(record.data.options);
+                if (!record.data.required) {
+                    options.unshift(['', '(' + Phlexible.elements.Strings.empty + ')']);
+                }
+                editor.field.store.loadData(options);
             }
         };
     },

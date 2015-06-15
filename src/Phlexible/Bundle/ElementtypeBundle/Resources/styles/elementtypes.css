@@ -160,17 +160,17 @@
 }
 
 .p-elementtypes-newelementtype .p-header-image {
-    background: transparent url(/COMPONENTSPATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
+    background: transparent url(/BUNDLES_PATH/phlexiblemediamanager/images/filedialog.gif) no-repeat !important;
 }
 
 .p-elementtypes-panel .x-layout-collapsed-west {
-    background-image: url(/COMPONENTSPATH/phlexibleelementtype/images/panel_elementtypes.png);
+    background-image: url(/BUNDLES_PATH/phlexibleelementtype/images/panel_elementtypes.png);
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .p-elementtypes-2-panel .x-layout-collapsed-west {
-    background-image: url(/COMPONENTSPATH/phlexibleelementtype/images/panel_template.png);
+    background-image: url(/BUNDLES_PATH/phlexibleelementtype/images/panel_template.png);
     background-repeat: no-repeat;
     background-position: center;
 }
