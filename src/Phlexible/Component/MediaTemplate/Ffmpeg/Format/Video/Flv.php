@@ -1,9 +1,10 @@
 <?php
 
+
 /*
- * This file is part of PHP-FFmpeg.
+ * This file is part of the phlexible package.
  *
- * (c) Alchemy <info@alchemy.fr>
+ * (c) Stephan Wentz <sw@brainbits.net>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,6 +16,8 @@ use FFMpeg\Format\Video\DefaultVideo;
 
 /**
  * The Flv video format
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class Flv extends DefaultVideo
 {

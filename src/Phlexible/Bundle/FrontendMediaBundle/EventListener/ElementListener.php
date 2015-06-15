@@ -1,16 +1,18 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\FrontendMediaBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
-use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\FrontendMediaBundle\Usage\UsageUpdater;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
