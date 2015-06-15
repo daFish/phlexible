@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Test\Compressor;
+namespace Phlexible\Bundle\GuiBundle\Tests\Compressor;
 
 use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Compressor\SimpleCssCompressor;

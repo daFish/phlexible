@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Test\Compressor;
+namespace Phlexible\Bundle\GuiBundle\Tests\Compressor;
 
 use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Compressor\SimpleJavascriptCompressor;
@@ -34,10 +34,21 @@ class JavascriptCompressorTest extends \PHPUnit_Framework_TestCase
     private function createJs()
     {
         return <<<EOF
+// remove me
+/* remove me */
+/*
+remove me
+*/
+/*
+ * remove me
+ */
+/**
+ * remove me
+ */
 var x = {
-    test: 1,
-    bla: 2,
-    blubb: 3
+    allowed1: 'keep me',
+    allowed2: '/* keep me */',
+    allowed3: '// keep me'
 };
 EOF;
     }
@@ -48,7 +59,7 @@ EOF;
 
         $compressed = $this->compressor->compressString($js);
 
-        $this->assertEquals('var x = {test: 1,bla: 2,blubb: 3};', $compressed);
+        $this->assertEquals($this->createJs(), $compressed);
     }
 
     public function testCompressStream()
@@ -61,7 +72,7 @@ EOF;
 
         $compressed = stream_get_contents($this->compressor->compressStream($stream));
 
-        $this->assertEquals('var x = {test: 1,bla: 2,blubb: 3};', $compressed);
+        $this->assertEquals($this->createJs(), $compressed);
     }
 
     public function testCompressFile()
@@ -72,10 +83,10 @@ EOF;
 
         $js = $this->createJs();
 
-        $vfs = vfsStream::setup('root', null, array('test.js' => $js));
+        vfsStream::setup('root', null, array('test.js' => $js));
 
         $compressed = file_get_contents($this->compressor->compressFile(vfsStream::url('root/test.js')));
 
-        $this->assertEquals('var x = {test: 1,bla: 2,blubb: 3};', $compressed);
+        $this->assertEquals($this->createJs(), $compressed);
     }
 }

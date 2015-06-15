@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Properties;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Phlexible\Bundle\GuiBundle\Entity\Property;
 
 /**
@@ -22,7 +22,7 @@ use Phlexible\Bundle\GuiBundle\Entity\Property;
 class Properties
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
@@ -32,9 +32,9 @@ class Properties
     private $properties;
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }

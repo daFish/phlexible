@@ -44,8 +44,8 @@ class BaseUrlFilter
     public function filter($content)
     {
         return str_replace(
-            ['/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'],
-            [$this->basePath, $this->baseUrl, $this->basePath . 'bundles/'],
+            ['/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/', '/BUNDLES_URL/'],
+            [$this->basePath, $this->baseUrl, $this->basePath . 'bundles/', $this->baseUrl . 'bundles/'],
             $content
         );
     }

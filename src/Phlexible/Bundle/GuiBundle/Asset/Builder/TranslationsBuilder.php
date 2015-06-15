@@ -38,25 +38,34 @@ class TranslationsBuilder
     private $cacheDir;
 
     /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
      * @param CatalogAccessor     $catalogAccessor
      * @param CompressorInterface $javascriptCompressor
      * @param string              $cacheDir
+     * @param bool                $debug
      */
     public function __construct(
         CatalogAccessor $catalogAccessor,
         CompressorInterface $javascriptCompressor,
-        $cacheDir)
+        $cacheDir,
+        $debug
+    )
     {
         $this->catalogAccessor = $catalogAccessor;
         $this->javascriptCompressor = $javascriptCompressor;
         $this->cacheDir = $cacheDir;
+        $this->debug = $debug;
     }
 
     /**
-     * Get all Translations for the given section
+     * Get all translations for the given domain
      *
      * @param string $locale
-     * @param string $fallbackLanguage
+     * @param string $fallbackLocale
      * @param string $domain
      *
      * @return string
@@ -102,72 +111,13 @@ class TranslationsBuilder
             $filesystem->mkdir(dirname($cacheFilename));
         }
 
+        if ($this->debug) {
+            $content = $this->compress($content);
+        }
+
         file_put_contents($cacheFilename, $content);
 
         return $cacheFilename;
-
-        $translations = [];
-        $catalogue = $this->catalogAccessor->getCatalogues($language);
-        $namespaces = [];
-        foreach ($catalogue->all($domain) as $key => $value) {
-            $parts = explode('.', $key);
-            $component = array_shift($parts);
-            $namespace = 'Phlexible.' . strtolower($component) . '.Strings';
-            if (count($parts) > 1) {
-                $key1 = array_shift($parts);
-                $key2 = array_shift($parts);
-                $namespaces[$namespace][$key1][$key2] = $value;
-            } else {
-                $key = array_shift($parts);
-                $namespaces[$namespace][$key] = $value;
-            }
-        }
-        foreach ($namespaces as $namespace => $keys) {
-            $translations[$namespace] = $keys;
-        }
-
-        $cacheFilename = $this->cacheDir . '/translations-' . $language . '.js';
-
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($cacheFilename))) {
-            $filesystem->mkdir(dirname($cacheFilename));
-        }
-
-        $content = $this->buildTranslations($translations);
-        file_put_contents($cacheFilename, $content);
-
-        return $cacheFilename;
-    }
-
-    /**
-     * Glue together all scripts and return file/memory stream
-     *
-     * @param array $languages
-     *
-     * @return string
-     */
-    private function buildTranslations(array $languages)
-    {
-        $namespaces = [];
-
-        $content = '';
-        foreach ($languages as $namespace => $page) {
-            $parentNamespace = explode('.', $namespace);
-            array_pop($parentNamespace);
-            $parentNamespace = implode('.', $parentNamespace);
-
-            if (!in_array($parentNamespace, $namespaces)) {
-                $content .= 'Ext.namespace("' . $parentNamespace . '");' . PHP_EOL;
-                $namespaces[] = $parentNamespace;
-            }
-
-            $content .= $namespace . ' = ' . json_encode($page) . ';' . PHP_EOL;
-            $content .= $namespace . '.get = function(s){return this[s]};' . PHP_EOL;
-        }
-
-        $content = $this->compress($content);
-
-        return $content;
     }
 
     /**

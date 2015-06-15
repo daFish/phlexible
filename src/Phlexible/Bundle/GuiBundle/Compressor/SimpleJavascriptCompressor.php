@@ -23,10 +23,6 @@ class SimpleJavascriptCompressor extends AbstractStringCompressor
      */
     public function compressString($buffer)
     {
-        //$buffer = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/", "", $buffer);
-        //$buffer = str_replace(["\r\n","\r","\t","\n",'  ','    ','     '], '', $buffer);
-        //$buffer = preg_replace(['(( )+\))','(\)( )+)'], ')', $buffer);
-
         return $buffer;
     }
 }
