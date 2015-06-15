@@ -9,7 +9,7 @@
 /**
  * Reorder teasers event
  *
- * @author Peter Fahssel <pfahsel@brainbits.net>
+ * @author Peter Fahsel <pfahsel@brainbits.net>
  */
 class ReorderTeasersEvent extends \Symfony\Component\EventDispatcher\Event
 {

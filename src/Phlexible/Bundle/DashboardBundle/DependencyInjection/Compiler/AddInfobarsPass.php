@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Add infobars pass
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class AddInfobarsPass implements CompilerPassInterface
 {

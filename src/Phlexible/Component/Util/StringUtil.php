@@ -11,8 +11,8 @@ namespace Phlexible\Component\Util;
 /**
  * String utils
  *
- * @author Stephan Wentz <swentz@brainbits.net>
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
+ * @author Phillip Look <pl@brainbits.net>
  */
 class StringUtil
 {

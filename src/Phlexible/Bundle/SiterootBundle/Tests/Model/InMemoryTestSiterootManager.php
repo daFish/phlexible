@@ -16,7 +16,7 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 /**
  * In memory siteroot manager
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class InMemoryTestSiterootManager implements SiterootManagerInterface
 {

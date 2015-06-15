@@ -15,7 +15,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 /**
  * Zend lucene pptx content extractor
  *
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ZendLucenePptxExtractor implements ExtractorInterface
 {

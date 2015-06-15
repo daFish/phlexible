@@ -16,7 +16,7 @@ use Poppler\Processor\PdfFile;
 /**
  * PDF to text content extractor
  *
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class PdfToTextExtractor implements ExtractorInterface
 {

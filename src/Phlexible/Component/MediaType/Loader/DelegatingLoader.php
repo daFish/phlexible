@@ -16,7 +16,7 @@ use Phlexible\Component\MediaType\Exception\LoadException;
  * This loader acts as an array of LoaderInterface objects - each having
  * a chance to load a given resource (handled by the resolver)
  *
- * @author Fabien Potencier <fabien@symfony.com>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class DelegatingLoader implements LoaderInterface
 {

@@ -7,7 +7,7 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 /**
  * Siteroots accessor
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class SiterootsAccessor implements \ArrayAccess, \IteratorAggregate
 {

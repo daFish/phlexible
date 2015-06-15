@@ -15,7 +15,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 /**
  * Raw text content extract
  *
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class RawTextExtractor implements ExtractorInterface
 {

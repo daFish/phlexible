@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Serialize user event
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class SerializeUserEvent extends Event
 {

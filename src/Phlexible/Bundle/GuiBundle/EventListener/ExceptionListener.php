@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 /**
  * Exception listener
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ExceptionListener extends ContainerAware
 {

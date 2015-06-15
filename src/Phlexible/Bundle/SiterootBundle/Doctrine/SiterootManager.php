@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Siteroot manager
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class SiterootManager implements SiterootManagerInterface
 {

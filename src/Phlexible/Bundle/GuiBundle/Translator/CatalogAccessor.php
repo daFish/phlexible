@@ -9,13 +9,12 @@
 namespace Phlexible\Bundle\GuiBundle\Translator;
 
 use Symfony\Component\Translation\LoggingTranslator;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Translation catalog accessor
  *
- * @author Michael van Engelshoven <mve@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class CatalogAccessor
 {

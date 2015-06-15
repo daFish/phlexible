@@ -15,7 +15,7 @@ use Phlexible\Component\MediaType\Model\MediaType;
 /**
  * Zend lucene xlsx content extractor
  *
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ZendLuceneXlsxExtractor implements ExtractorInterface
 {

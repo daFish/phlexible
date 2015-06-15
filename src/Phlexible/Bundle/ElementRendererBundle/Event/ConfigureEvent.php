@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Configure event
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ConfigureEvent extends Event
 {

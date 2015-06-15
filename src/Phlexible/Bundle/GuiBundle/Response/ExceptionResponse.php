@@ -13,8 +13,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Exception response
  *
- * @author  Stephan Wentz <sw@brainbits.net>
- * @author  Phillip Look <pl@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
+ * @author Phillip Look <pl@brainbits.net>
  */
 class ExceptionResponse extends JsonResponse
 {

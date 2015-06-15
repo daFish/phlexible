@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementtypeBundle\Model;
 /**
  * Elementtype structure node
  *
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ElementtypeStructureNode
 {

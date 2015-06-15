@@ -16,7 +16,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 /**
  * Field mapper
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class FieldMapper
 {

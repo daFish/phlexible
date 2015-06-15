@@ -5,7 +5,7 @@ namespace Phlexible\Bundle\GuiBundle\Requirement;
 /**
  * Represents a PHP requirement in form of a php.ini configuration.
  *
- * @author Tobias Schultze <http://tobion.de>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class PhpIniRequirement extends Requirement
 {

@@ -11,7 +11,7 @@ namespace Phlexible\Component\Util;
 /**
  * A class with utility functions for arrays.
  *
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ArrayUtil
 {

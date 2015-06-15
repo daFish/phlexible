@@ -35,13 +35,13 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface, Authentica
     public function createToken(Request $request, $providerKey)
     {
         // look for an apikey query parameter
-        $apiKey = 'swentz';//$request->headers->get('apikey');
+        $apiKey = $request->headers->get('apikey');
 
         if (!$apiKey) {
-            throw new BadCredentialsException('No API key found');
+            //throw new BadCredentialsException('No API key found');
 
             // or to just skip api key authentication
-            // return null;
+            return null;
         }
 
         return new PreAuthenticatedToken(
@@ -88,6 +88,6 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface, Authentica
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        return new Response("Authentication Failed.", 403);
+//        return new Response("Authentication Failed.", 403);
     }
 }

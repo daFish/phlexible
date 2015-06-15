@@ -7,7 +7,7 @@ namespace Phlexible\Bundle\GuiBundle\Requirement;
  * It can be a mandatory requirement or an optional recommendation.
  * There is a special subclass, named PhpIniRequirement, to check a php.ini configuration.
  *
- * @author Tobias Schultze <http://tobion.de>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class Requirement
 {

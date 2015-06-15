@@ -11,7 +11,7 @@ namespace Phlexible\Component\Formatter;
 /**
  * Filesize formatter
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class FilesizeFormatter
 {

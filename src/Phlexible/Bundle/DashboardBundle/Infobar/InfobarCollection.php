@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\DashboardBundle\Infobar;
 /**
  * Infobar collection
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class InfobarCollection
 {

@@ -13,7 +13,7 @@ use Phlexible\Bundle\ElementtypeBundle\Exception\InvalidArgumentException;
 /**
  * Elementtype structure
  *
- * @author Phillip Look <plook@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ElementtypeStructure implements \Countable, \IteratorAggregate
 {

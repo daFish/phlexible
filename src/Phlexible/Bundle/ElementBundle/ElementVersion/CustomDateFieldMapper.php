@@ -14,7 +14,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 /**
  * Custom date field mapper
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class CustomDateFieldMapper implements FieldMapperInterface
 {

@@ -22,7 +22,7 @@ use Webmozart\Expression\Expression;
 /**
  * User query
  *
- * @author  Stephan Wentz <sw@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class UserQuery
 {

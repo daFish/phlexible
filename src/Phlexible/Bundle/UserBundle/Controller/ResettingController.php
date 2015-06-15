@@ -18,8 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Controller managing the resetting of the password
  *
- * @author Thibault Duplessis <thibault.duplessis@gmail.com>
- * @author Christophe Coevoet <stof@notk.org>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ResettingController extends BaseResettingController
 {

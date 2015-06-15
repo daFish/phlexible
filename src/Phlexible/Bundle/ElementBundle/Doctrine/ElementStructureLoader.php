@@ -21,7 +21,6 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
  * Element version data
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @author Marcus Stöhr <mstoehr@brainbits.net>
  */
 class ElementStructureLoader
 {

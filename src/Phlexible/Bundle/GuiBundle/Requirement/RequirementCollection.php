@@ -5,7 +5,7 @@ namespace Phlexible\Bundle\GuiBundle\Requirement;
 /**
  * A RequirementCollection represents a set of Requirement instances.
  *
- * @author Tobias Schultze <http://tobion.de>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class RequirementCollection implements \IteratorAggregate
 {
