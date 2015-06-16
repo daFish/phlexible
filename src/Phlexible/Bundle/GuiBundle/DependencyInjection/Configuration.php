@@ -42,7 +42,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('ext')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('path')->cannotBeEmpty()->defaultValue('ext-2.3.0')->end()
+                        ->scalarNode('path')->cannotBeEmpty()->defaultValue('//cdn.sencha.com/ext/gpl/5.1.0')->end()
                     ->end()
                 ->end()
                 ->arrayNode('mail')
