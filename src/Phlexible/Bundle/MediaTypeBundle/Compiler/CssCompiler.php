@@ -40,7 +40,7 @@ class CssCompiler implements CompilerInterface
 
             foreach ($sizes as $size => $sizeTitle) {
                 $styles[] = sprintf(
-                    '.p-%s-%s-small {background-image:url(//COMPONENTSPATH/phlexiblemediatype/mimetypes16/%s.gif) !important;}',
+                    '.p-%s-%s-small {background-image:url(//BUNDLES_PATH/phlexiblemediatype/mimetypes16/%s.gif) !important;}',
                     $classname,
                     str_replace(':', '-', (string) $mediaType),
                     $name
