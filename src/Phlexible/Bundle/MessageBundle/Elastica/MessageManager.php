@@ -177,11 +177,7 @@ class MessageManager implements MessageManagerInterface
         $handlerFilter = new Filter\Term();
         $handlerFilter->setTerm('handler', $handler);
 
-<<<<<<< HEAD
-        $query = new Query();
-=======
         $query = new Filter\Query();
->>>>>>> origin/master
         $query->setPostFilter($handlerFilter);
 
         $documents = $this->getType()->search($query);
@@ -514,10 +510,7 @@ class MessageManager implements MessageManagerInterface
                     break;
             }
         }
-<<<<<<< HEAD
 
         $query->setPostFilter($andFilter);
-=======
->>>>>>> origin/master
     }
 }

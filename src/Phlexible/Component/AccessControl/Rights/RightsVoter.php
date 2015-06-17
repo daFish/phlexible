@@ -10,7 +10,6 @@ namespace Phlexible\Component\AccessControl\Rights;
 
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
-<<<<<<< HEAD:src/Phlexible/Bundle/AccessControlBundle/Voter/AccessControlVoter.php
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
@@ -19,9 +18,7 @@ use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\UserSecurityIdentity;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Phlexible\Component\AccessControl\Rights\CalculatedRights;
-=======
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
->>>>>>> origin/master:src/Phlexible/Component/AccessControl/Rights/RightsVoter.php
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -65,7 +62,6 @@ class RightsVoter implements VoterInterface
      */
     public function vote(TokenInterface $token, $identity, array $attributes)
     {
-<<<<<<< HEAD:src/Phlexible/Bundle/AccessControlBundle/Voter/AccessControlVoter.php
         if (!$identity instanceof ObjectIdentityInterface) {
             if ($identity instanceof HierarchicalDomainObjectInterface) {
                 $identity = HierarchicalObjectIdentity::fromDomainObject($identity);
@@ -101,22 +97,6 @@ class RightsVoter implements VoterInterface
 
         return self::ACCESS_DENIED;
 
-=======
-        if (!$object instanceof ContentObjectInterface) {
-            return self::ACCESS_ABSTAIN;
-        }
-
-        $contentType = current($object->getContentObjectIdentifiers());
-        $rightType = !empty($attributes['rightType']) ? $attributes['rightType'] : 'internal';
-        $right = !empty($attributes['right']) ? $attributes['right'] : $attributes[0];
-        $language = !empty($attributes['language']) ? $attributes['language'] : null;
-
-        return self::ACCESS_ABSTAIN;
-        if (!$this->permissions->hasPermission($rightType, $contentType, $right)) {
-            return self::ACCESS_ABSTAIN;
-        }
-
->>>>>>> origin/master:src/Phlexible/Component/AccessControl/Rights/RightsVoter.php
         $user = $token->getUser();
 
         $rightIdentifiers = [

@@ -12,12 +12,9 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\StateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-<<<<<<< HEAD
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
-=======
 use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
->>>>>>> origin/master
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**

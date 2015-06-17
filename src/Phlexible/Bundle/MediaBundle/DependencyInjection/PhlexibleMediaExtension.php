@@ -30,15 +30,11 @@ class PhlexibleMediaExtension extends Extension
         $loader->load('mp4box.yml');
         $loader->load('swftools.yml');
         $loader->load('poppler.yml');
-<<<<<<< HEAD:src/Phlexible/Bundle/MediaBundle/DependencyInjection/PhlexibleMediaExtension.php
         $loader->load('exiftool.yml');
         $loader->load('image_analyzer.yml');
         $loader->load('media_classifier.yml');
         $loader->load('media_converter.yml');
         $loader->load('meta_reader.yml');
-=======
-        $loader->load('imageanalyzer.yml');
->>>>>>> origin/master:src/Phlexible/Bundle/MediaToolBundle/DependencyInjection/PhlexibleMediaToolExtension.php
         $loader->load('imagine.yml');
 
         $configuration = $this->getConfiguration($config, $container);
@@ -69,18 +65,10 @@ class PhlexibleMediaExtension extends Extension
             'timeout'         => $config['mp4box']['timeout']
         ));
 
-<<<<<<< HEAD:src/Phlexible/Bundle/MediaBundle/DependencyInjection/PhlexibleMediaExtension.php
         $container->setParameter('phlexible_media.media_classifier.file', $config['media_classifier']['file']);
-=======
-        $container->setAlias('phlexible_media_tool.image_analyzer.driver', $config['image_analyzer']['driver']);
->>>>>>> origin/master:src/Phlexible/Bundle/MediaToolBundle/DependencyInjection/PhlexibleMediaToolExtension.php
 
         $container->setAlias('phlexible_media.image_analyzer.driver', 'phlexible_media.image_analyzer.driver.' . $config['image_analyzer']['driver']);
 
-<<<<<<< HEAD:src/Phlexible/Bundle/MediaBundle/DependencyInjection/PhlexibleMediaExtension.php
         $container->setAlias('phlexible_media.imagine', 'phlexible_media.imagine.' . $config['imagine']['driver']);
-=======
-        $container->setAlias('phlexible_media_tool.imagine', $config['imagine']['driver']);
->>>>>>> origin/master:src/Phlexible/Bundle/MediaToolBundle/DependencyInjection/PhlexibleMediaToolExtension.php
     }
 }
