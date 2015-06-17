@@ -151,7 +151,7 @@ class StateManager implements StateManagerInterface
             return null;
         }
 
-        return $teaserOnline->getLanguage();
+        return $teaserOnline->getVersion();
     }
 
     /**

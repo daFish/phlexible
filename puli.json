@@ -399,8 +399,12 @@
             "install-path": "vendor/neutron/temporary-filesystem",
             "installer": "composer"
         },
-        "nikic/php-parser": {
-            "install-path": "vendor/nikic/php-parser",
+        "padraic/humbug_get_contents": {
+            "install-path": "vendor/padraic/humbug_get_contents",
+            "installer": "composer"
+        },
+        "padraic/phar-updater": {
+            "install-path": "vendor/padraic/phar-updater",
             "installer": "composer"
         },
         "padraic/humbug_get_contents": {
@@ -475,10 +479,6 @@
             "install-path": "vendor/phpunit/phpunit-mock-objects",
             "installer": "composer"
         },
-        "pimple/pimple": {
-            "install-path": "vendor/pimple/pimple",
-            "installer": "composer"
-        },
         "psr/log": {
             "install-path": "vendor/psr/log",
             "installer": "composer"
@@ -521,10 +521,6 @@
         },
         "ramsey/uuid": {
             "install-path": "vendor/ramsey/uuid",
-            "installer": "composer"
-        },
-        "sami/sami": {
-            "install-path": "vendor/sami/sami",
             "installer": "composer"
         },
         "sebastian/comparator": {
