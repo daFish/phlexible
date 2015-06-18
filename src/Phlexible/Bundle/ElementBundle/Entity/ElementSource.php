@@ -66,31 +66,31 @@ class ElementSource
 
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="default_tab", type="integer", nullable=true)
      */
     private $defaultTab;
 
     /**
      * @var int
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="default_content_tab", type="integer", nullable=true)
      */
     private $defaultContentTab;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="hide_children", type="boolean")
      */
     private $hideChildren;
 
     /**
      * @var bool
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="no_index", type="boolean")
      */
     private $noIndex;
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="meta_set_id", type="string", nullable=true)
      */
     private $metaSetId;
 

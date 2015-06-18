@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Change;
 
-use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
+use Phlexible\Component\Elementtype\Model\Elementtype;
 
 /**
  * Elementtype add change

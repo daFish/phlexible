@@ -12,12 +12,6 @@ services:
         tags:
             - {name: phlexible_elementtype.field, alias: checkbox}
 
-    phlexible_elementtype.field.checkgroup:
-        class: Phlexible\Component\Elementtype\Field\CheckgroupField
-        public: false
-        tags:
-            - {name: phlexible_elementtype.field, alias: checkgroup}
-
     phlexible_elementtype.field.date:
         class: Phlexible\Component\Elementtype\Field\DateField
         public: false
