@@ -46,6 +46,12 @@ class DumpCommand extends ContainerAwareCommand
 
         $element = $elementService->findElement($eid);
 
+        if (!$element) {
+            $output->writeln("Element $eid not found.");
+
+            return 1;
+        }
+
         if ($version = $input->getOption('ver')) {
             $elementVersion = $elementService->findElementVersion($element, $version);
         } else {

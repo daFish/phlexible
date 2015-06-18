@@ -37,6 +37,14 @@ class TestCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
+    public function isEnabled()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $conn = $this->getContainer()->get('doctrine.dbal.default_connection');

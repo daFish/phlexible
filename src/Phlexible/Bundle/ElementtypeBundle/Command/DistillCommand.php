@@ -36,6 +36,14 @@ class DistillCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
+    public function isEnabled()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $elementtypeService = $this->getContainer()->get('phlexible_elementtype.elementtype_service');

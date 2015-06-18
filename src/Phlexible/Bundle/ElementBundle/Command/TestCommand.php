@@ -30,6 +30,13 @@ class TestCommand extends ContainerAwareCommand
             ->setDescription('test.');
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function isEnabled()
+    {
+        return false;
+    }
 
     /**
      * @param ElementStructure $structure
