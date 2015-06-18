@@ -79,9 +79,21 @@ class ElementVersionMappedField
 
     /**
      * @var string
+     * @ORM\Column(name="custom1_name", type="string", length=255, nullable=true)
+     */
+    private $custom1Name;
+
+    /**
+     * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $custom2;
+
+    /**
+     * @var string
+     * @ORM\Column(name="custom2_name", type="string", length=255, nullable=true)
+     */
+    private $custom2Name;
 
     /**
      * @var string
@@ -91,15 +103,33 @@ class ElementVersionMappedField
 
     /**
      * @var string
+     * @ORM\Column(name="custom3_name", type="string", length=255, nullable=true)
+     */
+    private $custom3Name;
+
+    /**
+     * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $custom4;
 
     /**
      * @var string
+     * @ORM\Column(name="custom4_name", type="string", length=255, nullable=true)
+     */
+    private $custom4Name;
+
+    /**
+     * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $custom5;
+
+    /**
+     * @var string
+     * @ORM\Column(name="custom5_name", type="string", length=255, nullable=true)
+     */
+    private $custom5Name;
 
     /**
      * @param array $fields

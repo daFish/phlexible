@@ -1,9 +1,12 @@
+parameters:
+    phlexible_media.fallback_media_type: document:binary
+
 services:
     phlexible_media.media_classifier:
         class: Temp\MediaClassifier\MediaClassifier
         arguments:
             - @phlexible_media.media_classifier.collection
-            - document:binary
+            - %phlexible_media.fallback_media_type%
 
     phlexible_media.media_classifier.collection:
         class: Temp\MediaClassifier\Model\MediaTypeCollection

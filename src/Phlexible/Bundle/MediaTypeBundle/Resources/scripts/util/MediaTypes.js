@@ -15,7 +15,7 @@ Phlexible.mediatype.util.MediaTypes = Ext.extend(Ext.util.Observable, {
         if (this.has(mediaType)) {
             return this.get(mediaType).cls;
         }
-        return this.get("_unknown").cls;
+        return this.get("document:binary").cls;
     },
 
     getText: function(mediaType) {
@@ -23,7 +23,7 @@ Phlexible.mediatype.util.MediaTypes = Ext.extend(Ext.util.Observable, {
         if (this.has(mediaType)) {
             return this.get(mediaType)[language];
         }
-        return this.get("_unknown")[language];
+        return this.get("document:binary")[language];
     },
 
     setData: function(mediatypes) {

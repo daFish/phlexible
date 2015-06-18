@@ -9,17 +9,17 @@
 namespace Phlexible\Component\MediaCache\Worker;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaCache\Specifier\SpecifierResolver;
 use Phlexible\Component\MediaCache\Storage\StorageManager;
-use Phlexible\Component\MediaTemplate\Applier\AudioTemplateApplier;
-use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Phlexible\Component\MediaType\Model\MediaType;
-use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Temp\MediaClassifier\MediaClassifier;
+use Temp\MediaClassifier\Model\MediaType;
 use Temp\MediaConverter\Transmuter;
 
 /**
@@ -50,9 +50,9 @@ class Worker implements WorkerInterface
     private $cacheManager;
 
     /**
-     * @var MediaTypeManagerInterface
+     * @var MediaClassifier
      */
-    private $mediaTypeManager;
+    private $mediaClassifier;
 
     /**
      * @var CacheIdStrategyInterface
@@ -70,21 +70,21 @@ class Worker implements WorkerInterface
     private $tempDir;
 
     /**
-     * @param Transmuter                $transmuter
-     * @param SpecifierResolver         $specifierResolver
-     * @param StorageManager            $storageManager
-     * @param CacheManagerInterface     $cacheManager
-     * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param CacheIdStrategyInterface  $cacheIdStrategy
-     * @param LoggerInterface           $logger
-     * @param string                    $tempDir
+     * @param Transmuter               $transmuter
+     * @param SpecifierResolver        $specifierResolver
+     * @param StorageManager           $storageManager
+     * @param CacheManagerInterface    $cacheManager
+     * @param MediaClassifier          $mediaClassifier
+     * @param CacheIdStrategyInterface $cacheIdStrategy
+     * @param LoggerInterface          $logger
+     * @param string                   $tempDir
      */
     public function __construct(
         Transmuter $transmuter,
         SpecifierResolver $specifierResolver,
         StorageManager $storageManager,
         CacheManagerInterface $cacheManager,
-        MediaTypeManagerInterface $mediaTypeManager,
+        MediaClassifier $mediaClassifier,
         CacheIdStrategyInterface $cacheIdStrategy,
         LoggerInterface $logger,
         $tempDir)
@@ -93,7 +93,7 @@ class Worker implements WorkerInterface
         $this->specifierResolver = $specifierResolver;
         $this->storageManager = $storageManager;
         $this->cacheManager = $cacheManager;
-        $this->mediaTypeManager = $mediaTypeManager;
+        $this->mediaClassifier = $mediaClassifier;
         $this->cacheIdStrategy = $cacheIdStrategy;
         $this->logger = $logger;
         $this->tempDir = $tempDir;
@@ -104,12 +104,7 @@ class Worker implements WorkerInterface
      */
     public function process(TemplateInterface $template, ExtendedFileInterface $file, MediaType $mediaType)
     {
-        $volume = $file->getVolume();
-        $fileId = $file->getId();
-        $fileVersion = $file->getVersion();
-
         $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
-        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $template->getParameter('audio_format');
 
         $cacheItem = $this->cacheManager->find($cacheId);
         if (!$cacheItem) {
@@ -118,23 +113,21 @@ class Worker implements WorkerInterface
         }
 
         $cacheItem
-            ->setVolumeId($volume->getId())
-            ->setFileId($fileId)
-            ->setFileVersion($fileVersion)
+            ->setVolumeId($file->getVolume()->getId())
+            ->setFileId($file->getId())
+            ->setFileVersion($file->getVersion())
             ->setTemplateKey($template->getKey())
             ->setTemplateRevision($template->getRevision())
             ->setCacheStatus(CacheItem::STATUS_DELEGATE)
             ->setQueueStatus(CacheItem::QUEUE_DONE)
             ->setMimeType($file->getMimeType())
-            ->setMediaType(strtolower($file->getMediaType()))
+            ->setMediaType($file->getMediaType())
             ->setExtension('')
             ->setFileSize(0)
             ->setError(null);
 
-        $spec = $this->specifierResolver->resolve($template, $file, $mediaType);
-
         if (!file_exists($file->getPhysicalPath())) {
-            $this->applyError(
+            return $this->applyError(
                 $cacheItem,
                 CacheItem::STATUS_MISSING,
                 'Input file not found.',
@@ -142,59 +135,75 @@ class Worker implements WorkerInterface
                 $template,
                 $file
             );
-        } elseif (!$spec) {
-            $this->applyError(
+        }
+
+        $specifier = $this->specifierResolver->resolve($template);
+
+        if (!$specifier) {
+            return $this->applyError(
                 $cacheItem,
                 CacheItem::STATUS_MISSING,
-                'No suitable template converter found.',
+                'No suitable template specifier found.',
                 $file->getPhysicalPath(),
                 $template,
                 $file
             );
-        } else {
-            $filesystem = new Filesystem();
-            if (!$filesystem->exists($this->tempDir)) {
-                $filesystem->mkdir($this->tempDir, 0777);
-            }
-            if ($filesystem->exists($tempFilename)) {
-                $filesystem->remove($tempFilename);
-            }
+        }
 
-            try {
-                $spec = $this->specifierResolver->resolve($template, $file, $mediaType);
-                $this->transmuter->transmute($file->getPhysicalPath(), $spec, $tempFilename);
+        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $specifier->getExtension($template);
 
-                $filesystem->chmod($tempFilename, 0777);
+        $filesystem = new Filesystem();
+        if (!$filesystem->exists($this->tempDir)) {
+            $filesystem->mkdir($this->tempDir, 0777);
+        }
+        if ($filesystem->exists($tempFilename)) {
+            $filesystem->remove($tempFilename);
+        }
 
-                $mediaType = $this->mediaTypeManager->findByFilename($tempFilename);
+        try {
+            $spec = $specifier->specify($template);
+            $tempFilename = $this->transmuter->transmute($file->getPhysicalPath(), $spec, $tempFilename);
 
-                $cacheItem
-                    ->setCacheStatus(CacheItem::STATUS_OK)
-                    ->setQueueStatus(CacheItem::QUEUE_DONE)
-                    ->setMimeType($mediaType->getMimetype())
-                    ->setMediaType($mediaType->getName())
-                    ->setExtension(pathinfo($tempFilename, PATHINFO_EXTENSION))
-                    ->setFilesize(filesize($tempFilename))
-                    ->setFinishedAt(new \DateTime());
-            } catch (\Exception $e) {
-                $cacheItem
-                    ->setCacheStatus(CacheItem::STATUS_ERROR)
-                    ->setQueueStatus(CacheItem::QUEUE_ERROR)
-                    ->setError($e)
-                    ->setFinishedAt(new \DateTime());
+            if (!$tempFilename) {
+                return $this->applyError(
+                    $cacheItem,
+                    CacheItem::STATUS_INAPPLICABLE,
+                    'File type '.((string) $mediaType).' not convertable to ' . $template->getType() . ' template ' . $template->getKey() . '.',
+                    $file->getPhysicalPath(),
+                    $template,
+                    $file
+                );
             }
 
-            if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
-                $storage = $this->storageManager->get($template->getStorage());
-                $storage->store($cacheItem, $tempFilename);
-            }
+            $filesystem->chmod($tempFilename, 0777);
+
+            $xfile = new File($tempFilename);
+            $mediaType = $this->mediaClassifier->classify($tempFilename);
+
+            $cacheItem
+                ->setCacheStatus(CacheItem::STATUS_OK)
+                ->setQueueStatus(CacheItem::QUEUE_DONE)
+                ->setMimeType($xfile->getMimeType())
+                ->setMediaType((string) $mediaType)
+                ->setExtension($xfile->getExtension())
+                ->setFilesize($xfile->getSize())
+                ->setFinishedAt(new \DateTime());
+        } catch (\Exception $e) {
+            $cacheItem
+                ->setCacheStatus(CacheItem::STATUS_ERROR)
+                ->setQueueStatus(CacheItem::QUEUE_ERROR)
+                ->setError($e)
+                ->setFinishedAt(new \DateTime());
+
+            $this->logger->error($e);
+        }
+
+        if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
+            $storage = $this->storageManager->get($template->getStorage());
+            $storage->store($cacheItem, $tempFilename);
         }
 
         $this->cacheManager->updateCacheItem($cacheItem);
-
-        if ($cacheItem->getError()) {
-            $this->logger->error($cacheItem->getError());
-        }
 
         return $cacheItem;
     }
@@ -208,6 +217,8 @@ class Worker implements WorkerInterface
      * @param string                $inputFilename
      * @param TemplateInterface     $template
      * @param ExtendedFileInterface $file
+     *
+     * @return CacheItem
      */
     protected function applyError(
         CacheItem $cacheItem,
@@ -224,11 +235,18 @@ class Worker implements WorkerInterface
             . 'File name: ' . $file->getName() . PHP_EOL
             . 'File path: ' . $inputFilename . PHP_EOL
             . 'File ID: ' . $file->getId() . ':' . $file->getVersion() . PHP_EOL
-            . 'File type: ' . $file->getMimeType() . PHP_EOL
+            . 'File mime type: ' . $file->getMimeType() . PHP_EOL
             . 'File media type: ' . strtolower($file->getMediaType());
 
         $cacheItem
             ->setCacheStatus($status)
-            ->setError($error);
+            ->setError($error)
+            ->setFinishedAt(new \DateTime());
+
+        $this->logger->error($message);
+
+        $this->cacheManager->updateCacheItem($cacheItem);
+
+        return $cacheItem;
     }
 }
