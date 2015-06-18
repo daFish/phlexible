@@ -28,7 +28,7 @@ class TestObject implements ObjectIdentityInterface
      */
     public function getType()
     {
-        return 'test';
+        return get_class($this);
     }
 }
 
@@ -94,7 +94,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $user = new User();
         $user->setId('testUser');
         $permissions = new PermissionCollection(
-            'Phlexible\phlexible\src\Phlexible\Bundle\AccessControlBundle\Tests\Voter\TestObject',
+            $object->getType(),
             array(
                 new Permission('VIEW', 1),
                 new Permission('EDIT', 2),
@@ -124,7 +124,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $user = new User();
         $user->setId('testUser');
         $permissions = new PermissionCollection(
-            'Phlexible\phlexible\src\Phlexible\Bundle\AccessControlBundle\Tests\Voter\TestObject',
+            $object->getType(),
             array(
                 new Permission('VIEW', 1),
                 new Permission('EDIT', 2),
