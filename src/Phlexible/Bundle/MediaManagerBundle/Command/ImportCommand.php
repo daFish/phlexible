@@ -33,9 +33,8 @@ class ImportCommand extends ContainerAwareCommand
             ->setName('media-manager:import')
             ->setDefinition(
                 [
-                    new InputArgument('source', InputArgument::REQUIRED, 'Source file'),
-                    new InputArgument('dir', InputArgument::OPTIONAL, 'Target directory'),
-                    new InputOption('volume', null, InputOption::VALUE_REQUIRED, 'Target volume'),
+                    new InputArgument('folderId', InputArgument::REQUIRED, 'Target folder'),
+                    new InputArgument('sourceFile', InputArgument::REQUIRED, 'Source file'),
                     new InputOption('delete', null, InputOption::VALUE_NONE, 'Delete source file after import'),
                 ]
             )
@@ -47,39 +46,19 @@ class ImportCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $source = $input->getArgument('source');
+        $source = $input->getArgument('sourceFile');
         $delete = $input->getOption('delete');
 
-        $volume = $input->getOption('volume');
+        $folderId = $input->getArgument('folderId');
         $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
 
-        if ($volume) {
-            $volume = $volumeManager->getById($volume);
-        } else {
-            $volume = $volumeManager->get('default');
-        }
-
-        $targetDir = $input->getArgument('dir');
-        if ($targetDir) {
-            if (substr($targetDir, -1) != '/') {
-                $targetDir .= '/';
-            }
-
-            try {
-                $targetFolder = $volume->findFolderByPath($targetDir);
-            } catch (\Exception $e) {
-                $output->writeln('Folder "' . $targetDir . '" not found.');
-
-                return 1;
-            }
-        } else {
-            $targetFolder = $volume->findRootFolder();
-        }
+        $volume = $volumeManager->getByFolderId($folderId);
+        $folder = $volume->findFolder($folderId);
 
         if (is_dir($source)) {
-            $this->importDir($output, $source, $targetFolder);
+            $this->importDir($output, $source, $folder);
         } else {
-            $this->importFile($output, $source, $targetFolder, $delete);
+            $this->importFile($output, $source, $folder, $delete);
         }
 
         return 0;

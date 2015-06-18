@@ -16,11 +16,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * File command
+ * Folder command
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class FileCommand extends ContainerAwareCommand
+class FolderCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -28,14 +28,14 @@ class FileCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('media-manager:file')
+            ->setName('media-manager:folder')
             ->setDefinition(
                 [
-                    new InputArgument('id', InputArgument::REQUIRED, 'File ID.'),
+                    new InputArgument('id', InputArgument::REQUIRED, 'Folder ID.'),
                     new InputOption('with-attributes', null, InputOption::VALUE_NONE, 'Include attributes.'),
                 ]
             )
-            ->setDescription('Show file info');
+            ->setDescription('Show folder info.');
     }
 
     /**
@@ -43,25 +43,19 @@ class FileCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $fileId = $input->getArgument('id');
+        $folderId = $input->getArgument('id');
 
         $volumeManager = $this->getContainer()->get('phlexible_media_manager.volume_manager');
-        $volume = $volumeManager->getByFileId($fileId);
-        $file = $volume->findFile($fileId);
+        $folder = $volumeManager->getByFolderId($folderId)->findFolder($folderId);
 
         $data = array(
-            'ID'             => $file->getId(),
-            'Folder ID'      => $file->getFolderId(),
-            'Path'           => $file->getPhysicalPath(),
-            'Created At'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-            'Create User ID' => $file->getCreateUserId(),
-            'Modified At'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
-            'Modify User ID' => $file->getModifyUserId(),
-            'Hash'           => $file->getHash(),
-            'MimeType'       => $file->getMimeType(),
-            'Name'           => $file->getName(),
-            'Size'           => $file->getSize(),
-            'Version'        => $file->getVersion(),
+            'ID'             => $folder->getId(),
+            'Path'           => $folder->getPhysicalPath(),
+            'Created At'     => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
+            'Create User ID' => $folder->getCreateUserId(),
+            'Modified At'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
+            'Modify User ID' => $folder->getModifyUserId(),
+            'Name'           => $folder->getName(),
         );
 
         $table = new Table($output);
@@ -72,11 +66,11 @@ class FileCommand extends ContainerAwareCommand
 
         if ($input->getOption('with-attributes')) {
             $output->writeln('');
-            if ($file->getAttributes()) {
+            if ($folder->getAttributes()) {
                 $output->writeln('Attributes:');
                 $table = new Table($output);
                 $table->setHeaders(array('Key', 'Value'));
-                foreach ($file->getAttributes() as $key => $value) {
+                foreach ($folder->getAttributes() as $key => $value) {
                     $table->addRow(array($key, substr($value, 0, 60)));
                 }
                 $table->render();
