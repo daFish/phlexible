@@ -65,10 +65,10 @@ class PhlexibleMediaExtension extends Extension
             'timeout'         => $config['mp4box']['timeout']
         ));
 
-        $container->setAlias('phlexible_media.image_analyzer.driver', 'phlexible_media_tool.image_analyzer.driver.' . $config['image_analyzer']['driver']);
+        $container->setParameter('phlexible_media.media_classifier.file', $config['media_classifier']['file']);
 
         $container->setAlias('phlexible_media.image_analyzer.driver', 'phlexible_media.image_analyzer.driver.' . $config['image_analyzer']['driver']);
 
-        $container->setAlias('phlexible_media.imagine', 'phlexible_media_tool.imagine.' . $config['imagine']['driver']);
+        $container->setAlias('phlexible_media.imagine', 'phlexible_media.imagine.' . $config['imagine']['driver']);
     }
 }
