@@ -1,6 +1,5 @@
 Ext.provide('Phlexible.elements.ElementAccordion');
 
-Ext.require('Phlexible.elements.accordion.AllowedChildren');
 Ext.require('Phlexible.elements.accordion.Comment');
 Ext.require('Phlexible.elements.accordion.Configuration');
 Ext.require('Phlexible.elements.accordion.Data');
@@ -55,23 +54,6 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
             this.items.push({
                 xtype: 'elements-metaaccordion',
                 collapsed: true
-            });
-        }
-
-        if (Phlexible.User.isGranted('ROLE_ELEMENT_CHILDREN')) {
-            this.items.push({
-                xtype: 'elements-allowedchildrenaccordion',
-                collapsed: true,
-                listeners: {
-                    rowdblclick: function (grid, index) {
-                        if (this.element.data.rights.indexOf('CREATE') === -1) return;
-
-                        var r = grid.store.getAt(index);
-                        var et_id = r.id;
-                        this.element.showNewElementWindow(false, et_id);
-                    },
-                    scope: this
-                }
             });
         }
 

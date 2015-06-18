@@ -24,7 +24,6 @@ class ElementRoleProvider extends RoleProvider
     {
         return [
             'ROLE_ELEMENTS',
-            'ROLE_ELEMENT_CHILDREN',
             'ROLE_ELEMENT_COMMENT',
             'ROLE_ELEMENT_CONFIG',
             'ROLE_ELEMENT_CREATE',
