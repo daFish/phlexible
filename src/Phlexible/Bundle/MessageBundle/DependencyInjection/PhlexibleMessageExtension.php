@@ -53,6 +53,9 @@ class PhlexibleMessageExtension extends Extension
             throw new \InvalidArgumentException('message_manager needs to be doctrine or elastica');
         }
 
+        $container->setParameter('phlexible_message.elastica_index_name', $config['elastica_index_name']);
+        $container->setParameter('phlexible_message.elastica_type_name', $config['elastica_type_name']);
+
         $loader->load('doctrine_filter.yml');
         $container->setAlias('phlexible_message.filter_manager', 'phlexible_message.doctrine.filter_manager');
 

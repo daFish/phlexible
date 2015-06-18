@@ -46,7 +46,7 @@ class MessageManager implements MessageManagerInterface
      * @param string $index
      * @param string $type
      */
-    public function __construct(Client $client, $index = 'test2', $type = 'message')
+    public function __construct(Client $client, $index, $type = 'message')
     {
         $this->client = $client;
         $this->index = $index;
