@@ -247,12 +247,10 @@ class DataController extends Controller
             }
         }
 
-        if ($node instanceof ContentObjectInterface) {
-            if (!$this->isGranted('ROLE_SUPER_ADMIN') &&
-                !$this->isGranted(['right' => 'EDIT', 'language' => $language], $node)
-            ) {
-                $doLock = false;
-            }
+        if (!$this->isGranted('ROLE_SUPER_ADMIN') &&
+            !$this->isGranted(['permission' => 'EDIT', 'language' => $language], $node)
+        ) {
+            $doLock = false;
         }
 
         $lock = null;
@@ -456,20 +454,18 @@ class DataController extends Controller
         // rights
 
         $userRights = [];
-        if ($node instanceof ContentObjectInterface) {
-            if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-                //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            if ($this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
+                return null;
+            }
 
-                if ($this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
-                    return null;
-                }
-
-                $userRights = []; //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
-            } else {
-                $userRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByObjectType(get_class($node))
-                );
+            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                $userRights[] = $permission->getName();
+            }
+        } else {
+            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                $userRights[] = $permission->getName();
             }
         }
 
