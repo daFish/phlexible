@@ -510,7 +510,5 @@ class MessageManager implements MessageManagerInterface
                     break;
             }
         }
-
-        $query->setPostFilter($andFilter);
     }
 }
