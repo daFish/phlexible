@@ -17,5 +17,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleDataSourceBundle extends Bundle
 {
-    const RESOURCE_DATASOURCES = 'datasources';
 }

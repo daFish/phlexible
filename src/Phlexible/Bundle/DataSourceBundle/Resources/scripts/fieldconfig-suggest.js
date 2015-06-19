@@ -15,7 +15,7 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
          */
         storeMode = 'remote';
         store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elementtypes_selectfield_suggest'),
+            url: Phlexible.Router.generate('datasources_suggest'),
             baseParams: {
                 id: item.configuration.suggest_source,
                 ds_id: item.dsId,
@@ -37,7 +37,7 @@ Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, va
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
-        xtype: 'elementtypes-field-suggest',
+        xtype: 'datasources-field-suggest',
         name: config.name + '[]',
         width: (parseInt(item.configuration.width, 10) || 200),
 

@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.metasets.MetaSuggestWindow');
+Ext.provide('Phlexible.datasources.window.MetaSuggestWindow');
 
-Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
+Phlexible.datasources.window.MetaSuggestWindow = Ext.extend(Ext.Window, {
     width: 400,
     height: 350,
     layout: 'fit',
@@ -132,6 +132,6 @@ Phlexible.metasets.MetaSuggestWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.metasets.MetaSuggestWindow.superclass.initComponent.call(this);
+        Phlexible.datasources.window.MetaSuggestWindow.superclass.initComponent.call(this);
     }
 });

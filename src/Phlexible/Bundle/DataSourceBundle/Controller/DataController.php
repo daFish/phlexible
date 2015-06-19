@@ -110,12 +110,12 @@ class DataController extends Controller
     }
 
     /**
-     * Return selectfield data for lists
+     * Return suggest data for lists
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/suggest", name="elementtypes_selectfield_suggest")
+     * @Route("/suggest", name="datasources_suggest")
      */
     public function suggestAction(Request $request)
     {

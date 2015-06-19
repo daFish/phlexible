@@ -3,6 +3,11 @@ services:
         class: Phlexible\Component\Suggest\GarbageCollector\GarbageCollector
         arguments: [@phlexible_data_source.data_source_manager, @event_dispatcher]
 
+    phlexible_data_source.suggest_option_resolver:
+        class: Phlexible\Bundle\DataSourceBundle\OptionResolver\SuggestOptionResolver
+        tags:
+            - {name: phlexible_meta_set.option_resolver, type: suggest}
+
     # event listeners
     phlexible_data_source.listener.apply_successor:
         class: Phlexible\Bundle\DataSourceBundle\EventListener\ApplySuccessorListener

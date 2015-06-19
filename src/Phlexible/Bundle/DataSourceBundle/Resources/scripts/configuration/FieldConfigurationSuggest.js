@@ -1,8 +1,8 @@
-Ext.provide('Phlexible.elementtypes.configuration.FieldConfigurationSuggest');
+Ext.provide('Phlexible.datasources.configuration.FieldConfigurationSuggest');
 
-Phlexible.elementtypes.configuration.FieldConfigurationSuggest = Ext.extend(Ext.form.FieldSet, {
-    strings: Phlexible.elementtypes.Strings,
-    title: Phlexible.elementtypes.Strings.suggest,
+Phlexible.datasources.configuration.FieldConfigurationSuggest = Ext.extend(Ext.form.FieldSet, {
+    strings: Phlexible.datasources.Strings,
+    title: Phlexible.datasources.Strings.suggest,
     iconCls: 'p-elementtype-field_suggest-icon',
     autoHeight: true,
     labelWidth: 139,
@@ -40,7 +40,7 @@ Phlexible.elementtypes.configuration.FieldConfigurationSuggest = Ext.extend(Ext.
             }
         ];
 
-        Phlexible.elementtypes.configuration.FieldConfigurationSuggest.superclass.initComponent.call(this);
+        Phlexible.datasources.configuration.FieldConfigurationSuggest.superclass.initComponent.call(this);
     },
 
     updateVisibility: function (type) {
@@ -65,4 +65,4 @@ Phlexible.elementtypes.configuration.FieldConfigurationSuggest = Ext.extend(Ext.
     }
 });
 
-Ext.reg('elementtypes-configuration-field-configuration-suggest', Phlexible.elementtypes.configuration.FieldConfigurationSuggest);
+Ext.reg('datasources-configuration-field-configuration-suggest', Phlexible.datasources.configuration.FieldConfigurationSuggest);
