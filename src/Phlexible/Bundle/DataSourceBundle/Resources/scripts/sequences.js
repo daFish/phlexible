@@ -15,7 +15,7 @@ Phlexible.metasets.util.Fields.prototype.initFields =
     Phlexible.metasets.util.Fields.prototype.initFields.createSequence(function() {
         this.set('suggest', {
             title: 'Suggest',
-            beforeEdit: function (grid, field, record) {
+            beforeEditCallback: function (grid, field, record) {
                 if (grid.master !== undefined) {
                     var isSynchronized = (1 == record.get('synchronized'));
 

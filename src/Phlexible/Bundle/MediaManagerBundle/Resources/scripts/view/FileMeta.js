@@ -177,7 +177,7 @@ Phlexible.mediamanager.FileMeta = Ext.extend(Ext.Panel, {
         var sources = {};
         this.items.each(function(p) {
             sources[p.setId] = p.getData();
-        })
+        });
         var params = this.params;
         params.data = Ext.encode(sources);
 

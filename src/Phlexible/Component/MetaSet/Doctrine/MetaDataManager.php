@@ -124,8 +124,7 @@ class MetaDataManager implements MetaDataManagerInterface
 
         foreach ($metaData->getLanguages() as $language) {
             foreach ($metaData->getMetaSet()->getFields() as $field) {
-
-                // TODO: löschen?
+                // TODO: remove?
                 if (!$metaData->get($field->getName(), $language)) {
                     continue;
                 }
@@ -201,7 +200,9 @@ class MetaDataManager implements MetaDataManagerInterface
             }
 
             $field = $metaSet->getFieldById($row['field_id']);
-            $metaData->set($field->getName(), $row['value'], $row['language']);
+            if ($field) {
+                $metaData->set($field->getName(), $row['value'], $row['language']);
+            }
         }
 
         return $metaDatas;

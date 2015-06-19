@@ -41,42 +41,42 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
     },
 
     getSelectEditorCallbacks: function () {
-        var selectEditorCallbacks = {};
-        for (var key in this.fields) {
+        var callbacks = {}, key;
+        for (key in this.fields) {
             if (!this.fields.hasOwnProperty(key)) {
                 continue;
             }
-            if (this.fields[key].selectEditorCallback) {
-                selectEditorCallbacks.key = this.fields[key].selectEditorCallback;
+            if (typeof this.fields[key].selectEditorCallback === 'function') {
+                callbacks[key] = this.fields[key].selectEditorCallback;
             }
         }
-        return selectEditorCallbacks;
+        return callbacks;
     },
 
     getBeforeEditCallbacks: function () {
-        var selectEditorCallbacks = {};
-        for (var key in this.fields) {
+        var callbacks = {}, key;
+        for (key in this.fields) {
             if (!this.fields.hasOwnProperty(key)) {
                 continue;
             }
-            if (this.fields[key].selectEditorCallbacks) {
-                selectEditorCallbacks.key = this.fields[key].selectEditorCallbacks;
+            if (typeof this.fields[key].beforeEditCallback === 'function') {
+                callbacks[key] = this.fields[key].beforeEditCallback;
             }
         }
-        return selectEditorCallbacks;
+        return callbacks;
     },
 
     getAfterEditCallbacks: function () {
-        var afterEditCallbacks = {};
-        for (var key in this.fields) {
+        var callbacks = {}, key;
+        for (key in this.fields) {
             if (!this.fields.hasOwnProperty(key)) {
                 continue;
             }
-            if (this.fields[key].afterEditCallbacks) {
-                afterEditCallbacks.key = this.fields[key].afterEditCallbacks;
+            if (typeof this.fields[key].afterEditCallback === 'function') {
+                callbacks[key] = this.fields[key].afterEditCallback;
             }
         }
-        return afterEditCallbacks;
+        return callbacks;
     },
 
     get: function(key) {
@@ -90,15 +90,6 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
 
         if (!field.editor) {
             field.editor = null;
-        }
-        if (!field.selectEditor) {
-            field.selectEditor = Ext.emptyFn;
-        }
-        if (!field.beforeEdit) {
-            field.beforeEdit = Ext.emptyFn;
-        }
-        if (!field.afterEdit) {
-            field.afterEdit = Ext.emptyFn;
         }
         if (!field.configure) {
             field.configure = Ext.emptyFn;
@@ -153,7 +144,7 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
                 editable: false,
                 typeAhead: false
             }),
-            selectEditor: function (editor, record) {
+            selectEditorCallback: function (editor, record) {
                 var options = Phlexible.clone(record.data.options);
                 if (!record.data.required) {
                     options.unshift(['', '(' + Phlexible.elements.Strings.empty + ')']);
