@@ -16,6 +16,17 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
         return this.fields;
     },
 
+    getStoreData: function () {
+        var data = [];
+        for (var key in this.fields) {
+            if (!this.fields.hasOwnProperty(key)) {
+                continue;
+            }
+            data.push([key, this.fields[key].title]);
+        }
+        return data;
+    },
+
     getEditors: function () {
         var editors = [];
         for (var key in this.fields) {

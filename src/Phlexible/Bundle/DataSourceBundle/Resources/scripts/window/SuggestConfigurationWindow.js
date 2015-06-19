@@ -1,8 +1,8 @@
 Ext.provide('Phlexible.datasources.window.SuggestConfigurationWindow');
 
 Phlexible.datasources.window.SuggestConfigurationWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.metasets.Strings.configure_suggest,
-    strings: Phlexible.metasets.Strings,
+    title: Phlexible.datasources.Strings.configure_suggest,
+    strings: Phlexible.datasources.Strings,
     width: 300,
     height: 400,
     layout: 'fit',

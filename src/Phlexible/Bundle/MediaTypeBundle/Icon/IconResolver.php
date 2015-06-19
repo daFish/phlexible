@@ -44,6 +44,7 @@ class IconResolver
         $name = $mediaType->getName();
 
         $sizes = array(16, 32, 48, 256);
+
         $size = $requestedSize;
         $icon = $this->locator->locate("@PhlexibleMediaTypeBundle/Resources/public/mimetypes$size/$name.gif", null, true);
 
@@ -55,7 +56,8 @@ class IconResolver
         foreach ($sizes as $size) {
             if ($size > $requestedSize) {
                 $icon = $this->locator->locate("@PhlexibleMediaTypeBundle/Resources/public/mimetypes$size/$name.gif", null, true);
-                break;
+
+                return $icon;
             }
         }
 

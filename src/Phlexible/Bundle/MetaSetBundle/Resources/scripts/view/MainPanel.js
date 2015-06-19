@@ -12,7 +12,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     iconCls: 'p-metaset-component-icon',
 
     initComponent: function () {
-        var metaFields = new Phlexible.metasets.util.Fields();
+        this.metaFields = new Phlexible.metasets.util.Fields();
 
         var setActions = new Ext.ux.grid.RowActions({
             header: this.strings.actions,
@@ -141,7 +141,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
                         editor: new Ext.form.ComboBox({
                             store: new Ext.data.SimpleStore({
                                 fields: ['type', 'text'],
-                                data: metaFields.getFields()
+                                data: this.metaFields.getStoreData()
                             }),
                             displayField: 'text',
                             valueField: 'type',
@@ -311,7 +311,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     configureField: function(grid, record) {
-        Phlexible.metasets.Fields.get(record.get('type')).configure(record);
+        this.metaFields.get(record.get('type')).configure(record);
     },
 
     deleteField: function (grid, record) {
@@ -324,7 +324,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
         for (var i = 0; i < this.getComponent(1).store.getCount(); i++) {
             var r = this.getComponent(1).store.getAt(i);
 
-            if (Phlexible.metasets.Fields.get(r.get('type')).validate(r) === false) {
+            if (this.metaFields.get(r.get('type')).validate(r) === false) {
                 return;
             }
 

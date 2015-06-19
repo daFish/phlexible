@@ -10,10 +10,6 @@
         <mimetypes>
         </mimetypes>
     </mediatype>
-    <mediatype name="aif" category="audio">
-        <mimetypes>
-        </mimetypes>
-    </mediatype>
     <mediatype name="avi" category="video">
         <mimetypes>
             <mimetype>video/x-msvideo</mimetype>
@@ -38,11 +34,6 @@
         <mimetypes>
             <mimetype>text/csv</mimetype>
             <mimetype>application/csv</mimetype>
-        </mimetypes>
-    </mediatype>
-    <mediatype name="db" category="document">
-        <mimetypes>
-            <mimetype>application/commonground</mimetype>
         </mimetypes>
     </mediatype>
     <mediatype name="doc" category="document">
@@ -179,13 +170,6 @@
         <mimetypes>
             <mimetype>application/vnd.oasis.opendocument.graphics</mimetype>
         </mimetypes>
-    </mediatype>
-    <mediatype name="odi" category="document">
-        <mimetypes>
-            <mimetype>application/vnd.oasis.opendocument.image</mimetype>
-        </mimetypes>
-        <icons>
-        </icons>
     </mediatype>
     <mediatype name="odm" category="document">
         <mimetypes>

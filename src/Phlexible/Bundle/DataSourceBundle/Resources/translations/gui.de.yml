@@ -1,0 +1,10 @@
+datasources:
+    select: Auswählen
+    cancel: Abbrechen
+    failure: Fehler
+    suggest: Suggest
+    suggest_needs_options: Bitte konfigurieren Sie das Suggest-Feld.
+    configure_suggest: Suggest-Feld konfigurieren
+    datasource: DataSource
+    create_datasource: Neue Datenquelle anlegen
+    create_datasource_text: Bitte geben Sie den Titel der neuen Datenquelle ein.

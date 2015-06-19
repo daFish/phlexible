@@ -6,9 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MetaSet\OptionResolver;
+namespace Phlexible\Bundle\DataSourceBundle\OptionResolver;
 
 use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\OptionResolver\OptionResolverInterface;
 
 /**
  * Suggest option resolver

@@ -1,6 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.SuggestField');
+Ext.require('Phlexible.datasources.field.SuggestField');
 Ext.require('Phlexible.fields.FieldHelper');
 
 Phlexible.fields.Registry.addFactory('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {

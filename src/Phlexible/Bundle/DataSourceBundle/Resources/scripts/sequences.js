@@ -1,5 +1,15 @@
-Ext.require('Phlexible.metasets.util.Fields');
+Ext.require('Phlexible.datasources.configuration.FieldConfigurationSuggest');
 Ext.require('Phlexible.datasources.window.MetaSuggestWindow');
+Ext.require('Phlexible.datasources.window.SuggestConfigurationWindow');
+Ext.require('Phlexible.metasets.util.Fields');
+
+Phlexible.elementtypes.configuration.FieldConfiguration.prototype.initMyItems =
+    Phlexible.elementtypes.configuration.FieldConfiguration.prototype.initMyItems.createSequence(function() {
+        this.items.push({
+            xtype: 'datasources-configuration-field-configuration-suggest',
+            additional: true
+        });
+    });
 
 Phlexible.metasets.util.Fields.prototype.initFields =
     Phlexible.metasets.util.Fields.prototype.initFields.createSequence(function() {
@@ -31,7 +41,7 @@ Phlexible.metasets.util.Fields.prototype.initFields =
                 return false;
             },
             configure: function (record) {
-                var w = new Phlexible.metasets.SuggestConfigurationWindow({
+                var w = new Phlexible.datasources.window.SuggestConfigurationWindow({
                     options: record.get('options'),
                     listeners: {
                         select: function (options) {
@@ -45,7 +55,7 @@ Phlexible.metasets.util.Fields.prototype.initFields =
             validate: function (record) {
                 if (!record.get('options')) {
                     Ext.MessageBox.alert(Phlexible.datasources.Strings.failure, Phlexible.datasources.Strings.suggest_needs_options);
-                    return;
+                    return false;
                 }
 
                 return true;
