@@ -1,0 +1,6 @@
+services:
+    phlexible_elementtype.field.suggest:
+        class: Phlexible\Bundle\DataSourceBundle\Field\SuggestField
+        public: false
+        tags:
+            - {name: phlexible_elementtype.field, alias: suggest}

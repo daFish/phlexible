@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\DataSource\Model;
+namespace Phlexible\Component\Suggest\Model;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 

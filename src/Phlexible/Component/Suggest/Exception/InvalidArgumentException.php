@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\DataSource\Exception;
+namespace Phlexible\Component\Suggest\Exception;
 
 /**
  * Invalid argument exception for data source bundle

@@ -72,12 +72,6 @@ services:
         tags:
             - {name: phlexible_elementtype.field, alias: select}
 
-    phlexible_elementtype.field.suggest:
-        class: Phlexible\Component\Elementtype\Field\SuggestField
-        public: false
-        tags:
-            - {name: phlexible_elementtype.field, alias: suggest}
-
     phlexible_elementtype.field.table:
         class: Phlexible\Component\Elementtype\Field\TableField
         public: false

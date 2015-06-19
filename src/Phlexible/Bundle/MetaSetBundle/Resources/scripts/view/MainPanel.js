@@ -313,30 +313,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     configureField: function(grid, record) {
-        if (record.get('type') === 'suggest') {
-            var w = new Phlexible.metasets.SuggestConfigurationWindow({
-                options: record.get('options'),
-                listeners: {
-                    select: function(options) {
-                        record.set('options', options);
-                    },
-                    scope: this
-                }
-            });
-            w.show();
-        }
-        else if (record.get('type') === 'select') {
-            var w = new Phlexible.metasets.SelectConfigurationWindow({
-                options: record.get('options'),
-                listeners: {
-                    store: function(options) {
-                        record.set('options', options);
-                    },
-                    scope: this
-                }
-            });
-            w.show();
-        }
+        Phlexible.metasets.Fields.get(record.get('type')).configure(record);
     },
 
     deleteField: function (grid, record) {
@@ -349,12 +326,7 @@ Phlexible.metasets.MainPanel = Ext.extend(Ext.Panel, {
         for (var i = 0; i < this.getComponent(1).store.getCount(); i++) {
             var r = this.getComponent(1).store.getAt(i);
 
-            if (r.get('type') === 'select' && !r.get('options')) {
-                Ext.MessageBox.alert(this.strings.failure, this.strings.select_needs_options);
-                return;
-            }
-            if (r.get('type') === 'suggest' && !r.get('options')) {
-                Ext.MessageBox.alert(this.strings.failure, this.strings.suggest_needs_options);
+            if (Phlexible.metasets.Fields.get(r.get('type')).validate(r) === false) {
                 return;
             }
 

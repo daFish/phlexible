@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\DataSource\Exception;
+namespace Phlexible\Component\Suggest\Exception;
 
 /**
  * Not found exception

@@ -6,14 +6,14 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\DataSource;
+namespace Phlexible\Component\Suggest;
 
 /**
- * Data source events
+ * Suggest events
  *
  * @author Phillip Look <pl@brainbits.net>
  */
-class DataSourceEvents
+class SuggestEvents
 {
     /**
      * Fired before garbage collection is invoked

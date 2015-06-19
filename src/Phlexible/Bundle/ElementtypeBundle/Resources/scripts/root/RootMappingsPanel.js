@@ -246,8 +246,7 @@ Phlexible.elementtypes.RootMappingsPanel = Ext.extend(Ext.Panel, {
                                     'textarea',
                                     'date',
                                     'select',
-                                    'multiselect',
-                                    'suggest'
+                                    'multiselect'
                                 ],
                                 listeners: {
                                     change: function (fields) {

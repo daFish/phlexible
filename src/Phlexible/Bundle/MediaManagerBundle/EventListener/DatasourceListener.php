@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Component\DataSource\DataSourceEvents;
-use Phlexible\Component\DataSource\Event\GarbageCollectEvent;
 use Phlexible\Component\MediaManager\Util\SuggestFieldUtil;
+use Phlexible\Component\Suggest\SuggestEvents;
+use Phlexible\Component\Suggest\Event\GarbageCollectEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -40,14 +40,14 @@ class DatasourceListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DataSourceEvents::GARBAGE_COLLECT => 'onGarbageCollect',
+            SuggestEvents::GARBAGE_COLLECT => 'onGarbageCollect',
         ];
     }
 
     /**
      * Ensure used values are marked active.
      *
-     * @param \Phlexible\Component\DataSource\Event\GarbageCollectEvent $event
+     * @param \Phlexible\Component\Suggest\Event\GarbageCollectEvent $event
      */
     public function onGarbageCollect(GarbageCollectEvent $event)
     {

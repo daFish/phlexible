@@ -108,4 +108,46 @@ class DataController extends Controller
 
         return new ResultResponse(true);
     }
+
+    /**
+     * Return selectfield data for lists
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @Route("/suggest", name="elementtypes_selectfield_suggest")
+     */
+    public function suggestAction(Request $request)
+    {
+        $id = $request->get('id');
+        $dsId = $request->get('ds_id');
+        $language = $request->get('language');
+        $query = $request->get('query', null);
+        $valuesQuery = $request->get('valuesqry', '');
+
+        $data = [];
+
+        $datasourceManager = $this->get('phlexible_data_source.data_source_manager');
+
+        $source = $datasourceManager->find($id);
+
+        $filter = null;
+        if ($query && $valuesQuery) {
+            $filter = explode('|', $query);
+        }
+
+        foreach ($source->getActiveValuesForLanguage($language) as $key => $value) {
+            if (!empty($query)) {
+                if ($filter && !in_array($key, $filter)) {
+                    continue;
+                } elseif (!$filter && mb_stripos($key, $query) === false) {
+                    continue;
+                }
+            }
+
+            $data[] = ['key' => $key, 'value' => $key];
+        }
+
+        return new JsonResponse(['data' => $data]);
+    }
 }

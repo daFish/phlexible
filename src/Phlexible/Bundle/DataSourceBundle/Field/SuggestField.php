@@ -6,7 +6,9 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\Elementtype\Field;
+namespace Phlexible\Bundle\DataSourceBundle\Field;
+
+use Phlexible\Component\Elementtype\Field\AbstractField;
 
 /**
  * Suggest field

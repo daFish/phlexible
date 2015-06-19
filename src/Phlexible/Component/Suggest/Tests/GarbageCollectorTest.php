@@ -6,13 +6,13 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\DataSource\Tests;
+namespace Phlexible\Component\Suggest\Tests;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Component\DataSource\DataSourceEvents;
-use Phlexible\Component\DataSource\Event\GarbageCollectEvent;
-use Phlexible\Component\DataSource\GarbageCollector\GarbageCollector;
+use Phlexible\Component\Suggest\SuggestEvents;
+use Phlexible\Component\Suggest\Event\GarbageCollectEvent;
+use Phlexible\Component\Suggest\GarbageCollector\GarbageCollector;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -31,7 +31,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     private $garbageCollector;
 
     /**
-     * @var \Phlexible\Component\DataSource\Model\DataSourceManagerInterface|ObjectProphecy
+     * @var \Phlexible\Component\Suggest\Model\DataSourceManagerInterface|ObjectProphecy
      */
     private $manager;
 
@@ -49,7 +49,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     {
 
         $this->eventDispatcher = new EventDispatcher();
-        $this->manager = $this->prophesize('Phlexible\Component\DataSource\Model\DataSourceManagerInterface');
+        $this->manager = $this->prophesize('Phlexible\Component\Suggest\Model\DataSourceManagerInterface');
         $this->garbageCollector = new GarbageCollector($this->manager->reveal(), $this->eventDispatcher);
 
         $this->datasource = new DataSource();
@@ -63,13 +63,13 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
     {
         $fired = 0;
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function() use (&$fired) {
                 $fired++;
             }
         );
         $this->eventDispatcher->addListener(
-            DataSourceEvents::GARBAGE_COLLECT,
+            SuggestEvents::GARBAGE_COLLECT,
             function() use (&$fired) {
                 $fired++;
             }
@@ -167,7 +167,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
             }
@@ -196,7 +196,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
             }
@@ -225,7 +225,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
             }
@@ -254,7 +254,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markInactive(['value1', 'value2']);
             }
@@ -283,7 +283,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markInactive(['value1', 'value2']);
             }
@@ -312,7 +312,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value2', false);
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markInactive(['value1', 'value2']);
             }
@@ -345,7 +345,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value6');
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
                 $event->markInactive(['value3', 'value4']);
@@ -379,7 +379,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value6');
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
                 $event->markInactive(['value3', 'value4']);
@@ -413,7 +413,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value6');
 
         $this->eventDispatcher->addListener(
-            DataSourceEvents::BEFORE_GARBAGE_COLLECT,
+            SuggestEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
                 $event->markActive(['value1', 'value2']);
                 $event->markInactive(['value3', 'value4']);

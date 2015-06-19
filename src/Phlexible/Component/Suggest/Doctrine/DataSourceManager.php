@@ -6,12 +6,12 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\DataSource\Doctrine;
+namespace Phlexible\Component\Suggest\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\DataSourceBundle\DataSource\DataSourceRepository;
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
-use Phlexible\Component\DataSource\Model\DataSourceManagerInterface;
+use Phlexible\Component\Suggest\Model\DataSourceManagerInterface;
 
 /**
  * Doctrine data source manager

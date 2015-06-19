@@ -27,8 +27,9 @@ class PhlexibleDataSourceExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
-
+        $loader->load('fields.yml');
         $loader->load('doctrine.yml');
+
         $container->setAlias(
             'phlexible_data_source.data_source_manager',
             'phlexible_data_source.doctrine.data_source_manager'

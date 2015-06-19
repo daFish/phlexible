@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\DataSource\Event;
+namespace Phlexible\Component\Suggest\Event;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Symfony\Component\EventDispatcher\Event;
