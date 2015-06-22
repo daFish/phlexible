@@ -58,5 +58,4 @@ class InfobarCollection
     {
         return $this->infobars;
     }
-
 }
