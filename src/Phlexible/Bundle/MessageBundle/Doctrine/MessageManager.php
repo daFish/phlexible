@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\MessageBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\MessageBundle\Doctrine\Query\MessageExpressionQuery;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Entity\Repository\MessageRepository;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;

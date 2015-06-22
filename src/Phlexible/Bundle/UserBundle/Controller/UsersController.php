@@ -21,7 +21,6 @@ use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Form\Type\UserType;
-use Phlexible\Bundle\UserBundle\Model\UserCriteriaBuilder;
 use Phlexible\Bundle\UserBundle\UsersMessage;
 use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

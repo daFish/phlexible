@@ -12,13 +12,12 @@
 namespace Phlexible\Bundle\UserBundle\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityRepository;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
+use Phlexible\Bundle\UserBundle\Entity\Repository\UserRepository;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -33,14 +32,9 @@ use Webmozart\Expression\Expression;
 class UserManager extends BaseUserManager implements UserManagerInterface
 {
     /**
-     * @var EntityRepository
+     * @var UserRepository
      */
     private $userRepository;
-
-    /**
-     * @var SuccessorService
-     */
-    private $successorService;
 
     /**
      * @var EventDispatcherInterface
@@ -63,7 +57,6 @@ class UserManager extends BaseUserManager implements UserManagerInterface
      * @param CanonicalizerInterface   $emailCanonicalizer
      * @param ObjectManager            $om
      * @param string                   $class
-     * @param SuccessorService         $successorService
      * @param EventDispatcherInterface $dispatcher
      * @param string                   $systemUserId
      * @param string                   $everyoneGroupId
@@ -74,21 +67,19 @@ class UserManager extends BaseUserManager implements UserManagerInterface
         CanonicalizerInterface $emailCanonicalizer,
         ObjectManager $om,
         $class,
-        SuccessorService $successorService,
         EventDispatcherInterface $dispatcher,
         $systemUserId,
         $everyoneGroupId)
     {
         parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
 
-        $this->successorService = $successorService;
         $this->dispatcher = $dispatcher;
         $this->systemUserId = $systemUserId;
         $this->everyoneGroupId = $everyoneGroupId;
     }
 
     /**
-     * @return EntityRepository
+     * @return UserRepository
      */
     private function getUserRepository()
     {
