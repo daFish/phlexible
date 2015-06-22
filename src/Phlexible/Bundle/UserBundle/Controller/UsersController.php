@@ -142,8 +142,6 @@ class UsersController extends FOSRestController
      */
     public function postUsersAction(Request $request)
     {
-        $userManager = $this->get('phlexible_user.user_manager');
-
         return $this->processForm($request, new User(), (bool) $request->get('optin'));
 
         $this->get('phlexible_message.message_poster')
