@@ -167,7 +167,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     public function matchRequest(Request $request)
     {
-        // remove pathPrefix (debug, preview), strip trailing slash
         $tree = $this->findTree($request);
 
         if (null === $tree) {
@@ -300,6 +299,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             }
         }
 
+        if ($language) {
+            $request->setLocale($language);
+            $request->attributes->set('_locale', $language);
+        }
+
         if ($tid) {
             $request->attributes->set('tid', $tid);
 
@@ -321,9 +325,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             $attributes['_controller'] = 'PhlexibleFrontendBundle:Online:index';
         }
 
-        $request->setLocale($language);
-        $request->attributes->set('_locale', $language);
-
         return $attributes;
     }
 
@@ -342,7 +343,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * Generate hostname
      *
-     * @param \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $node
+     * @param TreeNodeInterface $node
      *
      * @return string
      */

@@ -18,6 +18,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 use Phlexible\Bundle\TreeBundle\Pattern\PatternResolver;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -48,22 +49,30 @@ class TreeExtension extends \Twig_Extension
     private $authorizationChecker;
 
     /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @param ContentTreeManagerInterface   $contentTreeManager
      * @param PatternResolver               $patternResolver
      * @param RequestStack                  $requestStack
      * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
         ContentTreeManagerInterface $contentTreeManager,
         PatternResolver $patternResolver,
         RequestStack $requestStack,
-        AuthorizationCheckerInterface $authorizationChecker
+        AuthorizationCheckerInterface $authorizationChecker,
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->contentTreeManager = $contentTreeManager;
         $this->patternResolver = $patternResolver;
         $this->requestStack = $requestStack;
         $this->authorizationChecker = $authorizationChecker;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -102,6 +111,10 @@ class TreeExtension extends \Twig_Extension
      */
     public function nodeGranted($node)
     {
+        if ($this->tokenStorage->getToken() === null) {
+            return false;
+        }
+
         /* @var $nodes TreeNodeInterface[] */
 
         if ($node instanceof ContentTreeContext) {
