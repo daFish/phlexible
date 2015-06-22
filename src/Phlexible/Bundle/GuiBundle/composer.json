@@ -24,17 +24,6 @@
         "phpunit/phpunit": "~4.5",
         "mikey179/vfsStream": "~1.4"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.brainbits.net/phlexible-bundles/",
-            "options": {
-                "ssl": {
-                    "allow_self_signed": "true"
-                }
-            }
-        }
-    ],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
