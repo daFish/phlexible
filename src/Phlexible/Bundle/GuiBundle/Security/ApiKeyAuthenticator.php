@@ -97,6 +97,6 @@ class ApiKeyAuthenticator implements SimplePreAuthenticatorInterface, Authentica
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-//        return new Response("Authentication Failed.", 403);
+        // return new Response("Authentication Failed.", 403);
     }
 }

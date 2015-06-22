@@ -27,10 +27,7 @@ class ApiKeyUserProvider extends UserProvider
      */
     public function getUsernameForApiKey($apiKey)
     {
-        // Look up the username based on the token in the database, via
-        // an API call, or do something entirely different
-//        $username = $this->userManager->findUserBy(array('apiKey' => $apiKey));
-        $username = $this->userManager->findUserBy(array('username' => $apiKey));
+        $username = $this->userManager->findUserBy(array('apiKey' => $apiKey));
 
         return $username;
     }
