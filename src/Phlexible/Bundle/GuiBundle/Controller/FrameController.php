@@ -112,9 +112,11 @@ class FrameController extends Controller
     {
         $routeExtractor = $this->get('phlexible_gui.route_extractor');
         $extractedRoutes = $routeExtractor->extract($request);
+        $puliRepository = $this->get('puli.repository');
 
-        $content = '';
-        $content .= file_get_contents(dirname(__DIR__).'/Resources/scripts/util/Router.js');
+        $routerFile = $puliRepository->get('/phlexible/phlexiblegui/scripts/util/Router.js');
+
+        $content = $routerFile->getBody();
         $content .= sprintf('Phlexible.Router = Ext.create("Phlexible.gui.util.Router", %s);', json_encode(array(
             'baseUrl' => $extractedRoutes->getBaseUrl(),
             'basePath' => $extractedRoutes->getBasePath(),
