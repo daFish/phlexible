@@ -65,19 +65,18 @@ class IconsBuilder
     /**
      * Get all Stylesheets for the given section
      *
-     * @param string $baseUrl
      * @param string $basePath
      *
      * @return string
      */
-    public function build($baseUrl, $basePath)
+    public function build($basePath)
     {
         $cache = new ResourceCollectionCache($this->cacheDir . '/icons.css', $this->debug);
 
         $bindings = $this->findBindings();
 
-        if (1 || !$cache->isFresh($bindings)) {
-            $content = $this->buildIcons($bindings, $baseUrl, $basePath);
+        if (!$cache->isFresh($bindings)) {
+            $content = $this->buildIcons($bindings, $basePath);
 
             $cache->write($content);
 
@@ -100,12 +99,11 @@ class IconsBuilder
 
     /**
      * @param ResourceBinding[] $bindings
-     * @param string            $baseUrl
      * @param string            $basePath
      *
      * @return string
      */
-    private function buildIcons(array $bindings, $baseUrl, $basePath)
+    private function buildIcons(array $bindings, $basePath)
     {
         $data = [];
 

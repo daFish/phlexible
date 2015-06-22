@@ -60,6 +60,8 @@ class ResourceCollectionCache
     {
         if (!file_exists($this->file)) {
             return false;
+        } elseif (!$this->debug) {
+            return true;
         }
 
         $timestamp = filemtime($this->file);

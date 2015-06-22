@@ -66,7 +66,7 @@ class AssetController extends Controller
     public function iconsAction(Request $request)
     {
         $iconsBuilder = $this->get('phlexible_gui.asset.builder.icons');
-        $file = $iconsBuilder->build($request->getBaseUrl(), $request->getBasePath());
+        $file = $iconsBuilder->build($request->getBasePath());
 
         return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
     }
