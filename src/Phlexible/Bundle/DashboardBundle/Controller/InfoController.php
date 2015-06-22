@@ -36,47 +36,50 @@ class InfoController extends Controller
     {
         $securityContext = $this->get('security.context');
 
-        $lines = [];
+        $projectTitle = $this->container->getParameter('phlexible_gui.project.title');
+        $projectVersion = $this->container->getParameter('phlexible_gui.project.version');
+
+        $lines = [
+            ['Project:', $projectTitle . ' ' . $projectVersion]
+        ];
 
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            $lines[] = [
-                'Project:',
-                $this->container->getParameter('phlexible_gui.project.title') . ' '
-                    . $this->container->getParameter('phlexible_gui.project.version')
-            ];
-            $lines[] = [
-                'Env:',
-                $this->container->getParameter('kernel.environment') . ($this->container->getParameter(
-                    'kernel.debug'
-                ) ? ' [DEBUG]' : '')
-            ];
-            $lines[] = ['Host:', $request->server->get('SERVER_NAME') . ' [' . PHP_SAPI . ']'];
-
             $connection = $this->getDoctrine()->getConnection();
             /* @var $connection \Doctrine\DBAL\Connection */
 
-            $lines[] = [
-                'Default Database:',
-                $connection->getHost() . ' / ' . $connection->getDatabase() . ' [' . $connection->getDriver()->getName(
-                ) . ']'
-            ];
+            $env = $this->container->getParameter('kernel.environment');
+            $debug = $this->container->getParameter('kernel.debug');
 
-            $lines[] = ['Session:', $request->getSession()->getId() . ' [' . $request->server->get('REMOTE_ADDR') . ']'];
+            $serverName = $request->server->get('SERVER_NAME');
+            $remoteAddr = $request->server->get('REMOTE_ADDR');
 
-            $lines[] = [
-                'User:',
-                $this->getUser()->getUsername() . ' [' . implode(', ', $this->getUser()->getRoles()) . ']'
-            ];
+            $dbHost = $connection->getHost();
+            $db = $connection->getDatabase();
+            $dbName = $connection->getDriver()->getName();
 
+            $sessionId = $request->getSession()->getId();
+
+            $username = $this->getUser()->getUsername();
+            $roles = $this->getUser()->getRoles();
+
+            $lines[] = ['Env:', $env . ($debug ? ' [DEBUG]' : '')];
+            $lines[] = ['Host:', $serverName . ' [' . PHP_SAPI . ']'];
+            $lines[] = ['Default Database:', $dbHost . ' / ' . $db . ' [' . $dbName . ']'];
+            $lines[] = ['Session:', $sessionId . ' [' . $remoteAddr . ']'];
+            $lines[] = ['User:', $username . ' [' . implode(', ', $roles) . ']'];
             $lines[] = ['UserAgent:', $request->server->get('HTTP_USER_AGENT')];
-        } else {
-            $lines[] = [
-                'Project:',
-                $this->container->getParameter('phlexible_gui.project.title') . ' '
-                . $this->container->getParameter('phlexible_gui.project.version')
-            ];
         }
 
+        return new Response("<pre>{$this->tableize($lines)}</pre>");
+    }
+
+    /**
+     * @param array $lines
+     *
+     * @return string
+     */
+    private function tableize(array $lines)
+    {
         $l1 = 0;
         $l2 = 0;
         foreach ($lines as $line) {
@@ -96,8 +99,7 @@ class InfoController extends Controller
             }
             $table .= PHP_EOL;
         }
-        $out = '<pre>' . $table . '</pre>';
 
-        return new Response($out);
+        return $table;
     }
 }
