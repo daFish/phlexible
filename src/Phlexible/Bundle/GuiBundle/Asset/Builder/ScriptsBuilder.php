@@ -17,7 +17,6 @@ use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
 use Puli\Discovery\Api\Binding\ResourceBinding;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Resource\FileResource;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Scripts builder
@@ -116,19 +115,6 @@ class ScriptsBuilder
                 }
             }
         }
-
-        //ldd($entryPoints);
-        /*
-        $dir = $this->puliRepository->get('/phlexible/scripts');
-        foreach ($dir->listChildren() as $dir) {
-            //if ($dir->getName() !== 'phlexiblegui') continue;
-            foreach ($dir->listChildren() as $resource) {
-                if ($resource instanceof FileResource && substr($resource->getName(), -3) === '.js') {
-                    $entryPoints[$resource->getPath()] = $resource->getFilesystemPath();
-                }
-            }
-        }
-        */
 
         $files = array();
         foreach ($bindings as $binding) {
