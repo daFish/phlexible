@@ -11,60 +11,68 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Tests\Controller;
 
+use Phlexible\Bundle\ProblemBundle\Controller\ProblemsController;
+use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class ProblemsControllerTest
+ * Problems controller test
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ProblemsControllerTest extends WebTestCase
+class ProblemsControllerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group functional
-     */
     public function testGetProblemsReturnsJsonWithCorrectKeys()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $fetcher = $this->prophesize('Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcherInterface');
+        $fetcher->fetch()->willReturn(array());
 
-        $client->request('GET', '/admin/rest/problems');
-        $response = $client->getResponse();
-        $content = $response->getContent();
-        $data = json_decode($content, true);
+        $container = $this->prophesize('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container->get('phlexible_problem.problem_fetcher')->willReturn($fetcher->reveal());
 
-        $this->assertSame(200, $response->getStatusCode());
+        $controller = new ProblemsController();
+        $controller->setContainer($container->reveal());
+
+        $data = $controller->getProblemsAction();
+
         $this->assertArrayHasKey('problems', $data);
         $this->assertArrayHasKey('count', $data);
     }
 
-    /**
-     * @group functional
-     */
     public function testGetProblemReturnsJsonWithCorrectKeys()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $problem = new Problem();
+        $problem->setId('valid');
 
-        $client->request('GET', '/admin/rest/problems/problem_check_long_ago');
-        $response = $client->getResponse();
-        $content = $response->getContent();
-        $data = json_decode($content, true);
+        $fetcher = $this->prophesize('Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcherInterface');
+        $fetcher->fetch()->willReturn(array($problem));
 
-        $this->assertSame(200, $response->getStatusCode());
+        $container = $this->prophesize('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container->get('phlexible_problem.problem_fetcher')->willReturn($fetcher->reveal());
+
+        $controller = new ProblemsController();
+        $controller->setContainer($container->reveal());
+
+        $data = $controller->getProblemAction('valid');
+
         $this->assertArrayHasKey('problem', $data);
-        $this->assertArrayHasKey('id', $data['problem']);
-        $this->assertSame('problem_check_long_ago', $data['problem']['id']);
+        $this->assertSame('valid', $data['problem']->getId());
     }
 
     /**
-     * @group functional
+     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function testGetProblemRespondsWith404ForUnknownProblem()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $fetcher = $this->prophesize('Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcherInterface');
+        $fetcher->fetch()->willReturn(array());
 
-        $client->request('GET', '/admin/rest/problems/invalid');
-        $response = $client->getResponse();
+        $container = $this->prophesize('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container->get('phlexible_problem.problem_fetcher')->willReturn($fetcher->reveal());
 
-        $this->assertSame(404, $response->getStatusCode());
+        $controller = new ProblemsController();
+        $controller->setContainer($container->reveal());
+
+        $controller->getProblemAction('invalid');
     }
 }

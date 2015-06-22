@@ -1,10 +1,4 @@
 services:
-    phlexible_problem.problem_normalizer:
-        class: Phlexible\Bundle\ProblemBundle\Serializer\Normalizer\ProblemNormalizer
-        public: false
-        tags:
-            - {name: serializer.normalizer}
-
     phlexible_problem.problem_checkers:
         class: Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerCollection
         arguments: [[]]

@@ -18,11 +18,11 @@ use Phlexible\Bundle\ProblemBundle\ProblemEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Problems aggregator
+ * Problems fetcher
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ProblemFetcher
+class ProblemFetcher implements ProblemFetcherInterface
 {
     /**
      * @var EntityManager
@@ -46,7 +46,7 @@ class ProblemFetcher
     }
 
     /**
-     * @return Problem[]
+     * {@inheritdoc}
      */
     public function fetch()
     {

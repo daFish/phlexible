@@ -85,6 +85,6 @@ class ProblemsController extends FOSRestController
             }
         }
 
-        throw new NotFoundHttpException('User not found');
+        throw new NotFoundHttpException('Problem not found');
     }
 }
