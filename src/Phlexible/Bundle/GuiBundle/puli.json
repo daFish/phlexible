@@ -21,9 +21,6 @@
         }
     },
     "binding-types": {
-        "phlexible/mediatypes": {
-            "description": "phlexible mediatypes"
-        },
         "phlexible/menu": {
             "description": "phlexible gui menu definitions"
         },

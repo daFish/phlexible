@@ -100,7 +100,6 @@ Ext.define('Phlexible.gui.view.Bundles', {
                         totalProperty: 'count'
                     },
                 },
-                // TODO: enable when buffered paging reload works. disabled for now.
                 autoLoad: false,
                 sorters: [{
                     property: 'name',
