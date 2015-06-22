@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\GuiBundle\View;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

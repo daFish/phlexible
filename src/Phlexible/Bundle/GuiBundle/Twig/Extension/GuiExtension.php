@@ -11,8 +11,6 @@
 
 namespace Phlexible\Bundle\GuiBundle\Twig\Extension;
 
-use Symfony\Component\Routing\RouterInterface;
-
 /**
  * Twig gui extension
  *
