@@ -18,14 +18,6 @@ services:
             - %asset.cache_dir%
             - %kernel.debug%
 
-    phlexible_gui.asset.builder.icons:
-        class: Phlexible\Bundle\GuiBundle\Asset\Builder\IconsBuilder
-        arguments:
-            - @puli.discovery
-            - @phlexible_gui.compressor.css
-            - %asset.cache_dir%
-            - %kernel.debug%
-
     phlexible_gui.asset.builder.translations:
         class: Phlexible\Bundle\GuiBundle\Asset\Builder\TranslationsBuilder
         arguments:

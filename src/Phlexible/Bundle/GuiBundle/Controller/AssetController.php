@@ -56,22 +56,6 @@ class AssetController extends Controller
     }
 
     /**
-     * Output icon styles
-     *
-     * @param Request $request
-     *
-     * @return Response
-     * @Route("/icons", name="phlexible_gui_asset_icons")
-     */
-    public function iconsAction(Request $request)
-    {
-        $iconsBuilder = $this->get('phlexible_gui.asset.builder.icons');
-        $file = $iconsBuilder->build($request->getBasePath());
-
-        return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
-    }
-
-    /**
      * Output translations
      *
      * @param Request $request
