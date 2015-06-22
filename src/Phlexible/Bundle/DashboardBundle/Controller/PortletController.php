@@ -44,7 +44,7 @@ class PortletController extends Controller
 
         foreach ($this->get('phlexible_dashboard.infobars')->all() as $infobar) {
             if ($infobar->getRegion() === Infobar::REGION_HEADER) {
-                $headerBars[] = $infobar->toArray();
+                $headers[] = $infobar->toArray();
             } else {
                 $footers[] = $infobar->toArray();
             }
