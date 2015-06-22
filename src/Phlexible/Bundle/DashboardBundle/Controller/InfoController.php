@@ -36,41 +36,101 @@ class InfoController extends Controller
     {
         $securityContext = $this->get('security.context');
 
-        $projectTitle = $this->container->getParameter('phlexible_gui.project.title');
-        $projectVersion = $this->container->getParameter('phlexible_gui.project.version');
-
-        $lines = [
-            ['Project:', $projectTitle . ' ' . $projectVersion]
-        ];
+        $lines = [$this->createProject()];
 
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            $connection = $this->getDoctrine()->getConnection();
-            /* @var $connection \Doctrine\DBAL\Connection */
-
-            $env = $this->container->getParameter('kernel.environment');
-            $debug = $this->container->getParameter('kernel.debug');
-
-            $serverName = $request->server->get('SERVER_NAME');
-            $remoteAddr = $request->server->get('REMOTE_ADDR');
-
-            $dbHost = $connection->getHost();
-            $db = $connection->getDatabase();
-            $dbName = $connection->getDriver()->getName();
-
-            $sessionId = $request->getSession()->getId();
-
-            $username = $this->getUser()->getUsername();
-            $roles = $this->getUser()->getRoles();
-
-            $lines[] = ['Env:', $env . ($debug ? ' [DEBUG]' : '')];
-            $lines[] = ['Host:', $serverName . ' [' . PHP_SAPI . ']'];
-            $lines[] = ['Default Database:', $dbHost . ' / ' . $db . ' [' . $dbName . ']'];
-            $lines[] = ['Session:', $sessionId . ' [' . $remoteAddr . ']'];
-            $lines[] = ['User:', $username . ' [' . implode(', ', $roles) . ']'];
-            $lines[] = ['UserAgent:', $request->server->get('HTTP_USER_AGENT')];
+            $lines[] = $this->createEnv();
+            $lines[] = $this->createHost($request);
+            $lines[] = $this->createDatabase();
+            $lines[] = $this->createSession($request);
+            $lines[] = $this->createUser();
+            $lines[] = $this->createUserAgent($request);
         }
 
         return new Response("<pre>{$this->tableize($lines)}</pre>");
+    }
+
+    /**
+     * @return array
+     */
+    private function createProject()
+    {
+        $projectTitle = $this->container->getParameter('phlexible_gui.project.title');
+        $projectVersion = $this->container->getParameter('phlexible_gui.project.version');
+
+        return ['Project:', $projectTitle . ' ' . $projectVersion];
+    }
+
+    /**
+     * @return array
+     */
+    private function createEnv()
+    {
+        $env = $this->container->getParameter('kernel.environment');
+        $debug = $this->container->getParameter('kernel.debug');
+
+        return ['Env:', $env . ($debug ? ' [DEBUG]' : '')];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function createHost(Request $request)
+    {
+        $serverName = $request->server->get('SERVER_NAME');
+
+        return ['Host:', $serverName . ' [' . PHP_SAPI . ']'];
+    }
+
+    /**
+     * @return array
+     */
+    private function createDatabase()
+    {
+        $connection = $this->getDoctrine()->getConnection();
+        /* @var $connection \Doctrine\DBAL\Connection */
+
+        $dbHost = $connection->getHost();
+        $db = $connection->getDatabase();
+        $dbName = $connection->getDriver()->getName();
+
+        return ['Default Database:', $dbHost . ' / ' . $db . ' [' . $dbName . ']'];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function createSession(Request $request)
+    {
+        $sessionId = $request->getSession()->getId();
+        $remoteAddress = $request->server->get('REMOTE_ADDR');
+
+        return ['Session:', $sessionId . ' [' . $remoteAddress . ']'];
+    }
+
+    /**
+     * @return array
+     */
+    private function createUser()
+    {
+        $username = $this->getUser()->getUsername();
+        $roles = $this->getUser()->getRoles();
+
+        return ['User:', $username . ' [' . implode(', ', $roles) . ']'];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function createUserAgent(Request $request)
+    {
+        return ['UserAgent:', $request->server->get('HTTP_USER_AGENT')];
     }
 
     /**

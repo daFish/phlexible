@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\DashboardBundle\Controller;
 
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\DashboardBundle\Infobar\Infobar;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -38,37 +37,26 @@ class PortletController extends Controller
     public function portletsAction()
     {
         $authorizationChecker = $this->get('security.authorization_checker');
-        $portlets = $this->get('phlexible_dashboard.portlets');
-        $infobars = $this->get('phlexible_dashboard.infobars');
 
-        $data = array(
-            'headerBar' => array(),
-            'footerBar' => array(),
-            'portlets'  => array(),
-        );
+        $headers = array();
+        $footers = array();
+        $portlets = array();
 
-        foreach ($infobars->all() as $infobar) {
-            switch ($infobar->getRegion()) {
-                case Infobar::REGION_HEADER:
-                    $data['headerBar'][] = $infobar->toArray();
-                    break;
-
-                case Infobar::REGION_FOOTER:
-                    $data['footerBar'][] = $infobar->toArray();
-                    break;
+        foreach ($this->get('phlexible_dashboard.infobars')->all() as $infobar) {
+            if ($infobar->getRegion() === Infobar::REGION_HEADER) {
+                $headerBars[] = $infobar->toArray();
+            } else {
+                $footers[] = $infobar->toArray();
             }
-
         }
 
-        foreach ($portlets->all() as $portlet) {
-            if ($portlet->hasRole() && !$authorizationChecker->isGranted($portlet->getRole())) {
-                continue;
+        foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
+            if (!$portlet->hasRole() || $authorizationChecker->isGranted($portlet->getRole())) {
+                $portlets[] = $portlet->toArray();
             }
-
-            $data['portlets'][] = $portlet->toArray();
         }
 
-        return new JsonResponse($data);
+        return new JsonResponse(array('headerBar' => $headers, 'footerBar' => $footers, 'portlets' => $portlets));
     }
 
     /**
