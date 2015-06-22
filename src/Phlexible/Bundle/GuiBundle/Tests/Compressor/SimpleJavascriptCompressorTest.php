@@ -19,7 +19,7 @@ use Phlexible\Bundle\GuiBundle\Compressor\SimpleJavascriptCompressor;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class JavascriptCompressorTest extends \PHPUnit_Framework_TestCase
+class SimpleJavascriptCompressorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SimpleJavascriptCompressor

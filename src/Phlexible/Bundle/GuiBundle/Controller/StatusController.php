@@ -16,7 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route as RoutingRoute;
 
 /**
  * Status controller
@@ -36,111 +35,12 @@ class StatusController extends Controller
     public function indexAction()
     {
         $output = '';
-        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_callbacks').'">Callbacks (deprecated)</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_listeners').'">Listeners</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_routes').'">Routes</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_php').'">PHP</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_versions').'">Versions</a><br/>';
-        $output .= '<a href="'.$this->generateUrl('phlexible_gui_status_load').'">Load</a><br/>';
-        $output .= '<a href="' . $this->generateUrl('phlexible_gui_status_context') . '">Context</a><br />';
-        $output .= '<a href="' . $this->generateUrl('phlexible_gui_status_session') . '">Session</a>';
-
-        return new Response($output);
-    }
-
-    /**
-     * Show callbacks
-     *
-     * @return Response
-     * @Route("/callbacks", name="phlexible_gui_status_callbacks")
-     */
-    public function callbacksAction()
-    {
-        $components = $this->container->getParameter('kernel.bundles');
-
-        $allCallbacks = [];
-        $out = '';
-
-        foreach ($components as $id => $class) {
-            $cur = str_repeat('-', 3).'<a name="'.$id.'">'.str_pad(' '.$id.' ', 20, '-').'</a>'.str_repeat('-', 70).PHP_EOL.PHP_EOL;
-
-            $callbacks = get_class_methods($class);
-            $reflection = new \ReflectionClass('Symfony\Component\HttpKernel\Bundle\Bundle');
-            $methods = $reflection->getMethods();
-            $nonCallbacks = ['__construct', 'initContainer', 'setCallbacks', 'setDependencies', 'setDescription', 'setName', 'setOrder', 'setPath', 'getFile', 'setFile', 'getPath', 'getContainer', 'setContainer', 'getControllerDirectory', 'setControllerDirectory', 'init'];
-            foreach ($methods as $method) {
-                $nonCallbacks[] = $method->getName();
-            }
-            $callbacks = array_diff($callbacks, $nonCallbacks);
-
-            if (!count($callbacks)) {
-                continue;
-            }
-
-            foreach ($callbacks as $callback) {
-                if (!isset($allCallbacks[$callback])) {
-                    $allCallbacks[$callback] = 0;
-                }
-                $allCallbacks[$callback]++;
-
-                $url = $this->generateUrl('gui_status_callback', ['callback' => $callback, 'component' => $id]);
-                $cur .= "<a href='$url'>$id::$callback()</a>" . PHP_EOL;
-            }
-
-            $out .= $cur . PHP_EOL;
-        }
-
-        ksort($allCallbacks);
-
-        $output = "<pre>" . str_repeat('=', 3).' Callbacks '.str_repeat('=', 80).PHP_EOL.PHP_EOL;
-        foreach ($allCallbacks as $callback => $count) {
-            $url = $this->generateUrl('gui_status_callback', ['callback' => $callback]);
-            $output .= "<a href='$url'>$callback()</a> ($count)" . PHP_EOL;
-        }
-
-        $output .= PHP_EOL . PHP_EOL . $out;
-
-        return new Response($output);
-    }
-
-    /**
-     * Show callback
-     *
-     * @param string $callback
-     * @param string $component
-     *
-     * @return Response
-     * @Route("/callback", name="phlexible_gui_status_callback")
-     */
-    public function callbackAction($callback, $component = null)
-    {
-        $components = $this->container->getParameter('kernel.bundles');
-
-        $output = '<pre>';
-
-        $result = null;
-        if (!$component) {
-            $output .= 'Callback: '.$callback.'()'.PHP_EOL.PHP_EOL;
-            $result = [];
-            foreach ($components as $class) {
-                if (method_exists($class, $callback)) {
-                    $bundle = new $class();
-                    $result = array_merge($result, $bundle->$callback());
-                }
-            }
-        } else {
-            $class = $components[$component];
-            if (method_exists($class, $callback)) {
-                $bundle = new $class();
-                $result = $bundle->$callback();
-                $output .= 'Callback:  '.$callback.'()'.PHP_EOL;
-                $output .= 'Component: '.$component.PHP_EOL.PHP_EOL;
-            }
-        }
-
-        if ($result) {
-            $output .= print_r($result, true);
-        }
+        $output .= '<a href="'.$this->generateUrl('gui_status_listeners').'">listeners</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('gui_status_versions').'">versions</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('gui_status_php').'">php</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('gui_status_load').'">load</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('gui_status_context').'">context</a><br/>';
+        $output .= '<a href="'.$this->generateUrl('gui_status_session').'">session</a><br/>';
 
         return new Response($output);
     }
@@ -169,16 +69,12 @@ class StatusController extends Controller
 
         foreach ($listenerNames as $listenerName) {
             $listeners = $dispatcher->getListeners($listenerName);
-            //sort($observers);
 
             if (!$listenerName) {
                 $listenerName = '(global)';
             }
 
-            $output .= PHP_EOL . PHP_EOL;
-            $output .= str_repeat('-', 3);
-            $output .= '<a name="' . $listenerName . '"></a>' . str_pad(' ' . $listenerName . ' ', 80, '-');
-            $output .= PHP_EOL . PHP_EOL;
+            $output .= PHP_EOL . PHP_EOL . str_repeat('-', 3) . '<a name="' . $listenerName . '"></a>' . str_pad(' ' . $listenerName . ' ', 80, '-') . PHP_EOL . PHP_EOL;
 
             foreach ($listeners as $listener) {
                 if (is_array($listener)) {
@@ -190,63 +86,6 @@ class StatusController extends Controller
                 }
                 $output .= '* ' . $listener . PHP_EOL;
             }
-        }
-
-        return new Response($output);
-    }
-
-    /**
-     * Show routes
-     *
-     * @return Response
-     * @Route("/routes", name="phlexible_gui_status_routes")
-     */
-    public function routesAction()
-    {
-        $router = $this->get('router');
-        $nameParser = $this->get('controller_name_converter');
-
-        $routes = $router->getRouteCollection();
-        $paths = [];
-        foreach ($routes as $name => $route) {
-            /* @var $route RoutingRoute  */
-
-            /*
-            $data = array();
-            $vars = $route->getVariables();
-            foreach ($vars as $var) {
-                $data[$var] = '{' . $var . '}';
-            }
-            */
-
-            if ($route->hasDefault('_controller')) {
-                try {
-                    $route->setDefault('_controller', $nameParser->build($route->getDefault('_controller')));
-                } catch (\InvalidArgumentException $e) {
-                }
-            }
-
-            $paths[$name] = $route;
-        }
-
-        ksort($paths);
-
-        $output = '<pre>' .
-            str_pad('Name', 60) . ' ' .
-            str_pad('Method', 10) . ' ' .
-            str_pad('Scheme', 10) . ' ' .
-            str_pad('Host', 10) . ' ' .
-            'Path' . ' ' .
-            PHP_EOL;
-
-        foreach ($paths as $name => $route) {
-            $output .=
-                str_pad($name, 60) . ' ' .
-                str_pad($route->getMethods() ? implode(',', $route->getMethods()) : 'ANY', 10) . ' ' .
-                str_pad($route->getSchemes() ? implode(',', $route->getSchemes()) : 'ANY', 10) . ' ' .
-                str_pad($route->getHost() ? $route->getHost() : 'ANY', 10) . ' ' .
-                $route->getPath() . ' ' .
-                PHP_EOL;
         }
 
         return new Response($output);

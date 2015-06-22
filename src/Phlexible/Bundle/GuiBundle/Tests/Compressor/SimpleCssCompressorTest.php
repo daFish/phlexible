@@ -19,7 +19,7 @@ use Phlexible\Bundle\GuiBundle\Compressor\SimpleCssCompressor;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CssiptCompressorTest extends \PHPUnit_Framework_TestCase
+class SimpleCssCompressorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SimpleCssCompressor
