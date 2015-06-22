@@ -51,7 +51,7 @@ class YamlFileLoader implements LoaderInterface
      * @param string $file
      *
      * @throws LoaderException
-     * @return array
+     * @return MenuItemCollection
      */
     private function import($file)
     {
