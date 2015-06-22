@@ -171,27 +171,11 @@ class ScriptsBuilder
                     }
                 }
 
-                /*
-                if (preg_match_all('/xtype:\s*["\'](.+)["\']/', $body, $matches)) {
-                    foreach ($matches[1] as $require) {
-                        $file->requires[] = $require;
-                    }
-                }
-                */
-
                 if (preg_match_all('/window:\s*["\'](.+)["\']/', $body, $matches)) {
                     foreach ($matches[1] as $require) {
                         $file->requires[] = $require;
                     }
                 }
-
-                /*
-                if (preg_match_all('/model:\s*["\'](.+)["\']/', $body, $matches)) {
-                    foreach ($matches[1] as $require) {
-                        $file->requires[] = $require;
-                    }
-                }
-                */
 
                 if (preg_match_all('/defaultType:\s*["\'](.+)["\']/', $body, $matches)) {
                     foreach ($matches[1] as $require) {
