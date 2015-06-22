@@ -31,14 +31,21 @@ class FrameControllerTest extends \PHPUnit_Framework_TestCase
         $routeExtractor = $this->prophesize('Phlexible\Bundle\GuiBundle\Routing\RouteExtractorInterface');
         $routeExtractor->extract($request)->willReturn($extractedRoutes);
 
+        $fileResource = $this->prophesize('Puli\Repository\Resource\FileResource');
+        $fileResource->getBody()->willReturn('router;');
+
+        $puliRepository = $this->prophesize('Puli\Repository\Api\ResourceRepository');
+        $puliRepository->get('/phlexible/phlexiblegui/scripts/util/Router.js')->willReturn($fileResource);
+
         $container = $this->prophesize('Symfony\Component\DependencyInjection\ContainerInterface');
         $container->get('phlexible_gui.route_extractor')->willReturn($routeExtractor->reveal());
+        $container->get('puli.repository')->willReturn($puliRepository->reveal());
 
         $controller = new FrameController();
         $controller->setContainer($container->reveal());
 
         $response = $controller->routesAction($request);
 
-        $this->assertSame('Phlexible.Router.setData({"baseUrl":"","basePath":"","routes":["test"]});', $response->getContent());
+        $this->assertSame('router;Phlexible.Router = Ext.create("Phlexible.gui.util.Router", {"baseUrl":"","basePath":"","routes":["test"]});', $response->getContent());
     }
 }
