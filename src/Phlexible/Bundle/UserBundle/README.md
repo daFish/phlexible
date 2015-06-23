@@ -1,1 +1,2 @@
-[READ-ONLY] Subtree split of the Phlexible User Bundle
+Phlexible User Bundle
+=====================
