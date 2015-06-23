@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\ProblemBundle\Problem;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Event\CollectProblemsEvent;
 use Phlexible\Bundle\ProblemBundle\ProblemEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

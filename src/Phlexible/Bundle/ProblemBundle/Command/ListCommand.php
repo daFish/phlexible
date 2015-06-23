@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Command;
 
-use Phlexible\Bundle\ProblemBundle\Problem;
+use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,26 +56,10 @@ class ListCommand extends ContainerAwareCommand
         $table->setHeaders(['Type', 'Severity', 'Problem', 'Solve']);
 
         foreach ($problems as $problem) {
-            /*
-            switch ($problem->getSeverity())
-            {
-                case Problem::SEVERITY_CRITICAL:
-                    $severity = '<error>' . $problem->getSeverity() . '</error>';
-                    break;
-
-                case Problem::SEVERITY_WARNING:
-                    $severity = '<comment>' . $problem->getSeverity() . '</comment>';
-                    break;
-
-                default:
-                    $severity = '<info>' . $problem->getSeverity() . '</info>';
-            }
-            */
-
             $table->addRow(
                 [
                     $problem->isLive() ? 'live' : 'cached',
-                    $problem->getSeverity(),
+                    $this->createSeverety($problem->getSeverity()),
                     $problem->getMessage(),
                     $problem->getHint()
                 ]
@@ -87,4 +71,30 @@ class ListCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param string $severety
+     *
+     * @return string
+     */
+    private function createSeverety($severety)
+    {
+        switch ($severety)
+        {
+            case Problem::SEVERITY_CRITICAL:
+                return '<error>' . $severety . '</error>';
+                break;
+
+            case Problem::SEVERITY_WARNING:
+                return '<comment>' . $severety . '</comment>';
+                break;
+
+            case Problem::SEVERITY_NOTICE:
+                return '<info>' . $severety . '</info>';
+                break;
+
+            case Problem::SEVERITY_INFO:
+            default:
+                return $severety . '</info>';
+        }
+    }
 }

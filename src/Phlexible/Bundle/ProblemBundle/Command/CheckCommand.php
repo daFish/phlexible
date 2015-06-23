@@ -87,7 +87,6 @@ class CheckCommand extends ContainerAwareCommand
         $subject = null;
         $total = null;
         $body = 'Changes:';
-        $priority = null;
         $countAdd = count($problemList['add']);
         $countRemove = count($problemList['remove']);
         if ($countAdd) {
