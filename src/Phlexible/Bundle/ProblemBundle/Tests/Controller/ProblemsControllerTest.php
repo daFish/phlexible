@@ -13,7 +13,6 @@ namespace Phlexible\Bundle\ProblemBundle\Tests\Controller;
 
 use Phlexible\Bundle\ProblemBundle\Controller\ProblemsController;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Problems controller test

@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\GuiBundle\Tests\Config;
 
 use Phlexible\Bundle\GuiBundle\Config\Config;
-use Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException;
 
 /**
  * Config test
@@ -30,7 +29,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException
      */
     public function testGetThrowsExceptionOnInvalidKey()
     {
@@ -40,7 +39,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException
      */
     public function testSetThrowsExceptionOnInvalidValue()
     {

@@ -69,7 +69,7 @@ EOF;
 
         $css = $this->createCss();
 
-        $vfs = vfsStream::setup('root', null, array('test.css' => $css));
+        vfsStream::setup('root', null, array('test.css' => $css));
 
         $compressed = file_get_contents($this->compressor->compressFile(vfsStream::url('root/test.css')));
 
