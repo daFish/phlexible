@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\MessageBundle\Digest;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Mailer\Mailer;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;

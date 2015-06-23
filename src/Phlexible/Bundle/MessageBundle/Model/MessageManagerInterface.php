@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\MessageBundle\Model;
 
-use Doctrine\Common\Collections\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Webmozart\Expression\Expression;
