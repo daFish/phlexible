@@ -80,6 +80,7 @@ class Digest
         $this->entityManager = $entityManager;
         $this->filterManager = $filterManager;
         $this->messageService = $messageService;
+        $this->messageManager = $messageManager;
         $this->userManager = $userManager;
         $this->mailer = $mailer;
 

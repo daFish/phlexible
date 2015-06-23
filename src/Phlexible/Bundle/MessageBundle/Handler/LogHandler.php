@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\MessageBundle\Handler;
 
 use Phlexible\Bundle\MessageBundle\Entity\Message;
-use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**

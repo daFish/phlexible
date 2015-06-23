@@ -387,6 +387,7 @@ class MessageManager implements MessageManagerInterface
                 continue;
             }
 
+            $key = $criterium->getType();
             $type = $criterium->getType();
             $value = $criterium->getValue();
 
@@ -395,89 +396,50 @@ class MessageManager implements MessageManagerInterface
             }
 
             switch ($type) {
-                case Criteria::CRITERIUM_SUBJECT_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('subject', '*' . $value . '*')));
+                case 'like':
+                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard($key, '*' . $value . '*')));
                     break;
 
-                case Criteria::CRITERIUM_SUBJECT_NOT_LIKE:
+                case 'notLike':
                     $andFilter->addFilter(
-                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('subject', '*' . $value . '*')))
+                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard($key, '*' . $value . '*')))
                     );
                     break;
 
-                case Criteria::CRITERIUM_BODY_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('body', '*' . $value . '*')));
+                case 'eq':
+                    $andFilter->addFilter(new Filter\Term([$key => $value]));
                     break;
 
-                case Criteria::CRITERIUM_BODY_NOT_LIKE:
-                    $andFilter->addFilter(
-                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('body', '*' . $value . '*')))
-                    );
-                    break;
-
-                case Criteria::CRITERIUM_TYPE_IS:
-                    $andFilter->addFilter(new Filter\Term(['type' => $value]));
-                    break;
-
-                case Criteria::CRITERIUM_TYPE_IN:
+                case 'neq':
                     $orFilter = new Filter\BoolOr();
                     foreach (explode(',', $value) as $type) {
-                        $orFilter->addFilter(new Filter\Term(['type' => $type]));
+                        $orFilter->addFilter(new Filter\Term([$key => $type]));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
-                case Criteria::CRITERIUM_CHANNEL_IS:
-                    $andFilter->addFilter(new Filter\Term(['channel' => $value]));
-                    break;
-
-                case Criteria::CRITERIUM_CHANNEL_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('channel', '*' . $value . '*')));
-                    break;
-
-                case Criteria::CRITERIUM_CHANNEL_IN:
+                case 'in':
                     $orFilter = new Filter\BoolOr();
                     foreach (explode(',', $value) as $channel) {
-                        $orFilter->addFilter(new Filter\Term(['channel' => $channel]));
+                        $orFilter->addFilter(new Filter\Term([$key => $channel]));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
-                case Criteria::CRITERIUM_ROLE_IS:
-                    $andFilter->addFilter(new Filter\Term(['role' => $value]));
+                case 'greaterThan':
+                    $andFilter->addFilter(new Filter\Range($key, ['gt' => $value]));
                     break;
 
-                case Criteria::CRITERIUM_ROLE_IN:
-                    $orFilter = new Filter\BoolOr();
-                    foreach (explode(',', $value) as $role) {
-                        $orFilter->addFilter(new Filter\Term(['role' => $role]));
-                    }
-                    $andFilter->addFilter($orFilter);
+                case 'greaterThanEquals':
+                    $andFilter->addFilter(new Filter\Range($key, ['gte' => $value]));
                     break;
 
-                case Criteria::CRITERIUM_MAX_AGE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', ['gt' => time() - ($value * 24 * 60 * 60)]));
+                case 'lessThan':
+                    $andFilter->addFilter(new Filter\Range($key, ['lt' => $value]));
                     break;
 
-                case Criteria::CRITERIUM_MIN_AGE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', ['lt' => time() - ($value * 24 * 60 * 60)]));
-                    break;
-
-                case Criteria::CRITERIUM_START_DATE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', ['gt' => $value->format('U')]));
-                    break;
-
-                case Criteria::CRITERIUM_END_DATE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', ['lt' => $value->format('U')]));
-                    break;
-
-                case Criteria::CRITERIUM_DATE_IS:
-                    $andFilter->addFilter(
-                        new Filter\Range('createdAt', [
-                            'gte' => $value->format('U'),
-                            'lt'  => $value->format('U'),
-                        ])
-                    );
+                case 'lessThanEquals':
+                    $andFilter->addFilter(new Filter\Range($key, ['lte' => $value]));
                     break;
             }
         }
