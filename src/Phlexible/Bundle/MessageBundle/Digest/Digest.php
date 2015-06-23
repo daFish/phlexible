@@ -17,6 +17,7 @@ use Phlexible\Bundle\MessageBundle\Mailer\Mailer;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\MessageBundle\Model\FilterManagerInterface;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
+use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 
 /**
@@ -47,6 +48,11 @@ class Digest
     private $messageService;
 
     /**
+     * @var SubscriptionManagerInterface
+     */
+    private $subscriptionManager;
+
+    /**
      * @param UserManagerInterface
      */
     private $userManager;
@@ -73,10 +79,11 @@ class Digest
     {
         $this->entityManager = $entityManager;
         $this->filterManager = $filterManager;
-        $this->messageManager = $messageManager;
         $this->messageService = $messageService;
         $this->userManager = $userManager;
         $this->mailer = $mailer;
+
+        $this->subscriptionManager = null;
     }
 
     /**
@@ -109,9 +116,9 @@ class Digest
                 $lastSend = new \DateTime($lastSend);
             }
 
-            $criteria = new Criteria([$filter->getCriteria()], Criteria::MODE_AND);
-            $criteria->dateFrom($lastSend);
-            $messages = $this->messageRepository->findByCriteria($criteria);
+            $expression = $filter->getExpression();
+            $expression->andGreaterThan($lastSend->format('Y-m-d H:i:s'), 'createTime');
+            $messages = $this->messageManager->findByExpression($expression);
             if (!count($messages)) {
                 continue;
             }
@@ -119,7 +126,7 @@ class Digest
             if ($this->mailer->sendDigestMail($user, $messages)) {
                 $digests[] = ['filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'ok'];
                 $subscription->setAttribute('lastSend', date('Y-m-d H:i:s'));
-                $this->subscriptionRepository->save($subscription);
+                $this->subscriptionManager->updateSubscription($subscription);
             } else {
                 $digests[] = ['filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'failed'];
             }

@@ -28,11 +28,6 @@ class LogHandler implements HandlerInterface
     private $logger;
 
     /**
-     * @var MessageManagerInterface
-     */
-    private $messageManager;
-
-    /**
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
