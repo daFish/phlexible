@@ -413,7 +413,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setModifiedAt(new \DateTime())
             ->setModifyUser($user);
 
-        $this->volumeManager->validateRenameFile($file);
+        $this->volumeManager->validateRenameFile($file, $file->getFolder());
 
         $event = new RenameFileEvent($file, $oldName);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_RENAME_FILE, $event)->isPropagationStopped()) {
@@ -442,7 +442,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setModifiedAt(new \DateTime())
             ->setModifyUser($user);
 
-        $this->volumeManager->validateMoveFile($file);
+        $this->volumeManager->validateMoveFile($file, $targetFolder);
 
         $event = new MoveFileEvent($file, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_MOVE_FILE, $event)->isPropagationStopped()) {
@@ -471,7 +471,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setModifyUser($file->getCreateUser())
             ->setFolder($targetFolder);
 
-        $this->volumeManager->validateCopyFile($file);
+        $this->volumeManager->validateCopyFile($file, $targetFolder);
 
         $event = new CopyFileEvent($file, $originalFile, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_COPY_FILE, $event)->isPropagationStopped()) {
