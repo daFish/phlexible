@@ -500,15 +500,8 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function validateCreateFolder(FolderInterface $folder)
     {
-        if ($folder->getParentId()) {
-            $targetFolder = $this->findFolder($folder->getParentId());
-            $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
-        } else {
-            $folderPath = '';
-        }
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        if ($this->findFolderBy(array('parentId' => $folder->getParentId(), 'name' => $folder->getName()))) {
+            throw new AlreadyExistsException("Folder {$folder->getName()} already exists.");
         }
     }
 
@@ -517,11 +510,8 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function validateRenameFolder(FolderInterface $folder)
     {
-        $targetFolder = $this->findFolder($folder->getParentId());
-        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        if ($this->findFolderBy(array('parentId' => $folder->getParentId(), 'name' => $folder->getName()))) {
+            throw new AlreadyExistsException("Folder {$folder->getName()} already exists at target folder.");
         }
     }
 
@@ -530,11 +520,8 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function validateMoveFolder(FolderInterface $folder)
     {
-        $targetFolder = $this->findFolder($folder->getParentId());
-        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        if ($this->findFolderBy(array('parentId' => $folder->getParentId(), 'name' => $folder->getName()))) {
+            throw new AlreadyExistsException("Folder {$folder->getName()} already exists at target folder.");
         }
     }
 
@@ -543,10 +530,8 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function validateCopyFolder(FolderInterface $folder, FolderInterface $targetFolder)
     {
-        $folderPath = trim($targetFolder->getPath() . '/' . $folder->getName(), '/');
-
-        if ($this->findFolderByPath($folderPath)) {
-            throw new AlreadyExistsException("Folder {$folderPath} already exists.");
+        if ($this->findFolderBy(array('parentId' => $targetFolder->getId(), 'name' => $folder->getName()))) {
+            throw new AlreadyExistsException("Folder {$folder->getName()} already exists at target folder.");
         }
     }
 
@@ -555,9 +540,8 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function validateCreateFile(FileInterface $file, FolderInterface $folder)
     {
-        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
-        if ($this->findFileByPath($filePath)) {
-            throw new AlreadyExistsException("File {$filePath} already exists.");
+        if ($this->findFileBy(array('folderId' => $folder->getId(), 'name' => $file->getName()))) {
+            throw new AlreadyExistsException("File {$file->getName()} already exists at target folder.");
         }
     }
 
@@ -574,9 +558,8 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function validateMoveFile(FileInterface $file, FolderInterface $folder)
     {
-        $filePath = $folder->getPath() . '/' . $file->getName();
-        if ($this->findFileByPath($filePath)) {
-            throw new AlreadyExistsException("File {$filePath} already exists.");
+        if ($this->findFileBy(array('folderId' => $folder->getId(), 'name' => $file->getName()))) {
+            throw new AlreadyExistsException("File {$file->getName()} already exists at target folder.");
         }
     }
 
@@ -609,15 +592,16 @@ class VolumeManager implements VolumeManagerInterface
             throw new NotWritableException('Delete folder failed.');
         }
 
-        foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
+        foreach ($this->findFoldersBy(array('parentId' => $folder->getId())) as $subFolder) {
             $this->deletePhysicalFolder($subFolder, $userId);
         }
 
-        foreach ($this->findFilesByFolder($folder) as $file) {
-            $this->deleteFile($file, $userId);
+        foreach ($this->findFilesBy(array('folderId' => $folder->getId())) as $file) {
+            $this->deleteFile($file);
         }
 
-        $filesystem->remove($physicalPath);
+        // TODO: check for remaining instances pointing to blob
+        //$filesystem->remove($physicalPath);
 
         $folder->setId(null);
     }
