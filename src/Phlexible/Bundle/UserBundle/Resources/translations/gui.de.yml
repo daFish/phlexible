@@ -107,6 +107,8 @@ Phlexible:
                 generatedPasswordText: Erzeugtes Passwort
                 generateText: Erzeugen
                 copyText: Kopieren
+                addOptinText: 'E-Mail schicken, die einen Link auf eine Seite enthält, auf der der Benutzer ein Passwort setzen kann.'
+                editOptinText: 'E-Mail schicken, die einen Link auf eine Seite enthält, auf der der Benutzer ein neues Passwort setzen kann.'
 
             Comment:
                 title: Bemerkungen

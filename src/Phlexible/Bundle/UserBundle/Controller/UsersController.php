@@ -143,9 +143,6 @@ class UsersController extends FOSRestController
     public function postUsersAction(Request $request)
     {
         return $this->processForm($request, new User(), (bool) $request->get('optin'));
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
     }
 
     /**
@@ -180,9 +177,6 @@ class UsersController extends FOSRestController
         }
 
         return $this->processForm($request, new User(), (bool) $request->get('optin'));
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
     }
 
     /**
@@ -212,7 +206,10 @@ class UsersController extends FOSRestController
             }
 
             if ($optin) {
-                $user->setPasswordToken(Uuid::generate());
+                $tokenGenerator = $this->container->get('fos_user.util.token_generator');
+                $user->setPasswordRequestedAt(new \DateTime());
+                $user->setConfirmationToken($tokenGenerator->generateToken());
+                $user->setPlainPassword($tokenGenerator->generateToken());
 
                 $mailer = $this->get('phlexible_user.mailer');
                 $mailer->sendNewAccountEmailMessage($user);

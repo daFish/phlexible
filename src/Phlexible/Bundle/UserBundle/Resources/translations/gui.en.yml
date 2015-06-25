@@ -107,6 +107,8 @@ Phlexible:
                 generatedPasswordText: Generated password
                 generateText: Generate
                 copyText: Copy
+                addOptinText: 'Send an email containing a link to a page where the user can enter a password.'
+                editOptinText: 'Send an email containing a link to a page where the user can enter a new password.'
 
             Comment:
                 title: Comments

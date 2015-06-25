@@ -608,7 +608,7 @@ class DataSaver
                 } else {
                     $mapId = $rootElementStructure->getDataId();
                     if ($repeatableIdentifier) {
-                        $mapId = substr($repeatableIdentifier, -36);
+                        $mapId = mb_substr($repeatableIdentifier, -36, null, 'UTF-8');
                     }
                 }
                 $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
@@ -629,7 +629,7 @@ class DataSaver
                 } else {
                     $mapId = $rootElementStructure->getDataId();
                     if ($repeatableIdentifier) {
-                        $mapId = substr($repeatableIdentifier, -36);
+                        $mapId = mb_substr($repeatableIdentifier, -36, null, 'UTF-8');
                     }
                 }
                 $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);

@@ -26,84 +26,87 @@ Ext.define('Phlexible.user.edit.Password', {
     generatePasswordText: '_generate_password_text',
     generatedPasswordText: '_generated_password',
     generateText: '_generate',
+    addOptinText: '_addOptin',
+    editOptinText: '_editOptin',
 
     initComponent: function() {
         this.items = [{
-            xtype: 'ux.passwordmeterfield',
-            itemId: 'password',
-            name: 'password',
-            fieldLabel: this.passwordText,
-            minLength: Phlexible.Config.get('users.system.password_min_length'),
-            width: 150,
+            xtype: 'checkbox',
+            itemId: 'addOptin',
+            boxLabel: this.strings.addOptinText,
+            hideLabel: true,
+            checked: true,
+            name: 'optin',
+            border: false,
+            disabled: this.mode !== 'add',
+            hidden: this.mode !== 'add',
             listeners: {
-                change: function() {
-                    if(this.mode === 'add') {
-                        return;
-                    }
-                    this.getComponent('notify').enable();
-                },
-                scope: this
-            }
-        },{
-            name: 'repeat',
-            itemId: 'passwordRepeat',
-            fieldLabel: this.passwordRepeatText,
-            inputType: "password",
-            minLength: Phlexible.Config.get('users.system.password_min_length'),
-            width: 150,
-            invalidText: this.passwordsDontMatchText,
-            listeners: {
-                change: function() {
-                    if(this.mode === 'add') {
-                        return;
-                    }
-                    this.getComponent(2).enable();
+                check: function(c, checked) {
+                    this.getComponent('passwordFieldset').setDisabled(checked);
                 },
                 scope: this
             }
         },{
             xtype: 'checkbox',
-            itemId: 'notify',
-            name: 'notify',
+            itemId: 'editOptin',
+            boxLabel: this.strings.editOptinText,
             hideLabel: true,
-            boxLabel: this.notifyUserText,
-            disabled: true
+            checked: false,
+            name: 'optin',
+            border: false,
+            disabled: this.mode === 'add',
+            hidden: this.mode === 'add',
+            listeners: {
+                check: function(c, checked) {
+                    this.getComponent('passwordFieldset').setDisabled(checked);
+                },
+                scope: this
+            }
         },{
             xtype: 'fieldset',
-            itemId: 'generateFieldset',
-            title: this.generatePasswordText,
+            itemId: 'passwordFieldset',
+            text: this.strings.password,
+            title: this.strings.password,
+            autoHeight: true,
+            disabled: this.mode === 'add',
             items: [{
-                xtype: 'fieldcontainer',
-                itemId: 'generateContainer',
-                hideLabel: true,
-                layout: 'hbox',
+                xtype: 'ux.passwordmeterfield',
+                itemId: 'password',
+                name: 'password',
+                fieldLabel: this.passwordText,
+                minLength: Phlexible.Config.get('users.system.password_min_length'),
+                width: 150,
+            },{
+                xtype: 'fieldset',
+                itemId: 'generateFieldset',
+                title: this.generatePasswordText,
                 items: [{
-                    xtype: 'textfield',
-                    itemId: 'generated',
-                    emptyText: this.generatedPasswordText,
-                    readOnly: true,
-                    width: 150,
-                    padding: '0 5 0 0'
-                },{
-                    xtype: 'button',
-                    itemId: 'generateBtn',
-                    text: this.generateText,
-                    iconCls: Phlexible.Icon.get('wand'),
-                    handler: function(btn) {
-                        var generator = Ext.create('Phlexible.user.util.PasswordGenerator'),
-                            length = Phlexible.Config.get('users.system.password_min_length'),
-                            password = generator.create(length, false);
+                    xtype: 'fieldcontainer',
+                    itemId: 'generateContainer',
+                    hideLabel: true,
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'textfield',
+                        itemId: 'generated',
+                        emptyText: this.generatedPasswordText,
+                        readOnly: true,
+                        width: 150,
+                        padding: '0 5 0 0'
+                    },{
+                        xtype: 'button',
+                        itemId: 'generateBtn',
+                        text: this.generateText,
+                        iconCls: Phlexible.Icon.get('wand'),
+                        handler: function(btn) {
+                            var generator = Ext.create('Phlexible.user.util.PasswordGenerator'),
+                                length = Phlexible.Config.get('users.system.password_min_length'),
+                                password = generator.create(length, false);
 
-                        this.getComponent('generateFieldset').getComponent('generateContainer').getComponent('generated').setValue(password);
-
-                        this.getComponent('password').setValue(password);
-                        this.getComponent('passwordRepeat').setValue(password);
-
-                        if (this.mode !== 'add') {
-                            this.getComponent('notify').enable();
-                        }
-                    },
-                    scope: this
+                            this.getComponent('passswordFieldset').getComponent('generateFieldset').getComponent('generateContainer').getComponent('generated').setValue(password);
+                            this.getComponent('passswordFieldset').getComponent('password').setValue(password);
+                        },
+                        scope: this
+                    }]
                 }]
             }]
         }];
@@ -112,10 +115,6 @@ Ext.define('Phlexible.user.edit.Password', {
     },
 
     loadUser: function(user) {
-        if (this.mode === 'add') {
-            this.getComponent('notify').hide();
-        }
-
         this.getForm().loadRecord(user);
     },
 

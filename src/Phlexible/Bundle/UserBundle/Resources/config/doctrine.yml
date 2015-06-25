@@ -9,6 +9,7 @@ services:
             - @fos_user.entity_manager
             - %fos_user.model.user.class%
             - @event_dispatcher
+            - @phlexible_message.message_poster
             - %phlexible_user.user.system_user_id%
             - %phlexible_user.group.everyone_group_id%
 
