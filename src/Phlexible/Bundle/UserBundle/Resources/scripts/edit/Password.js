@@ -33,7 +33,7 @@ Ext.define('Phlexible.user.edit.Password', {
         this.items = [{
             xtype: 'checkbox',
             itemId: 'addOptin',
-            boxLabel: this.strings.addOptinText,
+            boxLabel: this.addOptinText,
             hideLabel: true,
             checked: true,
             name: 'optin',
@@ -49,7 +49,7 @@ Ext.define('Phlexible.user.edit.Password', {
         },{
             xtype: 'checkbox',
             itemId: 'editOptin',
-            boxLabel: this.strings.editOptinText,
+            boxLabel: this.editOptinText,
             hideLabel: true,
             checked: false,
             name: 'optin',
@@ -65,8 +65,7 @@ Ext.define('Phlexible.user.edit.Password', {
         },{
             xtype: 'fieldset',
             itemId: 'passwordFieldset',
-            text: this.strings.password,
-            title: this.strings.password,
+            title: this.passwordText,
             autoHeight: true,
             disabled: this.mode === 'add',
             items: [{
@@ -75,7 +74,7 @@ Ext.define('Phlexible.user.edit.Password', {
                 name: 'password',
                 fieldLabel: this.passwordText,
                 minLength: Phlexible.Config.get('users.system.password_min_length'),
-                width: 150,
+                width: 150
             },{
                 xtype: 'fieldset',
                 itemId: 'generateFieldset',
@@ -87,7 +86,7 @@ Ext.define('Phlexible.user.edit.Password', {
                     layout: 'hbox',
                     items: [{
                         xtype: 'textfield',
-                        itemId: 'generated',
+                        itemId: 'generatedPassword',
                         emptyText: this.generatedPasswordText,
                         readOnly: true,
                         width: 150,
@@ -102,7 +101,7 @@ Ext.define('Phlexible.user.edit.Password', {
                                 length = Phlexible.Config.get('users.system.password_min_length'),
                                 password = generator.create(length, false);
 
-                            this.getComponent('passswordFieldset').getComponent('generateFieldset').getComponent('generateContainer').getComponent('generated').setValue(password);
+                            this.getComponent('passswordFieldset').getComponent('generateFieldset').getComponent('generateContainer').getComponent('generatedPassword').setValue(password);
                             this.getComponent('passswordFieldset').getComponent('password').setValue(password);
                         },
                         scope: this

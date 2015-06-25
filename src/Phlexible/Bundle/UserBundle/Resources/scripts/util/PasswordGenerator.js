@@ -18,13 +18,13 @@ Ext.define('Phlexible.user.util.PasswordGenerator', {
         if (length === null) {
             length = 10;
         }
-        if (memorable === null) {
+        if (!memorable) {
             memorable = true;
         }
-        if (pattern === null) {
+        if (!pattern) {
             pattern = /\w/;
         }
-        if (prefix === null) {
+        if (!prefix) {
             prefix = '';
         }
         if (prefix.length >= length) {
