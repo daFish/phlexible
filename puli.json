@@ -258,9 +258,6 @@
         }
     },
     "binding-types": {
-        "phlexible/icons": {
-            "description": "phlexible gui icons"
-        },
         "phlexible/mediatypes": {
             "description": "phlexible mediatypes"
         },

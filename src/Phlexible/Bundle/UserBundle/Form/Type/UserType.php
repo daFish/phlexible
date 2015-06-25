@@ -22,11 +22,30 @@ class UserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('username');
         $builder->add('firstname');
         $builder->add('lastname');
+        $builder->add('comment');
+        $builder->add('username');
         $builder->add('email', 'email');
-        $builder->add('password', 'password');
+        $builder->add('salt');
+        $builder->add('plainPassword', 'password');
+        $builder->add('confirmationToken');
+        $builder->add('expired', 'checkbox');
+        $builder->add('enabled', 'checkbox');
+        $builder->add('locked', 'checkbox');
+        #$builder->add('properties');
+        #$builder->add('roles');
+        #$builder->add('groups');
+        $builder->add('credentialsExpired', 'checkbox');
+        #$builder->add('credentialsExpireAt', 'date');
+        $builder->add('passwordRequestedAt', 'date');
+        #$builder->add('lastLogin', 'date');
+        $builder->add('expiresAt', 'date');
+        $builder->add('createdAt', 'date');
+        #$builder->add('createUser');
+        $builder->add('modifiedAt', 'date');
+        #$builder->add('modifyUser');
+        #$builder->add('extra');
     }
 
     /**

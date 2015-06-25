@@ -304,7 +304,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
             return;
         }
 
-        $this->deleteUser($user);
+        parent::deleteUser($user);
 
         $event = new UserEvent($user);
         $this->dispatcher->dispatch(UserEvents::DELETE_USER, $event);

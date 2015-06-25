@@ -59,22 +59,8 @@ Ext.define('Phlexible.user.view.users.List', {
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.user.model.User',
-            proxy: {
-                type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_api_user_get_users'),
-                simpleSortMode: true,
-                reader: {
-                    type: 'json',
-                    rootProperty: 'users',
-                    totalProperty: 'count'
-                },
-                extraParams: this.storeExtraParams
-            },
-            // TODO: enable when buffered paging reload works. disabled for now.
-            buffered: false, //true,
             autoLoad: true,
             pageSize: 100,
-            leadingBufferZone: 200,
             remoteSort: true,
             sorters: [{
                 property: 'username',
@@ -304,7 +290,7 @@ Ext.define('Phlexible.user.view.users.List', {
                 user: user,
                 listeners: {
                     save: function() {
-                        this.store.load();
+                        this.store.sync();
                     },
                     scope: this
                 }
@@ -319,7 +305,7 @@ Ext.define('Phlexible.user.view.users.List', {
             user: user,
             listeners: {
                 save: function(){
-                    this.store.load();
+                    this.store.sync();
                 },
                 scope: this
             }
@@ -329,21 +315,14 @@ Ext.define('Phlexible.user.view.users.List', {
 
     deleteUser: function() {
         var selectionModel = this.getSelectionModel(),
-            records = selectionModel.getSelection(),
-            ids = [],
+            users = selectionModel.getSelection(),
             msg;
 
-        if (records.length > 1) {
+        if (users.length > 1) {
             msg = this.deleteUsersWarningText;
+        } else if (users.length === 1) {
+            msg = Ext.String.format(this.deleteUserWarningText, users[0].get('username'));
         } else {
-            msg = Ext.String.format(this.deleteUserWarningText, records[0].get('username'));
-        }
-
-        for (var i=0; i<records.length; i++) {
-            ids.push(records[i].get('id'));
-        }
-
-        if (!ids) {
             return;
         }
 
@@ -351,21 +330,32 @@ Ext.define('Phlexible.user.view.users.List', {
             if (btn !== 'yes') {
                 return;
             }
-            Ext.Ajax.request({
-                url: Phlexible.Router.generate('phlexible_api_user_delete_user'),
-                params: {
-                    'ids[]': ids
-                },
-                success: function(response){
-                    var data = Ext.decode(response.responseText);
-                    if (data.success) {
-                        this.getStore().load();
-                    } else {
-                        Phlexible.Notify.failure(data.message);
-                    }
-                },
-                scope:this
-            });
+            Ext.each(users, function(user) {
+                user.drop();
+                return;
+                Ext.Ajax.request({
+                    url: Phlexible.Router.generate('phlexible_api_user_delete_user', {userId: userId}),
+                    method: 'DELETE',
+                    success: function(response){
+                        deletedIds.push(userId);
+                        if (response.status !== 204) {
+                            Phlexible.Notify.failure('Deleted user failed.');
+                        }
+                        if (deletedIds.length === userIds.length) {
+                            this.getStore().load();
+                        }
+                    },
+                    failure: function() {
+                        deletedIds.push(userId);
+                        Phlexible.Notify.failure('Deleted user failed.');
+                        if (deletedIds.length === userIds.length) {
+                            this.getStore().load();
+                        }
+                    },
+                    scope:this
+                });
+            }, this);
+            this.getStore().sync();
         }, this);
     },
 

@@ -71,7 +71,7 @@ Ext.define('Phlexible.user.edit.Password', {
             items: [{
                 xtype: 'ux.passwordmeterfield',
                 itemId: 'password',
-                name: 'password',
+                name: 'plainPassword',
                 fieldLabel: this.passwordText,
                 minLength: Phlexible.Config.get('users.system.password_min_length'),
                 width: 150

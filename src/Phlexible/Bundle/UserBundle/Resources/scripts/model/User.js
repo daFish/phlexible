@@ -3,6 +3,7 @@
  */
 Ext.define('Phlexible.user.model.User', {
     extend: 'Ext.data.Model',
+
     idProperty: 'id',
     fields: [
         {name: 'id', type: 'string'},
@@ -26,9 +27,27 @@ Ext.define('Phlexible.user.model.User', {
         {name: 'lastLogin', type: 'date'},
         {name: 'expiresAt', type: 'date'},
         {name: 'createdAt', type: 'date'},
-        {name: 'createUser', type: 'string'},
+        //{name: 'createUser', type: 'string'},
         {name: 'modifiedAt', type: 'date'},
-        {name: 'modifyUser', type: 'string'},
+        //{name: 'modifyUser', type: 'string'},
         {name: 'extra'}
-    ]
+    ],
+    proxy: {
+        type: 'rest',
+        url: Phlexible.Router.generate('phlexible_api_user_get_users'),
+        simpleSortMode: true,
+        reader: {
+            type: 'json',
+            rootProperty: 'users',
+            totalProperty: 'count'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true,
+            transform: function(data, request) {
+                // do some manipulation of the unserialized data object
+                return {user: data};
+            }
+        }
+    }
 });
