@@ -1,10 +1,10 @@
 /**
  * Iframe panel
  */
-Ext.define('Phlexible.gui.panel.IframePanel', {
+Ext.define('Phlexible.gui.panel.IFrame', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.gui-iframe-panel',
-    requires: ['Ext.panel.Panel', 'Ext.toolbar.*'],
+    alias: 'widget.gui-iframe',
+    requires: ['Ext.panel.Panel', 'Ext.toolbar.*', 'Ext.ux.IFrame'],
 
     border: false,
     header: false,
@@ -144,14 +144,20 @@ Ext.define('Phlexible.gui.panel.IframePanel', {
             }
         }
 
-        this.updateHthml();
+        this.layout = 'fit';
+        this.items = {
+            xtype: 'uxiframe',
+            src: this.src,
+            listeners: {
+                load: function() {
+                    this.fireEvent('load', this);
+                },
+                scope: this
+            }
+
+        };
 
         this.callParent(arguments);
-    },
-
-    updateHthml: function() {
-        this.html = '<iframe id="iframe-' + this.id + '" style="overflow:auto;width:100%;height:100%;"'+
-            ' frameborder="0"  src="' + this.src + '"></iframe>';
     },
 
     /**
@@ -170,85 +176,22 @@ Ext.define('Phlexible.gui.panel.IframePanel', {
      */
     setSrc: function(src){
         this.src = src;
-        var iframe = this.getDOM();
-        if (iframe) {
-            iframe.src = src;
-        }
-    },
-
-    /**
-     * Reset iframe
-     */
-    reset: function() {
-        var iframe = this.getDOM();
-        var iframeParent = iframe.parentNode;
-        if (iframe && iframeParent) {
-            iframe.src = 'about:blank';
-            iframe.parentNode.removeChild(iframe);
-        }
-
-        iframe = document.createElement('iframe');
-        iframe.frameBorder = 0;
-        iframe.src = this.src;
-        iframe.id = 'iframe-' + this.id;
-        iframe.style.overflow = 'auto';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframeParent.appendChild(iframe);
+        this.getComponent(0).getWin().src = src;
     },
 
     /**
      * Reload iframe
      */
     reload: function(){
-        this.setSrc(this.getSrc());
-    },
-
-    /**
-     * Return dom node
-     * @return {HTMLElement}
-     */
-    getDOM: function() {
-        return document.getElementById('iframe-' + this.id);
+        this.setSrc(this.getComponent(0).getWin().src);
     },
 
     /**
      * Return document
      * @return {HTMLElement}
      */
-    getDocument: function() {
-        var iframe = this.getDOM();
-        iframe = (iframe.contentWindow) ? iframe.contentWindow : (iframe.contentDocument.document) ? iframe.contentDocument.document : iframe.contentDocument;
-        return iframe.document;
-    },
-
-    destroy: function() {
-        var iframe = this.getDOM();
-        if (iframe && iframe.parentNode) {
-            iframe.src = 'about:blank';
-            iframe.parentNode.removeChild(iframe);
-        }
-        this.callParent(arguments);
-    },
-
-    //call this to manually change content.
-    //don't call until component is rendered!!!
-    update: function(content) {
-        this.setSrc('about:blank');
-        var doc;
-        try {
-            doc = this.getDocument();
-            doc.open();
-            doc.write(content);
-            doc.close();
-        } catch(err) {
-            // reset if any permission issues
-            this.reset();
-            doc = this.getDocument();
-            doc.open();
-            doc.write(content);
-            doc.close();
-        }
+    getDoc: function() {
+        return this.getComponent(0).getDoc();
     },
 
     /**
@@ -278,10 +221,5 @@ Ext.define('Phlexible.gui.panel.IframePanel', {
         if (this.enableMask) {
             this.el.unmask();
         }
-    },
-
-    loadHandler: function() {
-        this.src = this.getIframeEl().dom.src;
-        this.removeMask();
     }
 });

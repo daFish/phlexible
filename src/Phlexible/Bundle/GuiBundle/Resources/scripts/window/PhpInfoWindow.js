@@ -3,11 +3,11 @@
  */
 Ext.define('Phlexible.gui.window.PhpInfoWindow', {
     extend: 'Ext.window.Window',
-    requires: ['Ext.window.Window', 'Phlexible.gui.panel.IframePanel'],
+    requires: ['Ext.window.Window', 'Phlexible.gui.panel.IFrame'],
 
     title: '_PhpInfoWindow',
     iconCls: 'p-icon-php',
-    width: 940,
+    width: 1080,
     height: 600,
     constrain: true,
     modal: true,
@@ -25,14 +25,14 @@ Ext.define('Phlexible.gui.window.PhpInfoWindow', {
             plain: true,
             autoScroll: true,
             collapsible: true,
-            width: 140,
+            width: 100,
             margin: 5,
             padding: 5,
             items: []
         },{
-            xtype: 'gui-iframe-panel',
+            xtype: 'gui-iframe',
             region: 'center',
-            src: Phlexible.Router.generate('gui_status_php'),
+            src: Phlexible.Router.generate('phlexible_gui_status_php'),
             enableReload: true,
             enableWindow: true,
             listeners: {
@@ -58,7 +58,7 @@ Ext.define('Phlexible.gui.window.PhpInfoWindow', {
                         this.getComponent(0).add({
                             xtype: 'button',
                             text: name,
-                            width: 125,
+                            width: 80,
                             handler: function() {
                                 this.getComponent(1).getFrame().src = this.getComponent(1).src + '#' + anchor;
                             },

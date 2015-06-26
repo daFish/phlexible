@@ -23,7 +23,7 @@ Phlexible:
                 text: Reload current state
 
         panel:
-            IframePanel:
+            IFrame:
                 homeText: Home
                 reloadText: Reload
                 openInNewWindowText: Open in new window
