@@ -2,21 +2,21 @@
     "version": "1.0",
     "name": "phlexible/gui-bundle",
     "path-mappings": {
-        "/phlexible/phlexiblegui/menu": "src/Phlexible/Bundle/GuiBundle/Resources/menu",
-        "/phlexible/phlexiblegui/scripts": "src/Phlexible/Bundle/GuiBundle/Resources/scripts",
-        "/phlexible/phlexiblegui/styles": "src/Phlexible/Bundle/GuiBundle/Resources/styles"
+        "/phlexible/gui-bundle/menu": "Resources/menu",
+        "/phlexible/gui-bundle/scripts": "Resources/scripts",
+        "/phlexible/gui-bundle/styles": "Resources/styles",
     },
     "bindings": {
-        "f8dedc99-e83b-5926-8eed-0aa7f0673429": {
-            "query": "/phlexible/phlexiblegui/menu/*.yml",
+        "8d88f8e3-1189-41c9-b8fe-2702bc7ae286": {
+            "query": "/phlexible/gui-bundle/menu/*.yml",
             "type": "phlexible/menu"
         },
-        "f9f7ada2-dd12-571f-95c4-e5931a2e1f4a": {
-            "query": "/phlexible/phlexiblegui/scripts/**/*.js",
+        "1a5d2004-7e10-4bc9-bfbe-125530f3efa3": {
+            "query": "/phlexible/gui-bundle/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
-        "e48dfe29-6164-5df2-89ca-8b32ab717083": {
-            "query": "/phlexible/phlexiblegui/styles/**/*.css",
+        "fe6151e7-3a26-456e-ba46-6ee50ce26608": {
+            "query": "/phlexible/gui-bundle/styles/**/*.css",
             "type": "phlexible/styles"
         }
     },

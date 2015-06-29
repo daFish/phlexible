@@ -1,0 +1,23 @@
+{
+    "version": "1.0",
+    "name": "phlexible/message-bundle",
+    "path-mappings": {
+        "/phlexible/message-bundle/menu": "Resources/menu",
+        "/phlexible/message-bundle/scripts": "Resources/scripts",
+        "/phlexible/message-bundle/styles": "Resources/styles"
+    },
+    "bindings": {
+        "3a61ecc9-1b3d-4403-9583-c123956f3189": {
+            "query": "/phlexible/message-bundle/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "45f5d8be-4d2b-40ba-b108-2c5e08c47840": {
+            "query": "/phlexible/message-bundle/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        },
+        "657d66be-532e-4946-8bb6-63ec13b9401a": {
+            "query": "/phlexible/message-bundle/styles/**/*.css",
+            "type": "phlexible/styles"
+        }
+    }
+}

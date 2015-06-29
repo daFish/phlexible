@@ -2,21 +2,16 @@
     "version": "1.0",
     "name": "phlexible/queue-bundle",
     "path-mappings": {
-        "/phlexible/phlexiblequeue/icons": "src/Phlexible/Bundle/QueueBundle/Resources/public/icons",
-        "/phlexible/phlexiblequeue/menu": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
-        "/phlexible/phlexiblequeue/scripts": "src/Phlexible/Bundle/QueueBundle/Resources/scripts"
+        "/phlexible/queue-bundle/menu": "Resources/menu",
+        "/phlexible/queue-bundle/scripts": "Resources/scripts"
     },
     "bindings": {
-        "53f8a617-37a1-5ea0-894c-cc5df42d7490": {
-            "query": "/phlexible/phlexiblequeue/icons/*.png",
-            "type": "phlexible/icons"
-        },
-        "12dca705-3701-5b44-8d03-81c7ebaf29b5": {
-            "query": "/phlexible/phlexiblequeue/menu/*.yml",
+        "b6cbc2d5-c0c4-45f4-8030-1e311877ce00": {
+            "query": "/phlexible/queue-bundle/menu/*.yml",
             "type": "phlexible/menu"
         },
-        "ca47c1f0-77b3-50b1-8f25-f76dd788e356": {
-            "query": "/phlexible/phlexiblequeue/scripts/**/*.js",
+        "62fb5ae3-791b-43e1-8a3b-874dce42eb36": {
+            "query": "/phlexible/queue-bundle/scripts/**/*.js",
             "type": "phlexible/scripts"
         }
     }
