@@ -1,0 +1,23 @@
+{
+    "version": "1.0",
+    "name": "phlexible/search-bundle",
+    "path-mappings": {
+        "/phlexible/search-bundle/menu": "Resources/menu",
+        "/phlexible/search-bundle/scripts": "Resources/scripts",
+        "/phlexible/search-bundle/styles": "Resources/styles"
+    },
+    "bindings": {
+        "325ced49-7752-4552-9e27-cd6142850536": {
+            "query": "/phlexible/search-bundle/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "6f077f87-a366-4f38-a29c-ba9f62ab40e2": {
+            "query": "/phlexible/search-bundle/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        },
+        "aaa1fcd1-0335-4d13-8c81-e534872ab76d": {
+            "query": "/phlexible/search-bundle/styles/**/*.css",
+            "type": "phlexible/styles"
+        }
+    }
+}
