@@ -77,7 +77,7 @@ Ext.define('Phlexible.mediamanager.toolbar.UploadStatus', {
     },
 
     addFile: function (id, name, size, removeFn) {
-        Phlexible.console.log('UploadStatusBar::addFile(' + id + ')');
+        Phlexible.console.debug('UploadStatusBar::addFile(' + id + ')');
         var iconCls = Phlexible.Icon.get('document');
         var ext = name.split('.').pop();
         if (Phlexible.documenttypes.DocumentTypes.classMap[ext]) {
@@ -123,7 +123,7 @@ Ext.define('Phlexible.mediamanager.toolbar.UploadStatus', {
     },
 
     removeFile: function (id) {
-        Phlexible.console.log('UploadStatusBar::removeFile(' + id + ')');
+        Phlexible.console.debug('UploadStatusBar::removeFile(' + id + ')');
         var btn = this.files.get(id);
         this.removeButton(btn);
     },
@@ -223,3 +223,4 @@ Ext.define('Phlexible.mediamanager.toolbar.UploadStatus', {
 
     }
 });
+

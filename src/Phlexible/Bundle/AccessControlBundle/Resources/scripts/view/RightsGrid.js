@@ -654,8 +654,8 @@ Ext.define('Phlexible.accesscontrol.RightsGrid', {
             });
         }
 
-        Phlexible.console.log(modified);
-        Phlexible.console.log(deleted);
+        //Phlexible.console.log(modified);
+        //Phlexible.console.log(deleted);
 
         Ext.Ajax.request({
             url: this.urls.save,

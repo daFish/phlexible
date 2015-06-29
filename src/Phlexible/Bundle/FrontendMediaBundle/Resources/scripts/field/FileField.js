@@ -246,11 +246,11 @@ Ext.define('Phlexible.frontendmedia.field.FileField', {
                 return e.getTarget('.x-form-item');
             },
             xonNodeEnter: function (target, dd, e, data) {
-                Phlexible.console.log('onNodeEnter');
+                //Phlexible.console.log('onNodeEnter');
                 //Ext.fly(target).addClass('flower-target-hover');
             },
             xonNodeOut: function (target, dd, e, data) {
-                Phlexible.console.log('onNodeOut');
+                //Phlexible.console.log('onNodeOut');
                 //Ext.fly(target).removeClass('flower-target-hover');
             },
             onNodeOver: function (target, dd, e, data) {
@@ -484,3 +484,4 @@ Ext.define('Phlexible.frontendmedia.field.FileField', {
         return true;
     }
 });
+

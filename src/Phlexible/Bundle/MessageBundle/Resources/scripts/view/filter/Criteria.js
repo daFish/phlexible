@@ -236,7 +236,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     initCriteriaFields: function (blocks) {
         this.removeCriteriaFields();
 
-        console.info(blocks);
+        Phlexible.console.info(blocks);
 
         if (!blocks || !Ext.isArray(blocks) || !blocks.length) {
             this.addEmptyOrBlock();
@@ -591,7 +591,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
             criteria = null;
         }
 
-        console.info('serialize:', criteria);
+        Phlexible.console.info('serialize:', criteria);
 
         return criteria;
     },

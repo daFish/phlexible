@@ -235,9 +235,9 @@ Ext.define('Phlexible.user.window.UserWindow', {
             method = 'PUT';
         }
         jsonData = Ext.clone(this.user.data);
-        console.log(url);
-        console.log(method);
-        console.log(jsonData);
+        Phlexible.console.log(url);
+        Phlexible.console.log(method);
+        Phlexible.console.log(jsonData);
         return;
 
         Ext.Ajax.request({

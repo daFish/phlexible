@@ -160,8 +160,6 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
      */
     initConfig: function() {
         var config = Phlexible.config;
-        Phlexible.Logger.notice(config);
-
         delete Phlexible.config;
         Phlexible.Config = new Phlexible.gui.util.Config(config);
         Phlexible.User = new Phlexible.gui.util.User(
@@ -227,7 +225,7 @@ Ext.extend(Phlexible.gui.util.Frame, Ext.util.Observable, {
                             }
                             var tb = this.getToolbar();
                             if (!(item instanceof Ext.Toolbar.Button) && item instanceof Ext.form.Field) {
-                                console.log(item);
+                                //Phlexible.console.debug(item);
                                 var td = document.createElement("td");
                                 tb.tr.insertBefore(td, tb.tr.childNodes[edge]);
                                 //tb.initMenuTracking(item);

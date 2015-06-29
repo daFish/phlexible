@@ -338,6 +338,21 @@ interface VolumeInterface
 
     /**
      * @param FileInterface $file
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function hideFile(FileInterface $file, $userId);
+    /**
+     * @param FileInterface $file
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function showFile(FileInterface $file, $userId);
+
+    /**
+     * @param FileInterface $file
      * @param array         $attributes
      * @param string        $user
      *

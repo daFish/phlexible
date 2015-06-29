@@ -431,7 +431,7 @@ Ext.define('Phlexible.elementtype.configuration.root.Mappings', {
             }
         });
 
-        console.log(mappings);
+        //Phlexible.console.debug(mappings);
 
         return mappings;
     },

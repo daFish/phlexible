@@ -200,7 +200,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
         Ext.Object.each(params, function(key, value) {
             this.getStore().getProxy().setExtraParam(key, value);
         }, this);
-        console.info(this.getStore().getProxy());
+        Phlexible.console.info(this.getStore().getProxy());
         this.getStore().load();
         return;
         Ext.Ajax.request({
