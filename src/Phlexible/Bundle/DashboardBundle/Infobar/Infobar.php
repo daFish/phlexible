@@ -18,8 +18,8 @@ namespace Phlexible\Bundle\DashboardBundle\Infobar;
  */
 class Infobar
 {
-    const REGION_HEADER = 'header';
-    const REGION_FOOTER = 'footer';
+    const REGION_TOP    = 'top';
+    const REGION_BOTTOM = 'bottom';
 
     const TYPE_DEFAULT = '';
     const TYPE_NOTICE  = 'notice';

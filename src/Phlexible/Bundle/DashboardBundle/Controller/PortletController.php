@@ -38,16 +38,11 @@ class PortletController extends Controller
     {
         $authorizationChecker = $this->get('security.authorization_checker');
 
-        $headers = array();
-        $footers = array();
+        $infobars = array();
         $portlets = array();
 
         foreach ($this->get('phlexible_dashboard.infobars')->all() as $infobar) {
-            if ($infobar->getRegion() === Infobar::REGION_HEADER) {
-                $headers[] = $infobar->toArray();
-            } else {
-                $footers[] = $infobar->toArray();
-            }
+            $infobars[] = $infobar->toArray();
         }
 
         foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
@@ -56,7 +51,7 @@ class PortletController extends Controller
             }
         }
 
-        return new JsonResponse(array('headerBar' => $headers, 'footerBar' => $footers, 'portlets' => $portlets));
+        return new JsonResponse(array('infobars' => $infobars, 'portlets' => $portlets));
     }
 
     /**

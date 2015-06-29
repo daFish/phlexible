@@ -108,14 +108,13 @@ Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
     submit: function() {
         var view = this.getComponent(0),
             records = view.getSelectionModel().getSelection(),
-            user = Phlexible.App.getUser(),
             record;
 
         if (records.length) {
             record = records[0];
 
-            user.setProperty('dashboard.columns', record.get('key'));
-            user.commit();
+            Phlexible.User.setProperty('dashboard.columns', record.get('key'));
+            Phlexible.User.commit();
 
             this.fireEvent('columnsChange', record.get('key'));
             this.close();

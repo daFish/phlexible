@@ -20,6 +20,8 @@ Ext.define('Phlexible.gui.util.User', {
         properties: {}
     },
 
+    changes: {},
+
     /**
      * Is access granted?
      *
@@ -88,22 +90,20 @@ Ext.define('Phlexible.gui.util.User', {
      */
     commit: function(callback, scope) {
         Ext.Ajax.request({
-            url: Routing.generate('phlx_users_options_update'),
-            params: this.changes,
-            success: function(response) {
-                var result = Ext.decode(response.responseText);
+            url: Phlexible.Router.generate('phlexible_api_user_put_myself'),
+            method: 'PUT',
+            jsonData: this.changes,
+            success: function() {
+                this.changes = {};
 
-                if (result.success) {
-                    this.changes = {};
+                this.fireEvent('commit', this);
 
-                    this.fireEvent('commit', this);
-
-                    if (callback) {
-                        callback.call(scope, this);
-                    }
-                } else {
-                    this.fireEvent('commitFailed', this);
+                if (callback) {
+                    callback.call(scope, this);
                 }
+            },
+            failure: function() {
+                this.fireEvent('commitFailed', this);
             },
             scope: this
         });
@@ -193,7 +193,7 @@ Ext.define('Phlexible.gui.util.User', {
     applyProperties: function(properties) {
         Ext.Object.each(properties, function(key, value) {
             if (value !== this.properties[key]) {
-                if (this.changes[key]) {
+                if (this.changes['property#' + key]) {
                     this.changes['property#' + key].new = value;
                 } else {
                     this.changes['property#' + key] = {old: this.properties[key], new: value};

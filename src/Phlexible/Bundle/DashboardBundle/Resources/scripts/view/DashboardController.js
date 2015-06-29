@@ -251,29 +251,15 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
             }
         });
 
-        if (data.headerBar) {
-            for (i = 0; i < data.headerBar.length; i++) {
-                row = data.headerBar[i];
+        if (data.infobars) {
+            for (i = 0; i < data.infobars.length; i++) {
+                row = data.infobars[i];
 
                 this.getView().addDocked({
                     xtype: row.xtype,
                     type: row.type,
                     data: row.data,
-                    dock: 'top'
-                });
-            }
-        }
-
-        if (data.footerBar) {
-            for (i = 0; i < data.footerBar.length; i++) {
-                row = data.footerBar[i];
-
-                this.getView().addDocked({
-                    xtype: row.xtype,
-                    type: row.type,
-                    data: row.data,
-                    dock: 'bottom',
-                    padding: 5
+                    dock: row.region
                 });
             }
         }
