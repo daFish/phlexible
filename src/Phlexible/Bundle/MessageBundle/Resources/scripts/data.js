@@ -11,3 +11,8 @@ Phlexible.message.TypeIcons = {
     0: Phlexible.Icon.get('information-white'),
     1: Phlexible.Icon.get('exclamation')
 };
+
+Phlexible.message.TypeNames = {
+    0: 'info',
+    1: 'error'
+};

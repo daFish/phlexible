@@ -22,4 +22,4 @@ Phlexible:
             ColumnsWindow:
                 title: Columns
                 saveText: Save
-                closeText: Close
+                cancelText: Cancel

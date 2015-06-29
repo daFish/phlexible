@@ -57,10 +57,11 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
                 singleSelect: true,
                 listeners: {
                     itemclick: function(view, record){
-                        var item = Ext.clone(record.data);
+                        var item = Ext.clone(record.data),
+                            store = Ext.data.StoreManager.lookup('dashboard-available');
                         record.set('hidden', true);
-                        this.store.clearFilter();
-                        this.store.filterBy(function(record) {
+                        store.clearFilter();
+                        store.filterBy(function(record) {
                             if (!record.get('hidden')) {
                                 return true;
                             }

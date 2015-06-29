@@ -22,4 +22,4 @@ Phlexible:
             ColumnsWindow:
                 title: Spalten
                 saveText: Speichern
-                closeText: Schliessen
+                cancelText: Abbrechen

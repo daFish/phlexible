@@ -66,6 +66,7 @@ class MessagesPortlet extends Portlet
      */
     public function getData()
     {
+        /*
         $subscription = $this->subscriptionManager
             ->findOneBy(
                 ['userId' => $this->tokenStorage->getToken()->getUser()->getId(), 'handler' => 'portlet']
@@ -82,25 +83,20 @@ class MessagesPortlet extends Portlet
         }
 
         $messages = $this->messageManager->findByExpression($filter->getExpression(), ['createdAt' => 'DESC'], 20);
-
-        $typeList = $this->messageManager->getTypeNames();
+        */
+        $messages = $this->messageManager->findBy(array(), ['createdAt' => 'DESC'], 20);
 
         $data = [];
         foreach ($messages as $message) {
-            $subject = '';
-
-            $i = 0;
-            do {
-                $subject .= ($i ? '<wbr />' : '') . mb_substr($message->getSubject(), $i, $i + 30, 'UTF-8');
-                $i += 30;
-            } while ($i <= strlen($message->getSubject()));
-
             $data[] = [
-                'id'       => $message->getId(),
-                'subject'  => $subject,
-                'time'     => $message->getCreatedAt()->format('U'),
-                'type'     => $typeList[$message->getType()],
-                'channel'  => $message->getChannel(),
+                'id'        => $message->getId(),
+                'subject'   => $message->getSubject(),
+                'body'      => $message->getBody(),
+                'type'      => $message->getType(),
+                'channel'   => $message->getChannel(),
+                'role'      => $message->getRole(),
+                'user'      => $message->getUser(),
+                'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
             ];
         }
 

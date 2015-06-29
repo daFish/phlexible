@@ -1,5 +1,6 @@
 Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     extend: 'Ext.dashboard.Panel',
+    requires: ['Phlexible.mediamanager.model.LatestFile'],
     alias: 'widget.mediamanager-latest-files-portlet',
 
     iconCls: Phlexible.Icon.get('images'),

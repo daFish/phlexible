@@ -37,13 +37,13 @@ Ext.define('Phlexible.dashboard.window.ColumnsWindow', {
                     {key: '2', value: this.col2Text, iconCls: 'col-2.png'},
                     {key: 'bigleft', value: this.col2Text, iconCls: 'col-bigleft.png'},
                     {key: 'bigright', value: this.col2Text, iconCls: 'col-bigright.png'},
-                    {key: '3', value: this.col3Text, iconCls: 'col-3.png'},
+                    {key: '3', value: this.col3Text, iconCls: 'col-3.png'}
                 ]
             }),
             tpl: new Ext.XTemplate(
                 '<tpl for=".">',
                 '<div class="col-wrap" id="{key}">',
-                '<div class="col"><img src="/bundles/phlexibledashboard/cols/{iconCls}" title="{value}"></div>',
+                '<div class="col"><img src="/bundles/phlexibledashboard/images/cols/{iconCls}" title="{value}"></div>',
                 //'<span>{value}</span>',
                 '</div>',
                 '</tpl>',
