@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\FrontendMediaBundle\Controller;
 
-use Phlexible\Bundle\MediaTemplateBundle\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
