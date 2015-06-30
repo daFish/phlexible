@@ -12,8 +12,8 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     noRecentFilesText: '_noRecentFilesText',
 
     initComponent: function () {
-        if (this.item.settings && this.item.settings.style) {
-            this.type = this.item.settings.style;
+        if (this.settings && this.settings.style) {
+            this.type = this.settings.style;
         }
 
         var tpl;
@@ -40,8 +40,7 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
             sorters: [{
                 property: 'time',
                 direction: 'DESC'
-            }],
-            data: this.item.data
+            }]
         });
 
         this.items = [

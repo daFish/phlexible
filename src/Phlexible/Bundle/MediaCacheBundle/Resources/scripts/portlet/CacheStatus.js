@@ -14,7 +14,7 @@ Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
     remainingText: '_remainingText',
 
     initComponent: function () {
-        var itemsLeft = parseInt(this.item.data, 10);
+        var itemsLeft = 0;
 
         if (itemsLeft) {
             this.html = '<span id="media_cache_status">' + Ext.String.format(this.itemsText, itemsLeft) + '</span>';

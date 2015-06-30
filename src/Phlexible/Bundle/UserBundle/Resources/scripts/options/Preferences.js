@@ -18,6 +18,7 @@ Ext.define('Phlexible.user.options.Preferences', {
     descriptionText: '_description',
     dateFormatText: '_date_format',
     systemDefaultText: '_system_default',
+    themeText: '_theme',
     saveText: '_save',
     cancelText: '_cancel',
 
@@ -29,7 +30,20 @@ Ext.define('Phlexible.user.options.Preferences', {
     },
 
     initMyItems: function() {
-        this.items = [];
+        this.items = [{
+            xtype: 'combo',
+            name: 'theme',
+            fieldLabel: this.themeText,
+            value: Phlexible.User.getProperty('theme', 'classic'),
+            store: Ext.create('Ext.data.Store', {
+                model: 'Phlexible.gui.model.KeyValue',
+                data: Phlexible.Config.get('set.themes')
+            }),
+            displayField: 'value',
+            valueField: 'key',
+            queryMode: 'local',
+            editable: false
+        }];
     },
 
     initMyDockedItems: function() {
@@ -41,19 +55,12 @@ Ext.define('Phlexible.user.options.Preferences', {
                 text: this.saveText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                 handler: function() {
-                    this.form.submit({
-                        url: Phlexible.Router.generate('phlexible_options'),
-                        method: 'PATCH',
-                        success: function(form, result) {
-                            if (result.success) {
-                                var values = form.getValues();
-                                Phlexible.User.getOptions().language   = values.language;
-                            } else {
-                                Phlexible.Notify.failure(result.msg);
-                            }
-                        },
-                        scope: this
-                    });
+                    var values = this.getForm().getValues();
+
+                    if (Phlexible.User.getProperty('theme', 'classic') !== values.theme) {
+                        Phlexible.User.setProperty('theme', values.theme);
+                        Phlexible.User.commit();
+                    }
                 },
                 scope: this
             }]

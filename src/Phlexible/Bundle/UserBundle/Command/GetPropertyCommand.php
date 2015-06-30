@@ -28,7 +28,7 @@ class GetPropertyCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('phlx:users:property-get')
+        $this->setName('users:properties:get')
             ->setDescription('Get user property.')
             ->setDefinition(array(
                 new InputArgument(
@@ -56,7 +56,7 @@ class GetPropertyCommand extends ContainerAwareCommand
         $username = $input->getArgument('username');
         $key      = $input->getArgument('key');
 
-        $userManager = $this->getContainer()->get('phlx_user.user_manager');
+        $userManager = $this->getContainer()->get('phlexible_user.user_manager');
         $user = $userManager->findUserByUsername($username);
 
         if (!$user) {
@@ -71,7 +71,12 @@ class GetPropertyCommand extends ContainerAwareCommand
         }
 
         foreach ($properties as $key => $value) {
-            $output->writeln("$key => $value");
+            if (is_array($value)) {
+                $output->writeln("$key => " . json_encode($value));
+            } else {
+                $output->writeln("$key => $value");
+            }
+
         }
 
         return 0;

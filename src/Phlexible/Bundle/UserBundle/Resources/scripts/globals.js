@@ -1,6 +1,3 @@
-Ext.require('Phlexible.user.options.Theme');
-Phlexible.PluginManager.prepend('userOptionCards', 'user.options-theme');
-
 Ext.require('Phlexible.user.options.Preferences');
 Phlexible.PluginManager.prepend('userOptionCards', 'user.options-preferences');
 

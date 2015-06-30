@@ -49,8 +49,7 @@ Ext.define('Phlexible.problem.portlet.Problems', {
                     idProperty: 'id'
                 }
             },
-            sorters: [{property: 'severity', username: 'ASC'}],
-            data: this.item.data
+            sorters: [{property: 'severity', username: 'ASC'}]
         });
     },
 

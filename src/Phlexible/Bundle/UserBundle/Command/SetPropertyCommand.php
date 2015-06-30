@@ -28,7 +28,7 @@ class SetPropertyCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('phlx:users:property-set')
+        $this->setName('user:properties:set')
             ->setDescription('Set user property.')
             ->setDefinition(array(
                 new InputArgument(
@@ -62,7 +62,7 @@ class SetPropertyCommand extends ContainerAwareCommand
         $key      = $input->getArgument('key');
         $value    = $input->getArgument('value');
 
-        $userManager = $this->getContainer()->get('phlx_user.user_manager');
+        $userManager = $this->getContainer()->get('phlexible_user.user_manager');
         $user = $userManager->findUserByUsername($username);
 
         if (!$user) {

@@ -10,8 +10,7 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
     controller: 'dashboard.dashboard',
 
     iconCls: Phlexible.Icon.get('dashboard'),
-    cls: 'p-dashboard-dashboard',
-    //header: false,
+    componentCls: 'p-dashboard-dashboard',
     border: false,
 
     dockedItems: [{
@@ -19,8 +18,7 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
         dock: 'top',
         data: {},
         listeners: {
-            addPortlet: 'onAddPortlet',
-            editColumns: 'onEditColumns'
+            addPortlet: 'onAddPortlet'
         }
     }]
 });

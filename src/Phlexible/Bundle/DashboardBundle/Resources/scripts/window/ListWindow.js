@@ -9,7 +9,7 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
     layout: 'fit',
     modal: true,
     constrainHeader: true,
-    cls: 'p-dashboard-list-window',
+    componentCls: 'p-dashboard-list-window',
 
     noAvailablePortletsText: '_noAvailablePortletsText',
 
@@ -27,6 +27,13 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
     },
 
     initMyItems: function() {
+        Phlexible.dashboard.Portlets.clearFilter();
+        Phlexible.dashboard.Portlets.filterBy(function(record) {
+            if (!record.get('hidden')) {
+                return true;
+            }
+        });
+
         this.items = [{
             xtype: 'panel',
             itemId: 'portletPanel',

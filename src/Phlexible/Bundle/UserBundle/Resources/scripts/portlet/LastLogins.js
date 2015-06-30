@@ -17,14 +17,13 @@ Ext.define('Phlexible.user.portlet.LastLogins', {
     loggedOutText: '_logged_out',
 
     initComponent: function() {
-        this.store = new Ext.data.SimpleStore({
+        this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.user.model.LastLogin',
             idProperty: 'userId',
             sorters: {
                 property: 'username',
                 username: 'ASC'
-            },
-            data: this.item.data
+            }
         });
 
         this.items = [{

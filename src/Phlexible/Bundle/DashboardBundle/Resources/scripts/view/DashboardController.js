@@ -7,7 +7,6 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
     requires: [
         'Phlexible.dashboard.infobar.Welcome',
         'Phlexible.dashboard.window.ListWindow',
-        'Phlexible.dashboard.window.ColumnsWindow',
         'Phlexible.dashboard.store.Portlets',
         'Phlexible.dashboard.model.Portlet',
         'Ext.DomHelper'
@@ -15,7 +14,6 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
 
     alias: 'controller.dashboard.dashboard',
 
-    cols: 3,
     store: Ext.create('Phlexible.dashboard.store.Portlets'),
 
     noTitleText: '_noTitleText',
@@ -31,27 +29,21 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
 
         Phlexible.App.getPoller().on('message', this.processMessage, this);
 
-        this.cols = Phlexible.Config.get('dashboard.defaults.columns');
-        if (Phlexible.User.getProperty('dashboard.columns')) {
-            this.cols = Phlexible.User.getProperty('dashboard.columns');
-        }
-        this.activePortlets = Phlexible.Config.get('dashboard.defaults.portlets');
+        this.activePortlets = [{
+            xtype: 'dashboard-column',
+            items: [{
+                id: 'load-portlet'
+            }]
+        }];
         if (Phlexible.User.getProperty('dashboard.portlets')) {
             this.activePortlets = Phlexible.User.getProperty('dashboard.portlets');
         }
 
-        this.configure(this.cols, this.activePortlets);
+        this.configure(this.activePortlets);
 
         this.initMyDockedItems();
         this.initMyTasks();
-
-        /*
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('dashboard_portlets'),
-            success: this.onLoadSuccess,
-            scope: this
-        });
-        */
+        this.initMyListeners();
 
         this.callParent(arguments);
     },
@@ -61,6 +53,8 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
 
     initMyListeners: function() {
         this.on({
+            add: this.save,
+            remove: this.save,
             render: function() {
                 Ext.DomHelper.append(this.el, {
                     tag: 'img',
@@ -81,6 +75,24 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
         });
     },
 
+    initMyTasks: function() {
+        this.saveTask = new Ext.util.DelayedTask(this.doSave, this);
+    },
+
+    processMessage: function(event){
+        if (Ext.isObject(event) && event.type == "dashboard") {
+            Ext.Object.each(event.data, function(id, data) {
+                var panel = this.lookupReference(id);
+
+                if (!panel || !panel.updateData) {
+                    return;
+                }
+
+                panel.updateData(data);
+            }, this);
+        }
+    },
+
     onAddPortlet: function() {
         Ext.create('Phlexible.dashboard.window.ListWindow', {
             listeners: {
@@ -91,45 +103,22 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
             }
         }).show();
     },
-    onEditColumns: function() {
-        Ext.create('Phlexible.dashboard.window.ColumnsWindow', {
-            listeners: {
-                columnsChange: function(columns) {
-                    this.reconfigure(columns, this.activePortlets);
-                },
-                scope: this
-            }
-        }).show();
-    },
-
-    updatePanels: function() {
-        for(var i=0; i<this.store.getCount(); i++){
-            var r = this.store.getAt(i);
-            this.addRecordPanel(r);
-        }
-
-        this.doLayout();
-    },
-
-    getColumn: function(pos) {
-        return this.getView().items.get(pos);
-    },
 
     getBestColumn: function() {
         var max = 999,
             bestColumn;
 
         this.getView().items.each(function(column) {
-            if (column.xtype !== 'dashboard-column') {
+            if (column.$className !== 'Ext.dashboard.Column') {
                 return;
             }
-            if (!column.items.getCount()) {
+            if (!column.items.length) {
                 bestColumn = column;
                 return false;
             }
-            var cnt = column.getSize().height;
-            if (cnt < max) {
-                max = cnt;
+            var height = column.getSize().height;
+            if (height < max) {
+                max = height;
                 bestColumn = column;
             }
         });
@@ -137,18 +126,11 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
         return bestColumn;
     },
 
-    addPortlet: function(item, skipEvent) {
-        var col;
-        if (item.col !== false && item.col < this.cols) {
-            col = this.getColumn(item.col);
-        } else {
-            col = this.getBestColumn();
-        }
+    addPortlet: function(item) {
+        var column = this.getBestColumn(),
+            config;
 
-        if (item.xtype) {
-            item.col = col.col;
-            item.pos =  col.items.length + 1;
-
+        if (column && item.xtype) {
             var tools = [];
             var plugins = [];
             if (item.configuration && item.configuration.length) {
@@ -167,167 +149,77 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
                 });
             }
 
-            var config = {
-                xtype: item.xtype,
-                itemId: item.id,
-                reference: item.id,
-                item: item,
-                collapsed: item.mode == 'collapsed',
-                tools: tools,
-                plugins: plugins,
+            config = this.createPortletConfig(item.id);
+            config.tools = tools;
+            config.plugins = plugins;
+
+            column.add(config);
+        }
+    },
+
+    createPortletConfig: function(id) {
+        Phlexible.dashboard.Portlets.clearFilter();
+
+        var portlet = Phlexible.dashboard.Portlets.findRecord('id', id),
+            config;
+
+        if (portlet) {
+            config = {
+                portletId: id,
+                data: {},
+                xtype: portlet.data.xtype,
                 listeners: {
-                    close: function(panel) {
-                        panel.ownerCt.remove(panel, true);
-                        panel.destroy();
-                        this.fireEvent('portletClose', panel, panel.item);
-                    },
-                    collapse: function(panel){
-                        panel.item.mode = 'collapsed';
-
-                        this.fireEvent('portletCollapse', panel, panel.item);
-                    },
-                    expand: function(panel){
-                        panel.item.mode = 'expanded';
-
-                        this.fireEvent('portletExpand', panel, panel.item);
+                    close: function () {
+                        this.save();
+                        Phlexible.dashboard.Portlets.findRecord('id', id).set('hidden', false);
                     },
                     scope: this
                 }
             };
-            var panel = col.add(config);
-
-            if (!skipEvent) {
-                this.fireEvent('portletAdd', item, item.record);
-            }
+            portlet.set('hidden', true);
         }
+
+        return config;
     },
 
-    getSaveData: function() {
-        var data = {}, x = 0, y = 0;
+    recurseConfigs: function(items) {
+        var configs = [], count = items.length;
 
-        this.items.each(function(col) {
-            col.items.each(function(item) {
-                data[item.id] = {
-                    id: item.id,
-                    mode: item.item.mode,
-                    col: x,
-                    pos: y
+        Ext.each(items, function(item) {
+            var config;
+            if (item.id === 'column') {
+                config = {
+                    xtype: 'dashboard-column',
+                    columnWidth: 1 / count,
+                    items: this.recurseConfigs(item.children),
                 };
-                y++;
-            }, this);
-            x++;
-            y = 0;
+                configs.push(config);
+            } else {
+                config = this.createPortletConfig(item.id);
+                if (config) {
+                    configs.push(config);
+                }
+            }
         }, this);
 
-        return data;
+        return configs;
     },
 
-    processMessage: function(event){
-        if (Ext.isObject(event) && event.type == "dashboard") {
-            Ext.Object.each(event.data, function(id, data) {
-                    var panel = this.lookupReference(id);
+    configure: function(activePortlets) {
+        var configs = this.recurseConfigs(activePortlets);
 
-                if (!panel || !panel.updateData) {
-                    return;
-                }
+        this.getView().add(configs);
 
-                panel.updateData(data);
-            }, this);
-        }
-    },
-
-    initMyTasks: function() {
-        this.saveTask = new Ext.util.DelayedTask(this.doSave, this);
-    },
-
-    configure: function(cols, activePortlets) {
-        var matrix = [],
-            id, col, portletConfig, pos, mode, cls, portlet, i;
-
-        for (i = 0; i < cols; i += 1) {
-            this.getView().add({
-                itemId: 'col' + i,
-                col: i,
-                columnWidth: 1 / this.cols,
-                padding: 10
-            });
-            matrix.push(new Ext.util.MixedCollection());
-        }
-
-        Ext.Object.each(activePortlets, function(portletId, activePortlet) {
-            var portlet = Phlexible.dashboard.Portlets.findRecord('id', portletId),
-                portletConfig;
-
-            if (!portlet) {
-                Phlexible.Logger.warn('Portlet ' + portletId + ' not found.');
+        this.getView().cascade(function(c) {
+            if (c.$className !== 'Ext.dashboard.Column') {
                 return;
             }
-
-            portlet.set('hidden', true);
-
-            portletConfig = Ext.clone(portlet.data);
-            portletConfig.col = parseInt(activePortlet.col, 10);
-            portletConfig.pos = parseInt(activePortlet.pos, 10);
-            portletConfig.mode = activePortlet.mode || 'opened';
-
-            if (portletConfig.col !== false && portletConfig.pos !== false && portletConfig.mode !== 'closed') {
-                if (portletConfig.col <= (cols - 1)) {
-                    matrix[portletConfig.col].insert(portletConfig.pos, portletConfig);
-                } else {
-                    matrix[0].insert(portletConfig.pos, portletConfig);
-                }
-            }
-        });
-
-        /*
-        for (i = 0; i < portlets.length; i++) {
-            portletConfig = portlets[i];
-            id = portletConfig.id;
-
-            cls = Ext.ClassManager.getByAlias('widget.' + portletConfig.xtype);
-            if (!cls) {
-                Phlexible.console.warn('Portlet widget.' + portletConfig.xtype + ' not found.');
-                continue;
-            }
-            portletConfig.title = cls.prototype.title || this.noTitleText;
-            portletConfig.description = cls.prototype.description || this.noDescriptionText;
-            portletConfig.imageUrl = cls.prototype.imageUrl || '/bundles/phlexibledashboard/images/portlet-plain.png';
-            portletConfig.hidden = false;
-            col = false;
-            pos = false;
-            mode = 'closed';
-
-            if (activePortlets[id]) {
-                portletConfig.hidden = true;
-                col  = parseInt(activePortlets[id].col, 10);
-                pos  = parseInt(activePortlets[id].pos, 10);
-                mode = activePortlets[id].mode || 'opened';
-            }
-
-            portletConfig.col = col;
-            portletConfig.pos = pos;
-            portletConfig.mode = mode;
-
-            if (portletConfig.col !== false && portletConfig.pos !== false && portletConfig.mode !== 'closed') {
-                if (portletConfig.col <= (cols - 1)) {
-                    matrix[portletConfig.col].insert(portletConfig.pos, portletConfig);
-                } else {
-                    matrix[0].insert(portletConfig.pos, portletConfig);
-                }
-            }
-        }
-        */
-
-        for (i = 0; i< cols; i++) {
-            matrix[i].each(function(portletConfig) {
-                this.addPortlet(portletConfig, true);
-            }, this);
-        }
-    },
-
-    reconfigure: function(cols, activePortlets) {
-        this.getView().items.removeAll();
-        this.configure(cols, activePortlets);
+            c.on({
+                add: this.save,
+                remove: this.save,
+                scope: this
+            });
+        }, this);
     },
 
     save: function() {
@@ -340,17 +232,37 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
 
         var data = this.getSaveData();
 
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('dashboard_portlets_save'),
-            params: {
-                portlets: Ext.encode(data)
-            },
-            success: function(response) {
-                var data = Ext.decode(response.responseText);
-                if (!data.success) {
-                    Phlexible.Notify.failure(data.msg);
+        Phlexible.User.setProperty('dashboard.portlets', data);
+        Phlexible.User.commit();
+    },
+
+    getSaveData: function() {
+        return this.recurseItems(this.getView().items);
+    },
+
+    recurseItems: function(items) {
+        var data = [];
+
+        items.each(function(item) {
+            if (item.$className === 'Ext.layout.container.ColumnSplitter') {
+                return;
+            } else if (item.$className === 'Ext.dashboard.Column') {
+                var children = this.recurseItems(item.items);
+                if (!children.length) {
+                    return;
                 }
+                data.push({
+                    id: 'column',
+                    children: this.recurseItems(item.items)
+                });
+            } else {
+                data.push({
+                    id: item.portletId,
+                    mode: item.getCollapsed() ? 'collapsed' : 'expanded'
+                });
             }
-        });
+        }, this);
+
+        return data;
     }
 });

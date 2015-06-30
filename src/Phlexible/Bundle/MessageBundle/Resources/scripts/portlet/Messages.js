@@ -28,8 +28,7 @@ Ext.define('Phlexible.message.portlet.Messages', {
             store: Ext.create('Ext.data.Store', {
                 model: 'Phlexible.message.model.Message',
                 id: 'id',
-                sorters: [{property: 'time', direction: 'DESC'}],
-                data: this.item.data
+                sorters: [{property: 'time', direction: 'DESC'}]
             }),
             columns: [{
                 header: this.subjectText,

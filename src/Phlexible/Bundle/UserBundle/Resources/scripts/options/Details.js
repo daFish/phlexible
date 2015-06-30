@@ -73,22 +73,14 @@ Ext.define('Phlexible.user.options.Details', {
                 text: this.saveText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
                 handler: function() {
-                    this.form.submit({
-                        url: Phlexible.Router.generate('phlexible_options'),
-                        method: 'PATCH',
-                        success: function(form, result) {
-                            if (result.success) {
-                                var values = form.getValues(),
-                                    user = Phlexible.User;
-                                user.setFirstname(values.firstname);
-                                user.setLastname(values.lastname);
-                                user.setEmail(values.email);
-                            } else {
-                                Phlexible.Notify.failure(result.msg);
-                            }
-                        },
-                        scope: this
-                    });
+                    var values = this.getForm().getValues(),
+                        user = Phlexible.User;
+
+                    user.setFirstname(values.firstname);
+                    user.setLastname(values.lastname);
+                    user.setEmail(values.email);
+
+                    user.commit();
                 },
                 scope: this
             }]

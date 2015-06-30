@@ -28,7 +28,7 @@ class RemovePropertyCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('phlx:users:property-remove')
+        $this->setName('users:properties:remove')
             ->setDescription('Remove user property.')
             ->setDefinition(array(
                 new InputArgument(
@@ -56,7 +56,7 @@ class RemovePropertyCommand extends ContainerAwareCommand
         $username = $input->getArgument('username');
         $key      = $input->getArgument('key');
 
-        $userManager = $this->getContainer()->get('phlx_user.user_manager');
+        $userManager = $this->getContainer()->get('phlexible_user.user_manager');
         $user = $userManager->findUserByUsername($username);
 
         if (!$user) {

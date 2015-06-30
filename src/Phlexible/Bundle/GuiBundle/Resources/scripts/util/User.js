@@ -89,10 +89,21 @@ Ext.define('Phlexible.gui.util.User', {
      * @returns {Phlexible.gui.util.User}
      */
     commit: function(callback, scope) {
+        var changes = {};
+        Ext.Object.each(this.changes, function(key, values) {
+            if (values.old !== values.new) {
+                changes[key] = values.new;
+            }
+        });
+        if (!Ext.Object.getKeys(changes).length) {
+            this.changes = {};
+            return;
+        }
+
         Ext.Ajax.request({
             url: Phlexible.Router.generate('phlexible_api_user_put_myself'),
             method: 'PUT',
-            jsonData: this.changes,
+            jsonData: changes,
             success: function() {
                 this.changes = {};
 

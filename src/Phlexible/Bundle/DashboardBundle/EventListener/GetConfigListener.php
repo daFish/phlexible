@@ -13,7 +13,6 @@ namespace Phlexible\Bundle\DashboardBundle\EventListener;
 
 use Phlexible\Bundle\DashboardBundle\Infobar\InfobarCollection;
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Get config listener
@@ -42,21 +41,11 @@ class GetConfigListener
     {
         $config = $event->getConfig();
 
-        $defaultPortlets = array(
-            'problems-portlet' => array(
-                'mode' => 'opened',
-                'col'  => 0,
-                'pos'  => 0
-            )
-        );
-
         $infobars = array();
         foreach ($this->infobars->all() as $infobar) {
             $infobars[] = $infobar->toArray();
         }
 
         $config->set('dashboard.infobars', $infobars);
-        $config->set('dashboard.defaults.portlets', $defaultPortlets);
-        $config->set('dashboard.defaults.columns', 2);
     }
 }

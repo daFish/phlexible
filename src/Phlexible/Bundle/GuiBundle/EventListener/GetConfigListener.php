@@ -78,8 +78,10 @@ class GetConfigListener
         }
 
         $sets['themes'] = [
-            ['default', 'Default Theme', 'theme_default.png'],
+            ['classic', 'Classic Theme', 'theme_default.png'],
             ['gray', 'Gray Theme', 'theme_gray.png'],
+            ['neptune', 'Neptune Theme', 'theme_neptune.png'],
+            ['crisp', 'Crisp Theme', 'theme_crisp.png'],
             //            array('slate', 'Slate Theme', 'theme_slate.png'),
             //            array('slickness', 'Slickness Theme', 'theme_slate.png'),
         ];
