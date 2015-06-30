@@ -340,7 +340,7 @@ Ext.define('Phlexible.elementtype.view.Tree', {
                 fieldTypeMatrix = Phlexible.fields.FieldTypes.get(nodeType),
                 hasSibling = false,
                 hasChild = false,
-                language = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+                language = Phlexible.User.getProperty('interfaceLanguage', 'en');
 
             Phlexible.fields.FieldTypes.each(function(type, fieldType) {
                 if (fieldTypeParentMatrix &&

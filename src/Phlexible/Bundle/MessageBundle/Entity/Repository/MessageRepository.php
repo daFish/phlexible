@@ -149,13 +149,16 @@ class MessageRepository extends EntityRepository
         }
         sort($roles);
 
-        return [
-            'types'      => array_map(function($v) {
-                return (int) $v;
-            }, array_column($fullTypes, 'type')),
+        return array(
+            'types' => array_map(
+                function ($v) {
+                    return (int) $v;
+                },
+                array_column($fullTypes, 'type')
+            ),
             'channels'   => $channels,
             'roles'      => $roles,
-        ];
+        );
     }
 
     /**

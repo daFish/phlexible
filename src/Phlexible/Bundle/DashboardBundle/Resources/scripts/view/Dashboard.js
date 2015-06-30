@@ -12,5 +12,15 @@ Ext.define('Phlexible.dashboard.view.Dashboard', {
     iconCls: Phlexible.Icon.get('dashboard'),
     cls: 'p-dashboard-dashboard',
     //header: false,
-    border: false
+    border: false,
+
+    dockedItems: [{
+        xtype: 'dashboard-infobar-welcome',
+        dock: 'top',
+        data: {},
+        listeners: {
+            addPortlet: 'onAddPortlet',
+            editColumns: 'onEditColumns'
+        }
+    }]
 });

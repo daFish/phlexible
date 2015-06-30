@@ -115,12 +115,14 @@ class File implements FileInterface
      */
     protected $volume;
 
+    protected $volumeId;
+
     /**
      * {@inheritdoc}
      */
     public function getVolumeId()
     {
-        return $this->volumeId;
+        return $this->getFolder()->getVolumeId();
     }
 
     /**

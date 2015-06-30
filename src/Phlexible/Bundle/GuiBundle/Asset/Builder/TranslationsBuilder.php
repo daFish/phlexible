@@ -53,8 +53,7 @@ class TranslationsBuilder
         CompressorInterface $javascriptCompressor,
         $cacheDir,
         $debug
-    )
-    {
+    ) {
         $this->catalogAccessor = $catalogAccessor;
         $this->javascriptCompressor = $javascriptCompressor;
         $this->cacheDir = $cacheDir;

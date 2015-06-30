@@ -101,7 +101,8 @@ class CheckCommand extends ContainerAwareCommand
         }
         if ($countAdd && $countRemove) {
             $subject = "Problem check found $countAdd new and removed $countRemove existing problem(s)";
-            $total = "Problem check found <fg=red>$countAdd new</fg=red> and removed <fg=green>$countRemove existing</fg=green> problem(s)";
+            $total = "Problem check found <fg=red>$countAdd new</fg=red> and " .
+                "removed <fg=green>$countRemove existing</fg=green> problem(s)";
         }
 
         if (isset($subject)) {
@@ -118,5 +119,4 @@ class CheckCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

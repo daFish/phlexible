@@ -3,7 +3,7 @@ Phlexible.fields.Registry.register('label', function (parentConfig, item, valueS
         fieldLabel = item.labels.fieldLabel || {},
         config = {
             xtype: 'panel',
-            html: item.content || contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+            html: item.content || contextHelp[Phlexible.User.getProperty('interfaceLanguage', 'en')] || fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')],
             plain: true,
             border: false,
             cls: 'p-fields-label'

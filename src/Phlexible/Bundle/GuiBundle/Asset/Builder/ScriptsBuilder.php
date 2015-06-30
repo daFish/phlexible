@@ -55,8 +55,8 @@ class ScriptsBuilder
         ResourceDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
-        $debug)
-    {
+        $debug
+    ) {
         $this->puliDiscovery = $puliDiscovery;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;
@@ -261,7 +261,8 @@ class ScriptsBuilder
 
             if (!empty($file->requires)) {
                 foreach ($file->requires as $require) {
-                    if ((substr($require, 0, 4) === 'Ext.' && substr($require, 0, 7) !== 'Ext.ux.') || in_array($require, $skip)) {
+                    if ((substr($require, 0, 4) === 'Ext.' && substr($require, 0, 7) !== 'Ext.ux.')
+                        || in_array($require, $skip)) {
                         continue;
                     }
                     if (!isset($symbols[$require])) {

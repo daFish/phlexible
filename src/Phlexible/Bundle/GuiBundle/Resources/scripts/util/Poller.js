@@ -216,7 +216,8 @@ Ext.define('Phlexible.gui.util.Poller', {
         this.setButtonIdle();
 
         if (response.responseText) {
-            var messages = Ext.decode(response.responseText);
+            var result = Ext.decode(response.responseText),
+                messages = result.messages;
             if (Ext.isArray(messages)) {
                 Ext.each(messages, function(message) {
                     Phlexible.Logger.debug('Poller.Message: ' + Ext.encode(message));

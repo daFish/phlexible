@@ -93,6 +93,16 @@ class MyselfController extends Controller
             $user->setInterfaceLanguage($request->request->get('theme'));
         }
 
+        foreach ($request->request->all() as $key => $value) {
+            if (substr($key, 0, 9) === 'property#') {
+                $key = substr($key, 9);
+
+                $properties = $user->getProperties();
+                $properties[$key] = $value;
+                $user->setProperties($properties);
+            }
+        }
+
         $userManager = $this->get('phlexible_user.user_manager');
         $userManager->updateUser($user);
     }

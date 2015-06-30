@@ -21,17 +21,6 @@ use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 class LoadPortlet extends Portlet
 {
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this
-            ->setId('load-portlet')
-            ->setXtype('gui-load-portlet')
-            ->setIconClass('system-monitor');
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getData()
@@ -45,7 +34,7 @@ class LoadPortlet extends Portlet
             $l5 = $l[1];
             $l15 = $l[2];
         }
-        $data = [['l1' => $l1, 'l5' => $l5, 'l15' => $l15, 'point' => 0, 'ts' => time()]];
+        $data = ['l1' => $l1, 'l5' => $l5, 'l15' => $l15, 'ts' => time()];
 
         return $data;
     }

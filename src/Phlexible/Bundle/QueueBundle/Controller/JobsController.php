@@ -167,11 +167,9 @@ class JobsController extends FOSRestController
 
             // set the `Location` header only when creating new resources
             if (201 === $statusCode) {
-                $response->headers->set('Location',
-                    $this->generateUrl(
-                        'phlexible_api_queue_get_job', array('jobId' => $job->getId()),
-                        true // absolute
-                    )
+                $response->headers->set(
+                    'Location',
+                    $this->generateUrl('phlexible_api_queue_get_job', array('jobId' => $job->getId()), true)
                 );
             }
 

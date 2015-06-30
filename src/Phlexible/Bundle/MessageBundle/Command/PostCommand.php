@@ -80,5 +80,4 @@ class PostCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

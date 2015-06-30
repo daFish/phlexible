@@ -24,43 +24,39 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
     init: function() {
         Phlexible.Logger.debug('DashboardController.init()');
 
+        Phlexible.dashboard.Portlets = Ext.create('Phlexible.dashboard.store.Portlets');
+        Phlexible.PluginManager.each('portlet', function(item) {
+            Phlexible.dashboard.Portlets.add(Ext.create('Phlexible.dashboard.model.Portlet', item));
+        });
+
         Phlexible.App.getPoller().on('message', this.processMessage, this);
 
-        if (Phlexible.Config.has('dashboard.columns')) {
-            this.cols = Phlexible.Config.get('dashboard.columns');
+        this.cols = Phlexible.Config.get('dashboard.defaults.columns');
+        if (Phlexible.User.getProperty('dashboard.columns')) {
+            this.cols = Phlexible.User.getProperty('dashboard.columns');
+        }
+        this.activePortlets = Phlexible.Config.get('dashboard.defaults.portlets');
+        if (Phlexible.User.getProperty('dashboard.portlets')) {
+            this.activePortlets = Phlexible.User.getProperty('dashboard.portlets');
         }
 
-        for (var i = 0; i < this.cols; i += 1) {
-            this.getView().add({
-                itemId: 'col' + i,
-                col: i,
-                columnWidth: 1 / this.cols,
-                padding: 10
-            });
-        }
+        this.configure(this.cols, this.activePortlets);
 
+        this.initMyDockedItems();
         this.initMyTasks();
 
+        /*
         Ext.Ajax.request({
             url: Phlexible.Router.generate('dashboard_portlets'),
             success: this.onLoadSuccess,
             scope: this
         });
+        */
 
         this.callParent(arguments);
     },
 
-    initMyItems: function() {
-        this.items = [];
-
-        for (var i = 0; i < this.cols; i += 1) {
-            this.items.push({
-                itemId: 'col' + i,
-                col: i,
-                flex: 1,
-                padding: 10
-            });
-        }
+    initMyDockedItems: function() {
     },
 
     initMyListeners: function() {
@@ -83,6 +79,27 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
             },
             scope: this
         });
+    },
+
+    onAddPortlet: function() {
+        Ext.create('Phlexible.dashboard.window.ListWindow', {
+            listeners: {
+                portletOpen: function(item) {
+                    this.addPortlet(item);
+                },
+                scope: this
+            }
+        }).show();
+    },
+    onEditColumns: function() {
+        Ext.create('Phlexible.dashboard.window.ColumnsWindow', {
+            listeners: {
+                columnsChange: function(columns) {
+                    this.reconfigure(columns, this.activePortlets);
+                },
+                scope: this
+            }
+        }).show();
     },
 
     updatePanels: function() {
@@ -150,7 +167,7 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
                 });
             }
 
-            var o = {
+            var config = {
                 xtype: item.xtype,
                 itemId: item.id,
                 reference: item.id,
@@ -177,7 +194,7 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
                     scope: this
                 }
             };
-            var panel = col.add(o);
+            var panel = col.add(config);
 
             if (!skipEvent) {
                 this.fireEvent('portletAdd', item, item.record);
@@ -223,107 +240,94 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
         this.saveTask = new Ext.util.DelayedTask(this.doSave, this);
     },
 
-    onLoadSuccess: function(response) {
-        var data = Ext.decode(response.responseText),
-            cols = this.cols,
-            i, row, r, id;
-
-        // always add welcome infobar
-        this.getView().addDocked({
-            xtype: 'dashboard-infobar-welcome',
-            dock: 'top',
-            data: {},
-            listeners: {
-                addPortlet: function() {
-                    Ext.create('Phlexible.dashboard.window.ListWindow', {
-                        listeners: {
-                            portletOpen: function(item){
-                                this.addPortlet(item);
-                            },
-                            scope: this
-                        }
-                    }).show();
-                },
-                editColumns: function() {
-                    Ext.create('Phlexible.dashboard.window.ColumnsWindow').show();
-                },
-                scope: this
-            }
-        });
-
-        if (data.infobars) {
-            for (i = 0; i < data.infobars.length; i++) {
-                row = data.infobars[i];
-
-                this.getView().addDocked({
-                    xtype: row.xtype,
-                    type: row.type,
-                    data: row.data,
-                    dock: row.region
-                });
-            }
-        }
-
-        this.configure(cols, data.portlets);
-    },
-
-    configure: function(cols, portlets) {
+    configure: function(cols, activePortlets) {
         var matrix = [],
-            id, col, pos, mode, cls, record;
+            id, col, portletConfig, pos, mode, cls, portlet, i;
 
-        for (i = 0; i < cols; i++) {
+        for (i = 0; i < cols; i += 1) {
+            this.getView().add({
+                itemId: 'col' + i,
+                col: i,
+                columnWidth: 1 / this.cols,
+                padding: 10
+            });
             matrix.push(new Ext.util.MixedCollection());
         }
 
-        for(i = 0; i < portlets.length; i++) {
-            row = portlets[i];
-            id = row.id;
+        Ext.Object.each(activePortlets, function(portletId, activePortlet) {
+            var portlet = Phlexible.dashboard.Portlets.findRecord('id', portletId),
+                portletConfig;
 
-            cls = Ext.ClassManager.getByAlias('widget.' + row.xtype);
+            if (!portlet) {
+                Phlexible.Logger.warn('Portlet ' + portletId + ' not found.');
+                return;
+            }
+
+            portlet.set('hidden', true);
+
+            portletConfig = Ext.clone(portlet.data);
+            portletConfig.col = parseInt(activePortlet.col, 10);
+            portletConfig.pos = parseInt(activePortlet.pos, 10);
+            portletConfig.mode = activePortlet.mode || 'opened';
+
+            if (portletConfig.col !== false && portletConfig.pos !== false && portletConfig.mode !== 'closed') {
+                if (portletConfig.col <= (cols - 1)) {
+                    matrix[portletConfig.col].insert(portletConfig.pos, portletConfig);
+                } else {
+                    matrix[0].insert(portletConfig.pos, portletConfig);
+                }
+            }
+        });
+
+        /*
+        for (i = 0; i < portlets.length; i++) {
+            portletConfig = portlets[i];
+            id = portletConfig.id;
+
+            cls = Ext.ClassManager.getByAlias('widget.' + portletConfig.xtype);
             if (!cls) {
-                Phlexible.console.warn('widget.' + row.xtype + ' not found.');
+                Phlexible.console.warn('Portlet widget.' + portletConfig.xtype + ' not found.');
                 continue;
             }
-            row.title = cls.prototype.title || this.noTitleText;
-            row.description = cls.prototype.description || this.noDescriptionText;
-            row.imageUrl = cls.prototype.imageUrl || '/bundles/phlexibledashboard/images/portlet-plain.png';
-            row.hidden = false;
+            portletConfig.title = cls.prototype.title || this.noTitleText;
+            portletConfig.description = cls.prototype.description || this.noDescriptionText;
+            portletConfig.imageUrl = cls.prototype.imageUrl || '/bundles/phlexibledashboard/images/portlet-plain.png';
+            portletConfig.hidden = false;
             col = false;
             pos = false;
             mode = 'closed';
 
-            if (Phlexible.Config.get('dashboard.portlets')[id]) {
-                row.hidden = true;
-                col  = parseInt(Phlexible.Config.get('dashboard.portlets')[id].col, 10);
-                pos  = parseInt(Phlexible.Config.get('dashboard.portlets')[id].pos, 10);
-                mode = Phlexible.Config.get('dashboard.portlets')[id].mode || 'opened';
+            if (activePortlets[id]) {
+                portletConfig.hidden = true;
+                col  = parseInt(activePortlets[id].col, 10);
+                pos  = parseInt(activePortlets[id].pos, 10);
+                mode = activePortlets[id].mode || 'opened';
             }
 
-            record = Ext.create('Phlexible.dashboard.model.Portlet', row);
-            Ext.data.StoreManager.lookup('dashboard-available').add(record);
+            portletConfig.col = col;
+            portletConfig.pos = pos;
+            portletConfig.mode = mode;
 
-            row.col = col;
-            row.pos = pos;
-            row.mode = mode;
-
-            if (row.col !== false && row.pos !== false && row.mode !== 'closed') {
-                if (row.col <= (cols - 1)) {
-                    matrix[row.col].insert(row.pos, row);
+            if (portletConfig.col !== false && portletConfig.pos !== false && portletConfig.mode !== 'closed') {
+                if (portletConfig.col <= (cols - 1)) {
+                    matrix[portletConfig.col].insert(portletConfig.pos, portletConfig);
                 } else {
-                    matrix[0].insert(row.pos, row);
+                    matrix[0].insert(portletConfig.pos, portletConfig);
                 }
             }
         }
+        */
 
-        for(i = 0; i< cols; i++) {
-            matrix[i].each(function(item) {
-                this.addPortlet(item, true);
+        for (i = 0; i< cols; i++) {
+            matrix[i].each(function(portletConfig) {
+                this.addPortlet(portletConfig, true);
             }, this);
         }
     },
 
-    reconfigure: function() {
-
+    reconfigure: function(cols, activePortlets) {
+        this.getView().items.removeAll();
+        this.configure(cols, activePortlets);
     },
 
     save: function() {

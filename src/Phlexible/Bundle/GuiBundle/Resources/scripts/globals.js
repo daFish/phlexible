@@ -33,3 +33,11 @@ Phlexible.Icon = Ext.create('Phlexible.gui.util.Icon');
 Phlexible.Notify = Ext.create('Phlexible.gui.util.Notify');
 
 Phlexible.Format = Ext.create('Phlexible.gui.util.Format');
+
+Phlexible.PluginManager.append('portlet', {
+    id: 'load-portlet',
+    image: '/bundles/phlexibledashboard/images/portlet-plain.png',
+    xtype: 'gui-load-portlet',
+    iconCls: 'system-monitor'
+});
+

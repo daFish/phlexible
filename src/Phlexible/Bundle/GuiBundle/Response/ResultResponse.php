@@ -32,11 +32,12 @@ class ResultResponse extends JsonResponse
      * @param array $data       (Optional) Data
      * @param array $additional (Optional) Additional values
      */
-    public function __construct($result = self::RESULT_SUCCESS,
-                                $message = null,
-                                array $data = [],
-                                array $additional = [])
-    {
+    public function __construct(
+        $result = self::RESULT_SUCCESS,
+        $message = null,
+        array $data = [],
+        array $additional = []
+    ) {
         parent::__construct();
 
         $this->setResult($result, $message, $data, $additional);
@@ -50,11 +51,12 @@ class ResultResponse extends JsonResponse
      * @param array $data       (Optional) Data
      * @param array $additional (Optional) Additional values
      */
-    public function setResult($result = self::RESULT_SUCCESS,
-                              $message = null,
-                              array $data = [],
-                              array $additional = [])
-    {
+    public function setResult(
+        $result = self::RESULT_SUCCESS,
+        $message = null,
+        array $data = [],
+        array $additional = []
+    ) {
         $this->headers->set('X-Phlexible-Response', 'result');
 
         $values = [

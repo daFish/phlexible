@@ -41,5 +41,9 @@ Ext.define('Phlexible.gui.util.PluginManager', {
         if (index >= 0) {
             this.plugins[plugin].splice(index, 1);
         }
+    },
+
+    each: function(plugin, callback) {
+        Ext.each(this.plugins[plugin], callback);
     }
 });

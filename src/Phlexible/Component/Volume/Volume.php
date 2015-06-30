@@ -168,7 +168,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findRootFolder()
     {
-        return $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'parentId' => null));
+        $folder = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'parentId' => null));
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -176,7 +182,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFolder($id)
     {
-        return $this->volumeManager->findFolder($id);
+        $folder = $this->volumeManager->findFolder($id);
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -186,7 +198,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
     {
         $file = $this->findFile($fileId);
 
-        return $this->findFolder($file->getFolderId());
+        $folder = $this->findFolder($file->getFolderId());
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -194,7 +212,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFolderByPath($path)
     {
-        return $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $path));
+        $folder = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $path));
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -202,7 +226,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFoldersByParentFolder(FolderInterface $parentFolder)
     {
-        return $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $parentFolder->getId()));
+        $folders = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $parentFolder->getId()));
+
+        foreach ($folders as $folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folders;
     }
 
     /**
@@ -218,7 +248,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFile($id, $version = 1)
     {
-        return $this->volumeManager->findFileBy(array('id' => $id, 'version' => $version));
+        $file = $this->volumeManager->findFileBy(array('id' => $id, 'version' => $version));
+
+        if ($file) {
+            $file->setVolume($this);
+        }
+
+        return $file;
     }
 
     /**
@@ -226,7 +262,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFiles(array $criteria, $order = null, $limit = null, $start = null)
     {
-        return $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+        $files = $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
@@ -242,7 +284,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFileByFolderAndName(FolderInterface $folder, $name)
     {
-        return $this->volumeManager->findFileBy(array('folder' => $folder->getId(), 'name' => $name));
+        $file = $this->volumeManager->findFileBy(array('folder' => $folder->getId(), 'name' => $name));
+
+        if ($file) {
+            $file->setVolume($this);
+        }
+
+        return $file;
     }
 
     /**
@@ -250,7 +298,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFileVersions($id)
     {
-        return $this->volumeManager->findFileBy(array('id' => $id));
+        $files = $this->volumeManager->findFileBy(array('id' => $id));
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
@@ -270,7 +324,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
             $criteria['hidden'] = false;
         }
 
-        return $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+        $files = $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
@@ -293,7 +353,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findLatestFiles($limit = 20)
     {
-        return $this->volumeManager->findFilesBy(array(), array('createdAt' => 'DESC', $limit));
+        $files = $this->volumeManager->findFilesBy(array(), array('createdAt' => 'DESC', $limit));
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
@@ -301,7 +367,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFilesByExpression(Expression $expression, $order = null, $limit = null, $start = null)
     {
-        return $this->volumeManager->findFilesByExpression($expression, $order, $limit, $start);
+        $files = $this->volumeManager->findFilesByExpression($expression, $order, $limit, $start);
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**

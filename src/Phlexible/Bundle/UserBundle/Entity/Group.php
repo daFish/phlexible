@@ -298,4 +298,3 @@ class Group implements GroupInterface
         return $this;
     }
 }
-

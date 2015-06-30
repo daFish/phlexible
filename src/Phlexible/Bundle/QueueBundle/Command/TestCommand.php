@@ -113,5 +113,4 @@ class TestCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

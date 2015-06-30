@@ -35,6 +35,6 @@ class RawImageExtractor implements ExtractorInterface
      */
     public function extract(ExtendedFileInterface $file, MediaType $mediaType, $targetFormat)
     {
-        return $file->getPhysicalPath();
+        return $file->getVolume()->getPhysicalPath($file);
     }
 }

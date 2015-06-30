@@ -16,6 +16,7 @@ Ext.define('Phlexible.problem.portlet.Problems', {
         this.initMyTemplate();
         this.initMyStore();
         this.initMyItems();
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -24,8 +25,7 @@ Ext.define('Phlexible.problem.portlet.Problems', {
         this.tpl = new Ext.XTemplate(
             '<tpl for=".">',
             '<div id="portal_problems_{id}" class="portlet-problem">',
-            '<div class="p-problem-icon {iconCls}"></div>',
-            '<div class="p-problem-severity p-problem-severity_{severity}-icon" ></div>',
+            '<div class="p-problem-severity {[Phlexible.problem.ProblemIcons[values.severity]]}" ></div>',
             '<div class="p-problem-text">',
             '<span class="p-problem-message">{msg}</span>',
             '<tpl if="hint">',
@@ -35,8 +35,7 @@ Ext.define('Phlexible.problem.portlet.Problems', {
             '</div>',
             '<div class="x-clear-both"></div>',
             '</div>',
-            '</tpl>',
-            '<div><hr />' + this.menuHintText + '</div>'
+            '</tpl>'
         );
     },
 
@@ -47,7 +46,7 @@ Ext.define('Phlexible.problem.portlet.Problems', {
                 type: 'memory',
                 reader: {
                     type: 'json',
-                    idProperty: 'id',
+                    idProperty: 'id'
                 }
             },
             sorters: [{property: 'severity', username: 'ASC'}],
@@ -87,31 +86,39 @@ Ext.define('Phlexible.problem.portlet.Problems', {
         ];
     },
 
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                xtype: 'tbtext',
+                text: this.menuHintText
+            }]
+        }];
+    },
+
     updateData: function (data) {
         var problemsMap = [],
-            i, row, record;
+            toRemove = [],
+            store = this.store;
 
-        for (i = 0; i < data.length; i++) {
-            row = data[i];
-            problemsMap.push(row.id);
-            record = this.store.getById(row.id);
-            if (!record) {
-                this.store.add(new Phlexible.problem.model.Problem(row));
-
-                Ext.fly('portal_problems_' + row.id).frame('#8db2e3', 1);
+        Ext.each(data, function(item) {
+            problemsMap.push(item.id);
+            if (store.find('id', item.id) === -1) {
+                store.add(new Phlexible.problem.model.Problem(item));
             }
-        }
+        }, this);
 
-        for (i = this.store.getCount() - 1; i > 0; i--) {
-            record = this.store.getAt(i);
-            if (problemsMap.indexOf(record.id) === -1) {
-                this.store.remove(record);
+        store.each(function(problem) {
+            if (problemsMap.indexOf(problem.id) === -1) {
+                toRemove.push(problem);
             }
-        }
+        }, this);
 
-        if (!this.store.getCount()) {
-            this.store.removeAll();
-        }
+        Ext.each(toRemove, function (problem) {
+            store.remove(problem);
+        });
 
         this.store.sort('type', 'ASC');
     }

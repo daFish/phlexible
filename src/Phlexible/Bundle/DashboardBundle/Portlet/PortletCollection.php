@@ -28,19 +28,20 @@ class PortletCollection
      */
     public function __construct(array $portlets)
     {
-        foreach ($portlets as $portlet) {
-            $this->add($portlet);
+        foreach ($portlets as $portletId => $portlet) {
+            $this->set($portletId, $portlet);
         }
     }
 
     /**
+     * @param string  $portletId
      * @param Portlet $portlet
      *
      * @return $this
      */
-    public function add(Portlet $portlet)
+    public function set($portletId, Portlet $portlet)
     {
-        $this->portlets[] = $portlet;
+        $this->portlets[$portletId] = $portlet;
 
         return $this;
     }

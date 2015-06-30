@@ -37,12 +37,12 @@
     color: #8B8B8B;
 }
 
-/* small style */
-.mediamanager-portlet-small .x-panel-body {
+/* tile style */
+.mediamanager-portlet-tile .x-panel-body {
     font: 11px Arial, Helvetica, sans-serif;
 }
 
-.mediamanager-portlet-small .thumb-wrap {
+.mediamanager-portlet-tile .thumb-wrap {
     margin: 1px;
     margin-right: 0;
     margin-bottom: 3px;
@@ -51,36 +51,36 @@
     width: 170px;
 }
 
-.mediamanager-portlet-small .thumb-wrap .thumb {
+.mediamanager-portlet-tile .thumb-wrap .thumb {
     background: #fff;
-    padding: 3px;
-    width: 32px;
-    height: 32px;
-    border: 2px solid #bbb;
+    xpadding: 3px;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #bbb;
     float: left;
 }
 
-.mediamanager-portlet-small .thumb-wrap-over .thumb {
-    border: 2px solid #888;
+.mediamanager-portlet-tile .thumb-wrap-over .thumb {
+    border: 1px solid #888;
 }
 
-.mediamanager-portlet-small .thumb-wrap .thumb img {
-    width: 32px;
-    height: 32px;
+.mediamanager-portlet-tile .thumb-wrap .thumb img {
+    width: 48px;
+    height: 48px;
 }
 
-.mediamanager-portlet-small .thumb-wrap .text {
-    margin-left: 50px;
+.mediamanager-portlet-tile .thumb-wrap .text {
+    margin-left: 55px;
     margin-right: 10px;
 }
 
-.mediamanager-portlet-small .thumb-wrap span {
+.mediamanager-portlet-tile .thumb-wrap span {
     display: block;
     overflow: hidden;
 }
 
-.mediamanager-portlet-small .thumb-wrap span.thumb-date,
-.mediamanager-portlet-small .thumb-wrap span.thumb-type {
+.mediamanager-portlet-tile .thumb-wrap span.thumb-date,
+.mediamanager-portlet-tile .thumb-wrap span.thumb-type {
     color: #8B8B8B;
     white-space: nowrap;
 }
@@ -108,6 +108,7 @@
     float: left;
 }
 
-.mediamanager-portlet-list .thumb-wrap span.thumb-date {
+.mediamanager-portlet-list .thumb-wrap .thumb-date,
+.mediamanager-portlet-list .thumb-wrap .thumb-type {
     color: #8B8B8B;
 }

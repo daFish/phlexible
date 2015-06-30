@@ -52,7 +52,7 @@ services:
         public: false
         arguments: [@phlexible_media_cache.cache_manager]
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: cachestatus-portlet}
 
     # role providers
     phlexible_media_cache.role_provider:

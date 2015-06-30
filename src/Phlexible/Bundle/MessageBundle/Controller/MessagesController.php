@@ -161,10 +161,12 @@ class MessagesController extends FOSRestController
 
             // set the `Location` header only when creating new resources
             if (201 === $statusCode) {
-                $response->headers->set('Location',
+                $response->headers->set(
+                    'Location',
                     $this->generateUrl(
-                        'phlexible_api_message_get_message', array('siterootId' => $message->getId()),
-                        true // absolute
+                        'phlexible_api_message_get_message',
+                        array('siterootId' => $message->getId()),
+                        true
                     )
                 );
             }

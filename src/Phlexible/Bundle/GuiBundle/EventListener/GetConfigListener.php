@@ -59,7 +59,10 @@ class GetConfigListener
 
         $languages = [];
         foreach ($this->availableLanguages as $key => $language) {
-            $name = \Locale::getDisplayName($language, $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('en'));
+            $name = \Locale::getDisplayName(
+                $language,
+                $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('en')
+            );
             $languages[$name] = $language;
             unset($languages[$key]);
         }

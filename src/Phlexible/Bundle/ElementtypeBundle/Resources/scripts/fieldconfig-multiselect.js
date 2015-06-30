@@ -27,7 +27,7 @@ Phlexible.fields.Registry.register('multiselect', function (parentConfig, item, 
             }
         });
     } else if (item.configuration.select_source === 'list') {
-        displayField = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+        displayField = Phlexible.User.getProperty('interfaceLanguage', 'en');
         if (item.configuration.select_list && item.configuration.select_list.length) {
             storeData = item.configuration.select_list;
         } else {
@@ -39,7 +39,7 @@ Phlexible.fields.Registry.register('multiselect', function (parentConfig, item, 
         });
         storeMode = 'local';
     } else {
-        displayField = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+        displayField = Phlexible.User.getProperty('interfaceLanguage', 'en');
         storeData = [{key: 'no_valid_source', de: 'Keine gültige Quelle', en: 'No valid source'}];
         store = Ext.create('Ext.data.Store', {
             fields: ['key', 'de', 'en'],

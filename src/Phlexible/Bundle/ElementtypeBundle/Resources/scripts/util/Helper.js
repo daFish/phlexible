@@ -13,7 +13,7 @@ Ext.define('Phlexible.elementtype.util.Helper', {
         var hideLabel,
             label,
             labelSeparator = ':',
-            language = Phlexible.Config.get('user.property.interfaceLanguage', 'en'),
+            language = Phlexible.User.getProperty('interfaceLanguage', 'en'),
             contextHelp = item.labels.contextHelp || {},
             prefix = item.labels.prefix || {},
             suffix = item.labels.suffix || {};

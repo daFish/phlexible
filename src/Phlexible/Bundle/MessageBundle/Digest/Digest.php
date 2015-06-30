@@ -70,13 +70,14 @@ class Digest
      * @param UserManagerInterface    $userManager
      * @param Mailer                  $mailer
      */
-    public function __construct(EntityManager $entityManager,
-                                FilterManagerInterface $filterManager,
-                                MessageManagerInterface $messageManager,
-                                MessagePoster $messageService,
-                                UserManagerInterface $userManager,
-                                Mailer $mailer)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        FilterManagerInterface $filterManager,
+        MessageManagerInterface $messageManager,
+        MessagePoster $messageService,
+        UserManagerInterface $userManager,
+        Mailer $mailer
+    ) {
         $this->entityManager = $entityManager;
         $this->filterManager = $filterManager;
         $this->messageService = $messageService;

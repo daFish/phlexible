@@ -14,7 +14,6 @@ namespace Phlexible\Bundle\MediaCacheBundle\Portlet;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Cache status portlet
@@ -33,12 +32,6 @@ class CacheStatusPortlet extends Portlet
      */
     public function __construct(CacheManagerInterface $cacheManager)
     {
-        $this
-            ->setId('cachestatus-portlet')
-            ->setXtype('cache-status-portlet')
-            ->setIconClass('images-stack')
-            ->setRole('ROLE_MEDIA_CACHE');
-
         $this->cacheManager = $cacheManager;
     }
 

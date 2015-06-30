@@ -60,7 +60,8 @@ class FlushCommand extends ContainerAwareCommand
             && !$input->getOption('aborted')
         ) {
             $output->writeln(
-                'Please choose either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted'
+                'Please choose either --all or one or more of the status options: ' .
+                '--pending, --running, --finished, --failed, --suspended, --aborted'
             );
 
             return 1;
@@ -75,7 +76,8 @@ class FlushCommand extends ContainerAwareCommand
                 || $input->getOption('aborted'))
         ) {
             $output->writeln(
-                'Please use either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted'
+                'Please use either --all or one or more of the status options: ' .
+                '--pending, --running, --finished, --failed, --suspended, --aborted'
             );
 
             return 1;

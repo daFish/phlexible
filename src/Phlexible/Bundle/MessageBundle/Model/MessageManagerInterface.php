@@ -121,5 +121,4 @@ interface MessageManagerInterface
      * @param Message $message
      */
     public function deleteMessage(Message $message);
-
 }

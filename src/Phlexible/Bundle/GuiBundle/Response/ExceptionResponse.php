@@ -105,7 +105,8 @@ class ExceptionResponse extends JsonResponse
 
         $lines = array();
         for ($i = max($line - 3, 1), $max = min($line + 3, count($content)); $i <= $max; $i++) {
-            $lines[] = '<li'.($i == $line ? ' class="selected"' : '').'><code>'.$this->fixCodeMarkup($content[$i - 1]).'</code></li>';
+            $lines[] = '<li' . ($i == $line ? ' class="selected"' : '') . '>' .
+                '<code>'.$this->fixCodeMarkup($content[$i - 1]).'</code></li>';
         }
 
         return '<ol start="'.max($line - 3, 1).'">'.implode("\n", $lines).'</ol>';

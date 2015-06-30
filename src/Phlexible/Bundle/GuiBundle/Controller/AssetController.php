@@ -72,4 +72,3 @@ class AssetController extends Controller
         return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
     }
 }
-

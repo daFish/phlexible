@@ -30,5 +30,3 @@ class Uuid
         return BaseUuid::uuid4()->toString();
     }
 }
-
-

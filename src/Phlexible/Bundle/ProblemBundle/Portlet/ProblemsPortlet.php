@@ -29,16 +29,10 @@ class ProblemsPortlet extends Portlet
     private $fetcher;
 
     /**
-     * @param ProblemFetcher      $fetcher
+     * @param ProblemFetcher $fetcher
      */
     public function __construct(ProblemFetcher $fetcher)
     {
-        $this
-            ->setId('problems-portlet')
-            ->setXtype('problems-portlet')
-            ->setIconClass('exclamation')
-            ->setRole('ROLE_PROBLEMS');
-
         $this->fetcher = $fetcher;
     }
 

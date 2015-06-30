@@ -38,7 +38,7 @@ services:
         public: false
         arguments: [@phlexible_user.user_manager]
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: online-portlet}
 
     # role providers
     phlexible_user.role_provider:

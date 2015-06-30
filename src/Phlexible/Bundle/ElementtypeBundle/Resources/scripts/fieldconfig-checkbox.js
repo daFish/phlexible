@@ -4,7 +4,7 @@ Phlexible.fields.Registry.register('checkbox', function (parentConfig, item, val
 
     Ext.apply(config, {
         xtype: 'xcheckbox',
-        boxLabel: (boxLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
+        boxLabel: (boxLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')] || ''),
         checked: config.value,
 
         submitOffValue: '',

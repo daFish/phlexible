@@ -46,8 +46,8 @@ class Mailer
     public function __construct(
         Twig_Environment $templating,
         Swift_Mailer $mailer,
-        array $parameters)
-    {
+        array $parameters
+    ) {
         $this->templating = $templating;
         $this->mailer = $mailer;
         $this->parameters = $parameters;

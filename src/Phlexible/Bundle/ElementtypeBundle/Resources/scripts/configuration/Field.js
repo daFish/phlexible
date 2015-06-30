@@ -173,7 +173,7 @@ Ext.define('Phlexible.elementtype.configuration.Field', {
 
         var fieldType = Phlexible.fields.FieldTypes[this.node.attributes.type];
 
-        this.node.setText(properties.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] + ' (' + properties.field.working_title + ')');
+        this.node.setText(properties.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')] + ' (' + properties.field.working_title + ')');
         this.node.ui.getIconEl().className = 'x-tree-node-icon ' + fieldType.iconCls;
 
         this.fireEvent('saveField', this.node);

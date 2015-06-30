@@ -11,10 +11,14 @@
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
+use Phlexible\Bundle\GuiBundle\Event\PollEvent;
+use Phlexible\Bundle\GuiBundle\GuiEvents;
+use Phlexible\Bundle\GuiBundle\Poller\MessageCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Poll controller
@@ -34,24 +38,18 @@ class PollController extends Controller
      */
     public function pollAction(Request $request)
     {
-        $messages = [];
-
-        $data = [];
-        foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
-            $data[$portlet->getId()] = $portlet->getData();
+        $lastPoll = $request->getSession()->get('lastPoll');
+        if ($lastPoll) {
+            $lastPoll = new \DateTime($lastPoll);
         }
+        $messages = new MessageCollection($this->getUser()->getId(), $lastPoll);
 
-        $message = new \stdClass();
-        $message->type = 'dashboard';
-        $message->event = 'update';
-        $message->userId = $this->getUser()->getId();
-        $message->data = $data;
-        $message->ts = date('Y-m-d H:i:s');
-
-        $messages[] = (array) $message;
+        $this->get('event_dispatcher')->dispatch(GuiEvents::POLL, new PollEvent($messages));
 
         $request->getSession()->set('lastPoll', date('Y-m-d H:i:s'));
 
-        return new JsonResponse($messages);
+        $messages = $this->get('serializer')->serialize($messages, 'json');
+
+        return new Response($messages);
     }
 }

@@ -45,6 +45,8 @@ class ResourcesController extends Controller
      */
     public function stylesAction()
     {
+        $locator = $this->get('file_locator');
+
         $content = file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/styles/users.css'));
 
         return new Response($content, 200, ['Content-Type' => 'text/css']);
@@ -79,4 +81,3 @@ class ResourcesController extends Controller
         return new Response($content, 200, ['Content-Type' => 'text/javascript']);
     }
 }
-

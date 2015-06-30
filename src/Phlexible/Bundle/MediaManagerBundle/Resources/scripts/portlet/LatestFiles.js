@@ -6,30 +6,30 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
     iconCls: Phlexible.Icon.get('images'),
     bodyPadding: 5,
 
-    type: 'small',
+    type: 'tile',
     imageUrl: '/bundles/phlexiblemediamanager/images/portlet-latest-files.png',
 
     noRecentFilesText: '_noRecentFilesText',
 
     initComponent: function () {
-        if (this.item.settings.style) {
+        if (this.item.settings && this.item.settings.style) {
             this.type = this.item.settings.style;
         }
 
         var tpl;
         switch (this.type) {
             case 'big':
-                this.extraCls = 'mediamanager-portlet mediamanager-portlet-big';
+                this.cls = 'mediamanager-portlet mediamanager-portlet-big';
                 tpl = this.createLatestFilesBigTemplate();
                 break;
 
             case 'list':
-                this.extraCls = 'mediamanager-portlet mediamanager-portlet-list';
+                this.cls = 'mediamanager-portlet mediamanager-portlet-list';
                 tpl = this.createLatestFilesListTemplate();
                 break;
 
             default:
-                this.extraCls = 'mediamanager-portlet mediamanager-portlet-small';
+                this.cls = 'mediamanager-portlet mediamanager-portlet-tile';
                 tpl = this.createLatestFilesSmallTemplate();
                 break;
         }
@@ -84,16 +84,13 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
         for (i = 0; i < data.length; i++) {
             row = data[i];
             latestFilesMap.push(row.id);
-            record = this.store.getById(row.id);
+            record = this.store.findRecord('id', row.id);
             if (!record) {
-                row.time = new Date(row.time * 1000);
-                this.store.insert(0, new Phlexible.mediamanager.portlet.LatestFilesRecord(row, row.id));
-
-                Ext.fly('media_last_' + row.id).frame('#8db2e3', 1);
+                this.store.insert(0, Ext.create('Phlexible.mediamanager.model.LatestFile', row));
             }
             else {
                 for (j in row.cache) {
-                    if (row.cache[j] != r.data.cache[j]) {
+                    if (row.cache[j] !== record.data.cache[j]) {
                         needUpdate = true;
                         break;
                     }
@@ -122,9 +119,9 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
         return new Ext.XTemplate(
             '<tpl for=".">',
             '<div class="thumb-wrap" id="media_last_{id}">',
-            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.fileId, templateKey: \"_mm_large\", fileVersion: values.fileVersion})]}<tpl if="!cache._mm_large">?waiting</tpl><tpl if="cache._mm_large">?{[values.cache._mm_large]}</tpl>" width="96" height="96" title="{title}" /></div>',
-            '<span>{[values.title.shorten(20)]}</span>',
-            '<span class="thumb-date">{time:date("Y-m-d H:i:s")}</span>',
+            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"phlexible_mediamanager_media\", {fileId: values.fileId, templateKey: \"_mm_large\", fileVersion: values.fileVersion})]}<tpl if="!cache._mm_large">?waiting</tpl><tpl if="cache._mm_large">?{[values.cache._mm_large]}</tpl>" width="96" height="96" title="{name}" /></div>',
+            '<span>{[Ext.String.ellipsis(values.name, 20)]}</span>',
+            '<span class="thumb-date">{createdAt:date("Y-m-d H:i:s")}</span>',
             '</div>',
             '</tpl>',
             '<div class="x-clear"></div>'
@@ -135,11 +132,11 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
         return new Ext.XTemplate(
             '<tpl for=".">',
             '<div class="thumb-wrap" id="media_last_{id}">',
-            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.fileId, templateKey: \"_mm_small\", fileVersion: values.fileVersion})]}<tpl if="!cache._mm_small">?waiting</tpl><tpl if="cache._mm_small">?{[values.cache._mm_small]}</tpl>" width="32" height="32" /></div>',
+            '<div class="thumb"><img src="{[Phlexible.Router.generate(\"phlexible_mediamanager_media\", {fileId: values.fileId, templateKey: \"_mm_medium\", fileVersion: values.fileVersion})]}<tpl if="!cache._mm_small">?waiting</tpl><tpl if="cache._mm_small">?{[values.cache._mm_small]}</tpl>" width="48" height="48" /></div>',
             '<div class="text">',
-            '<span>{[values.title.shorten(20)]}</span>',
+            '<span>{[Ext.String.ellipsis(values.name, 20)]}</span>',
             '<span class="thumb-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.mediaType)]}</span>',
-            '<span class="thumb-date">{time:date("Y-m-d H:i:s")}</span>',
+            '<span class="thumb-date">{createdAt:date("Y-m-d H:i:s")}</span>',
             '</div>',
             '<div class="x-clear"></div>',
             '</div>',
@@ -150,17 +147,16 @@ Ext.define('Phlexible.mediamanager.portlet.LatestFiles', {
 
     createLatestFilesListTemplate: function() {
         return new Ext.XTemplate(
+            '<table>',
             '<tpl for=".">',
-            '<div class="thumb-wrap" id="media_last_{id}">',
-            '<div class="thumb {[Phlexible.mediamanager.DocumentTypes.getClass(values.mediaType)]}-small"></div>',
-            '<div class="text">',
-            '<span>{[values.title.shorten(60)]}</span>',
-            '<br />',
-            '<span class="thumb-date">{time:date("Y-m-d H:i:s")}, {[Phlexible.mediamanager.DocumentTypes.getText(values.mediaType)]}</span>',
-            '</div>',
-            '<div class="x-clear"></div>',
-            '</div>',
-            '</tpl>'
+            '<tr class="thumb-wrap" id="media_last_{id}">',
+            '<td class="thumb {[Phlexible.documenttypes.DocumentTypes.getClass(values.mediaType)]}-small"></td>',
+            '<td class="text">{[Ext.String.ellipsis(values.name, 60)]}</td>',
+            '<td class="thumb-date">{createdAt:date("Y-m-d H:i:s")}</td>',
+            '<td class="thumb-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.mediaType)]}</td>',
+            '</tr>',
+            '</tpl>',
+            '</table>'
         );
     }
 });

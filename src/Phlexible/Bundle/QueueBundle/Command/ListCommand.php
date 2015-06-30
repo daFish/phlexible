@@ -105,5 +105,4 @@ class ListCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

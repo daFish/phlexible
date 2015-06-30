@@ -46,14 +46,8 @@ class MessagesPortlet extends Portlet
     public function __construct(
         SubscriptionManagerInterface $subscriptionManager,
         MessageManagerInterface $messageManager,
-        TokenStorageInterface $tokenStorage)
-    {
-        $this
-            ->setId('messages-portlet')
-            ->setXtype('messages-portlet')
-            ->setIconClass('resource-monitor')
-            ->setRole('ROLE_MESSAGE_SUBSCRIPTIONS');
-
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->subscriptionManager = $subscriptionManager;
         $this->messageManager = $messageManager;
         $this->tokenStorage = $tokenStorage;

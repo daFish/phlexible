@@ -29,6 +29,11 @@ class GuiEvents
     const GET_MENU = 'phlexible_gui.get_menu';
 
     /**
+     * Poll event
+     */
+    const POLL = 'phlexible_gui.poll';
+
+    /**
      * View frame event
      */
     const VIEW_FRAME = 'phlexible_gui.view_frame';

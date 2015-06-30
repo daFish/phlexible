@@ -55,8 +55,8 @@ class CssBuilder
         ResourceDiscovery $puliDiscovery,
         CompressorInterface $compressor,
         $cacheDir,
-        $debug)
-    {
+        $debug
+    ) {
         $this->puliDiscovery = $puliDiscovery;
         $this->compressor = $compressor;
         $this->cacheDir = $cacheDir;

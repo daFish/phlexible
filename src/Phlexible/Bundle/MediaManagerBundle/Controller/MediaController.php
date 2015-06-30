@@ -62,8 +62,9 @@ class MediaController extends Controller
                 $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
                 $queueProcessor->processItem($cacheItem);
             } elseif ($cacheItem->getCacheStatus() === CacheItem::STATUS_MISSING) {
-                $file = $volumeManager->getByFileId($fileId)->findFile($fileId);
-                if (file_exists($file->getPhysicalPath())) {
+                $volume = $volumeManager->getByFileId($fileId);
+                $file = $volume->findFile($fileId);
+                if (file_exists($volume->getPhysicalPath($file))) {
                     $queueProcessor = $this->get('phlexible_media_cache.queue_processor');
                     $queueProcessor->processItem($cacheItem);
                 }

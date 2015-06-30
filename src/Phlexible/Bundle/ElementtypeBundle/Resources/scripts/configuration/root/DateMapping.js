@@ -134,7 +134,7 @@ Ext.define('Phlexible.elementtype.configuration.root.DateMapping', {
                         return;
                     }
 
-                    var fieldTitle = dragData.node.attributes.properties.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] + ' (' + dragData.node.attributes.properties.field.working_title + ')';
+                    var fieldTitle = dragData.node.attributes.properties.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')] + ' (' + dragData.node.attributes.properties.field.working_title + ')';
                     var r = new Ext.data.Record({
                         dsId: dragData.node.attributes.ds_id,
                         title: fieldTitle,

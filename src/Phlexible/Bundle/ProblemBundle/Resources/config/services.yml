@@ -20,7 +20,7 @@ services:
         public: false
         arguments: [@phlexible_problem.problem_fetcher]
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: problems-portlet}
 
     # role providers
     phlexible_problem.role_provider:

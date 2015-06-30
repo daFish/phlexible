@@ -389,4 +389,3 @@ class User extends BaseUser
         return $this->setProperty('interfaceLanguage', $interfaceLanguage);
     }
 }
-

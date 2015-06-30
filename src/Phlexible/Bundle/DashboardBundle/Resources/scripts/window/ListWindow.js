@@ -36,11 +36,11 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
             items: [{
                 xtype: 'dataview',
                 padding: '5 25 5 5;',
-                store: Ext.data.StoreManager.lookup('dashboard-available'),
+                store: Phlexible.dashboard.Portlets,
                 tpl: new Ext.XTemplate(
                     '<tpl for=".">',
                         '<div class="list-item list-wrap" id="{title}">',
-                        '<div class="image"><img src="{imageUrl}" width="120" height="50" /></div>',
+                        '<div class="image"><img src="{image}" width="120" height="50" /></div>',
                         '<div class="text">',
                             '<div class="title"><tpl if="iconCls">{[Phlexible.Icon.inline(values.iconCls)]} </tpl>{title}</div>',
                             '<div class="description">{description}</div>',
@@ -58,7 +58,7 @@ Ext.define('Phlexible.dashboard.window.ListWindow', {
                 listeners: {
                     itemclick: function(view, record){
                         var item = Ext.clone(record.data),
-                            store = Ext.data.StoreManager.lookup('dashboard-available');
+                            store = this.getComponent(0).getComponent(0).getStore();
                         record.set('hidden', true);
                         store.clearFilter();
                         store.filterBy(function(record) {

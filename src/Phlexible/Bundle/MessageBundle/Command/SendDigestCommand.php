@@ -46,5 +46,4 @@ class SendDigestCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

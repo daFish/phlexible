@@ -134,7 +134,8 @@ class StatsCommand extends ContainerAwareCommand
 
             if ($cnt) {
                 $output->writeln(
-                    ($cnt ? ($color ? '<' . $color . '>' : '') . $cnt : 'No') . ' ' . $state . ' jobs.' . ($cnt && $color ? '</' . $color . '>' : '')
+                    ($cnt ? ($color ? '<' . $color . '>' : '') . $cnt : 'No') . ' ' . $state .
+                    ' jobs.' . ($cnt && $color ? '</' . $color . '>' : '')
                 );
             }
         }

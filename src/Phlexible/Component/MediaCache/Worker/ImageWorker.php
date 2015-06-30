@@ -120,9 +120,9 @@ class ImageWorker extends AbstractWorker
         if ($imageFile !== null && file_exists($imageFile)) {
             // we have a preview image from the asset
             return $this->work($template, $file, $imageFile);
-        } elseif (!file_exists($file->getPhysicalPath())) {
+        } elseif (!file_exists($file->getVolume()->getPhysicalPath($file))) {
             // file is completely missing
-            return $this->work($template, $file, $file->getPhysicalPath(), true);
+            return $this->work($template, $file, $file->getVolume()->getPhysicalPath($file), true);
         } elseif ($imageFile === null) {
             return $this->work($template, $file);
         }
@@ -151,7 +151,7 @@ class ImageWorker extends AbstractWorker
         $cacheId = $this->cacheIdStrategy->createCacheId($template, $file);
         $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $template->getParameter('format');
 
-        $pathinfo = pathinfo($file->getPhysicalPath());
+        $pathinfo = pathinfo($file->getVolume()->getPhysicalPath($file));
 
         $cacheItem = $this->cacheManager->findOneBy([
             'templateKey' => $template->getKey(),

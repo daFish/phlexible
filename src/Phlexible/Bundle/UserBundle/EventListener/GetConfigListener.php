@@ -53,8 +53,8 @@ class GetConfigListener
         TokenStorageInterface $tokenStorage,
         RoleHierarchyInterface $roleHierarchy,
         array $defaults,
-        $passwordMinLength)
-    {
+        $passwordMinLength
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->roleHierarchy = $roleHierarchy;
         $this->defaults = $defaults;
@@ -94,9 +94,5 @@ class GetConfigListener
             ->set('user.roles', $roles)
             ->set('user.previousUsername', $previousUsername)
             ->set('defaults', $this->defaults);
-
-        foreach ($user->getProperties() as $key => $value) {
-            $event->getConfig()->set('user.property.' . $key, $value);
-        }
     }
 }

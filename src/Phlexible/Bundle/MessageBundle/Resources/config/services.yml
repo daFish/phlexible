@@ -86,7 +86,7 @@ services:
             - @phlexible_message.message_manager
             - @security.token_storage
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: messages-portlet}
 
     # role providers
     phlexible_message.role_provider:

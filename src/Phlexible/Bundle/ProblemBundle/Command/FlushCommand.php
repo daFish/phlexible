@@ -51,5 +51,4 @@ class FlushCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

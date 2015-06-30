@@ -222,11 +222,9 @@ class UsersController extends FOSRestController
 
             // set the `Location` header only when creating new resources
             if (201 === $statusCode) {
-                $response->headers->set('Location',
-                    $this->generateUrl(
-                        'phlexible_api_user_get_user', array('userId' => $user->getId()),
-                        true // absolute
-                    )
+                $response->headers->set(
+                    'Location',
+                    $this->generateUrl('phlexible_api_user_get_user', array('userId' => $user->getId()), true)
                 );
             }
 

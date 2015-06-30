@@ -60,6 +60,9 @@ class PhlexibleMessageExtension extends Extension
         $container->setAlias('phlexible_message.filter_manager', 'phlexible_message.doctrine.filter_manager');
 
         $loader->load('doctrine_subscription.yml');
-        $container->setAlias('phlexible_message.subscription_manager', 'phlexible_message.doctrine.subscription_manager');
+        $container->setAlias(
+            'phlexible_message.subscription_manager',
+            'phlexible_message.doctrine.subscription_manager'
+        );
     }
 }

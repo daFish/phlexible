@@ -170,8 +170,8 @@ class Message
         $channel = null,
         $role = null,
         $user = null,
-        \DateTime $createdAt = null)
-    {
+        \DateTime $createdAt = null
+    ) {
         if ($subject === null) {
             $subject = static::getDefaultSubject();
         }

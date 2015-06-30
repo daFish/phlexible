@@ -53,8 +53,8 @@ class Mailer
         Twig_Environment $templating,
         \Swift_Mailer $mailer,
         LoggerInterface $logger,
-        array $parameters)
-    {
+        array $parameters
+    ) {
         $this->templating = $templating;
         $this->mailer = $mailer;
         $this->logger = $logger;

@@ -108,7 +108,7 @@ services:
             - %phlexible_media_manager.portlet.style%
             - %phlexible_media_manager.portlet.num_items%
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: mediamanager-portlet}
 
     # role providers
     phlexible_media_manager.role_provider:

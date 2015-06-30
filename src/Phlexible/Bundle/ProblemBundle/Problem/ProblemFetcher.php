@@ -37,8 +37,7 @@ class ProblemFetcher implements ProblemFetcherInterface
      * @param EntityManager            $entityManager
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(EntityManager $entityManager,
-                                EventDispatcherInterface $dispatcher)
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;

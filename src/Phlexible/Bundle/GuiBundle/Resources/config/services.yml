@@ -63,7 +63,7 @@ services:
         tags:
             - {name: phlexible_gui.compressor.css, priority: -100}
 
-    # eventlisteners
+    # event listeners
     phlexible_gui.listener.exception:
         class: Phlexible\Bundle\GuiBundle\EventListener\ExceptionListener
         tags:
@@ -83,7 +83,7 @@ services:
         class: Phlexible\Bundle\GuiBundle\Portlet\LoadPortlet
         public: false
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: load-portlet}
 
     # role providers
     phlexible_gui.role_provider:

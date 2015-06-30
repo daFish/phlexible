@@ -34,7 +34,7 @@ Phlexible.fields.Registry.register('group', function (parentConfig, item, valueS
 
     var config = {
         xtype: 'group',
-        title: item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        title: item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')],
         cls: (item.configuration.group_single_line ? 'p-form-group-singleline' : 'p-form-group-multiline') + ' ' + (item.configuration.group_show_border ? 'p-fields-group-border' : 'p-fields-group-noborder'),
         labelWidth: item.configuration.label_width ? parseInt(item.configuration.label_width, 10) : 100,
 
@@ -44,7 +44,7 @@ Phlexible.fields.Registry.register('group', function (parentConfig, item, valueS
         dsId: item.dsId,
         repeatableId: repeatableId,
         attributes: valueStructure.attributes,
-        helpText: contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
+        helpText: contextHelp[Phlexible.User.getProperty('interfaceLanguage', 'en')] || '',
         isMaster: element.master,
         isDiff: !!element.data.diff,
         isOptional: isOptional,
@@ -53,7 +53,7 @@ Phlexible.fields.Registry.register('group', function (parentConfig, item, valueS
         maxRepeat: maxRepeat,
         defaultRepeat: defaultRepeat,
         singleLine: (item.configuration.group_single_line ? true : false),
-        singleLineLabel: (item.configuration.group_single_line && !item.configuration.group_show_border ? item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] : ''),
+        singleLineLabel: (item.configuration.group_single_line && !item.configuration.group_show_border ? item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')] : ''),
         showBorder: (item.configuration.group_show_border ? true : false),
         isSortable: (item.configuration.sortable ? true : false),
         element: element
@@ -72,7 +72,7 @@ Phlexible.fields.Registry.register('group', function (parentConfig, item, valueS
                 if (isRepeatable || isOptional) {
                     allowedItems[child.dsId] = {
                         max: maxRepeat,
-                        title: child.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]
+                        title: child.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')]
                     };
                     has = true;
                 }

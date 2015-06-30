@@ -4,7 +4,7 @@ Ext.require('Phlexible.element.ElementDataTabHelper');
 Phlexible.fields.Registry.register('accordion', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'accordion',
-        title: item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        title: item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')],
         layout: 'form',
         frame: false,
         border: false,
@@ -36,7 +36,7 @@ Phlexible.fields.Registry.register('accordion', function (parentConfig, item, va
                 if (isRepeatable || isOptional) {
                     allowedItems[child.dsId] = {
                         max: maxRepeat,
-                        title: child.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]
+                        title: child.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')]
                     };
                     has = true;
                 }

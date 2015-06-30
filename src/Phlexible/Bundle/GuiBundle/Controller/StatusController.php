@@ -64,7 +64,8 @@ class StatusController extends Controller
         foreach ($listenerNames as $listenerName) {
             $listeners = $dispatcher->getListeners($listenerName);
 
-            $output .= $listenerName . ' (<a href="#' . $listenerName . '">' . count($listeners) . ' listeners</a>)' . PHP_EOL;
+            $output .= $listenerName .
+                ' (<a href="#' . $listenerName . '">' . count($listeners) . ' listeners</a>)' . PHP_EOL;
         }
 
         foreach ($listenerNames as $listenerName) {
@@ -74,7 +75,8 @@ class StatusController extends Controller
                 $listenerName = '(global)';
             }
 
-            $output .= PHP_EOL . PHP_EOL . str_repeat('-', 3) . '<a name="' . $listenerName . '"></a>' . str_pad(' ' . $listenerName . ' ', 80, '-') . PHP_EOL . PHP_EOL;
+            $output .= PHP_EOL . PHP_EOL . str_repeat('-', 3) . '<a name="' . $listenerName . '"></a>'
+                . str_pad(' ' . $listenerName . ' ', 80, '-') . PHP_EOL . PHP_EOL;
 
             foreach ($listeners as $listener) {
                 if (is_array($listener)) {
@@ -202,4 +204,3 @@ class StatusController extends Controller
         return new Response($output);
     }
 }
-

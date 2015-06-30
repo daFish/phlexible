@@ -31,11 +31,6 @@ class OnlinePortlet extends Portlet
      */
     public function __construct(UserManagerInterface $userManager)
     {
-        $this
-            ->setId('online-portlet')
-            ->setXtype('users-online-portlet')
-            ->setIconClass('user');
-
         $this->userManager = $userManager;
     }
 

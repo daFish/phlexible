@@ -78,8 +78,8 @@ class UserManager extends BaseUserManager implements UserManagerInterface
         EventDispatcherInterface $dispatcher,
         MessagePoster $messagePoster,
         $systemUserId,
-        $everyoneGroupId)
-    {
+        $everyoneGroupId
+    ) {
         parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
 
         $this->dispatcher = $dispatcher;

@@ -181,10 +181,12 @@ class FiltersController extends FOSRestController
 
             // set the `Location` header only when creating new resources
             if (201 === $statusCode) {
-                $response->headers->set('Location',
+                $response->headers->set(
+                    'Location',
                     $this->generateUrl(
-                        'phlexible_api_message_get_filter', array('filterId' => $filter->getId()),
-                        true // absolute
+                        'phlexible_api_message_get_filter',
+                        array('filterId' => $filter->getId()),
+                        true
                     )
                 );
             }

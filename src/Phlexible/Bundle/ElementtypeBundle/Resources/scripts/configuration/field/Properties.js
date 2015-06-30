@@ -22,7 +22,7 @@ Ext.define('Phlexible.elementtype.configuration.field.Properties', {
     initComponent: function () {
         var sortedTypes = [],
             types = [],
-            language = Phlexible.Config.get('user.property.interfaceLanguage', 'en');
+            language = Phlexible.User.getProperty('interfaceLanguage', 'en');
 
         Phlexible.fields.FieldTypes.each(function(name, fieldType) {
             if (name === 'root' || name === 'referenceroot') {

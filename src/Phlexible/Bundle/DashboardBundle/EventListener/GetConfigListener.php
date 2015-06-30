@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\DashboardBundle\EventListener;
 
+use Phlexible\Bundle\DashboardBundle\Infobar\InfobarCollection;
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -22,16 +23,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class GetConfigListener
 {
     /**
-     * @var TokenStorageInterface
+     * @var InfobarCollection
      */
-    private $tokenStorage;
+    private $infobars;
 
     /**
-     * @param TokenStorageInterface $tokenStorage
+     * @param InfobarCollection $infobars
      */
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(InfobarCollection $infobars)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->infobars = $infobars;
     }
 
     /**
@@ -39,29 +40,23 @@ class GetConfigListener
      */
     public function onGetConfig(GetConfigEvent $event)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
         $config = $event->getConfig();
 
-        $defaultPortlets = [
-            'users-online-portlet'   => [
-                'mode' => 'opened',
-                'col'  => 1,
-                'pos'  => 1
-            ],
-            'problems-portlet' => [
+        $defaultPortlets = array(
+            'problems-portlet' => array(
                 'mode' => 'opened',
                 'col'  => 0,
-                'pos'  => 2
-            ]
-        ];
+                'pos'  => 0
+            )
+        );
 
-        if ($user->getProperty('portlets')) {
-            $portlets = json_decode($user->getProperty('portlets'), true);
-        } else {
-            $portlets = $defaultPortlets;
+        $infobars = array();
+        foreach ($this->infobars->all() as $infobar) {
+            $infobars[] = $infobar->toArray();
         }
 
-        $config->set('dashboard.portlets', $portlets);
-        $config->set('dashboard.columns', $user->getProperty('dashboard.columns', 2));
+        $config->set('dashboard.infobars', $infobars);
+        $config->set('dashboard.defaults.portlets', $defaultPortlets);
+        $config->set('dashboard.defaults.columns', 2);
     }
 }

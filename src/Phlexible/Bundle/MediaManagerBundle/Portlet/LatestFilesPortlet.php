@@ -62,12 +62,6 @@ class LatestFilesPortlet extends Portlet
         $style,
         $numItems)
     {
-        $this
-            ->setId('mediamanager-portlet')
-            ->setXtype('mediamanager-latest-files-portlet')
-            ->setIconClass('images')
-            ->setRole('ROLE_MEDIA');
-
         $this->volumeManager = $volumeManager;
         $this->cacheManager = $cacheManager;
         $this->authorizationChecker = $authorizationChecker;
@@ -97,16 +91,16 @@ class LatestFilesPortlet extends Portlet
         $data = [];
 
         try {
-            $files = $this->volumeManager->findFilesBy(array(), array('createdAt' => 'DESC'), 20);
+            $files = $this->volumeManager->findFilesBy(array(), array('createdAt' => 'DESC'), 10);
 
             foreach ($files as $file) {
                 $folder = $this->volumeManager->findFolder($file->getFolderId());
 
-                if (!$this->authorizationChecker->isGranted('FILE_READ', $folder)) {
+                if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('FILE_READ', $folder)) {
                     continue;
                 }
 
-                $cacheItems = $this->cacheManager->findByFile($file);
+                $cacheItems = $this->cacheManager->findByFile($file->getId(), $file->getVersion());
                 $cacheStatus = [];
                 foreach ($cacheItems as $cacheItem) {
                     $cacheStatus[$cacheItem->getTemplateKey()] =
@@ -118,15 +112,16 @@ class LatestFilesPortlet extends Portlet
                     'fileId'      => $file->getId(),
                     'fileVersion' => $file->getVersion(),
                     'folderId'    => $file->getFolderId(),
-                    'folderPath'  => $folder->getIdPath(),
+                    'folderPath'  => null,//$folder->getIdPath(),
                     'mediaType'   => strtolower($file->getMediaType()),
-                    'time'        => $file->getCreatedAt()->format('U'),
-                    'title'       => $file->getName(),
+                    'createdAt'   => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'name'       => $file->getName(),
                     'cache'       => $cacheStatus
                 ];
             }
         } catch (\Exception $e) {
             $data = [];
+            echo $e->getMessage();die;
         }
 
         return $data;

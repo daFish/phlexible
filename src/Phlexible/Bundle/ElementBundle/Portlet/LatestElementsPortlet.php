@@ -51,28 +51,19 @@ class LatestElementsPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param TranslatorInterface $translator
-     * @param ElementService      $elementService
-     * @param TreeManager         $treeManager
-     * @param IconResolver        $iconResolver
-     * @param Connection          $connection
-     * @param int                 $numItems
+     * @param ElementService $elementService
+     * @param TreeManager    $treeManager
+     * @param IconResolver   $iconResolver
+     * @param Connection     $connection
+     * @param int            $numItems
      */
     public function __construct(
-        TranslatorInterface $translator,
         ElementService $elementService,
         TreeManager $treeManager,
         IconResolver $iconResolver,
         Connection $connection,
         $numItems)
     {
-        $this
-            ->setId('elements-portlet')
-            ->setTitle($translator->trans('elements.latest_element_changes', [], 'gui'))
-            ->setXtype('elements-latest-elements-portlet')
-            ->setIconClass('p-element-component-icon')
-            ->setRole('ROLE_ELEMENTS');
-
         $this->elementService = $elementService;
         $this->treeManager = $treeManager;
         $this->iconResolver = $iconResolver;

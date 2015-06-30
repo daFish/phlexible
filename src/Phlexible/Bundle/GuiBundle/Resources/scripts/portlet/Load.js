@@ -12,7 +12,8 @@ Ext.define('Phlexible.gui.portlet.Load', {
     COLOR15: '#b1441e',
     imageUrl: '/bundles/phlexiblegui/images/portlet-load.png',
 
-    height: 200,
+    height: 100,
+    layout: 'vbox',
 
     oneMinAvgText: '_oneMinAvgText',
     fiveMinAvgText: '_fiveMinAvgText',
@@ -25,37 +26,31 @@ Ext.define('Phlexible.gui.portlet.Load', {
 //        }
 
         this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.gui.model.LoadEntry',
-            data: this.data
+            model: 'Phlexible.gui.model.LoadEntry'
         });
 
         this.items = [
             {
+                itemId: 'spark',
                 xtype: 'sparklineline',
-                values: [1,5,4,3,4,5,6,3,4,5,6],
-                height: 25
-            },
-            {
-                hidden: true,
-                data: this.data,
+                border: true,
+                values: [],
+                height: 25,
+                width: 200,
+                fillColor: this.COLOR1,
+                lineColor: this.COLOR5
+            },{
+                xtype: 'component',
+                itemId: 'text',
+                height: 50,
+                data: {l1: 1, l5: 5, l15: 15, ts: 'ts'},
                 tpl: new Ext.XTemplate(
-                    '<table>',
-                    '<tr>',
-                    '<tpl if="!Ext.isIE"><td><div style="background-color: ' + this.COLOR1 + '; width: 10px; height: 8px; border: 1px solid black;" /></td></tpl>',
-                    '<td>' + this.oneMinAvgText + ':</td>',
-                    '<td>{[values.l1.toFixed(2)]}</td>',
-                    '</tr>',
-                    '<tr>',
-                    '<tpl if="!Ext.isIE"><td><div style="background-color: ' + this.COLOR5 + '; width: 10px; height: 8px; border: 1px solid black;" /></td></tpl>',
-                    '<td>' + this.fiveMinAvgText + ':</td>',
-                    '<td>{[values.l5.toFixed(2)]}</td>',
-                    '</tr>',
-                    '<tr>',
-                    '<tpl if="!Ext.isIE"><td><div style="background-color: ' + this.COLOR15 + '; width: 10px; height: 8px; border: 1px solid black;" /></td></tpl>',
-                    '<td>' + this.fifteenMinAvgText + ':</td>',
-                    '<td>{[values.l15.toFixed(2)]}</td>',
-                    '</tr>',
-                    '</table>'
+                    '<div>',
+                    '<span>' + this.oneMinAvgText + ': {[values.l1.toFixed(2)]}</span>',
+                    '<span>' + this.fiveMinAvgText + ': {[values.l5.toFixed(2)]}</span>',
+                    '<span>' + this.fifteenMinAvgText + ': {[values.l15.toFixed(2)]}</span>',
+                    '<span>{samples} Samples</span>',
+                    '</div>'
                 )
             }
         ];
@@ -63,11 +58,27 @@ Ext.define('Phlexible.gui.portlet.Load', {
         delete this.data;
 
         this.callParent(arguments);
+
+        this.on({
+            render: this.fixSparklineWidth,
+            resize: this.fixSparklineWidth,
+            scope: this
+        });
+    },
+
+    fixSparklineWidth: function() {
+        this.getComponent('spark').setWidth(this.getWidth() - 30);
     },
 
     updateData: function (data) {
-        var r = new Phlexible.gui.model.LoadEntry({l1: data[0], l5: data[1], l15: data[2]});
-        this.store.add(r);
-
+        var entry = Ext.create('Phlexible.gui.model.LoadEntry', {l1: data.l1, l5: data.l5, l15: data.l15, ts: data.ts});
+        this.store.add(entry);
+        var values = [];
+        this.store.each(function(entry) {
+            values.push(entry.get('l1'));
+        });
+        entry.samples = this.store.count();
+        this.getComponent('text').setData(Ext.apply({samples: this.store.count()}, entry.data));
+        this.getComponent('spark').setValues(values);
     }
 });

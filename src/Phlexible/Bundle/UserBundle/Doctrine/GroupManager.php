@@ -57,11 +57,12 @@ class GroupManager implements GroupManagerInterface
      * @param string                   $groupClass
      * @param string                   $everyoneGroupId
      */
-    public function __construct(EntityManager $entityManager,
-                                EventDispatcherInterface $dispatcher,
-                                $groupClass,
-                                $everyoneGroupId)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        EventDispatcherInterface $dispatcher,
+        $groupClass,
+        $everyoneGroupId
+    ) {
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
         $this->everyoneGroupId = $everyoneGroupId;

@@ -3,7 +3,7 @@ Ext.require('Phlexible.element.ElementDataTabHelper');
 Phlexible.fields.Registry.register('tab', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'panel',
-        title: item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        title: item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')],
         layout: 'form',
         cls: 'p-elements-data-tab',
         autoHeight: true,

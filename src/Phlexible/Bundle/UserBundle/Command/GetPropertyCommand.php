@@ -51,8 +51,7 @@ class GetPropertyCommand extends ContainerAwareCommand
      * @param  OutputInterface $output An OutputInterface instance
      * @return integer         0 if everything went fine, or an error code
      */
-    public function execute(InputInterface $input,
-                            OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         $username = $input->getArgument('username');
         $key      = $input->getArgument('key');

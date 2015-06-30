@@ -3,31 +3,31 @@
     padding-bottom: 3px;
 }
 
-.p-problems-icon {
+.p-problem-icon {
     float: left;
     width: 16px;
     height: 16px;
 }
 
-.p-problems-severity {
-    float: right;
+.p-problem-severity {
+    float: left;
     width: 16px;
     height: 16px;
 }
 
-.p-problems-text {
+.p-problem-text {
     padding-left: 20px !important;
     padding-right: 20px !important;
 }
 
-.p-problems-message {
+.p-problem-message {
     font-weight: bold;
 }
 
-.p-problems-solve {
+.p-problem-solve {
 }
 
-.p-problems-repair-icon {
+.p-problem-repair-icon {
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;

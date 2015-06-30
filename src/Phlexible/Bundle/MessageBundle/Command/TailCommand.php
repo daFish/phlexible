@@ -120,5 +120,4 @@ class TailCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }

@@ -15,6 +15,7 @@ use Phlexible\Bundle\GuiBundle\Event\GetMenuEvent;
 use Phlexible\Bundle\GuiBundle\GuiEvents;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\DelegatingLoader;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderResolver;
+use Phlexible\Bundle\GuiBundle\Menu\Loader\XmlFileLoader;
 use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Resource\FileResource;
@@ -56,6 +57,7 @@ class MenuLoader
             new LoaderResolver(
                 [
                     new YamlFileLoader(),
+                    new XmlFileLoader(),
                 ]
             )
         );
