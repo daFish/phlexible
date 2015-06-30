@@ -6,9 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
     <link rel="icon" type="image/png" href="{{ asset("bundles/phlexiblegui/images/phlexible.png") }}">
     {% set theme = "ext-theme-" ~ app.user.property("theme", "classic") %}
-    <link rel="stylesheet" type="text/css" href="//cdn.sencha.com/ext/gpl/5.1.0/build/packages/{{ theme }}/build/resources/{{ theme }}-all{% if app.debug %}-debug{% endif %}.css">
-    <script type="text/javascript" src="//cdn.sencha.com/ext/gpl/5.1.0/build/ext-all{% if app.debug %}-debug{% endif %}.js"></script>
-    <script type="text/javascript" src="//cdn.sencha.com/ext/gpl/5.1.0/build/packages/{{ theme }}/build/{{ theme }}{% if app.debug %}-debug{% endif %}.js"></script>
+    {% set debug = app.debug ? "-debug" : "" %}
+    <link rel="stylesheet" type="text/css" href="{{ asset("build/packages/" ~ theme ~ "/build/resources/" ~ theme ~ "-all" ~ debug ~ ".css", "ext") }}">
+    <script type="text/javascript" src="{{ asset("build/ext-all" ~ debug ~ ".js", "ext") }}"></script>
+    <script type="text/javascript" src="{{ asset("build/packages/" ~ theme ~ "/build/" ~ theme ~ debug ~ ".js", "ext") }}"></script>
     <link href="{{ path("phlexible_gui_asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         #loading {
