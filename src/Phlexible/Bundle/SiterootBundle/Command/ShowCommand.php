@@ -67,6 +67,4 @@ class ShowCommand extends ContainerAwareCommand
 
         return 0;
     }
-
 }
-

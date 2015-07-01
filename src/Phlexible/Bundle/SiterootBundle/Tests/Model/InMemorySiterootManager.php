@@ -18,7 +18,6 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\SiterootBundle\SiterootEvents;
-use Phlexible\Bundle\SiterootBundle\SiterootsMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -88,9 +87,6 @@ class InMemorySiterootManager implements SiterootManagerInterface
 
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::UPDATE_SITEROOT, $event);
-
-            $message = SiterootsMessage::create('Siteroot updated.', '', null, 'siteroot');
-            $this->messagePoster->post($message);
         } else {
             $event = new SiterootEvent($siteroot);
             if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_CREATE_SITEROOT, $event)->isPropagationStopped()) {
@@ -105,9 +101,6 @@ class InMemorySiterootManager implements SiterootManagerInterface
 
             $event = new SiterootEvent($siteroot);
             $this->dispatcher->dispatch(SiterootEvents::CREATE_SITEROOT, $event);
-
-            $message = SiterootsMessage::create('Siteroot created.', '', null, 'siteroot');
-            $this->messagePoster->post($message);
         }
     }
 
@@ -125,9 +118,6 @@ class InMemorySiterootManager implements SiterootManagerInterface
 
         $event = new SiterootEvent($siteroot);
         $this->dispatcher->dispatch(SiterootEvents::DELETE_SITEROOT, $event);
-
-        $message = SiterootsMessage::create('Siteroot deleted.', '', null, 'siteroot');
-        $this->messagePoster->post($message);
     }
 
     /**

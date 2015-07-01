@@ -4,7 +4,6 @@ services:
         arguments:
             - @phlexible_siteroot.entity_manager
             - @event_dispatcher
-            - @phlexible_message.message_poster
         public: false
 
     phlexible_siteroot.entity_manager:

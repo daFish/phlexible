@@ -43,25 +43,21 @@ class CollectProblemsListener
         $lastRun = $this->properties->get('queue', 'last_run');
 
         if (!$lastRun) {
-            $problem = new Problem();
-            $problem
-                ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage('Queue was never run.')
-                ->setHint('Run queue command')
-                ->setIconClass('p-queue-component-icon')
-                ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime());
+            $problem = new Problem(
+                'queue_no_run',
+                Problem::SEVERITY_WARNING,
+                'Queue was never run.',
+                'Run queue command'
+            );
 
             $event->addProblem($problem);
         } elseif (time() - strtotime($lastRun) > 86400) {
-            $problem = new Problem();
-            $problem
-                ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage("Queue last run was on $lastRun, more than 24h ago.")
-                ->setHint('Install a cronjob for running the queue command')
-                ->setIconClass('p-queue-component-icon')
-                ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime());
+            $problem = new Problem(
+                'queue_last_run',
+                Problem::SEVERITY_WARNING,
+                "Queue last run was on $lastRun, more than 24h ago.",
+                'Install a cronjob for running the queue command'
+            );
 
             $event->addProblem($problem);
         }

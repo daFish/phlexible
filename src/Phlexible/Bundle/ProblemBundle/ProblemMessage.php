@@ -9,23 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\SiterootBundle;
+namespace Phlexible\Bundle\ProblemBundle;
 
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Siteroots message
+ * Problem message
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class SiterootsMessage extends Message
+class ProblemMessage extends Message
 {
     /**
      * {@inheritdoc}
      */
     public static function getDefaultChannel()
     {
-        return 'siteroots';
+        return 'problems';
     }
 
     /**
@@ -33,6 +33,6 @@ class SiterootsMessage extends Message
      */
     public static function getDefaultRole()
     {
-        return 'ROLE_SITEROOT';
+        return 'ROLE_PROBLEMS';
     }
 }

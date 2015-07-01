@@ -55,8 +55,7 @@ class SiterootExtension extends \Twig_Extension
         SiterootRequestMatcher $siterootRequestMatcher,
         SiterootsAccessor $siterootsAccessor,
         RequestStack $requestStack
-    )
-    {
+    ) {
         $this->siterootManager = $siterootManager;
         $this->siterootRequestMatcher = $siterootRequestMatcher;
         $this->siterootsAccessor = $siterootsAccessor;

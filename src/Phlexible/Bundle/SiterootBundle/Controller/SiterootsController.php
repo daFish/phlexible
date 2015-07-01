@@ -167,10 +167,12 @@ class SiterootsController extends FOSRestController
 
             // set the `Location` header only when creating new resources
             if (201 === $statusCode) {
-                $response->headers->set('Location',
+                $response->headers->set(
+                    'Location',
                     $this->generateUrl(
-                        'phlexible_api_siteroot_get_siteroot', array('siterootId' => $siteroot->getId()),
-                        true // absolute
+                        'phlexible_api_siteroot_get_siteroot',
+                        array('siterootId' => $siteroot->getId()),
+                        true
                     )
                 );
             }

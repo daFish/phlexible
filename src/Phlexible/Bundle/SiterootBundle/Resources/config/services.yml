@@ -11,13 +11,21 @@ services:
         class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootsAccessor
         arguments: [@phlexible_siteroot.siteroot_manager]
 
+    # event listeners
+    phlexible_siteroot.listener.message:
+        class: Phlexible\Bundle\SiterootBundle\EventListener\MessageListener
+        arguments:
+            - @phlexible_message.message_poster
+        tags:
+            - {name: kernel.event_subscriber}
+
     # problem checkers
     phlexible_siteroot.problem.siterootcheck:
         class: Phlexible\Bundle\SiterootBundle\ProblemChecker\SiterootProblemChecker
         public: false
         arguments: [@phlexible_siteroot.siteroot_manager]
         tags:
-            - {name: phlexible_problem.problem_checker}
+            - {name: phlexible_problem.checker}
 
     # role providers
     phlexible_siteroot.role_provider:

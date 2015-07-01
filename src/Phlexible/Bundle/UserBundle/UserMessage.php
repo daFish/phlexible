@@ -9,23 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ProblemBundle;
+namespace Phlexible\Bundle\UserBundle;
 
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 
 /**
- * Problems message
+ * User message
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ProblemsMessage extends Message
+class UserMessage extends Message
 {
     /**
      * {@inheritdoc}
      */
     public static function getDefaultChannel()
     {
-        return 'problems';
+        return 'users';
     }
 
     /**
@@ -33,6 +33,6 @@ class ProblemsMessage extends Message
      */
     public static function getDefaultRole()
     {
-        return 'ROLE_PROBLEMS';
+        return 'ROLE_USERS';
     }
 }

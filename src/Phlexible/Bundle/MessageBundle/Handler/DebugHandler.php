@@ -30,11 +30,13 @@ class DebugHandler implements HandlerInterface
      */
     public function handle(Message $message)
     {
+        $typeNames = array(0 => 'info', 1 => 'error');
+
         $this->messages[] = [
             'subject'      => $message->getSubject(),
             'body'         => $message->getBody(),
             'type'         => $message->getType(),
-            'typeName'     => $message->getType(),
+            'typeName'     => $typeNames[$message->getType()],
             'channel'      => $message->getChannel(),
             'role'         => $message->getRole(),
             'user'         => $message->getUser(),

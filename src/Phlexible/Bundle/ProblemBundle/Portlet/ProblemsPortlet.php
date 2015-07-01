@@ -59,11 +59,10 @@ class ProblemsPortlet extends Portlet
 
             $data[] = [
                 'id'       => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
-                'iconCls'  => $problem->getIconClass(),
                 'severity' => $problem->getSeverity(),
                 'msg'      => $problem->getMessage(),
                 'hint'     => $problem->getHint(),
-                'link'     => $problem->getLink(),
+                'link'     => $problem->getAttribute('link'),
             ];
         }
 

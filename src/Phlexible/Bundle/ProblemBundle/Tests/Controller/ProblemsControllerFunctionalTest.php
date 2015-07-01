@@ -44,7 +44,7 @@ class ProblemsControllerFunctionalTest extends WebTestCase
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $client->request('GET', '/admin/rest/problems/problem_check_long_ago');
+        $client->request('GET', '/admin/rest/problems/siteroots_no_specialtids_1385911f-4491-4601-9166-5778aa360260');
         $response = $client->getResponse();
         $content = $response->getContent();
         $data = json_decode($content, true);
@@ -52,7 +52,7 @@ class ProblemsControllerFunctionalTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertArrayHasKey('problem', $data);
         $this->assertArrayHasKey('id', $data['problem']);
-        $this->assertSame('problem_check_long_ago', $data['problem']['id']);
+        $this->assertSame('siteroots_no_specialtids_1385911f-4491-4601-9166-5778aa360260', $data['problem']['id']);
     }
 
     /**

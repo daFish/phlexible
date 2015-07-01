@@ -80,14 +80,6 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
     /**
      * @return array
      */
-    public function getPriorities()
-    {
-        return isset($this->data['priorities']) ? $this->data['priorities'] : [];
-    }
-
-    /**
-     * @return array
-     */
     public function getTypes()
     {
         return isset($this->data['types']) ? $this->data['types'] : [];
@@ -112,7 +104,6 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
     {
         $count = [
             'error_count' => 0,
-            'priorities'  => [],
             'types'       => [],
         ];
 
@@ -130,7 +121,6 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
             }
         }
 
-        ksort($count['priorities']);
         ksort($count['types']);
 
         return $count;

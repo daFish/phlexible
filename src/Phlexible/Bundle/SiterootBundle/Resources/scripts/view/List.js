@@ -10,6 +10,7 @@ Ext.define('Phlexible.siteroot.view.List', {
     removeDescriptionText: '_removeDescriptionText',
     addSiterootText: '_addSiterootText',
     titleText: '_titleText',
+    saveSiterootsText: '_saveSiterootsText',
 
     /**
      * Fires after the active Siteroot has been changed
@@ -31,7 +32,6 @@ Ext.define('Phlexible.siteroot.view.List', {
     initComponent: function () {
         this.initMyColumns();
         this.initMyDockedItems();
-        this.initMyListeners();
 
         this.callParent(arguments);
     },
@@ -80,16 +80,13 @@ Ext.define('Phlexible.siteroot.view.List', {
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.onAddSiteroot,
                 scope: this
+            },'->',{
+                text: this.saveSiterootsText,
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
+                handler: this.onSaveSiteroots,
+                scope: this
             }]
         }];
-    },
-
-    initMyListeners: function() {
-        this.on({
-            select: this.onSelectSiteroot,
-            siterootDataChange: this.onSiterootDataChange,
-            scope: this
-        });
     },
 
     /**
@@ -110,16 +107,6 @@ Ext.define('Phlexible.siteroot.view.List', {
                 sm.select([i]);
             }
         }
-    },
-
-    /**
-     * If the siteroot selection changes fire the siterootChange event.
-     *
-     * @param {Ext.grid.Panel}                    grid
-     * @param {Phlexible.siteroot.model.Siteroot} siteroot
-     */
-    onSelectSiteroot: function (grid, siteroot) {
-        this.fireEvent('loadSiteroot', siteroot);
     },
 
     /**
@@ -181,12 +168,62 @@ Ext.define('Phlexible.siteroot.view.List', {
     },
 
     /**
-     * After the siteroot data changed.
-     *  - new siteroot added
-     *  - title of siteroot changed
+     * If a complete siteroot should be saved (including all plugins).
+     *
+     * The data is collected and submitted in only one request to the server
+     * all plugins must register themselfs at the PHP observer for handle the
+     * submit process.
      */
-    onSiterootDataChange: function () {
-        this.store.reload();
+    onSaveSiteroots: function () {
+        this.fireEvent('save');
+        return;
+
+        var saveData = {}, valid = true;
+
+        this.getComponent(1).items.each(function (panel) {
+            if (typeof(panel.isValid) == 'function' && !panel.isValid()) {
+                valid = false;
+            }
+            else if (typeof(panel.getSaveData) == 'function') {
+                var data = panel.getSaveData();
+
+                if (!data) {
+                    return;
+                }
+
+                // merge data
+                Ext.apply(saveData, data);
+            }
+        }, this);
+
+        if (!valid) {
+            Phlexible.Notify.failure(this.checkAccordionsForErrorsText);
+            return;
+        }
+
+        // save data
+        Ext.Ajax.request({
+            method: 'POST',
+            url: Phlexible.Router.generate('siteroot_save'),
+            params: {
+                id: this.siterootId,
+                data: Ext.encode(saveData)
+            },
+            success: function (response) {
+                var data = Ext.decode(response.responseText);
+                if (data.success) {
+                    this.getSiterootGrid().selected = this.getSiterootGrid().getSelectionModel().getSelected().id;
+                    this.getSiterootGrid().store.reload();
+
+//                    this.onSiterootChange(this.siterootId, this.siterootTitle);
+                }
+                else {
+                    Ext.Msg.alert('Failure', data.msg);
+                }
+            },
+            scope: this
+        });
+
     }
 
 });

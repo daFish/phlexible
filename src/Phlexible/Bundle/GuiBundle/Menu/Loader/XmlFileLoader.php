@@ -13,7 +13,6 @@ namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
 
 use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
-use Symfony\Component\Yaml\Parser;
 
 /**
  * XML file loader
@@ -102,8 +101,8 @@ class XmlFileLoader implements LoaderInterface
         if (!$dom->schemaValidate(__DIR__ . '/schema/menu.xsd')) {
             $errors = libxml_get_errors();
             foreach ($errors as $error) {
-                if ($error->level > LIBXML_ERR_ERROR) {
-                    throw new \Exception(
+                if ($error->level >= LIBXML_ERR_ERROR) {
+                    throw new LoaderException(
                         "Schema error in {$error->file}, line {$error->line}, column {$error->column} " .
                         "[{$error->level}]: {$error->message}"
                     );

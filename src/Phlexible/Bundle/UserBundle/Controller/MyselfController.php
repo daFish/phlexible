@@ -85,14 +85,6 @@ class MyselfController extends Controller
             $user->setPlainPassword($request->request->get('password'));
         }
 
-        if ($request->request->has('interfaceLanguage')) {
-            $user->setInterfaceLanguage($request->request->get('interfaceLanguage'));
-        }
-
-        if ($request->request->has('theme')) {
-            $user->setInterfaceLanguage($request->request->get('theme'));
-        }
-
         foreach ($request->request->all() as $key => $value) {
             if (substr($key, 0, 9) === 'property#') {
                 $key = substr($key, 9);

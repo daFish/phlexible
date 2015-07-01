@@ -11,6 +11,8 @@
 
 namespace Phlexible\Bundle\ProblemBundle\ProblemChecker;
 
+use Phlexible\Bundle\ProblemBundle\Problem\ProblemCollection;
+
 /**
  * Problem checker interface
  *
@@ -25,7 +27,7 @@ interface ProblemCheckerInterface
     /**
      * Check for problems
      *
-     * @return mixed
+     * @return ProblemCollection
      */
     public function check();
 }

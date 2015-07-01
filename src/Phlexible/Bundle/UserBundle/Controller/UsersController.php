@@ -18,10 +18,8 @@ use FOS\RestBundle\View\View;
 use FOS\UserBundle\Model\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Form\Type\UserType;
-use Phlexible\Bundle\UserBundle\UsersMessage;
 use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -262,9 +260,6 @@ class UsersController extends FOSRestController
         }
 
         $userManager->deleteUser($user);
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('User "' . $user->getUsername() . '" deleted.'));
     }
 
     /**

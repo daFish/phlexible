@@ -80,17 +80,15 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
     },
 
     processMessage: function(event){
-        if (Ext.isObject(event) && event.type == "dashboard") {
-            Ext.Object.each(event.data, function(id, data) {
-                var panel = this.lookupReference(id);
-
-                if (!panel || !panel.updateData) {
-                    return;
-                }
-
-                panel.updateData(data);
-            }, this);
+        if (!Ext.isObject(event) && event.type == "dashboard") {
+            return;
         }
+
+        this.getView().cascade(function(c) {
+            if (event.data[c.portletId]) {
+                c.updateData(event.data[c.portletId]);
+            }
+        });
     },
 
     onAddPortlet: function() {

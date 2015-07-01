@@ -15,12 +15,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\UserBundle\Entity\Repository\UserRepository;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Bundle\UserBundle\UserEvents;
-use Phlexible\Bundle\UserBundle\UsersMessage;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Webmozart\Expression\Expr;
@@ -44,11 +42,6 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     private $dispatcher;
 
     /**
-     * @var MessagePoster
-     */
-    private $messagePoster;
-
-    /**
      * @var string
      */
     private $systemUserId;
@@ -65,7 +58,6 @@ class UserManager extends BaseUserManager implements UserManagerInterface
      * @param ObjectManager            $om
      * @param string                   $class
      * @param EventDispatcherInterface $dispatcher
-     * @param MessagePoster            $messagePoster
      * @param string                   $systemUserId
      * @param string                   $everyoneGroupId
      */
@@ -76,14 +68,12 @@ class UserManager extends BaseUserManager implements UserManagerInterface
         ObjectManager $om,
         $class,
         EventDispatcherInterface $dispatcher,
-        MessagePoster $messagePoster,
         $systemUserId,
         $everyoneGroupId
     ) {
         parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
 
         $this->dispatcher = $dispatcher;
-        $this->messagePoster = $messagePoster;
         $this->systemUserId = $systemUserId;
         $this->everyoneGroupId = $everyoneGroupId;
     }
@@ -285,13 +275,6 @@ class UserManager extends BaseUserManager implements UserManagerInterface
         } else {
             $this->dispatcher->dispatch(UserEvents::CREATE_USER, $event);
         }
-
-        if ($isUpdate) {
-            $this->messagePoster->post(UsersMessage::create('User "' . $user->getUsername() . '" updated.'));
-        } else {
-            $this->messagePoster->post(UsersMessage::create('User "' . $user->getUsername() . '" created.'));
-        }
-
     }
 
     /**

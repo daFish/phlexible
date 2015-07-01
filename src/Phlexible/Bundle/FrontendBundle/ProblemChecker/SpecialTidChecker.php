@@ -13,6 +13,7 @@ namespace Phlexible\Bundle\FrontendBundle\ProblemChecker;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
+use Phlexible\Bundle\ProblemBundle\Problem\ProblemCollection;
 use Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerInterface;
 
 /**
@@ -40,33 +41,25 @@ class SpecialTidChecker implements ProblemCheckerInterface
      */
     public function check()
     {
-        $problems = [];
+        $problems = new ProblemCollection();
 
         foreach ($this->entityManager->getRepository('PhlexibleSiterootBundle:Siteroot')->findAll() as $siteroot) {
             if (!$siteroot->getSpecialTid(null, 'error_404')) {
-                $problem = new Problem();
-                $problem
-                    ->setId('siteroot_' . $siteroot->getId() . '_error_404_missing')
-                    ->setCheckClass(__CLASS__)
-                    ->setIconClass('p-frontend-component-icon')
-                    ->setSeverity(Problem::SEVERITY_CRITICAL)
-                    ->setMessage("No special tid for 404 page found in siteroot {$siteroot->getTitle()}.")
-                    ->setHint('Create a special tid "error_404"');
-
-                $problems[] = $problem;
+                $problems->add(new Problem(
+                    "siteroot_{$siteroot->getId()}_error_404_missing",
+                    Problem::SEVERITY_CRITICAL,
+                    "No special tid for 404 page found in siteroot {$siteroot->getTitle()}.",
+                    'Create a special tid "error_404"'
+                ));
             }
 
             if (!$siteroot->getSpecialTid(null, 'error_500')) {
-                $problem = new Problem();
-                $problem
-                    ->setId('siteroot_' . $siteroot->getId() . '_error_500_missing')
-                    ->setCheckClass(__CLASS__)
-                    ->setIconClass('p-frontend-component-icon')
-                    ->setSeverity(Problem::SEVERITY_CRITICAL)
-                    ->setMessage("No special tid for 500 page found in siteroot {$siteroot->getTitle()}.")
-                    ->setHint('Create a special tid "error_500"');
-
-                $problems[] = $problem;
+                $problems->add(new Problem(
+                    "siteroot_{$siteroot->getId()}_error_500_missing",
+                    Problem::SEVERITY_CRITICAL,
+                    "No special tid for 500 page found in siteroot {$siteroot->getTitle()}.",
+                    'Create a special tid "error_500"'
+                ));
             }
         }
 

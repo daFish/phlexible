@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Tests\Menu\Loader;
 
 use org\bovigo\vfs\vfsStream;
-use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
+use Phlexible\Bundle\GuiBundle\Menu\Loader\XmlFileLoader;
 
 /**
  * YAML file loader test
@@ -23,7 +23,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testSupports()
     {
-        $loader = new YamlFileLoader();
+        $loader = new XmlFileLoader();
 
         $this->assertTrue($loader->supports('test.xml'));
         $this->assertFalse($loader->supports('test.yml'));
@@ -36,9 +36,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://phlexible.net/schema/menu http://phlexible.net/schema/menu/menu-1.0.xsd">
 
-    <item id="menus" handle="menus" />
+    <item name="menus" handle="menus" />
 
-    <item id="config" parent="menus" handle="configuration">
+    <item name="config" parent="menus" handle="configuration">
         <roles satisfy="any">
             <role>a</role>
             <role>b</role>
@@ -47,10 +47,10 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 </items>
 EOF;
 
-        vfsStream::setup('root', null, array('items.yml' => $items));
+        vfsStream::setup('root', null, array('items.xml' => $items));
 
-        $loader = new YamlFileLoader();
-        $items = $loader->load(vfsStream::url('root/items.yml'));
+        $loader = new XmlFileLoader();
+        $items = $loader->load(vfsStream::url('root/items.xml'));
 
         $this->assertCount(2, $items);
         $this->assertArrayHasKey('menus', $items->getItems());
@@ -63,27 +63,30 @@ EOF;
 
     /**
      * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedExceptionMessage The attribute 'name' is required but missing
      */
-    public function testLoadWithInvalidParent()
+    public function testValidateWithMissingName()
     {
         $items = <<<EOF
 <items xmlns="http://phlexible.net/schema/menu"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://phlexible.net/schema/menu http://phlexible.net/schema/menu/menu-1.0.xsd">
 
-    <item id="config" parent="123" handle="configuration" />
+    <item />
 </items>
 EOF;
 
-        vfsStream::setup('root', null, array('items.yml' => $items));
+        vfsStream::setup('root', null, array('missingName.xml' => $items));
 
-        $loader = new YamlFileLoader();
-        $items = $loader->load(vfsStream::url('root/items.yml'));
+        $loader = new XmlFileLoader();
+        $items = $loader->load(vfsStream::url('root/missingName.xml'));
 
+        print_r($items);
     }
 
     /**
      * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedExceptionMessage The attribute 'name' is required but missing
      */
     public function testLoadWithMissingHandler()
     {
@@ -92,13 +95,13 @@ EOF;
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://phlexible.net/schema/menu http://phlexible.net/schema/menu/menu-1.0.xsd">
 
-    <item id="config" parent="123" />
+    <item name="config" />
 </items>
 EOF;
 
-        vfsStream::setup('root', null, array('items.yml' => $items));
+        vfsStream::setup('root', null, array('missingHandler.xml' => $items));
 
-        $loader = new YamlFileLoader();
-        $loader->load(vfsStream::url('root/items.yml'));
+        $loader = new XmlFileLoader();
+        $loader->load(vfsStream::url('root/missingHandler.xml'));
     }
 }

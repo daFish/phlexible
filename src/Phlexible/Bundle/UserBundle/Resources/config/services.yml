@@ -32,6 +32,13 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
+    phlexible_user.listener.message:
+        class: Phlexible\Bundle\UserBundle\EventListener\MessageListener
+        arguments:
+            - @phlexible_message.message_poster
+        tags:
+            - {name: kernel.event_subscriber}
+
     # portlets
     phlexible_user.portlet.online:
         class: Phlexible\Bundle\UserBundle\Portlet\OnlinePortlet

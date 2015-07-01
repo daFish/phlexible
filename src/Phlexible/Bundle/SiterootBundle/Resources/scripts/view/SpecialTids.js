@@ -1,5 +1,6 @@
 Ext.define('Phlexible.siteroot.view.SpecialTids', {
     extend: 'Ext.grid.Panel',
+    requires: ['Phlexible.gui.model.KeyValueIconCls'],
 
     xtype: 'siteroot.specialtids',
 

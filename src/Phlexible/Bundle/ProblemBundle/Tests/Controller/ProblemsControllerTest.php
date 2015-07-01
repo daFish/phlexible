@@ -40,8 +40,7 @@ class ProblemsControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetProblemReturnsJsonWithCorrectKeys()
     {
-        $problem = new Problem();
-        $problem->setId('valid');
+        $problem = new Problem('valid', Problem::SEVERITY_INFO, 'test');
 
         $fetcher = $this->prophesize('Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcherInterface');
         $fetcher->fetch()->willReturn(array($problem));

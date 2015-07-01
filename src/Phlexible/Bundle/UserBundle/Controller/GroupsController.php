@@ -17,7 +17,6 @@ use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\UserBundle\Entity\Group;
 use Phlexible\Bundle\UserBundle\Form\Type\GroupType;
-use Phlexible\Bundle\UserBundle\UsersMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -114,9 +113,6 @@ class GroupsController extends FOSRestController
     public function postGroupsAction(Request $request)
     {
         return $this->processForm($request, new Group());
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
     }
 
     /**
@@ -149,9 +145,6 @@ class GroupsController extends FOSRestController
         }
 
         return $this->processForm($request, $group);
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
     }
 
     /**
@@ -215,8 +208,5 @@ class GroupsController extends FOSRestController
         }
 
         $groupManager->deleteGroup($group);
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" deleted.'));
     }
 }

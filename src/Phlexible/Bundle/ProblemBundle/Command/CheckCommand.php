@@ -11,7 +11,8 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Command;
 
-use Phlexible\Bundle\ProblemBundle\ProblemsMessage;
+use Phlexible\Bundle\ProblemBundle\Problem\ProblemCollection;
+use Phlexible\Bundle\ProblemBundle\ProblemMessage;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,80 +43,70 @@ class CheckCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $problemsRepository = $em->getRepository('PhlexibleProblemBundle:Problem');
 
-        $problemList = ['add' => [], 'remove' => []];
+        $existing = new ProblemCollection($problemsRepository->findAll());
+        $countExisting = count($existing);
+
+        $known = array();
+        $added = array();
+        $removed = array();
 
         foreach ($problemCheckers as $problemChecker) {
             $problems = $problemChecker->check();
 
-            $existingProblems = $problemsRepository->findByCheckClass(get_class($problemChecker));
+            $output->writeln(get_class($problemChecker) . ' => ' . count($problems));
 
-            $problemIds = [];
-            foreach ($problems as $problemKey => $problem) {
-                $problemIds[$problem->getId()] = $problemKey;
-            }
-
-            foreach ($existingProblems as $existingProblemKey => $existingProblem) {
-                $existingProblemId = $existingProblem->getId();
-
-                if (array_key_exists($existingProblemId, $problemIds)) {
-                    $output->writeln("= " . $existingProblemId);
-                    $existingProblem->setLastCheckedAt(new \DateTime());
-                    unset ($problems[$problemIds[$existingProblemId]]);
-                    unset ($existingProblems[$existingProblemKey]);
-                }
-            }
-
-            foreach ($problems as $problem) {
-                $problemList['add'][] = $problem->getId();
-
-                $output->writeln("<fg=red>+ {$problem->getId()} </fg=red>");
-                $problem->setCreatedAt(new \DateTime());
-                $problem->setLastCheckedAt(new \DateTime());
+            foreach ($existing->diff($problems) as $problem) {
+                $output->writeln("<error> + {$problem->getId()}</error>");
                 $em->persist($problem);
+                $added[] = $problem->getId();
             }
 
-            foreach ($existingProblems as $existingProblem) {
-                $problemList['remove'][] = $existingProblem->getId();
-
-                $output->writeln("<fg=green>- {$existingProblem->getId()}</fg=green>");
-                $em->remove($existingProblem);
+            foreach ($existing->intersect($problems) as $problem) {
+                $output->writeln(" = {$problem->getId()}");
+                $existing = $problems->diff($existing);
+                $known[] = $problem->getId();
             }
+        }
+
+        foreach ($existing as $problem) {
+            $output->writeln("<info> - {$problem->getId()}</info>");
+            $em->remove($problem);
+            $removed[] = $problem->getId();
         }
 
         $em->flush();
 
-        $subject = null;
-        $total = null;
-        $body = 'Changes:';
-        $countAdd = count($problemList['add']);
-        $countRemove = count($problemList['remove']);
-        if ($countAdd) {
-            $body .= PHP_EOL . '+ ' . implode(PHP_EOL . '+ ', $problemList['add']);
-            $subject = "Problem check found $countAdd new problem(s)";
-            $total = "Problem check found <fg=red>$countAdd new</fg=red> problem(s)";
-        }
-        if ($countRemove) {
-            $body .= PHP_EOL . '- ' . implode(PHP_EOL . '- ', $problemList['remove']);
-            $subject = "Problem check removed $countRemove existing problem(s)";
-            $total = "Problem check removed <fg=green>$countRemove existing</fg=green> problem(s)";
-        }
-        if ($countAdd && $countRemove) {
-            $subject = "Problem check found $countAdd new and removed $countRemove existing problem(s)";
-            $total = "Problem check found <fg=red>$countAdd new</fg=red> and " .
-                "removed <fg=green>$countRemove existing</fg=green> problem(s)";
-        }
-
-        if (isset($subject)) {
-            $this->getContainer()->get('phlexible_message.message_poster')
-                ->post(ProblemsMessage::create($subject, $body));
-        }
-
-        if ($total) {
-            $output->writeln($total);
-        }
-
         $properties = $this->getContainer()->get('properties');
         $properties->set('problems', 'last_run', date('Y-m-d H:i:s'));
+
+        $type = ProblemMessage::TYPE_INFO;
+        $body = '';
+        $countKnown = count($known);
+        $countAdd = count($added);
+        $countRemove = count($removed);
+        $parts = array();
+        if ($known) {
+            $body .= 'Known: ' . PHP_EOL . ' = ' . implode(PHP_EOL . ' = ', $known) . PHP_EOL;
+            $parts[] = "$countKnown existing";
+            $type = ProblemMessage::TYPE_ERROR;
+        }
+        if ($added) {
+            $body .= 'Added: ' . PHP_EOL . ' + ' . implode(PHP_EOL . ' + ', $added) . PHP_EOL;
+            $parts[] = "$countAdd added";
+            $type = ProblemMessage::TYPE_ERROR;
+        }
+        if ($removed) {
+            $body .= 'Removed: ' . PHP_EOL . ' - ' . implode(PHP_EOL . ' - ', $removed) . PHP_EOL;
+            $parts[] = "$countRemove removed";
+        }
+        if (count($parts)) {
+            $subject = "Problem check result: " . implode(" and ", $parts). " problems";
+        } else {
+            $subject = "Problem check result: no problems";
+        }
+
+        $this->getContainer()->get('phlexible_message.message_poster')
+            ->post(ProblemMessage::create($subject, $body, $type));
 
         return 0;
     }

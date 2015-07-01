@@ -5,4 +5,4 @@ services:
         public: false
         arguments: [@doctrine.orm.entity_manager]
         tags:
-            - {name: problem.checker}
+            - {name: phlexible_problem.checker}

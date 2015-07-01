@@ -34,7 +34,7 @@ class TailCommand extends ContainerAwareCommand
             ->setDescription('Show latest messages')
             ->setDefinition(
                 [
-                    new InputOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Show latest <limit> messages.', 20),
+                    new InputOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Show latest <number> messages.', 20),
                     new InputOption('follow', 'f', InputOption::VALUE_NONE, 'Follow output'),
                     new InputOption('body', 'b', InputOption::VALUE_NONE, 'Show body'),
                     new InputOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep time', 5),

@@ -60,6 +60,12 @@ class User extends BaseUser
     private $comment;
 
     /**
+     * @var string
+     * @ORM\Column(name="api_key", type="string", nullable=true)
+     */
+    private $apiKey;
+
+    /**
      * @var array
      * @ORM\Column(type="json_array")
      */

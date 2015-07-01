@@ -2,30 +2,50 @@
 
 {% block menu %}
     <span class="label">
-        <span class="icon"><img
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAgCAYAAAAMq2gFAAABjElEQVRIx2MIDw+vd3R0/GFvb/+fGtjFxeVJSUmJ1f///5nv37/PAMMMzs7OVLMEhoODgy/k5+cHJCYmagAtZAJbRG1L0DEwxCYALeOgiUXbt2+/X1NT8xTEdnd3/wi0SI4mFgHBDCBeCLXoF5BtwkCEpvNAvB8JnydCTwgQR0It+g1kWxNjUQEQOyDhAiL0gNUiWWRDjEUOyMkUZsCoRaMWjVpEvEVkFkGjFmEUqgc+fvx4hVYWIReqzi9evKileaoDslnu3LkTNLQtGk3edLPIycnpL9Bge5pb1NXVdQNosDmGRcAm7F+QgKur6783b95cBQoeRGv1kII3QPOdAoZF8+fPP4PUqnx55syZVKCEI1rLh1hsAbWEZ8aMGaUoFoFcMG3atKdIjfSPISEhawICAlaQgwMDA1f6+/sfB5rzE2Sej4/PD3C7DkjoAHHVoUOHLpSVlX3w8vL6Sa34Alr6Z8WKFaCoMARZxAHEoFZ/HBD3A/FyIF4BxMvIxCC964F4G6hZDMTxQCwJAGWE8pur5kFDAAAAAElFTkSuQmCC"
-                    alt="Messages"></span>
+        <span class="icon">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAgCAYAAAAMq2gFAAABjElEQVRIx2MIDw+vd3R0/GFvb/+fGtjFxeVJSUmJ1f///5nv37/PAMMMzs7OVLMEhoODgy/k5+cHJCYmagAtZAJbRG1L0DEwxCYALeOgiUXbt2+/X1NT8xTEdnd3/wi0SI4mFgHBDCBeCLXoF5BtwkCEpvNAvB8JnydCTwgQR0It+g1kWxNjUQEQOyDhAiL0gNUiWWRDjEUOyMkUZsCoRaMWjVpEvEVkFkGjFmEUqgc+fvx4hVYWIReqzi9evKileaoDslnu3LkTNLQtGk3edLPIycnpL9Bge5pb1NXVdQNosDmGRcAm7F+QgKur6783b95cBQoeRGv1kII3QPOdAoZF8+fPP4PUqnx55syZVKCEI1rLh1hsAbWEZ8aMGaUoFoFcMG3atKdIjfSPISEhawICAlaQgwMDA1f6+/sfB5rzE2Sej4/PD3C7DkjoAHHVoUOHLpSVlX3w8vL6Sa34Alr6Z8WKFaCoMARZxAHEoFZ/HBD3A/FyIF4BxMvIxCC964F4G6hZDMTxQCwJAGWE8pur5kFDAAAAAElFTkSuQmCC"
+                 alt="Messages">
+        </span>
         <strong>Messages</strong>
+        <span class="count"><span>{{ collector.messages|length }}</span></span>
     </span>
 {% endblock %}
 
 {% block panel %}
-
-    Types:<br/>{% for type in collector.types %}- {{ type.name }}: {{ type.count }}<br/>{% endfor %}<br/>
-    Errors: {{ collector.countErrors }}<br/>
-    <br/>
+    <h2>Types</h2>
+    <table>
+        {% for type in collector.types %}
+        <tr>
+            <th>{{ type.name }}</th>
+            <td>{{ type.count }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Messages</h2>
+    <table>
+        <tr>
+            <th>Message</th>
+            <th>User</th>
+            <th>Type</th>
+            <th>Channel</th>
+            <th>Role</th>
+            <th>Timestamp</th>
+        </tr>
     {% for message in collector.messages %}
-        {{ message.createdAt }}
-        {{ message.subject }}
-        [{{ message.typeName }}]
-        [{{ message.channel }}]
-        [{{ message.role }}]
-        by {{ message.user }}
-        <br/>
-        {% if message.body %}
-            {{ message.body }}
-            <br/>
-        {% endif %}
+        <tr>
+            <td>{{ message.subject }}
+                {% if message.body %}
+                    <br /><br /><code>{{ message.body }}</code>
+                {% endif %}
+            </td>
+            <td>{{ message.user|default("unknown") }}</td>
+            <td>{{ message.typeName|default("-") }}</td>
+            <td>{{ message.channel|default("-") }}</td>
+            <td>{{ message.role|default("-") }}</td>
+            <td>{{ message.createdAt|date("U") }}</td>
+        </tr>
+
     {% endfor %}
+    </table>
 
 {% endblock %}
