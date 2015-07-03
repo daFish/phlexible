@@ -56,9 +56,19 @@ abstract class AbstractTemplate implements TemplateInterface
     private $createdAt;
 
     /**
+     * @var string
+     */
+    private $createUser;
+
+    /**
      * @var \DateTime
      */
     private $modifiedAt;
+
+    /**
+     * @var string
+     */
+    private $modifyUser;
 
     /**
      * {@inheritdoc}
@@ -218,6 +228,46 @@ abstract class AbstractTemplate implements TemplateInterface
     public function setModifiedAt(\DateTime $modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreateUser()
+    {
+        return $this->createUser;
+    }
+
+    /**
+     * @param string $createUser
+     *
+     * @return $this
+     */
+    public function setCreateUser($createUser)
+    {
+        $this->createUser = $createUser;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModifyUser()
+    {
+        return $this->modifyUser;
+    }
+
+    /**
+     * @param string $modifyUser
+     *
+     * @return $this
+     */
+    public function setModifyUser($modifyUser)
+    {
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }

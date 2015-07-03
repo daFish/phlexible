@@ -108,7 +108,7 @@ class PuliMetaSetRepository implements MetaSetRepositoryInterface
                     continue;
                 }
                 $parser = $this->parsers[$extension];
-                $metaSets->add($parser->parser($resource->getBody()));
+                $metaSets->add($parser->parse($resource->getBody()));
             }
         }
 
@@ -125,9 +125,9 @@ class PuliMetaSetRepository implements MetaSetRepositoryInterface
         }
 
         $dumper = $this->dumpers[$type];
-        $filename = strtolower("{$this->dumpDir}/{$metaSet->getId()}.{$type}");
         $content = $dumper->dump($metaSet);
 
+        $filename = strtolower("{$this->dumpDir}/{$metaSet->getId()}.{$type}");
         $filesystem = new Filesystem();
         $filesystem->dumpFile($filename, $content);
 

@@ -126,9 +126,9 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
         }
 
         $dumper = $this->dumpers[$type];
-        $filename = strtolower("{$this->dumpDir}/{$template->getKey()}.{$type}");
-        $content = $dumper->dump($filename, $template);
+        $content = $dumper->dump($template);
 
+        $filename = strtolower("{$this->dumpDir}/{$template->getKey()}.{$type}");
         $filesystem = new Filesystem();
         $filesystem->dumpFile($filename, $content);
 

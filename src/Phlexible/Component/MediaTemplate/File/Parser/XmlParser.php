@@ -33,7 +33,9 @@ class XmlParser implements ParserInterface
         $system = (bool) (string) $xmlAttributes['system'];
         $revision = (int) $xmlAttributes['revision'];
         $createdAt = isset($xmlAttributes['createdAt']) ? new \DateTime((string) $xmlAttributes['createdAt']) : null;
+        $createdUser = isset($xmlAttributes['createUser']) ? (string) $xmlAttributes['createUser'] : null;
         $modifiedAt = isset($xmlAttributes['modifiedAt']) ? new \DateTime((string) $xmlAttributes['modifiedAt']) : null;
+        $modifyUser = isset($xmlAttributes['modifyUser']) ? (string) $xmlAttributes['modifyUser'] : null;
 
         if (!class_exists($class)) {
             throw new InvalidClassException("Invalid template class $class");
@@ -46,9 +48,20 @@ class XmlParser implements ParserInterface
             ->setType($type)
             ->setCache($cache)
             ->setSystem($system)
-            ->setRevision($revision)
-            ->setCreatedAt($createdAt)
-            ->setModifiedAt($modifiedAt);
+            ->setRevision($revision);
+
+        if ($createdAt) {
+            $template->setCreatedAt($createdAt);
+        }
+        if ($createdUser) {
+            $template->setCreateUser($createdUser);
+        }
+        if ($modifiedAt) {
+            $template->setModifiedAt($modifiedAt);
+        }
+        if ($modifyUser) {
+            $template->setModifyUser($modifyUser);
+        }
 
         foreach ($xml as $parameterNode) {
             $parameterNodeAttributes = $parameterNode->attributes();
