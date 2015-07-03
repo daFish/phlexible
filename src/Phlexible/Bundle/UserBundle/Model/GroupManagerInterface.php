@@ -71,7 +71,7 @@ interface GroupManagerInterface
      *
      * @return Group
      */
-    public function findOneBy(array $criteria, $order = []);
+    public function findOneBy(array $criteria, $order = array());
 
     /**
      * @return string

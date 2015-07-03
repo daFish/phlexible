@@ -53,27 +53,27 @@ class ChangesCommand extends ContainerAwareCommand
         if (count($changes)) {
             if (!$input->getOption('commit')) {
                 $table = new Table($output);
-                $table->setHeaders([
+                $table->setHeaders(array(
                     'Elementtype',
                     'New Revision',
                     'Old Revisions',
                     'Needs import?',
                     '# Element source updates'
-                    ]);
+                    ));
 
                 foreach ($changes as $change) {
-                    $oldRevisions = [];
+                    $oldRevisions = array();
                     foreach ($change->getOutdatedElementSources() as $outdatedElementSource) {
                         $oldRevisions[] = $outdatedElementSource->getElementtypeRevision();
                     }
                     $table->addRow(
-                        [
+                        array(
                             $change->getElementtype()->getTitle(),
                             $change->getElementtype()->getRevision(),
                             implode(',', $oldRevisions),
                             $change->getNeedImport() ? '<fg=green>' . $change->getReason() . '</fg=green>': '-',
                             count($change->getOutdatedElementSources()) ?: '-'
-                        ]
+                        )
                     );
                 }
 

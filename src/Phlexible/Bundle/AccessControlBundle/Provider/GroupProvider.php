@@ -61,19 +61,19 @@ class GroupProvider implements ProviderInterface
     {
         $groups = $this->groupRepository->findAll();
 
-        $data = [];
+        $data = array();
         foreach ($groups as $group) {
-            $data[] = [
+            $data[] = array(
                 'type'       => 'group',
                 'objectType' => 'gid',
                 'objectId'   => $group->getId(),
                 'label'      => $group->getName(),
-            ];
+            );
         }
 
-        return [
+        return array(
             'count' => count($data),
             'data'  => $data,
-        ];
+        );
     }
 }

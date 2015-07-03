@@ -65,9 +65,9 @@ class Mailer
 
         $content = $this->templating->render(
             $template,
-            [
+            array(
                 'user' => $user,
-            ]
+            )
         );
         $this->sendEmailMessage($content, $from, $user->getEmail());
     }
@@ -84,9 +84,9 @@ class Mailer
 
         $content = $this->templating->render(
             $template,
-            [
+            array(
                 'user' => $user,
-            ]
+            )
         );
         $this->sendEmailMessage($content, $from, $user->getEmail());
     }

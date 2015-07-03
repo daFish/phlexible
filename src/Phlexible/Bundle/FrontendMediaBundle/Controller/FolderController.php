@@ -33,7 +33,7 @@ class FolderController extends Controller
      */
     public function treeAction()
     {
-        $data = [];
+        $data = array();
 
         $securityContext = $this->get('security.context');
 
@@ -45,7 +45,7 @@ class FolderController extends Controller
                 //continue;
             }
 
-            $data[] = [
+            $data[] = array(
                 'id'        => $rootFolder->getId(),
                 'site_id'   => $volume->getId(),
                 'text'      => $rootFolder->getName(),
@@ -54,7 +54,7 @@ class FolderController extends Controller
                 'expanded'  => true,
                 'allowDrop' => true,
                 'children'  => $this->recurseFolders($volume, $rootFolder),
-            ];
+            );
         }
 
         return new JsonResponse($data);
@@ -68,7 +68,7 @@ class FolderController extends Controller
      */
     private function recurseFolders(VolumeInterface $volume, ExtendedFolderInterface $folder)
     {
-        $data = [];
+        $data = array();
 
         $securityContext = $this->get('security.context');
 
@@ -78,7 +78,7 @@ class FolderController extends Controller
                 //continue;
             }
 
-            $tmp = [
+            $tmp = array(
                 'id'        => $subFolder->getId(),
                 'site_id'   => $volume->getId(),
                 'text'      => $subFolder->getName(),
@@ -86,11 +86,11 @@ class FolderController extends Controller
                 'numChilds' => $volume->countFoldersByParentFolder($subFolder),
                 'allowDrop' => true,
                 'children'  => $this->recurseFolders($volume, $subFolder),
-            ];
+            );
 
             if (!$tmp['numChilds']) {
                 $tmp['expanded'] = true;
-                $tmp['children'] = [];
+                $tmp['children'] = array();
             }
 
             $data[] = $tmp;

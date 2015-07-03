@@ -48,7 +48,7 @@ class XmlLoader implements LoaderInterface
      */
     public function loadAll()
     {
-        $files = [];
+        $files = array();
         foreach ($this->locator->locate('*.xml', 'elementtypes', false) as $file) {
             $id = basename($file, '.xml');
             if (!isset($files[$id])) {
@@ -56,7 +56,7 @@ class XmlLoader implements LoaderInterface
             }
         }
 
-        $elementtypes = [];
+        $elementtypes = array();
         foreach ($files as $id => $file) {
             $elementtypes[] = $this->parse($this->loadFile($file));
         }

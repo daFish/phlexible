@@ -123,7 +123,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
      */
     public function findByUsername($username)
     {
-        return $this->findOneBy(['username' => $username]);
+        return $this->findOneBy(array('username' => $username));
     }
 
     /**
@@ -153,7 +153,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOneBy(array $criteria, $order = [])
+    public function findOneBy(array $criteria, $order = array())
     {
         return $this->getUserRepository()->findOneBy($criteria, $order);
     }
@@ -230,7 +230,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
      */
     public function checkUsername($username)
     {
-        return $this->findOneBy(['username' => $username]) ? true : false;
+        return $this->findOneBy(array('username' => $username)) ? true : false;
     }
 
     /**
@@ -238,7 +238,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
      */
     public function checkEmail($email)
     {
-        return $this->findOneBy(['email' => $email]) ? true : false;
+        return $this->findOneBy(array('email' => $email)) ? true : false;
     }
 
     /**

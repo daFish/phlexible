@@ -39,15 +39,15 @@ class DataController extends Controller
         $prefix = $request->getBasePath() . '/bundles/phlexibleelementtype/elementtypes/';
 
         foreach ($files as $file) {
-            $data[basename($file)] = [
+            $data[basename($file)] = array(
                 'title' => basename($file),
                 'url'   => $prefix . basename($file)
-            ];
+            );
         }
 
         ksort($data);
         $data = array_values($data);
 
-        return new JsonResponse(['images' => $data]);
+        return new JsonResponse(array('images' => $data));
     }
 }

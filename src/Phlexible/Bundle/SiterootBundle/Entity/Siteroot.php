@@ -66,19 +66,19 @@ class Siteroot
      * @var array
      * @ORM\Column(name="special_tids", type="json_array")
      */
-    private $specialTids = [];
+    private $specialTids = array();
 
     /**
      * @var array
      * @ORM\Column(type="json_array")
      */
-    private $titles = [];
+    private $titles = array();
 
     /**
      * @var array
      * @ORM\Column(type="json_array")
      */
-    private $properties = [];
+    private $properties = array();
 
     /**
      * @var Navigation[]|ArrayCollection
@@ -366,7 +366,7 @@ class Siteroot
      */
     public function getSpecialTidsForLanguage($language = null)
     {
-        $specialTids = [];
+        $specialTids = array();
 
         foreach ($this->specialTids as $specialTid) {
             if ($specialTid['language'] === $language || $specialTid['language'] === null) {

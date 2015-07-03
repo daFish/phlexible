@@ -57,7 +57,7 @@ class PublishController extends Controller
             $eid = $node->getEid();
             //$fileUsage->update($node->getEid());
 
-            $data = [];
+            $data = array();
 
             $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
             $elementVersion = $elementVersionManager->get($node->getEid(), $version);
@@ -118,7 +118,7 @@ class PublishController extends Controller
         if ($languages) {
             $languages = explode(',', $languages);
         } else {
-            $languages = [$language];
+            $languages = array($language);
         }
 
         $selector = $this->get('phlexible_element.publish.selector');
@@ -141,7 +141,7 @@ class PublishController extends Controller
             $selection->merge($langSelection);
         }
 
-        $result = [];
+        $result = array();
         foreach ($selection->all() as $selectionItem) {
             if ($selectionItem->getTarget() instanceof TreeNodeInterface) {
                 $id = $selectionItem->getTarget()->getId();
@@ -151,7 +151,7 @@ class PublishController extends Controller
                 $icon = $iconResolver->resolveTeaser($selectionItem->getTarget(), $selectionItem->getLanguage());
             }
 
-            $result[] = [
+            $result[] = array(
                 'type'      => $selectionItem->getTarget() instanceof TreeNodeInterface ? 'full_element' : 'part_element',
                 'instance'  => $selectionItem->isInstance(),
                 'depth'     => $selectionItem->getDepth(),
@@ -163,10 +163,10 @@ class PublishController extends Controller
                 'title'     => $selectionItem->getTitle(),
                 'icon'      => $icon,
                 'action'    => true,
-            ];
+            );
         }
 
-        return new JsonResponse(['preview' => $result]);
+        return new JsonResponse(array('preview' => $result));
     }
 
     /**
@@ -217,16 +217,16 @@ class PublishController extends Controller
             */
         }
 
-        $data = [];
+        $data = array();
 
         $tree = $treeManager->getByNodeId($tid);
         $treeNode = $tree->get($tid);
 
-        $data = [
+        $data = array(
             'tid' => $tid,
             'language' => $language,
             'icon' => $iconResolver->resolveTreeNode($treeNode, $language),
-        ];
+        );
 
         $lock->release();
 

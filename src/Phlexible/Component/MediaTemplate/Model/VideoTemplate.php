@@ -33,7 +33,7 @@ class VideoTemplate extends MediaTemplate
      */
     public function getDefaultParameters()
     {
-        return [
+        return array(
             'match_format'     => 0,
             'for_web'          => 0,
             'format'           => 'flv',
@@ -48,7 +48,7 @@ class VideoTemplate extends MediaTemplate
             'audio_samplerate' => 0,
             'audio_samplebits' => 0,
             'audio_channels'   => 0,
-        ];
+        );
     }
 
     /**
@@ -56,7 +56,7 @@ class VideoTemplate extends MediaTemplate
      */
     public function getAllowedParameters()
     {
-        return [
+        return array(
             'match_format',
             'for_web',
             'format',
@@ -71,7 +71,7 @@ class VideoTemplate extends MediaTemplate
             'audio_samplerate',
             'audio_samplebits',
             'audio_channels',
-        ];
+        );
     }
 
     /**

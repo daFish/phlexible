@@ -46,7 +46,7 @@ class HistoryController extends Controller
         $offset   = $request->get('start', 0);
         $limit    = $request->get('limit', 25);
 
-        $criteria = [];
+        $criteria = array();
 
         if ($eid) {
             $criteria['eid'] = $eid;
@@ -69,10 +69,10 @@ class HistoryController extends Controller
         }
 
         $historyManager = $this->get('phlexible_element.element_history_manager');
-        $entries = $historyManager->findBy($criteria, [$sort => $dir], $limit, $offset);
+        $entries = $historyManager->findBy($criteria, array($sort => $dir), $limit, $offset);
         $count = $historyManager->countBy($criteria);
 
-        $elementHistory = [];
+        $elementHistory = array();
         foreach ($entries as $entry) {
             $type = '-';
             if (stripos($entry->getAction(), 'element')) {
@@ -83,7 +83,7 @@ class HistoryController extends Controller
                 $type = 'teaser';
             }
 
-            $elementHistory[] = [
+            $elementHistory[] = array(
                 'eid'         => $entry->getEid(),
                 'type'        => $type,
                 'id'          => $entry->getId(),
@@ -94,13 +94,13 @@ class HistoryController extends Controller
                 'action'      => $entry->getAction(),
                 'username'    => $entry->getCreateUserId(),
                 'create_time' => $entry->getCreatedAt()->format('Y-m-d H:i:s'),
-            ];
+            );
         }
 
-        $data = [
+        $data = array(
             'total'   => $count,
             'history' => $elementHistory,
-        ];
+        );
 
         return new JsonResponse($data);
     }

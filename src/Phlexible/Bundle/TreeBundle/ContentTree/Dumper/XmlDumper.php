@@ -135,7 +135,7 @@ class XmlDumper
             $navigationNode->appendChild($maxDepthAttr);
         }
 
-        $nodes = [];
+        $nodes = array();
 
         $treeNode = $nodes[null] = $dom->createElement('tree');
         $contentTreeNode->appendChild($treeNode);

@@ -150,7 +150,7 @@ interface ElementLockManagerInterface
      *
      * @return ElementLock[]
      */
-    public function findBy(array $criteria, array $sort = [], $limit = null, $offset = null);
+    public function findBy(array $criteria, array $sort = array(), $limit = null, $offset = null);
 
     /**
      * @param ElementLock $lock

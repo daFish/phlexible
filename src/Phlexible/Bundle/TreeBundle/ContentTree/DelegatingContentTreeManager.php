@@ -60,7 +60,7 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     public function findAll()
     {
         if (null === $this->trees) {
-            $this->trees = [];
+            $this->trees = array();
             foreach ($this->siterootManager->findAll() as $siteroot) {
                 $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
                 $this->trees[] = new DelegatingContentTree($tree, $siteroot, $this->mediator);

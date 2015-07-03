@@ -29,7 +29,7 @@ class ExtractorResolver implements ExtractorResolverInterface
     /**
      * @param ExtractorInterface[] $extractors
      */
-    public function __construct(array $extractors = [])
+    public function __construct(array $extractors = array())
     {
         $this->extractors = $extractors;
     }

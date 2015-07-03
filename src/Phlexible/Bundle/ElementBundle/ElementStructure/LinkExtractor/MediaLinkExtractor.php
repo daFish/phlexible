@@ -27,7 +27,7 @@ class MediaLinkExtractor implements LinkExtractorInterface
      */
     public function supports(ElementStructureValue $value, AbstractField $field)
     {
-        return in_array($value->getType(), ['file', 'folder']);
+        return in_array($value->getType(), array('file', 'folder'));
     }
 
     /**
@@ -36,7 +36,7 @@ class MediaLinkExtractor implements LinkExtractorInterface
     public function extract(ElementStructureValue $value, AbstractField $field)
     {
         if (!$value->getValue()) {
-            return [];
+            return array();
         }
 
         $link = new ElementLink();
@@ -46,6 +46,6 @@ class MediaLinkExtractor implements LinkExtractorInterface
             ->setField($value->getName())
             ->setTarget($value->getValue());
 
-        return [$link];
+        return array($link);
     }
 }

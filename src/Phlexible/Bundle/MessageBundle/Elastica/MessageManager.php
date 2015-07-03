@@ -78,11 +78,11 @@ class MessageManager implements MessageManagerInterface
 
         $resultSet = $this->getType()->search($query);
         $facets = $resultSet->getFacets();
-        $filterSets = [
+        $filterSets = array(
             'types'      => array_column($facets['types']['terms'], 'term'),
             'channels'   => array_column($facets['channels']['terms'], 'term'),
             'roles'      => array_column($facets['roles']['terms'], 'term'),
-        ];
+        );
 
         return $filterSets;
     }
@@ -125,11 +125,11 @@ class MessageManager implements MessageManagerInterface
         $resultSet = $this->getType()->search($query);
         $facets = $resultSet->getFacets();
 
-        $filterSets = [
+        $filterSets = array(
             'types'      => array_column($facets['types']['terms'], 'term'),
             'channels'   => array_column($facets['channels']['terms'], 'term'),
             'roles'      => array_column($facets['roles']['terms'], 'term'),
-        ];
+        );
 
         return $filterSets;
     }
@@ -225,14 +225,14 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findBy(array $criteria = [], $orderBy = null, $limit = null, $offset = 0)
+    public function findBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = 0)
     {
         $query = new Query();
 
         if (count($criteria)) {
             $andFilter = new Filter\BoolAnd();
             foreach ($criteria as $key => $value) {
-                $andFilter->addFilter(new Filter\Term([$key => $value]));
+                $andFilter->addFilter(new Filter\Term(array($key => $value)));
             }
             $query->setPostFilter($andFilter);
         }
@@ -281,10 +281,10 @@ class MessageManager implements MessageManagerInterface
      */
     public function getTypeNames()
     {
-        return [
+        return array(
             0 => 'info',
             1 => 'error',
-        ];
+        );
     }
 
     /**
@@ -294,7 +294,7 @@ class MessageManager implements MessageManagerInterface
     {
         $document = new Document(
             $message->getId(),
-            [
+            array(
                 'id'        => $message->getId(),
                 'subject'   => $message->getSubject(),
                 'body'      => $message->getBody(),
@@ -303,7 +303,7 @@ class MessageManager implements MessageManagerInterface
                 'role'      => $message->getRole(),
                 'user'      => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('U'),
-            ]
+            )
         );
 
         $this->getType()->addDocument($document);
@@ -325,7 +325,7 @@ class MessageManager implements MessageManagerInterface
      */
     private function mapDocuments(ResultSet $resultSet)
     {
-        $mesages = [];
+        $mesages = array();
 
         foreach ($resultSet->getResults() as $result) {
             $mesages[] = $this->mapDocument($result->getSource());
@@ -407,13 +407,13 @@ class MessageManager implements MessageManagerInterface
                     break;
 
                 case 'eq':
-                    $andFilter->addFilter(new Filter\Term([$key => $value]));
+                    $andFilter->addFilter(new Filter\Term(array($key => $value)));
                     break;
 
                 case 'neq':
                     $orFilter = new Filter\BoolOr();
                     foreach (explode(',', $value) as $type) {
-                        $orFilter->addFilter(new Filter\Term([$key => $type]));
+                        $orFilter->addFilter(new Filter\Term(array($key => $type)));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
@@ -421,25 +421,25 @@ class MessageManager implements MessageManagerInterface
                 case 'in':
                     $orFilter = new Filter\BoolOr();
                     foreach (explode(',', $value) as $channel) {
-                        $orFilter->addFilter(new Filter\Term([$key => $channel]));
+                        $orFilter->addFilter(new Filter\Term(array($key => $channel)));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
                 case 'greaterThan':
-                    $andFilter->addFilter(new Filter\Range($key, ['gt' => $value]));
+                    $andFilter->addFilter(new Filter\Range($key, array('gt' => $value)));
                     break;
 
                 case 'greaterThanEquals':
-                    $andFilter->addFilter(new Filter\Range($key, ['gte' => $value]));
+                    $andFilter->addFilter(new Filter\Range($key, array('gte' => $value)));
                     break;
 
                 case 'lessThan':
-                    $andFilter->addFilter(new Filter\Range($key, ['lt' => $value]));
+                    $andFilter->addFilter(new Filter\Range($key, array('lt' => $value)));
                     break;
 
                 case 'lessThanEquals':
-                    $andFilter->addFilter(new Filter\Range($key, ['lte' => $value]));
+                    $andFilter->addFilter(new Filter\Range($key, array('lte' => $value)));
                     break;
             }
         }

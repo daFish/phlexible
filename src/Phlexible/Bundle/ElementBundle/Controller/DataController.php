@@ -119,29 +119,29 @@ class DataController extends Controller
 
         if ($teaser) {
             $publishedVersions = $elementHistoryManager->findBy(
-                [
+                array(
                     'teaserId' => $teaser->getId(),
                     'action'   => 'publishTeaser'
-                ]
+                )
             );
         } else {
             $publishedVersions = $elementHistoryManager->findBy(
-                [
+                array(
                     'treeId' => $node->getId(),
                     'action' => 'publishNode'
-                ]
+                )
             );
         }
 
-        $versions = [];
+        $versions = array();
         foreach (array_reverse($elementService->getVersions($element)) as $version) {
-            $versions[$version] = [
+            $versions[$version] = array(
                 'version'       => $version,
                 'format'        => 2,
                 'create_date'   => date('Y-m-d H:i:s'),
                 'is_published'  => false,
                 'was_published' => false,
-            ];
+            );
         }
 
         foreach ($publishedVersions as $publishedVersion) {
@@ -157,35 +157,35 @@ class DataController extends Controller
 
         // instances
 
-        $instances = [];
+        $instances = array();
         if ($teaser) {
             foreach ($teaserManager->getInstances($teaser) as $instanceTeaser) {
-                $instance = [
+                $instance = array(
                     'id'              => $instanceTeaser->getId(),
                     'instance_master' => false,
                     'modify_time'     => $instanceTeaser->getCreatedAt()->format('Y-m-d H:i:s'),
                     'icon'            => $iconResolver->resolveTeaser($instanceTeaser, $language),
                     'type'            => 'teaser',
-                    'link'            => [],
-                ];
+                    'link'            => array(),
+                );
 
                 $instances[] = $instance;
             }
         } else {
             foreach ($treeManager->getInstanceNodes($node) as $instanceNode) {
-                $instance = [
+                $instance = array(
                     'id'              => $instanceNode->getId(),
                     'instance_master' => false,
                     'modify_time'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
                     'icon'            => $iconResolver->resolveTreeNode($instanceNode, $language),
                     'type'            => 'treenode',
-                    'link'            => [],
-                ];
+                    'link'            => array(),
+                );
 
                 if ($instanceNode->getTree()->getSiterootId() !== $tree->getSiterootId()) {
-                    $instance['link'] = [
+                    $instance['link'] = array(
                         'start_tid_path' => '/' . implode('/', $instanceNode->getTree()->getIdPath($instanceNode)),
-                    ];
+                    );
                 }
 
                 $instances[] = $instance;
@@ -194,18 +194,18 @@ class DataController extends Controller
 
         // allowed child elements
 
-        $allowedChildren = [];
+        $allowedChildren = array();
         if (!$teaser) {
             foreach ($elementService->findAllowedChildren($elementtype) as $childElementtype) {
                 if ($childElementtype->getType() !== 'full') {
                     continue;
                 }
 
-                $allowedChildren[] = [
+                $allowedChildren[] = array(
                     $childElementtype->getId(),
                     $childElementtype->getTitle(),
                     $iconResolver->resolveElementtype($childElementtype),
-                ];
+                );
             }
         }
 
@@ -232,12 +232,12 @@ class DataController extends Controller
 
         $diffInfo = null;
         if ($diff) {
-            $diffInfo = [
+            $diffInfo = array(
                 'enabled'      => $diff,
                 'version_from' => $diffVersionFrom,
                 'version_to'   => $diffVersionTo,
                 'language'     => $diffLanguage,
-            ];
+            );
         }
 
         // lock
@@ -255,7 +255,7 @@ class DataController extends Controller
 
         if ($node instanceof ContentObjectInterface) {
             if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') &&
-                !$securityContext->isGranted(['right' => 'EDIT', 'language' => $language], $node)
+                !$securityContext->isGranted(array('right' => 'EDIT', 'language' => $language), $node)
             ) {
                 $doLock = false;
             }
@@ -284,14 +284,14 @@ class DataController extends Controller
         if ($lock && !$diff) {
             $lockUser = $userManager->find($lock->getUserId());
 
-            $lockInfo = [
+            $lockInfo = array(
                 'status'   => 'locked',
                 'id'       => $lock->getElement()->getEid(),
                 'username' => $lockUser->getDisplayName(),
                 'time'     => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                 'age'      => time() - $lock->getLockedAt()->format('U'),
                 'type'     => $lock->getType(),
-            ];
+            );
 
             if ($lock->getUserId() === $this->getUser()->getId()) {
                 $lockInfo['status'] = 'edit';
@@ -302,19 +302,19 @@ class DataController extends Controller
             // Workaround for loading diffs without locking and view-mask
             // TODO: introduce new diff lock mode
 
-            $lockInfo = [
+            $lockInfo = array(
                 'status'   => 'edit',
                 'id'       => '',
                 'username' => '',
                 'time'     => '',
                 'age'      => 0,
                 'type'     => ElementLock::TYPE_TEMPORARY,
-            ];
+            );
         }
 
         // meta
 
-        $meta = [];
+        $meta = array();
         $elementMetaSetResolver = $this->get('phlexible_element.element_meta_set_resolver');
         $elementMetaDataManager = $this->get('phlexible_element.element_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
@@ -324,19 +324,19 @@ class DataController extends Controller
             $metaSet = $elementMetaSetResolver->resolve($elementVersion);
             $metaData = $elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
 
-            $fieldDatas = [];
+            $fieldDatas = array();
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fieldData = [
+                $fieldData = array(
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                ];
+                );
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $metaLanguage) {
@@ -350,17 +350,17 @@ class DataController extends Controller
                 $fieldDatas[] = $fieldData;
             }
 
-            $meta = [
+            $meta = array(
                 'set_id' => $metaSetId,
                 'title'  => $metaSet->getName(),
                 'fields' => $fieldDatas
-            ];
+            );
         }
 
         // redirects
         // TODO: auslagern
 
-        $redirects = [];
+        $redirects = array();
         if (!$teaser && $this->container->has('redirectsManager')) {
             $redirectsManager = $this->get('redirectsManager');
             $redirects = $redirectsManager->getForTidAndLanguage($treeId, $language);
@@ -368,19 +368,19 @@ class DataController extends Controller
 
         // preview / online url
 
-        $urls = [
+        $urls = array(
             'preview' => '',
             'online'  => '',
-        ];
+        );
 
         $publishDate = null;
         $publishUser = null;
         $onlineVersion = null;
         $latestVersion = null;
 
-        if (in_array($elementtype->getType(), [Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART])) {
+        if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
             if ($type == Elementtype::TYPE_FULL) {
-                $urls['preview'] = $this->generateUrl('frontend_preview', ['treeId' => $node->getId(), '_locale' => $language]);
+                $urls['preview'] = $this->generateUrl('frontend_preview', array('treeId' => $node->getId(), '_locale' => $language));
 
                 if ($isPublished) {
                     $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
@@ -417,7 +417,7 @@ class DataController extends Controller
         // context
         // TODO: repair element context
 
-        $context = [];
+        $context = array();
         if (0) {
             $contextManager = $this->get('phlexible_element.context.manager');
 
@@ -429,18 +429,18 @@ class DataController extends Controller
                     : $contextManager->getActiveCountriesByTid($node->getId());
 
                 foreach ($contextCountries as $contextKey => $contextValue) {
-                    $context[] = [
+                    $context[] = array(
                         'id'      => $contextKey,
                         'country' => $contextValue,
                         'active'  => in_array($contextKey, $activeContextCountries) ? 1 : 0
-                    ];
+                    );
                 }
             }
         }
 
         // pager
 
-        $pager = [];
+        $pager = array();
         if (!$teaser) {
             $parentNode = $tree->getParent($node);
             if ($parentNode) {
@@ -461,16 +461,16 @@ class DataController extends Controller
 
         // rights
 
-        $userRights = [];
+        $userRights = array();
         if ($node instanceof ContentObjectInterface) {
             if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
                     return null;
                 }
 
-                $userRights = []; //$contentRightsManager->getRights($language);
+                $userRights = array(); //$contentRightsManager->getRights($language);
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = array_keys(
@@ -490,7 +490,7 @@ class DataController extends Controller
 
         // glue together
 
-        $properties = [
+        $properties = array(
             'tid'              => $treeId,
             'eid'              => $eid,
             'siteroot_id'      => empty($teaserId) ? $node->getTree()->getSiterootId() : null,
@@ -535,7 +535,7 @@ class DataController extends Controller
             'sort_dir'         => $node->getSortDir(),
             'icon'             => $icon,
             'navigation'       => $node->getInNavigation(),
-        ];
+        );
 
         $elementtypeSerializer = new ElementtypeArraySerializer();
         $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
@@ -543,7 +543,7 @@ class DataController extends Controller
         $elementSerializer = new ElementArraySerializer();
         $serializedValues = $elementSerializer->serialize($elementStructure, $language);
 
-        $data = [
+        $data = array(
             'success'             => true,
             'properties'          => $properties,
             'configuration'       => $configuration,
@@ -563,7 +563,7 @@ class DataController extends Controller
             'versions'            => $versions,
             'valueStructure'      => $serializedValues,
             'structure'           => $serializedStructure,
-        ];
+        );
 
         $data = (object) $data;
         $event = new LoadDataEvent($node, $teaser, $language, $data);
@@ -599,14 +599,14 @@ class DataController extends Controller
 
         $msg = "Element {$elementVersion->getElement()->getEid()} master language {$elementVersion->getElement()->getMasterLanguage()} saved as new version {$elementVersion->getVersion()}";
 
-        $data = [
+        $data = array(
             'title'         => $elementVersion->getBackendTitle($language),
             'icon'          => $icon,
             'navigation'    => $teaser ? '' : $treeNode->getInNavigation(),
             'restricted'    => $teaser ? '' : $treeNode->getAttribute('needAuthentication'),
             'publish_other' => $publishSlaves,
             'publish'       => $request->get('publish'),
-        ];
+        );
 
         return new ResultResponse(true, $msg, $data);
 
@@ -719,7 +719,7 @@ class DataController extends Controller
 
         $msg = 'Element "' . $eid . '" master language "' . $language . '" saved as new version ' . $newVersion;
 
-        $publishOther = [];
+        $publishOther = array();
         if ($isPublish) {
             $msg .= ' and published.';
 
@@ -825,20 +825,20 @@ class DataController extends Controller
         $fileUsage->update($eid);
         */
 
-        $data = [];
+        $data = array();
 
         $status = '';
         if ($stateManager->isPublished($node, $language)) {
             $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
         }
 
-        $data = [
+        $data = array(
             'title'         => $elementVersion->getBackendTitle($language),
             'status'        => $status,
             'navigation'    => $teaserId ? '' : $node->getInNavigation($newVersion),
             'restricted'    => $teaserId ? '' : $node->getAttribute('restrictire'),
             'publish_other' => $publishSlaves,
-        ];
+        );
 
         return new ResultResponse(true, $msg, $data);
     }
@@ -859,13 +859,13 @@ class DataController extends Controller
 
         $node = $treeManager->getByNodeId($tid)->get($tid);
 
-        $urls = [
+        $urls = array(
             'preview' => '',
             'online'  => '',
-        ];
+        );
 
         if ($node) {
-            $urls['preview'] = $this->generateUrl('frontend_preview', ['treeId' => $tid, '_locale' => $language]);
+            $urls['preview'] = $this->generateUrl('frontend_preview', array('treeId' => $tid, '_locale' => $language));
 
             if ($stateManager->isPublished($node, $language)) {
                 try {

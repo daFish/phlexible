@@ -112,11 +112,11 @@ class MessageRepository extends EntityRepository
         $types = $this->createQueryBuilder('m')->select('DISTINCT m.type')->getQuery()->getScalarResult();
         $roles = $this->createQueryBuilder('m')->select('DISTINCT m.role')->getQuery()->getScalarResult();
 
-        return [
+        return array(
             'channels' => array_column($channels, 'channel'),
             'types'    => array_column($types, 'type'),
             'roles'    => array_column($roles, 'role'),
-        ];
+        );
     }
 
     /**

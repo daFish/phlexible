@@ -43,11 +43,11 @@ class StatsCommand extends ContainerAwareCommand
         $cacheManager = $container->get('phlexible_media_cache.cache_manager');
 
         $cntCache = $cacheManager->countAll();
-        $cntWaiting = $cacheManager->countBy(['queueStatus' => CacheItem::QUEUE_WAITING]);
-        $cntMissing = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_MISSING]);
-        $cntError = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_ERROR]);
-        $cntOk = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_OK]);
-        $cntDelegate = $cacheManager->countBy(['cacheStatus' => CacheItem::STATUS_DELEGATE]);
+        $cntWaiting = $cacheManager->countBy(array('queueStatus' => CacheItem::QUEUE_WAITING));
+        $cntMissing = $cacheManager->countBy(array('cacheStatus' => CacheItem::STATUS_MISSING));
+        $cntError = $cacheManager->countBy(array('cacheStatus' => CacheItem::STATUS_ERROR));
+        $cntOk = $cacheManager->countBy(array('cacheStatus' => CacheItem::STATUS_OK));
+        $cntDelegate = $cacheManager->countBy(array('cacheStatus' => CacheItem::STATUS_DELEGATE));
 
         $output->writeln($cntCache . ' cached items.');
         $output->writeln($cntWaiting . ' waiting items.');

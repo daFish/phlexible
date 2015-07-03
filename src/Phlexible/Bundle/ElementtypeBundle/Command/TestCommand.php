@@ -58,12 +58,12 @@ class TestCommand extends ContainerAwareCommand
 
         $rows = $conn->fetchAll($qb->getSQL());
 
-        $map = [];
+        $map = array();
         foreach ($rows as $row) {
             $uniqueId = str_replace('_', '-', $row['unique_id']);
             $id = md5($uniqueId);
             $id = substr($id, 0, 8) . '-' . substr($id, 8, 4) . '-' . substr($id, 12, 4) . '-' . substr($id, 16, 4) . '-' . substr($id, 20);
-            $map[$row['id']] = ['id' => $id, 'uniqueId' => $uniqueId];
+            $map[$row['id']] = array('id' => $id, 'uniqueId' => $uniqueId);
         }
 
         foreach ($rows as $row) {

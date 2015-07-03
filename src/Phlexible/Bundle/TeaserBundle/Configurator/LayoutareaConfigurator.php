@@ -88,8 +88,8 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         $elementtypeId = $renderConfiguration->get('contentElement')->getElementtypeId();
         $elementtype = $this->elementSourceManager->findElementtype($elementtypeId);
 
-        $layouts = [];
-        $layoutareas = [];
+        $layouts = array();
+        $layoutareas = array();
         foreach ($this->elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
             if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {
                 $layoutareas[] = $layoutarea;
@@ -105,7 +105,7 @@ class LayoutareaConfigurator implements ConfiguratorInterface
         $availableLanguages = $request->attributes->get('availableLanguages');
         $isPreview = true;
 
-        $areas = [];
+        $areas = array();
 
         foreach ($layoutareas as $layoutarea) {
             //$beforeAreaEvent = new Brainbits_Event_Notification(new stdClass(), 'before_area');
@@ -125,11 +125,11 @@ class LayoutareaConfigurator implements ConfiguratorInterface
 
             $teasers = $this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath, false);
 
-            $areas[$layoutarea->getUniqueId()] = [
+            $areas[$layoutarea->getUniqueId()] = array(
                 'title'    => $layoutarea->getTitle(),
                 'uniqueId' => $layoutarea->getUniqueId(),
                 'children' => $teasers
-            ];
+            );
 
             //$areaEvent = new Brainbits_Event_Notification(new stdClass(), 'area');
             //$this->_dispatcher->dispatch($areaEvent);

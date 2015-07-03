@@ -80,7 +80,7 @@ class LatestElementsPortlet extends Portlet
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select(['et.id', 'ev.eid', 'ev.trigger_language AS language'])
+            ->select(array('et.id', 'ev.eid', 'ev.trigger_language AS language'))
             ->from('element_version', 'ev')
             ->join('ev', 'element_tree', 'et', 'ev.eid = et.eid')
             ->orderBy('ev.created_at', 'DESC')
@@ -88,7 +88,7 @@ class LatestElementsPortlet extends Portlet
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
-        $data = [];
+        $data = array();
 
         foreach ($rows as $row) {
             $element = $this->elementService->findElement($row['eid']);
@@ -131,9 +131,9 @@ class LatestElementsPortlet extends Portlet
 
             $menu = $menuItem->get();
             */
-            $menu = [];
+            $menu = array();
 
-            $data[] = [
+            $data[] = array(
                 'ident'    => $row['eid'] . '_' . $row['language'] . '_' . $row['version'],
                 'eid'      => $row['eid'],
                 'language' => $row['language'],
@@ -143,7 +143,7 @@ class LatestElementsPortlet extends Portlet
                 'time'     => strtotime($elementVersion->getCreatedAt()->format('Y-m-d H:i:s')),
                 'author'   => $elementVersion->getCreateUserId(),
                 'menu'     => $menu
-            ];
+            );
         }
 
         return $data;

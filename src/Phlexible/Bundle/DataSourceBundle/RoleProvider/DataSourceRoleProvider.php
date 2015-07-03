@@ -25,9 +25,9 @@ class DataSourceRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_DATA_SOURCES',
-        ];
+        );
     }
 
     /**

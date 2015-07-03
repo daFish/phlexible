@@ -36,7 +36,7 @@ class XmlDumper implements DumperInterface
         $rootElement = $dom->appendElement(
             'elementtype',
             '',
-            [
+            array(
                 'id'           => $elementtype->getId(),
                 'uniqueId'     => $elementtype->getUniqueId(),
                 'revision'     => $elementtype->getRevision(),
@@ -45,12 +45,12 @@ class XmlDumper implements DumperInterface
                 'defaultTab'   => $elementtype->getDefaultTab(),
                 'hideChildren' => $elementtype->getHideChildren() ? '1' : '0',
                 'deleted'      => $elementtype->getDeleted() ? '1' : '0',
-            ]
+            )
         );
 
         $titlesElement = $rootElement->appendElement('titles');
         foreach ($elementtype->getTitles() as $language => $title) {
-            $titlesElement->appendElement('title', $title, ['language' => $language]);
+            $titlesElement->appendElement('title', $title, array('language' => $language));
         }
 
         $rootElement->appendElement('template', $elementtype->getTemplate());
@@ -65,7 +65,7 @@ class XmlDumper implements DumperInterface
         if ($elementtype->getMappings()) {
             $mappingsElement = $rootElement->appendElement('mappings');
             foreach ($elementtype->getMappings() as $key => $mapping) {
-                $mappingElement = $mappingsElement->appendElement('mapping', '', ['key' => $key, 'pattern' => $mapping['pattern']]);
+                $mappingElement = $mappingsElement->appendElement('mapping', '', array('key' => $key, 'pattern' => $mapping['pattern']));
                 $fieldsElement = $mappingElement->appendElement('fields');
                 foreach ($mapping['fields'] as $field) {
                     $fieldsElement->appendElement('field', '', $field);
@@ -96,11 +96,11 @@ class XmlDumper implements DumperInterface
      */
     private function appendNode(ElementtypeStructure $structure, ElementtypeStructureNode $node, Element $element)
     {
-        $nodeAttributes = [
+        $nodeAttributes = array(
             'type' => $node->getType(),
             'dsId' => $node->getDsId(),
             'name' => $node->getName(),
-        ];
+        );
         if ($node->getReferenceElementtypeId()) {
             $nodeAttributes['referenceElementtypeId'] = $node->getReferenceElementtypeId();
         }
@@ -123,10 +123,10 @@ class XmlDumper implements DumperInterface
                         $labelsElement->appendElement(
                             'label',
                             $languageValue,
-                            [
+                            array(
                                 'type'     => $key,
                                 'language' => $language
-                            ]
+                            )
                         );
                     }
                 }
@@ -143,10 +143,10 @@ class XmlDumper implements DumperInterface
             if ($configuration) {
                 $configurationElement = $nodeElement->appendElement('configuration');
                 foreach ($configuration as $key => $value) {
-                    $attributes = [
+                    $attributes = array(
                         'key' => $key,
                         'type' => gettype($value),
-                    ];
+                    );
                     if (is_array($value)) {
                         $value = json_encode($value);
                         $attributes['type'] = 'json_array';
@@ -175,9 +175,9 @@ class XmlDumper implements DumperInterface
                     $validationElement->appendElement(
                         'constraint',
                         $value,
-                        [
+                        array(
                             'key' => $key,
-                        ]
+                        )
                     );
                 }
             }

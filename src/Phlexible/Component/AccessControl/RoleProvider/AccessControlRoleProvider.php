@@ -25,9 +25,9 @@ class AccessControlRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_ACCESS_CONTROL',
-        ];
+        );
     }
 
     /**

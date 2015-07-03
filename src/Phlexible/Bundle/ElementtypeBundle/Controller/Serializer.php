@@ -44,7 +44,7 @@ class Serializer
         $rootNode = $elementtypeStructure->getRootNode();
         $type = $elementtype->getType(); // != 'reference' ? 'root' : 'referenceroot';
 
-        $children = [];
+        $children = array();
         $rootDsId = '';
         $rootType = 'root';
         if ($rootNode) {
@@ -62,7 +62,7 @@ class Serializer
             true
         );
 
-        $data = [
+        $data = array(
             'text'               => $elementtype->getTitle($language)
                 . ' [v' . $elementtype->getRevision() . ', '
                 . $elementtype->getType() . ']',
@@ -78,7 +78,7 @@ class Serializer
             'allowDrag'          => ($type == Elementtype::TYPE_REFERENCE),
             'allowDrop'          => $mode == 'edit',
             'editable'           => $mode == 'edit',
-            'properties'         => [
+            'properties'         => array(
                 'title'             => $elementtype->getTitle($language),
                 'referenceTitle'    => "{$elementtype->getTitle($language)} [v{$elementtype->getRevision()}]",
                 'uniqueId'          => $elementtype->getUniqueId(),
@@ -90,7 +90,7 @@ class Serializer
                 'template'          => $elementtype->getTemplate(),
                 'metaset'           => $elementtype->getMetaSetId(),
                 'comment'           => $elementtype->getComment(),
-            ],
+            ),
             'mappings' => $elementtype->getMappings(),
             'children' => $this->serializeNodes(
                 $elementtypeStructure,
@@ -100,7 +100,7 @@ class Serializer
                 false,
                 true
             )
-        ];
+        );
 
         return $data;
     }
@@ -125,12 +125,12 @@ class Serializer
         $reference = false,
         $allowDrag = true)
     {
-        $return = [];
+        $return = array();
 
         foreach ($nodes as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            $tmp = [
+            $tmp = array(
                 'id'         => md5(serialize($node)),
                 'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
                 'dsId'       => $node->getDsId(),
@@ -143,16 +143,16 @@ class Serializer
                 'allowDrag'  => $allowDrag,
                 'allowDrop'  => $mode == 'edit' && !$reference,
                 'editable'   => $mode == 'edit' || !$reference,
-                'properties' => [
+                'properties' => array(
                     'title'   => $node->getName(),
                     'type'    => $node->getType(),
                     'comment' => $node->getComment(),
                     'image'   => '',
-                ],
+                ),
                 'configuration'    => $node->getConfiguration(),
                 'labels'           => $node->getLabels(),
                 'validation'       => $node->getValidation()
-            ];
+            );
 
             if ($structure->hasChildNodes($node->getDsId())) {
                 $tmp['leaf'] = false;
@@ -174,7 +174,7 @@ class Serializer
                 $tmp['text'] = $referenceElementtype->getTitle($language) . ' [v' . $referenceElementtype->getRevision() . ']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
-                $tmp['reference'] = ['refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision()];
+                $tmp['reference'] = array('refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision());
                 $tmp['editable'] = false;
                 $tmp['allowDrag'] = true;
                 $tmp['children'] = $this->serializeNodes(

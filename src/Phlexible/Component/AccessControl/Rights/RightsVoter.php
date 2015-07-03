@@ -74,11 +74,11 @@ class RightsVoter implements VoterInterface
 
         $user = $token->getUser();
 
-        $rightIdentifiers = [
-            ['type' => 'uid', 'id' => $user->getId()]
-        ];
+        $rightIdentifiers = array(
+            array('type' => 'uid', 'id' => $user->getId())
+        );
         foreach ($user->getGroups() as $groupId) {
-            $rightIdentifiers[] = ['type' => 'gid', 'id' => $groupId];
+            $rightIdentifiers[] = array('type' => 'gid', 'id' => $groupId);
         }
 
         $calculatedRights = $this->calculateRights($rightType, $object, $rightIdentifiers);
@@ -117,7 +117,7 @@ class RightsVoter implements VoterInterface
     public function calculateRights(
         $rightType,
         ContentObjectInterface $contentObject,
-        array $rightIdentifiers = [])
+        array $rightIdentifiers = array())
     {
         $calculatedRights = new CalculatedRights();
 
@@ -172,17 +172,17 @@ class RightsVoter implements VoterInterface
             return null;
         }
 
-        $rights = [];
+        $rights = array();
 
         foreach ($path as $pathId) {
             $result = $this->accessManager->findBy(
-                [
+                array(
                     'right_type'   => $rightType,
                     'content_type' => $contentType,
                     'content_id'   => $pathId,
                     'object_type'  => $objectType,
                     'object_id'    => $objectId
-                ]
+                )
             );
 
             foreach ($result as $row) {
@@ -193,14 +193,14 @@ class RightsVoter implements VoterInterface
                     case self::RIGHT_STATUS_SINGLE:
                     case self::RIGHT_STATUS_INHERITABLE:
                     case self::RIGHT_STATUS_STOPPED:
-                        $rights[$langage][$right] = [
+                        $rights[$langage][$right] = array(
                             'type'        => (int) $row['inherit'],
                             'objectType'  => $objectType,
                             'objectId'    => $objectId,
                             'pathId'      => $pathId,
                             'contentType' => $contentType,
                             'contentId'   => $pathId,
-                        ];
+                        );
                         break;
 
                     default:

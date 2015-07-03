@@ -93,18 +93,18 @@ class FileUsageManager
     {
         $qb = $this->fileUsageRepository->createQueryBuilder('u');
         $qb
-            ->select(['u.usageType', 'u.usageId', 'u.status'])
+            ->select(array('u.usageType', 'u.usageId', 'u.status'))
             ->join('u.file', 'f')
             ->where($qb->expr()->eq('f.id', $qb->expr()->literal($file->getId())))
             ->andWhere($qb->expr()->eq('f.version', $qb->expr()->literal($file->getVersion())));
 
-        $usedIn = [];
+        $usedIn = array();
         foreach ($qb->getQuery()->getScalarResult() as $row) {
-            $usedIn[] = [
+            $usedIn[] = array(
                 'usage_type' => $row['usageType'],
                 'usage_id'   => $row['usageId'],
                 'status'     => $row['status'],
-            ];
+            );
         }
 
         return $usedIn;

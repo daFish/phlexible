@@ -55,9 +55,9 @@ class GetConfigListener
     {
         $config = $event->getConfig();
 
-        $sets = [];
+        $sets = array();
 
-        $languages = [];
+        $languages = array();
         foreach ($this->availableLanguages as $key => $language) {
             $name = \Locale::getDisplayName(
                 $language,
@@ -70,27 +70,27 @@ class GetConfigListener
         ksort($languages);
 
         foreach ($languages as $languageTitle => $language) {
-            $sets['backendLanguages'][] = [
+            $sets['backendLanguages'][] = array(
                 $language,
                 $languageTitle,
                 'p-gui-' . $language . '-icon',
-            ];
+            );
         }
 
-        $sets['themes'] = [
-            ['classic', 'Classic Theme', 'theme_default.png'],
-            ['gray', 'Gray Theme', 'theme_gray.png'],
-            ['neptune', 'Neptune Theme', 'theme_neptune.png'],
-            ['crisp', 'Crisp Theme', 'theme_crisp.png'],
-            ['triton', 'Triton Theme', 'theme_triton.png'],
+        $sets['themes'] = array(
+            array('classic', 'Classic Theme', 'theme_default.png'),
+            array('gray', 'Gray Theme', 'theme_gray.png'),
+            array('neptune', 'Neptune Theme', 'theme_neptune.png'),
+            array('crisp', 'Crisp Theme', 'theme_crisp.png'),
+            array('triton', 'Triton Theme', 'theme_triton.png'),
             //            array('slate', 'Slate Theme', 'theme_slate.png'),
             //            array('slickness', 'Slickness Theme', 'theme_slate.png'),
-        ];
+        );
 
-        $sets['dateFormats'] = [
-            ['Y-m-d H:i:s', date('Y-m-d H:i:s') . ' (Y-m-d H:i:s)'],
-            ['d.m.Y H:i:s', date('d.m.Y H:i:s') . ' (d.m.Y H:i:s)'],
-        ];
+        $sets['dateFormats'] = array(
+            array('Y-m-d H:i:s', date('Y-m-d H:i:s') . ' (Y-m-d H:i:s)'),
+            array('d.m.Y H:i:s', date('d.m.Y H:i:s') . ' (d.m.Y H:i:s)'),
+        );
 
         $config
             ->set('set.language.backend', $sets['backendLanguages'])

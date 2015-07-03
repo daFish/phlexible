@@ -80,12 +80,12 @@ class TreeExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('tree_node', [$this, 'treeNode']),
-            new \Twig_SimpleFunction('node_granted', [$this, 'nodeGranted']),
-            new \Twig_SimpleFunction('page_title', [$this, 'pageTitle']),
-            new \Twig_SimpleFunction('page_title_pattern', [$this, 'pageTitlePattern']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('tree_node', array($this, 'treeNode')),
+            new \Twig_SimpleFunction('node_granted', array($this, 'nodeGranted')),
+            new \Twig_SimpleFunction('page_title', array($this, 'pageTitle')),
+            new \Twig_SimpleFunction('page_title_pattern', array($this, 'pageTitlePattern')),
+        );
     }
 
     /**

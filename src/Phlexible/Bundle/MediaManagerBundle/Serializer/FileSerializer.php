@@ -91,7 +91,7 @@ class FileSerializer
 
         $usageStatus = $this->fileUsageManager->getStatus($file);
 
-        $meta = [];
+        $meta = array();
         if ($all || in_array('meta', $fields)) {
             // TODO: enable
             //foreach ($asset->getMetas()->getAll() as $metaData) {
@@ -101,26 +101,26 @@ class FileSerializer
             //}
         }
 
-        $cache = [];
+        $cache = array();
         if ($all || in_array('cache', $fields)) {
             $cacheItems = $this->cacheManager->findByFile($file->getID(), $version);
             foreach ($cacheItems as $cacheItem) {
                 if ($cacheItem->getCacheStatus() === CacheItem::STATUS_OK) {
                     $cache[$cacheItem->getTemplateKey()] = $this->router->generate(
                         'phlexible_mediamanager_media',
-                        [
+                        array(
                             'fileId'      => $file->getId(),
                             'fileVersion' => $file->getVersion(),
                             'templateKey' => $cacheItem->getTemplateKey(),
-                        ]
+                        )
                     );
                 } else {
                     $cache[$cacheItem->getTemplateKey()] = $this->router->generate(
                         'phlexible_mediamanager_media_delegate',
-                        [
+                        array(
                             'mediaTypeName' => $file->getMediaType(),
                             'templateKey'   => $cacheItem->getTemplateKey(),
-                        ]
+                        )
                     );
                 }
             }
@@ -178,7 +178,7 @@ class FileSerializer
             }
         }
 
-        $data = [
+        $data = array(
             'id'              => $file->getID(),
             'name'            => $file->getName(),
             'path'            => '/' . $folder->getPath() . $file->getName(),
@@ -205,7 +205,7 @@ class FileSerializer
             'attributes'      => $attributes,
             'versions'        => $versions,
             'navigation'      => $navigation,
-        ];
+        );
 
         if ($file instanceof ExtendedFileInterface) {
             $mediaType = $this->mediaTypeManager->find(strtolower($file->getMediaType()));

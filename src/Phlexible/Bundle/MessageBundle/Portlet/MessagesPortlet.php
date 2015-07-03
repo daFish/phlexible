@@ -78,11 +78,11 @@ class MessagesPortlet extends Portlet
 
         $messages = $this->messageManager->findByExpression($filter->getExpression(), ['createdAt' => 'DESC'], 20);
         */
-        $messages = $this->messageManager->findBy(array(), ['createdAt' => 'DESC'], 20);
+        $messages = $this->messageManager->findBy(array(), array('createdAt' => 'DESC'), 20);
 
-        $data = [];
+        $data = array();
         foreach ($messages as $message) {
-            $data[] = [
+            $data[] = array(
                 'id'        => $message->getId(),
                 'subject'   => $message->getSubject(),
                 'body'      => $message->getBody(),
@@ -91,7 +91,7 @@ class MessagesPortlet extends Portlet
                 'role'      => $message->getRole(),
                 'user'      => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-            ];
+            );
         }
 
         return $data;

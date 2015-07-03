@@ -50,13 +50,13 @@ class GuiExtension extends \Twig_Extension
      */
     public function getGlobals()
     {
-        return [
-            'project' => [
+        return array(
+            'project' => array(
                 'title'   => $this->projectTitle,
                 'version' => $this->projectVersion,
                 'url'     => $this->projectUrl,
-            ],
-        ];
+            ),
+        );
     }
 
     /**

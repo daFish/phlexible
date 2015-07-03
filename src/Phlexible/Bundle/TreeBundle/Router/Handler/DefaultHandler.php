@@ -105,7 +105,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
         /* @var $treeNode TreeNodeInterface */
         $treeNode = $name;
@@ -256,13 +256,13 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     protected function matchIdentifiers(Request $request, ContentTreeInterface $tree)
     {
-        $match = [];
+        $match = array();
         $path = $request->getPathInfo();
 
         /* @var $siterootUrl Url */
         $siterootUrl = $request->attributes->get('siterootUrl');
 
-        $attributes = [];
+        $attributes = array();
 
         if (!strlen($path)) {
             // no path, use siteroot defaults
@@ -376,7 +376,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         // have paths
         $pathNodes = array_reverse($tree->getPath($node));
 
-        $parts = [];
+        $parts = array();
 
         foreach ($pathNodes as $pathNode) {
             if ($tree->isViewable($pathNode)) {

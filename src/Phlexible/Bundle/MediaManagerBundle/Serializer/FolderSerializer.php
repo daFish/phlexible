@@ -54,7 +54,7 @@ class FolderSerializer
 
         $attributes = $folder->getAttributes();
 
-        $data = [
+        $data = array(
             'id'           => $folder->getId(),
             'name'         => $folder->getName(),
             'path'         => '/'. $folder->getPath(),
@@ -67,7 +67,7 @@ class FolderSerializer
             'usedIn'       => $usedIn,
             'used'         => $usage,
             'attributes'   => $attributes,
-        ];
+        );
 
         return $data;
     }

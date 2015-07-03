@@ -96,7 +96,7 @@ class StateManager implements StateManagerInterface
      */
     public function findByTeaser(Teaser $teaser)
     {
-        return $this->getTeaserOnlineRepository()->findBy(['teaser' => $teaser]);
+        return $this->getTeaserOnlineRepository()->findBy(array('teaser' => $teaser));
     }
 
     /**
@@ -104,7 +104,7 @@ class StateManager implements StateManagerInterface
      */
     public function findOneByTeaserAndLanguage(Teaser $teaser, $language)
     {
-        return $this->getTeaserOnlineRepository()->findOneBy(['teaser' => $teaser, 'language' => $language]);
+        return $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
     }
 
     /**
@@ -120,7 +120,7 @@ class StateManager implements StateManagerInterface
      */
     public function getPublishedLanguages(Teaser $teaser)
     {
-        $language = [];
+        $language = array();
         foreach ($this->findByTeaser($teaser) as $teaserOnline) {
             $language[] = $teaserOnline->getLanguage();
         }
@@ -133,7 +133,7 @@ class StateManager implements StateManagerInterface
      */
     public function getPublishedVersions(Teaser $teaser)
     {
-        $versions = [];
+        $versions = array();
         foreach ($this->findByTeaser($teaser) as $teaserOnline) {
             $versions[$teaserOnline->getLanguage()] = $teaserOnline->getVersion();
         }
@@ -181,7 +181,7 @@ class StateManager implements StateManagerInterface
      */
     public function publish(Teaser $teaser, $version, $language, $userId, $comment = null)
     {
-        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(['teaser' => $teaser, 'language' => $language]);
+        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
         if (!$teaserOnline) {
             $teaserOnline = new TeaserOnline();
             $teaserOnline
@@ -206,7 +206,7 @@ class StateManager implements StateManagerInterface
      */
     public function setOffline(Teaser $teaser, $language)
     {
-        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(['teaser' => $teaser, 'language' => $language]);
+        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
 
         if ($teaserOnline) {
             $this->entityManager->remove($teaserOnline);

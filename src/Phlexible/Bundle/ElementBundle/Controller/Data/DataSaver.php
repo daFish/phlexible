@@ -83,7 +83,7 @@ class DataSaver
     /**
      * @var ElementStructure[]
      */
-    private $structures = [];
+    private $structures = array();
 
     /**
      * @param ElementService           $elementService
@@ -191,12 +191,12 @@ class DataSaver
         }
 
         // TODO: available languages
-        $this->saveMeta($elementVersion, $language, $isMaster, ['de'], $request);
+        $this->saveMeta($elementVersion, $language, $isMaster, array('de'), $request);
 
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->eventDispatcher->dispatch(ElementEvents::SAVE_ELEMENT, $event);
 
-        $publishSlaves = [];
+        $publishSlaves = array();
         if ($isPublish) {
             $publishSlaves = $this->checkPublishSlaves($elementVersion, $node, $teaser, $language);
             if ($teaser) {
@@ -206,7 +206,7 @@ class DataSaver
             }
         }
 
-        return [$elementVersion, $node, $teaser, $publishSlaves];
+        return array($elementVersion, $node, $teaser, $publishSlaves);
     }
 
     /**
@@ -499,7 +499,7 @@ class DataSaver
     private function applyStructure(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values)
     {
         $this->structures[null] = $rootElementStructure;
-        $map = [null => $rootElementStructure->getDataId()];
+        $map = array(null => $rootElementStructure->getDataId());
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
@@ -675,7 +675,7 @@ class DataSaver
      */
     private function checkPublishSlaves(ElementVersion $elementVersion, TreeNodeInterface $node, Teaser $teaser = null, $language)
     {
-        $publishSlaves = ['elements' => [], 'languages' => []];
+        $publishSlaves = array('elements' => array(), 'languages' => array());
 
         if ($elementVersion->getElement()->getMasterLanguage() !== $language) {
             return $publishSlaves;
@@ -691,7 +691,7 @@ class DataSaver
                     if (!$this->teaserManager->isAsync($teaser, $slaveLanguage)) {
                         $publishSlaves['languages'][] = $slaveLanguage;
                     } else {
-                        $publishSlaves['elements'][] = [$teaser->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1];
+                        $publishSlaves['elements'][] = array($teaser->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1);
                     }
                 }
                 // TODO: needed?
@@ -709,7 +709,7 @@ class DataSaver
                     if (!$node->getTree()->isAsync($node, $slaveLanguage)) {
                         $publishSlaves['languages'][] = $slaveLanguage;
                     } else {
-                        $publishSlaves['elements'][] = [$node->getId(), $slaveLanguage, 0, 'async', 1];
+                        $publishSlaves['elements'][] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
                     }
                 }
                 // TODO: needed?
@@ -733,7 +733,7 @@ class DataSaver
      * @param string|null    $comment
      * @param array          $publishSlaves
      */
-    private function publishTeaser(ElementVersion $elementVersion, Teaser $teaser = null, $language, $userId, $comment = null, array $publishSlaves = [])
+    private function publishTeaser(ElementVersion $elementVersion, Teaser $teaser = null, $language, $userId, $comment = null, array $publishSlaves = array())
     {
         $this->teaserManager->publishTeaser(
             $teaser,
@@ -765,7 +765,7 @@ class DataSaver
      * @param string|null       $comment
      * @param array             $publishSlaves
      */
-    private function publishTreeNode(ElementVersion $elementVersion, TreeNodeInterface $treeNode, $language, $userId, $comment = null, array $publishSlaves = [])
+    private function publishTreeNode(ElementVersion $elementVersion, TreeNodeInterface $treeNode, $language, $userId, $comment = null, array $publishSlaves = array())
     {
         $tree = $treeNode->getTree();
 

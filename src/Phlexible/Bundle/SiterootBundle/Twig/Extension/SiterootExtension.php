@@ -67,10 +67,10 @@ class SiterootExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('special_tid', [$this, 'specialTid']),
-            new \Twig_SimpleFunction('current_siteroot', [$this, 'currentSiteroot']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('special_tid', array($this, 'specialTid')),
+            new \Twig_SimpleFunction('current_siteroot', array($this, 'currentSiteroot')),
+        );
     }
 
     /**

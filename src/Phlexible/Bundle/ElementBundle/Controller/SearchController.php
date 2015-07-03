@@ -63,7 +63,7 @@ class SearchController extends Controller
             $result[$key]['icon'] = $iconResolver->resolveTreeNode($treeNode, $language);
         }
 
-        return new JsonResponse(['results' => $result]);
+        return new JsonResponse(array('results' => $result));
     }
 
     /**
@@ -78,23 +78,23 @@ class SearchController extends Controller
 
         // TODO: meta search
 
-        $results = [];
+        $results = array();
         foreach ($this->get('phlexible_media_manager.volume_manager')->all() as $volume) {
             $files = $volume->search($query);
 
             foreach ($files as $file) {
                 /* @var $file ExtendedFileInterface */
 
-                $results[] = [
+                $results[] = array(
                     'id'        => $file->getId(),
                     'version'   => $file->getVersion(),
                     'name'      => $file->getName(),
                     'folder_id' => $file->getFolderId(),
-                ];
+                );
             }
         }
 
-        return new JsonResponse(['results' => $results]);
+        return new JsonResponse(array('results' => $results));
     }
 
     /**

@@ -109,8 +109,8 @@ class GetConfigListener
         $siteroots = $this->siterootManager->findAll();
         $allLanguages = explode(',', $this->availableLanguages);
 
-        $siterootLanguages = [];
-        $siterootConfig = [];
+        $siterootLanguages = array();
+        $siterootConfig = array();
 
         foreach ($siteroots as $siteroot) {
             $siterootId = $siteroot->getId();
@@ -118,13 +118,13 @@ class GetConfigListener
             if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
                 $siterootLanguages[$siterootId] = $allLanguages;
             } else {
-                $siterootLanguages[$siterootId] = [];
+                $siterootLanguages[$siterootId] = array();
 
                 foreach ($allLanguages as $language) {
                     $tree = $this->treeManager->getBySiterootId($siterootId);
                     $root = $tree->getRoot();
 
-                    if (!$this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
+                    if (!$this->authorizationChecker->isGranted(array('right' => 'VIEW', 'language' => $language), $root)) {
                         continue;
                     }
 
@@ -133,10 +133,10 @@ class GetConfigListener
             }
 
             if (count($siterootLanguages[$siterootId])) {
-                $siterootConfig[$siterootId] = [
+                $siterootConfig[$siterootId] = array(
                     'id' => $siteroot->getId(),
                     'title' => $siteroot->getTitle(),
-                ];
+                );
             }
         }
 

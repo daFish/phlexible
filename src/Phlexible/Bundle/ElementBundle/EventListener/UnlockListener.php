@@ -45,7 +45,7 @@ class UnlockListener
         $user = $event->getUser();
 
         $locks = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLock')
-            ->findBy(['userId' => $user->getId()]);
+            ->findBy(array('userId' => $user->getId()));
 
         foreach ($locks as $lock) {
             $this->entityManager->remove($lock);
@@ -62,7 +62,7 @@ class UnlockListener
         $user = $event->getUser();
 
         $locks = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLock')
-            ->findBy(['userId' => $user->getId(), 'type' => 'temporary']);
+            ->findBy(array('userId' => $user->getId(), 'type' => 'temporary'));
 
         foreach ($locks as $lock) {
             $this->entityManager->remove($lock);

@@ -33,12 +33,12 @@ class TailCommand extends ContainerAwareCommand
             ->setName('message:tail')
             ->setDescription('Show latest messages')
             ->setDefinition(
-                [
+                array(
                     new InputOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Show latest <number> messages.', 20),
                     new InputOption('follow', 'f', InputOption::VALUE_NONE, 'Follow output'),
                     new InputOption('body', 'b', InputOption::VALUE_NONE, 'Show body'),
                     new InputOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep time', 5),
-                ]
+                )
             );
     }
 
@@ -56,7 +56,7 @@ class TailCommand extends ContainerAwareCommand
         $types = $messageManager->getTypeNames();
 
         if ($limit) {
-            $messages = $messageManager->findBy([], ['createdAt' => 'DESC'], $limit);
+            $messages = $messageManager->findBy(array(), array('createdAt' => 'DESC'), $limit);
             $messages = array_reverse($messages);
             foreach ($messages as $message) {
                 $output->writeln(
@@ -79,14 +79,14 @@ class TailCommand extends ContainerAwareCommand
             return 0;
         }
 
-        $message = $messageManager->findOneBy([], ['createdAt' => 'DESC']);
+        $message = $messageManager->findOneBy(array(), array('createdAt' => 'DESC'));
         $minTime = $message->getCreatedAt();
 
         while (1) {
             $expr = $messageManager->expr()
                 ->andGreaterThan($minTime->format('Y-m-d H:i:s'), 'createdAt');
 
-            $messages = $messageManager->findByExpression($expr, ['createdAt' => 'ASC'], 5);
+            $messages = $messageManager->findByExpression($expr, array('createdAt' => 'ASC'), 5);
 
             foreach ($messages as $message) {
                 /* @var $message Message */

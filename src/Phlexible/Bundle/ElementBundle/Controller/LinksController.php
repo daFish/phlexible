@@ -51,27 +51,27 @@ class LinksController extends Controller
         $element = $elementService->findElement($node->getTypeId());
         $elementVersion = $elementService->findElementVersion($element, $version);
 
-        $result = [];
+        $result = array();
 
         if ($incoming) {
-            $links = $linkRepository->findBy(['type' => 'link-internal', 'target' => $node->getId()]);
+            $links = $linkRepository->findBy(array('type' => 'link-internal', 'target' => $node->getId()));
         } else {
-            $links = $linkRepository->findBy(['elementVersion' => $elementVersion]);
+            $links = $linkRepository->findBy(array('elementVersion' => $elementVersion));
         }
 
         foreach ($links as $link) {
-            $result[] = [
+            $result[] = array(
                 'id'      => $link->getId(),
                 'iconCls' => 'p-element-component-icon',
                 'type'    => $link->getType(),
                 'title'   => $link->getField(),
                 'content' => $link->getTarget(),
-                'link'    => [],
+                'link'    => array(),
                 'raw'     => 'raw'
-            ];
+            );
         }
 
-        return new JsonResponse(['links' => $result]);
+        return new JsonResponse(array('links' => $result));
     }
 
     /**
@@ -160,19 +160,19 @@ class LinksController extends Controller
 
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $data = [];
+        $data = array();
         foreach ($results as $row) {
             $siteroot = $siterootManager->find($row['siteroot_id']);
-            $data[] = [
+            $data[] = array(
                 'id'    => $row['id'],
                 'type'  => ($siterootId === $row['siteroot_id'] ? 'internal' : 'intrasiteroot'),
                 'tid'   => $row['id'],
                 'eid'   => $row['eid'],
                 'title' => $siteroot->getTitle($language)
                     . ' :: ' . $row['title'] . ' [' . $row['id'] . ']',
-            ];
+            );
         }
 
-        return new JsonResponse(['results' => $data]);
+        return new JsonResponse(array('results' => $data));
     }
 }

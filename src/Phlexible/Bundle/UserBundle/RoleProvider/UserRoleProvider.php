@@ -25,7 +25,7 @@ class UserRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_USERS',
             'ROLE_SWITCH_USER',
             'ROLE_GROUPS',
@@ -37,7 +37,7 @@ class UserRoleProvider extends RoleProvider
             'ROLE_GROUP_ADMIN_CREATE',
             'ROLE_GROUP_ADMIN_UPDATE',
             'ROLE_GROUP_ADMIN_DELETE',
-        ];
+        );
     }
 
     /**

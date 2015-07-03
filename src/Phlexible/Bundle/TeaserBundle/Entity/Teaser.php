@@ -467,7 +467,7 @@ class Teaser
      */
     public function getCache()
     {
-        return $this->getAttribute('cache', []);
+        return $this->getAttribute('cache', array());
     }
 
     /**

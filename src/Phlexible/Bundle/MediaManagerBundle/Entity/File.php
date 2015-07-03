@@ -41,7 +41,7 @@ class File extends BaseFile implements ExtendedFileInterface
      * @var array
      * @ORM\Column(name="metasets", type="simple_array", nullable=true)
      */
-    private $metasets = [];
+    private $metasets = array();
 
     /**
      * @param string $mediaCategory

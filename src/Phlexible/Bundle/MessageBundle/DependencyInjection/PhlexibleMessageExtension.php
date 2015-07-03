@@ -35,9 +35,9 @@ class PhlexibleMessageExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $handlers = [
+        $handlers = array(
             new Reference('phlexible_message.handler.message_manager')
-        ];
+        );
         if ($config['use_log_handler']) {
             $handlers[] = new Reference('phlexible_message.handler.log');
         }

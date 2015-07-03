@@ -62,8 +62,8 @@ class LayoutController extends Controller
 
         $treeNodePath = $tree->getPath($treeNode);
 
-        $layouts = [];
-        $layoutareas = [];
+        $layouts = array();
+        $layoutareas = array();
         // TODO: repair
         foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
             if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
@@ -73,18 +73,18 @@ class LayoutController extends Controller
 
         foreach ($layoutareas as $layoutarea) {
             // TODO: switch to generic solution
-            $availableLanguages = [
+            $availableLanguages = array(
                 $language,
                 'en',
                 $elementMasterLanguage
-            ];
+            );
 
             $teasers = $teaserService->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
             // $language,
             // $availableLanguages
             // preview = true
 
-            $areaRoot = [
+            $areaRoot = array(
                 'id'         => 'area_' . $layoutarea->getId(),
                 'area_id'    => $layoutarea->getId(),
                 'parent_tid' => $treeId,
@@ -98,13 +98,13 @@ class LayoutController extends Controller
                 'expanded'   => true,
                 'allowDrag'  => true,
                 'allowDrop'  => false,
-                'children'   => [],
-                'qtip'       => $translator->trans('elements.doubleclick_to_sort', [], 'gui'),
-            ];
+                'children'   => array(),
+                'qtip'       => $translator->trans('elements.doubleclick_to_sort', array(), 'gui'),
+            );
 
             foreach ($teasers as $teaser) {
                 /* @var $teaser Teaser */
-                $teaserData = [
+                $teaserData = array(
                     'id'            => $teaser->getId(),
                     'layoutarea_id' => $layoutarea->getId(),
                     'parent_tid'    => $treeId,
@@ -116,10 +116,10 @@ class LayoutController extends Controller
                     'hide'          => false,
                     'expanded'      => false,
                     'cls'           => '',
-                    'children'      => [],
+                    'children'      => array(),
                     'allowDrag'     => false,
                     'allowDrop'     => false,
-                ];
+                );
 
                 switch ($teaser->getType()) {
                     case 'inherited':
@@ -141,7 +141,7 @@ class LayoutController extends Controller
 
                         $teaserData = array_merge(
                             $teaserData,
-                            [
+                            array(
                                 'text'      => $teaserElementVersion->getBackendTitle($language),
                                 'icon'      => $iconResolver->resolveTeaser($teaser, $language),
                                 'eid'       => $teaserElement->getEid(),
@@ -149,7 +149,7 @@ class LayoutController extends Controller
                                 'inherit'   => !$teaser->isStopped(),
                                 'cls'       => trim($cls),
                                 'hide'      => $teaser->isHidden(),
-                            ]
+                            )
                         );
                         break;
 
@@ -204,7 +204,7 @@ class LayoutController extends Controller
         $layoutarea = $elementtypeService->findElementtype($layoutAreaId);
         $teasers = $teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath);
 
-        $parent = [
+        $parent = array(
             'teaser_id'       => $treeId, //(int) $teaserData->id,
             'tid'             => 0,
             'title'           => $treeNode->getId(), //$teaserData->text,
@@ -226,9 +226,9 @@ class LayoutController extends Controller
             'qtip'            =>
                 $layoutarea->getTitle() . ', Version ' . $layoutarea->getRevision() . '<br>' .
                 37 . ' Versions<br>'
-        ];
+        );
 
-        $data = [];
+        $data = array();
 
         foreach ($teasers as $teaser) {
             /* @var $teaser Teaser */
@@ -291,7 +291,7 @@ class LayoutController extends Controller
                     }
                 }
 
-                $data[] = [
+                $data[] = array(
                     'teaser_id'       => $teaser->getId(),
                     '_type'           => $teaser->getType(),
                     'eid'             => $teaser->getTypeId(),
@@ -314,9 +314,9 @@ class LayoutController extends Controller
                     'status'          => '>o>',
                     'qtip'            => $teaserElementVersion->getBackendTitle($language) . ', Version ' . $teaserElementVersion->getElementtypeVersion() . '<br>' .
                         'Version ' . $teaserElementVersion->getVersion() . '<br>',
-                ];
+                );
             } elseif ('inherited' == $teaser->getType()) {
-                $data[] = [
+                $data[] = array(
                     'teaser_id'       => (int) $teaser->getId(),
                     'eid'             => null,
                     '_type'           => $teaser->getType(),
@@ -337,17 +337,17 @@ class LayoutController extends Controller
                     'version_online'  => 0,
                     'status'          => '>o>',
                     'qtip'            => 'waaa', //$teaserItem->text,
-                ];
+                );
             }
         }
 
         //$data['totalChilds'] = $element->getChildCount();
 
         return new JsonResponse(
-            [
+            array(
                 'parent' => $parent,
                 'list'   => $data
-            ]
+            )
         );
     }
 
@@ -372,18 +372,18 @@ class LayoutController extends Controller
         $elementtype = $elementSourceManager->findElementtype($id);
         $childElementtypes = $elementService->findAllowedChildren($elementtype);
 
-        $data = [];
+        $data = array();
         foreach ($childElementtypes as $childElementtype) {
-            $data[$childElementtype->getTitle() . $childElementtype->getId()] = [
+            $data[$childElementtype->getTitle() . $childElementtype->getId()] = array(
                 'id'    => $childElementtype->getId(),
                 'title' => $childElementtype->getTitle(),
                 'icon'  => $iconResolver->resolveElementtype($childElementtype),
-            ];
+            );
         }
         ksort($data);
         $data = array_values($data);
 
-        return new JsonResponse(['elementtypes' => $data]);
+        return new JsonResponse(array('elementtypes' => $data));
     }
 
     /**
@@ -407,12 +407,12 @@ class LayoutController extends Controller
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
-        $data = [];
-        $data[] = [
+        $data = array();
+        $data[] = array(
             'id'    => '0',
-            'title' => $translator->trans('elements.first', [], 'gui'),
+            'title' => $translator->trans('elements.first', array(), 'gui'),
             'icon'  => $iconResolver->resolveIcon('_top.gif'),
-        ];
+        );
 
         $tree = $treeManager->getByNodeId($tid);
         $treeNode = $tree->get($tid);
@@ -424,14 +424,14 @@ class LayoutController extends Controller
         foreach ($teasers as $teaser) {
             $teaserElement = $elementService->findElement($teaser->getTypeId());
             $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
-            $data[] = [
+            $data[] = array(
                 'id'    => $teaser->getId(),
                 'title' => $teaserElementVersion->getBackendTitle($language),
                 'icon'  => $iconResolver->resolveTeaser($teaser, $language),
-            ];
+            );
         }
 
-        return new JsonResponse(['elements' => $data]);
+        return new JsonResponse(array('elements' => $data));
     }
 
     /**
@@ -487,7 +487,7 @@ class LayoutController extends Controller
             $userId
         );
 
-        return new ResultResponse(true, "Teaser with ID {$teaser->getId()} created.", ['language' => $masterLanguage]);
+        return new ResultResponse(true, "Teaser with ID {$teaser->getId()} created.", array('language' => $masterLanguage));
     }
 
     /**
@@ -533,7 +533,7 @@ class LayoutController extends Controller
             $elementService->deleteElement($element);
         }
 
-        foreach ($teaserManager->findBy(['type' => ['sort', 'stop', 'inherit'], 'typeId' => $teaser->getTypeId()]) as $subTeaser) {
+        foreach ($teaserManager->findBy(array('type' => array('sort', 'stop', 'inherit'), 'typeId' => $teaser->getTypeId())) as $subTeaser) {
             $teaserManager->deleteTeaser($subTeaser, $this->getUser()->getId());
         }
 
@@ -702,7 +702,7 @@ class LayoutController extends Controller
                 }
 
                 if (-1 == $teaserId) {
-                    $insertData = [
+                    $insertData = array(
                         'tree_id'       => $treeId,
                         'eid'           => $eid,
                         'layoutarea_id' => $layoutAreaId,
@@ -711,7 +711,7 @@ class LayoutController extends Controller
                         'sort'          => $sort,
                         'modify_uid'    => MWF_Env::getUid(),
                         'modify_time'   => $db->fn->now(),
-                    ];
+                    );
 
                     $db->insert($db->prefix . 'element_tree_teasers', $insertData);
 
@@ -720,7 +720,7 @@ class LayoutController extends Controller
                     continue;
                 }
 
-                $exists = $db->fetchOne($select, ['teaserId' => $teaserId]) ? true : false;
+                $exists = $db->fetchOne($select, array('teaserId' => $teaserId)) ? true : false;
 
                 if (!$exists) {
                     continue;
@@ -728,8 +728,8 @@ class LayoutController extends Controller
 
                 $db->update(
                     $db->prefix . 'element_tree_teasers',
-                    ['sort' => $sort],
-                    ['id = ?' => $teaserId]
+                    array('sort' => $sort),
+                    array('id = ?' => $teaserId)
                 );
             }
 
@@ -777,10 +777,10 @@ class LayoutController extends Controller
         $treeNode = $tree->get($tid);
         $rootNode = $tree->getRoot();
 
-        $data = [];
+        $data = array();
         if ($rootNode !== null) {
             if ($tid === null || $tid < 1) {
-                $data = [$nodeSerializer->serializeNode($rootNode, $language)];
+                $data = array($nodeSerializer->serializeNode($rootNode, $language));
 
                 return new JsonResponse($data);
             }
@@ -811,8 +811,8 @@ class LayoutController extends Controller
         $elementMasterLanguage = $element->getMasterLanguage();
         $elementtype = $elementService->findElementtype($element);
 
-        $layouts = [];
-        $layoutareas = [];
+        $layouts = array();
+        $layoutareas = array();
         // TODO: repair
         foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
             if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
@@ -821,7 +821,7 @@ class LayoutController extends Controller
         }
 
         foreach ($layoutareas as $layoutarea) {
-            $areaRoot = [
+            $areaRoot = array(
                 'id'         => 'area_' . $layoutarea->getId(),
                 'area_id'    => $layoutarea->getId(),
                 'parent_tid' => $currentTreeId,
@@ -834,9 +834,9 @@ class LayoutController extends Controller
                 'expanded'   => true,
                 'allowDrag'  => false,
                 'allowDrop'  => false,
-                'children'   => [],
-                'qtip'       => $translator->trans('elements.doubleclick_to_sort', [], 'gui'),
-            ];
+                'children'   => array(),
+                'qtip'       => $translator->trans('elements.doubleclick_to_sort', array(), 'gui'),
+            );
 
             $teasers = $teaserManager->findForLayoutAreaAndTreeNode($layoutarea, $treeNode);
 
@@ -846,7 +846,7 @@ class LayoutController extends Controller
                         $teaserElement = $elementService->findElement($teaser->getTypeId());
                         $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
 
-                        $areaRoot['children'][] = [
+                        $areaRoot['children'][] = array(
                             'id'            => $teaser->getId(),
                             'parent_tid'    => $currentTreeId,
                             'parent_eid'    => $element->getEid(),
@@ -860,8 +860,8 @@ class LayoutController extends Controller
                             'leaf'          => true,
                             'allowDrag'     => false,
                             'allowDrop'     => false,
-                            'children'      => []
-                        ];
+                            'children'      => array()
+                        );
 
                         break;
                 }

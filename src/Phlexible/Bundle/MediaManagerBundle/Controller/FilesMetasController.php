@@ -59,17 +59,17 @@ class FilesMetasController extends FOSRestController
 
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $fileMetaSets = [];
+        $fileMetaSets = array();
 
         foreach ($fileMetaSetResolver->resolve($file) as $metaSet) {
             $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
 
-            $fileMetas = [];
+            $fileMetas = array();
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fileMeta = [
+                $fileMeta = array(
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
@@ -78,7 +78,7 @@ class FilesMetasController extends FOSRestController
                     'synchronized' => $field->isSynchronized(),
                     'values'       => array(),
                     'leaf'         => true,
-                ];
+                );
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $language) {
@@ -89,16 +89,16 @@ class FilesMetasController extends FOSRestController
                 $fileMetas[] = $fileMeta;
             }
 
-            $fileMetaSets[] = [
+            $fileMetaSets[] = array(
                 'id'       => $metaSet->getId(),
                 'title'    => $metaSet->getName(),
                 'children' => $fileMetas
-            ];
+            );
         }
 
-        return [
+        return array(
             'metas' => $fileMetaSets
-        ];
+        );
     }
 
     /**
@@ -132,7 +132,7 @@ class FilesMetasController extends FOSRestController
         }
         */
 
-        $metaSetIds = $file->getAttribute('metasets', []);
+        $metaSetIds = $file->getAttribute('metasets', array());
 
         foreach ($data as $metaSetId => $fields) {
             $metaSet = $metaSetManager->find($metaSetId);

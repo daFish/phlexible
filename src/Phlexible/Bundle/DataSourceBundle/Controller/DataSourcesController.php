@@ -50,7 +50,7 @@ class DataSourcesController extends FOSRestController
     public function getDatasourcesAction()
     {
         $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
-        $dataSources = $dataSourceManager->findBy([]);
+        $dataSources = $dataSourceManager->findBy(array());
 
         return array(
             'datasources' => $dataSources,

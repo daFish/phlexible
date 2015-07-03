@@ -77,12 +77,12 @@ class RightsController extends Controller
         $contentClass = $request->get('contentClass');
 
         $permissions = $this->get('phlexible_access_control.permissions');
-        $contentRights = [];
+        $contentRights = array();
         foreach ($permissions->getByContentClass($contentClass) as $permission) {
-            $contentRights[] = [
+            $contentRights[] = array(
                 'name'    => $permission->getName(),
                 'iconCls' => $permission->getIconClass(),
-            ];
+            );
         }
 
         return new JsonResponse($contentRights);
@@ -155,11 +155,11 @@ class RightsController extends Controller
                         $modifiedRow['language']
                     );
 
-                    if (!in_array($rightRow['status'], [
+                    if (!in_array($rightRow['status'], array(
                         \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_INHERITABLE,
                         \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_SINGLE,
                         \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_STOPPED
-                    ])) {
+                    ))) {
                         continue;
                     }
 

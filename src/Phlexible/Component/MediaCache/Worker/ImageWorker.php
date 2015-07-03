@@ -153,11 +153,11 @@ class ImageWorker extends AbstractWorker
 
         $pathinfo = pathinfo($file->getVolume()->getPhysicalPath($file));
 
-        $cacheItem = $this->cacheManager->findOneBy([
+        $cacheItem = $this->cacheManager->findOneBy(array(
             'templateKey' => $template->getKey(),
             'fileId' => $fileId,
             'fileVersion' => $fileVersion
-        ]);
+        ));
         if (!$cacheItem) {
             $cacheItem = new CacheItem();
         }

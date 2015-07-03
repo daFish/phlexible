@@ -67,13 +67,13 @@ class FileMetaDataManager extends MetaDataManager
 
         $rows = $connection->fetchAll($qb->getSQL());
 
-        $metaDatas = [];
+        $metaDatas = array();
 
         foreach ($rows as $row) {
-            $identifiers = [
+            $identifiers = array(
                 'file_id' => $row['file_id'],
                 'file_version' => $row['file_version'],
-            ];
+            );
 
             $id = '';
             foreach ($identifiers as $value) {
@@ -104,9 +104,9 @@ class FileMetaDataManager extends MetaDataManager
      */
     private function getIdentifiersFromFile(ExtendedFileInterface $file)
     {
-        return [
+        return array(
             'file_id'      => $file->getId(),
             'file_version' => $file->getVersion(),
-        ];
+        );
     }
 }

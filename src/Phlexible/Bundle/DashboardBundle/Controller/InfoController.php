@@ -36,7 +36,7 @@ class InfoController extends Controller
     {
         $securityContext = $this->get('security.context');
 
-        $lines = [$this->createProject()];
+        $lines = array($this->createProject());
 
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
             $lines[] = $this->createEnv();
@@ -58,7 +58,7 @@ class InfoController extends Controller
         $projectTitle = $this->container->getParameter('phlexible_gui.project.title');
         $projectVersion = $this->container->getParameter('phlexible_gui.project.version');
 
-        return ['Project:', $projectTitle . ' ' . $projectVersion];
+        return array('Project:', $projectTitle . ' ' . $projectVersion);
     }
 
     /**
@@ -69,7 +69,7 @@ class InfoController extends Controller
         $env = $this->container->getParameter('kernel.environment');
         $debug = $this->container->getParameter('kernel.debug');
 
-        return ['Env:', $env . ($debug ? ' [DEBUG]' : '')];
+        return array('Env:', $env . ($debug ? ' [DEBUG]' : ''));
     }
 
     /**
@@ -81,7 +81,7 @@ class InfoController extends Controller
     {
         $serverName = $request->server->get('SERVER_NAME');
 
-        return ['Host:', $serverName . ' [' . PHP_SAPI . ']'];
+        return array('Host:', $serverName . ' [' . PHP_SAPI . ']');
     }
 
     /**
@@ -96,7 +96,7 @@ class InfoController extends Controller
         $db = $connection->getDatabase();
         $dbName = $connection->getDriver()->getName();
 
-        return ['Default Database:', $dbHost . ' / ' . $db . ' [' . $dbName . ']'];
+        return array('Default Database:', $dbHost . ' / ' . $db . ' [' . $dbName . ']');
     }
 
     /**
@@ -109,7 +109,7 @@ class InfoController extends Controller
         $sessionId = $request->getSession()->getId();
         $remoteAddress = $request->server->get('REMOTE_ADDR');
 
-        return ['Session:', $sessionId . ' [' . $remoteAddress . ']'];
+        return array('Session:', $sessionId . ' [' . $remoteAddress . ']');
     }
 
     /**
@@ -120,7 +120,7 @@ class InfoController extends Controller
         $username = $this->getUser()->getUsername();
         $roles = $this->getUser()->getRoles();
 
-        return ['User:', $username . ' [' . implode(', ', $roles) . ']'];
+        return array('User:', $username . ' [' . implode(', ', $roles) . ']');
     }
 
     /**
@@ -130,7 +130,7 @@ class InfoController extends Controller
      */
     private function createUserAgent(Request $request)
     {
-        return ['UserAgent:', $request->server->get('HTTP_USER_AGENT')];
+        return array('UserAgent:', $request->server->get('HTTP_USER_AGENT'));
     }
 
     /**

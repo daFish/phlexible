@@ -134,12 +134,12 @@ class FileUsage
      */
     public function toArray()
     {
-        return [
+        return array(
             'fileId'      => $this->file->getId(),
             'fileVersion' => $this->file->getVersion(),
             'usageType'   => $this->usageType,
             'usageId'     => $this->usageId,
             'status'      => $this->status,
-        ];
+        );
     }
 }

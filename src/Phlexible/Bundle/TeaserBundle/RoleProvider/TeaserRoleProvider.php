@@ -25,9 +25,9 @@ class TeaserRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_TEASERS',
-        ];
+        );
     }
 
     /**

@@ -25,9 +25,9 @@ class ElementtypeRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_ELEMENTTYPES',
-        ];
+        );
     }
 
     /**

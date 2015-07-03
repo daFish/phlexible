@@ -79,7 +79,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
     /**
      * @var ElementVersion[]
      */
-    private $elementVersions = [];
+    private $elementVersions = array();
 
     /**
      * {@inheritdoc}
@@ -90,10 +90,10 @@ class ElementVersionManager implements ElementVersionManagerInterface
 
         if (!isset($this->elementVersions[$index]) || $this->elementVersions[$index] === null) {
             $elementVersion = $this->getElementVersionRepository()->findOneBy(
-                [
+                array(
                     'element' => $element,
                     'version' => $version,
-                ]
+                )
             );
             $this->elementVersions[$index] = $elementVersion;
         }
@@ -106,7 +106,7 @@ class ElementVersionManager implements ElementVersionManagerInterface
      */
     public function findByElementSource(ElementSource $elementSource)
     {
-        return $this->getElementVersionRepository()->findBy(['elementSource' => $elementSource]);
+        return $this->getElementVersionRepository()->findBy(array('elementSource' => $elementSource));
     }
 
     /**

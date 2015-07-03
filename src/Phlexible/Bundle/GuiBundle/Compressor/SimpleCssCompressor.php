@@ -24,10 +24,10 @@ class SimpleCssCompressor extends AbstractStringCompressor
     public function compressString($buffer)
     {
         $buffer = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $buffer);
-        $buffer = str_replace(["\r\n","\r","\n","\t",'  ','    ','     '], '', $buffer);
-        $buffer = preg_replace(['(( )+{)','({( )+)'], '{', $buffer);
-        $buffer = preg_replace(['(( )+})','(}( )+)','(;( )*})'], '}', $buffer);
-        $buffer = preg_replace(['(;( )+)','(( )+;)'], ';', $buffer);
+        $buffer = str_replace(array("\r\n","\r","\n","\t",'  ','    ','     '), '', $buffer);
+        $buffer = preg_replace(array('(( )+{)','({( )+)'), '{', $buffer);
+        $buffer = preg_replace(array('(( )+})','(}( )+)','(;( )*})'), '}', $buffer);
+        $buffer = preg_replace(array('(;( )+)','(( )+;)'), ';', $buffer);
 
         return $buffer;
     }

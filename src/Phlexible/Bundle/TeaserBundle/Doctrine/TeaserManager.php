@@ -123,7 +123,7 @@ class TeaserManager implements TeaserManagerInterface
     public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath, $includeLocalHidden = true)
     {
         /* @var $teasers Teaser[] */
-        $teasers = [];
+        $teasers = array();
         $forTreeId = end($treeNodePath)->getId();
 
         foreach ($treeNodePath as $treeNode) {
@@ -166,10 +166,10 @@ class TeaserManager implements TeaserManagerInterface
     public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
     {
         $teasers = $this->getTeaserRepository()->findBy(
-            [
+            array(
                 'layoutareaId' => $layoutarea->getId(),
                 'treeId'       => $treeNode->getId()
-            ]
+            )
         );
 
         return $teasers;
@@ -203,10 +203,10 @@ class TeaserManager implements TeaserManagerInterface
     public function getInstances(Teaser $teaser)
     {
         return $this->getTeaserRepository()->findBy(
-            [
+            array(
                 'type'   => $teaser->getType(),
                 'typeId' => $teaser->getTypeId(),
-            ]
+            )
         );
     }
 

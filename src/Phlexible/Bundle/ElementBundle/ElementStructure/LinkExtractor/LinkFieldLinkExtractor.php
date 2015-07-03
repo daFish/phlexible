@@ -36,7 +36,7 @@ class LinkFieldLinkExtractor implements LinkExtractorInterface
     public function extract(ElementStructureValue $value, AbstractField $field)
     {
         if (!$value->getValue()) {
-            return [];
+            return array();
         }
 
         $link = new ElementLink();
@@ -46,7 +46,7 @@ class LinkFieldLinkExtractor implements LinkExtractorInterface
 
         $rawValue = $value->getValue();
         $type = $rawValue['type'];
-        if (in_array($type, ['internal', 'intrasiteroot']) && !empty($rawValue['tid'])) {
+        if (in_array($type, array('internal', 'intrasiteroot')) && !empty($rawValue['tid'])) {
             $link
                 ->setType('link-internal')
                 ->setTarget($rawValue['tid']);
@@ -59,9 +59,9 @@ class LinkFieldLinkExtractor implements LinkExtractorInterface
                 ->setType('link-mailto')
                 ->setTarget($rawValue['recipient']);
         } else {
-            return [];
+            return array();
         }
 
-        return [$link];
+        return array($link);
     }
 }

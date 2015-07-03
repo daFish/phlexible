@@ -108,7 +108,7 @@ class CssBuilder
      */
     private function buildCss(array $bindings)
     {
-        $input = [];
+        $input = array();
 
         foreach ($bindings as $binding) {
             foreach ($binding->getResources() as $resource) {

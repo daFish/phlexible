@@ -36,9 +36,9 @@ class FolderIterator implements \Iterator, \RecursiveIterator
         if (is_array($folder)) {
             $this->iterator = new \ArrayIterator($folder);
         } elseif ($folder instanceof FolderInterface) {
-            $this->iterator = new \ArrayIterator([$folder]);
+            $this->iterator = new \ArrayIterator(array($folder));
         } elseif ($folder instanceof VolumeInterface) {
-            $this->iterator = new \ArrayIterator([$folder->findRootFolder()]);
+            $this->iterator = new \ArrayIterator(array($folder->findRootFolder()));
         } else {
             throw new RuntimeException('FolderIterator needs either Volume or Folder.');
         }

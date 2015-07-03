@@ -42,7 +42,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
         if ($tree instanceof TreeInterface) {
             /* @var $tree TreeInterface */
             $node = $tree->getRoot();
-            $this->iterator = new \ArrayIterator([$node]);
+            $this->iterator = new \ArrayIterator(array($node));
         } elseif ($tree instanceof TreeNodeInterface) {
             /* @var $tree \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface */
             $node = $tree;

@@ -81,7 +81,7 @@ class ImagePreviewer implements PreviewerInterface
 
         $debug = json_encode($template->getParameters());
 
-        $data = [
+        $data = array(
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
             'template' => $templateKey,
@@ -90,7 +90,7 @@ class ImagePreviewer implements PreviewerInterface
             'format'   => $extension,
             'mimetype' => $this->applier->getMimetype($template),
             'debug'    => $debug,
-        ];
+        );
 
         return $data;
     }

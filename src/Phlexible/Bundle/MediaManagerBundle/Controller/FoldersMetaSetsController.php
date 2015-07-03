@@ -54,15 +54,15 @@ class FoldersMetaSetsController extends FOSRestController
         $folder = $volumeManager->getByFolderId($folderId)->findFolder($folderId);
         $metaSets = $folderMetaSetResolver->resolve($folder);
 
-        $sets = [];
+        $sets = array();
         foreach ($metaSets as $metaSet) {
-            $sets[] = [
+            $sets[] = array(
                 'id'   => $metaSet->getId(),
                 'name' => $metaSet->getName(),
-            ];
+            );
         }
 
-        return new JsonResponse(['sets' => $sets]);
+        return new JsonResponse(array('sets' => $sets));
     }
 
     /**
@@ -77,7 +77,7 @@ class FoldersMetaSetsController extends FOSRestController
         if ($joinedIds) {
             $ids = explode(',', $joinedIds);
         } else {
-            $ids = [];
+            $ids = array();
         }
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');

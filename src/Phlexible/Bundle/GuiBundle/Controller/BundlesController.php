@@ -46,7 +46,7 @@ class BundlesController extends FOSRestController
     {
         $bundles = $this->container->getParameter('kernel.bundles');
 
-        $bundlesData = [];
+        $bundlesData = array();
 
         foreach ($bundles as $name => $class) {
             $className = $class;
@@ -62,12 +62,12 @@ class BundlesController extends FOSRestController
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
-            $bundlesData[$name] = [
+            $bundlesData[$name] = array(
                 'name'        => $name,
                 'classname'   => $className,
                 'package'     => $package,
                 'path'        => $path,
-            ];
+            );
         }
 
         ksort($bundlesData);

@@ -38,9 +38,9 @@ class MediaTemplateExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('mediatemplate', [$this, 'mediatemplate']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('mediatemplate', array($this, 'mediatemplate')),
+        );
     }
 
     /**
@@ -53,7 +53,7 @@ class MediaTemplateExtension extends \Twig_Extension
         $template = $this->templateManager->find($id);
 
         if (!$template) {
-            return [];
+            return array();
         }
 
         return $template->getParameters();

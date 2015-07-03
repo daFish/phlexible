@@ -50,10 +50,10 @@ class UrlExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('path', [$this, 'path']),
-            new \Twig_SimpleFunction('url', [$this, 'url']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('path', array($this, 'path')),
+            new \Twig_SimpleFunction('url', array($this, 'url')),
+        );
     }
 
     /**
@@ -62,7 +62,7 @@ class UrlExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function path($name, array $parameters = [], $relative = false)
+    public function path($name, array $parameters = array(), $relative = false)
     {
         if ($name instanceof TreeNodeInterface) {
             return $this->router->generate($name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
@@ -126,7 +126,7 @@ class UrlExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function url($name, array $parameters = [], $schemeRelative = false)
+    public function url($name, array $parameters = array(), $schemeRelative = false)
     {
         if ($name instanceof TreeNodeInterface) {
             return $this->router->generate($name, $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);

@@ -196,9 +196,9 @@ class MetaSetsController extends FOSRestController
         $metaSet = $metaSetManager->find($id);
         $fields = $metaSet->getFields();
 
-        $data = [];
+        $data = array();
         foreach ($fields as $field) {
-            $data[] = [
+            $data[] = array(
                 'id'           => $field->getId(),
                 'key'          => $field->getName(),
                 'type'         => $field->getType(),
@@ -206,10 +206,10 @@ class MetaSetsController extends FOSRestController
                 'synchronized' => $field->isSynchronized(),
                 'readonly'     => $field->isReadonly(),
                 'options'      => $field->getOptions(),
-            ];
+            );
         }
 
-        return new JsonResponse(['values' => $data]);
+        return new JsonResponse(array('values' => $data));
     }
 
     /**
@@ -227,16 +227,16 @@ class MetaSetsController extends FOSRestController
         $datasource = $datasourceManager->find($sourceId);
         $keys = $datasource->getValuesForLanguage($language);
 
-        $data = [];
+        $data = array();
         foreach ($keys as $key) {
             if (!$key) {
                 continue;
             }
 
-            $data[] = ['key' => $key, 'value' => $key];
+            $data[] = array('key' => $key, 'value' => $key);
         }
 
-        return new JsonResponse(['values' => $data]);
+        return new JsonResponse(array('values' => $data));
     }
 
     /**
@@ -318,14 +318,14 @@ class MetaSetsController extends FOSRestController
 
         $metaSet->setRevision($metaSet->getRevision() + 1);
 
-        $fields = [];
+        $fields = array();
         foreach ($metaSet->getFields() as $field) {
             $fields[$field->getId()] = $field;
         }
 
         foreach ($data as $item) {
             if (!empty($item['options'])) {
-                $options = [];
+                $options = array();
                 foreach (explode(',', $item['options']) as $key => $value) {
                     $options[$key] = trim($value);
                 }

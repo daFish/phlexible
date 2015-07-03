@@ -43,27 +43,27 @@ class ProblemsPortlet extends Portlet
      */
     public function getData()
     {
-        $data = [];
+        $data = array();
 
         $problems = $this->fetcher->fetch();
 
-        $allowedSeverities = [
+        $allowedSeverities = array(
             Problem::SEVERITY_CRITICAL,
             Problem::SEVERITY_WARNING,
-        ];
+        );
 
         foreach ($problems as $problem) {
             if (!in_array($problem->getSeverity(), $allowedSeverities)) {
                 continue;
             }
 
-            $data[] = [
+            $data[] = array(
                 'id'       => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
                 'severity' => $problem->getSeverity(),
                 'msg'      => $problem->getMessage(),
                 'hint'     => $problem->getHint(),
                 'link'     => $problem->getAttribute('link'),
-            ];
+            );
         }
 
         if (!count($data)) {

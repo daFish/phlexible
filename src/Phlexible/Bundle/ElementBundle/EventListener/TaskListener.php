@@ -52,11 +52,11 @@ class TaskListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
+        return array(
             TreeEvents::PUBLISH_NODE => 'onPublishNode',
             TreeEvents::SET_NODE_OFFLINE => 'onSetNodeOffline',
             TreeEvents::DELETE_NODE => 'onDeleteNode',
-        ];
+        );
     }
 
     /**
@@ -76,11 +76,11 @@ class TaskListener implements EventSubscriberInterface
         }
 
         $this->doTask(
-            [
+            array(
                 'type' => 'element',
                 'type_id' => $node->getId(),
                 'language' => $language
-            ],
+            ),
             'element.publish',
             $this->tokenStorage->getToken()->getUser()->getId()
         );
@@ -103,11 +103,11 @@ class TaskListener implements EventSubscriberInterface
         }
 
         $this->doTask(
-            [
+            array(
                 'type' => 'element',
                 'type_id' => $node->getId(),
                 'language' => $language
-            ],
+            ),
             'element.set_offline',
             $this->tokenStorage->getToken()->getUser()->getId()
         );
@@ -130,10 +130,10 @@ class TaskListener implements EventSubscriberInterface
         }
 
         $this->doTask(
-            [
+            array(
                 'type' => 'element',
                 'type_id' => $node->getId()
-            ],
+            ),
             'element.delete',
             $this->tokenStorage->getToken()->getUser()->getId()
         );
@@ -147,14 +147,14 @@ class TaskListener implements EventSubscriberInterface
     private function doTask(array $payload, $type, $userId)
     {
         $tasks = $this->taskManager->findBy(
-            [
+            array(
                 'type' => $type,
-                'finiteState' => [
+                'finiteState' => array(
                     Task::STATUS_OPEN,
                     Task::STATUS_REJECTED,
                     Task::STATUS_REOPENED,
-                ]
-            ]
+                )
+            )
         );
 
         if (!$tasks) {

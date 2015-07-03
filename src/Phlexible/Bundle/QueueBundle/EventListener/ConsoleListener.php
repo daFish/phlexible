@@ -50,10 +50,10 @@ class ConsoleListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
+        return array(
             ConsoleEvents::EXCEPTION => 'onException',
             ConsoleEvents::TERMINATE => 'onTerminate',
-        ];
+        );
     }
 
     /**

@@ -40,7 +40,7 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions()
     {
-        return new PermissionCollection([
+        return new PermissionCollection(array(
             new Permission($this->contentClass, 'FOLDER_READ', 1, 'p-mediamanager-folder_view-icon'),
             new Permission($this->contentClass, 'FOLDER_CREATE', 2, 'p-mediamanager-folder_add-icon'),
             new Permission($this->contentClass, 'FOLDER_MODIFY', 4, 'p-mediamanager-folder_edit-icon'),
@@ -51,6 +51,6 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
             new Permission($this->contentClass, 'FILE_MODIFY', 128, 'p-mediamanager-file_edit-icon'),
             new Permission($this->contentClass, 'FILE_DELETE', 256, 'p-mediamanager-file_delete-icon'),
             new Permission($this->contentClass, 'FILE_DOWNLOAD', 512, 'p-mediamanager-file_download-icon'),
-        ]);
+        ));
     }
 }

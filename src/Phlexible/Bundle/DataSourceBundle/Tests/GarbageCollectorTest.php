@@ -79,7 +79,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $this->garbageCollector->run();
@@ -89,7 +89,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function testRunWithNoValues()
     {
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run();
@@ -104,7 +104,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1');
         $this->datasource->addValueForLanguage('de', 'value2');
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
@@ -112,11 +112,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => [],
-                'remove' => ['value1', 'value2'],
-            ],
+            array(
+                'active' => array(),
+                'inactive' => array(),
+                'remove' => array('value1', 'value2'),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -126,7 +126,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1');
         $this->datasource->addValueForLanguage('de', 'value2');
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
@@ -134,11 +134,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => [],
-                'remove' => ['value1', 'value2'],
-            ],
+            array(
+                'active' => array(),
+                'inactive' => array(),
+                'remove' => array('value1', 'value2'),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -148,7 +148,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->datasource->addValueForLanguage('de', 'value1');
         $this->datasource->addValueForLanguage('de', 'value2');
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
@@ -156,11 +156,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => ['value1', 'value2'],
-                'remove' => [],
-            ],
+            array(
+                'active' => array(),
+                'inactive' => array('value1', 'value2'),
+                'remove' => array(),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -173,11 +173,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(['value1', 'value2']);
+                $event->markActive(array('value1', 'value2'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
@@ -185,11 +185,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => [],
-            ],
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array(),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -202,11 +202,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(['value1', 'value2']);
+                $event->markActive(array('value1', 'value2'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
@@ -214,11 +214,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => [],
-            ],
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array(),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -231,11 +231,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(['value1', 'value2']);
+                $event->markActive(array('value1', 'value2'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
@@ -243,11 +243,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => [],
-            ],
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array(),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -260,11 +260,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markInactive(['value1', 'value2']);
+                $event->markInactive(array('value1', 'value2'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
@@ -272,11 +272,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => ['value1', 'value2'],
-                'remove' => [],
-            ],
+            array(
+                'active' => array(),
+                'inactive' => array('value1', 'value2'),
+                'remove' => array(),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -289,11 +289,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markInactive(['value1', 'value2']);
+                $event->markInactive(array('value1', 'value2'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
@@ -301,11 +301,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => [],
-                'remove' => ['value1', 'value2'],
-            ],
+            array(
+                'active' => array(),
+                'inactive' => array(),
+                'remove' => array('value1', 'value2'),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -318,11 +318,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markInactive(['value1', 'value2']);
+                $event->markInactive(array('value1', 'value2'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
@@ -330,11 +330,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => [],
-                'inactive' => ['value1', 'value2'],
-                'remove' => [],
-            ],
+            array(
+                'active' => array(),
+                'inactive' => array('value1', 'value2'),
+                'remove' => array(),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -351,12 +351,12 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(['value1', 'value2']);
-                $event->markInactive(['value3', 'value4']);
+                $event->markActive(array('value1', 'value2'));
+                $event->markInactive(array('value3', 'value4'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED);
@@ -364,11 +364,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => ['value3', 'value4'],
-                'remove' => ['value5', 'value6'],
-            ],
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array('value3', 'value4'),
+                'remove' => array('value5', 'value6'),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -385,12 +385,12 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(['value1', 'value2']);
-                $event->markInactive(['value3', 'value4']);
+                $event->markActive(array('value1', 'value2'));
+                $event->markInactive(array('value3', 'value4'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_REMOVE_UNUSED_AND_INACTIVE);
@@ -398,11 +398,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => [],
-                'remove' => ['value3', 'value4', 'value5', 'value6'],
-            ],
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array(),
+                'remove' => array('value3', 'value4', 'value5', 'value6'),
+            ),
             $result['testDatasource']['de']
         );
     }
@@ -419,12 +419,12 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->eventDispatcher->addListener(
             DataSourceEvents::BEFORE_GARBAGE_COLLECT,
             function(GarbageCollectEvent $event) {
-                $event->markActive(['value1', 'value2']);
-                $event->markInactive(['value3', 'value4']);
+                $event->markActive(array('value1', 'value2'));
+                $event->markInactive(array('value3', 'value4'));
             }
         );
 
-        $this->manager->findBy(Argument::cetera())->willReturn([$this->datasource]);
+        $this->manager->findBy(Argument::cetera())->willReturn(array($this->datasource));
         $this->manager->updateDataSource(Argument::any())->shouldBeCalled();
 
         $result = $this->garbageCollector->run(GarbageCollector::MODE_MARK_UNUSED_INACTIVE);
@@ -432,11 +432,11 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('testDatasource', $result);
         $this->assertArrayHasKey('de', $result['testDatasource']);
         $this->assertSame(
-            [
-                'active' => ['value1', 'value2'],
-                'inactive' => ['value3', 'value4', 'value5', 'value6'],
-                'remove' => [],
-            ],
+            array(
+                'active' => array('value1', 'value2'),
+                'inactive' => array('value3', 'value4', 'value5', 'value6'),
+                'remove' => array(),
+            ),
             $result['testDatasource']['de']
         );
     }

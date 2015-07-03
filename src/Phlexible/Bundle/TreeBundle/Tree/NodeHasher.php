@@ -34,7 +34,7 @@ class NodeHasher
     /**
      * @var array
      */
-    private $hashes = [];
+    private $hashes = array();
 
     /**
      * @param ElementHasher $elementHasher

@@ -23,7 +23,7 @@ abstract class AbstractView
     /**
      * @var array
      */
-    private $parts = [];
+    private $parts = array();
 
     /**
      * @param string $src

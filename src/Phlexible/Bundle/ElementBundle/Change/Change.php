@@ -24,7 +24,7 @@ class Change
     /**
      * @var ElementSource[]
      */
-    private $outdatedElementSources = [];
+    private $outdatedElementSources = array();
 
     /**
      * @var bool
@@ -47,7 +47,7 @@ class Change
      * @param string          $reason
      * @param ElementSource[] $outdatedElementSources
      */
-    public function __construct(Elementtype $elementtype, $needImport, $reason, array $outdatedElementSources = [])
+    public function __construct(Elementtype $elementtype, $needImport, $reason, array $outdatedElementSources = array())
     {
         $this->elementtype = $elementtype;
         $this->needImport = $needImport;

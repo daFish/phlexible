@@ -201,7 +201,7 @@ class DataSource
      */
     public function getLanguages()
     {
-        $languages = [];
+        $languages = array();
         foreach ($this->valueBags as $value) {
             $languages[] = $value->getLanguage();
         }
@@ -270,7 +270,7 @@ class DataSource
             }
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -286,7 +286,7 @@ class DataSource
             }
         }
 
-        return [];
+        return array();
     }
 
     /**

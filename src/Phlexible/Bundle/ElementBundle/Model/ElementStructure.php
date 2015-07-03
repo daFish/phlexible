@@ -78,7 +78,7 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @var ElementStructure[]
      */
-    private $structures = [];
+    private $structures = array();
 
     /**
      * @var ElementStructure
@@ -88,12 +88,12 @@ class ElementStructure implements \IteratorAggregate
     /**
      * @var ElementStructureValue[]
      */
-    private $values = [];
+    private $values = array();
 
     /**
      * @var array
      */
-    private $attributes = [];
+    private $attributes = array();
 
     /**
      * Clone
@@ -401,7 +401,7 @@ class ElementStructure implements \IteratorAggregate
         }
 
         if (!isset($this->values[$language])) {
-            return [];
+            return array();
         }
 
         return $this->values[$language];
@@ -488,7 +488,7 @@ class ElementStructure implements \IteratorAggregate
      */
     public function all($name)
     {
-        $items = [];
+        $items = array();
 
         if ($this->hasValue($name)) {
             $items[] = $this->getValue($name);
@@ -532,7 +532,7 @@ class ElementStructure implements \IteratorAggregate
             return $this->getStructures();
         }
 
-        $result = [];
+        $result = array();
         foreach ($this->getStructures() as $childStructure) {
             if ($childStructure->getParentName() === $name) {
                 $result[] = $childStructure;

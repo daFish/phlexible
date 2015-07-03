@@ -23,7 +23,7 @@ class Config
     /**
      * @var array
      */
-    private $values = [];
+    private $values = array();
 
     /**
      * @param string $key

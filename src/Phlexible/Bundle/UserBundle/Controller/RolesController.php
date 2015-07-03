@@ -46,12 +46,12 @@ class RolesController extends FOSRestController
     {
         $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
 
-        $roles = [];
+        $roles = array();
         foreach (array_keys($roleHierarchy) as $role) {
-            $roles[] = [
+            $roles[] = array(
                 'id' => $role,
                 'role' => $role
-            ];
+            );
         }
 
         return $this->handleView($this->view(

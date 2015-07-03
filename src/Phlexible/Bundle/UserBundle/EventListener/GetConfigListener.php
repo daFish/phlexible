@@ -69,7 +69,7 @@ class GetConfigListener
         $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
 
-        $roles = [];
+        $roles = array();
         foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
             $roles[] = $role->getRole();
         }

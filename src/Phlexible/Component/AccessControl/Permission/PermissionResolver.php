@@ -42,7 +42,7 @@ class PermissionResolver
      */
     public function resolve($contentClass, $mask)
     {
-        $permissions = [];
+        $permissions = array();
 
         foreach ($this->permissions->getByContentClass($contentClass) as $permission) {
             if ($permission->getBit() & $mask) {

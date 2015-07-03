@@ -87,7 +87,7 @@ class PuliLoader
         $configCache = new ConfigCache($this->getFilename(), $this->debug);
 
         if (!$configCache->isFresh()) {
-            $resources = [];
+            $resources = array();
             $r = new \ReflectionClass($this);
             $resources[] = new FileResource($r->getFileName());
             $r = new \ReflectionClass($this->compiler);

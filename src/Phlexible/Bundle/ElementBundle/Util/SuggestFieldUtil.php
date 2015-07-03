@@ -65,7 +65,7 @@ class SuggestFieldUtil
         */
         // TODO: aus elementen
 
-        $values = [];
+        $values = array();
 
         $values = $this->splitSuggestValues($values);
 
@@ -81,7 +81,7 @@ class SuggestFieldUtil
      */
     private function splitSuggestValues(array $concatenated)
     {
-        $keys = [];
+        $keys = array();
         foreach ($concatenated as $value) {
             $splitted = explode($this->seperatorChar, $value);
             foreach ($splitted as $key) {

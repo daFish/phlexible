@@ -62,7 +62,7 @@ class ElementValidator
         $elementtype = $this->elementService->findElementtype($elementVersion->getElement());
         $elementStructure = $this->elementService->findElementStructure($elementVersion);
 
-        $violations = [];
+        $violations = array();
 
         $rii = new \RecursiveIteratorIterator($elementtype->getStructure()->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $node) {
@@ -83,7 +83,7 @@ class ElementValidator
      */
     private function createConstraints(ElementtypeStructureNode $node)
     {
-        $constraints = [];
+        $constraints = array();
 
         $required = $node->getConfigurationValue('required');
         if ($required === 'always' || $required === 'on_publish') {

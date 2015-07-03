@@ -27,7 +27,7 @@ class AddFieldMappersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $mappers = [];
+        $mappers = array();
         foreach ($container->findTaggedServiceIds('phlexible_element.field_mapper') as $id => $attributes) {
             $mappers[] = new Reference($id);
         }

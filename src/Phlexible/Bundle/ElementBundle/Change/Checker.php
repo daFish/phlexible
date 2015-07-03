@@ -57,18 +57,18 @@ class Checker
      */
     public function check()
     {
-        $changes = [];
+        $changes = array();
 
         $allElementtypes = $this->elementtypeService->findAllElementtypes();
 
-        $referenceElementtypeIds = [];
+        $referenceElementtypeIds = array();
         foreach ($allElementtypes as $elementtype) {
             if ($elementtype->getType() !== 'reference') {
                 continue;
             }
             $reason = '';
             $needImport = false;
-            $outdatedElementSources = [];
+            $outdatedElementSources = array();
             $oldElementSources = $this->elementSourceManager->findByElementtype($elementtype);
             if (!$oldElementSources) {
                 $needImport = true;
@@ -95,7 +95,7 @@ class Checker
             }
             $reason = '';
             $needImport = false;
-            $outdatedElementSources = [];
+            $outdatedElementSources = array();
             $oldElementSources = $this->elementSourceManager->findByElementtype($elementtype);
             if (!$oldElementSources) {
                 $needImport = true;

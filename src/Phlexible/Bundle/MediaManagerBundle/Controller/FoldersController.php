@@ -61,7 +61,7 @@ class FoldersController extends FOSRestController
     {
         $folderId = $request->get('node', null);
 
-        $data = [];
+        $data = array();
 
         $slots = new Slots();
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
@@ -99,9 +99,9 @@ class FoldersController extends FOSRestController
 
                 $slot = new SiteSlot();
                 $slot->setData(
-                    [
+                    array(
                         $data
-                    ]
+                    )
                 );
 
                 $slots->append($slot);
@@ -118,7 +118,7 @@ class FoldersController extends FOSRestController
                 $folder = $volume->findFolder($folderId);
 
                 if (!$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$authorizationChecker->isGranted('FOLDER_READ', $rootFolder)) {
-                    return new JsonResponse([]);
+                    return new JsonResponse(array());
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
@@ -242,7 +242,7 @@ class FoldersController extends FOSRestController
         $calculator = new SizeCalculator();
         $calculatedSize = $calculator->calculate($volume, $folder);
 
-        $data = [
+        $data = array(
             'title'       => $folder->getName(),
             'type'        => 'folder',
             'path'        => '/' . $folder->getPath(),
@@ -253,7 +253,7 @@ class FoldersController extends FOSRestController
             'create_user' => $folder->getCreateUser(),
             'modify_time' => $folder->getModifiedAt()->format('U') * 1000,
             'modify_user' => $folder->getModifyUser(),
-        ];
+        );
 
         return array(
             'size' => $data
@@ -477,7 +477,7 @@ class FoldersController extends FOSRestController
 
         $user = $this->getUser();
 
-        $children = [];
+        $children = array();
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder ExtendedFolderInterface */
 
@@ -495,7 +495,7 @@ class FoldersController extends FOSRestController
             */
             $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
 
-            $tmp = [
+            $tmp = array(
                 'id'        => $subFolder->getId(),
                 'text'      => $subFolder->getName(),
                 'leaf'      => false,
@@ -506,13 +506,13 @@ class FoldersController extends FOSRestController
                 'allowChildren' => true,
                 'isTarget'  => true,
                 'rights'    => $userRights,
-            ];
+            );
 
             if ($volume->countFoldersByParentFolder($subFolder)) {
                 $tmp['children'] = $this->recurseFolders($subFolder);
                 $tmp['expanded'] = false;
             } else {
-                $tmp['children'] = [];
+                $tmp['children'] = array();
                 $tmp['expanded'] = true;
             }
 

@@ -123,10 +123,10 @@ class TreeNode implements TreeNodeInterface, ContentObjectInterface
      */
     public function getContentObjectIdentifiers()
     {
-        return [
+        return array(
             'type' => 'treenode',
             'id'   => $this->getId()
-        ];
+        );
     }
 
     /**
@@ -418,7 +418,7 @@ class TreeNode implements TreeNodeInterface, ContentObjectInterface
      */
     public function getCache()
     {
-        return $this->getAttribute('cache', []);
+        return $this->getAttribute('cache', array());
     }
 
     /**
@@ -484,7 +484,7 @@ class TreeNode implements TreeNodeInterface, ContentObjectInterface
      */
     public function getRoutes()
     {
-        return $this->getAttribute('routes', []);
+        return $this->getAttribute('routes', array());
     }
 
     /**

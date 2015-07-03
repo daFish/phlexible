@@ -77,13 +77,13 @@ class PatternResolver
      */
     public function replacePattern($pattern, Siteroot $siteroot, ElementVersion $elementVersion, $language)
     {
-        $replace = [
+        $replace = array(
             '%s' => $siteroot->getTitle(),
             '%b' => $elementVersion->getBackendTitle($language),
             '%p' => $elementVersion->getPageTitle($language),
             '%n' => $elementVersion->getNavigationTitle($language),
             '%r' => $this->projectTitle,
-        ];
+        );
 
         return str_replace(array_keys($replace), array_values($replace), $pattern);
     }

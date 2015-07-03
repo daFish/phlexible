@@ -38,17 +38,17 @@ class MediaType
     /**
      * @var array
      */
-    private $titles = [];
+    private $titles = array();
 
     /**
      * @var InternetMediaType[]
      */
-    private $mimetypes = [];
+    private $mimetypes = array();
 
     /**
      * @var array
      */
-    private $icons = [];
+    private $icons = array();
 
     /**
      * @return string

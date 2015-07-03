@@ -93,17 +93,17 @@ class FolderUsageManager
     {
         $qb = $this->folderUsageRepository->createQueryBuilder('u');
         $qb
-            ->select(['u.usageType', 'u.usageId', 'u.status'])
+            ->select(array('u.usageType', 'u.usageId', 'u.status'))
             ->join('u.folder', 'f')
             ->where($qb->expr()->eq('f.id', $qb->expr()->literal($folder->getId())));
 
-        $usedIn = [];
+        $usedIn = array();
         foreach ($qb->getQuery()->getScalarResult() as $row) {
-            $usedIn[] = [
+            $usedIn[] = array(
                 'usage_type' => $row['usageType'],
                 'usage_id'   => $row['usageId'],
                 'status'     => $row['status'],
-            ];
+            );
         }
 
         return $usedIn;

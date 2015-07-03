@@ -71,7 +71,7 @@ class Rights
         $x = $resolver->resolve($entries);
         ldd($x);
 
-        $sort = [];
+        $sort = array();
         foreach ($entries as $idx => $entry) {
             $sort[$idx] = array_search((int) $entry->getContentId(), $contentIdPath);
 
@@ -85,8 +85,8 @@ class Rights
 
         array_multisort($sort, $entries);
 
-        $userIds  = [];
-        $groupIds = [];
+        $userIds  = array();
+        $groupIds = array();
 
         foreach ($entries as $entry) {
             if ($entry->getSecurityType() === 'uid' && !array_key_exists($entry->getSecurityId(), $userIds)) {
@@ -96,12 +96,12 @@ class Rights
             }
         }
 
-        $userSubjects = [];
+        $userSubjects = array();
         if (count($userIds)) {
             $userSubjects = $securityFetchers['uid']($userIds);
         }
 
-        $groupSubjects = [];
+        $groupSubjects = array();
         if (count($groupIds)) {
             $groupSubjects = $securityFetchers['gid']($groupIds);
         }
@@ -121,15 +121,15 @@ class Rights
 
     private function getRightsForSubjects($contentId, array $subjectsData, array $allRights, array $rightsData)
     {
-        $subjects = [];
+        $subjects = array();
 
         $allRights = array_flip($allRights);
         foreach ($allRights as $right => $rightsRow) {
-            $allRights[$right] = [
+            $allRights[$right] = array(
                 'right'  => $right,
                 'status' => self::RIGHT_STATUS_UNSET,
                 'info'   => 'not_set',
-            ];
+            );
         }
 
         foreach ($rightsData as $rightsRow) {
@@ -145,7 +145,7 @@ class Rights
             $key         = $objectType.'__'.$objectId.'__'.$language;
 
             if (empty($subjects[$key])) {
-                $subjects[$key] = [
+                $subjects[$key] = array(
                     'type'        => $objectType === 'uid' ? 'user' : 'group',
                     'object_type' => $objectType,
                     'object_id'   => $objectId,
@@ -157,7 +157,7 @@ class Rights
                     'inherited'   => 0,
                     'set_here'    => 1,
                     'restore'     => 0,
-                ];
+                );
             }
 
             $subjects[$key]['rights'][$right]['status'] = $status;

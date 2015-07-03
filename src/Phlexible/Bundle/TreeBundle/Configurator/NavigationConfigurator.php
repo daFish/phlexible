@@ -60,7 +60,7 @@ class NavigationConfigurator implements ConfiguratorInterface
         /** @var Url $siterootUrl */
         $siterootUrl = $request->attributes->get('siterootUrl');
 
-        $navigations = [];
+        $navigations = array();
 
         foreach ($siterootUrl->getSiteroot()->getNavigations() as $siterootNavigation) {
             $startTid = $siterootNavigation->getStartTreeId();

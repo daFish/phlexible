@@ -37,7 +37,7 @@ class RunCommand extends ContainerAwareCommand
     /**
      * @var RunningJob[]
      */
-    private $runningJobs = [];
+    private $runningJobs = array();
 
     /**
      * @var bool

@@ -71,11 +71,11 @@ class ElementtypesController extends FOSRestController
             }
         }
 
-        return new JsonResponse([
+        return new JsonResponse(array(
             'elementtypes' => $elementtypes,
             'total'        => count($elementtypes),
             'changes'      => $hasChanges,
-        ]);
+        ));
     }
 
     /**

@@ -53,24 +53,24 @@ class FoldersMetasController extends FOSRestController
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $meta = [];
+        $meta = array();
 
         foreach ($folderMetaSetResolver->resolve($folder) as $metaSet) {
             $metaData = $folderMetaDataManager->findByMetaSetAndFolder($metaSet, $folder);
 
-            $fieldDatas = [];
+            $fieldDatas = array();
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fieldData = [
+                $fieldData = array(
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                ];
+                );
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $language) {
@@ -81,16 +81,16 @@ class FoldersMetasController extends FOSRestController
                 $fieldDatas[] = $fieldData;
             }
 
-            $meta[] = [
+            $meta[] = array(
                 'set_id' => $metaSet->getId(),
                 'title'  => $metaSet->getName(),
                 'fields' => $fieldDatas
-            ];
+            );
         }
 
-        return [
+        return array(
             'meta' => $meta
-        ];
+        );
     }
 
     /**
@@ -123,7 +123,7 @@ class FoldersMetasController extends FOSRestController
         }
         */
 
-        $metaSetIds = $folder->getAttribute('metasets', []);
+        $metaSetIds = $folder->getAttribute('metasets', array());
 
         foreach ($data as $metaSetId => $fields) {
             $metaSet = $metaSetManager->find($metaSetId);

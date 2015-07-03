@@ -128,7 +128,7 @@ class ElementConfigurator implements ConfiguratorInterface
 
         $versionStrategy = new OnlineVersionStrategy($this->elementService);
 
-        $availableLanguages = $request->attributes->get('availableLanguages', ['de']);
+        $availableLanguages = $request->attributes->get('availableLanguages', array('de'));
         $elementLanguage = $versionStrategy->findLanguage($request, $element, $availableLanguages);
 
         if (!$elementLanguage) {
@@ -203,7 +203,7 @@ class ElementConfigurator implements ConfiguratorInterface
             ->addFeature('element')
             ->setVariable('contentElement', $contentElement)
             ->setVariable('content', $data->contentElement->getStructure())
-            ->setVariable('contentLanguages', ['de']);
+            ->setVariable('contentLanguages', array('de'));
 
         if (!$renderConfiguration->hasFeature('template')) {
             $renderConfiguration

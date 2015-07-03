@@ -95,9 +95,9 @@ class SiterootListener
             ->setDsId(Uuid::generate())
             ->setName('data')
             ->setType('tab')
-            ->setLabels(['fieldLabel' => ['de' => 'Daten', 'en' => 'Data']])
-            ->setConfiguration([])
-            ->setValidation([]);
+            ->setLabels(array('fieldLabel' => array('de' => 'Daten', 'en' => 'Data')))
+            ->setConfiguration(array())
+            ->setValidation(array());
 
         $textfield = new ElementtypeStructureNode();
         $textfield
@@ -106,23 +106,23 @@ class SiterootListener
             ->setDsId(Uuid::generate())
             ->setName('title')
             ->setType('textfield')
-            ->setLabels(['fieldLabel' => ['de' => 'Titel', 'en' => 'Title']])
-            ->setConfiguration(['required' => 'always'])
-            ->setValidation([]);
+            ->setLabels(array('fieldLabel' => array('de' => 'Titel', 'en' => 'Title')))
+            ->setConfiguration(array('required' => 'always'))
+            ->setValidation(array());
 
         $elementtypeStructure
             ->addNode($root)
             ->addNode($tab)
             ->addNode($textfield);
 
-        $mappings = [
-            'backend' => [
-                'fields' => [
-                    ['ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1]
-                ],
+        $mappings = array(
+            'backend' => array(
+                'fields' => array(
+                    array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)
+                ),
                 'pattern' => '$1'
-            ]
-        ];
+            )
+        );
 
         $elementtype = $this->elementtypeService->createElementtype(
             'structure',

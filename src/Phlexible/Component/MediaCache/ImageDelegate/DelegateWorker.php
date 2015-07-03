@@ -97,7 +97,7 @@ class DelegateWorker
      */
     public function writeAll($force = false, callable $callback = null)
     {
-        $templates  = $this->templateManager->findBy(['type' => 'image']);
+        $templates  = $this->templateManager->findBy(array('type' => 'image'));
         $mediaTypes = $this->mediaTypeManager->findAll();
 
         $cnt = count($templates) * count($mediaTypes);

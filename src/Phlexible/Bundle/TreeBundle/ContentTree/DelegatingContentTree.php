@@ -209,7 +209,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function getChildren(TreeNodeInterface $node)
     {
-        $children = [];
+        $children = array();
         foreach ($this->tree->getChildren($node) as $childNode) {
             $children[] = $this->get($childNode->getId());
         }
@@ -251,7 +251,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
      */
     public function getPath(TreeNodeInterface $node)
     {
-        $path = [];
+        $path = array();
         foreach ($this->tree->getPath($node) as $pathNode) {
             $path[] = $this->get($pathNode->getId());
         }

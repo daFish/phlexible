@@ -66,7 +66,7 @@ class ContentElementBuilder
         if (isset($mappedFields[$language])) {
             $mappedFields = $mappedFields[$language];
         } else {
-            $mappedFields = [];
+            $mappedFields = array();
         }
         $contentElement = new ContentElement(
             $element->getEid(),

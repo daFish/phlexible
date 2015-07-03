@@ -37,12 +37,12 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * @var array
      */
-    private $nodes = [];
+    private $nodes = array();
 
     /**
      * @var array
      */
-    private $childNodes = [];
+    private $childNodes = array();
 
     /**
      * @var \DOMDocument
@@ -188,12 +188,12 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             $siteroot->addNavigation($navigation);
         }
 
-        $specialTids = [];
+        $specialTids = array();
         foreach ($specialTidElements as $specialTidElement) {
             /* @var $specialTidElement \DOMElement */
             $name = $specialTidElement->getAttribute('name');
             $language = $specialTidElement->getAttribute('language') ? : null;
-            $specialTids[] = ['name' => $name, 'language' => $language, 'treeId' => (int) $specialTidElement->textContent];
+            $specialTids[] = array('name' => $name, 'language' => $language, 'treeId' => (int) $specialTidElement->textContent);
         }
         $siteroot->setSpecialTids($specialTids);
 
@@ -215,7 +215,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             ->setSort($treeNode->getSort())
             ->setSortMode($treeNode->getSortMode())
             ->setSortDir($treeNode->getSortDir())
-            ->setTitles(['de' => 'bla', 'en' => 'blubb']);
+            ->setTitles(array('de' => 'bla', 'en' => 'blubb'));
 
         return $contentNode;
     }
@@ -288,7 +288,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $elements = $this->xpath->query("//node[@id={$node->getId()}]/node");
 
         if (!$elements->length) {
-            return [];
+            return array();
         }
 
         $childNodes = $this->mapNodes($elements);
@@ -328,13 +328,13 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     {
         $elements = $this->xpath->query("//node[@id={$node->getId()}]");
         if (!$elements->length) {
-            return [];
+            return array();
         }
 
         $element = $elements->item(0);
         $elementPath = $this->xpath->query($element->getNodePath());
 
-        $path = [];
+        $path = array();
         foreach ($elementPath as $element) {
             $path[] = $this->get($element->attributes->item(0)->value);
         }
@@ -379,7 +379,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
 
         $elements = $this->xpath->query("//node[@id=$id]/versions/version");
 
-        $languages = [];
+        $languages = array();
         foreach ($elements as $element) {
             $languages[] = $element->attributes->item(0)->value;
         }
@@ -400,7 +400,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
 
         $elements = $this->xpath->query("//node[@id=$id]/versions/version");
 
-        $versions = [];
+        $versions = array();
         foreach ($elements as $element) {
             $language = $element->attributes->item(0)->value;
             $versions[$language] = (int) $element->textContent;
@@ -430,7 +430,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
      */
     private function mapNodes(\DOMNodeList $elements)
     {
-        $nodes = [];
+        $nodes = array();
 
         foreach ($elements as $element) {
             $node = $this->mapNode($element);
@@ -447,21 +447,21 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
      */
     private function mapNode(\DOMElement $element)
     {
-        $attributes = [];
+        $attributes = array();
 
-        $titles = [];
+        $titles = array();
         $titlesElement = $element->getElementsByTagName('titles')->item(0);
         foreach ($titlesElement->getElementsByTagName('title') as $titleNode) {
             $titles[$titleNode->getAttribute('language')] = $titleNode->textContent;
         }
 
-        $slugs = [];
+        $slugs = array();
         $slugsElement = $element->getElementsByTagName('slugs')->item(0);
         foreach ($slugsElement->getElementsByTagName('slug') as $slugNode) {
             $slugs[$slugNode->getAttribute('language')] = $slugNode->textContent;
         }
 
-        $versions = [];
+        $versions = array();
         $versionsElement = $element->getElementsByTagName('versions')->item(0);
         foreach ($versionsElement->getElementsByTagName('version') as $versionNode) {
             $versions[$versionNode->getAttribute('language')] = (int) $versionNode->textContent;
@@ -520,7 +520,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
      */
     public function getInstances(TreeNodeInterface $node)
     {
-        return [];
+        return array();
     }
 
     /**

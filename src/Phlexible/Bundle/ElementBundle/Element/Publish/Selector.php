@@ -241,7 +241,7 @@ class Selector
             }
         }
         if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            if (!$this->authorizationChecker->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
+            if (!$this->authorizationChecker->isGranted($treeNode, array('right' => 'PUBLISH', 'language' => $language))) {
                 $include = false;
             }
         }
@@ -293,7 +293,7 @@ class Selector
         $element = $this->elementService->findElement($treeNode->getTypeId());
         $elementtype = $this->elementService->findElementtype($element);
 
-        $layoutareas = [];
+        $layoutareas = array();
         // TODO: repair
         foreach ($this->elementService->findElementtypeByType('layout') as $layoutarea) {
             if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {

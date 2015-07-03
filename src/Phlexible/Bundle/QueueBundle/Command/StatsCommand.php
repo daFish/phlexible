@@ -33,14 +33,14 @@ class StatsCommand extends ContainerAwareCommand
         $this
             ->setName('queue:stats')
             ->setDefinition(
-                [
+                array(
                     new InputOption('pending', null, InputOption::VALUE_NONE, 'Show statistics for pending jobs'),
                     new InputOption('running', null, InputOption::VALUE_NONE, 'Show statistics for running jobs'),
                     new InputOption('finished', null, InputOption::VALUE_NONE, 'Show statistics for finished jobs'),
                     new InputOption('failed', null, InputOption::VALUE_NONE, 'Show statistics for failed jobs'),
                     new InputOption('aborted', null, InputOption::VALUE_NONE, 'Show statistics for aborted jobs'),
                     new InputOption('suspended', null, InputOption::VALUE_NONE, 'Show statistics for suspended jobs'),
-                ]
+                )
             )
             ->setDescription('Show statistics');
     }
@@ -73,15 +73,15 @@ class StatsCommand extends ContainerAwareCommand
     {
         $jobManager = $this->getContainer()->get('phlexible_queue.job_manager');
 
-        $jobs = $jobManager->findBy(['state' => $state]);
+        $jobs = $jobManager->findBy(array('state' => $state));
 
         $total = count($jobs);
 
         if ($total) {
             $table = new Table($output);
-            $table->setHeaders(['Command', 'Count', 'Percent']);
+            $table->setHeaders(array('Command', 'Count', 'Percent'));
 
-            $commands = [];
+            $commands = array();
             foreach ($jobs as $job) {
                 if (!isset($commands[$job->getCommand()])) {
                     $commands[$job->getCommand()] = 0;
@@ -91,21 +91,21 @@ class StatsCommand extends ContainerAwareCommand
 
             foreach ($commands as $command => $count) {
                 $table->addRow(
-                    [
+                    array(
                         $command,
                         $count,
                         number_format($count * 100 / $total, 1) . ' %'
-                    ]
+                    )
                 );
             }
 
             if (count($commands) > 1) {
                 $table->addRow(
-                    [
+                    array(
                         'Total',
                         $total,
                         ''
-                    ]
+                    )
                 );
             }
 
@@ -119,18 +119,18 @@ class StatsCommand extends ContainerAwareCommand
     {
         $jobManager = $this->getContainer()->get('phlexible_queue.job_manager');
 
-        $colors = [
+        $colors = array(
             Job::STATE_PENDING   => 'comment',
             Job::STATE_RUNNING   => null,
             Job::STATE_FINISHED  => 'info',
             Job::STATE_FAILED    => 'error',
             Job::STATE_ABORTED   => null,
             Job::STATE_SUSPENDED => null,
-        ];
+        );
 
         $sum = 0;
         foreach ($colors as $state => $color) {
-            $sum += $cnt = $jobManager->countBy(['state' => $state]);
+            $sum += $cnt = $jobManager->countBy(array('state' => $state));
 
             if ($cnt) {
                 $output->writeln(

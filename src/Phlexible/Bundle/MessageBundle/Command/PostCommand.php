@@ -33,13 +33,13 @@ class PostCommand extends ContainerAwareCommand
         $this
             ->setName('message:post')
             ->setDefinition(
-                [
+                array(
                     new InputArgument('subject', InputArgument::OPTIONAL, 'Message subject'),
                     new InputOption('body', null, InputOption::VALUE_REQUIRED, 'Message body'),
                     new InputOption('type', null, InputOption::VALUE_REQUIRED, 'Message type', 0),
                     new InputOption('channel', null, InputOption::VALUE_REQUIRED, 'Message channel'),
                     new InputOption('role', null, InputOption::VALUE_REQUIRED, 'Message role'),
-                ]
+                )
             )
             ->setDescription('Post message');
     }
@@ -62,7 +62,7 @@ class PostCommand extends ContainerAwareCommand
         }
 
         $type = $input->getOption('type');
-        $types = ['info', 'error'];
+        $types = array('info', 'error');
         if (in_array($type, $types)) {
             $type = array_search($type, $types);
         } elseif (!in_array($type, array_keys($types))) {

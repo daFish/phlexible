@@ -133,10 +133,10 @@ class MessageManager implements MessageManagerInterface
      */
     public function getTypeNames()
     {
-        return [
+        return array(
             0 => 'info',
             1 => 'error',
-        ];
+        );
     }
 
     /**

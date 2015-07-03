@@ -72,7 +72,7 @@ class DigestAssembler
     {
         $subscriptions = $this->subscriptionManager->findBy(array('handler' => 'digest'));
 
-        $digests = [];
+        $digests = array();
         foreach ($subscriptions as $subscription) {
             $filter = $this->filterManager->find($subscription->getFilter()->getId());
             if (!$filter) {

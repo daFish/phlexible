@@ -63,7 +63,7 @@ class ListCommand extends ContainerAwareCommand
         dump($s->serialize($filter, 'json'));
         die;
 
-        $messages = $messageManager->findByExpression($filter->getExpression(), ['createdAt' => 'DESC'], $limit);
+        $messages = $messageManager->findByExpression($filter->getExpression(), array('createdAt' => 'DESC'), $limit);
         $messages = array_reverse($messages);
         foreach ($messages as $message) {
             $output->writeln(

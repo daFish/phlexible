@@ -158,6 +158,6 @@ class MediaController extends Controller
         $icon = $mediaType->getIcon($size);
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($icon, 'image/gif', ['absolute_path' => true]);
+            ->create($icon, 'image/gif', array('absolute_path' => true));
     }
 }

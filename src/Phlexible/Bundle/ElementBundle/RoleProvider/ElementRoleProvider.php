@@ -25,7 +25,7 @@ class ElementRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_ELEMENTS',
             'ROLE_ELEMENT_CHILDREN',
             'ROLE_ELEMENT_COMMENT',
@@ -38,7 +38,7 @@ class ElementRoleProvider extends RoleProvider
             'ROLE_ELEMENT_PUBLISH',
             'ROLE_ELEMENT_TASKS',
             'ROLE_ELEMENT_VERSIONS',
-        ];
+        );
     }
 
     /**
@@ -46,12 +46,12 @@ class ElementRoleProvider extends RoleProvider
      */
     public function provideRoleHierarchy()
     {
-        return [
+        return array(
             'ROLE_ELEMENT_ADMIN' => $this->provideRoles(),
-            'ROLE_ELEMENT_MANAGER' => [
+            'ROLE_ELEMENT_MANAGER' => array(
                 'ROLE_ELEMENTS'
-            ]
-        ];
+            )
+        );
     }
 
     /**

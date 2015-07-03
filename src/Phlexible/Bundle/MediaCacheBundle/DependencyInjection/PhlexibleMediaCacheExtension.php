@@ -40,7 +40,7 @@ class PhlexibleMediaCacheExtension extends Extension
 
         $container->setParameter('phlexible_media_cache.immediately_cache_system_templates', $config['immediately_cache_system_templates']);
 
-        $ids = [];
+        $ids = array();
         foreach ($config['storages'] as $name => $storageConfig) {
             if (!isset($storageConfig['id']) || !isset($storageConfig['options'])) {
                 throw new InvalidArgumentException('Storage config needs id and options.');

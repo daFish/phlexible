@@ -37,9 +37,9 @@ class CleanCommand extends ContainerAwareCommand
         $this
             ->setName('media-cache:clean')
             ->setDefinition(
-                [
+                array(
                     new InputOption('pretend', null, InputOption::VALUE_NONE, 'Only show files that will be deleted'),
-                ]
+                )
             )
             ->setDescription('Remove obsolete cache files');
     }
@@ -60,7 +60,7 @@ class CleanCommand extends ContainerAwareCommand
         $storageManager = $this->getContainer()->get('phlexible_media_cache.storage_manager');
         $templateManager = $this->getContainer()->get('phlexible_media_template.template_manager');
 
-        $files = [];
+        $files = array();
         foreach ($storageManager->all() as $storage) {
             $finder = Finder::create()
                 ->in(rtrim($storage->getStorageDir(), '/'))

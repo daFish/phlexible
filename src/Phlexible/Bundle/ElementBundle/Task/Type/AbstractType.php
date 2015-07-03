@@ -64,7 +64,7 @@ abstract class AbstractType implements TypeInterface
      */
     public function getTitle(Task $task)
     {
-        return $this->translator->trans($this->getTitleKey(), [], 'gui', 'en');
+        return $this->translator->trans($this->getTitleKey(), array(), 'gui', 'en');
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class AbstractType implements TypeInterface
      */
     public function getText(Task $task)
     {
-        return $this->translator->trans($this->getTextKey(), [], 'gui', 'en');
+        return $this->translator->trans($this->getTextKey(), array(), 'gui', 'en');
     }
 
     /**

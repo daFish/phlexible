@@ -36,24 +36,24 @@ class ArraySerializer implements SerializerInterface
      */
     private function walk(ElementStructure $elementStructure, $language)
     {
-        $valueDatas = [];
+        $valueDatas = array();
         foreach ($elementStructure->getValues($language) as $value) {
-            $valueDatas[] = [
+            $valueDatas[] = array(
                 'id'         => $value->getId(),
                 'dsId'       => $value->getDsId(),
                 'name'       => $value->getName(),
                 'type'       => $value->getType(),
                 'content'    => $value->getValue(),
                 'attributes' => $value->getAttributes(),
-            ];
+            );
         }
 
-        $structureDatas = [];
+        $structureDatas = array();
         foreach ($elementStructure->getStructures() as $subStructure) {
             $structureDatas[] = $this->walk($subStructure, $language);
         }
 
-        $structureData = [
+        $structureData = array(
             //'id'         => $elementStructure->getId(),
             //'dataId'     => $elementStructure->getDataId(),
             'id'         => $elementStructure->getDataId(),
@@ -65,7 +65,7 @@ class ArraySerializer implements SerializerInterface
             'attributes' => $elementStructure->getAttributes(),
             'structures' => $structureDatas,
             'values'     => $valueDatas,
-        ];
+        );
 
         return $structureData;
     }

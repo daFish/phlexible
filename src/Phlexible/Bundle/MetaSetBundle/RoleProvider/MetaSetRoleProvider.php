@@ -25,9 +25,9 @@ class MetaSetRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_META_SETS',
-        ];
+        );
     }
 
     /**

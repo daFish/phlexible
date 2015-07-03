@@ -55,10 +55,10 @@ class MenuLoader
     {
         $loader = new DelegatingLoader(
             new LoaderResolver(
-                [
+                array(
                     new YamlFileLoader(),
                     new XmlFileLoader(),
-                ]
+                )
             )
         );
         $items = new MenuItemCollection();

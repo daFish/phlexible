@@ -31,7 +31,7 @@ class MetaData implements MetaDataInterface, \Countable
     /**
      * @var array
      */
-    private $values = [];
+    private $values = array();
 
     /**
      * {@inheritdoc}

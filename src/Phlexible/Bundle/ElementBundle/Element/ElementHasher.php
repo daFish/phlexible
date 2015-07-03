@@ -79,24 +79,24 @@ class ElementHasher
         $elementtypeVersion = $elementVersion->getElementtypeVersion();
 
         // TODO: meta resolver
-        $meta = [];//$this->_db->fetchCol($selectMeta);
+        $meta = array();//$this->_db->fetchCol($selectMeta);
         sort($meta);
 
         $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
-        $content = [];
+        $content = array();
         foreach ($rii as $structure) {
             foreach ($structure->getValues() as $value) {
                 $content[$structure->getId() . '__' . $value->getId()] = $value->getValue();
             }
         }
 
-        $values = [
+        $values = array(
             'eid'                => $eid,
             'elementtypeId'      => $elementtypeId,
             'elementtypeVersion' => $elementtypeVersion,
             'meta'               => $meta,
             'content'            => $content,
-        ];
+        );
 
         return $values;
     }

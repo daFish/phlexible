@@ -31,7 +31,7 @@ class FlushCommand extends ContainerAwareCommand
         $this
             ->setName('queue:flush')
             ->setDefinition(
-                [
+                array(
                     new InputOption('all', null, InputOption::VALUE_NONE, 'Flush all jobs'),
                     new InputOption('pending', null, InputOption::VALUE_NONE, 'Flush pendingjobs'),
                     new InputOption('running', null, InputOption::VALUE_NONE, 'Flush running'),
@@ -39,7 +39,7 @@ class FlushCommand extends ContainerAwareCommand
                     new InputOption('failed', null, InputOption::VALUE_NONE, 'Flush failed jobs'),
                     new InputOption('suspended', null, InputOption::VALUE_NONE, 'Flush suspended jobs'),
                     new InputOption('aborted', null, InputOption::VALUE_NONE, 'Flush aborted jobs'),
-                ]
+                )
             )
             ->setDescription('Flush the queue');
     }
@@ -83,7 +83,7 @@ class FlushCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $states = ['pending', 'running', 'finished', 'failed', 'suspended', 'aborted'];
+        $states = array('pending', 'running', 'finished', 'failed', 'suspended', 'aborted');
 
         if ($input->getOption('all')) {
             $output->writeln('Flushing all jobs.');

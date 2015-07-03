@@ -33,13 +33,13 @@ class ArraySerializer implements SerializerInterface
 
         $rii = new \RecursiveIteratorIterator($elementtypeStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
-        $nodaDatas[] = [];
+        $nodaDatas[] = array();
 
         foreach ($rii as $node) {
             /* @var $node ElementtypeStructureNode */
 
             $nodeData = $nodeDatas[$node->getDsId()] = new \ArrayObject(
-                [
+                array(
                     'comment'          => $node->getComment(),
                     'configuration'    => $node->getConfiguration(),
                     'dsId'             => $node->getDsId(),
@@ -52,14 +52,14 @@ class ArraySerializer implements SerializerInterface
                     'referenceVersion' => $node->getReferenceElementtypeId() ? 1 : null,
                     'type'             => $node->getType(),
                     'validation'       => $node->getValidation(),
-                    'children'         => []
-                ],
+                    'children'         => array()
+                ),
                 \ArrayObject::ARRAY_AS_PROPS
             );
 
             if ($node->getParentDsId()) {
                 $nodeDatas[$node->getParentDsId()]['children'][] = $nodeData;
-            } elseif (!in_array($node->getType(), ['referenceroot', 'reference'])) {
+            } elseif (!in_array($node->getType(), array('referenceroot', 'reference'))) {
                 if (!empty($rootNode)) {
                     throw new InvalidArgumentException('duplicate root: ' . print_r($nodeData, 1));
                 }
@@ -67,7 +67,7 @@ class ArraySerializer implements SerializerInterface
             }
         }
 
-        return [(array) $rootNode];
+        return array((array) $rootNode);
     }
 
     /**
@@ -79,12 +79,12 @@ class ArraySerializer implements SerializerInterface
     {
         $labels = $node->getLabels();
 
-        $labels += [
-            'fieldLabel' => [],
-            'contextHelp' => [],
-            'prefix' => [],
-            'suffix' => []
-        ];
+        $labels += array(
+            'fieldLabel' => array(),
+            'contextHelp' => array(),
+            'prefix' => array(),
+            'suffix' => array()
+        );
 
         return $labels;
     }

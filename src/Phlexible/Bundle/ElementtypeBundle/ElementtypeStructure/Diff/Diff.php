@@ -20,9 +20,9 @@ use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
  */
 class Diff
 {
-    private $added = [];
-    private $moved = [];
-    private $removed = [];
+    private $added = array();
+    private $moved = array();
+    private $removed = array();
 
     /**
      * @param \Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode $newNode
@@ -52,7 +52,7 @@ class Diff
      */
     public function addMoved(ElementtypeStructureNode $oldNode, ElementtypeStructureNode $newNode)
     {
-        $this->moved[] = ['oldNode' => $oldNode, 'newNode' => $newNode];
+        $this->moved[] = array('oldNode' => $oldNode, 'newNode' => $newNode);
 
         return $this;
     }

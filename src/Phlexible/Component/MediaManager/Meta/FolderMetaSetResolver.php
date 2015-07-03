@@ -42,7 +42,7 @@ class FolderMetaSetResolver
      */
     public function resolve(ExtendedFolderInterface $folder)
     {
-        $metaSets = [];
+        $metaSets = array();
         foreach ($folder->getMetasets() as $metaSetId) {
             $metaSet = $this->metaSetManager->find($metaSetId);
             if ($metaSet) {

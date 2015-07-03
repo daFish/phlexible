@@ -25,10 +25,10 @@ class CmsRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_REPORTS',
             'ROLE_STATISTICS',
-        ];
+        );
     }
 
     /**

@@ -25,9 +25,9 @@ class ProblemRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_PROBLEMS',
-        ];
+        );
     }
 
     /**

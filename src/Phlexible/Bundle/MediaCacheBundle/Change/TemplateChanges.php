@@ -86,7 +86,7 @@ class TemplateChanges
      */
     public function changes()
     {
-        $changes = [];
+        $changes = array();
 
         foreach ($this->templateManager->findAll() as $template) {
             $cacheItems = $this->cacheManager->findOutdatedTemplates($template);

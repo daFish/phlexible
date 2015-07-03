@@ -43,13 +43,13 @@ class OnlinePortlet extends Portlet
     {
         $users = $this->userManager->findLoggedInUsers();
 
-        $data = [];
+        $data = array();
         foreach ($users as $user) {
-            $data[] = [
+            $data[] = array(
                 'uid'      => $user->getId(),
                 'username' => $user->getUsername(),
                 'image'    => '/bundles/users/images/male-black-blonde.png',
-            ];
+            );
         }
 
         return $data;

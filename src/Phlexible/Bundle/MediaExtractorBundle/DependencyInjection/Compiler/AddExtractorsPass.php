@@ -27,7 +27,7 @@ class AddExtractorsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $ids = [];
+        $ids = array();
         foreach ($container->findTaggedServiceIds('phlexible_media_extractor.extractor') as $id => $definition) {
             $ids[] = new Reference($id);
         }

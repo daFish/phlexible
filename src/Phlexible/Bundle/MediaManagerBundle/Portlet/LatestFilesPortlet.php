@@ -76,9 +76,9 @@ class LatestFilesPortlet extends Portlet
      */
     public function getSettings()
     {
-        return [
+        return array(
             'style' => $this->style
-        ];
+        );
     }
 
     /**
@@ -88,7 +88,7 @@ class LatestFilesPortlet extends Portlet
      */
     public function getData()
     {
-        $data = [];
+        $data = array();
 
         try {
             $files = $this->volumeManager->findFilesBy(array(), array('createdAt' => 'DESC'), 10);
@@ -101,13 +101,13 @@ class LatestFilesPortlet extends Portlet
                 }
 
                 $cacheItems = $this->cacheManager->findByFile($file->getId(), $file->getVersion());
-                $cacheStatus = [];
+                $cacheStatus = array();
                 foreach ($cacheItems as $cacheItem) {
                     $cacheStatus[$cacheItem->getTemplateKey()] =
                         $cacheItem->getCacheStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
                 }
 
-                $data[] = [
+                $data[] = array(
                     'id'          => sprintf('%s___%s', $file->getId(), $file->getVersion()),
                     'fileId'      => $file->getId(),
                     'fileVersion' => $file->getVersion(),
@@ -117,10 +117,10 @@ class LatestFilesPortlet extends Portlet
                     'createdAt'   => $file->getCreatedAt()->format('Y-m-d H:i:s'),
                     'name'       => $file->getName(),
                     'cache'       => $cacheStatus
-                ];
+                );
             }
         } catch (\Exception $e) {
-            $data = [];
+            $data = array();
             echo $e->getMessage();die;
         }
 

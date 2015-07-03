@@ -25,7 +25,7 @@ class ChainConfigurator implements ConfiguratorInterface
     /**
      * @var ConfiguratorInterface[]
      */
-    private $configurators = [];
+    private $configurators = array();
 
     /**
      * @param ConfiguratorInterface[]  $configurators

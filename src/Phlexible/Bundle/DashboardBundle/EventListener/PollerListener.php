@@ -42,7 +42,7 @@ class PollerListener
     {
         $messages = $event->getMessages();
 
-        $data = [];
+        $data = array();
         foreach ($this->portlets->all() as $portletId => $portlet) {
             $data[$portletId] = $portlet->getData();
         }

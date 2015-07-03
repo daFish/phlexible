@@ -54,13 +54,13 @@ class PatternResolver
      */
     public function replace(Siteroot $siteroot, ElementVersion $elementVersion, $language, $pattern)
     {
-        $replace = [
+        $replace = array(
             '%s' => $siteroot->getTitle(),
             '%b' => $elementVersion->getBackendTitle($language),
             '%p' => $elementVersion->getPageTitle($language),
             '%n' => $elementVersion->getNavigationTitle($language),
             '%r' => $this->projectTitle,
-        ];
+        );
 
         return str_replace(array_keys($replace), array_values($replace), $pattern);
     }
@@ -74,13 +74,13 @@ class PatternResolver
      */
     public function replaceExample(Siteroot $siteroot, $language, $pattern = null)
     {
-        $replace = [
+        $replace = array(
             '%s' => $siteroot->getTitle(),
-            '%b' => '[' . $this->translator->trans('siteroots.element_backend_title', [], 'gui', $language) . ']',
-            '%p' => '[' . $this->translator->trans('siteroots.element_page_title', [], 'gui', $language) . ']',
-            '%n' => '[' . $this->translator->trans('siteroots.element_navigation_title', [], 'gui', $language) . ']',
+            '%b' => '[' . $this->translator->trans('siteroots.element_backend_title', array(), 'gui', $language) . ']',
+            '%p' => '[' . $this->translator->trans('siteroots.element_page_title', array(), 'gui', $language) . ']',
+            '%n' => '[' . $this->translator->trans('siteroots.element_navigation_title', array(), 'gui', $language) . ']',
             '%r' => $this->projectTitle,
-        ];
+        );
 
         return str_replace(array_keys($replace), array_values($replace), $pattern);
     }
@@ -92,27 +92,27 @@ class PatternResolver
      */
     public function getPlaceholders($language)
     {
-        return [
-            [
+        return array(
+            array(
                 'placeholder' => '%s',
-                'title'       => $this->translator->trans('siteroots.siteroot_title', [], 'gui', $language)
-            ],
-            [
+                'title'       => $this->translator->trans('siteroots.siteroot_title', array(), 'gui', $language)
+            ),
+            array(
                 'placeholder' => '%b',
-                'title'       => $this->translator->trans('siteroots.element_backend_title', [], 'gui', $language)
-            ],
-            [
+                'title'       => $this->translator->trans('siteroots.element_backend_title', array(), 'gui', $language)
+            ),
+            array(
                 'placeholder' => '%p',
-                'title'       => $this->translator->trans('siteroots.element_page_title', [], 'gui', $language)
-            ],
-            [
+                'title'       => $this->translator->trans('siteroots.element_page_title', array(), 'gui', $language)
+            ),
+            array(
                 'placeholder' => '%n',
-                'title'       => $this->translator->trans('siteroots.element_navigation_title', [], 'gui', $language)
-            ],
-            [
+                'title'       => $this->translator->trans('siteroots.element_navigation_title', array(), 'gui', $language)
+            ),
+            array(
                 'placeholder' => '%r',
-                'title'       => $this->translator->trans('siteroots.project_title', [], 'gui', $language)
-            ],
-        ];
+                'title'       => $this->translator->trans('siteroots.project_title', array(), 'gui', $language)
+            ),
+        );
     }
 }

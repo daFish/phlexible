@@ -85,7 +85,7 @@ class MetaSearch implements SearchProviderInterface
      */
     public function search($query)
     {
-        $files = [];
+        $files = array();
         foreach ($this->volumeManager->all() as $volume) {
             $foundFiles = $volume->search($query);
             if ($foundFiles) {
@@ -99,8 +99,8 @@ class MetaSearch implements SearchProviderInterface
             $files[$file->getId()] = $file;
         }
 
-        $folders = [];
-        $results = [];
+        $folders = array();
+        $results = array();
         foreach ($files as $file) {
             /* @var $file ExtendedFileInterface */
 
@@ -121,13 +121,13 @@ class MetaSearch implements SearchProviderInterface
                 $file->getCreatedAt(),
                 '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager Meta Search',
-                [
+                array(
                     'handler'    => 'media',
-                    'parameters' => [
+                    'parameters' => array(
                         'startFile_id'    => $file->getId(),
                         'startFolderPath' => '/' . implode('/', $folderPath)
-                    ],
-                ]
+                    ),
+                )
             );
         }
 

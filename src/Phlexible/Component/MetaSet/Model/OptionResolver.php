@@ -28,17 +28,17 @@ class OptionResolver
         $type = $field->getType();
 
         if ($type === 'select') {
-            $options = [];
+            $options = array();
             foreach (explode(',', $field->getOptions()) as $value) {
-                $options[] = [$value, $value];
+                $options[] = array($value, $value);
             }
 
             return $options;
         } elseif ($type === 'suggest') {
             $dataSourceId = $field->getOptions();
-            $options = [
+            $options = array(
                 'source_id' => $dataSourceId,
-            ];
+            );
 
             return $options;
         }

@@ -36,15 +36,15 @@ class SelectfieldController extends Controller
     {
         $selectFieldProviders = $this->get('phlexible_elementtype.select_field_providers');
 
-        $data = [];
+        $data = array();
         foreach ($selectFieldProviders->all() as $selectFieldProvider) {
-            $data[] = [
+            $data[] = array(
                 'name'  => $selectFieldProvider->getName(),
                 'title' => $selectFieldProvider->getTitle($this->getUser()->getInterfaceLanguage('en')),
-            ];
+            );
         }
 
-        return new JsonResponse(['functions' => $data]);
+        return new JsonResponse(array('functions' => $data));
     }
 
     /**
@@ -65,7 +65,7 @@ class SelectfieldController extends Controller
         $provider = $selectFieldProviders->get($providerName);
         $data = $provider->getData($language);
 
-        return new JsonResponse(['data' => $data]);
+        return new JsonResponse(array('data' => $data));
     }
 
     /**
@@ -84,7 +84,7 @@ class SelectfieldController extends Controller
         $query = $request->get('query', null);
         $valuesQuery = $request->get('valuesqry', '');
 
-        $data = [];
+        $data = array();
 
         $datasourceManager = $this->get('phlexible_data_source.data_source_manager');
 
@@ -104,9 +104,9 @@ class SelectfieldController extends Controller
                 }
             }
 
-            $data[] = ['key' => $key, 'value' => $key];
+            $data[] = array('key' => $key, 'value' => $key);
         }
 
-        return new JsonResponse(['data' => $data]);
+        return new JsonResponse(array('data' => $data));
     }
 }

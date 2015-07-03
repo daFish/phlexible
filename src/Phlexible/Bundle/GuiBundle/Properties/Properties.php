@@ -140,7 +140,7 @@ class Properties
 
         $repository = $this->entityManager->getRepository('PhlexibleGuiBundle:Property');
 
-        $properties = [];
+        $properties = array();
         foreach ($repository->findAll() as $property) {
             $id = sprintf('%s__%s', $property->getComponent(), $property->getName());
 

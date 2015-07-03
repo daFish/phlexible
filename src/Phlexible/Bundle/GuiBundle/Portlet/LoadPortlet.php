@@ -34,7 +34,7 @@ class LoadPortlet extends Portlet
             $l5 = $l[1];
             $l15 = $l[2];
         }
-        $data = ['l1' => $l1, 'l5' => $l5, 'l15' => $l15, 'ts' => time()];
+        $data = array('l1' => $l1, 'l5' => $l5, 'l15' => $l15, 'ts' => time());
 
         return $data;
     }

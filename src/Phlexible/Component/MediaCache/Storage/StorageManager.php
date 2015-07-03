@@ -23,12 +23,12 @@ class StorageManager
     /**
      * @var StorageInterface[]
      */
-    private $storages = [];
+    private $storages = array();
 
     /**
      * @param StorageInterface[] $storages
      */
-    public function __construct(array $storages = [])
+    public function __construct(array $storages = array())
     {
         foreach ($storages as $name => $storage) {
             $this->add($name, $storage);

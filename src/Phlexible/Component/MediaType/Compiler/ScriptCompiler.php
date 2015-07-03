@@ -33,11 +33,11 @@ class ScriptCompiler implements CompilerInterface
      */
     public function compile(MediaTypeCollection $mediaTypes)
     {
-        $classMap = [];
+        $classMap = array();
         foreach ($mediaTypes->all() as $mediaType) {
-            $classMapItem = [
+            $classMapItem = array(
                 'cls' => sprintf('p-documenttype-%s', $mediaType->getName())
-            ];
+            );
 
             foreach ($mediaType->getTitles() as $key => $title) {
                 $classMapItem[$key] = $title;

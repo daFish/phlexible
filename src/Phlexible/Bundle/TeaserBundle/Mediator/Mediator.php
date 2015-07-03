@@ -25,12 +25,12 @@ class Mediator implements MediatorInterface
     /**
      * @var MediatorInterface[]
      */
-    private $mediators = [];
+    private $mediators = array();
 
     /**
      * @param MediatorInterface[] $mediators
      */
-    public function __construct(array $mediators = [])
+    public function __construct(array $mediators = array())
     {
         foreach ($mediators as $mediator) {
             $this->addMediator($mediator);

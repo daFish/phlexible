@@ -80,7 +80,7 @@ class SearchResult
      */
     public function toArray()
     {
-        return [
+        return array(
             'id'        => $this->id,
             'author'    => $this->author,
             'title'     => $this->title,
@@ -88,6 +88,6 @@ class SearchResult
             'component' => $this->component,
             'image'     => $this->image,
             'handler'   => $this->handler
-        ];
+        );
     }
 }

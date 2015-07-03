@@ -53,7 +53,7 @@ class GetConfigListener
         $user = $this->tokenStorage->getToken()->getUser();
         $guiLanguage = $user->getInterfaceLanguage('en');
 
-        $languages = [];
+        $languages = array();
         foreach ($this->availableLanguages as $language) {
             $name = \Locale::getDisplayName($language, $guiLanguage);
             $languages[$name] = $language;
@@ -61,13 +61,13 @@ class GetConfigListener
 
         ksort($languages);
 
-        $frontendLanguages = [];
+        $frontendLanguages = array();
         foreach ($languages as $languageTitle => $language) {
-            $frontendLanguages[] = [
+            $frontendLanguages[] = array(
                 $language,
                 $languageTitle,
                 'p-gui-' . $language . '-icon',
-            ];
+            );
         }
 
         $config->set('language.frontend', $this->defaultLanguage);

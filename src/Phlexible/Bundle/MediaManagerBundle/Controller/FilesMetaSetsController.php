@@ -56,12 +56,12 @@ class FilesMetaSetsController extends FOSRestController
         $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
         $metaSets = $fileMetaSetResolver->resolve($file);
 
-        $sets = [];
+        $sets = array();
         foreach ($metaSets as $metaSet) {
-            $sets[] = [
+            $sets[] = array(
                 'id'   => $metaSet->getId(),
                 'name' => $metaSet->getName(),
-            ];
+            );
         }
 
         return array(
@@ -82,7 +82,7 @@ class FilesMetaSetsController extends FOSRestController
         if ($joinedIds) {
             $ids = explode(',', $joinedIds);
         } else {
-            $ids = [];
+            $ids = array();
         }
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');

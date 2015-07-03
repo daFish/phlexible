@@ -94,8 +94,8 @@ class ElementSourceManager implements ElementSourceManagerInterface
     public function findElementSource($elementtypeId)
     {
         return $this->getElementSourceRepository()->findOneBy(
-            ['elementtypeId' => $elementtypeId],
-            ['elementtypeRevision' => 'DESC']
+            array('elementtypeId' => $elementtypeId),
+            array('elementtypeRevision' => 'DESC')
         );
     }
 
@@ -104,7 +104,7 @@ class ElementSourceManager implements ElementSourceManagerInterface
      */
     public function findByType($type)
     {
-        return $this->getElementSourceRepository()->findBy(['type' => $type]);
+        return $this->getElementSourceRepository()->findBy(array('type' => $type));
     }
 
     /**
@@ -126,8 +126,8 @@ class ElementSourceManager implements ElementSourceManagerInterface
      */
     public function findElementtypesByType($type)
     {
-        $elementtypes = [];
-        foreach ($this->getElementSourceRepository()->findBy(['type' => $type]) as $elementSource) {
+        $elementtypes = array();
+        foreach ($this->getElementSourceRepository()->findBy(array('type' => $type)) as $elementSource) {
             $elementtypes[] = $this->findElementtypeByElementSource($elementSource);
         }
 
@@ -161,9 +161,9 @@ class ElementSourceManager implements ElementSourceManagerInterface
     public function findByElementtype(Elementtype $elementtype)
     {
         return $this->getElementSourceRepository()->findBy(
-            [
+            array(
                 'elementtypeId' => $elementtype->getId(),
-            ]
+            )
         );
     }
 
@@ -173,10 +173,10 @@ class ElementSourceManager implements ElementSourceManagerInterface
     public function findOneByElementtypeAndRevision(Elementtype $elementtype)
     {
         return $this->getElementSourceRepository()->findOneBy(
-            [
+            array(
                 'elementtypeId'       => $elementtype->getId(),
                 'elementtypeRevision' => $elementtype->getRevision()
-            ]
+            )
         );
     }
 

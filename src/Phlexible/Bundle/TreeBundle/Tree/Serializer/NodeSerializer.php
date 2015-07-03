@@ -82,7 +82,7 @@ class NodeSerializer
      */
     public function serializeNodes(array $nodes, $language)
     {
-        $return = [];
+        $return = array();
 
         foreach ($nodes as $node) {
             $nodeData = $this->serializeNode($node, $language);
@@ -105,14 +105,14 @@ class NodeSerializer
      */
     public function serializeNode(TreeNodeInterface $node, $language)
     {
-        $userRights = [];
+        $userRights = array();
         if ($node instanceof ContentObjectInterface) {
             if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-                if ($this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if ($this->authorizationChecker->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
                     return null;
                 }
 
-                $userRights = []; //$contentRightsManager->getRights($language);
+                $userRights = array(); //$contentRightsManager->getRights($language);
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = array_keys(
@@ -151,7 +151,7 @@ class NodeSerializer
         */
 
         $elementtype = $this->elementService->findElementtype($element);
-        $allowedElementtypeIds = [];
+        $allowedElementtypeIds = array();
         foreach ($this->elementService->findAllowedChildren($elementtype) as $allowedElementtype) {
             $allowedElementtypeIds[] = $allowedElementtype->getId();
         }
@@ -164,7 +164,7 @@ class NodeSerializer
             'Element Type Version: ' . $elementtype->getRevision() .
             $lockQtip;
 
-        $data = [
+        $data = array(
             'id'                  => $node->getID(),
             'eid'                 => $element->getEid(),
             'text'                => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
@@ -177,7 +177,7 @@ class NodeSerializer
             'alias'               => $node->getTree()->isInstance($node),
             'allow_drag'          => true,
             'sort_mode'           => $node->getSortMode(),
-            'areas'               => [355],
+            'areas'               => array(355),
             'allowed_et'          => $allowedElementtypeIds,
             'is_published'        => $this->stateManager->isPublished($node, $language),
             'rights'              => $userRights,
@@ -186,7 +186,7 @@ class NodeSerializer
             'default_tab'         => $elementtype->getDefaultTab(),
             'default_content_tab' => $elementtype->getDefaultContentTab(),
             'masterlanguage'      => $element->getMasterLanguage()
-        ];
+        );
 
         if (count($node->getTree()->getChildren($node)) && !$elementtype->getHideChildren()) {
             $data['leaf'] = false;

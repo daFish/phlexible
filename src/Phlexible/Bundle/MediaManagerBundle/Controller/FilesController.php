@@ -67,7 +67,7 @@ class FilesController extends FOSRestController
             throw new BadRequestHttpException("No folder ID given");
         }
 
-        $data = [];
+        $data = array();
         $total = 0;
 
         $volume = $this->getVolumeByFolderId($folderId);
@@ -91,12 +91,12 @@ class FilesController extends FOSRestController
                 $expr = new Conjunction(array($expr, $serializer->deserialize($expression)));
             }
 
-            $files = $volume->findFilesByExpression($expr, [$sort => $dir], $limit, $start);
+            $files = $volume->findFilesByExpression($expr, array($sort => $dir), $limit, $start);
             $total = $volume->countFilesByExpression($expr);
 
             $serializer = $this->get('phlexible_media_manager.file_serializer');
 
-            $data = [];
+            $data = array();
             foreach ($files as $file) {
                 $data[] = $serializer->serialize($volume, $file, $request->getLocale());
             }

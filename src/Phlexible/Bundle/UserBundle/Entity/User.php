@@ -69,7 +69,7 @@ class User extends BaseUser
      * @var array
      * @ORM\Column(type="json_array")
      */
-    private $properties = [];
+    private $properties = array();
 
     /**
      * @var \DateTime
@@ -304,7 +304,7 @@ class User extends BaseUser
      */
     public function setProperties($properties)
     {
-        $this->properties = [];
+        $this->properties = array();
 
         return $this->addProperties($properties);
     }

@@ -30,7 +30,7 @@ class TemplateLoader
     /**
      * @var LoaderInterface[]
      */
-    private $loaders = [];
+    private $loaders = array();
 
     /**
      * @param PatternResourceLocator $locator

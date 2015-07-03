@@ -27,7 +27,7 @@ class AddSelectFieldProvidersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $providers = [];
+        $providers = array();
         foreach ($container->findTaggedServiceIds('phlexible_elementtype.select_field_provider') as $id => $attributes) {
             $providers[] = new Reference($id);
         }

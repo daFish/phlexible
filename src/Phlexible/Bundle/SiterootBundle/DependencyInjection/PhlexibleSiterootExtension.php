@@ -40,7 +40,7 @@ class PhlexibleSiterootExtension extends Extension
         }
 
         if (!empty($config['mappings'])) {
-            $mappings = [];
+            $mappings = array();
             foreach ($config['mappings'] as $mappedUrl => $siterootUrl) {
                 $mappings[$mappedUrl] = $siterootUrl;
             }

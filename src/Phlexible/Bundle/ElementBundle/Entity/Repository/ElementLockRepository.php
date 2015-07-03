@@ -30,7 +30,7 @@ class ElementLockRepository extends EntityRepository
      */
     public function findByElementAndUserId(Element $element, $userId)
     {
-        return $this->findBy(['element' => $element, 'userId' => $userId]);
+        return $this->findBy(array('element' => $element, 'userId' => $userId));
     }
 
     /**
@@ -56,6 +56,6 @@ class ElementLockRepository extends EntityRepository
      */
     public function findByEid(Element $element)
     {
-        return $this->findBy(['element' => $element]);
+        return $this->findBy(array('element' => $element));
     }
 }

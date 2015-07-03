@@ -49,9 +49,9 @@ class ElementExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('element', [$this, 'element']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('element', array($this, 'element')),
+        );
     }
 
     /**

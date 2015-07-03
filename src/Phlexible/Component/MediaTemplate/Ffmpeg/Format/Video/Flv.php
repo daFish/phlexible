@@ -45,7 +45,7 @@ class Flv extends DefaultVideo
      */
     public function getAvailableAudioCodecs()
     {
-        return ['libmp3lame'];
+        return array('libmp3lame');
     }
 
     /**
@@ -53,6 +53,6 @@ class Flv extends DefaultVideo
      */
     public function getAvailableVideoCodecs()
     {
-        return ['flv'];
+        return array('flv');
     }
 }

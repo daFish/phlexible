@@ -53,7 +53,7 @@ class MediaTemplate implements TemplateInterface
     /**
      * @var array
      */
-    private $parameters = [];
+    private $parameters = array();
 
     /**
      * @var \DateTime

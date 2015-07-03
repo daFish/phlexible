@@ -128,7 +128,7 @@ abstract class AbstractSearch implements SearchProviderInterface
             $language = $this->defaultLanguage;
         }
 
-        $results = [];
+        $results = array();
         foreach ($rows as $row) {
             $node = $this->treeManager->getByNodeId($row['id'])->get($row['id']);
 

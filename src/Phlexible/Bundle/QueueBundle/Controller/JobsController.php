@@ -50,7 +50,7 @@ class JobsController extends FOSRestController
     {
         $jobManager = $this->get('phlexible_queue.job_manager');
 
-        $jobs = $jobManager->findBy([], ['createdAt' => 'DESC']);
+        $jobs = $jobManager->findBy(array(), array('createdAt' => 'DESC'));
 
         return array(
             'jobs' => $jobs,

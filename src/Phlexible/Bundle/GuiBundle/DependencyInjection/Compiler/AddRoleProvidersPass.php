@@ -29,7 +29,7 @@ class AddRoleProvidersPass implements CompilerPassInterface
     {
         $roleHierarchyFactory = $container->findDefinition('phlexible_gui.security.role_hierarchy_factory');
         foreach ($container->findTaggedServiceIds('phlexible_gui.role_provider') as $id => $attributes) {
-            $roleHierarchyFactory->addMethodCall('addRoleProvider', [new Reference($id)]);
+            $roleHierarchyFactory->addMethodCall('addRoleProvider', array(new Reference($id)));
         }
     }
 }

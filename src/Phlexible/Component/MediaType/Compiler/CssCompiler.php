@@ -33,7 +33,7 @@ class CssCompiler implements CompilerInterface
      */
     public function compile(MediaTypeCollection $mediaTypes)
     {
-        $sizes = [16 => 'small']; //, 32 => 'medium', 48 => 'tile');
+        $sizes = array(16 => 'small'); //, 32 => 'medium', 48 => 'tile');
 
         $classname = $this->getClassname();
 
