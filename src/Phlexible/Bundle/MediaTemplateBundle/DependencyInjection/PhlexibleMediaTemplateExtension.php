@@ -31,5 +31,13 @@ class PhlexibleMediaTemplateExtension extends Extension
 
         $loader->load('file.yml');
         $container->setAlias('phlexible_media_template.template_manager', 'phlexible_media_template.file.template_manager');
+
+        $configuration = $this->getConfiguration($config, $container);
+        $config = $this->processConfiguration($configuration, $config);
+
+        $container->setParameter('phlexible_media_template.dumper.filesystem_dir', $config['dumper']['filesystem_dir']);
+        $container->setParameter('phlexible_media_template.dumper.puli_resource_dir', $config['dumper']['puli_resource_dir']);
+        $container->setParameter('phlexible_media_template.dumper.default_type', $config['dumper']['default_type']);
+
     }
 }

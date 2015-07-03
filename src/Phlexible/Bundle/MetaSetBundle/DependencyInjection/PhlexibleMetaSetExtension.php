@@ -35,6 +35,9 @@ class PhlexibleMetaSetExtension extends Extension
         $container->setParameter('phlexible_meta_set.languages.default', $config['languages']['default']);
         $container->setParameter('phlexible_meta_set.languages.available', $config['languages']['available']);
         $container->setParameter('phlexible_meta_set.suggest.seperator', $config['suggest']['seperator']);
+        $container->setParameter('phlexible_meta_set.dumper.filesystem_dir', $config['dumper']['filesystem_dir']);
+        $container->setParameter('phlexible_meta_set.dumper.puli_resource_dir', $config['dumper']['puli_resource_dir']);
+        $container->setParameter('phlexible_meta_set.dumper.default_type', $config['dumper']['default_type']);
 
         $container->setAlias('phlexible_meta_set.meta_set_manager', 'phlexible_meta_set.file.meta_set_manager');
     }

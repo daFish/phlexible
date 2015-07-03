@@ -1,6 +1,3 @@
-parameters:
-    phlexible_meta_set.file_dir: %kernel.root_dir%/Resources/metasets/
-
 services:
     phlexible_meta_set.file.xml_parser:
         class: Phlexible\Component\MetaSet\File\Parser\XmlParser
@@ -13,7 +10,12 @@ services:
     phlexible_meta_set.file.repository:
         class: Phlexible\Component\MetaSet\File\PuliMetaSetRepository
         public: false
-        arguments: [@puli.discovery, @puli.repository, "xml", "%kernel.root_dir%/Resources/metasets"]
+        arguments:
+            - @puli.discovery
+            - @puli.repository
+            - %phlexible_meta_set.dumper.default_type%
+            - %phlexible_meta_set.dumper.filesystem_dir%
+            - %phlexible_meta_set.dumper.puli_resource_dir%
         calls:
             - [addParser, ["xml", @phlexible_meta_set.file.xml_parser]]
             - [addDumper, ["xml", @phlexible_meta_set.file.xml_dumper]]

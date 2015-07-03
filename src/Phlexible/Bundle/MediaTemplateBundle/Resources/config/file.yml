@@ -14,7 +14,12 @@ services:
     phlexible_media_template.file.puli_repository:
         class: Phlexible\Component\MediaTemplate\File\PuliTemplateRepository
         public: false
-        arguments: [@puli.discovery, @puli.repository, "xml", "%kernel.root_dir%/Resources/mediatemplates"]
+        arguments:
+            - @puli.discovery
+            - @puli.repository
+            - %phlexible_media_template.dumper.default_type%
+            - %phlexible_media_template.dumper.filesystem_dir%
+            - %phlexible_media_template.dumper.puli_resource_dir%
         calls:
             - [addParser, ["xml", @phlexible_media_template.file.xml_parser]]
             - [addDumper, ["xml", @phlexible_media_template.file.xml_dumper]]

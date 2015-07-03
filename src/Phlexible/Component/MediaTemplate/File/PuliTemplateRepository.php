@@ -13,9 +13,8 @@ use Phlexible\Component\MediaTemplate\File\Parser\ParserInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateCollection;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Puli\Discovery\Api\ResourceDiscovery;
-use Puli\Manager\Api\Puli;
-use Puli\Manager\Api\Repository\RepositoryManager;
 use Puli\Repository\Api\EditableRepository;
+use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -38,12 +37,17 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     /**
      * @var string
      */
+    private $defaultDumpType;
+
+    /**
+     * @var string
+     */
     private $dumpDir;
 
     /**
      * @var string
      */
-    private $defaultDumpType;
+    private $puliResourceDir;
 
     /**
      * @var ParserInterface[]
@@ -60,13 +64,20 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
      * @param EditableRepository $puliRepository
      * @param string             $defaultDumpType
      * @param string             $dumpDir
+     * @param string             $puliResourceDir
      */
-    public function __construct(ResourceDiscovery $puliDiscovery, EditableRepository $puliRepository, $defaultDumpType, $dumpDir)
-    {
+    public function __construct(
+        ResourceDiscovery $puliDiscovery,
+        EditableRepository $puliRepository,
+        $defaultDumpType,
+        $dumpDir,
+        $puliResourceDir
+    ) {
         $this->puliDiscovery = $puliDiscovery;
         $this->puliRepository = $puliRepository;
         $this->defaultDumpType = $defaultDumpType;
         $this->dumpDir = $dumpDir;
+        $this->puliResourceDir = $puliResourceDir;
     }
 
     /**
@@ -128,16 +139,13 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
         $dumper = $this->dumpers[$type];
         $content = $dumper->dump($template);
 
-        $filename = strtolower("{$this->dumpDir}/{$template->getKey()}.{$type}");
+        $filename = strtolower("{$template->getKey()}.{$type}");
+        $path = "{$this->dumpDir}/$filename";
         $filesystem = new Filesystem();
-        $filesystem->dumpFile($filename, $content);
+        $filesystem->dumpFile($path, $content);
 
-        $rootDir = '/Users/swentz/Sites/phlexible-tipfinder/tipfinder-refactorings/.puli';
-        $puli = new Puli($rootDir);
-        $puli->start();
-        $repoManager = $puli->getRepositoryManager();
-
-        $repoManager->clearRepository();
-        $repoManager->buildRepository();
+        $resourcePath = "{$this->puliResourceDir}/$filename";
+        $resource = new FileResource($path, $resourcePath);
+        $this->puliRepository->add($resourcePath, $resource);
     }
 }
