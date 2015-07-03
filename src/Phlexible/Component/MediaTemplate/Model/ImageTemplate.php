@@ -73,6 +73,14 @@ class ImageTemplate extends AbstractTemplate
     private $backgroundcolor;
 
     /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return self::TYPE_IMAGE;
+    }
+
+    /**
      * @return int
      */
     public function getWidth()

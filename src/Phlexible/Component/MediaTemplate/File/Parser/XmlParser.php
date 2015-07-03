@@ -27,7 +27,6 @@ class XmlParser implements ParserInterface
 
         $xmlAttributes = $xml->attributes();
         $key = (string) $xmlAttributes['key'];
-        $type = (string) $xmlAttributes['type'];
         $class = (string) $xmlAttributes['class'];
         $cache = (bool) (string) $xmlAttributes['cache'];
         $system = (bool) (string) $xmlAttributes['system'];
@@ -45,7 +44,6 @@ class XmlParser implements ParserInterface
         $template = new $class();
         $template
             ->setKey($key)
-            ->setType($type)
             ->setCache($cache)
             ->setSystem($system)
             ->setRevision($revision);

@@ -45,13 +45,6 @@ interface TemplateInterface
     public function getType();
 
     /**
-     * @param string $type
-     *
-     * @return $this
-     */
-    public function setType($type);
-
-    /**
      * @return bool
      */
     public function getCache();

@@ -26,11 +26,6 @@ abstract class AbstractTemplate implements TemplateInterface
     private $key;
 
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @var bool
      */
     private $cache = false;
@@ -102,24 +97,6 @@ abstract class AbstractTemplate implements TemplateInterface
     public function setKey($key)
     {
         $this->key = $key;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
 
         return $this;
     }
