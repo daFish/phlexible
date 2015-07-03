@@ -30,7 +30,7 @@ interface ElementtypeRepositoryInterface
     public function load($elementtypeId);
 
     /**
-     * @return Elementtype $elementtype
+     * @param Elementtype $elementtype
      */
     public function write(Elementtype $elementtype);
 }

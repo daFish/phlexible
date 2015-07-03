@@ -56,7 +56,7 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function findAll()
     {
-        return $this->repository->loadAll();
+        return $this->repository->loadAll()->all();
     }
 
     /**

@@ -16,11 +16,6 @@ namespace Phlexible\Component\MediaTemplate\Model;
 interface TemplateManagerInterface
 {
     /**
-     * @return TemplateCollection
-     */
-    public function getCollection();
-
-    /**
      * Find template
      *
      * @param string $key

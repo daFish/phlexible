@@ -116,7 +116,7 @@ class PuliMetaSetRepository implements MetaSetRepositoryInterface
      */
     public function loadAll()
     {
-        if ($this->metasets = null) {
+        if ($this->metasets === null) {
             $this->metasets = new MetaSetCollection();
 
             foreach ($this->puliDiscovery->findByType('phlexible/metasets') as $binding) {

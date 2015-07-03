@@ -60,6 +60,11 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     private $dumpers = [];
 
     /**
+     * @var TemplateCollection
+     */
+    private $templates;
+
+    /**
      * @param ResourceDiscovery  $puliDiscovery
      * @param EditableRepository $puliRepository
      * @param string             $defaultDumpType
@@ -109,22 +114,32 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function loadTemplates()
+    public function loadAll()
     {
-        $templates = new TemplateCollection();
+        if ($this->templates === null) {
+            $this->templates = new TemplateCollection();
 
-        foreach ($this->puliDiscovery->findByType('phlexible/mediatemplates') as $binding) {
-            foreach ($binding->getResources() as $resource) {
-                $extension = pathinfo($resource->getPath(), PATHINFO_EXTENSION);
-                if (!isset($this->parsers[$extension])) {
-                    continue;
+            foreach ($this->puliDiscovery->findByType('phlexible/mediatemplates') as $binding) {
+                foreach ($binding->getResources() as $resource) {
+                    $extension = pathinfo($resource->getPath(), PATHINFO_EXTENSION);
+                    if (!isset($this->parsers[$extension])) {
+                        continue;
+                    }
+                    $parser = $this->parsers[$extension];
+                    $this->templates->add($parser->parse($resource->getBody()));
                 }
-                $parser = $this->parsers[$extension];
-                $templates->add($parser->parse($resource->getBody()));
             }
         }
 
-        return $templates;
+        return $this->templates;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load($key)
+    {
+        return $this->loadAll()->get($key);
     }
 
     /**

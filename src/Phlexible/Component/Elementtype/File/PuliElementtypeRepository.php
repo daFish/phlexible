@@ -91,9 +91,9 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
         $elementtypes = [];
         foreach ($this->puliDiscovery->findByType('phlexible/elementtypes') as $bindings) {
             foreach ($bindings->getResources() as $resource) {
-                $id = basename($resource->getFilesystemPath(), '.xml');
+                $id = basename($resource->getPath(), '.xml');
                 if (!isset($files[$id])) {
-                    $elementtypes[$id] = $this->parse($this->loadDomFromResource($resource->getFilesystemPath));
+                    $elementtypes[$id] = $this->parse($this->loadDomFromResource($resource));
                 }
             }
         }
@@ -113,12 +113,26 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
      * @param string $elementtypeId
      *
      * @return Document
+     * @throws \Exception
      */
     private function loadElementtypeDom($elementtypeId)
     {
-        $resource = $this->puliDiscovery->findByPath("$elementtypeId.xml", 'phlexible/elementtype');
+        $foundResource = null;
+        foreach ($this->puliDiscovery->findByType('phlexible/elementtypes') as $bindings) {
+            foreach ($bindings->getResources() as $resource) {
+                $id = basename($resource->getPath(), '.xml');
+                if ($elementtypeId === $id) {
+                    $foundResource = $resource;
+                    break 2;
+                }
+            }
+        }
 
-        return $this->loadDomFromResource($resource);
+        if (!$foundResource) {
+            throw new \Exception();
+        }
+
+        return $this->loadDomFromResource($foundResource);
     }
 
     /**
@@ -140,15 +154,15 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
     }
 
     /**
-     * @param string $filename
+     * @param FileResource $resource
      *
      * @return Document
      */
-    private function loadDomFromResource($filename)
+    private function loadDomFromResource(FileResource $resource)
     {
         $dom = new Document();
         $dom->formatOutput = true;
-        $dom->load($filename);
+        $dom->load($resource->getFilesystemPath());
 
         $this->applyReferenceElementtype($dom);
 

@@ -9,7 +9,6 @@
 namespace Phlexible\Component\MediaTemplate\File;
 
 use Phlexible\Component\MediaTemplate\Exception\NotFoundException;
-use Phlexible\Component\MediaTemplate\Model\TemplateCollection;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 
@@ -26,28 +25,11 @@ class TemplateManager implements TemplateManagerInterface
     private $repository;
 
     /**
-     * @var TemplateCollection
-     */
-    private $templates;
-
-    /**
      * @param TemplateRepositoryInterface $repository
      */
     public function __construct(TemplateRepositoryInterface $repository)
     {
         $this->repository = $repository;
-    }
-
-    /**
-     * @return TemplateCollection
-     */
-    public function getCollection()
-    {
-        if ($this->templates === null) {
-            $this->templates = $this->repository->loadTemplates();
-        }
-
-        return $this->templates;
     }
 
     /**
@@ -60,7 +42,7 @@ class TemplateManager implements TemplateManagerInterface
      */
     public function find($key)
     {
-        $template = $this->getCollection()->get($key);
+        $template = $this->repository->load($key);
 
         if ($template !== null) {
             return $template;
@@ -77,7 +59,7 @@ class TemplateManager implements TemplateManagerInterface
     public function findBy(array $criteria)
     {
         $found = [];
-        foreach ($this->getCollection()->all() as $template) {
+        foreach ($this->repository->loadAll() as $template) {
             foreach ($criteria as $criterium => $value) {
                 $method = 'get' . ucfirst(strtolower($criterium));
                 if (!method_exists($template, $method)) {
@@ -100,7 +82,7 @@ class TemplateManager implements TemplateManagerInterface
      */
     public function findAll()
     {
-        return $this->getCollection()->all();
+        return $this->repository->loadAll()->all();
     }
 
     /**

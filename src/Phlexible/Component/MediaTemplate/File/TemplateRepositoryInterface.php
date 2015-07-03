@@ -21,7 +21,14 @@ interface TemplateRepositoryInterface
     /**
      * @return TemplateCollection
      */
-    public function loadTemplates();
+    public function loadAll();
+
+    /**
+     * @param string $key
+     *
+     * @return TemplateInterface
+     */
+    public function load($key);
 
     /**
      * @param TemplateInterface $template
