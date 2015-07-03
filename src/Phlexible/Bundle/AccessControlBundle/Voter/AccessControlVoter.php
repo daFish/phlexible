@@ -46,13 +46,20 @@ class AccessControlVoter implements VoterInterface
     private $permissionRegistry;
 
     /**
+     * @var PermissionRegistry
+     */
+    private $permissiveOnEmptyAcl;
+
+    /**
      * @param AccessManagerInterface $accessManager
      * @param PermissionRegistry     $permissionRegistry
+     * @param bool                   $permissiveOnEmpty
      */
-    public function __construct(AccessManagerInterface $accessManager, PermissionRegistry $permissionRegistry)
+    public function __construct(AccessManagerInterface $accessManager, PermissionRegistry $permissionRegistry, $permissiveOnEmptyAcl)
     {
         $this->accessManager = $accessManager;
         $this->permissionRegistry = $permissionRegistry;
+        $this->permissiveOnEmptyAcl = $permissiveOnEmptyAcl;
     }
 
     /**
@@ -90,6 +97,13 @@ class AccessControlVoter implements VoterInterface
 
         $acl = $this->accessManager->findAcl($identity);
 
+        if ($acl->isEmpty()) {
+            if ($this->permissiveOnEmpty) {
+                return self::ACCESS_GRANTED;
+            } else {
+                return self::ACCESS_DENIED;
+            }
+        }
         $securityIdentity = UserSecurityIdentity::fromToken($token);
 
         if ($acl->check($permission, $securityIdentity, $objectLanguage)) {
