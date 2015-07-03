@@ -9,7 +9,6 @@
 namespace Phlexible\Component\MediaTemplate\File\Dumper;
 
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * XML dumper
@@ -29,13 +28,8 @@ class XmlDumper implements DumperInterface
     /**
      * {@inheritdoc}
      */
-    public function dump($file, TemplateInterface $template)
+    public function dump(TemplateInterface $template)
     {
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($file))) {
-            $filesystem->mkdir(dirname($file));
-        }
-
         $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><mediaTemplate/>');
         $xml->addAttribute('key', $template->getKey());
         $xml->addAttribute('type', $template->getType());
@@ -53,6 +47,7 @@ class XmlDumper implements DumperInterface
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
         $dom->loadXML($xml->asXML());
-        $dom->save($file);
+
+        return $dom->saveXML();
     }
 }

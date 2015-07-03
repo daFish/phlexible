@@ -6,24 +6,23 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaTemplate\File;
+namespace Phlexible\Component\MetaSet\File;
 
-use Phlexible\Component\MediaTemplate\File\Dumper\DumperInterface;
-use Phlexible\Component\MediaTemplate\File\Parser\ParserInterface;
-use Phlexible\Component\MediaTemplate\Model\TemplateCollection;
-use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
+use Phlexible\Component\MetaSet\File\Dumper\DumperInterface;
+use Phlexible\Component\MetaSet\File\Parser\ParserInterface;
+use Phlexible\Component\MetaSet\Model\MetaSetCollection;
+use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Manager\Api\Puli;
-use Puli\Manager\Api\Repository\RepositoryManager;
 use Puli\Repository\Api\EditableRepository;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Puli template repository
+ * Puli meta set repository
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class PuliTemplateRepository implements TemplateRepositoryInterface
+class PuliMetaSetRepository
 {
     /**
      * @var ResourceDiscovery
@@ -98,36 +97,36 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function loadTemplates()
+    public function loadMetaSets()
     {
-        $templates = new TemplateCollection();
+        $metaSets = new MetaSetCollection();
 
-        foreach ($this->puliDiscovery->findByType('phlexible/mediatemplates') as $binding) {
+        foreach ($this->puliDiscovery->findByType('phlexible/metasets') as $binding) {
             foreach ($binding->getResources() as $resource) {
-                $extension = pathinfo($resource->getPath(), PATHINFO_EXTENSION);
+                $extension = pathinfo($resource->getFilesystemPath(), PATHINFO_EXTENSION);
                 if (!isset($this->parsers[$extension])) {
                     continue;
                 }
                 $parser = $this->parsers[$extension];
-                $templates->add($parser->parse($resource->getBody()));
+                $metaSets->add($parser->parser($resource->getBody()));
             }
         }
 
-        return $templates;
+        return $metaSets;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dumpTemplate(TemplateInterface $template, $type = null)
+    public function dumpMetaSet(MetaSetInterface $metaSet, $type = null)
     {
         if (!$type) {
             $type = $this->defaultDumpType;
         }
 
         $dumper = $this->dumpers[$type];
-        $filename = strtolower("{$this->dumpDir}/{$template->getKey()}.{$type}");
-        $content = $dumper->dump($filename, $template);
+        $filename = strtolower("{$this->dumpDir}/{$metaSet->getId()}.{$type}");
+        $content = $dumper->dump($metaSet);
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile($filename, $content);

@@ -29,13 +29,8 @@ class XmlDumper implements DumperInterface
     /**
      * {@inheritdoc}
      */
-    public function dump($file, MetaSetInterface $metaSet)
+    public function dump(MetaSetInterface $metaSet)
     {
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists(dirname($file))) {
-            $filesystem->mkdir(dirname($file));
-        }
-
         $xml = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><metaSet/>');
         $xml->addAttribute('id', $metaSet->getId());
         $xml->addAttribute('name', $metaSet->getName());
@@ -61,6 +56,7 @@ class XmlDumper implements DumperInterface
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
         $dom->loadXML($xml->asXML());
-        $dom->save($file);
+
+        return $dom->saveXML();
     }
 }

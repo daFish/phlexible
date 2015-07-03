@@ -22,14 +22,9 @@ use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 class MetaSetManager implements MetaSetManagerInterface
 {
     /**
-     * @var PuliMetaSetLoader
+     * @var MetaSetRepositoryInterface
      */
-    private $loader;
-
-    /**
-     * @var MetaSetDumper
-     */
-    private $dumper;
+    private $repository;
 
     /**
      * @var MetaSetCollection
@@ -37,13 +32,11 @@ class MetaSetManager implements MetaSetManagerInterface
     private $metaSets;
 
     /**
-     * @param PuliMetaSetLoader $loader
-     * @param MetaSetDumper     $dumper
+     * @param MetaSetRepositoryInterface $repository
      */
-    public function __construct(PuliMetaSetLoader $loader, MetaSetDumper $dumper)
+    public function __construct(MetaSetRepositoryInterface $repository)
     {
-        $this->loader = $loader;
-        $this->dumper = $dumper;
+        $this->repository = $repository;
     }
 
     /**
@@ -52,7 +45,7 @@ class MetaSetManager implements MetaSetManagerInterface
     public function getCollection()
     {
         if ($this->metaSets === null) {
-            $this->metaSets = $this->loader->loadMetaSets();
+            $this->metaSets = $this->repository->loadMetaSets();
         }
 
         return $this->metaSets;
@@ -105,6 +98,6 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function updateMetaSet(MetaSetInterface $metaSet)
     {
-        $this->dumper->dumpMetaSet($metaSet);
+        $this->repository->dumpMetaSet($metaSet, 'xml');
     }
 }

@@ -6,32 +6,24 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MetaSet\File\Loader;
+namespace Phlexible\Component\MetaSet\File\Parser;
 
 use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaSetField;
 
 /**
- * XML loader
+ * XML parser
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class XmlLoader implements LoaderInterface
+class XmlParser implements ParserInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getExtension()
+    public function parse($content)
     {
-        return 'xml';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function load($file)
-    {
-        $xml = simplexml_load_file($file);
+        $xml = simplexml_load_string($content);
 
         $xmlAttributes = $xml->attributes();
         $id = (string) $xmlAttributes['id'];

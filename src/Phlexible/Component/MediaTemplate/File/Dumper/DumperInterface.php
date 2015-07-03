@@ -25,8 +25,7 @@ interface DumperInterface
     public function getExtension();
 
     /**
-     * @param string            $file
      * @param TemplateInterface $template
      */
-    public function dump($file, TemplateInterface $template);
+    public function dump(TemplateInterface $template);
 }
