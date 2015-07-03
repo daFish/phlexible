@@ -1,0 +1,23 @@
+.p-label {
+    padding: 2px 6px 3px 6px;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #777;
+    color: white;
+}
+.p-label-success {
+    background-color: #5cb85c;
+    color: white;
+}
+.p-label-error {
+    background-color: #d9534f;
+    color: white;
+}
+.p-label-warning {
+    background-color: #f0ad4e;
+    color: white;
+}
+.p-label-info {
+    background-color: #5bc0de;
+    color: white;
+}

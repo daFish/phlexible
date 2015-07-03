@@ -11,13 +11,12 @@
 
 .p-problem-severity {
     float: left;
-    width: 16px;
-    height: 16px;
+    font-size: 10px;
 }
 
 .p-problem-text {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+    padding-left: 80px !important;
+    padding-right: 80px !important;
 }
 
 .p-problem-message {

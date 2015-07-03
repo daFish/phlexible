@@ -8,7 +8,7 @@ Phlexible:
             Problems:
                 title: Problems
                 solutionText: Solution
-                menuHintText: 'Hiding problems of severity notice and lower, open Menu / Administration / Problems for a full list.'
+                menuHintText: 'Problems of severity notice and lower are hidden, open <a href="#problems">Problems</a> from the menu for a full list.'
                 noProblemsText: 'No problems'
                 newProblemText: 'New problem'
 
@@ -29,8 +29,6 @@ Phlexible:
                 idtext: ID
                 problemText: Problem
                 severityText: Severity
-                sourceText: Source
                 createdAtText: 'Created at'
                 lastCheckedAtText: 'Last checked at'
-                linkText: Link
                 solutionText: Solution

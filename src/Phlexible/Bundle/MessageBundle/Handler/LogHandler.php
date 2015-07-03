@@ -58,16 +58,18 @@ class LogHandler implements HandlerInterface
 
         $msg .= ': ' . $subject;
 
-        // log message
-        if ($type >= Message::TYPE_ERROR) {
-            if (!empty($body)) {
-                $msg .= PHP_EOL . $body;
-            }
+        $methodMap = array(
+            Message::TYPE_INFO => 'info',
+            Message::TYPE_ERROR => 'error',
+        );
+        $method = $methodMap[$type];
 
-            $this->logger->error($msg);
-        } else {
-            $this->logger->debug($msg);
+        // log message
+        if ($type >= Message::TYPE_ERROR && !empty($body)) {
+            $msg .= PHP_EOL . $body;
         }
+
+        $this->logger->$method($msg);
     }
 
     /**

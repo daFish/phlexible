@@ -7,7 +7,7 @@ Ext.define('Phlexible.message.view.subscription.Main', {
 
     xtype: 'message.subscription.main',
 
-    cls: 'p-message-subscription-main',
+    componentCls: 'p-message-subscription-main',
     iconCls: Phlexible.Icon.get('tick'),
     layout: 'border',
     border: false,
@@ -40,15 +40,6 @@ Ext.define('Phlexible.message.view.subscription.Main', {
                 },
                 store: Ext.create('Ext.data.Store', {
                     model: 'Phlexible.message.model.Subscription',
-                    proxy: {
-                        type: 'ajax',
-                        url: Phlexible.Router.generate('phlexible_api_message_get_subscriptions'),
-                        simpleSortMode: true,
-                        reader: {
-                            type: 'json',
-                            idProperty: 'id'
-                        }
-                    },
                     autoLoad: true
                 }),
                 columns: [
@@ -61,7 +52,10 @@ Ext.define('Phlexible.message.view.subscription.Main', {
                     {
                         header: this.filterText,
                         width: 200,
-                        dataIndex: 'filter'
+                        dataIndex: 'filter',
+                        renderer: function(v) {
+                            return v.title;
+                        }
                     },
                     {
                         header: this.handlerText,
@@ -92,14 +86,6 @@ Ext.define('Phlexible.message.view.subscription.Main', {
                             emptyText: this.filterText,
                             store: Ext.create('Ext.data.Store', {
                                 model: 'Phlexible.message.model.Filter',
-                                proxy: {
-                                    type: 'ajax',
-                                    url: Phlexible.Router.generate('phlexible_api_message_get_filters'),
-                                    reader: {
-                                        type: 'json',
-                                        idProperty: 'id'
-                                    }
-                                }
                             }),
                             displayField: 'title',
                             valueField: 'id',
@@ -129,8 +115,14 @@ Ext.define('Phlexible.message.view.subscription.Main', {
                             text: this.subscribeText,
                             iconCls: Phlexible.Icon.get('tick'),
                             handler: function () {
-                                var filter = this.getDockedComponent('tbar').getComponent('filter').getValue(),
-                                    handler = this.getDockedComponent('tbar').getComponent('handler').getValue();
+                                var filter = this.getComponent(0).getDockedComponent('tbar').getComponent('filter').getValue(),
+                                    handler = this.getComponent(0).getDockedComponent('tbar').getComponent('handler').getValue(),
+                                    data = {filterId: filter, handler: handler, userId: Phlexible.User.getId()},
+                                    subscription = Ext.create('Phlexible.message.model.Subscription', data);
+
+                                this.getComponent(0).getStore().add(subscription);
+                                this.getComponent(0).getStore().sync();
+                                return;
 
                                 Ext.Ajax.request({
                                     url: Phlexible.Router.generate('phlexible_api_message_post_subscriptions'),
@@ -163,9 +155,12 @@ Ext.define('Phlexible.message.view.subscription.Main', {
         this.getComponent(0).getStore().reload();
     },
 
-    deleteSubscription: function (grid, record) {
+    deleteSubscription: function (grid, subscription) {
+        subscription.drop();
+        this.getComponent(0).getStore().sync();
+        return;
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlexible_api_message_delete_subscription', {subscriptionId: record.data.id}),
+            url: Phlexible.Router.generate('phlexible_api_message_delete_subscription', {subscriptionId: subscription.data.id}),
             success: function (response) {
                 var result = Ext.decode(response.responseText);
 

@@ -4,8 +4,8 @@ Ext.define('Phlexible.gui.menuhandle.handle.Group', {
     createConfig: function (data) {
         var btns = [];
 
-        if (data.menu && Ext.isArray(data.menu)) {
-            Ext.each(data.menu, function (menuItem) {
+        if (data.children && Ext.isArray(data.children)) {
+            Ext.each(data.children, function (menuItem) {
                 var handleName, handler;
 
                 if (!Phlexible.Handles.has(menuItem.handle)) {

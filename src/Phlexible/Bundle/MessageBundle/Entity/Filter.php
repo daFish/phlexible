@@ -73,6 +73,8 @@ class Filter
      */
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
     }
 
     /**
@@ -168,7 +170,7 @@ class Filter
      *
      * @return $this
      */
-    public function setCreatedAt(\DateTime $createTime)
+    public function setCreatedAt(\DateTime $createTime = null)
     {
         $this->createdAt = $createTime;
 
@@ -188,7 +190,7 @@ class Filter
      *
      * @return $this
      */
-    public function setModifiedAt(\DateTime $modifyTime)
+    public function setModifiedAt(\DateTime $modifyTime = null)
     {
         $this->modifiedAt = $modifyTime;
 

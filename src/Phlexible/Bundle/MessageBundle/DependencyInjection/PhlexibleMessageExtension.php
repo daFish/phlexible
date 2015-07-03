@@ -44,7 +44,7 @@ class PhlexibleMessageExtension extends Extension
         if ($container->getParameter('kernel.debug')) {
             $handlers[] = new Reference('phlexible_message.handler.debug');
         }
-        $container->findDefinition('phlexible_message.handlers')->replaceArgument(0, $handlers);
+        $container->findDefinition('phlexible_message.message_handler')->replaceArgument(0, $handlers);
 
         if ($config['message_manager'] === 'doctrine') {
             $loader->load('doctrine_message.yml');

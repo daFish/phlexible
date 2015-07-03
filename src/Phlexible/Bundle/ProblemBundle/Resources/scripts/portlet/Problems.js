@@ -25,7 +25,7 @@ Ext.define('Phlexible.problem.portlet.Problems', {
         this.tpl = new Ext.XTemplate(
             '<tpl for=".">',
             '<div id="portal_problems_{id}" class="portlet-problem">',
-            '<div class="p-problem-severity {[Phlexible.problem.ProblemIcons[values.severity]]}" ></div>',
+            '<div class="p-problem-severity"><span class="p-label p-label-problem-{severity}">{severity}</span></div>',
             '<div class="p-problem-text">',
             '<span class="p-problem-message">{msg}</span>',
             '<tpl if="hint">',

@@ -43,7 +43,8 @@ Ext.define('Phlexible.message.portlet.Messages', {
                 dataIndex: 'type',
                 width: 80,
                 renderer: function(v) {
-                    return Phlexible.Icon.inlineDirect(Phlexible.message.TypeIcons[v]) + ' ' + Phlexible.message.TypeNames[v];
+                    var type = Phlexible.message.TypeNames[v];
+                    return '<span class="p-label p-label-message-' + type + '">' + type + '</span>';
                 }
             },{
                 xtype: 'datecolumn',

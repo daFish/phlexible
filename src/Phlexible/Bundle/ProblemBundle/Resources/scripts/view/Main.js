@@ -48,38 +48,47 @@ Ext.define('Phlexible.problem.view.Main', {
             layout: 'form',
             padding: '0 5 5 5',
             bodyPadding: 5,
-            height: 200,
+            height: 160,
+            defaults: {
+                anchor: '100%',
+                readOnly: true
+            },
             items: [{
                 xtype: 'textfield',
-                anchor: '100%',
                 fieldLabel: this.problemText,
                 bind: {
-                    value: '{list.selection.msg}'
+                    value: '{list.selection.message}'
                 }
             },{
                 xtype: 'textfield',
-                anchor: '100%',
                 fieldLabel: this.solutionText,
                 bind: {
                     value: '{list.selection.hint}'
                 }
             },{
-                xtype: 'textfield',
-                anchor: '100%',
+                xtype: 'displayfield',
                 fieldLabel: this.severityText,
+                fieldCls: '',
+                anchor: null,
                 bind: {
                     value: '{list.selection.severity}'
+                },
+                listeners: {
+                    change: function(field, value, oldValue) {
+                        field.inputEl.addCls('p-label');
+                        field.inputEl.setStyle('display', 'inline');
+                        field.inputEl.removeCls('p-label-problem-' + oldValue);
+                        field.inputEl.addCls('p-label-problem-' + value);
+                    }
                 }
             },{
                 xtype: 'textfield',
-                anchor: '100%',
                 fieldLabel: this.createdAtText,
                 bind: {
                     value: '{list.selection.createdAt}'
                 }
             },{
                 xtype: 'textfield',
-                anchor: '100%',
                 fieldLabel: this.lastCheckedAtText,
                 bind: {
                     value: '{list.selection.lastCheckedAt}'

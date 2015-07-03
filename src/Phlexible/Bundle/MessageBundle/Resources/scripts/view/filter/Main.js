@@ -3,39 +3,55 @@ Ext.define('Phlexible.message.view.filter.Main', {
     requires: [
         'Phlexible.message.view.filter.Criteria',
         'Phlexible.message.view.filter.List',
-        'Phlexible.message.view.filter.Preview'
+        'Phlexible.message.view.list.List'
     ],
     xtype: 'message.filter.main',
 
-    cls: 'p-message-filter-main',
+    componentCls: 'p-message-filter-main',
     iconCls: Phlexible.Icon.get(Phlexible.Icon.FILTER),
     layout: 'border',
     border: false,
+    referenceHolder: true,
+    viewModel: {
+        stores: {
+            filters: {
+                model: 'Filter',
+                autoLoad: true,
+                sorters: [{
+                    property: 'title',
+                    direction: 'ASC'
+                }]
+            },
+            messages: {
+                model: 'Message',
+                autoLoad: false,
+                remoteSort: true,
+                pageSize: 25,
+                sorters: [{
+                    property: 'createdAt',
+                    direction: 'DESC'
+                }]
+            }
+        }
+    },
 
     initComponent: function () {
         this.items = [
             {
                 xtype: 'message.filter.list',
                 itemId: 'list',
+                reference: 'list',
                 region: 'west',
                 padding: '5 0 5 5',
                 width: 200,
                 collapsible: true,
                 split: false,
+                bind: {
+                    store: '{filters}'
+                },
                 listeners: {
-                    filterChange: function (record) {
-                        if (this.getCriteriaPanel().ready === true) {
-                            this.getCriteriaPanel().ready = false;
-                            this.getCriteriaPanel().loadData(record);
-                        }
-                    },
-                    filterDeleted: function (record) {
-                        this.fireEvent('filterDeleted');
-
-                        this.getCriteriaPanel().clear();
-                        this.getCriteriaPanel().disable();
-                        this.getPreviewPanel().clear();
-                        this.getPreviewPanel().disable();
+                    saveFilter: function() {
+                        this.getViewModel().getStore('filters').sync();
                     },
                     scope: this
                 }
@@ -56,22 +72,27 @@ Ext.define('Phlexible.message.view.filter.Main', {
                         disabled: true,
                         ready: true,
                         split: false,
+                        bind: {
+                            title: '{list.selection.title}',
+                            filter: '{list.selection}'
+                        },
                         listeners: {
-                            reload: function () {
-                                this.getListPanel().getStore().reload();
-                            },
-                            refreshPreview: function (expression, title) {
+                            refreshPreview: function(expression) {
                                 this.getPreviewPanel().setExpression(expression);
                             },
                             scope: this
                         }
                     },
                     {
-                        xtype: 'message.filter.preview',
+                        xtype: 'message.list.list',
                         itemId: 'preview',
                         region: 'center',
                         padding: '5 0 5 5',
-                        autoLoad: false
+                        autoLoad: false,
+                        bind: {
+                            store: '{messages}',
+                            expression: '{list.section.expression}'
+                        }
                     }
                 ]
             }

@@ -1,14 +1,13 @@
-[{{ appTitle }} {{ projectTitle }}] Daily Digest Mail
-Digest Mail from {{ date }}
+Digest Mail
+Messages sind {{ digest.lastSend|date }}
 
-{% for message in messages %}
-    ===============================================================================
-    {{ message.subject }} {{ message.createdAt|date }}
-    -------------------------------------------------------------------------------
-    {% if message.body %}
-        {{ message.body }}
-    {% endif %}
-    {% if message.user %}
-        triggered by {{ message.user }}
-    {% endif %}
+{% for message in digest.messages %}
+===============================================================================
+{{ message.user|default("?") }}, {{ message.createdAt|date }} [{{ message.type|default("-") }}, {{ message.channel|default("-") }}, {{ message.role|default("-") }}]
+-------------------------------------------------------------------------------
+{{ message.subject }}
+{% if message.body %}
+-------------------------------------------------------------------------------
+{{ message.body }}
+{% endif %}
 {% endfor %}

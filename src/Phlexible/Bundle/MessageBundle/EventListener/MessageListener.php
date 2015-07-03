@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\MessageBundle\EventListener;
 
 use Phlexible\Bundle\MessageBundle\Event\MessageEvent;
-use Phlexible\Bundle\MessageBundle\Handler\HandlerCollection;
+use Phlexible\Bundle\MessageBundle\Handler\HandlerInterface;
 use Phlexible\Bundle\MessageBundle\MessageEvents;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,16 +26,16 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class MessageListener implements EventSubscriberInterface
 {
     /**
-     * @var HandlerCollection
+     * @var HandlerInterface
      */
-    private $messageHandlers;
+    private $messageHandler;
 
     /**
-     * @param HandlerCollection       $messageHandlers
+     * @param HandlerInterface $messageHandler
      */
-    public function __construct(HandlerCollection $messageHandlers)
+    public function __construct(HandlerInterface $messageHandler)
     {
-        $this->messageHandlers = $messageHandlers;
+        $this->messageHandler = $messageHandler;
     }
 
     /**
@@ -57,9 +57,7 @@ class MessageListener implements EventSubscriberInterface
     {
         $message = $event->getMessage();
 
-        foreach ($this->messageHandlers as $messageHandler) {
-            $messageHandler->handle($message);
-        }
+        $this->messageHandler->handle($message);
     }
 
     /**
@@ -67,8 +65,6 @@ class MessageListener implements EventSubscriberInterface
      */
     public function onTerminate()
     {
-        foreach ($this->messageHandlers as $messageHandler) {
-            $messageHandler->close();
-        }
+        $this->messageHandler->close();
     }
 }

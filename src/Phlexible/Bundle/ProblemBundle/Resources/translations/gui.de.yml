@@ -8,7 +8,7 @@ Phlexible:
             Problems:
                 title: Probleme
                 solutionText: Lösung
-                menuHintText: 'Probleme mit Schwere notice und darunter sind versteckt, öffnen Sie Menu / Administration / Probleme für eine vollständige Liste.'
+                menuHintText: 'Probleme mit Schwere notice und darunter werden nicht angezeigt, öffnen Sie <a href="#problems">Probleme</a> aus dem Menü für eine vollständige Liste.'
                 noProblemsText: 'Keine Probleme'
                 newProblemText: 'Neues Problem'
 
@@ -29,8 +29,6 @@ Phlexible:
                 idtext: ID
                 problemText: Problem
                 severityText: Schwere
-                sourceText: Quelle
                 createdAtText: 'Erstellt an'
                 lastCheckedAtText: 'Zuletzt überprüft an'
-                linkText: Link
                 solutionText: Lösung

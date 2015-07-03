@@ -2,7 +2,7 @@ Ext.define('Phlexible.message.view.list.Filter', {
     extend: 'Ext.form.FormPanel',
     xtype: 'message.list.filter',
 
-    cls: 'p-messages-list-filter',
+    componentCls: 'p-messages-list-filter',
     iconCls: Phlexible.Icon.get('funnel'),
     bodyPadding: 5,
     autoScroll: true,
@@ -273,10 +273,11 @@ Ext.define('Phlexible.message.view.list.Filter', {
         if (facets.types && facets.types.length && Ext.isArray(facets.types)) {
             var types = [];
             Ext.each(facets.types, function (item) {
+                var typeName = Phlexible.message.TypeNames[item];
                 types.push({
                     xtype: 'checkbox',
                     name: 'type_' + item,
-                    boxLabel: Phlexible.Icon.inlineText(Phlexible.message.TypeIcons[item], Phlexible.Config.get('message.types')[item]),
+                    boxLabel: '<span class="p-label p-label-message-' + typeName + '">' + typeName + '</span>',
                     listeners: {
                         change: this.updateFilter,
                         scope: this

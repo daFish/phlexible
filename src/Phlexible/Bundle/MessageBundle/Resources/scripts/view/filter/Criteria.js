@@ -7,7 +7,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
 
     xtype: 'message.filter.criteria',
 
-    cls: 'p-message-filter-criteria',
+    componentCls: 'p-message-filter-criteria',
     border: true,
     layout: 'border',
     bodyStyle: {
@@ -17,8 +17,10 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     ready: true,
 
     titleText: '_titleText',
-    saveText: '_saveText',
-    addOrBlockText: '_addOrBlockText',
+    addJunctionText: '_addJunction',
+    addExpressionText: '_addExpression',
+    orText: '_or',
+    andText: '_and',
     refreshText: '_refreshText',
     criteriaForText: '_criteriaForText',
     criteriaText: '_criteriaText',
@@ -111,7 +113,10 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                         name: 'title',
                         fieldLabel: this.titleText,
                         flex: 1,
-                        allowBlank: false
+                        allowBlank: false,
+                        bind: {
+                            value: '{list.selection.title}'
+                        }
                     }
                 ]
             },
@@ -119,7 +124,43 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 region: 'center',
                 itemId: 'criteria',
                 border: false,
-                autoScroll: true
+                autoScroll: true,
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'top',
+                    items: [{
+                        xtype: 'segmentedbutton',
+                        allowMultiple: true,
+                        items: [{
+                            text: this.orText,
+                            pressed: true
+                        },{
+                            text: this.andText
+                        }],
+                        listeners: {
+                            change: function(btn, newValue) {
+                                btn.ownerCt.ownerCt.setTitle(newValue[0] === 0 ? this.orText : this.andText);
+                            },
+                            scope: this
+                        }
+                    },'->',{
+                        xtype: 'button',
+                        text: this.addJunctionText,
+                        iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                        handler: function(btn) {
+                            btn.ownerCt.ownerCt.add(this.createJunctionConfig());
+                        },
+                        scope: this
+                    },{
+                        xtype: 'button',
+                        text: this.addExpressionText,
+                        iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                        handler: function(btn) {
+                            btn.ownerCt.ownerCt.add(this.createExpressionConfig());
+                        },
+                        scope: this
+                    }]
+                }]
             }
         ];
     },
@@ -129,19 +170,6 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
             xtype: 'toolbar',
             dock: 'top',
             items: [
-                {
-                    text: this.saveText,
-                    iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
-                    handler: this.save,
-                    scope: this
-                },
-                '-',
-                {
-                    text: this.addOrBlockText,
-                    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
-                    handler: this.addEmptyOrBlock,
-                    scope: this
-                },
                 '->',
                 {
                     text: this.refreshText,
@@ -153,101 +181,74 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
         }];
     },
 
-    getCriteriaPanel: function() {
-        return this.getComponent('criteria');
-    },
-
     /**
      * Save method to save modified data
      */
-    save: function () {
+    storeFilter: function () {
         if (!this.getForm().isValid()) {
             Phlexible.Notify.failure("Validation failed");
             return;
         }
 
         var expression = this.createExpression();
-        if(!expression) {
+        if (!expression) {
             Phlexible.Notify.failure("Empty expression");
             return;
         }
 
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('phlexible_api_message_put_filter', {filterId: this.record.id}),
-            jsonData: {
-                title: this.getComponent(0).getComponent(0).getValue(),
-                expression: expression
-            },
-            success: this.saveSuccess,
-            failure: this.saveFailure,
-            scope: this
-        });
+        this.filter.set('expression', expression);
+        this.filter.set('modifiedAt', new Date());
     },
 
-    saveSuccess: function (response) {
-        var data = Ext.decode(response.responseText);
+    getExpressionsPanel: function() {
+        return this.getComponent('criteria');
+    },
 
-        if (data.success) {
-            Phlexible.Notify.success(data.msg);
-            this.fireEvent('reload');
+    setFilter: function(filter) {
+        this.filter = filter;
+        if (filter) {
+            this.initExpressions(filter.get('expression'));
+            this.enable();
         } else {
-            Phlexible.Notify.failure(data.msg);
+            this.clear();
+            this.disable();
         }
-    },
-
-    saveFailure: function () {
-    },
-
-    /**
-     * Method to load data to the Information form and then to load the criteria list
-     * @param {Object} record
-     */
-    loadData: function (record) {
-        this.record = record;
-        this.enable();
-        this.getForm().loadRecord(record);
-
-        this.setTitle(Ext.String.format(this.criteriaForText, record.data.title));
-
-        // Loads the criteria list
-        this.initCriteriaFields(record.data.criteria);
     },
 
     clear: function () {
         this.getForm().reset();
-        this.removeCriteriaFields();
-        this.setTitle(this.criteriaText);
+        this.removeExpressions();
     },
 
     /**
      * Method to remove ALL criterias
      * Will be called before initalise a new criteria list
      */
-    removeCriteriaFields: function () {
-        this.getCriteriaPanel().removeAll();
+    removeExpressions: function () {
+        this.getExpressionsPanel().removeAll();
     },
 
     /**
      * Method to initialise the criteria field list.
      * Will be called in the loadData method
      *
-     * @param {Array} blocks
+     * @param {Object} expression
      */
-    initCriteriaFields: function (blocks) {
-        this.removeCriteriaFields();
+    initExpressions: function (expression) {
+        this.removeExpressions();
 
-        Phlexible.console.info(blocks);
+        Phlexible.console.info(expression);
 
-        if (!blocks || !Ext.isArray(blocks) || !blocks.length) {
-            this.addEmptyOrBlock();
+        if (!expression || !Ext.isObject(expression) || Ext.Object.isEmpty(expression)) {
+            this.addEmptyJunction(this.getExpressionsPanel());
         } else {
-            Ext.each(blocks, function(block) {
-                var rows = [];
-                Ext.each(block.group, function(row) {
-                    rows.push(this.createRowConfig(row.criteria, row.value));
-                });
-                this.addOrBlock(rows);
-            });
+            Ext.each(expression.expressions, function(expression1) {
+                var junctions = [];
+                Ext.each(expression1.expressions, function(expression2) {
+                    junctions.push(this.createExpressionConfig(expression2));
+                }, this);
+                this.addJunction(this.getExpressionsPanel(), expression.op, junctions);
+            }, this);
         }
 
         this.refreshPreview();
@@ -260,12 +261,11 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
      * Will be called after clicking on the add button or during
      * the load of existing criterias (params c and v are corresponding values)
      *
-     * @param {String} criterium
-     * @param {String} value
+     * @param {Object} expression
      */
-    createRowConfig: function (criterium, value) {
-        var criteriaConfig = this.createCriteriumConfig(criterium),
-            valueConfig = this.createValueConfig(criterium, value);
+    createExpressionConfig: function (expression) {
+        var fieldConfig = this.createFieldConfig(expression || {}),
+            valueConfig = this.createValueConfig(expression || {});
 
         return {
             xtype: 'fieldcontainer',
@@ -274,7 +274,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
             flex: 1,
             layout: 'hbox',
             items: [
-                criteriaConfig,
+                fieldConfig,
                 valueConfig,
                 {
                     xtype: 'button',
@@ -292,42 +292,39 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     /**
      * Returns a ComboBox containing all criterias.
      * Will be used during the initialisation of a criteria panel
-     * @param {String} value
+     * @param {Object} expression
      */
-    createCriteriumConfig: function (value) {
+    createFieldConfig: function (expression) {
         return {
             xtype: 'combo',
             itemId: 'criterium',
             emptyText: this.criteriaText,
-            width: 150,
-            value: value,
             margin: '0 0 0 5',
+            value: expression.field + '_' + expression.op,
             store: Ext.create('Ext.data.Store', {
                 fields: ['key', 'value'],
                 data: [
-                    ['subjectLike', this.subjectLikeText],
-                    ['subjectNotLike', this.subjectNotLikeText],
-                    ['bodyLike', this.bodyLikeText],
-                    ['bodyNotLike', this.bodyNotLikeText],
-                    ['userLike', this.userLikeText],
-                    ['userNotLike', this.userNotLikeText],
-                    ['typeIs', this.typeIsText],
-                    //['typeIn', this.typeInText],
-                    ['channelIs', this.channelIsText],
-                    ['channelIn', this.channelInText],
-                    ['roleIs', this.roleIsText],
-                    ['roleIn', this.roleInText],
-                    ['minAge', this.minAgeText],
-                    ['maxAge', this.maxAgeText],
-                    ['startDate', this.startDateText],
-                    ['endDate', this.endDateText],
-                    ['dateIs', this.dateIsText]
+                    ['subject_contains', this.subjectLikeText],
+                    ['subject_notcontains', this.subjectNotLikeText],
+                    ['body_contains', this.bodyLikeText],
+                    ['body_notcontains', this.bodyNotLikeText],
+                    ['user_contains', this.userLikeText],
+                    ['user_notcontains', this.userNotLikeText],
+                    ['type_equals', this.typeIsText],
+                    //['type_in', this.typeInText],
+                    ['channel_equals', this.channelIsText],
+                    ['channel_in', this.channelInText],
+                    ['role_equals', this.roleIsText],
+                    ['role_in', this.roleInText],
+                    ['date_greaterThanEqual', this.startDateText],
+                    ['date_lessThanEqual', this.endDateText],
+                    ['date_equals', this.dateIsText]
                 ]
             }),
             listeners: {
                 change: function (cb, newValue) {
                     cb.ownerCt.remove(cb.ownerCt.getComponent('value'));
-                    cb.ownerCt.insert(1, this.createValueConfig(newValue));
+                    cb.ownerCt.insert(1, this.createValueConfig({}, newValue));
                 },
                 scope: this
             },
@@ -341,14 +338,19 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     /**
      * Adds the corresponding field which will be get from getCorrespondingField,
      * and puts
-     * @param {String} criterium
-     * @param {String} value
+     *
+     * @param {Object} expression
+     * @param {Object} identifier
      */
-    createValueConfig: function (criterium, value) {
+    createValueConfig: function (expression, identifier) {
         var field;
 
-        switch (criterium) {
-            case 'typeIs':
+        if (!identifier) {
+            identifier = expression.field + '_' + expression.op;
+        }
+
+        switch (identifier) {
+            case 'type_equals':
                 field = {
                     exprOp: 'equals',
                     exprField: 'type',
@@ -366,7 +368,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'typeIn':
+            case 'type_in':
                 field = {
                     exprOp: 'in',
                     exprField: 'type',
@@ -385,7 +387,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'channelIs':
+            case 'channel_equals':
                 field = {
                     exprOp: 'equals',
                     exprField: 'channel',
@@ -406,7 +408,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'channelIn':
+            case 'channel_in':
                 field = {
                     exprOp: 'in',
                     exprField: 'channel',
@@ -424,7 +426,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'roleIs':
+            case 'role_equals':
                 field = {
                     exprOp: 'equals',
                     exprField: 'role',
@@ -445,7 +447,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'roleIn':
+            case 'role_in':
                 field = {
                     exprOp: 'in',
                     exprField: 'role',
@@ -463,21 +465,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'minAge':
-                field = {
-                    xtype: 'numberfield',
-                    emptyText: this.numberOfDaysText
-                };
-                break;
-
-            case 'maxAge':
-                field = {
-                    xtype: 'numberfield',
-                    emptyText: this.numberOfDaysText
-                };
-                break;
-
-            case 'startDate':
+            case 'date_greaterThanEqual':
                 field = {
                     exprOp: 'greaterThanEqual',
                     exprField: 'createdAt',
@@ -487,7 +475,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'endDate':
+            case 'date_lessThanEqual':
                 field = {
                     exprOp: 'lessThanEqual',
                     exprField: 'createdAt',
@@ -497,7 +485,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'dateIs':
+            case 'date_equals':
                 field = {
                     exprOp: 'equals',
                     exprField: 'createdAt',
@@ -507,7 +495,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'subjectLike':
+            case 'subject_contains':
                 field = {
                     exprOp: 'contains',
                     exprField: 'subject',
@@ -515,7 +503,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'subjectNotLike':
+            case 'subject_notcontains':
                 field = {
                     exprOp: 'containsNot',
                     exprField: 'subject',
@@ -523,7 +511,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'bodyLike':
+            case 'body_contains':
                 field = {
                     exprOp: 'contains',
                     exprField: 'body',
@@ -531,7 +519,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
                 };
                 break;
 
-            case 'bodyNotLike':
+            case 'body_notcontains':
                 field = {
                     exprOp: 'containsNot',
                     exprField: 'body',
@@ -548,8 +536,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
         }
 
         field.flex = 1;
-        field.width = 330;
-        field.value = value;
+        field.value = expression.value;
         field.name = 'value';
         field.itemId = 'value';
         field.margin = '0 0 0 5';
@@ -558,7 +545,7 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
     },
 
     refreshPreview: function () {
-        this.fireEvent('refreshPreview', this.createExpression(), this.record.data.title);
+        this.fireEvent('refreshPreview', this.createExpression(), this.filter.get('title'));
     },
 
     createExpression: function (all) {
@@ -591,24 +578,22 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
             criteria = null;
         }
 
-        Phlexible.console.info('serialize:', criteria);
-
         return criteria;
     },
 
-    addOrBlock: function(rows) {
-        var config = this.createBlockConfig(rows);
+    addJunction: function(panel, mode, rows) {
+        var config = this.createJunctionConfig(mode);
 
         config.items = rows;
 
-        return this.getCriteriaPanel().add(config);
+        return panel.add(config);
     },
 
-    addEmptyOrBlock: function () {
-        return this.addOrBlock([this.createRowConfig()]);
+    addEmptyJunction: function (panel, mode) {
+        return this.addJunction(panel, mode, [this.createExpressionConfig()]);
     },
 
-    createBlockConfig: function () {
+    createJunctionConfig: function (mode) {
         return {
             xtype: 'panel',
             title: this.groupText,
@@ -616,17 +601,48 @@ Ext.define('Phlexible.message.view.filter.Criteria', {
             layout: 'vbox',
             padding: '5 5 0 5',
             tools: [{
-                type: 'plus',
-                callback: function (p) {
-                    p.add(this.createRowConfig());
-                },
-                scope: this
-            },{
                 type: 'close',
                 callback: function (p) {
                     p.destroy();
                 },
                 scope: this
+            }],
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'top',
+                items: [{
+                    xtype: 'segmentedbutton',
+                    allowMultiple: false,
+                    items: [{
+                        text: this.orText,
+                        pressed: mode === 'or'
+                    },{
+                        text: this.andText,
+                        pressed: mode === 'and'
+                    }],
+                    listeners: {
+                        change: function(btn, newValue) {
+                            btn.ownerCt.ownerCt.setTitle(newValue[0] === 0 ? this.orText : this.andText);
+                        },
+                        scope: this
+                    }
+                },'->',{
+                    xtype: 'button',
+                    text: this.addJunctionText,
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                    handler: function(btn) {
+                        this.addEmptyJunction(btn.ownerCt.ownerCt, 'and');
+                    },
+                    scope: this
+                },{
+                    xtype: 'button',
+                    text: this.addExpressionText,
+                    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
+                    handler: function(btn) {
+                        btn.ownerCt.ownerCt.add(this.createExpressionConfig());
+                    },
+                    scope: this
+                }]
             }]
         };
     }

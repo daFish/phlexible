@@ -4,16 +4,16 @@ Ext.define('Phlexible.gui.menuhandle.handle.Menu', {
     menu: [],
 
     createConfig: function (data) {
-        if (!data.menu || !Ext.isArray(data.menu)) {
+        if (!data.children || !Ext.isArray(data.children)) {
             return null;
         }
 
         var config = this.createBasicConfig();
 
-        if (data.menu && Ext.isArray(data.menu)) {
+        if (data.children && Ext.isArray(data.children)) {
             subMenu = [];
 
-            Ext.each(data.menu, function (menuItem) {
+            Ext.each(data.children, function (menuItem) {
                 var handleName, handler;
 
                 if (!Phlexible.Handles.has(menuItem.handle)) {

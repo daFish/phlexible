@@ -121,8 +121,8 @@ Ext.define('Phlexible.gui.util.RequestListener', {
                 method: options.method || (options.params ? 'POST' : 'GET'),
                 timeout: options.timeout || Ext.Ajax.timeout,
                 headers: conn.requests[response.requestId].headers,
-                params: options.params,
-                jsonData: options.jsonData
+                params: !Ext.isEmpty(options.params) && Ext.isObject(options.params) && !Ext.Object.isEmpty(options.params) ? options.params : null,
+                jsonData: !Ext.isEmpty(options.jsonData) && Ext.isObject(options.jsonData) && !Ext.Object.isEmpty(options.jsonData) ? options.jsonData : null
             }
         });
         window.show();

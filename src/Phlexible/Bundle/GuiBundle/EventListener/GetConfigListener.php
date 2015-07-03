@@ -82,6 +82,7 @@ class GetConfigListener
             ['gray', 'Gray Theme', 'theme_gray.png'],
             ['neptune', 'Neptune Theme', 'theme_neptune.png'],
             ['crisp', 'Crisp Theme', 'theme_crisp.png'],
+            ['triton', 'Triton Theme', 'theme_triton.png'],
             //            array('slate', 'Slate Theme', 'theme_slate.png'),
             //            array('slickness', 'Slickness Theme', 'theme_slate.png'),
         ];

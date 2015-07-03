@@ -1,0 +1,12 @@
+.p-label-problem-info {
+    background-color: #5cb85c;
+}
+.p-label-problem-notice {
+    background-color: #337ab7;
+}
+.p-label-problem-warning {
+    background-color: #f0ad4e;
+}
+.p-label-problem-critical {
+    background-color: #d9534f;
+}

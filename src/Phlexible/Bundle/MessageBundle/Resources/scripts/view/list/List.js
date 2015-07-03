@@ -1,8 +1,8 @@
 Ext.define('Phlexible.message.view.list.List', {
-    extend: 'Ext.grid.GridPanel',
+    extend: 'Ext.grid.Panel',
     xtype: 'message.list.list',
 
-    cls: 'p-message-list-list',
+    componentCls: 'p-message-list-list',
     loadMask: true,
     emptyText: '_emptyText',
     viewConfig: {
@@ -45,11 +45,14 @@ Ext.define('Phlexible.message.view.list.List', {
                 flex: 1
             }, {
                 header: this.typeText,
-                dataIndex: 'type',
+                dataIndex: 'typeName',
                 sortable: true,
                 width: 70,
                 renderer: function (v) {
-                    return v !== undefined && v !== null ? Phlexible.Icon.inlineText(Phlexible.message.TypeIcons[v], Phlexible.Config.get('message.types')[v]) : '';
+                    if (!v) {
+                        return '';
+                    }
+                    return '<span class="p-label p-label-message-' + v + '">' + v + '</span>';
                 }
             }, {
                 header: this.channelText,
@@ -90,5 +93,10 @@ Ext.define('Phlexible.message.view.list.List', {
             displayMsg: this.displayMessageText,
             emptyMsg: this.emptyMessageText
         }];
+    },
+
+    setExpression: function(expression) {
+        this.getStore().getProxy().setExtraParam('expression', Ext.encode(expression));
+        this.getStore().reload();
     }
 });

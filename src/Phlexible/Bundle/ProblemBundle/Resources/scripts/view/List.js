@@ -8,10 +8,8 @@ Ext.define('Phlexible.problem.view.List', {
     idText: '_idtext',
     problemText: '_problemText',
     severityText: '_severityText',
-    sourceText: '_sourceText',
     createdAtText: '_createdAtText',
     lastCheckedAtText: '_lastCheckedAtText',
-    linkText: '_linkText',
     solutionText: '_solutionText',
 
     initComponent: function () {
@@ -28,19 +26,15 @@ Ext.define('Phlexible.problem.view.List', {
                 hidden: true
             }, {
                 header: this.problemText,
-                dataIndex: 'msg',
+                dataIndex: 'message',
                 flex: 1
             }, {
                 header: this.severityText,
                 dataIndex: 'severity',
                 width: 80,
-                renderer: function (v) {
-                    return Phlexible.Icon.inline(Phlexible.problem.ProblemIcons[v]) + ' ' + v;
+                renderer: function(v) {
+                    return '<span class="p-label p-label-problem-' + v + '">' + v + '</span>';
                 }
-            }, {
-                header: this.sourceText,
-                dataIndex: 'source',
-                hidden: true
             }, {
                 xtype: 'datecolumn',
                 header: this.createdAtText,
@@ -53,10 +47,6 @@ Ext.define('Phlexible.problem.view.List', {
                 dataIndex: 'lastCheckedAt',
                 width: 120,
                 format: 'Y-m-d H:i:s'
-            }, {
-                header: this.linkText,
-                dataIndex: 'link',
-                hidden: true
             }
         ];
     }

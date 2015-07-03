@@ -22,7 +22,10 @@ Phlexible:
                     title: Criteria
                     titleText: Title
                     saveText: Save
-                    addOrBlockText: 'Add or block'
+                    addJunctionText: Add junction
+                    addExpressionText: Add expression
+                    orText: OR
+                    andText: AND
                     refreshText: Refresh
                     criteriaForText: 'Criteria for "{0}"'
                     criteriaText: Criteria

@@ -5,12 +5,10 @@ Ext.define('Phlexible.problem.model.Problem', {
     idProperty: 'id',
     fields: [
         {name: 'id', type: 'string'},
-        {name: 'checkCass', type: 'string'},
-        {name: 'iconClass', type: 'string'},
         {name: 'severity', type: 'string'},
-        {name: 'msg', type: 'string'},
+        {name: 'message', type: 'string'},
         {name: 'hint', type: 'string'},
-        {name: 'link', type: 'string'},
+        {name: 'attributes'},
         {name: 'createdAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
         {name: 'lastCheckedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
         {name: 'isLive', type: 'bool'}

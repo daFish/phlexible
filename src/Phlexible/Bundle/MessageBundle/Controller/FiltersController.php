@@ -108,8 +108,6 @@ class FiltersController extends FOSRestController
      *
      * @return Response
      *
-     * @ParamConverter("subscription", converter="fos_rest.request_body")
-     * @Rest\Post("/filters")
      * @ApiDoc(
      *   description="Create a Filter",
      *   section="message",
@@ -134,8 +132,6 @@ class FiltersController extends FOSRestController
      *
      * @return Response
      *
-     * @ParamConverter("filter", converter="fos_rest.request_body")
-     * @Rest\Put("/filters/{filterId}")
      * @ApiDoc(
      *   description="Update a Filter",
      *   section="message",

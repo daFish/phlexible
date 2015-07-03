@@ -11,17 +11,18 @@
 
 namespace Phlexible\Bundle\MessageBundle\Mailer;
 
+use Phlexible\Bundle\MessageBundle\Digest\Digest;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig_Environment;
 
 /**
- * DigestMail Mailer
+ * Digest mailer
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class Mailer
+class DigestMailer
 {
     /**
      * @var Twig_Environment
@@ -64,25 +65,25 @@ class Mailer
     /**
      * Send digest mail
      *
-     * @param UserInterface $user
-     * @param Message[]     $messages
+     * @param Digest $digest
      *
      * @return bool
      */
-    public function sendDigestMail(UserInterface $user, array $messages)
+    public function sendDigestMail(Digest $digest)
     {
         $template = $this->parameters['digest']['template'];
         $from = $this->parameters['digest']['from'];
 
         $content = $this->templating->render(
             $template,
-            [
-                'date'         => date('Y-m-d H:i:s'),
-                'messages'     => $messages
-            ]
+            array(
+                'digest' => $digest
+            )
         );
 
-        return $this->sendEmailMessage($content, $from, $user->getEmail());
+        echo $content;die;
+
+        return $this->sendEmailMessage($content, $from, $digest->getUser()->getEmail());
     }
 
     /**

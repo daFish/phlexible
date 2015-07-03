@@ -72,7 +72,10 @@ Ext.define('Phlexible.queue.view.Main', {
                 }, {
                     header: this.stateText,
                     dataIndex: 'state',
-                    width: 60
+                    width: 100,
+                    renderer: function(v) {
+                        return '<span class="p-label p-label-queue-' + v + '">' + v + '</span>';
+                    }
                 }, {
                     xtype: 'datecolumn',
                     header: this.createdAtText,
@@ -155,15 +158,17 @@ Ext.define('Phlexible.queue.view.Main', {
                     },
                     items: [{
                         xtype: 'displayfield',
-                        cls: 'p-badge',
+                        fieldCls: '',
                         fieldLabel: this.stateText,
+                        anchor: null,
                         bind: {
                             value: '{list.selection.state}'
                         },
                         listeners: {
                             change: function(field, value, oldValue) {
-                                field.removeCls('p-badge-' + oldValue);
-                                field.addCls('p-badge-' + value);
+                                field.inputEl.addCls('p-label');
+                                field.inputEl.removeCls('p-label-queue-' + oldValue);
+                                field.inputEl.addCls('p-label-queue-' + value);
                             }
                         }
                     },{

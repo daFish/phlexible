@@ -39,7 +39,7 @@ class SendDigestCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
 
-        $digest = $container->get('phlexible_message.digest');
+        $digest = $container->get('phlexible_message.digester');
         $recipients = $digest->sendDigestMails();
 
         $output->writeln(count($recipients) . ' digest mails sent.');

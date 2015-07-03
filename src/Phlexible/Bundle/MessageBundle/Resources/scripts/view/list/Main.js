@@ -9,7 +9,7 @@ Ext.define('Phlexible.message.view.list.Main', {
     xtype: 'message.list.main',
     controller: 'message.list.main',
 
-    cls: 'p-message-list-main',
+    componentCls: 'p-message-list-main',
     iconCls: Phlexible.Icon.get('application-list'),
     layout: 'border',
     border: false,
@@ -85,9 +85,8 @@ Ext.define('Phlexible.message.view.list.Main', {
                     bodyPadding: 5,
                     border: true,
                     bind: {
-                        iconCls: '{list.selection.typeIconCls}',
+                        title: '{list.selection.subject}'
                     },
-                    iconCls: Phlexible.message.TypeIcons.info,
                     items: [
                         {
                             xtype: 'textfield',
@@ -97,7 +96,7 @@ Ext.define('Phlexible.message.view.list.Main', {
                             bind: {
                                 value: '{list.selection.subject}'
                             },
-                            readonly: true
+                            readOnly: true
                         },
                         {
                             xtype: 'textarea',
@@ -108,33 +107,41 @@ Ext.define('Phlexible.message.view.list.Main', {
                             bind: {
                                 value: '{list.selection.body}'
                             },
-                            readonly: true
+                            readOnly: true
                         },
                         {
                             layout: 'hbox',
                             border: false,
                             defaults: {
-                                flex: 1,
+                                flex: 3,
                                 layout: 'anchor',
                                 border: false
                             },
                             items: [{
                                 defaults: {
-                                    anchor: '-10',
-                                    readonly: true
+                                    readOnly: true
                                 },
+                                flex: 1,
                                 items: [{
-                                    xtype: 'textfield',
+                                    xtype: 'displayfield',
                                     name: 'type',
+                                    fieldCls: '',
                                     fieldLabel: this.typeText,
                                     bind: {
-                                        value: '{list.selection.typeText}'
+                                        value: '{list.selection.typeName}'
+                                    },
+                                    listeners: {
+                                        change: function(field, value, oldValue) {
+                                            field.inputEl.addCls('p-label');
+                                            field.inputEl.removeCls('p-label-message-' + oldValue);
+                                            field.inputEl.addCls('p-label-message-' + value);
+                                        }
                                     }
                                 }]
                             },{
                                 defaults: {
                                     anchor: '-10',
-                                    readonly: true
+                                    readOnly: true
                                 },
                                 items: [{
                                     xtype: 'textfield',
@@ -155,7 +162,7 @@ Ext.define('Phlexible.message.view.list.Main', {
                             },{
                                 defaults: {
                                     anchor: '-0',
-                                    readonly: true
+                                    readOnly: true
                                 },
                                 items: [{
                                     xtype: 'textfield',

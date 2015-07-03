@@ -50,8 +50,10 @@ class MessageRepository extends EntityRepository
                 ->setMaxResults($limit);
         }
 
-        foreach ($orderBy as $field => $dir) {
-            $queryBuilder->addOrderBy("m.$field", $dir);
+        if ($orderBy) {
+            foreach ($orderBy as $field => $dir) {
+                $queryBuilder->addOrderBy("m.$field", $dir);
+            }
         }
 
         $this->applyExpression($queryBuilder, $expression);

@@ -5,11 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
     <link rel="icon" type="image/png" href="{{ asset("bundles/phlexiblegui/images/phlexible.png") }}">
-    {% set theme = "ext-theme-" ~ app.user.property("theme", "classic") %}
+    {% set theme = "theme-" ~ app.user.property("theme", "classic") %}
     {% set debug = app.debug ? "-debug" : "" %}
-    <link rel="stylesheet" type="text/css" href="{{ asset("build/packages/" ~ theme ~ "/build/resources/" ~ theme ~ "-all" ~ debug ~ ".css", "ext") }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset("build/classic/" ~ theme ~ "/resources/" ~ theme ~ "-all" ~ debug ~ ".css", "ext") }}">
     <script type="text/javascript" src="{{ asset("build/ext-all" ~ debug ~ ".js", "ext") }}"></script>
-    <script type="text/javascript" src="{{ asset("build/packages/" ~ theme ~ "/build/" ~ theme ~ debug ~ ".js", "ext") }}"></script>
+    <script type="text/javascript" src="{{ asset("build/classic/" ~ theme ~ "/" ~ theme ~ debug ~ ".js", "ext") }}"></script>
     <link href="{{ path("phlexible_gui_asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         #loading {

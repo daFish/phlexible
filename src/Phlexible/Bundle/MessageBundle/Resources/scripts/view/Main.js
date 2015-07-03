@@ -11,7 +11,7 @@ Ext.define('Phlexible.message.view.Main', {
 
     controller: 'message.main',
 
-    cls: 'p-message-main',
+    componentCls: 'p-message-main',
     iconCls: Phlexible.Icon.get('resource-monitor'),
     layout: 'fit',
     border: false,

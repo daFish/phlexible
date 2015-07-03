@@ -92,7 +92,7 @@ class MenuItemCollection implements \Countable
             );
 
             if (count($item->getItems())) {
-                $itemData['menu'] = $item->getItems()->toArray();
+                $itemData['children'] = $item->getItems()->toArray();
             }
 
             if (count($item->getParameters())) {

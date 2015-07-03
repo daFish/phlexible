@@ -12,7 +12,7 @@ Ext.define('Phlexible.message.model.Message', {
         {name: 'role', type: 'string'},
         {name: 'user', type: 'string'},
         {name: 'createdAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
-        {name: 'typeText', calculate: function(data) {
+        {name: 'typeName', calculate: function(data) {
             return Phlexible.Config.get('message.types')[data.type];
         }},
         {name: 'typeIconCls', calculate: function(data) {
@@ -29,7 +29,8 @@ Ext.define('Phlexible.message.model.Message', {
         reader: {
             type: 'json',
             rootProperty: 'messages',
-            totalProperty: 'count'
+            totalProperty: 'count',
+            keepRawData: true
         }
     }
 });

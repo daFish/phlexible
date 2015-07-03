@@ -62,5 +62,7 @@ class BufferHandler implements HandlerInterface
         foreach ($this->messages as $message) {
             $this->handler->handle($message);
         }
+
+        $this->handler->close();
     }
 }

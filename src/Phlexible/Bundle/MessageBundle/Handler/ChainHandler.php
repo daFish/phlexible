@@ -11,12 +11,14 @@
 
 namespace Phlexible\Bundle\MessageBundle\Handler;
 
+use Phlexible\Bundle\MessageBundle\Entity\Message;
+
 /**
- * Handler collection
+ * Chain handler
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class HandlerCollection implements \IteratorAggregate
+class ChainHandler implements HandlerInterface
 {
     /**
      * @var HandlerInterface[]
@@ -44,10 +46,24 @@ class HandlerCollection implements \IteratorAggregate
     }
 
     /**
-     * @return \ArrayIterator
+     * Will be called as soon as a message is posted.
+     *
+     * @param Message $message
      */
-    public function getIterator()
+    public function handle(Message $message)
     {
-        return new \ArrayIterator($this->handlers);
+        foreach ($this->handlers as $handler) {
+            $handler->handle($message);
+        }
+    }
+
+    /**
+     * Will be called on kernel/console::terminate event.
+     */
+    public function close()
+    {
+        foreach ($this->handlers as $handler) {
+            $handler->close();
+        }
     }
 }

@@ -22,7 +22,10 @@ Phlexible:
                     title: Kriterien
                     titleText: Titel
                     saveText: Speichern
-                    addOrBlockText: 'Oder-Block hinzufügen'
+                    addJunctionText: Gruppe hinzufügen
+                    addExpressionText: Ausdruck hinzufügen
+                    orText: ODER
+                    andText: UND
                     refreshText: Aktualisieren
                     criteriaForText: 'Kriterien für "{0}"'
                     criteriaText: Kriterien
