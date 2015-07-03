@@ -112,6 +112,6 @@ class TemplateManager implements TemplateManagerInterface
     {
         $template->setRevision($template->getRevision() + 1);
 
-        $this->repository->dumpTemplate($template, 'xml');
+        $this->repository->writeTemplate($template, 'xml');
     }
 }

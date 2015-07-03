@@ -21,11 +21,25 @@ interface MetaSetRepositoryInterface
     /**
      * @return MetaSetCollection
      */
-    public function loadMetaSets();
+    public function loadAll();
+
+    /**
+     * @param string $id
+     *
+     * @return MetaSetInterface
+     */
+    public function load($id);
+
+    /**
+     * @param string $name
+     *
+     * @return MetaSetInterface
+     */
+    public function loadByName($name);
 
     /**
      * @param MetaSetInterface $metaSet
      * @param string           $type
      */
-    public function dumpMetaSet(MetaSetInterface $metaSet, $type = null);
+    public function writeMetaSet(MetaSetInterface $metaSet, $type = null);
 }

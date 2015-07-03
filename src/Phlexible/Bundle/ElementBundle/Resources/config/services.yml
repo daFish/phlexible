@@ -28,7 +28,7 @@ services:
             - @phlexible_element.element_manager
             - @phlexible_element.element_version_manager
             - @phlexible_element.element_source_manager
-            - @phlexible_elementtype.file.dumper.xml
+            - @phlexible_elementtype.file.xml_dumper
             - @logger
 
     phlexible_element.publish.publisher:

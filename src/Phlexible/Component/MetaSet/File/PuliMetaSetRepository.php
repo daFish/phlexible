@@ -60,6 +60,11 @@ class PuliMetaSetRepository implements MetaSetRepositoryInterface
     private $dumpers = [];
 
     /**
+     * @var MetaSetCollection
+     */
+    private $metasets;
+
+    /**
      * @param ResourceDiscovery  $puliDiscovery
      * @param EditableRepository $puliRepository
      * @param string             $defaultDumpType
@@ -109,28 +114,50 @@ class PuliMetaSetRepository implements MetaSetRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function loadMetaSets()
+    public function loadAll()
     {
-        $metaSets = new MetaSetCollection();
+        if ($this->metasets = null) {
+            $this->metasets = new MetaSetCollection();
 
-        foreach ($this->puliDiscovery->findByType('phlexible/metasets') as $binding) {
-            foreach ($binding->getResources() as $resource) {
-                $extension = pathinfo($resource->getFilesystemPath(), PATHINFO_EXTENSION);
-                if (!isset($this->parsers[$extension])) {
-                    continue;
+            foreach ($this->puliDiscovery->findByType('phlexible/metasets') as $binding) {
+                foreach ($binding->getResources() as $resource) {
+                    $extension = pathinfo($resource->getFilesystemPath(), PATHINFO_EXTENSION);
+                    if (!isset($this->parsers[$extension])) {
+                        continue;
+                    }
+                    $parser = $this->parsers[$extension];
+                    $this->metasets->add($parser->parse($resource->getBody()));
                 }
-                $parser = $this->parsers[$extension];
-                $metaSets->add($parser->parse($resource->getBody()));
             }
         }
 
-        return $metaSets;
+        return $this->metasets;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function dumpMetaSet(MetaSetInterface $metaSet, $type = null)
+    public function load($id)
+    {
+        $metaSets = $this->loadAll();
+
+        return $metaSets->get($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function loadByName($name)
+    {
+        $metaSets = $this->loadAll();
+
+        return $metaSets->getByName($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function writeMetaSet(MetaSetInterface $metaSet, $type = null)
     {
         if (!$type) {
             $type = $this->defaultDumpType;

@@ -9,7 +9,6 @@
 namespace Phlexible\Component\MetaSet\File;
 
 use Phlexible\Component\MetaSet\Model\MetaSet;
-use Phlexible\Component\MetaSet\Model\MetaSetCollection;
 use Phlexible\Component\MetaSet\Model\MetaSetField;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
@@ -27,11 +26,6 @@ class MetaSetManager implements MetaSetManagerInterface
     private $repository;
 
     /**
-     * @var MetaSetCollection
-     */
-    private $metaSets;
-
-    /**
      * @param MetaSetRepositoryInterface $repository
      */
     public function __construct(MetaSetRepositoryInterface $repository)
@@ -40,23 +34,11 @@ class MetaSetManager implements MetaSetManagerInterface
     }
 
     /**
-     * @return MetaSetCollection
-     */
-    public function getCollection()
-    {
-        if ($this->metaSets === null) {
-            $this->metaSets = $this->repository->loadMetaSets();
-        }
-
-        return $this->metaSets;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function find($id)
     {
-        return $this->getCollection()->get($id);
+        return $this->repository->load($id);
     }
 
     /**
@@ -66,7 +48,7 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function findOneByName($name)
     {
-        return $this->getCollection()->getByName($name);
+        return $this->repository->loadByName($name);
     }
 
     /**
@@ -74,7 +56,7 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function findAll()
     {
-        return $this->getCollection()->all();
+        return $this->repository->loadAll();
     }
 
     /**
@@ -98,6 +80,6 @@ class MetaSetManager implements MetaSetManagerInterface
      */
     public function updateMetaSet(MetaSetInterface $metaSet)
     {
-        $this->repository->dumpMetaSet($metaSet, 'xml');
+        $this->repository->writeMetaSet($metaSet, 'xml');
     }
 }

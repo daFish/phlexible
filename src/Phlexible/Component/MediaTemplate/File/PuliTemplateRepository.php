@@ -130,7 +130,7 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function dumpTemplate(TemplateInterface $template, $type = null)
+    public function writeTemplate(TemplateInterface $template, $type = null)
     {
         if (!$type) {
             $type = $this->defaultDumpType;

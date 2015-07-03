@@ -14,8 +14,6 @@ use Phlexible\Component\Elementtype\Event\ElementtypeEvent;
 use Phlexible\Component\Elementtype\Exception\CreateCancelledException;
 use Phlexible\Component\Elementtype\Exception\DeleteCancelledException;
 use Phlexible\Component\Elementtype\Exception\UpdateCancelledException;
-use Phlexible\Component\Elementtype\File\Loader\LoaderInterface;
-use Phlexible\Component\Elementtype\File\Writer\WriterInterface;
 use Phlexible\Component\Elementtype\Model\Elementtype;
 use Phlexible\Component\Elementtype\Model\ElementtypeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -30,14 +28,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ElementtypeManager implements ElementtypeManagerInterface
 {
     /**
-     * @var LoaderInterface
+     * @var ElementtypeRepositoryInterface
      */
-    private $loader;
-
-    /**
-     * @var WriterInterface
-     */
-    private $writer;
+    private $repository;
 
     /**
      * @var ValidatorInterface
@@ -50,19 +43,16 @@ class ElementtypeManager implements ElementtypeManagerInterface
     private $dispatcher;
 
     /**
-     * @param LoaderInterface          $loader
-     * @param WriterInterface          $writer
-     * @param ValidatorInterface       $validator
-     * @param EventDispatcherInterface $dispatcher
+     * @param ElementtypeRepositoryInterface $repository
+     * @param ValidatorInterface             $validator
+     * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
-        LoaderInterface $loader,
-        WriterInterface $writer,
+        ElementtypeRepositoryInterface $repository,
         ValidatorInterface $validator,
         EventDispatcherInterface $dispatcher)
     {
-        $this->loader = $loader;
-        $this->writer = $writer;
+        $this->repository = $repository;
         $this->validator = $validator;
         $this->dispatcher = $dispatcher;
     }
@@ -72,7 +62,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
      */
     public function find($elementtypeId)
     {
-        return $this->loader->load($elementtypeId);
+        return $this->repository->load($elementtypeId);
     }
 
     /**
@@ -80,7 +70,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
      */
     public function findAll()
     {
-        return $this->loader->loadAll();
+        return $this->repository->loadAll();
     }
 
     /**
@@ -112,7 +102,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
             $elementtype->setId(Uuid::generate());
 
             $this->validateElementtype($elementtype);
-            $this->writer->write($elementtype);
+            $this->repository->write($elementtype);
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::CREATE, $event);
@@ -123,7 +113,7 @@ class ElementtypeManager implements ElementtypeManagerInterface
             }
 
             $this->validateElementtype($elementtype);
-            $this->writer->write($elementtype);
+            $this->repository->write($elementtype);
 
             $event = new ElementtypeEvent($elementtype);
             $this->dispatcher->dispatch(ElementtypeEvents::UPDATE, $event);

@@ -6,26 +6,31 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\Elementtype\File\Loader;
+namespace Phlexible\Component\Elementtype\File;
 
 use Phlexible\Component\Elementtype\Model\Elementtype;
 
 /**
- * Loader interface
+ * Elementtype repository interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface LoaderInterface
+interface ElementtypeRepositoryInterface
 {
+    /**
+     * @return Elementtype[]
+     */
+    public function loadAll();
+
     /**
      * @param string $elementtypeId
      *
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype
+     * @return Elementtype
      */
     public function load($elementtypeId);
 
     /**
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype[]
+     * @return Elementtype $elementtype
      */
-    public function loadAll();
+    public function write(Elementtype $elementtype);
 }

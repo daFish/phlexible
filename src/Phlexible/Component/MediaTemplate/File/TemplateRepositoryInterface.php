@@ -27,5 +27,5 @@ interface TemplateRepositoryInterface
      * @param TemplateInterface $template
      * @param string|null       $type
      */
-    public function dumpTemplate(TemplateInterface $template, $type = null);
+    public function writeTemplate(TemplateInterface $template, $type = null);
 }
