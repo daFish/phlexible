@@ -103,12 +103,15 @@ class NodeSerializer
     {
         $userRights = [];
         if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            if ($this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+            if (!$this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
                 return null;
             }
 
-            $userRights = []; //$contentRightsManager->getRights($language);
-            $userRights = array_keys($userRights);
+            // TODO: fix
+            $userRights = array();
+            foreach ($this->permissionRegistry->get(get_class($node))->all() as $permission) {
+                $userRights[] = $permission->getName();
+            }
         } else {
             $userRights = array();
             foreach ($this->permissionRegistry->get(get_class($node))->all() as $permission) {

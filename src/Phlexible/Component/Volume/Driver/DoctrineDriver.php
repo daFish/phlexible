@@ -569,6 +569,24 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
+    public function hideFile(FileInterface $file)
+    {
+        $file->setHidden(true);
+        $this->updateFile($file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function showFile(FileInterface $file)
+    {
+        $file->setHidden(false);
+        $this->updateFile($file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function updateFolder(FolderInterface $folder)
     {
         $this->entityManager->persist($folder);
@@ -700,7 +718,7 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function validateCreateFile(FileInterface $file)
+    public function validateCreateFile(FileInterface $file, FolderInterface $folder)
     {
         $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
         if ($this->findFileByPath($filePath)) {
@@ -711,9 +729,17 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function validateRenameFile(FileInterface $file)
+    public function validateRenameFile(FileInterface $file, FolderInterface $folder)
     {
-        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
+        $this->validateMoveFile($file, $folder);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateMoveFile(FileInterface $file, FolderInterface $folder)
+    {
+        $filePath = $folder->getPath() . '/' . $file->getName();
         if ($this->findFileByPath($filePath)) {
             throw new AlreadyExistsException("File {$filePath} already exists.");
         }
@@ -722,23 +748,9 @@ class DoctrineDriver extends AbstractDriver
     /**
      * {@inheritdoc}
      */
-    public function validateMoveFile(FileInterface $file)
+    public function validateCopyFile(FileInterface $file, FolderInterface $folder)
     {
-        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
-        if ($this->findFileByPath($filePath)) {
-            throw new AlreadyExistsException("File {$filePath} already exists.");
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateCopyFile(FileInterface $file)
-    {
-        $filePath = $file->getFolder()->getPath() . '/' . $file->getName();
-        if ($this->findFileByPath($filePath)) {
-            throw new AlreadyExistsException("File {$filePath} already exists.");
-        }
+        $this->validateMoveFile($file, $folder);
     }
 
     /**

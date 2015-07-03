@@ -209,6 +209,20 @@ interface DriverInterface
     public function deleteFile(FileInterface $file);
 
     /**
+     * @param FileInterface $file
+     *
+     * @return FileInterface
+     */
+    public function hideFile(FileInterface $file);
+
+    /**
+     * @param FileInterface $file
+     *
+     * @return FileInterface
+     */
+    public function showFile(FileInterface $file);
+
+    /**
      * @param FolderInterface $folder
      *
      * @throws AlreadyExistsException
@@ -238,30 +252,34 @@ interface DriverInterface
     public function validateCopyFolder(FolderInterface $folder, FolderInterface $targetFolder);
 
     /**
-     * @param FileInterface $file
+     * @param FileInterface   $file
+     * @param FolderInterface $folder
      *
      * @throws AlreadyExistsException
      */
-    public function validateCreateFile(FileInterface $file);
+    public function validateCreateFile(FileInterface $file, FolderInterface $folder);
 
     /**
-     * @param FileInterface $file
+     * @param FileInterface   $file
+     * @param FolderInterface $folder
      *
      * @throws AlreadyExistsException
      */
-    public function validateRenameFile(FileInterface $file);
+    public function validateRenameFile(FileInterface $file, FolderInterface $folder);
 
     /**
-     * @param FileInterface $file
+     * @param FileInterface   $file
+     * @param FolderInterface $folder
      *
      * @throws AlreadyExistsException
      */
-    public function validateMoveFile(FileInterface $file);
+    public function validateMoveFile(FileInterface $file, FolderInterface $folder);
 
     /**
-     * @param FileInterface $file
+     * @param FileInterface   $file
+     * @param FolderInterface $folder
      *
      * @throws AlreadyExistsException
      */
-    public function validateCopyFile(FileInterface $file);
+    public function validateCopyFile(FileInterface $file, FolderInterface $folder);
 }

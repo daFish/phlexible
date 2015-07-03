@@ -73,12 +73,18 @@ class ListController extends Controller
             if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
-                    return null;
+                if (!$this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                    return new JsonResponse(array(
+                        'parent' => null,
+                        'list'   => array(),
+                        'total'  => 0
+                    ));
                 }
 
                 $userRights = []; //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
+                $userRights = array_keys(
+                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
+                );
             } else {
                 $userRights = $userAdminRights = array_keys(
                     $this->get('phlexible_access_control.permissions')->getByObjectType(get_class($node))
@@ -136,8 +142,8 @@ class ListController extends Controller
             if (!$userAdminRights) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
-                    return null;
+                if (!$this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                    continue;
                 }
 
                 $userRights = []; //$contentRightsManager->getRights($language);

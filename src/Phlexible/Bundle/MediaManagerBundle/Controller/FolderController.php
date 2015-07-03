@@ -66,7 +66,7 @@ class FolderController extends Controller
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder ExtendedFolderInterface */
 
-            if (!$this->isGranted('FOLDER_READ', $folder)) {
+            if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $folder)) {
                 continue;
             }
 

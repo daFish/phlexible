@@ -12,6 +12,7 @@ use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Media controller
@@ -41,30 +42,43 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
         $template = $templateManager->find($templateKey);
 
-        $outfile = $this->container->getParameter('app.web_dir') . '/media/' . $fileId . '/' . $templateKey . '.jpg';
+        $filePath = $this->container->getParameter('app.web_dir') . '/media/thumbnail/' . $fileId . '/' . $templateKey . '_' . $template->getRevision() . '.jpg';
         $mimeType = 'image/jpeg';
-        if (!file_exists($outfile)) {
+        if (!file_exists($filePath)) {
             if (file_exists($file->getPhysicalPath())) {
-                if (!file_exists(dirname($outfile))) {
-                    mkdir(dirname($outfile), 0777, true);
+                if (!file_exists(dirname($filePath))) {
+                    mkdir(dirname($filePath), 0777, true);
                 }
-                $this->get('phlexible_media_template.applier.image')->apply($template, $file, $file->getPhysicalPath(), $outfile);
+                $this->get('phlexible_media_template.applier.image')
+                    ->apply($template, $file, $file->getPhysicalPath(), $filePath);
             } else {
                 if (!$template instanceof ImageTemplate) {
-                    return new Response('Not found', 404);
+                    throw new NotFoundHttpException('Not found');
                 }
 
                 $mediaClassifier = $this->get('phlexible_media.media_classifier');
                 $delegateService = $this->get('phlexible_media_cache.image_delegate.service');
 
                 $mediaType = $mediaClassifier->getCollection()->get($file->getMediaType());
-                $outfile = $delegateService->getClean($template, $mediaType, true);
+                $filePath = $delegateService->getClean($template, $mediaType, true);
                 $mimeType = 'image/gif';
             }
         }
 
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
+        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+
         return $this->get('igorw_file_serve.response_factory')
-            ->create($outfile, $mimeType, ['absolute_path' => true]);
+            ->create(
+                $filePath,
+                $mimeType, array(
+                    'serve_filename' => $file->getName() . '.' . $extension,
+                    'absolute_path' => true,
+                )
+            );
     }
 
     /**
@@ -83,10 +97,22 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
+
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filePath, $mimeType, ['absolute_path' => true, 'inline' => false]);
+            ->create(
+                $filePath,
+                $mimeType, array(
+                    'serve_filename' => $file->getName(),
+                    'absolute_path' => true,
+                    'inline' => false,
+                )
+            );
     }
 
     /**
@@ -105,10 +131,22 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
+
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filePath, $mimeType, ['absolute_path' => true, 'inline' => true]);
+            ->create(
+                $filePath,
+                $mimeType, array(
+                    'serve_filename' => $file->getName(),
+                    'absolute_path' => true,
+                    'inline' => false,
+                )
+            );
     }
 
     /**

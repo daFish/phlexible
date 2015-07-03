@@ -530,7 +530,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                 reload: this.onReload,
                 folderChange: this.onFolderChange,
                 nodedragover: function (e) {
-                    console.log('nodedragover');
+                    //Phlexible.console.debug('nodedragover');
                     if (e.target.id == 'root') {
                         // root node can not be dragged
                         return false;
@@ -538,11 +538,11 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                     if (e.data.node) {
                         // tree -> tree move (folder -> folder)
                         if (e.target.id == 'trash') {
-                            console.warn('id is trash')
+                            //Phlexible.console.warn('id is trash')
                             return false;
                         }
                         if (e.target.id == e.data.node.parentNode.id) {
-                            console.log(e.target.id == e.data.node.parentNode.id, e.target.id, e.data.node.parentNode.id, e.target, e.data.node.parentNode);
+                            //Phlexible.console.debug(e.target.id == e.data.node.parentNode.id, e.target.id, e.data.node.parentNode.id, e.target, e.data.node.parentNode);
                             return false;
                         }
                     }
@@ -556,7 +556,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
                             }
                         }
                     }
-                    console.log('true');
+                    //Phlexible.console.debug('true');
                     return true;
                 },
                 beforenodedrop: this.onMove,
@@ -687,7 +687,10 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         });
         */
 
-        var dropper = this.createDropper(this.getFilesGrid());
+        var dropper = null;
+        if (!Ext.isIE) {
+            dropper = this.createDropper(this.getFilesGrid());
+        }
 
         var uploader = new plupload.Uploader({
             runtimes: 'html5,flash,silverlight,html4',
@@ -709,12 +712,12 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         uploader.bind('Init', function (up, params) {
             Phlexible.console.debug('uploader::Init', 'runtime:' + params.runtime, 'features:', up.features, 'caps:', up.caps);
 
-            if (!up.features.dragdrop) {
+            if (dropper && !up.features.dragdrop) {
                 dropper.style.visibility = 'hidden';
             }
 
             if (params.runtime === 'flash') {
-                up.params.multipart_params.sid = sessionID;
+                up.settings.multipart_params.sid = sessionID;
             }
         }, this);
 
@@ -725,7 +728,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         }, this);
 
         uploader.bind('QueueChanged', function (up) {
-            Phlexible.console.debug('uploader::QueueChanged');
+            //Phlexible.console.debug('uploader::QueueChanged');
             if (up.state == plupload.STOPPED) {
                 up.start();
             }
@@ -737,7 +740,7 @@ Phlexible.mediamanager.MediamanagerPanel = Ext.extend(Ext.Panel, {
         }, this);
 
         uploader.bind('ChunkUploaded', function (up, file, info) {
-            Phlexible.console.debug('uploader::ChunkUploaded', 'id:' + file.id, 'info:', info);
+            //Phlexible.console.debug('uploader::ChunkUploaded', 'id:' + file.id, 'info:', info);
         }, this);
 
         uploader.bind('FileUploaded', function (up, file, info) {

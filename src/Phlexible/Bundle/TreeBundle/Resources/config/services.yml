@@ -22,6 +22,7 @@ services:
             - @logger
             - @phlexible_tree.content_tree_manager
             - @phlexible_siteroot.siteroot_request_matcher
+            - @phlexible_siteroot.siteroot_hostname_generator
             - %phlexible_cms.languages.available%
             - %phlexible_cms.languages.default%
         tags:
@@ -60,6 +61,12 @@ services:
         arguments: [@doctrine.dbal.default_connection]
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+
+    phlexible_tree.listener.response:
+        class: Phlexible\Bundle\TreeBundle\EventListener\ResponseListener
+        arguments: [@router, @phlexible_tree.content_tree_manager]
+        tags:
+            - {name: kernel.event_listener, event: kernel.response, method: onResponse}
 
     phlexible_tree.listener.exception:
         class: Phlexible\Bundle\TreeBundle\EventListener\ExceptionListener

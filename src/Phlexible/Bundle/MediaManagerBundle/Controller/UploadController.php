@@ -130,9 +130,11 @@ class UploadController extends Controller
             $newName = basename($tempFile->getName());
             $file = new \Symfony\Component\HttpFoundation\File\File($tempFile->getPath());
             $mimetype = $file->getMimeType();
+            $newType = null;
             if ($mimetype) {
                 $newType = $mediaClassifier->getCollection()->lookup($mimetype);
-            } else {
+            }
+            if (!$newType) {
                 $newType = $mediaClassifier->getCollection()->lookup('binary');
             }
 

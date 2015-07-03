@@ -41,6 +41,22 @@ class FileController extends Controller
     }
 
     /**
+     * @param string $str
+     * @param bool   $capitaliseFirstChar
+     *
+     * @return string
+     */
+    private function toCamelCase($str, $capitaliseFirstChar = true)
+    {
+        if ($capitaliseFirstChar) {
+            $str[0] = strtoupper($str[0]);
+        }
+        $func = create_function('$c', 'return strtoupper($c[1]);');
+
+        return lcfirst(preg_replace_callback('/_([a-z])/', $func, $str));
+    }
+
+    /**
      * List files
      *
      * @param Request $request
@@ -95,10 +111,10 @@ class FileController extends Controller
                     $filter['mediaType'] = $filter['documenttypeType'];
                     unset($filter['documenttypeType']);
                 }
-                $files = $volume->findFiles($filter, [$sort => $dir], $limit, $start);
+                $files = $volume->findFiles($filter, [$this->toCamelCase($sort) => $dir], $limit, $start);
                 $total = $volume->countFiles($filter);
             } else {
-                $files = $volume->findFilesByFolder($folder, [$sort => $dir], $limit, $start, $showHidden);
+                $files = $volume->findFilesByFolder($folder, [$this->toCamelCase($sort) => $dir], $limit, $start, $showHidden);
                 $total = $volume->countFilesByFolder($folder, $showHidden);
             }
 
@@ -283,7 +299,9 @@ class FileController extends Controller
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
             $file = $volume->findFile($fileId);
-            $volume->hide();
+            if ($file) {
+                $volume->hideFile($file, $this->getUser()->getId());
+            }
         }
 
         return new ResultResponse(true, count($fileIds) . ' file(s) hidden.');
@@ -307,7 +325,9 @@ class FileController extends Controller
         foreach ($fileIds as $fileId) {
             $volume = $volumeManager->getByFileId($fileId);
             $file = $volume->findFile($fileId);
-            $volume->hide($file);
+            if ($file) {
+                $volume->showFile($file, $this->getUser()->getId());
+            }
         }
 
         return new ResultResponse(true, count($fileIds) . ' file(s) shown.');

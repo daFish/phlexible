@@ -349,7 +349,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setModifiedAt(new \DateTime())
             ->setModifyUserId($userId);
 
-        $this->driver->validateRenameFile($file);
+        $this->driver->validateRenameFile($file, $file->getFolder());
 
         $event = new RenameFileEvent($file, $oldName);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_RENAME_FILE, $event)->isPropagationStopped()) {
@@ -374,11 +374,11 @@ class Volume implements VolumeInterface, \IteratorAggregate
         }
 
         $file
-            ->setFolderId($targetFolder->getId())
+            ->setFolder($targetFolder)
             ->setModifiedAt(new \DateTime())
             ->setModifyUserId($userId);
 
-        $this->driver->validateMoveFile($file);
+        $this->driver->validateMoveFile($file, $targetFolder);
 
         $event = new MoveFileEvent($file, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_MOVE_FILE, $event)->isPropagationStopped()) {
@@ -405,9 +405,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setCreateUserId($userId)
             ->setModifiedAt($file->getCreatedAt())
             ->setModifyUserId($file->getCreateUserId())
-            ->setFolderId($targetFolder->getId());
+            ->setFolder($targetFolder);
 
-        $this->driver->validateCopyFile($file);
+        $this->driver->validateCopyFile($originalFile, $targetFolder);
 
         $event = new CopyFileEvent($file, $originalFile, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_COPY_FILE, $event)->isPropagationStopped()) {
@@ -445,6 +445,48 @@ class Volume implements VolumeInterface, \IteratorAggregate
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::DELETE_FILE, $event);
+
+        return $file;
+    }
+
+    /**
+     * @param FileInterface $file
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function hideFile(FileInterface $file, $userId)
+    {
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_HIDE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Hide file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->hideFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::HIDE_FILE, $event);
+
+        return $file;
+    }
+
+    /**
+     * @param FileInterface $file
+     * @param string        $userId
+     *
+     * @return FileInterface
+     */
+    public function showFile(FileInterface $file, $userId)
+    {
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SHOW_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Show file {$file->getName()} cancelled.");
+        }
+
+        $this->driver->showFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::SHOW_FILE, $event);
 
         return $file;
     }
