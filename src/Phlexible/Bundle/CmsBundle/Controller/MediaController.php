@@ -49,8 +49,9 @@ class MediaController extends Controller
                 if (!file_exists(dirname($filePath))) {
                     mkdir(dirname($filePath), 0777, true);
                 }
-                $this->get('phlexible_media_template.applier.image')
-                    ->apply($template, $file, $file->getPhysicalPath(), $filePath);
+
+                $spec = $this->get('phlexible_media_cache.specifier')->specify($template);
+                $this->get('phlexible_media.transmuter')->transmute($file->getPhysicalPath(), $spec, $filePath);
             } else {
                 if (!$template instanceof ImageTemplate) {
                     throw new NotFoundHttpException('Not found');

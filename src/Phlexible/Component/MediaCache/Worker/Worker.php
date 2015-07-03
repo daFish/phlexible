@@ -11,6 +11,7 @@ namespace Phlexible\Component\MediaCache\Worker;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaCache\Specifier\SpecifierInterface;
 use Phlexible\Component\MediaCache\Specifier\SpecifierResolver;
 use Phlexible\Component\MediaCache\Storage\StorageManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
@@ -35,9 +36,9 @@ class Worker implements WorkerInterface
     private $transmuter;
 
     /**
-     * @var SpecifierResolver
+     * @var SpecifierInterface
      */
-    private $specifierResolver;
+    private $specifier;
 
     /**
      * @var StorageManager
@@ -71,7 +72,7 @@ class Worker implements WorkerInterface
 
     /**
      * @param Transmuter               $transmuter
-     * @param SpecifierResolver        $specifierResolver
+     * @param SpecifierInterface       $specifier
      * @param StorageManager           $storageManager
      * @param CacheManagerInterface    $cacheManager
      * @param MediaClassifier          $mediaClassifier
@@ -81,7 +82,7 @@ class Worker implements WorkerInterface
      */
     public function __construct(
         Transmuter $transmuter,
-        SpecifierResolver $specifierResolver,
+        SpecifierInterface $specifier,
         StorageManager $storageManager,
         CacheManagerInterface $cacheManager,
         MediaClassifier $mediaClassifier,
@@ -90,7 +91,7 @@ class Worker implements WorkerInterface
         $tempDir)
     {
         $this->transmuter = $transmuter;
-        $this->specifierResolver = $specifierResolver;
+        $this->specifier = $specifier;
         $this->storageManager = $storageManager;
         $this->cacheManager = $cacheManager;
         $this->mediaClassifier = $mediaClassifier;
@@ -137,9 +138,7 @@ class Worker implements WorkerInterface
             );
         }
 
-        $specifier = $this->specifierResolver->resolve($template);
-
-        if (!$specifier) {
+        if (!$this->specifier->accept($template)) {
             return $this->applyError(
                 $cacheItem,
                 CacheItem::STATUS_MISSING,
@@ -150,7 +149,7 @@ class Worker implements WorkerInterface
             );
         }
 
-        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $specifier->getExtension($template);
+        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $this->specifier->getExtension($template);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->tempDir)) {
@@ -161,7 +160,7 @@ class Worker implements WorkerInterface
         }
 
         try {
-            $spec = $specifier->specify($template);
+            $spec = $this->specifier->specify($template);
             $tempFilename = $this->transmuter->transmute($file->getPhysicalPath(), $spec, $tempFilename);
 
             if (!$tempFilename) {
