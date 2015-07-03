@@ -22,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class PuliMetaSetRepository
+class PuliMetaSetRepository implements MetaSetRepositoryInterface
 {
     /**
      * @var ResourceDiscovery

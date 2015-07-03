@@ -15,8 +15,8 @@ services:
         public: false
         arguments: [@puli.discovery, @puli.repository, "xml", "%kernel.root_dir%/Resources/metasets"]
         calls:
-            - [addParser, [@phlexible_meta_set.file.xml_parser]]
-            - [addDumper, [@phlexible_meta_set.file.xml_dumper]]
+            - [addParser, ["xml", @phlexible_meta_set.file.xml_parser]]
+            - [addDumper, ["xml", @phlexible_meta_set.file.xml_dumper]]
 
     phlexible_meta_set.file.meta_set_manager:
         class: Phlexible\Component\MetaSet\File\MetaSetManager
