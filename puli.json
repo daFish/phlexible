@@ -29,6 +29,7 @@
         "/phlexible/phlexiblemediacache/icons": "src/Phlexible/Bundle/MediaCacheBundle/Resources/public/icons",
         "/phlexible/phlexiblemediacache/scripts": "src/Phlexible/Bundle/MediaCacheBundle/Resources/scripts",
         "/phlexible/phlexiblemediamanager/icons": "src/Phlexible/Bundle/MediaManagerBundle/Resources/public/icons",
+        "/phlexible/phlexiblemediamanager/mediatemplates": "src/Phlexible/Bundle/MediaManagerBundle/Resources/mediatemplates",
         "/phlexible/phlexiblemediamanager/menu": "src/Phlexible/Bundle/MediaManagerBundle/Resources/menu",
         "/phlexible/phlexiblemediamanager/scripts": "src/Phlexible/Bundle/MediaManagerBundle/Resources/scripts",
         "/phlexible/phlexiblemediamanager/styles": "src/Phlexible/Bundle/MediaManagerBundle/Resources/styles",
@@ -189,6 +190,10 @@
         "6dea1ab9-8838-5ba0-ba87-c0e2aef42f2e": {
             "query": "/phlexible/phlexiblemediamanager/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "56555c52-a360-57e8-892a-6ee99ad0b94c": {
+            "query": "/phlexible/phlexiblemediamanager/mediatemplates/*.xml",
+            "type": "phlexible/mediatemplates"
         },
         "97555c52-a360-57e8-892a-6ee99ad0b94c": {
             "query": "/phlexible/phlexiblemediamanager/menu/*.yml",
@@ -356,7 +361,10 @@
             "description": "phlexible gui icons"
         },
         "phlexible/mediatypes": {
-            "description": "phlexible mediatypes"
+            "description": "phlexible media types"
+        },
+        "phlexible/metasets": {
+            "description": "phlexible meta sets"
         },
         "phlexible/menu": {
             "description": "phlexible gui menu definitions"

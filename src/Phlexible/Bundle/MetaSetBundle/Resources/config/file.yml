@@ -11,9 +11,9 @@ services:
         public: false
 
     phlexible_meta_set.file.loader:
-        class: Phlexible\Component\MetaSet\File\MetaSetLoader
+        class: Phlexible\Component\MetaSet\File\PuliMetaSetLoader
         public: false
-        arguments: [@pattern_locator]
+        arguments: [@puli.discovery]
         calls:
             - [addLoader, [@phlexible_meta_set.file.loader.xml]]
 
