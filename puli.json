@@ -360,6 +360,9 @@
         "phlexible/icons": {
             "description": "phlexible gui icons"
         },
+        "phlexible/mediatemplates": {
+            "description": "phlexible media templates"
+        },
         "phlexible/mediatypes": {
             "description": "phlexible media types"
         },
