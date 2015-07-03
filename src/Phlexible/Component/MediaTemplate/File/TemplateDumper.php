@@ -37,13 +37,4 @@ class TemplateDumper
         $this->dumper = $dumper;
         $this->fileDir = $fileDir;
     }
-
-    /**
-     * @param TemplateInterface $template
-     */
-    public function dumpTemplate(TemplateInterface $template)
-    {
-        $filename = strtolower($template->getKey() . '.' . $this->dumper->getExtension());
-        $this->dumper->dump($this->fileDir . $filename, $template);
-    }
 }

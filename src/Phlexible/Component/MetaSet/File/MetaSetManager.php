@@ -22,7 +22,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 class MetaSetManager implements MetaSetManagerInterface
 {
     /**
-     * @var MetaSetLoader
+     * @var PuliMetaSetLoader
      */
     private $loader;
 
@@ -37,10 +37,10 @@ class MetaSetManager implements MetaSetManagerInterface
     private $metaSets;
 
     /**
-     * @param MetaSetLoader $loader
-     * @param MetaSetDumper $dumper
+     * @param PuliMetaSetLoader $loader
+     * @param MetaSetDumper     $dumper
      */
-    public function __construct(MetaSetLoader $loader, MetaSetDumper $dumper)
+    public function __construct(PuliMetaSetLoader $loader, MetaSetDumper $dumper)
     {
         $this->loader = $loader;
         $this->dumper = $dumper;

@@ -21,14 +21,9 @@ use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 class TemplateManager implements TemplateManagerInterface
 {
     /**
-     * @var TemplateLoader
+     * @var TemplateRepositoryInterface
      */
-    private $loader;
-
-    /**
-     * @var TemplateDumper
-     */
-    private $dumper;
+    private $repository;
 
     /**
      * @var TemplateCollection
@@ -36,13 +31,11 @@ class TemplateManager implements TemplateManagerInterface
     private $templates;
 
     /**
-     * @param TemplateLoader $loader
-     * @param TemplateDumper $dumper
+     * @param TemplateRepositoryInterface $repository
      */
-    public function __construct(TemplateLoader $loader, TemplateDumper $dumper)
+    public function __construct(TemplateRepositoryInterface $repository)
     {
-        $this->loader = $loader;
-        $this->dumper = $dumper;
+        $this->repository = $repository;
     }
 
     /**
@@ -51,7 +44,7 @@ class TemplateManager implements TemplateManagerInterface
     public function getCollection()
     {
         if ($this->templates === null) {
-            $this->templates = $this->loader->loadTemplates();
+            $this->templates = $this->repository->loadTemplates();
         }
 
         return $this->templates;
@@ -119,6 +112,6 @@ class TemplateManager implements TemplateManagerInterface
     {
         $template->setRevision($template->getRevision() + 1);
 
-        $this->dumper->dumpTemplate($template);
+        $this->repository->dumpTemplate($template, 'xml');
     }
 }

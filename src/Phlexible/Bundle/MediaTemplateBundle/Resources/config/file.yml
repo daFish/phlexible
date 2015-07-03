@@ -3,27 +3,23 @@ parameters:
     phlexible_media_template.file_dir: %kernel.root_dir%/Resources/mediatemplates/
 
 services:
-    phlexible_media_template.file.loader.xml:
-        class: Phlexible\Component\MediaTemplate\File\Loader\XmlLoader
+    phlexible_media_template.file.xml_parser:
+        class: Phlexible\Component\MediaTemplate\File\Parser\XmlParser
         public: false
 
-    phlexible_media_template.file.dumper.xml:
+    phlexible_media_template.file.xml_dumper:
         class: Phlexible\Component\MediaTemplate\File\Dumper\XmlDumper
         public: false
 
-    phlexible_media_template.file.loader:
-        class: Phlexible\Component\MediaTemplate\File\PuliTemplateLoader
+    phlexible_media_template.file.puli_repository:
+        class: Phlexible\Component\MediaTemplate\File\PuliTemplateRepository
         public: false
-        arguments: [@puli.discovery]
+        arguments: [@puli.discovery, @puli.repository, "xml", "%kernel.root_dir%/Resources/mediatemplates"]
         calls:
-            - [addLoader, [@phlexible_media_template.file.loader.xml]]
-
-    phlexible_media_template.file.dumper:
-        class: Phlexible\Component\MediaTemplate\File\TemplateDumper
-        public: false
-        arguments: [@phlexible_media_template.file.dumper.xml, %phlexible_media_template.file_dir%]
+            - [addParser, ["xml", @phlexible_media_template.file.xml_parser]]
+            - [addDumper, ["xml", @phlexible_media_template.file.xml_dumper]]
 
     phlexible_media_template.file.template_manager:
         class: Phlexible\Component\MediaTemplate\File\TemplateManager
         public: false
-        arguments: [@phlexible_media_template.file.loader, @phlexible_media_template.file.dumper]
+        arguments: [@phlexible_media_template.file.puli_repository]

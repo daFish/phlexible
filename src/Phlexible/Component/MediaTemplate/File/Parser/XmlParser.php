@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaTemplate\File\Loader;
+namespace Phlexible\Component\MediaTemplate\File\Parser;
 
 use Phlexible\Component\MediaTemplate\Exception\InvalidClassException;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
@@ -16,22 +16,14 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class XmlLoader implements LoaderInterface
+class XmlParser implements ParserInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getExtension()
+    public function parse($content)
     {
-        return 'xml';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function load($file)
-    {
-        $xml = simplexml_load_file($file);
+        $xml = simplexml_load_string($content);
 
         $xmlAttributes = $xml->attributes();
         $key = (string) $xmlAttributes['key'];
@@ -40,6 +32,8 @@ class XmlLoader implements LoaderInterface
         $cache = (bool) (string) $xmlAttributes['cache'];
         $system = (bool) (string) $xmlAttributes['system'];
         $revision = (int) $xmlAttributes['revision'];
+        $createdAt = isset($xmlAttributes['createdAt']) ? new \DateTime((string) $xmlAttributes['createdAt']) : null;
+        $modifiedAt = isset($xmlAttributes['modifiedAt']) ? new \DateTime((string) $xmlAttributes['modifiedAt']) : null;
 
         if (!class_exists($class)) {
             throw new InvalidClassException("Invalid template class $class");
@@ -53,8 +47,8 @@ class XmlLoader implements LoaderInterface
             ->setCache($cache)
             ->setSystem($system)
             ->setRevision($revision)
-            ->setCreatedAt(\DateTime::createFromFormat('U', filectime($file)))
-            ->setModifiedAt(\DateTime::createFromFormat('U', filemtime($file)));
+            ->setCreatedAt($createdAt)
+            ->setModifiedAt($modifiedAt);
 
         foreach ($xml as $parameterNode) {
             $parameterNodeAttributes = $parameterNode->attributes();

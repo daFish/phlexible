@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\MediaTemplate\File\Loader;
+namespace Phlexible\Component\MediaTemplate\File\Parser;
 
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
@@ -15,19 +15,12 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface LoaderInterface
+interface ParserInterface
 {
     /**
-     * Return supported extension
-     *
-     * @return string
-     */
-    public function getExtension();
-
-    /**
-     * @param string $file
+     * @param string $content
      *
      * @return TemplateInterface
      */
-    public function load($file);
+    public function parse($content);
 }
