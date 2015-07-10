@@ -20,12 +20,12 @@ class VolumeManager
     /**
      * @var Volume[]
      */
-    private $volumes = [];
+    private $volumes = array();
 
     /**
      * @var array
      */
-    private $idToKey = [];
+    private $idToKey = array();
 
     /**
      * @param Volume[] $volumes

@@ -1,0 +1,16 @@
+services:
+    phlexible_teaser.mediator.online_version_strategy:
+        class: Phlexible\Bundle\TeaserBundle\Mediator\VersionStrategy\OnlineVersionStrategy
+        arguments: [@phlexible_element.element_service]
+
+    phlexible_teaser.mediator.preview_version_strategy:
+        class: Phlexible\Bundle\TeaserBundle\Mediator\VersionStrategy\PreviewVersionStrategy
+        arguments: [@phlexible_element.element_service]
+
+    phlexible_teaser.teaser_mediator.element:
+        class: Phlexible\Bundle\TeaserBundle\Mediator\ElementTeaserMediator
+        arguments: [@phlexible_element.element_service, @phlexible_teaser.mediator.online_version_strategy]
+
+    phlexible_teaser.teaser_mediator:
+        class: Phlexible\Bundle\TeaserBundle\Mediator\DelegatingTeaserMediator
+        arguments: [[@phlexible_teaser.teaser_mediator.element]]

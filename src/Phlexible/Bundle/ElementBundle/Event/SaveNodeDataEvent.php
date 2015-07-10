@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Event;
 
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SaveNodeDataEvent extends Event
 {
     /**
-     * @var TreeNodeInterface
+     * @var NodeContext
      */
     private $node;
 
@@ -35,11 +35,11 @@ class SaveNodeDataEvent extends Event
     private $request;
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
-     * @param Request           $request
+     * @param NodeContext $node
+     * @param string      $language
+     * @param Request     $request
      */
-    public function __construct(TreeNodeInterface $node, $language, Request $request)
+    public function __construct(NodeContext $node, $language, Request $request)
     {
         $this->node = $node;
         $this->language = $language;
@@ -47,7 +47,7 @@ class SaveNodeDataEvent extends Event
     }
 
     /**
-     * @return TreeNodeInterface
+     * @return NodeContext
      */
     public function getNode()
     {

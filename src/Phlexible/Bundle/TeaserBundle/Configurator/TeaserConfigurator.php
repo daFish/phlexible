@@ -8,14 +8,13 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Configurator;
 
-use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
+use Phlexible\Bundle\CmsBundle\Configurator\Configuration;
+use Phlexible\Bundle\CmsBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\CmsBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
-use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
-use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
+use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,6 +93,6 @@ class TeaserConfigurator implements ConfiguratorInterface
             ->set('language', $request->getLocale());
 
         $event = new ConfigureEvent($renderConfiguration);
-        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_TEASER, $event);
+        $this->dispatcher->dispatch(TeaserEvents::CONFIGURE_TEASER, $event);
     }
 }

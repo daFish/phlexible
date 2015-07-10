@@ -11,8 +11,8 @@ namespace Phlexible\Bundle\ElementBundle\Element\Publish;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Component\Elementtype\ElementtypeService;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -29,12 +29,12 @@ class Selector
     private $elementService;
 
     /**
-     * @var \Phlexible\Component\Elementtype\ElementtypeService
+     * @var ElementtypeService
      */
     private $elementtypeService;
 
     /**
-     * @var TreeManager
+     * @var TreeManagerInterface
      */
     private $treeManager;
 
@@ -50,15 +50,15 @@ class Selector
 
     /**
      * @param ElementService                $elementService
-     * @param \Phlexible\Component\Elementtype\ElementtypeService            $elementtypeService
-     * @param TreeManager                   $treeManager
+     * @param ElementtypeService            $elementtypeService
+     * @param TreeManagerInterface          $treeManager
      * @param TeaserManagerInterface        $teaserManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         ElementService $elementService,
         ElementtypeService $elementtypeService,
-        TreeManager $treeManager,
+        TreeManagerInterface $treeManager,
         TeaserManagerInterface $teaserManager,
         AuthorizationCheckerInterface $authorizationChecker)
     {
@@ -96,16 +96,16 @@ class Selector
         $onlyAsync)
     {
         $tree = $this->treeManager->getByNodeId($treeId);
-        $treeNode = $tree->get($treeId);
+        $node = $tree->get($treeId);
 
         $selection = new Selection();
 
         if ($includeElements) {
-            $this->handleTreeNode(
+            $this->handleNode(
                 $selection,
                 0,
-                implode('/', $tree->getIdPath($treeNode)),
-                $treeNode,
+                implode('/', $tree->getIdPath($node)),
+                $node,
                 $version,
                 $language,
                 $onlyAsync,
@@ -113,11 +113,11 @@ class Selector
             );
         }
         if ($includeTeasers) {
-            $this->handleTreeNodeTeasers(
+            $this->handleTeasers(
                 $selection,
                 0,
-                implode('/', $tree->getIdPath($treeNode)),
-                $treeNode,
+                implode('/', $tree->getIdPath($node)),
+                $node,
                 $language,
                 $onlyAsync,
                 $onlyOffline,
@@ -126,15 +126,15 @@ class Selector
         }
 
         if ($recursive) {
-            $rii = new \RecursiveIteratorIterator($treeNode->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
+            $rii = new \RecursiveIteratorIterator($node->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
 
             foreach ($rii as $childNode) {
-                /* @var $childNode TreeNodeInterface */
+                /* @var $childNode NodeInterface */
 
                 set_time_limit(5);
 
                 if ($includeElements) {
-                    $this->handleTreeNode(
+                    $this->handleNode(
                         $selection,
                         $rii->getDepth() + 1,
                         implode('/', $tree->getIdPath($childNode)),
@@ -146,7 +146,7 @@ class Selector
                     );
                 }
                 if ($includeTeasers) {
-                    $this->handleTreeNodeTeasers(
+                    $this->handleTeasers(
                         $selection,
                         $rii->getDepth() + 1,
                         implode('/', $tree->getIdPath($childNode)),
@@ -161,13 +161,13 @@ class Selector
         }
 
         foreach ($selection->all() as $selectionItem) {
-            if ($includeElementInstances && $selectionItem->getTarget() instanceof TreeNodeInterface) {
+            if ($includeElementInstances && $selectionItem->getTarget() instanceof NodeInterface) {
                 $instanceNodes = $this->treeManager->getInstanceNodes($selectionItem->getTarget());
 
                 foreach ($instanceNodes as $instanceNode) {
-                    /* @var $instanceNode TreeNodeInterface */
+                    /* @var $instanceNode NodeInterface */
 
-                    $this->handleTreeNode(
+                    $this->handleNode(
                         $selection,
                         $selectionItem->getDepth(),
                         $selectionItem->getDepth(),
@@ -203,25 +203,25 @@ class Selector
      * @param Selection         $selection
      * @param int               $depth
      * @param array             $path
-     * @param TreeNodeInterface $treeNode
+     * @param NodeInterface $node
      * @param int               $version
      * @param string            $language
      * @param bool              $onlyAsync
      * @param bool              $onlyOffline
      * @param bool              $isInstance
      */
-    private function handleTreeNode(
+    private function handleNode(
         Selection $selection,
         $depth,
         $path,
-        TreeNodeInterface $treeNode,
+        NodeInterface $node,
         $version,
         $language,
         $onlyAsync,
         $onlyOffline,
         $isInstance = false)
     {
-        if ($selection->has($treeNode, $language)) {
+        if ($selection->has($node, $language)) {
             return;
         }
 
@@ -230,15 +230,15 @@ class Selector
         if ($onlyAsync || $onlyOffline) {
             $include = false;
 
-            if ($onlyAsync && $treeNode->getTree()->isAsync($treeNode, $language)) {
+            if ($onlyAsync && $node->getTree()->isAsync($node, $language)) {
                 $include = true;
             }
-            if ($onlyOffline && !$treeNode->getTree()->isPublished($treeNode, $language)) {
+            if ($onlyOffline && !$node->getTree()->isPublished($node, $language)) {
                 $include = true;
             }
         }
         if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            if (!$this->authorizationChecker->isGranted($treeNode, ['right' => 'PUBLISH', 'language' => $language])) {
+            if (!$this->authorizationChecker->isGranted($node, array('right' => 'PUBLISH', 'language' => $language))) {
                 $include = false;
             }
         }
@@ -247,7 +247,7 @@ class Selector
             return;
         }
 
-        $element = $this->elementService->findElement($treeNode->getTypeId());
+        $element = $this->elementService->findElement($node->getTypeId());
         if ($version) {
             $elementVersion = $this->elementService->findElementVersion($element, $version);
         } else {
@@ -256,13 +256,13 @@ class Selector
 
         $selection->add(
             new SelectionItem(
-                $treeNode,
+                $node,
                 $elementVersion->getVersion(),
                 $language,
                 $elementVersion->getBackendTitle($language),
                 $isInstance,
                 $depth,
-                $path . '+' . $language . '+' . $treeNode->getId() . '+' . $language
+                $path . '+' . $language . '+' . $node->getId() . '+' . $language
             )
         );
     }
@@ -271,26 +271,26 @@ class Selector
      * @param Selection         $selection
      * @param int               $depth
      * @param array             $path
-     * @param TreeNodeInterface $treeNode
+     * @param NodeInterface $node
      * @param string            $language
      * @param bool              $onlyAsync
      * @param bool              $onlyOffline
      * @param bool              $includeTeaserInstances
      */
-    private function handleTreeNodeTeasers(
+    private function handleTeasers(
         Selection $selection,
         $depth,
         $path,
-        TreeNodeInterface $treeNode,
+        NodeInterface $node,
         $language,
         $onlyAsync,
         $onlyOffline,
         $includeTeaserInstances)
     {
-        $element = $this->elementService->findElement($treeNode->getTypeId());
+        $element = $this->elementService->findElement($node->getTypeId());
         $elementtype = $this->elementService->findElementtype($element);
 
-        $layoutareas = [];
+        $layoutareas = array();
         // TODO: repair
         foreach ($this->elementService->findElementtypeByType('layout') as $layoutarea) {
             if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {
@@ -299,7 +299,7 @@ class Selector
         }
 
         foreach ($layoutareas as $layoutarea) {
-            $teasers = $this->teaserManager->findForLayoutAreaAndTreeNode($layoutarea, $treeNode);
+            $teasers = $this->teaserManager->findForLayoutAreaAndNodeContext($layoutarea, $node);
 
             foreach ($teasers as $teaser) {
                 $this->handleTeaser($selection, $depth + 1, $path, $teaser, $language, $onlyAsync, $onlyOffline);

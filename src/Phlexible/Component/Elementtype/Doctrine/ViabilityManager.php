@@ -42,7 +42,7 @@ class ViabilityManager implements ViabilityManagerInterface
     {
         $viabilityRepository = $this->entityManager->getRepository('PhlexibleElementtypeBundle:ElementtypeApply');
 
-        return $viabilityRepository->findBy(['elementtypeId' => $elementtype->getId()]);
+        return $viabilityRepository->findBy(array('elementtypeId' => $elementtype->getId()));
     }
 
     /**
@@ -54,7 +54,7 @@ class ViabilityManager implements ViabilityManagerInterface
     {
         $viabilityRepository = $this->entityManager->getRepository('PhlexibleElementtypeBundle:ElementtypeApply');
 
-        return $viabilityRepository->findBy(['underElementtypeId' => $elementtype->getId()]);
+        return $viabilityRepository->findBy(array('underElementtypeId' => $elementtype->getId()));
     }
 
     /**
@@ -69,7 +69,7 @@ class ViabilityManager implements ViabilityManagerInterface
     {
         $viabilityRepository = $this->entityManager->getRepository('PhlexibleElementtypeBundle:ElementtypeApply');
 
-        $viabilities = $viabilityRepository->findBy(['elementtypeId' => $elementtype->getId()]);
+        $viabilities = $viabilityRepository->findBy(array('elementtypeId' => $elementtype->getId()));
 
         foreach ($viabilities as $index => $viability) {
             if (in_array($viability->getUnderElementtypeId(), $parentIds)) {

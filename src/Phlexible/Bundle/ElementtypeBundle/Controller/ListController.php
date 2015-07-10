@@ -39,7 +39,7 @@ class ListController extends Controller
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
 
-        $elementtypes = [];
+        $elementtypes = array();
         foreach ($elementtypeService->findAllElementtypes() as $elementtype) {
             if ($type !== $elementtype->getType()) {
                 continue;
@@ -49,33 +49,26 @@ class ListController extends Controller
                 continue;
             }
 
-            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = [
+            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
                 'id'      => $elementtype->getId(),
                 'title'   => $elementtype->getTitle(),
                 'icon'    => $elementtype->getIcon(),
                 'version' => $elementtype->getRevision(),
                 'type'    => $elementtype->getType(),
-            ];
+            );
         }
 
         ksort($elementtypes);
         $elementtypes = array_values($elementtypes);
 
         $checker = $this->get('phlexible_element.checker');
-        $changes = $checker->check();
-        $hasChanges = false;
-        foreach ($changes as $change) {
-            if ($change->getNeedImport()) {
-                $hasChanges = true;
-                break;
-            }
-        }
+        $hasChanges = $checker->hasChanges();
 
-        return new JsonResponse([
+        return new JsonResponse(array(
             'elementtypes' => $elementtypes,
             'total'        => count($elementtypes),
             'changes'      => $hasChanges,
-        ]);
+        ));
     }
 
     /**
@@ -97,7 +90,7 @@ class ListController extends Controller
         }
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, [], $this->getUser()->getId());
+        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, array(), $this->getUser()->getId());
 
         return new ResultResponse(true, 'Element Type created.');
     }

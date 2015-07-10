@@ -33,10 +33,10 @@ class TextLinkExtractor implements LinkExtractorInterface
     public function extract(ElementStructureValue $value, AbstractField $field)
     {
         if (!preg_match_all('/\[tid[:=](\d+)\]/', $value->getValue(), $matches)) {
-            return [];
+            return array();
         }
 
-        $links = [];
+        $links = array();
 
         foreach ($matches[1] as $treeId) {
             $link = new ElementLink();

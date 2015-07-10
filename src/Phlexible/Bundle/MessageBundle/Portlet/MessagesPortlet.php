@@ -50,7 +50,7 @@ class MessagesPortlet extends Portlet
     {
         $this
             ->setId('messages-portlet')
-            ->setTitle($translator->trans('messages.messages', [], 'gui'))
+            ->setTitle($translator->trans('messages.messages', array(), 'gui'))
             ->setClass('Phlexible.messages.portlet.Messages')
             ->setIconClass('p-message-component-icon')
             ->setRole('ROLE_MESSAGE_SUBSCRIPTIONS');
@@ -69,25 +69,25 @@ class MessagesPortlet extends Portlet
     {
         $subscription = $this->subscriptionManager
             ->findOneBy(
-                ['userId' => $this->tokenStorage->getToken()->getUser()->getId(), 'handler' => 'portlet']
+                array('userId' => $this->tokenStorage->getToken()->getUser()->getId(), 'handler' => 'portlet')
             );
 
         if (!$subscription) {
-            return [];
+            return array();
         }
 
         $filter = $subscription->getFilter();
 
         if (!$filter) {
-            return [];
+            return array();
         }
 
-        $messages = $this->messageManager->findByCriteria($filter->getCriteria(), ['createdAt' => 'DESC'], 20);
+        $messages = $this->messageManager->findByCriteria($filter->getCriteria(), array('createdAt' => 'DESC'), 20);
 
         $priorityList = $this->messageManager->getPriorityNames();
         $typeList = $this->messageManager->getTypeNames();
 
-        $data = [];
+        $data = array();
         foreach ($messages as $message) {
             $subject = '';
 
@@ -97,14 +97,14 @@ class MessagesPortlet extends Portlet
                 $i += 30;
             } while ($i <= strlen($message->getSubject()));
 
-            $data[] = [
+            $data[] = array(
                 'id'       => $message->getId(),
                 'subject'  => $subject,
                 'time'     => $message->getCreatedAt()->format('U'),
                 'priority' => $priorityList[$message->getPriority()],
                 'type'     => $typeList[$message->getType()],
                 'channel'  => $message->getChannel(),
-            ];
+            );
         }
 
         return $data;

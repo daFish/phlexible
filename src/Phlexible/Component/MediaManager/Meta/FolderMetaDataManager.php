@@ -54,8 +54,8 @@ class FolderMetaDataManager extends MetaDataManager
      */
     private function getIdentifiersFromFolder(ExtendedFolderInterface $folder)
     {
-        return [
+        return array(
             'folder_id' => $folder->getId(),
-        ];
+        );
     }
 }

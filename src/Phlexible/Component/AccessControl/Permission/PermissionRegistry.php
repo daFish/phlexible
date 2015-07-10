@@ -20,12 +20,12 @@ class PermissionRegistry
     /**
      * @var array
      */
-    private $permissionCollections = [];
+    private $permissionCollections = array();
 
     /**
      * @param PermissionCollection[] $permissionCollections
      */
-    public function __construct(array $permissionCollections = [])
+    public function __construct(array $permissionCollections = array())
     {
         foreach ($permissionCollections as $permissionCollection) {
             $this->add($permissionCollection);
@@ -76,11 +76,15 @@ class PermissionRegistry
      */
     public function get($objectType)
     {
-        if (!isset($this->permissionCollections[$objectType])) {
-            throw new InvalidArgumentException("No permissions for type $objectType found.");
-        }
+        do {
+            if (isset($this->permissionCollections[$objectType])) {
+                return $this->permissionCollections[$objectType];
+            }
+            $objectType = get_parent_class($objectType);
+        } while ($objectType !== false);
 
-        return $this->permissionCollections[$objectType];
+        throw new InvalidArgumentException("No permissions for type $objectType found.");
+
     }
 
     /**

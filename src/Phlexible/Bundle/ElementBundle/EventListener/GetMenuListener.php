@@ -44,10 +44,10 @@ class GetMenuListener
         foreach ($siteroots as $siteroot) {
             $menuItem = new MenuItem('element', 'elements');
             $menuItem->setParameters(
-                [
+                array(
                     'siteroot_id' => $siteroot->getId(),
                     'title'       => $siteroot->getTitle(),
-                ]
+                )
             );
 
             $items->set('siteroot_' . $siteroot->getId(), $menuItem);

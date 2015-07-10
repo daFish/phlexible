@@ -35,17 +35,17 @@ class DataController extends Controller
     {
         $dataSourceManager = $this->get('phlexible_data_source.data_source_manager');
 
-        $dataSources = $dataSourceManager->findBy([]);
+        $dataSources = $dataSourceManager->findBy(array());
 
-        $sources = [];
+        $sources = array();
         foreach ($dataSources as $dataSource) {
-            $sources[] = [
+            $sources[] = array(
                 'id' => $dataSource->getId(),
                 'title' => $dataSource->getTitle()
-            ];
+            );
         }
 
-        return new JsonResponse(['datasources' => $sources]);
+        return new JsonResponse(array('datasources' => $sources));
     }
 
     /**
@@ -125,7 +125,7 @@ class DataController extends Controller
         $query = $request->get('query', null);
         $valuesQuery = $request->get('valuesqry', '');
 
-        $data = [];
+        $data = array();
 
         $datasourceManager = $this->get('phlexible_data_source.data_source_manager');
 
@@ -145,9 +145,9 @@ class DataController extends Controller
                 }
             }
 
-            $data[] = ['key' => $key, 'value' => $key];
+            $data[] = array('key' => $key, 'value' => $key);
         }
 
-        return new JsonResponse(['data' => $data]);
+        return new JsonResponse(array('data' => $data));
     }
 }

@@ -113,9 +113,9 @@ class MetaDataManager implements MetaDataManagerInterface
      */
     public function updateMetaData(MetaDataInterface $metaData)
     {
-        $baseData = [
+        $baseData = array(
             'set_id' => $metaData->getMetaSet()->getId(),
-        ];
+        );
         foreach ($metaData->getIdentifiers() as $field => $value) {
             $baseData[$field] = $value;
         }
@@ -161,7 +161,7 @@ class MetaDataManager implements MetaDataManagerInterface
      *
      * @return MetaData[]
      */
-    private function doFindByMetaSetAndIdentifiers(MetaSet $metaSet = null, array $identifiers = [])
+    private function doFindByMetaSetAndIdentifiers(MetaSet $metaSet = null, array $identifiers = array())
     {
         $connection = $this->getConnection();
 
@@ -180,7 +180,7 @@ class MetaDataManager implements MetaDataManagerInterface
 
         $rows = $connection->fetchAll($qb->getSQL());
 
-        $metaDatas = [];
+        $metaDatas = array();
 
         foreach ($rows as $row) {
             $id = '';

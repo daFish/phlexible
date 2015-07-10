@@ -25,7 +25,7 @@ class PermissionCollection
     /**
      * @var array
      */
-    private $permissions = [];
+    private $permissions = array();
 
     /**
      * @var array
@@ -36,7 +36,7 @@ class PermissionCollection
      * @param string $objectType
      * @param array  $permissions
      */
-    public function __construct($objectType, array $permissions = [])
+    public function __construct($objectType, array $permissions = array())
     {
         $this->objectType = $objectType;
 

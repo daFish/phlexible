@@ -45,10 +45,8 @@ class ListController extends Controller
         if ($filterValues) {
             $filterValues = json_decode($filterValues, true);
         } else {
-            $filterValues = [];
+            $filterValues = array();
         }
-
-        $data = [];
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
@@ -67,13 +65,13 @@ class ListController extends Controller
             $language = $elementMasterLanguage;
         }
 
-        $userRights = [];
+        $userRights = array();
         $userAdminRights = null;
         if ($node instanceof ContentObjectInterface) {
             if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if (!$this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if (!$this->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
                     return new JsonResponse(array(
                         'parent' => null,
                         'list'   => array(),
@@ -81,7 +79,7 @@ class ListController extends Controller
                     ));
                 }
 
-                $userRights = []; //$contentRightsManager->getRights($language);
+                $userRights = array(); //$contentRightsManager->getRights($language);
                 $userRights = array_keys(
                     $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
                 );
@@ -92,14 +90,14 @@ class ListController extends Controller
             }
         }
 
-        $parent = [
+        $parent = array(
             'tid'             => (int) $tid,
             'teaser_id'       => (int) 0,
             'eid'             => (int) $eid,
             'title'           => $elementVersion->getBackendTitle($language, $elementMasterLanguage),
             'element_type_id' => $elementtype->getId(),
             'element_type'    => $elementtype->getTitle(),
-            'icon'            => $iconResolver->resolveTreeNode($node, $language),
+            'icon'            => $iconResolver->resolveNode($node, $language),
             'author'          => 'author',
             'version'         => $elementVersion->getVersion(),
             'create_time'     => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
@@ -117,7 +115,7 @@ class ListController extends Controller
                 $elementtype->getTitle() . ', Version ' . $elementtype->getRevision() . '<br>' .
                 'Version ' . $elementVersion->getVersion() . '<br>' .
                 37 . ' Versions<br>'
-        ];
+        );
 
         $filter = new TreeFilter(
             $this->get('doctrine.dbal.default_connection'),
@@ -135,18 +133,18 @@ class ListController extends Controller
         $childIds = $filter->getIds($limit, $start);
         $cnt = $filter->getCount();
 
-        $data = [];
+        $data = array();
         foreach ($childIds as $childId => $latestVersion) {
             $childNode = $tree->get($childId);
 
             if (!$userAdminRights) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if (!$this->isGranted(['right' => 'VIEW', 'language' => $language], $node)) {
+                if (!$this->isGranted("ROLE_SUPER_ADMIN") && !$this->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
                     continue;
                 }
 
-                $userRights = []; //$contentRightsManager->getRights($language);
+                $userRights = array(); //$contentRightsManager->getRights($language);
                 $userRights = array_keys($userRights);
             } else {
                 $userRights = $userAdminRights;
@@ -157,7 +155,7 @@ class ListController extends Controller
             $childTitle = $childElementVersion->getBackendTitle($language, $childElement->getMasterLanguage());
             $childElementtype = $elementService->findElementtype($childElement);
 
-            $data[] = [
+            $data[] = array(
                 'tid'             => (int) $childNode->getId(),
                 'eid'             => (int) $childElement->getEid(),
                 '_type'           => 'element',
@@ -166,12 +164,12 @@ class ListController extends Controller
                 'element_type'    => $childElementtype->getTitle(),
                 'navigation'      => 0, //$childNode->inNavigation($childElementVersion->getVersion()),
                 'restricted'      => 0, //$childNode->isRestricted($childElementVersion->getVersion()),
-                'icon'            => $iconResolver->resolveTreeNode($childNode, $language),
+                'icon'            => $iconResolver->resolveNode($childNode, $language),
                 'author'          => 'author',
                 'version'         => $childElementVersion->getVersion(),
-                'create_time'     => $childNode->getCreatedAt()->format('Y-m-d H:i:s'),
+                'create_time'     => $childNode->getNode()->getCreatedAt()->format('Y-m-d H:i:s'),
                 // 'change_time'     => $child['modify_time'],
-                'publish_time'    => $childNode->getCreatedAt()->format('Y-m-d H:i:s'),//$childNode->getPublishDate($language),
+                'publish_time'    => $childNode->getNode()->getCreatedAt()->format('Y-m-d H:i:s'),//$childNode->getPublishDate($language),
                 'custom_date'     => $childElementVersion->getCustomDate($language) ? $childElementVersion->getCustomDate($language)->format('Y-m-d H:i:s') : null,
                 'language'        => $language,
                 'sort'            => (int) $childNode->getSort(),
@@ -182,16 +180,16 @@ class ListController extends Controller
                 'qtip'            => $childElementtype->getTitle() . ', ' .
                     'ET Version ' . $childElementtype->getRevision() . '<br>' .
                     'Version ' . $childElementVersion->getVersion() . '<br>',
-            ];
+            );
         }
 
         //$data['totalChilds'] = $element->getChildCount();
 
-        return new JsonResponse([
+        return new JsonResponse(array(
             'parent' => $parent,
             'list'   => $data,
             'total'  => $cnt
-        ]);
+        ));
     }
 
     /**
@@ -210,7 +208,7 @@ class ListController extends Controller
         $sortTids = $request->get('sort_ids');
         $sortTids = json_decode($sortTids, true);
 
-        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $treeManager = $this->get('phlexible_tree.node_manager');
         $nodeSorter = $this->get('phlexible_tree.node_sorter');
 
         $tree = $treeManager->getByNodeId($tid);

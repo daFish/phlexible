@@ -33,15 +33,15 @@ class SelectfieldController extends Controller
     {
         $selectFieldProviders = $this->get('phlexible_elementtype.select_field_providers');
 
-        $data = [];
+        $data = array();
         foreach ($selectFieldProviders->all() as $selectFieldProvider) {
-            $data[] = [
+            $data[] = array(
                 'name'  => $selectFieldProvider->getName(),
                 'title' => $selectFieldProvider->getTitle($this->getUser()->getInterfaceLanguage('en')),
-            ];
+            );
         }
 
-        return new JsonResponse(['functions' => $data]);
+        return new JsonResponse(array('functions' => $data));
     }
 
     /**
@@ -62,6 +62,6 @@ class SelectfieldController extends Controller
         $provider = $selectFieldProviders->get($providerName);
         $data = $provider->getData($language);
 
-        return new JsonResponse(['data' => $data]);
+        return new JsonResponse(array('data' => $data));
     }
 }

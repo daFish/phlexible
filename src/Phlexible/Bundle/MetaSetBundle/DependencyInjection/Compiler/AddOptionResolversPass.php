@@ -24,7 +24,7 @@ class AddOptionResolversPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $optionResolvers = [];
+        $optionResolvers = array();
         foreach ($container->findTaggedServiceIds('phlexible_meta_set.option_resolver') as $id => $attributes) {
             if (!isset($attributes[0]['type'])) {
                 throw new \InvalidArgumentException("attribute type must be set on phlexible_meta_set.option_resolver");

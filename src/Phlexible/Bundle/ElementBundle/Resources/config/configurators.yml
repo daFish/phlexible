@@ -9,5 +9,5 @@ services:
             - @phlexible_element.content_loader
             - @security.authorization_checker
         tags:
-            - {name: phlexible_element_renderer.configurator, priority: 500}
+            - {name: phlexible_cms.configurator, priority: 500}
             - {name: monolog.logger, channel: element_renderer}

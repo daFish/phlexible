@@ -16,6 +16,11 @@ namespace Phlexible\Bundle\ElementBundle;
 class ElementEvents
 {
     /**
+     * Fired after configuring element
+     */
+    const CONFIGURE_ELEMENT = 'phlexible_element.configure_element';
+
+    /**
      * Fired before an element is created.
      */
     const BEFORE_CREATE_ELEMENT = 'phlexible_element.before_create_element';

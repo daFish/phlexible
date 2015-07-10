@@ -28,19 +28,20 @@ class PhlexibleTreeExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('doctrine.yml');
+        $loader->load('file.yml');
         $loader->load('mediators.yml');
-        $loader->load('content.yml');
         $loader->load('configurators.yml');
+        $loader->load('routing.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
         $container->setParameter('phlexible_tree.patterns', $config['patterns']);
 
-        $container->setAlias('phlexible_tree.tree_factory', 'phlexible_tree.doctrine.tree_factory');
-        $container->setAlias('phlexible_tree.state_manager', 'phlexible_tree.doctrine.state_manager');
+        $container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.doctrine.node_manager');
+        //$container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.file.node_manager');
+        $container->setAlias('phlexible_tree.route_manager', 'phlexible_tree.doctrine.route_manager');
 
-        $container->setAlias('phlexible_tree.content_tree_manager', 'phlexible_tree.content_tree_manager.delegating');
-        //$container->setAlias('phlexible_tree.content_tree_manager', 'phlexible_tree.content_tree_manager.xml');
+        $container->setParameter('phlexible_tree.backend_type_orm', true);
     }
 }

@@ -31,45 +31,45 @@ class InfoController extends Controller
      */
     public function infoAction(Request $request)
     {
-        $lines = [];
+        $lines = array();
 
         if ($this->isGranted('ROLE_SUPER_ADMIN')) {
-            $lines[] = [
+            $lines[] = array(
                 'Project:',
                 $this->container->getParameter('phlexible_gui.project.title') . ' '
                     . $this->container->getParameter('phlexible_gui.project.version')
-            ];
-            $lines[] = [
+            );
+            $lines[] = array(
                 'Env:',
                 $this->container->getParameter('kernel.environment') . ($this->container->getParameter(
                     'kernel.debug'
                 ) ? ' [DEBUG]' : '')
-            ];
-            $lines[] = ['Host:', $request->server->get('SERVER_NAME') . ' [' . PHP_SAPI . ']'];
+            );
+            $lines[] = array('Host:', $request->server->get('SERVER_NAME') . ' [' . PHP_SAPI . ']');
 
             $connection = $this->getDoctrine()->getConnection();
             /* @var $connection \Doctrine\DBAL\Connection */
 
-            $lines[] = [
+            $lines[] = array(
                 'Default Database:',
                 $connection->getHost() . ' / ' . $connection->getDatabase() . ' [' . $connection->getDriver()->getName(
                 ) . ']'
-            ];
+            );
 
-            $lines[] = ['Session:', $request->getSession()->getId() . ' [' . $request->server->get('REMOTE_ADDR') . ']'];
+            $lines[] = array('Session:', $request->getSession()->getId() . ' [' . $request->server->get('REMOTE_ADDR') . ']');
 
-            $lines[] = [
+            $lines[] = array(
                 'User:',
                 $this->getUser()->getUsername() . ' [' . implode(', ', $this->getUser()->getRoles()) . ']'
-            ];
+            );
 
-            $lines[] = ['UserAgent:', $request->server->get('HTTP_USER_AGENT')];
+            $lines[] = array('UserAgent:', $request->server->get('HTTP_USER_AGENT'));
         } else {
-            $lines[] = [
+            $lines[] = array(
                 'Project:',
                 $this->container->getParameter('phlexible_gui.project.title') . ' '
                 . $this->container->getParameter('phlexible_gui.project.version')
-            ];
+            );
         }
 
         $l1 = 0;

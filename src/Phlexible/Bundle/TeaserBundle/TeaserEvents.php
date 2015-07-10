@@ -16,6 +16,16 @@ namespace Phlexible\Bundle\TeaserBundle;
 class TeaserEvents
 {
     /**
+     * Fired after configuring layoutarea
+     */
+    const CONFIGURE_LAYOUTAREA = 'phlexible_teaser.configure_layoutarea';
+
+    /**
+     * Fired after configuring teaser
+     */
+    const CONFIGURE_TEASER = 'phlexible_teaser.configure_teaser';
+
+    /**
      * Fired before a teaser is created.
      */
     const BEFORE_CREATE_TEASER = 'phlexible_teaser.before_create_teaser';

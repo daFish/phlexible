@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Cocur\Slugify\Slugify;
-use Phlexible\Bundle\TreeBundle\Entity\TreeNode;
+use Phlexible\Bundle\TreeBundle\Entity\Node;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
@@ -17,7 +17,7 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ContentTreeNode extends TreeNode implements RouteObjectInterface
+class ContentNode extends Node implements RouteObjectInterface
 {
     /**
      * @var array

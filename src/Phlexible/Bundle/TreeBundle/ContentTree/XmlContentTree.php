@@ -11,10 +11,10 @@ namespace Phlexible\Bundle\TreeBundle\ContentTree;
 use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
-use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
+use Phlexible\Bundle\TreeBundle\Entity\NodeState;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 
@@ -33,12 +33,12 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * @var array
      */
-    private $nodes = [];
+    private $nodes = array();
 
     /**
      * @var array
      */
-    private $childNodes = [];
+    private $childNodes = array();
 
     /**
      * @var \DOMDocument
@@ -184,12 +184,12 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             $siteroot->addNavigation($navigation);
         }
 
-        $specialTids = [];
+        $specialTids = array();
         foreach ($specialTidElements as $specialTidElement) {
             /* @var $specialTidElement \DOMElement */
             $name = $specialTidElement->getAttribute('name');
             $language = $specialTidElement->getAttribute('language') ? : null;
-            $specialTids[] = ['name' => $name, 'language' => $language, 'treeId' => (int) $specialTidElement->textContent];
+            $specialTids[] = array('name' => $name, 'language' => $language, 'treeId' => (int) $specialTidElement->textContent);
         }
         $siteroot->setSpecialTids($specialTids);
 
@@ -199,9 +199,9 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function createContentTreeNodeFromTreeNode(TreeNodeInterface $treeNode)
+    public function createContentTreeNodeFromTreeNode(NodeInterface $treeNode)
     {
-        $contentNode = new ContentTreeNode();
+        $contentNode = new ContentNode();
         $contentNode
             ->setTypeId($treeNode->getTypeId())
             ->setType($treeNode->getType())
@@ -211,7 +211,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             ->setSort($treeNode->getSort())
             ->setSortMode($treeNode->getSortMode())
             ->setSortDir($treeNode->getSortDir())
-            ->setTitles(['de' => 'bla', 'en' => 'blubb']);
+            ->setTitles(array('de' => 'bla', 'en' => 'blubb'));
 
         return $contentNode;
     }
@@ -265,7 +265,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
             return true;
         }
 
-        if ($id instanceof TreeNodeInterface) {
+        if ($id instanceof NodeInterface) {
             $id = $id->getId();
         }
 
@@ -275,7 +275,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getChildren(TreeNodeInterface $node)
+    public function getChildren(NodeInterface $node)
     {
         if (isset($this->childNodes[$node->getId()])) {
             return $this->childNodes[$node->getId()];
@@ -284,7 +284,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
         $elements = $this->xpath->query("//node[@id={$node->getId()}]/node");
 
         if (!$elements->length) {
-            return [];
+            return array();
         }
 
         $childNodes = $this->mapNodes($elements);
@@ -296,7 +296,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function hasChildren(TreeNodeInterface $node)
+    public function hasChildren(NodeInterface $node)
     {
         return count($this->getChildren($node)) > 0;
     }
@@ -304,7 +304,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getParent(TreeNodeInterface $node)
+    public function getParent(NodeInterface $node)
     {
         return $this->getParent($node);
     }
@@ -312,7 +312,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getIdPath(TreeNodeInterface $node)
+    public function getIdPath(NodeInterface $node)
     {
         return array_keys($this->getPath($node));
     }
@@ -320,17 +320,17 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getPath(TreeNodeInterface $node)
+    public function getPath(NodeInterface $node)
     {
         $elements = $this->xpath->query("//node[@id={$node->getId()}]");
         if (!$elements->length) {
-            return [];
+            return array();
         }
 
         $element = $elements->item(0);
         $elementPath = $this->xpath->query($element->getNodePath());
 
-        $path = [];
+        $path = array();
         foreach ($elementPath as $element) {
             $path[] = $this->get($element->attributes->item(0)->value);
         }
@@ -341,7 +341,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function isRoot(TreeNodeInterface $node)
+    public function isRoot(NodeInterface $node)
     {
         return $this->getRoot()->getId() === $node->getId();
     }
@@ -349,7 +349,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function isChildOf(TreeNodeInterface $childNode, TreeNodeInterface $parentNode)
+    public function isChildOf(NodeInterface $childNode, NodeInterface $parentNode)
     {
         return $this->xpath->query("//node[@id={$parentNode->getId()}]//node[@id={$childNode->getId()}]")->length > 0;
     }
@@ -357,7 +357,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function isParentOf(TreeNodeInterface $parentNode, TreeNodeInterface $childNode)
+    public function isParentOf(NodeInterface $parentNode, NodeInterface $childNode)
     {
         return $this->isChildOf($childNode, $parentNode);
     }
@@ -367,7 +367,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
      */
     public function getLanguages($node)
     {
-        if ($node instanceof TreeNodeInterface) {
+        if ($node instanceof NodeInterface) {
             $id = $node->getId();
         } else {
             $id = $node;
@@ -375,7 +375,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
 
         $elements = $this->xpath->query("//node[@id=$id]/versions/version");
 
-        $languages = [];
+        $languages = array();
         foreach ($elements as $element) {
             $languages[] = $element->attributes->item(0)->value;
         }
@@ -388,7 +388,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
      */
     public function getVersions($node)
     {
-        if ($node instanceof TreeNodeInterface) {
+        if ($node instanceof NodeInterface) {
             $id = $node->getId();
         } else {
             $id = $node;
@@ -396,7 +396,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
 
         $elements = $this->xpath->query("//node[@id=$id]/versions/version");
 
-        $versions = [];
+        $versions = array();
         foreach ($elements as $element) {
             $language = $element->attributes->item(0)->value;
             $versions[$language] = (int) $element->textContent;
@@ -408,7 +408,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function getVersion(TreeNodeInterface $node, $language)
+    public function getVersion(NodeInterface $node, $language)
     {
         $elements = $this->xpath->query("//node[@id={$node->getId()}]/versions/version[@language=\"$language\"]");
         if (!$elements->length) {
@@ -422,11 +422,11 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * @param \DOMNodeList $elements
      *
-     * @return TreeNodeInterface[]
+     * @return NodeInterface[]
      */
     private function mapNodes(\DOMNodeList $elements)
     {
-        $nodes = [];
+        $nodes = array();
 
         foreach ($elements as $element) {
             $node = $this->mapNode($element);
@@ -439,31 +439,31 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * @param \DOMElement $element
      *
-     * @return \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
+     * @return \Phlexible\Bundle\TreeBundle\Model\NodeInterface
      */
     private function mapNode(\DOMElement $element)
     {
-        $attributes = [];
+        $attributes = array();
 
-        $titles = [];
+        $titles = array();
         $titlesElement = $element->getElementsByTagName('titles')->item(0);
         foreach ($titlesElement->getElementsByTagName('title') as $titleNode) {
             $titles[$titleNode->getAttribute('language')] = $titleNode->textContent;
         }
 
-        $slugs = [];
+        $slugs = array();
         $slugsElement = $element->getElementsByTagName('slugs')->item(0);
         foreach ($slugsElement->getElementsByTagName('slug') as $slugNode) {
             $slugs[$slugNode->getAttribute('language')] = $slugNode->textContent;
         }
 
-        $versions = [];
+        $versions = array();
         $versionsElement = $element->getElementsByTagName('versions')->item(0);
         foreach ($versionsElement->getElementsByTagName('version') as $versionNode) {
             $versions[$versionNode->getAttribute('language')] = (int) $versionNode->textContent;
         }
 
-        $node = new ContentTreeNode();
+        $node = new ContentNode();
         $node
             ->setTree($this)
             ->setId((int) $element->getAttribute('id'))
@@ -490,116 +490,116 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
      * @return bool
      */
-    public function isInstance(TreeNodeInterface $node)
+    public function isInstance(NodeInterface $node)
     {
         return false;
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
      * @return bool
      */
-    public function isInstanceMaster(TreeNodeInterface $node)
+    public function isInstanceMaster(NodeInterface $node)
     {
         return false;
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
-     * @return TreeNodeInterface[]
+     * @return NodeInterface[]
      */
-    public function getInstances(TreeNodeInterface $node)
+    public function getInstances(NodeInterface $node)
     {
-        return [];
+        return array();
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
      * @return bool
      */
-    public function isPublished(TreeNodeInterface $node, $language)
+    public function isPublished(NodeInterface $node, $language)
     {
         // TODO: Implement isPublished() method.
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
      * @return array
      */
-    public function getPublishedLanguages(TreeNodeInterface $node)
+    public function getPublishedLanguages(NodeInterface $node)
     {
         // TODO: Implement getPublishedLanguages() method.
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
      * @return int|null
      */
-    public function getPublishedVersion(TreeNodeInterface $node, $language)
+    public function getPublishedVersion(NodeInterface $node, $language)
     {
         // TODO: Implement getPublishedVersion() method.
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
      * @return \DateTime|null
      */
-    public function getPublishedAt(TreeNodeInterface $node, $language)
+    public function getPublishedAt(NodeInterface $node, $language)
     {
         // TODO: Implement getPublishedAt() method.
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
      * @return array
      */
-    public function getPublishedVersions(TreeNodeInterface $node)
+    public function getPublishedVersions(NodeInterface $node)
     {
         // TODO: Implement getPublishedVersions() method.
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
      * @return bool
      */
-    public function isAsync(TreeNodeInterface $node, $language)
+    public function isAsync(NodeInterface $node, $language)
     {
         // TODO: Implement isAsync() method.
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
-     * @return TreeNodeOnline[]
+     * @return NodeState[]
      */
-    public function findOnlineByTreeNode(TreeNodeInterface $node)
+    public function findOnlineByTreeNode(NodeInterface $node)
     {
         // TODO: Implement findOnlineByTreeNode() method.
     }
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
-     * @return TreeNodeOnline
+     * @return NodeState
      */
-    public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language)
+    public function findOneOnlineByTreeNodeAndLanguage(NodeInterface $node, $language)
     {
         // TODO: Implement findOneOnlineByTreeNodeAndLanguage() method.
     }
@@ -623,7 +623,7 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     /**
      * {@inheritdoc}
      */
-    public function isViewable(TreeNodeInterface $node)
+    public function isViewable(NodeInterface $node)
     {
         return false;
     }

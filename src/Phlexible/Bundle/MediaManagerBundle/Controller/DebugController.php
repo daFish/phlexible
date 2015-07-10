@@ -40,14 +40,14 @@ class DebugController extends Controller
         $volume = $volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId);
 
-        $debug = [
-            ['key' => 'mimeType', 'value' => $file->getMimeType()],
-            ['key' => 'mediaType', 'value' => strtolower($file->getMediaType())],
-            ['key' => 'fileId', 'value' => $file->getId()],
-            ['key' => 'folderId', 'value' => $file->getFolderId()],
-        ];
+        $debug = array(
+            array('key' => 'mimeType', 'value' => $file->getMimeType()),
+            array('key' => 'mediaType', 'value' => strtolower($file->getMediaType())),
+            array('key' => 'fileId', 'value' => $file->getId()),
+            array('key' => 'folderId', 'value' => $file->getFolderId()),
+        );
 
-        return new JsonResponse(['debug' => $debug]);
+        return new JsonResponse(array('debug' => $debug));
     }
 
     /**
@@ -68,9 +68,9 @@ class DebugController extends Controller
 
         $volume = $volumeManager->getByFileId($fileId);
         $file = $volume->findFile($fileId);
-        $cacheItems = $cacheManager->findBy(['file_id' => $fileId]);
+        $cacheItems = $cacheManager->findBy(array('file_id' => $fileId));
 
-        $cache = [];
+        $cache = array();
         foreach ($cacheItems as $cacheItem) {
             $template = $templateManager->find($cacheItem->getTemplateKey());
             $storageKey = $template->getStorage();
@@ -78,12 +78,12 @@ class DebugController extends Controller
 
             $urls = $storage->getCacheUrls($file, $cacheItem, $this->_request->getBaseUrl());
 
-            $cache[] = [
+            $cache[] = array(
                 'key'   => $cacheItem->getTemplateKey(),
                 'value' => $urls['media']
-            ];
+            );
         }
 
-        return new JsonResponse(['cache' => $cache]);
+        return new JsonResponse(array('cache' => $cache));
     }
 }

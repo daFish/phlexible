@@ -51,11 +51,11 @@ class DownloadController extends Controller
         $filename = $file->getName();
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filepath, $file->getMimeType(), [
+            ->create($filepath, $file->getMimeType(), array(
                 'serve_filename' => $filename,
                 'absolute_path'  => true,
                 'inline'         => false,
-            ]);
+            ));
     }
 
     /**
@@ -95,7 +95,7 @@ class DownloadController extends Controller
 
         $rii = new \RecursiveIteratorIterator(new FolderIterator($folder), \RecursiveIteratorIterator::SELF_FIRST);
 
-        $files = [];
+        $files = array();
         foreach ($rii as $folder) {
             $folderPath = $folder->getPath() . '/';
             foreach ($volume->findFilesByFolder($folder) as $file) {
@@ -108,7 +108,7 @@ class DownloadController extends Controller
         $zippy = Zippy::load();
         $zippy->create($filename, $files);
 
-        return new ResultResponse(true, 'Zip finished', ['filename' => basename($filename)]);
+        return new ResultResponse(true, 'Zip finished', array('filename' => basename($filename)));
     }
 
     /**
@@ -135,7 +135,7 @@ class DownloadController extends Controller
 
         $filename = $path . 'files_' . $folder->getName() . '_' . date('YmdHis') . '.zip';
 
-        $files = [];
+        $files = array();
         foreach ($fileIds as $fileId) {
             $file = $volume->findFile($fileId);
 
@@ -145,7 +145,7 @@ class DownloadController extends Controller
         $zippy = Zippy::load();
         $zippy->create($filename, $files);
 
-        return new ResultResponse(true, 'Zip finished', ['filename' => basename($filename)]);
+        return new ResultResponse(true, 'Zip finished', array('filename' => basename($filename)));
     }
 
     /**
@@ -168,9 +168,9 @@ class DownloadController extends Controller
         }
 
         return $this->get('igorw_file_serve.response_factory')
-            ->create($filepath, 'application/zip', [
+            ->create($filepath, 'application/zip', array(
                 'absolute_path' => true,
                 'inline'        => false,
-            ]);
+            ));
     }
 }

@@ -21,12 +21,12 @@ class RoleHierarchyFactory
     /**
      * @var RoleProviderInterface[]
      */
-    private $roleProviders = [];
+    private $roleProviders = array();
 
     /**
      * @var array
      */
-    private $hierarchy = [];
+    private $hierarchy = array();
 
     /**
      * @param array $hierarchy
@@ -54,14 +54,14 @@ class RoleHierarchyFactory
     public function factory()
     {
         $hierarchy = $this->hierarchy;
-        $roles = [];
+        $roles = array();
         foreach ($this->roleProviders as $roleProvider) {
             $hierarchy = array_merge($hierarchy, $roleProvider->provideRoleHierarchy());
             $roles = array_merge($roles, $roleProvider->provideRoles());
         }
         $hierarchy['ROLE_SUPER_ADMIN'] = isset($hierarchy['ROLE_SUPER_ADMIN'])
             ? $hierarchy['ROLE_SUPER_ADMIN']
-            : [];
+            : array();
         $hierarchy['ROLE_SUPER_ADMIN'] = array_unique(array_merge($hierarchy['ROLE_SUPER_ADMIN'], $roles));
 
         return new RoleHierarchy($hierarchy);

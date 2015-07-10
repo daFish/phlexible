@@ -36,7 +36,7 @@ class PortletController extends Controller
      */
     public function portletsAction()
     {
-        $data = [];
+        $data = array();
         foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
             if ($portlet->hasRole() && !$this->isGranted($portlet->getRole())) {
                 continue;

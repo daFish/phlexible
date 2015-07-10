@@ -10,7 +10,8 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -26,7 +27,7 @@ class GetConfigListener
     private $siterootManager;
 
     /**
-     * @var TreeManager
+     * @var TreeManagerInterface
      */
     private $treeManager;
 
@@ -62,7 +63,7 @@ class GetConfigListener
 
     /**
      * @param SiterootManagerInterface      $siterootManager
-     * @param TreeManager                   $treeManager
+     * @param TreeManagerInterface          $treeManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param bool                          $publishCommentRequired
      * @param bool                          $publishConfirmRequired
@@ -72,7 +73,7 @@ class GetConfigListener
      */
     public function __construct(
         SiterootManagerInterface $siterootManager,
-        TreeManager $treeManager,
+        TreeManagerInterface $treeManager,
         AuthorizationCheckerInterface $authorizationChecker,
         $publishCommentRequired,
         $publishConfirmRequired,
@@ -106,8 +107,8 @@ class GetConfigListener
         $siteroots = $this->siterootManager->findAll();
         $allLanguages = explode(',', $this->availableLanguages);
 
-        $siterootLanguages = [];
-        $siterootConfig = [];
+        $siterootLanguages = array();
+        $siterootConfig = array();
 
         foreach ($siteroots as $siteroot) {
             $siterootId = $siteroot->getId();
@@ -115,13 +116,13 @@ class GetConfigListener
             if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
                 $siterootLanguages[$siterootId] = $allLanguages;
             } else {
-                $siterootLanguages[$siterootId] = [];
+                $siterootLanguages[$siterootId] = array();
 
                 foreach ($allLanguages as $language) {
                     $tree = $this->treeManager->getBySiterootId($siterootId);
                     $root = $tree->getRoot();
 
-                    if (!$this->authorizationChecker->isGranted(['right' => 'VIEW', 'language' => $language], $root)) {
+                    if (!$this->authorizationChecker->isGranted(array('right' => 'VIEW', 'language' => $language), $root)) {
                         continue;
                     }
 
@@ -130,10 +131,10 @@ class GetConfigListener
             }
 
             if (count($siterootLanguages[$siterootId])) {
-                $siterootConfig[$siterootId] = [
+                $siterootConfig[$siterootId] = array(
                     'id' => $siteroot->getId(),
                     'title' => $siteroot->getTitle(),
-                ];
+                );
             }
         }
 

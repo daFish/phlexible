@@ -1,51 +1,38 @@
 services:
-    phlexible_tree.pattern_resolver:
-        class: Phlexible\Bundle\TreeBundle\Pattern\PatternResolver
-        arguments: [@translator, %phlexible_tree.patterns%, %phlexible_gui.project.title%]
-
     phlexible_tree.tree_manager:
         class: Phlexible\Bundle\TreeBundle\Tree\TreeManager
-        arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_tree.tree_factory]
+        arguments:
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_tree.node_manager
+            - @phlexible_tree.mediator
+            - @event_dispatcher
+
+    phlexible_tree.tree_dumper:
+        class: Phlexible\Bundle\TreeBundle\File\Dumper\XmlTreeDumper
+
+    phlexible_tree.routes_dumper:
+        class: Phlexible\Bundle\TreeBundle\File\Dumper\XmlRoutesDumper
+        arguments: [@phlexible_tree.route_manager]
+
+    phlexible_tree.pattern_resolver:
+        class: Phlexible\Bundle\TreeBundle\Pattern\PatternResolver
+        arguments: [%phlexible_tree.patterns%, %phlexible_gui.project.title%]
 
     phlexible_tree.node_serializer:
-        class: Phlexible\Bundle\TreeBundle\Tree\Serializer\NodeSerializer
+        class: Phlexible\Bundle\TreeBundle\Node\NodeSerializer
         arguments:
             - @phlexible_element.element_service
             - @phlexible_element.icon_resolver
-            - @phlexible_tree.state_manager
+            - @phlexible_tree.node_manager
             - @phlexible_access_control.permission_registry
             - @security.authorization_checker
 
-    phlexible_tree.router.handler.default:
-        class: Phlexible\Bundle\TreeBundle\Router\Handler\DefaultHandler
-        arguments:
-            - @logger
-            - @phlexible_tree.content_tree_manager
-            - @phlexible_siteroot.siteroot_request_matcher
-            - @phlexible_siteroot.siteroot_hostname_generator
-            - %phlexible_cms.languages.available%
-            - %phlexible_cms.languages.default%
-        tags:
-            - {name: monolog.logger, channel: router}
-
-    phlexible_tree.router:
-        class: Phlexible\Bundle\TreeBundle\Router\TreeRouter
-        arguments:
-            - @router.request_context
-            - @phlexible_tree.router.handler.default
-            - @phlexible_tree.router.handler.default
-            - ""
-            - @event_dispatcher
-        tags:
-            - {name: monolog.logger, channel: router}
-            - {name: router, priority: 100}
-
     phlexible_tree.node_hasher:
-        class: Phlexible\Bundle\TreeBundle\Tree\NodeHasher
+        class: Phlexible\Bundle\TreeBundle\Node\NodeHasher
         arguments: [@phlexible_element.element_hasher]
 
     phlexible_tree.node_sorter:
-        class: Phlexible\Bundle\TreeBundle\Tree\NodeSorter
+        class: Phlexible\Bundle\TreeBundle\Node\NodeSorter
         arguments: [@doctrine.dbal.default_connection, de]
 
     # access control permission providers
@@ -62,29 +49,38 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
-    phlexible_tree.listener.response:
-        class: Phlexible\Bundle\TreeBundle\EventListener\ResponseListener
-        arguments: [@router, @phlexible_tree.content_tree_manager]
-        tags:
-            - {name: kernel.event_listener, event: kernel.response, method: onResponse}
-
     phlexible_tree.listener.exception:
         class: Phlexible\Bundle\TreeBundle\EventListener\ExceptionListener
         arguments:
             - @twig
-            - @phlexible_element_renderer.configurator
-            - @phlexible_tree.content_tree_manager
+            - @phlexible_cms.configurator
+            - @phlexible_tree.tree_manager
             - @logger
             - %kernel.debug%
         tags:
             - {name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 999}
+
+    phlexible_tree.listener.node:
+        class: Phlexible\Bundle\TreeBundle\EventListener\NodeListener
+        arguments:
+            - @phlexible_tree.doctrine.route_manager
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_element.element_history_manager
+        tags:
+            - {name: kernel.event_subscriber}
+
+    phlexible_tree.listener.response:
+        class: Phlexible\Bundle\TreeBundle\EventListener\ResponseListener
+        arguments: [@router, @phlexible_tree.node_manager]
+        tags:
+            - {name: kernel.event_listener, event: kernel.response, method: onResponse}
 
     # twig extensions
     phlexible_tree.twig.tree_extension:
         class: Phlexible\Bundle\TreeBundle\Twig\Extension\TreeExtension
         public: false
         arguments:
-            - @phlexible_tree.content_tree_manager
+            - @phlexible_tree.tree_manager
             - @phlexible_tree.pattern_resolver
             - @request_stack
             - @security.authorization_checker
@@ -95,6 +91,6 @@ services:
     phlexible_tree.twig.url_extension:
         class: Phlexible\Bundle\TreeBundle\Twig\Extension\UrlExtension
         public: false
-        arguments: [@router, @phlexible_tree.content_tree_manager.delegating]
+        arguments: [@router, @phlexible_tree.node_manager]
         tags:
             - {name: twig.extension}

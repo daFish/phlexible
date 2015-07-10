@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -25,18 +25,11 @@ class ResponseListener
     private $router;
 
     /**
-     * @var ContentTreeManagerInterface
+     * @param RouterInterface $router
      */
-    private $treeManager;
-
-    /**
-     * @param RouterInterface             $router
-     * @param ContentTreeManagerInterface $treeManager
-     */
-    public function __construct(RouterInterface $router, ContentTreeManagerInterface $treeManager)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
-        $this->treeManager = $treeManager;
     }
 
     /**
@@ -58,14 +51,14 @@ class ResponseListener
         }
 
         foreach ($match[1] as $index => $link) {
-            $treeId = null;
+            $nodeId = null;
             $parameters = array();
 
             $parts = explode(',', $link);
             foreach ($parts as $part) {
                 list($key, $value) = explode('=', $part);
                 if ($key === 'tid') {
-                    $treeId = (int) $value;
+                    $nodeId = (int) $value;
                 } elseif ($key === 'language') {
                     $parameters['_locale'] = $value;
                 } else {
@@ -73,13 +66,8 @@ class ResponseListener
                 }
             }
 
-            if ($treeId) {
-                $tree = $this->treeManager->findByTreeId($treeId);
-                if (!$tree) {
-                    continue;
-                }
-                $treeNode = $tree->get($treeId);
-                $url = $this->router->generate($treeNode, $parameters);
+            if ($nodeId) {
+                $url = $this->router->generate($nodeId, $parameters);
                 $content = str_replace($match[0][$index], $url, $content);
             }
         }

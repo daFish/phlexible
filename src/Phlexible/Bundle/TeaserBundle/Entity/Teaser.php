@@ -35,9 +35,9 @@ class Teaser
 
     /**
      * @var int
-     * @ORM\Column(name="tree_id", type="integer")
+     * @ORM\Column(name="node_id", type="integer")
      */
-    private $treeId;
+    private $nodeId;
 
     /**
      * @var int
@@ -120,19 +120,19 @@ class Teaser
     /**
      * @return int
      */
-    public function getTreeId()
+    public function getNodeId()
     {
-        return $this->treeId;
+        return $this->nodeId;
     }
 
     /**
-     * @param int $treeId
+     * @param int $nodeId
      *
      * @return $this
      */
-    public function setTreeId($treeId)
+    public function setNodeId($nodeId)
     {
-        $this->treeId = $treeId;
+        $this->nodeId = $nodeId;
 
         return $this;
     }
@@ -464,7 +464,7 @@ class Teaser
      */
     public function getCache()
     {
-        return $this->getAttribute('cache', []);
+        return $this->getAttribute('cache', array());
     }
 
     /**

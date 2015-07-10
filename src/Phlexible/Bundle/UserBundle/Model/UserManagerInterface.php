@@ -71,7 +71,7 @@ interface UserManagerInterface extends BaseUserManagerInterface
      *
      * @return UserInterface
      */
-    public function findOneBy(array $criteria, $order = []);
+    public function findOneBy(array $criteria, $order = array());
 
     /**
      * @param string $term

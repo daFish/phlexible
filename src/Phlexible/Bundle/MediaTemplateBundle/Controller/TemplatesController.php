@@ -40,19 +40,19 @@ class TemplatesController extends Controller
 
         $allTemplates = $repository->findAll();
 
-        $templates = [];
+        $templates = array();
         foreach ($allTemplates as $template) {
             if (substr($template->getKey(), 0, 4) === '_mm_') {
                 continue;
             }
 
-            $templates[] = [
+            $templates[] = array(
                 'key'  => $template->getKey(),
                 'type' => $template->getType()
-            ];
+            );
         }
 
-        return new JsonResponse(['templates' => $templates]);
+        return new JsonResponse(array('templates' => $templates));
     }
 
     /**

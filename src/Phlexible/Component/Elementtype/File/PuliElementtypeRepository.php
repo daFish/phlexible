@@ -88,7 +88,7 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
      */
     public function loadAll()
     {
-        $elementtypes = [];
+        $elementtypes = array();
         foreach ($this->puliDiscovery->findByType('phlexible/elementtypes') as $bindings) {
             foreach ($bindings->getResources() as $resource) {
                 $id = basename($resource->getPath(), '.xml');

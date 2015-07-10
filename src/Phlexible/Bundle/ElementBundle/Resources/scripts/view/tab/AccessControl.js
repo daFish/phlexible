@@ -8,7 +8,7 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
     title: Phlexible.elements.Strings.access_control,
     iconCls: 'p-element-tab_rights-icon',
     right: 'ACCESS',
-    objectType: 'Phlexible\\Bundle\\TreeBundle\\Entity\\TreeNode',
+    objectType: 'Phlexible\\Bundle\\TreeBundle\\Node\\NodeContext',
     strings: {
         users: Phlexible.elements.Strings.users,
         user: Phlexible.elements.Strings.user,
@@ -16,10 +16,13 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
         group: Phlexible.elements.Strings.group
     },
 
+    createIconCls: function(permission) {
+        return 'p-element-' + permission.name.toLowerCase() + '-icon';
+    },
 
     initComponent: function () {
         this.urls = {
-            identities: Phlexible.Router.generate('elements_rights_subjects'),
+            identities: Phlexible.Router.generate('elements_rights_identities'),
             add: Phlexible.Router.generate('elements_rights_add')
         };
 
@@ -62,7 +65,7 @@ Phlexible.elements.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Rights
             objectId = teaserId;
         }
         else {
-            objectType = 'treenode';
+            objectType = 'Phlexible\\Bundle\\TreeBundle\\Node\\NodeContext';
             objectId = tid;
         }
 

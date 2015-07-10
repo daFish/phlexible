@@ -33,14 +33,14 @@ class FieldMapper
     /**
      * @var FieldMapperInterface[]
      */
-    private $mappers = [];
+    private $mappers = array();
 
     /**
      * @param ElementSourceManagerInterface $elementSourceManager
      * @param string                        $availableLanguages
      * @param FieldMapperInterface[]        $mappers
      */
-    public function __construct(ElementSourceManagerInterface $elementSourceManager, $availableLanguages, array $mappers = [])
+    public function __construct(ElementSourceManagerInterface $elementSourceManager, $availableLanguages, array $mappers = array())
     {
         $this->elementSourceManager = $elementSourceManager;
         $this->availableLanguages = explode(',', $availableLanguages);
@@ -82,7 +82,7 @@ class FieldMapper
             throw new \LogicException("No elementtype found.");
         }
 
-        $titles = [];
+        $titles = array();
 
         if ($elementStructure) {
             $mappings = $elementtype->getMappings();

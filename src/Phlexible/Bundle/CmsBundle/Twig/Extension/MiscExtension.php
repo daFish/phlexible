@@ -25,9 +25,9 @@ class MiscExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('id', [$this, 'id']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('id', array($this, 'id')),
+        );
     }
 
     /**
@@ -35,10 +35,10 @@ class MiscExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return [
-            new \Twig_SimpleFilter('readable_size', [$this, 'readableSize']),
-            new \Twig_SimpleFilter('age', [$this, 'age']),
-        ];
+        return array(
+            new \Twig_SimpleFilter('readable_size', array($this, 'readableSize')),
+            new \Twig_SimpleFilter('age', array($this, 'age')),
+        );
     }
 
     /**

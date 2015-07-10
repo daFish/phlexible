@@ -18,12 +18,12 @@ class ChangeCollection implements \Countable, \IteratorAggregate
     /**
      * @var ChangeInterface[]
      */
-    private $changes = [];
+    private $changes = array();
 
     /**
      * @param ChangeInterface[] $changes
      */
-    public function __construct(array $changes = [])
+    public function __construct(array $changes = array())
     {
         $this->changes = $changes;
     }
@@ -69,7 +69,7 @@ class ChangeCollection implements \Countable, \IteratorAggregate
      */
     public function filterAdd()
     {
-        $changes = [];
+        $changes = array();
         foreach ($this->changes as $change) {
             if ($change instanceof AddChange) {
                 $changes[] = $change;
@@ -84,7 +84,7 @@ class ChangeCollection implements \Countable, \IteratorAggregate
      */
     public function filterUpdate()
     {
-        $changes = [];
+        $changes = array();
         foreach ($this->changes as $change) {
             if ($change instanceof UpdateChange) {
                 $changes[] = $change;
@@ -99,7 +99,7 @@ class ChangeCollection implements \Countable, \IteratorAggregate
      */
     public function filterRemove()
     {
-        $changes = [];
+        $changes = array();
         foreach ($this->changes as $change) {
             if ($change instanceof RemoveChange) {
                 $changes[] = $change;

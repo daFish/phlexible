@@ -6,13 +6,17 @@ services:
     phlexible_access_control.permission_resolver:
         class: Phlexible\Component\AccessControl\Permission\PermissionResolver
 
-    phlexible_access_control.provider.user:
-        class: Phlexible\Bundle\AccessControlBundle\Provider\UserProvider
+    phlexible_access_control.security_resolver:
+        class: Phlexible\Component\AccessControl\SecurityProvider\DelegatingSecurityResolver
+        arguments: [[@phlexible_access_control.user_security_provider, @phlexible_access_control.group_security_provider]]
+
+    phlexible_access_control.user_security_provider:
+        class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\UserSecurityProvider
         arguments: [@phlexible_user.user_manager]
 
-    phlexible_access_control.provider.group:
-        class: Phlexible\Bundle\AccessControlBundle\Provider\GroupProvider
-        arguments: [@doctrine.orm.entity_manager]
+    phlexible_access_control.group_security_provider:
+        class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\GroupSecurityProvider
+        arguments: [@phlexible_user.group_manager]
 
     # voters
     phlexible_access_control.voter.rights:

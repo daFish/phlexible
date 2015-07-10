@@ -93,7 +93,7 @@ class VideoPreviewer implements PreviewerInterface
 
         $videoStream = $this->ffprobe->streams($cacheFilename)->videos()->first();
 
-        $data = [
+        $data = array(
             'path'     => $cacheFilename,
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
@@ -103,7 +103,7 @@ class VideoPreviewer implements PreviewerInterface
             'debug'    => $debug,
             'width'    => $videoStream->get('width'),
             'height'   => $videoStream->get('height'),
-        ];
+        );
 
         return $data;
     }

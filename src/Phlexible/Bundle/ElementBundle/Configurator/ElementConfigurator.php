@@ -8,14 +8,13 @@
 
 namespace Phlexible\Bundle\ElementBundle\Configurator;
 
-use Phlexible\Bundle\AccessControlBundle\Rights as ContentRightsManager;
+use Phlexible\Bundle\CmsBundle\Configurator\Configuration;
+use Phlexible\Bundle\CmsBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\CmsBundle\Event\ConfigureEvent;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
+use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
-use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
-use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -116,7 +115,7 @@ class ElementConfigurator implements ConfiguratorInterface
         }
 
         $event = new ConfigureEvent($renderConfiguration);
-        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_ELEMENT, $event);
+        $this->dispatcher->dispatch(ElementEvents::CONFIGURE_ELEMENT, $event);
 
         return;
 
@@ -125,7 +124,7 @@ class ElementConfigurator implements ConfiguratorInterface
 
         $versionStrategy = new OnlineVersionStrategy($this->elementService);
 
-        $availableLanguages = $request->attributes->get('availableLanguages', ['de']);
+        $availableLanguages = $request->attributes->get('availableLanguages', array('de'));
         $elementLanguage = $versionStrategy->findLanguage($request, $element, $availableLanguages);
 
         if (!$elementLanguage) {
@@ -171,7 +170,7 @@ class ElementConfigurator implements ConfiguratorInterface
         */
 
         if ($versionStrategy->getName() === 'latest') {
-            if (!$this->authorizationChecker->isGranted('VIEW', $treeNode)) {
+            if (!$this->authorizationChecker->isGranted('VIEW', $node)) {
                 $this->logger->debug('403 Forbidden du to missing VIEW content right');
 
                 throw new \Makeweb_Renderers_Exception('Forbidden', 403);
@@ -200,7 +199,7 @@ class ElementConfigurator implements ConfiguratorInterface
             ->addFeature('element')
             ->setVariable('contentElement', $contentElement)
             ->setVariable('content', $data->contentElement->getStructure())
-            ->setVariable('contentLanguages', ['de']);
+            ->setVariable('contentLanguages', array('de'));
 
         if (!$renderConfiguration->hasFeature('template')) {
             $renderConfiguration
@@ -209,6 +208,6 @@ class ElementConfigurator implements ConfiguratorInterface
         }
 
         $event = new ConfigureEvent($renderConfiguration);
-        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_ELEMENT, $event);
+        $this->dispatcher->dispatch(ElementEvents::CONFIGURE_ELEMENT, $event);
     }
 }

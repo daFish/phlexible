@@ -36,15 +36,15 @@ class SetsController extends Controller
         $metaSetManager = $this->get('phlexible_meta_set.meta_set_manager');
         $metaSet = $metaSetManager->findAll();
 
-        $data = [];
+        $data = array();
         foreach ($metaSet as $set) {
-            $data[] = [
+            $data[] = array(
                 'id'   => $set->getId(),
                 'name' => $set->getName(),
-            ];
+            );
         }
 
-        return new JsonResponse(['sets' => $data]);
+        return new JsonResponse(array('sets' => $data));
     }
 
     /**
@@ -63,9 +63,9 @@ class SetsController extends Controller
         $metaSet = $metaSetManager->find($id);
         $fields = $metaSet->getFields();
 
-        $data = [];
+        $data = array();
         foreach ($fields as $field) {
-            $data[] = [
+            $data[] = array(
                 'id'           => $field->getId(),
                 'key'          => $field->getName(),
                 'type'         => $field->getType(),
@@ -73,10 +73,10 @@ class SetsController extends Controller
                 'synchronized' => $field->isSynchronized(),
                 'readonly'     => $field->isReadonly(),
                 'options'      => $field->getOptions(),
-            ];
+            );
         }
 
-        return new JsonResponse(['values' => $data]);
+        return new JsonResponse(array('values' => $data));
     }
 
     /**
@@ -158,14 +158,14 @@ class SetsController extends Controller
 
         $metaSet->setRevision($metaSet->getRevision() + 1);
 
-        $fields = [];
+        $fields = array();
         foreach ($metaSet->getFields() as $field) {
             $fields[$field->getId()] = $field;
         }
 
         foreach ($data as $item) {
             if (!empty($item['options'])) {
-                $options = [];
+                $options = array();
                 foreach (explode(',', $item['options']) as $key => $value) {
                     $options[$key] = trim($value);
                 }

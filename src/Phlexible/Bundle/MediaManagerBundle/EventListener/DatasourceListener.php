@@ -39,9 +39,9 @@ class DatasourceListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
+        return array(
             SuggestEvents::GARBAGE_COLLECT => 'onGarbageCollect',
-        ];
+        );
     }
 
     /**
@@ -67,6 +67,6 @@ class DatasourceListener implements EventSubscriberInterface
     {
         $language = $values->getLanguage();
 
-        return $this->suggestFieldUtil->fetchUsedValues($values, [$language]);
+        return $this->suggestFieldUtil->fetchUsedValues($values, array($language));
     }
 }

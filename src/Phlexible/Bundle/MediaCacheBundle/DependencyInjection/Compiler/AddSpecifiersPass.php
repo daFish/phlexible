@@ -24,7 +24,7 @@ class AddSpecifiersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $ids = [];
+        $ids = array();
         foreach ($container->findTaggedServiceIds('phlexible_media_cache.specifier') as $id => $definition) {
             $ids[] = new Reference($id);
         }

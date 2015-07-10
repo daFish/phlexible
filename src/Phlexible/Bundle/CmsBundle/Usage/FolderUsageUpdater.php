@@ -13,7 +13,8 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
 use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Volume\VolumeManager;
 
 /**
@@ -29,9 +30,9 @@ class FolderUsageUpdater
     private $entityManager;
 
     /**
-     * @var TreeManager
+     * @var NodeManagerInterface
      */
-    private $treeManager;
+    private $nodeManager;
 
     /**
      * @var TeaserManager
@@ -44,19 +45,19 @@ class FolderUsageUpdater
     private $volumeManager;
 
     /**
-     * @param EntityManager  $entityManager
-     * @param TreeManager    $treeManager
-     * @param TeaserManager  $teaserManager
-     * @param VolumeManager  $volumeManager
+     * @param EntityManager        $entityManager
+     * @param NodeManagerInterface $nodeManager
+     * @param TeaserManager        $teaserManager
+     * @param VolumeManager        $volumeManager
      */
     public function __construct(
         EntityManager $entityManager,
-        TreeManager $treeManager,
+        NodeManagerInterface $nodeManager,
         TeaserManager $teaserManager,
         VolumeManager $volumeManager)
     {
         $this->entityManager = $entityManager;
-        $this->treeManager = $treeManager;
+        $this->nodeManager = $nodeManager;
         $this->teaserManager = $teaserManager;
         $this->volumeManager = $volumeManager;
     }
@@ -79,12 +80,12 @@ class FolderUsageUpdater
             ->select('l')
             ->join('l.elementVersion', 'ev')
             ->join('ev.element', 'e')
-            ->where('e.eid = 9')
+            ->where($qb->expr()->eq('e.eid', $eid))
             ->andWhere($qb->expr()->eq('l.type', $qb->expr()->literal('folder')));
         $folderLinks = $qb->getQuery()->getResult();
         /* @var $folderLinks ElementLink[] */
 
-        $flags = [];
+        $flags = array();
 
         foreach ($folderLinks as $folderLink) {
             $folderId = $folderLink->getTarget();
@@ -103,7 +104,7 @@ class FolderUsageUpdater
             }
 
             // add flag STATUS_ONLINE if this link is used in an online teaser version
-            $teasers = $this->teaserManager->findBy(['typeId' => $eid, 'type' => 'element']);
+            $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
             foreach ($teasers as $teaser) {
                 if ($this->teaserManager->getPublishedVersion($teaser, $folderLink->getLanguage()) === $linkVersion) {
                     $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
@@ -112,12 +113,11 @@ class FolderUsageUpdater
                 }
             }
 
-            // add flag STATUS_ONLINE if this link is used in an online treeNode version
-            $trees = $this->treeManager->getByTypeId($eid, 'element');
-            foreach ($trees as $tree) {
-                $treeNodes = $tree->getByTypeId($eid, 'element');
-                foreach ($treeNodes as $treeNode) {
-                    if ($tree->getPublishedVersion($treeNode, $folderLink->getLanguage()) === $linkVersion) {
+            // add flag STATUS_ONLINE if this link is used in an online node version
+            $nodes = $this->nodeManager->findBy(array('type' => 'element', 'typeId' => $eid));
+            foreach ($nodes as $node) {
+                foreach ($this->nodeManager->findOneStateBy(array('node' => $node, 'language' => $fileLink->getLanguage())) as $nodeOnline) {
+                    if ($nodeOnline->getVersion() === $linkVersion) {
                         $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
                         $old = false;
                         break;
@@ -135,7 +135,7 @@ class FolderUsageUpdater
             $volume = $this->volumeManager->getByFolderId($folderId);
             $folder = $volume->findFolder($folderId);
 
-            $folderUsage = $folderUsageRepository->findOneBy(['folder' => $folder, 'usageType' => 'element', 'usageId' => $eid]);
+            $folderUsage = $folderUsageRepository->findOneBy(array('folder' => $folder, 'usageType' => 'element', 'usageId' => $eid));
             if (!$folderUsage) {
                 $folderUsage = new FolderUsage($folder, 'element', $eid, $flag);
                 $this->entityManager->persist($folderUsage);

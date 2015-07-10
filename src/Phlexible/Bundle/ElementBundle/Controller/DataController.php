@@ -17,6 +17,7 @@ use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Elementtype\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Component\Elementtype\Model\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -58,9 +59,9 @@ class DataController extends Controller
 
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $treeManager = $this->get('phlexible_tree.tree_manager');
+        $nodeManager = $this->get('phlexible_tree.node_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
-        $stateManager = $this->get('phlexible_tree.state_manager');
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
         $lockManager = $this->get('phlexible_element.element_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
@@ -69,11 +70,13 @@ class DataController extends Controller
         if ($teaserId) {
             $teaser = $teaserManager->find($teaserId);
             $eid = $teaser->getTypeId();
-            $treeId = $teaser->getTreeId();
+            $treeId = $teaser->getNodeId();
             $tree = $treeManager->getByNodeId($treeId);
+            $tree->setDefaultLanguage($language);
             $node = $tree->get($treeId);
         } elseif ($treeId) {
             $tree = $treeManager->getByNodeId($treeId);
+            $tree->setDefaultLanguage($language);
             $node = $tree->get($treeId);
             $eid = $node->getTypeId();
         } else {
@@ -113,29 +116,29 @@ class DataController extends Controller
 
         if ($teaser) {
             $publishedVersions = $elementHistoryManager->findBy(
-                [
+                array(
                     'teaserId' => $teaser->getId(),
                     'action'   => 'publishTeaser'
-                ]
+                )
             );
         } else {
             $publishedVersions = $elementHistoryManager->findBy(
-                [
+                array(
                     'treeId' => $node->getId(),
                     'action' => 'publishNode'
-                ]
+                )
             );
         }
 
-        $versions = [];
+        $versions = array();
         foreach (array_reverse($elementService->getVersions($element)) as $version) {
-            $versions[$version] = [
+            $versions[$version] = array(
                 'version'       => $version,
                 'format'        => 2,
                 'create_date'   => date('Y-m-d H:i:s'),
                 'is_published'  => false,
                 'was_published' => false,
-            ];
+            );
         }
 
         foreach ($publishedVersions as $publishedVersion) {
@@ -151,35 +154,36 @@ class DataController extends Controller
 
         // instances
 
-        $instances = [];
+        $instances = array();
         if ($teaser) {
             foreach ($teaserManager->getInstances($teaser) as $instanceTeaser) {
-                $instance = [
+                $instance = array(
                     'id'              => $instanceTeaser->getId(),
                     'instance_master' => false,
                     'modify_time'     => $instanceTeaser->getCreatedAt()->format('Y-m-d H:i:s'),
                     'icon'            => $iconResolver->resolveTeaser($instanceTeaser, $language),
                     'type'            => 'teaser',
-                    'link'            => [],
-                ];
+                    'link'            => array(),
+                );
 
                 $instances[] = $instance;
             }
         } else {
-            foreach ($treeManager->getInstanceNodes($node) as $instanceNode) {
-                $instance = [
+            foreach ($nodeManager->getInstanceNodes($node->getNode()) as $instanceNode) {
+                $instanceNodeContext = $treeManager->getByNodeId($instanceNode->getId())->get($instanceNode->getId());
+                $instance = array(
                     'id'              => $instanceNode->getId(),
                     'instance_master' => false,
                     'modify_time'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'icon'            => $iconResolver->resolveTreeNode($instanceNode, $language),
+                    'icon'            => $iconResolver->resolveNode($instanceNodeContext, $language),
                     'type'            => 'treenode',
-                    'link'            => [],
-                ];
+                    'link'            => array(),
+                );
 
-                if ($instanceNode->getTree()->getSiterootId() !== $tree->getSiterootId()) {
-                    $instance['link'] = [
-                        'start_tid_path' => '/' . implode('/', $instanceNode->getTree()->getIdPath($instanceNode)),
-                    ];
+                if ($instanceNode->getSiterootId() !== $tree->getSiterootId()) {
+                    $instance['link'] = array(
+                        'start_tid_path' => '/' . implode('/', $treeManager->getByNodeId($instanceNode->getId())->getIdPath($instanceNode)),
+                    );
                 }
 
                 $instances[] = $instance;
@@ -188,18 +192,18 @@ class DataController extends Controller
 
         // allowed child elements
 
-        $allowedChildren = [];
+        $allowedChildren = array();
         if (!$teaser) {
             foreach ($elementService->findAllowedChildren($elementtype) as $childElementtype) {
                 if ($childElementtype->getType() !== 'full') {
                     continue;
                 }
 
-                $allowedChildren[] = [
+                $allowedChildren[] = array(
                     $childElementtype->getId(),
                     $childElementtype->getTitle(),
                     $iconResolver->resolveElementtype($childElementtype),
-                ];
+                );
             }
         }
 
@@ -226,12 +230,12 @@ class DataController extends Controller
 
         $diffInfo = null;
         if ($diff) {
-            $diffInfo = [
+            $diffInfo = array(
                 'enabled'      => $diff,
                 'version_from' => $diffVersionFrom,
                 'version_to'   => $diffVersionTo,
                 'language'     => $diffLanguage,
-            ];
+            );
         }
 
         // lock
@@ -248,7 +252,7 @@ class DataController extends Controller
         }
 
         if (!$this->isGranted('ROLE_SUPER_ADMIN') &&
-            !$this->isGranted(['permission' => 'EDIT', 'language' => $language], $node)
+            !$this->isGranted(array('permission' => 'EDIT', 'language' => $language), $node)
         ) {
             $doLock = false;
         }
@@ -276,14 +280,14 @@ class DataController extends Controller
         if ($lock && !$diff) {
             $lockUser = $userManager->find($lock->getUserId());
 
-            $lockInfo = [
+            $lockInfo = array(
                 'status'   => 'locked',
                 'id'       => $lock->getElement()->getEid(),
                 'username' => $lockUser->getDisplayName(),
                 'time'     => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                 'age'      => time() - $lock->getLockedAt()->format('U'),
                 'type'     => $lock->getType(),
-            ];
+            );
 
             if ($lock->getUserId() === $this->getUser()->getId()) {
                 $lockInfo['status'] = 'edit';
@@ -294,19 +298,19 @@ class DataController extends Controller
             // Workaround for loading diffs without locking and view-mask
             // TODO: introduce new diff lock mode
 
-            $lockInfo = [
+            $lockInfo = array(
                 'status'   => 'edit',
                 'id'       => '',
                 'username' => '',
                 'time'     => '',
                 'age'      => 0,
                 'type'     => ElementLock::TYPE_TEMPORARY,
-            ];
+            );
         }
 
         // meta
 
-        $meta = [];
+        $meta = array();
         $elementMetaSetResolver = $this->get('phlexible_element.element_meta_set_resolver');
         $elementMetaDataManager = $this->get('phlexible_element.element_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
@@ -316,19 +320,19 @@ class DataController extends Controller
             $metaSet = $elementMetaSetResolver->resolve($elementVersion);
             $metaData = $elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
 
-            $fieldDatas = [];
+            $fieldDatas = array();
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fieldData = [
+                $fieldData = array(
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                ];
+                );
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $metaLanguage) {
@@ -342,17 +346,17 @@ class DataController extends Controller
                 $fieldDatas[] = $fieldData;
             }
 
-            $meta = [
+            $meta = array(
                 'set_id' => $metaSetId,
                 'title'  => $metaSet->getName(),
                 'fields' => $fieldDatas
-            ];
+            );
         }
 
         // redirects
         // TODO: auslagern
 
-        $redirects = [];
+        $redirects = array();
         if (!$teaser && $this->container->has('redirectsManager')) {
             $redirectsManager = $this->get('redirectsManager');
             $redirects = $redirectsManager->getForTidAndLanguage($treeId, $language);
@@ -360,23 +364,23 @@ class DataController extends Controller
 
         // preview / online url
 
-        $urls = [
+        $urls = array(
             'preview' => '',
             'online'  => '',
-        ];
+        );
 
         $publishDate = null;
         $publishUser = null;
         $onlineVersion = null;
         $latestVersion = null;
 
-        if (in_array($elementtype->getType(), [Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART])) {
+        if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
             if ($type == Elementtype::TYPE_FULL) {
-                $urls['preview'] = $this->generateUrl('cms_preview', ['treeId' => $node->getId(), '_locale' => $language]);
+                $urls['preview'] = $this->generateUrl('cms_preview', array('treeId' => $node->getId(), '_locale' => $language));
 
                 if ($isPublished) {
-                    $contentNode = $this->get('phlexible_tree.content_tree_manager.delegating')->findByTreeId($node->getId())->get($node->getId());
-                    $urls['online'] = $this->generateUrl($contentNode);
+                    //$contentNode = $this->get('phlexible_tree.node_manager')->getByTreeId($node->getId())->get($node->getId());
+                    $urls['online'] = $this->generateUrl($node->getId());
                 }
             }
 
@@ -387,10 +391,9 @@ class DataController extends Controller
                     $publishUser = $userManager->find($teaserOnline->getPublishUserId());
                     $onlineVersion = $teaserOnline->getVersion();
                 } else {
-                    $treeNodeOnline = $tree->findOneOnlineByTreeNodeAndLanguage($node, $language);
-                    $publishDate = $treeNodeOnline->getPublishedAt()->format('Y-m-d H:i:s');
-                    $publishUser = $userManager->find($treeNodeOnline->getPublishUserId());
-                    $onlineVersion = $treeNodeOnline->getVersion();
+                    $publishDate = $tree->getPublishedAt($node, $language)->format('Y-m-d H:i:s');
+                    $publishUser = $userManager->find($tree->getPublishUserId($node, $language));
+                    $onlineVersion = $tree->getPublishedVersion($node, $language);
                 }
             }
 
@@ -409,7 +412,7 @@ class DataController extends Controller
         // context
         // TODO: repair element context
 
-        $context = [];
+        $context = array();
         if (0) {
             $contextManager = $this->get('phlexible_element.context.manager');
 
@@ -421,18 +424,18 @@ class DataController extends Controller
                     : $contextManager->getActiveCountriesByTid($node->getId());
 
                 foreach ($contextCountries as $contextKey => $contextValue) {
-                    $context[] = [
+                    $context[] = array(
                         'id'      => $contextKey,
                         'country' => $contextValue,
                         'active'  => in_array($contextKey, $activeContextCountries) ? 1 : 0
-                    ];
+                    );
                 }
             }
         }
 
         // pager
 
-        $pager = [];
+        $pager = array();
         if (!$teaser) {
             $parentNode = $tree->getParent($node);
             if ($parentNode) {
@@ -453,10 +456,10 @@ class DataController extends Controller
 
         // rights
 
-        $userRights = [];
+        $userRights = array();
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-            if ($this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
+            if ($this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
                 return null;
             }
 
@@ -471,17 +474,17 @@ class DataController extends Controller
         }
 
         $status = '';
-        if ($stateManager->isPublished($node, $language)) {
-            $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
+        if ($node->getTree()->isPublished($node, $language)) {
+            $status = $node->getTree()->isAsync($node, $language) ? 'async' : 'online';
         }
 
-        $icon = $iconResolver->resolveTreeNode($node, $language);
+        $icon = $iconResolver->resolveNode($node, $language);
 
         $createUser = $userManager->find($elementVersion->getCreateUserId());
 
         // glue together
 
-        $properties = [
+        $properties = array(
             'tid'              => $treeId,
             'eid'              => $eid,
             'siteroot_id'      => empty($teaserId) ? $node->getTree()->getSiterootId() : null,
@@ -526,7 +529,7 @@ class DataController extends Controller
             'sort_dir'         => $node->getSortDir(),
             'icon'             => $icon,
             'navigation'       => $node->getInNavigation(),
-        ];
+        );
 
         $elementtypeSerializer = new ElementtypeArraySerializer();
         $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
@@ -534,7 +537,7 @@ class DataController extends Controller
         $elementSerializer = new ElementArraySerializer();
         $serializedValues = $elementSerializer->serialize($elementStructure, $language);
 
-        $data = [
+        $data = array(
             'success'             => true,
             'properties'          => $properties,
             'configuration'       => $configuration,
@@ -554,7 +557,7 @@ class DataController extends Controller
             'versions'            => $versions,
             'valueStructure'      => $serializedValues,
             'structure'           => $serializedStructure,
-        ];
+        );
 
         $data = (object) $data;
         $event = new LoadDataEvent($node, $teaser, $language, $data);
@@ -580,24 +583,24 @@ class DataController extends Controller
         $iconResolver = $this->get('phlexible_element.icon_resolver');
         $dataSaver = $this->get('phlexible_element.request.data_saver');
 
-        list($elementVersion, $treeNode, $teaser, $publishSlaves) = $dataSaver->save($request, $this->getUser());
+        list($elementVersion, $node, $teaser, $publishSlaves) = $dataSaver->save($request, $this->getUser());
 
         if ($teaser) {
             $icon = $iconResolver->resolveTeaser($teaser, $language);
         } else {
-            $icon = $iconResolver->resolveTreeNode($treeNode, $language);
+            $icon = $iconResolver->resolveNode($node, $language);
         }
 
         $msg = "Element {$elementVersion->getElement()->getEid()} master language {$elementVersion->getElement()->getMasterLanguage()} saved as new version {$elementVersion->getVersion()}";
 
-        $data = [
+        $data = array(
             'title'         => $elementVersion->getBackendTitle($language),
             'icon'          => $icon,
-            'navigation'    => $teaser ? '' : $treeNode->getInNavigation(),
-            'restricted'    => $teaser ? '' : $treeNode->getAttribute('needAuthentication'),
+            'navigation'    => $teaser ? '' : $node->getInNavigation(),
+            'restricted'    => $teaser ? '' : $node->getAttribute('needAuthentication'),
             'publish_other' => $publishSlaves,
             'publish'       => $request->get('publish'),
-        ];
+        );
 
         return new ResultResponse(true, $msg, $data);
 
@@ -615,10 +618,9 @@ class DataController extends Controller
         }
 
         $dispatcher = $this->get('event_dispatcher');
-        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $treeManager = $this->get('phlexible_tree.node_manager');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $stateManager = $this->get('phlexible_tree.state_manager');
         $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
 
         $tree = $treeManager->getByNodeId($tid);
@@ -710,7 +712,7 @@ class DataController extends Controller
 
         $msg = 'Element "' . $eid . '" master language "' . $language . '" saved as new version ' . $newVersion;
 
-        $publishOther = [];
+        $publishOther = array();
         if ($isPublish) {
             $msg .= ' and published.';
 
@@ -816,20 +818,20 @@ class DataController extends Controller
         $fileUsage->update($eid);
         */
 
-        $data = [];
+        $data = array();
 
         $status = '';
         if ($stateManager->isPublished($node, $language)) {
             $status = $stateManager->isAsync($node, $language) ? 'async' : 'online';
         }
 
-        $data = [
+        $data = array(
             'title'         => $elementVersion->getBackendTitle($language),
             'status'        => $status,
             'navigation'    => $teaserId ? '' : $node->getInNavigation($newVersion),
             'restricted'    => $teaserId ? '' : $node->getAttribute('restrictire'),
             'publish_other' => $publishSlaves,
-        ];
+        );
 
         return new ResultResponse(true, $msg, $data);
     }
@@ -842,25 +844,24 @@ class DataController extends Controller
      */
     public function urlsAction(Request $request)
     {
-        $tid = $request->get('tid');
+        $nodeId = $request->get('tid');
         $language = $request->get('language');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $stateManager = $this->get('phlexible_tree.state_manager');
 
-        $node = $treeManager->getByNodeId($tid)->get($tid);
+        $node = $treeManager->getByNodeId($nodeId)->get($nodeId);
 
-        $urls = [
+        $urls = array(
             'preview' => '',
             'online'  => '',
-        ];
+        );
 
         if ($node) {
-            $urls['preview'] = $this->generateUrl('cms_preview', ['treeId' => $tid, '_locale' => $language]);
+            $urls['preview'] = $this->generateUrl('cms_preview', array('treeId' => $nodeId, '_locale' => $language));
 
-            if ($stateManager->isPublished($node, $language)) {
+            if ($node->getTree()->isPublished($node, $language)) {
                 try {
-                    //$urls['online'] = $this->generateUrl($node);
+                    $urls['online'] = $this->generateUrl($node);
                 } catch (\Exception $e) {
 
                 }

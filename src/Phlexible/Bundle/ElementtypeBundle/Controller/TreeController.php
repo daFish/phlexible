@@ -49,7 +49,7 @@ class TreeController extends Controller
         $rootNode = $elementtypeStructure->getRootNode();
         $type = $elementtype->getType(); // != 'reference' ? 'root' : 'referenceroot';
 
-        $children = [];
+        $children = array();
         $rootDsId = '';
         $rootType = 'root';
         if ($rootNode) {
@@ -63,8 +63,8 @@ class TreeController extends Controller
             $language = 'en';
         }
 
-        $data = [
-            [
+        $data = array(
+            array(
                 'text'                 => $elementtype->getTitle($language)
                     . ' [v' . $elementtype->getRevision() . ', '
                     . $elementtype->getType() . ']',
@@ -80,8 +80,8 @@ class TreeController extends Controller
                 'allowDrag'            => ($type == Elementtype::TYPE_REFERENCE),
                 'allowDrop'            => $mode == 'edit',
                 'editable'             => $mode == 'edit',
-                'properties'           => [
-                    'root' => [
+                'properties'           => array(
+                    'root' => array(
                         'title'               => $elementtype->getTitle($language),
                         'reference_title'     => $elementtype->getTitle($language)
                             . ' [v' . $elementtype->getRevision() . ']',
@@ -94,9 +94,9 @@ class TreeController extends Controller
                         'template'            => $elementtype->getTemplate(),
                         'metaset'             => $elementtype->getMetaSetId(),
                         'comment'             => $elementtype->getComment(),
-                    ],
+                    ),
                     'mappings' => $elementtype->getMappings()
-                ],
+                ),
                 'children' => $this->recurseTree(
                     $elementtypeStructure,
                     $children,
@@ -105,8 +105,8 @@ class TreeController extends Controller
                     false,
                     true
                 )
-            ]
-        ];
+            )
+        );
 
         return new JsonResponse($data);
     }
@@ -131,14 +131,14 @@ class TreeController extends Controller
         $reference = false,
         $allowDrag = true)
     {
-        $return = [];
+        $return = array();
 
         $fieldRegistry = $this->get('phlexible_elementtype.field.registry');
 
         foreach ($nodes as $node) {
             /* @var $node ElementtypeStructureNode */
 
-            $tmp = [
+            $tmp = array(
                 'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
                 'id'         => md5(serialize($node)),
                 'ds_id'      => $node->getDsId(),
@@ -152,19 +152,19 @@ class TreeController extends Controller
                 'allowDrag'  => $allowDrag,
                 'allowDrop'  => $mode == 'edit' && !$reference,
                 'editable'   => $mode == 'edit' || !$reference,
-                'properties' => [
-                    'field'            => [
+                'properties' => array(
+                    'field'            => array(
                         'title'         => $node->getName(),
                         'type'          => $node->getType(),
                         'working_title' => $node->getName(),
                         'comment'       => $node->getComment(),
                         'image'         => ''
-                    ],
+                    ),
                     'configuration'    => $node->getConfiguration(),
                     'labels'           => $node->getLabels(),
                     'validation'       => $node->getValidation()
-                ]
-            ];
+                )
+            );
 
             if ($structure->hasChildNodes($node->getDsId())) {
                 $tmp['leaf'] = false;
@@ -188,7 +188,7 @@ class TreeController extends Controller
                 $tmp['text'] = $referenceElementtype->getTitle($language) . ' [v' . $referenceElementtype->getRevision() . ']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
-                $tmp['reference'] = ['refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision()];
+                $tmp['reference'] = array('refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision());
                 $tmp['editable'] = false;
                 $tmp['allowDrag'] = true;
                 $tmp['children'] = $this->recurseTree(

@@ -53,7 +53,7 @@ class ChangesCommand extends ContainerAwareCommand
         $filter = $input->getOption('filter');
         $force = $input->getOption('force');
 
-        $changes = $checker->check($force);
+        $changes = $checker->createChanges($force);
 
         if (count($changes)) {
             if ($filter === 'add') {
@@ -70,7 +70,7 @@ class ChangesCommand extends ContainerAwareCommand
 
             if (!$sync) {
                 $table = new Table($output);
-                $table->setHeaders([
+                $table->setHeaders(array(
                     'Elementtype',
                     'Type',
                     'New Revision',
@@ -78,19 +78,19 @@ class ChangesCommand extends ContainerAwareCommand
                     'Change',
                     '# Element sources',
                     '# Element usages',
-                ]);
+                ));
 
                 foreach ($changes as $change) {
                     $oldRevisions = array();
                     $color = 'white';
                     if ($change instanceof RemoveChange) {
-                        $oldRevisions = [];
+                        $oldRevisions = array();
                         foreach ($change->getRemovedElementSources() as $targetElementSource) {
                             $oldRevisions[] = $targetElementSource->getElementtypeRevision();
                         }
                         $color = 'red';
                     } elseif ($change instanceof UpdateChange) {
-                        $oldRevisions = [];
+                        $oldRevisions = array();
                         foreach ($change->getOutdatedElementSources() as $targetElementSource) {
                             $oldRevisions[] = $targetElementSource->getElementtypeRevision();
                         }
@@ -103,7 +103,7 @@ class ChangesCommand extends ContainerAwareCommand
                     $revision = $change->getElementtype()->getRevision();
 
                     $table->addRow(
-                        [
+                        array(
                             $name,
                             $type,
                             $revision,
@@ -111,7 +111,7 @@ class ChangesCommand extends ContainerAwareCommand
                             "<fg=$color>{$change->getReason()}</fg=$color>",
                             count($oldRevisions) ?: '-',
                             count($change->getUsage()) ?: '-'
-                        ]
+                        )
                     );
                 }
 

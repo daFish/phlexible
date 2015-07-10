@@ -9,55 +9,71 @@
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Bundle\TreeBundle\Entity\StructureElementNode;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
-use Phlexible\Bundle\TreeBundle\Model\TreeFactoryInterface;
+use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Model\WritableTreeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tree manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class TreeManager
+class TreeManager implements TreeManagerInterface
 {
-    /**
-     * @var TreeInterface[]
-     */
-    private $trees = [];
-
     /**
      * @var SiterootManagerInterface
      */
     private $siterootManager;
 
     /**
-     * @var TreeFactoryInterface
+     * @var NodeManagerInterface
      */
-    private $treeFactory;
+    private $nodeManager;
+
+    /**
+     * @var TreeMediatorInterface
+     */
+    private $mediator;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var TreeInterface[]
+     */
+    private $trees = array();
 
     /**
      * @param SiterootManagerInterface $siterootManager
-     * @param TreeFactoryInterface     $treeFactory
+     * @param NodeManagerInterface     $nodeManager
+     * @param TreeMediatorInterface    $mediator
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(SiterootManagerInterface $siterootManager, TreeFactoryInterface $treeFactory)
-    {
+    public function __construct(
+        SiterootManagerInterface $siterootManager,
+        NodeManagerInterface $nodeManager,
+        TreeMediatorInterface $mediator,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->siterootManager = $siterootManager;
-        $this->treeFactory = $treeFactory;
+        $this->nodeManager = $nodeManager;
+        $this->mediator = $mediator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
-     * Return tree by siteroot ID
-     *
-     * @param string $siteRootId
-     *
-     * @return TreeInterface|WritableTreeInterface
+     * {@inheritdoc}
      */
     public function getBySiteRootId($siteRootId)
     {
         if (!isset($this->trees[$siteRootId])) {
-            $tree = $this->treeFactory->factory($siteRootId);
+            $tree = new Tree($siteRootId, $this->nodeManager, $this->mediator, $this->eventDispatcher);
             $this->trees[$siteRootId] = $tree;
         }
 
@@ -65,12 +81,7 @@ class TreeManager
     }
 
     /**
-     * Get tree by node ID
-     *
-     * @param int $nodeId
-     *
-     * @return TreeInterface|WritableTreeInterface
-     * @throws NodeNotFoundException
+     * {@inheritdoc}
      */
     public function getByNodeId($nodeId)
     {
@@ -86,17 +97,11 @@ class TreeManager
     }
 
     /**
-     * Get tree by type ID
-     *
-     * @param int    $typeId
-     * @param string $type
-     *
-     * @return TreeInterface[]|WritableTreeInterface[]
-     * @throws NodeNotFoundException
+     * {@inheritdoc}
      */
     public function getByTypeId($typeId, $type = null)
     {
-        $trees = [];
+        $trees = array();
         foreach ($this->siterootManager->findAll() as $siteroot) {
             $tree = $this->getBySiteRootId($siteroot->getId());
 
@@ -109,7 +114,7 @@ class TreeManager
     }
 
     /**
-     * @return TreeInterface[]
+     * {@inheritdoc}
      */
     public function getAll()
     {
@@ -121,17 +126,21 @@ class TreeManager
     }
 
     /**
-     * @param TreeNodeInterface $node
-     *
-     * @return TreeNodeInterface[]
+     * {@inheritdoc}
      */
-    public function getInstanceNodes(TreeNodeInterface $node)
+    public function createTree($siterootId, $type, $typeId, $userId)
     {
-        $instanceNodes = [];
-        foreach ($this->getAll() as $tree) {
-            $instanceNodes = array_merge($instanceNodes, $tree->getInstances($node));
-        }
+        $node = new StructureElementNode();
+        $node
+            ->setSiterootId($siterootId)
+            ->setParentNode(null)
+            ->setType($type)
+            ->setTypeId($typeId)
+            ->setCreateUserId($userId)
+            ->setCreatedAt(new \DateTime);
 
-        return $instanceNodes;
+        $this->nodeManager->updateNode($node);
+
+        return $this->getBySiteRootId($siterootId);
     }
 }

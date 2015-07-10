@@ -32,9 +32,9 @@ class DataController extends Controller
     {
         $jobManager = $this->get('phlexible_queue.job_manager');
 
-        $data = [];
-        foreach ($jobManager->findBy([], ['createdAt' => 'DESC']) as $queueItem) {
-            $data[] = [
+        $data = array();
+        foreach ($jobManager->findBy(array(), array('createdAt' => 'DESC')) as $queueItem) {
+            $data[] = array(
                 'id'          => $queueItem->getId(),
                 'command'     => $queueItem->getCommand(),
                 'priority'    => $queueItem->getPriority(),
@@ -43,10 +43,10 @@ class DataController extends Controller
                 'start_time'  => $queueItem->getStartedAt() ? $queueItem->getStartedAt()->format('Y-m-d H:i:s') : null,
                 'end_time'    => $queueItem->getFinishedAt() ? $queueItem->getFinishedAt()->format('Y-m-d H:i:s') : null,
                 'output'      => nl2br($queueItem->getOutput()),
-            ];
+            );
         }
 
-        return new JsonResponse(['data' => $data]);
+        return new JsonResponse(array('data' => $data));
     }
 
 }

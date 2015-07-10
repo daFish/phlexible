@@ -32,10 +32,10 @@ class PreviewController extends Controller
     {
         $language = $request->get('_locale');
 
-        $contentTreeManager = $this->get('phlexible_tree.content_tree_manager.delegating');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $tree = $contentTreeManager->findByTreeId($treeId);
+        $tree = $treeManager->getByTreeId($treeId);
         $tree->setLanguage($language);
         $node = $tree->get($treeId);
 
@@ -48,10 +48,15 @@ class PreviewController extends Controller
         $request->attributes->set('siterootUrl', $siterootUrl);
         $request->attributes->set('preview', true);
 
-        $node->getTree()->setPreview(true);
         $this->get('router.request_context')->setParameter('preview', true);
+        $node->getTree()->setPreview(true);
+        $versionStrategy = $this->get('phlexible_tree.mediator.preview_version_strategy');
+        if ($request->query->has('version')) {
+            $versionStrategy->setVersion($request->query->get('version'));
+        }
+        $node->getTree()->getMediator()->setVersionStrategy($versionStrategy);
 
-        $configurator = $this->get('phlexible_element_renderer.configurator');
+        $configurator = $this->get('phlexible_cms.configurator');
         $configuration = $configurator->configure($request);
         if ($configuration->hasResponse()) {
             return $configuration->getResponse();

@@ -38,7 +38,7 @@ class TreeFilter implements TreeFilterInterface
     /**
      * @var array
      */
-    private $filterValues = [];
+    private $filterValues = array();
 
     /**
      * @var string
@@ -169,7 +169,7 @@ class TreeFilter implements TreeFilterInterface
         $ids = $this->fetchAllIds();
         $pos = array_search($id, $ids);
 
-        $pager = [
+        $pager = array(
             'first'   => $ids[0],
             'prev'    => null,
             'current' => $id,
@@ -177,7 +177,7 @@ class TreeFilter implements TreeFilterInterface
             'last'    => $ids[count($ids) - 1],
             'pos'     => $pos + 1,
             'total'   => count($ids),
-        ];
+        );
 
         if ($pos > 0) {
             $pager['prev'] = $ids[$pos - 1];
@@ -212,7 +212,7 @@ class TreeFilter implements TreeFilterInterface
     private function fetchCount()
     {
         $qb = $this->createFilterQueryBuilder();
-        $qb->select(['t.id']);
+        $qb->select(array('t.id'));
 
         //$cnt = $this->_db->fetchOne($select);
         $cnt = count($this->connection->fetchAll($qb->getSQL()));
@@ -226,11 +226,11 @@ class TreeFilter implements TreeFilterInterface
     private function fetchAllIds()
     {
         $qb = $this->createFilterAndSortQueryBuilder();
-        $qb->select(['t.id']);
+        $qb->select(array('t.id'));
 
         $rows = $this->connection->fetchAll($qb->getSQL());
 
-        $ids = [];
+        $ids = array();
         foreach ($rows as $row) {
             $ids[] = $row['id'];
         }
@@ -247,16 +247,16 @@ class TreeFilter implements TreeFilterInterface
     private function fetchRangeIds($limit, $start)
     {
         $qb = $this->createFilterAndSortQueryBuilder();
-        $qb->select(['t.id', 'e.latest_version']);
+        $qb->select(array('t.id', 'e.latest_version'));
 
         if (null !== $limit) {
             $qb->setFirstResult($start);
             $qb->setMaxResults($limit);
         }
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
+        $rows = $this->connection->fetchAll($qb);
 
-        $ids = [];
+        $ids = array();
         foreach ($rows as $row) {
             $ids[$row['id']] = $row['latest_version'];
         }
@@ -313,11 +313,11 @@ class TreeFilter implements TreeFilterInterface
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->from('tree', 't')
-            ->leftJoin('t', 'element', 'e', 't.type = "element" AND t.type_id = e.eid')
+            ->leftJoin('t', 'element', 'e', 'LEFT(t.type, 7) = "element" AND t.type_id = e.eid')
             ->where($qb->expr()->eq('t.parent_id', $this->tid));
 
         if (!empty($this->filterValues['status'])) {
-            $qb->leftJoin('t', 'tree_online', 'to1', 'to_1.tree_id = t.id AND to_1.language = ' . $qb->expr()->literal($this->language));
+            $qb->leftJoin('t', 'tree_online', 'to_1', 'to_1.tree_id = t.id AND to_1.language = ' . $qb->expr()->literal($this->language));
 
             $where = '0';
 
@@ -327,10 +327,7 @@ class TreeFilter implements TreeFilterInterface
                 $where .= ' OR to_1.version = e.latest_version';
             }
             if (in_array('async', $filterStatus)) {
-                $qb->leftJoin('to_1', 'tree_hash', 'th_1', 'th_1.tid = to_1.tree_id AND th_1.language = to_1.language AND th_1.version = to_1.version');
-                $qb->leftJoin('to_1', 'tree_hash', 'th_2', 'th_2.tid = to_1.tree_id AND th_2.language = to_1.language AND th_2.version = e.latest_version');
-
-                $where .= ' OR (to_1.version != e.latest_version AND th_1.hash != th_2.hash)';
+                $where .= ' OR (to_1.version != e.latest_version AND to_1.version IS NOT NULL)';
             }
             if (in_array('offline', $filterStatus)) {
                 $where .= ' OR to_1.version IS NULL';
@@ -339,23 +336,19 @@ class TreeFilter implements TreeFilterInterface
             $qb->andWhere($where);
         }
 
-        if (!empty($this->filterValues['navigation']) || !empty($this->filterValues['restricted'])) {
-            $qb->leftJoin('t', 'tree_page', 'tp_1', 'tp_1.tree_id = t.id AND tp_1.version = e.latest_version');
-
-            if (!empty($this->filterValues['navigation'])) {
-                if ($this->filterValues['navigation'] == 'in_navigation') {
-                    $qb->andWhere('tp_1.navigation = 1');
-                } else {
-                    $qb->andWhere('tp_1.navigation = 0');
-                }
+        if (!empty($this->filterValues['navigation'])) {
+            if ($this->filterValues['navigation'] == 'in_navigation') {
+                $qb->andWhere('t.in_navigation = 1');
+            } else {
+                $qb->andWhere('t.in_navigation = 0');
             }
+        }
 
-            if (!empty($this->filterValues['restricted'])) {
-                if ($this->filterValues['restricted'] == 'is_restricted') {
-                    $qb->andWhere('tp_1.restricted = 1');
-                } else {
-                    $qb->andWhere('tp_1.restricted =0');
-                }
+        if (0 && !empty($this->filterValues['restricted'])) {
+            if ($this->filterValues['restricted'] == 'is_restricted') {
+                $qb->andWhere('t.is_restricted = 1');
+            } else {
+                $qb->andWhere('t.is_restricted =0');
             }
         }
 
@@ -394,7 +387,7 @@ class TreeFilter implements TreeFilterInterface
 
         if (!empty($this->filterValues['search'])) {
             $qb->join('e', 'element_data_language', 'edl_1', 'edl_1.eid = e.eid AND edl_1.version = e.latest_version AND edl_1.language = ' . $qb->expr()->literal($this->language) . ' AND edl_1.content LIKE ' . $qb->expr()->literal('%' . $this->filterValues['search'] . '%'));
-            $qb->groupBy(['t.id', 'e.latest_version']);
+            $qb->groupBy(array('t.id', 'e.latest_version'));
         }
 
         $event = new TreeFilterEvent($this->filterValues, $qb);

@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\TeaserBundle\ContentTeaser;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TeaserBundle\Mediator\Mediator;
+use Phlexible\Bundle\TeaserBundle\Mediator\DelegatingTeaserMediator;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 
 // TODO: interface
 
@@ -28,15 +28,15 @@ class DelegatingContentTeaserManager
     private $teaserManager;
 
     /**
-     * @var Mediator
+     * @var DelegatingTeaserMediator
      */
     private $mediator;
 
     /**
      * @param TeaserManagerInterface $teaserManager
-     * @param Mediator               $mediator
+     * @param DelegatingTeaserMediator               $mediator
      */
-    public function __construct(TeaserManagerInterface $teaserManager, Mediator $mediator)
+    public function __construct(TeaserManagerInterface $teaserManager, DelegatingTeaserMediator $mediator)
     {
         $this->teaserManager = $teaserManager;
         $this->mediator = $mediator;
@@ -71,15 +71,15 @@ class DelegatingContentTeaserManager
      */
     public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath, $includeLocalHidden = true)
     {
-        return $this->createContentTeasersFromTeasers($this->teaserManager->findForLayoutAreaAndTreeNodePath($layoutarea, $treeNodePath, $includeLocalHidden));
+        return $this->createContentTeasersFromTeasers($this->teaserManager->findCascadingForLayoutAreaAndNode($layoutarea, $treeNodePath, $includeLocalHidden));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
+    public function findForLayoutAreaAndTreeNode($layoutarea, NodeInterface $treeNode)
     {
-        return $this->createContentTeasersFromTeasers($this->teaserManager->findForLayoutAreaAndTreeNode($layoutarea, $treeNode));
+        return $this->createContentTeasersFromTeasers($this->teaserManager->findForLayoutAreaAndNodeContext($layoutarea, $treeNode));
     }
 
     /**
@@ -169,7 +169,7 @@ class DelegatingContentTeaserManager
      */
     public function createContentTeasersFromTeasers(array $teasers)
     {
-        $contentTeasers = [];
+        $contentTeasers = array();
         foreach ($teasers as $teaser) {
             $contentTeasers[] = $this->createContentTeaserFromTeaser($teaser);
         }
@@ -188,7 +188,7 @@ class DelegatingContentTeaserManager
         $contentTeaser
             ->setId($teaser->getId())
             ->setLayoutareaId($teaser->getLayoutareaId())
-            ->setTreeId($teaser->getTreeId())
+            ->setNodeId($teaser->getNodeId())
             ->setEid($teaser->getEid())
             ->setTypeId($teaser->getTypeId())
             ->setType($teaser->getType())

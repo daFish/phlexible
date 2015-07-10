@@ -143,7 +143,7 @@ class ElementService
      */
     public function findElementsByElementtype(Elementtype $elementtype)
     {
-        return $this->elementManager->findBy(['elementtypeId' => $elementtype->getId()]);
+        return $this->elementManager->findBy(array('elementtypeId' => $elementtype->getId()));
     }
 
     /**
@@ -230,7 +230,7 @@ class ElementService
      */
     public function findAllowedParents(Elementtype $elementtype)
     {
-        $elementtypes = [];
+        $elementtypes = array();
         foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viability) {
             $elementtypes[] = $this->elementSourceManager->findElementtype($viability->getUnderElementtypeId());
         }
@@ -245,7 +245,7 @@ class ElementService
      */
     public function findAllowedChildren(Elementtype $elementtype)
     {
-        $elementtypes = [];
+        $elementtypes = array();
         foreach ($this->viabilityManager->findAllowedChildren($elementtype) as $viability) {
             $viabilityElementtype = $this->elementSourceManager->findElementtype($viability->getElementtypeId());
             if ($viabilityElementtype) {
@@ -261,7 +261,7 @@ class ElementService
      * @param string        $masterLanguage
      * @param string        $userId
      *
-     * @return Element
+     * @return ElementVersion
      */
     public function createElement(ElementSource $elementSource, $masterLanguage, $userId)
     {
@@ -296,7 +296,7 @@ class ElementService
             $masterLanguage
         );
 
-        return $element;
+        return $elementVersion;
     }
 
     /**

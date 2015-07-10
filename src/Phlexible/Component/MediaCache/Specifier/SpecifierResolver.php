@@ -20,12 +20,12 @@ class SpecifierResolver
     /**
      * @var SpecifierInterface[]
      */
-    private $specifiers = [];
+    private $specifiers = array();
 
     /**
      * @param SpecifierInterface[] $specifiers
      */
-    public function __construct(array $specifiers = [])
+    public function __construct(array $specifiers = array())
     {
         foreach ($specifiers as $specifier) {
             $this->addSpecifier($specifier);

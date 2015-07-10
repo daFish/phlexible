@@ -48,7 +48,7 @@ class ResettingController extends BaseResettingController
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
 
         if (null === $user) {
-            return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:request.html.'.$this->getEngine(), ['invalid_username' => $username]);
+            return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:request.html.'.$this->getEngine(), array('invalid_username' => $username));
         }
 
         if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
@@ -86,9 +86,9 @@ class ResettingController extends BaseResettingController
             return new RedirectResponse($this->container->get('router')->generate('fos_user_resetting_request'));
         }
 
-        return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:checkEmail.html.'.$this->getEngine(), [
+        return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:checkEmail.html.'.$this->getEngine(), array(
             'email' => $email,
-        ]);
+        ));
     }
 
     /**
@@ -121,10 +121,10 @@ class ResettingController extends BaseResettingController
             return $response;
         }
 
-        return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:reset.html.'.$this->getEngine(), [
+        return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:reset.html.'.$this->getEngine(), array(
             'token' => $token,
             'form' => $form->createView(),
-        ]);
+        ));
     }
 
     /**

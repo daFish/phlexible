@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Element\Publish;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 
 /**
  * Selection
@@ -21,7 +21,7 @@ class Selection
     /**
      * @var array
      */
-    private $items = [];
+    private $items = array();
 
     /**
      * @param SelectionItem $item
@@ -36,7 +36,7 @@ class Selection
     }
 
     /**
-     * @param TreeNodeInterface|Teaser $target
+     * @param NodeInterface|Teaser $target
      * @param string                   $language
      *
      * @return bool

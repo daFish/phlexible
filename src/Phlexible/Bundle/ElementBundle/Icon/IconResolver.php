@@ -14,7 +14,7 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Elementtype\Model\Elementtype;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -112,32 +112,32 @@ class IconResolver
     /**
      * Resolve tree node to icon
      *
-     * @param TreeNodeInterface $treeNode
-     * @param string            $language
+     * @param NodeContext $node
+     * @param string      $language
      *
      * @return string
      */
-    public function resolveTreeNode(TreeNodeInterface $treeNode, $language)
+    public function resolveNode(NodeContext $node, $language)
     {
-        $parameters = [];
+        $parameters = array();
 
-        if (!$treeNode->isRoot()) {
-            $tree = $treeNode->getTree();
+        if (!$node->getTree()->isRoot($node)) {
+            $tree = $node->getTree();
 
-            if ($tree->isPublished($treeNode, $language)) {
-                $parameters['status'] = $tree->isAsync($treeNode, $language) ? 'async': 'online';
+            if ($tree->isPublished($node, $language)) {
+                $parameters['status'] = $tree->isAsync($node, $language) ? 'async': 'online';
             }
 
-            if ($tree->isInstance($treeNode)) {
-                $parameters['instance'] = $tree->isInstanceMaster($treeNode) ? 'master' : 'slave';
+            if ($tree->isInstance($node)) {
+                $parameters['instance'] = $tree->isInstanceMaster($node) ? 'master' : 'slave';
             }
 
-            if ($treeNode->getSortMode() !== TreeInterface::SORT_MODE_FREE) {
-                $parameters['sort'] = $treeNode->getSortMode() . '_' . $treeNode->getSortDir();
+            if ($node->getSortMode() !== TreeInterface::SORT_MODE_FREE) {
+                $parameters['sort'] = $node->getSortMode() . '_' . $node->getSortDir();
             }
         }
 
-        $element = $this->elementService->findElement($treeNode->getTypeId());
+        $element = $this->elementService->findElement($node->getTypeId());
 
         if (!count($parameters)) {
             return $this->resolveElement($element);
@@ -158,7 +158,7 @@ class IconResolver
      */
     public function resolveTeaser(Teaser $teaser, $language)
     {
-        $parameters = [];
+        $parameters = array();
 
         if ($this->teaserManager->isPublished($teaser, $language)) {
             $parameters['status'] = $this->teaserManager->isAsync($teaser, $language) ? 'async': 'online';

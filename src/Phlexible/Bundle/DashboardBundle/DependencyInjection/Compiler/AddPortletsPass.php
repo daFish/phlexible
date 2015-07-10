@@ -24,7 +24,7 @@ class AddPortletsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $portlets = [];
+        $portlets = array();
         foreach ($container->findTaggedServiceIds('phlexible_dashboard.portlet') as $id => $attributes) {
             $portlets[] = new Reference($id);
         }

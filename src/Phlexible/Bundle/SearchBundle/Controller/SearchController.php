@@ -51,9 +51,9 @@ class SearchController extends Controller
         $search = $this->get('phlexible_search.search');
         $results = $search->search($query);
 
-        return new JsonResponse([
+        return new JsonResponse(array(
             'totalCount' => count($results),
             'results'    => array_slice($results, $start, $limit)
-        ]);
+        ));
     }
 }

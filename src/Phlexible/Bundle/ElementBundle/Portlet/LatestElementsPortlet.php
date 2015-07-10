@@ -12,7 +12,7 @@ use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -33,9 +33,9 @@ class LatestElementsPortlet extends Portlet
     private $elementService;
 
     /**
-     * @var TreeManager
+     * @var NodeManagerInterface
      */
-    private $treeManager;
+    private $nodeManager;
 
     /**
      * @var IconResolver
@@ -48,30 +48,30 @@ class LatestElementsPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param TranslatorInterface $translator
-     * @param ElementService      $elementService
-     * @param TreeManager         $treeManager
-     * @param IconResolver        $iconResolver
-     * @param Connection          $connection
-     * @param int                 $numItems
+     * @param TranslatorInterface  $translator
+     * @param ElementService       $elementService
+     * @param NodeManagerInterface $nodeManager
+     * @param IconResolver         $iconResolver
+     * @param Connection           $connection
+     * @param int                  $numItems
      */
     public function __construct(
         TranslatorInterface $translator,
         ElementService $elementService,
-        TreeManager $treeManager,
+        NodeManagerInterface $nodeManager,
         IconResolver $iconResolver,
         Connection $connection,
         $numItems)
     {
         $this
             ->setId('elements-portlet')
-            ->setTitle($translator->trans('elements.latest_element_changes', [], 'gui'))
+            ->setTitle($translator->trans('elements.latest_element_changes', array(), 'gui'))
             ->setClass('Phlexible.elements.portlet.LatestElements')
             ->setIconClass('p-element-component-icon')
             ->setRole('ROLE_ELEMENTS');
 
         $this->elementService = $elementService;
-        $this->treeManager = $treeManager;
+        $this->nodeManager = $nodeManager;
         $this->iconResolver = $iconResolver;
         $this->connection = $connection;
         $this->numItems = $numItems;
@@ -84,25 +84,13 @@ class LatestElementsPortlet extends Portlet
      */
     public function getData()
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select(['et.id', 'ev.eid', 'ev.trigger_language AS language'])
-            ->from('element_version', 'ev')
-            ->join('ev', 'element_tree', 'et', 'ev.eid = et.eid')
-            ->orderBy('ev.created_at', 'DESC')
-            ->setMaxResults($this->numItems);
+        $nodes = $this->nodeManager->findBy(array(), array('updatedAt' => 'DESC', $this->numItems));
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
-
-        $data = [];
-
-        foreach ($rows as $row) {
-            $element = $this->elementService->findElement($row['eid']);
+        foreach ($nodes as $node) {
+            $element = $this->elementService->findElement($node->getTypeId());
             $elementVersion = $this->elementService->findLatestElementVersion($element);
-            $node = $this->treeManager->getByNodeId($row['id'])->get($row['id']);
-            //$siterootId = $node->getTree()->getSiterootId();
 
-            $baseTitle = $elementVersion->getBackendTitle($row['language']);
+            $baseTitle = $elementVersion->getBackendTitle('de', 'en');
             $baseTitleArr = str_split($baseTitle, 16);
             $title = '';
 
@@ -112,7 +100,7 @@ class LatestElementsPortlet extends Portlet
                 $first = false;
             }
 
-            $title .= ' [' . $row['id'] . ']';
+            $title .= ' [' . $node->getId() . ']';
             /*
                 $i = 0;
                 do
@@ -137,19 +125,19 @@ class LatestElementsPortlet extends Portlet
 
             $menu = $menuItem->get();
             */
-            $menu = [];
+            $menu = array();
 
-            $data[] = [
-                'ident'    => $row['eid'] . '_' . $row['language'] . '_' . $row['version'],
-                'eid'      => $row['eid'],
-                'language' => $row['language'],
-                'version'  => $row['version'],
+            $data[] = array(
+                'ident'    => $node->getId(),
+                'eid'      => $node->getTypeId(),
+                'language' => 'de',
+                'version'  => 1,
                 'title'    => strip_tags($title),
-                'icon'     => $this->iconResolver->resolveTreeNode($node, $row['language']),
+                'icon'     => $this->iconResolver->resolveNode($node, 'de'),
                 'time'     => strtotime($elementVersion->getCreatedAt()->format('Y-m-d H:i:s')),
                 'author'   => $elementVersion->getCreateUserId(),
                 'menu'     => $menu
-            ];
+            );
         }
 
         return $data;

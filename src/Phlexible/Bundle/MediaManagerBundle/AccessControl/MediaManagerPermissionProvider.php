@@ -37,7 +37,7 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions()
     {
-        return new PermissionCollection($this->objectType, [
+        return new PermissionCollection($this->objectType, array(
             new Permission('FOLDER_READ', 1),
             new Permission('FOLDER_CREATE', 2),
             new Permission('FOLDER_MODIFY', 4),
@@ -48,6 +48,6 @@ class MediaManagerPermissionProvider implements PermissionProviderInterface
             new Permission('FILE_MODIFY', 128),
             new Permission('FILE_DELETE', 256),
             new Permission('FILE_DOWNLOAD', 512),
-        ]);
+        ));
     }
 }

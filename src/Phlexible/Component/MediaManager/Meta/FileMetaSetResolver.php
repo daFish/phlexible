@@ -39,7 +39,7 @@ class FileMetaSetResolver
      */
     public function resolve(ExtendedFileInterface $file)
     {
-        $metaSets = [];
+        $metaSets = array();
         foreach ($file->getMetasets() as $metaSetId) {
             $metaSet = $this->metaSetManager->find($metaSetId);
             if ($metaSet) {

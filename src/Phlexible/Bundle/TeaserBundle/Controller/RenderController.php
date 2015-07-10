@@ -36,7 +36,7 @@ class RenderController extends Controller
 
         $request->attributes->set('contentDocument', $teaser);
 
-        $renderConfigurator = $this->get('phlexible_element_renderer.configurator');
+        $renderConfigurator = $this->get('phlexible_cms.configurator');
         $renderConfig = $renderConfigurator->configure($request);
 
         if ($request->get('template')) {

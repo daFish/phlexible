@@ -58,11 +58,11 @@ class GarbageCollector
      */
     public function run($mode = self::MODE_MARK_UNUSED_INACTIVE, $pretend = false)
     {
-        $nums = [];
+        $nums = array();
 
         $limit = 10;
         $offset = 0;
-        foreach ($this->dataSourceManager->findBy([], null, $limit, $offset) as $dataSource) {
+        foreach ($this->dataSourceManager->findBy(array(), null, $limit, $offset) as $dataSource) {
             foreach ($dataSource->getValueBags() as $values) {
                 $num = $this->garbageCollect($values, $mode, $pretend);
 
@@ -90,7 +90,7 @@ class GarbageCollector
     {
         $event = new GarbageCollectEvent($valueBag);
         if ($this->dispatcher->dispatch(SuggestEvents::BEFORE_GARBAGE_COLLECT, $event)->isPropagationStopped()) {
-            return [];
+            return array();
         }
 
         $activeValues = $event->getActiveValues();
@@ -108,11 +108,11 @@ class GarbageCollector
         if ($mode === self::MODE_MARK_UNUSED_INACTIVE) {
             $inactiveValues = array_merge($inactiveValues, $removeValues);
             sort($inactiveValues);
-            $removeValues = [];
+            $removeValues = array();
         } elseif ($mode === self::MODE_REMOVE_UNUSED_AND_INACTIVE) {
             $removeValues = array_merge($removeValues, $inactiveValues);
             sort($removeValues);
-            $inactiveValues = [];
+            $inactiveValues = array();
         }
 
         if (!$pretend) {
@@ -147,10 +147,10 @@ class GarbageCollector
         $event = new GarbageCollectEvent($valueBag);
         $this->dispatcher->dispatch(SuggestEvents::GARBAGE_COLLECT, $event);
 
-        return [
+        return array(
             'active'   => $activeValues,
             'inactive' => $inactiveValues,
             'remove'   => $removeValues,
-        ];
+        );
     }
 }

@@ -39,11 +39,11 @@ class AssetController extends Controller
         $data = array();
         foreach ($mediaClassifier->getCollection()->all() as $mediaType) {
             $key = str_replace(':', '-', (string) $mediaType);
-            $item = [
+            $item = array(
                 'cls' => sprintf('p-mediatype-%s', $key),
                 'de'  => $translator->trans($key, array(), 'mediatypes', 'de'),
                 'en'  => $translator->trans($key, array(), 'mediatypes', 'en'),
-            ];
+            );
 
             $data[(string) $mediaType] = $item;
         }
@@ -69,8 +69,8 @@ class AssetController extends Controller
 
         $css = $compiler->compile($mediaClassifier->getCollection());
         $css = str_replace(
-            ['/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'],
-            [$basePath, $baseUrl, $basePath . 'bundles/'],
+            array('/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'),
+            array($basePath, $baseUrl, $basePath . 'bundles/'),
             $css
         );
 

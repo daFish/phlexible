@@ -26,7 +26,7 @@ class PermissionResolver
      */
     public function resolve(PermissionCollection $permissions, $mask)
     {
-        $resolvedPermissions = [];
+        $resolvedPermissions = array();
 
         foreach ($permissions->all() as $permission) {
             if ($permission->getBit() & $mask) {

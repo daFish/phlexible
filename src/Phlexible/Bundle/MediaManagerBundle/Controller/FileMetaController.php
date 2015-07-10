@@ -41,24 +41,24 @@ class FileMetaController extends Controller
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $meta = [];
+        $meta = array();
 
         foreach ($fileMetaSetResolver->resolve($file) as $metaSet) {
             $metaData = $fileMetaDataManager->findByMetaSetAndFile($metaSet, $file);
 
-            $fieldDatas = [];
+            $fieldDatas = array();
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fieldData = [
+                $fieldData = array(
                     'key'          => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                ];
+                );
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $language) {
@@ -69,14 +69,14 @@ class FileMetaController extends Controller
                 $fieldDatas[] = $fieldData;
             }
 
-            $meta[] = [
+            $meta[] = array(
                 'set_id' => $metaSet->getId(),
                 'title'  => $metaSet->getName(),
                 'fields' => $fieldDatas
-            ];
+            );
         }
 
-        return new JsonResponse(['meta' => $meta]);
+        return new JsonResponse(array('meta' => $meta));
     }
 
     /**
@@ -111,7 +111,7 @@ class FileMetaController extends Controller
         }
         */
 
-        $metaSetIds = $file->getAttribute('metasets', []);
+        $metaSetIds = $file->getAttribute('metasets', array());
 
         foreach ($data as $metaSetId => $fields) {
             $metaSet = $metaSetManager->find($metaSetId);
@@ -170,15 +170,15 @@ class FileMetaController extends Controller
         $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
         $metaSets = $fileMetaSetResolver->resolve($file);
 
-        $sets = [];
+        $sets = array();
         foreach ($metaSets as $metaSet) {
-            $sets[] = [
+            $sets[] = array(
                 'id'   => $metaSet->getId(),
                 'name' => $metaSet->getName(),
-            ];
+            );
         }
 
-        return new JsonResponse(['sets' => $sets]);
+        return new JsonResponse(array('sets' => $sets));
     }
 
     /**
@@ -195,7 +195,7 @@ class FileMetaController extends Controller
         if ($joinedIds) {
             $ids = explode(',', $joinedIds);
         } else {
-            $ids = [];
+            $ids = array();
         }
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');

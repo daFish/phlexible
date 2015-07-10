@@ -36,7 +36,7 @@ class PhlexibleMediaCacheExtension extends Extension
 
         $container->setParameter('phlexible_media_cache.process_on_add', $config['process_on_add']);
 
-        $ids = [];
+        $ids = array();
         foreach ($config['storages'] as $name => $storageConfig) {
             if (!isset($storageConfig['id']) || !isset($storageConfig['options'])) {
                 throw new InvalidArgumentException('Storage config needs id and options.');

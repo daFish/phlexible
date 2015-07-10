@@ -1,17 +1,14 @@
 services:
-    phlexible_tree.doctrine.tree_factory:
-        class: Phlexible\Bundle\TreeBundle\Doctrine\TreeFactory
+    phlexible_tree.doctrine.node_manager:
+        class: Phlexible\Bundle\TreeBundle\Doctrine\NodeManager
         arguments:
             - @doctrine.orm.entity_manager
-            - @phlexible_element.element_history_manager
-            - @phlexible_tree.state_manager
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_tree.node_hasher
             - @event_dispatcher
 
-    phlexible_tree.doctrine.state_manager:
-        class: Phlexible\Bundle\TreeBundle\Doctrine\StateManager
+    phlexible_tree.doctrine.route_manager:
+        class: Phlexible\Bundle\TreeBundle\Doctrine\RouteManager
         arguments:
             - @doctrine.orm.entity_manager
-            - @phlexible_element.element_history_manager
-            - @phlexible_tree.mediator
-            - @phlexible_tree.node_hasher
             - @event_dispatcher

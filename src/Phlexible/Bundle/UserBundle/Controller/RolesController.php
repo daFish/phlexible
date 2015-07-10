@@ -38,9 +38,9 @@ class RolesController extends Controller
     {
         $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
 
-        $roles = [];
+        $roles = array();
         foreach (array_keys($roleHierarchy) as $role) {
-            $roles[] = ['id' => $role, 'name' => $role];
+            $roles[] = array('id' => $role, 'name' => $role);
         }
 
         return new JsonResponse($roles);

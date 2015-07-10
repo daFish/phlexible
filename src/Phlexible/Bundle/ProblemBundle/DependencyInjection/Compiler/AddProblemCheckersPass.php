@@ -24,7 +24,7 @@ class AddProblemCheckersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $problemCheckers = [];
+        $problemCheckers = array();
         foreach (array_keys($container->findTaggedServiceIds('phlexible_problem.checker')) as $id) {
             $problemCheckers[] = new Reference($id);
         }

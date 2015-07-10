@@ -3,6 +3,12 @@ parameters:
     phlexible_cms.languages.available: en,de
 
 services:
+    phlexible_cms.configurator:
+        class: Phlexible\Bundle\CmsBundle\Configurator\ChainConfigurator
+        arguments: [[]]
+        tags:
+            - {name: monolog.logger, channel: element_renderer}
+
     # event listeners
     phlexible_cms.listener.get_config:
         class: Phlexible\Bundle\CmsBundle\EventListener\GetConfigListener

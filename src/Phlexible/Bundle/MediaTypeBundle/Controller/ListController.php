@@ -37,11 +37,11 @@ class ListController extends Controller
         $iconResolver = $this->get('phlexible_media_type.icon_resolver');
         $translator = $this->get('translator');
 
-        $mediaTypes = [];
+        $mediaTypes = array();
         foreach ($mediaClassifier->getCollection()->all() as $mediaType) {
             $key = str_replace(':', '-', (string) $mediaType);
 
-            $mediaTypes[] = [
+            $mediaTypes[] = array(
                 'id'        => $mediaType->getName(),
                 'key'       => $mediaType->getName(),
                 'upperkey'  => strtoupper($mediaType->getName()),
@@ -53,12 +53,12 @@ class ListController extends Controller
                 'icon32'    => (bool) $iconResolver->resolve($mediaType, 32),
                 'icon48'    => (bool) $iconResolver->resolve($mediaType, 48),
                 'icon256'   => (bool) $iconResolver->resolve($mediaType, 256),
-            ];
+            );
         }
 
-        return new JsonResponse([
+        return new JsonResponse(array(
             'totalCount' => count($mediaTypes),
             'mediatypes' => $mediaTypes
-        ]);
+        ));
     }
 }

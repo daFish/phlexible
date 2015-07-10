@@ -32,15 +32,15 @@ class SubscriptionsController extends Controller
     {
         $subscriptionManager = $this->get('phlexible_message.subscription_manager');
 
-        $subscriptions = [];
+        $subscriptions = array();
 
         foreach ($subscriptionManager->findAll() as $subscription) {
-            $subscriptions[] = [
+            $subscriptions[] = array(
                 'id'       => $subscription->getId(),
                 'filterId' => $subscription->getFilter()->getId(),
                 'filter'   => $subscription->getFilter()->getTitle(),
                 'handler'  => $subscription->getHandler(),
-            ];
+            );
         }
 
         return new JsonResponse($subscriptions);

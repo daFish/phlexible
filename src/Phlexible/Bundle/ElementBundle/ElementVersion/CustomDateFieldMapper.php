@@ -23,7 +23,7 @@ class CustomDateFieldMapper implements FieldMapperInterface
      */
     public function accept($key)
     {
-        return in_array($key, ['date', 'time', 'datetime']);
+        return in_array($key, array('date', 'time', 'datetime'));
     }
 
     /**
@@ -31,12 +31,12 @@ class CustomDateFieldMapper implements FieldMapperInterface
      */
     public function map(ElementStructure $elementStructure, $language, array $mapping)
     {
-        $mappings = [];
+        $mappings = array();
         foreach ($mapping['fields'] as $field) {
             $dsId = $field['dsId'];
             $mappings[$field['type']] = $this->findValue($elementStructure, $dsId, $language);
         }
-        $replace = [];
+        $replace = array();
         if (isset($mappings['datetime'])) {
             $replace[] = $mappings['datetime']->getValue();
         }

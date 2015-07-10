@@ -74,22 +74,22 @@ class XmlParser implements ParserInterface
         $modifyUserNodes = $dom->documentElement->getElementsByTagName('modifyUser');
         $modifyUser = $modifyUserNodes->length ? $modifyUserNodes->item(0)->textContent : '';
 
-        $mappings = [];
+        $mappings = array();
         $mappingNodes = $dom->documentElement->evaluate('mappings/mapping');
         if ($mappingNodes->length) {
             foreach ($mappingNodes as $mappingNode) {
                 /* @var $mappingNode Element */
                 $key = $mappingNode->getAttribute('key');
                 $pattern = $mappingNode->getAttribute('pattern');
-                $fields = [];
+                $fields = array();
                 $fieldNodes = $dom->xpath()->evaluate('fields/field', $mappingNode);
                 if ($fieldNodes->length) {
                     foreach ($fieldNodes as $fieldNode) {
                         /* @var $fieldNode Element */
-                        $field = [
+                        $field = array(
                             'dsId'  => (string) $fieldNode->getAttribute('dsId'),
                             'title' => (string) $fieldNode->getAttribute('title'),
-                        ];
+                        );
                         if ($fieldNode->hasAttribute('index')) {
                             $field['index'] = (int) $fieldNode->getAttribute('index');
                         }
@@ -99,14 +99,14 @@ class XmlParser implements ParserInterface
                         $fields[] = $field;
                     }
                 }
-                $mappings[$key] = [
+                $mappings[$key] = array(
                     'pattern' => $pattern,
                     'fields'  => $fields,
-                ];
+                );
             }
         }
 
-        $titles = [];
+        $titles = array();
         $titleNodes = $dom->documentElement->evaluate('titles/title');
         if ($titleNodes->length) {
             foreach ($titleNodes as $titleNode) {
@@ -180,7 +180,7 @@ class XmlParser implements ParserInterface
             $elementtypeStructure->addReference($referenceElementtypeId);
         }
 
-        $labels = [];
+        $labels = array();
         $labelNodes = $node->evaluate('labels/label');
         if ($labelNodes->length) {
             foreach ($labelNodes as $labelNode) {
@@ -191,7 +191,7 @@ class XmlParser implements ParserInterface
             }
         }
 
-        $configuration = [];
+        $configuration = array();
         $itemNodes = $node->evaluate('configuration/item');
         if ($itemNodes->length) {
             foreach ($itemNodes as $itemNode) {
@@ -214,7 +214,7 @@ class XmlParser implements ParserInterface
             }
         }
 
-        $validation = [];
+        $validation = array();
         $constraintNodes = $node->evaluate('validation/constraint');
         if ($constraintNodes->length) {
             foreach ($constraintNodes as $constraintNode) {

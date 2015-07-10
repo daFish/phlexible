@@ -71,7 +71,7 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
      */
     public function getMessages()
     {
-        return isset($this->data['messages']) ? $this->data['messages'] : [];
+        return isset($this->data['messages']) ? $this->data['messages'] : array();
     }
 
     /**
@@ -79,7 +79,7 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
      */
     public function getPriorities()
     {
-        return isset($this->data['priorities']) ? $this->data['priorities'] : [];
+        return isset($this->data['priorities']) ? $this->data['priorities'] : array();
     }
 
     /**
@@ -87,7 +87,7 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
      */
     public function getTypes()
     {
-        return isset($this->data['types']) ? $this->data['types'] : [];
+        return isset($this->data['types']) ? $this->data['types'] : array();
     }
 
     /**
@@ -107,29 +107,29 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
 
     private function computeErrorsCount()
     {
-        $count = [
+        $count = array(
             'error_count' => 0,
-            'priorities'  => [],
-            'types'       => [],
-        ];
+            'priorities'  => array(),
+            'types'       => array(),
+        );
 
         foreach ($this->debugHandler->getMessages() as $message) {
             if (isset($count['priorities'][$message['priority']])) {
                 ++$count['priorities'][$message['priority']]['count'];
             } else {
-                $count['priorities'][$message['priority']] = [
+                $count['priorities'][$message['priority']] = array(
                     'count' => 1,
                     'name'  => $message['priorityName'],
-                ];
+                );
             }
 
             if (isset($count['types'][$message['type']])) {
                 ++$count['types'][$message['type']]['count'];
             } else {
-                $count['types'][$message['type']] = [
+                $count['types'][$message['type']] = array(
                     'count' => 1,
                     'name'  => $message['typeName'],
-                ];
+                );
             }
             if ($message['type'] === 'error') {
                 $count['error_count']++;

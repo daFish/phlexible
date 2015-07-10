@@ -66,8 +66,8 @@ class UsersController extends Controller
         $allUsers = $userManager->findAll();
         $systemUserUid = $userManager->getSystemUserId();
 
-        $users = [];
-        $sortField = [];
+        $users = array();
+        $sortField = array();
 
         foreach ($allUsers as $user) {
             /* @var $user UserInterface */
@@ -130,12 +130,12 @@ class UsersController extends Controller
                 }
             }
 
-            $groups = [];
+            $groups = array();
             foreach ($user->getGroups() as $group) {
                 $groups[] = $group->getId();
             }
 
-            $dummy = [
+            $dummy = array(
                 'uid'        => $user->getId(),
                 'username'   => $user->getUsername(),
                 'email'      => $user->getEmail(),
@@ -150,7 +150,7 @@ class UsersController extends Controller
                 'modifyDate' => $user->getModifiedAt()->format('Y-m-d H:i:s'),
                 'modifyUser' => '',
                 'properties' => $user->getProperties(),
-            ];
+            );
 
             $users[] = $dummy;
 
@@ -167,10 +167,10 @@ class UsersController extends Controller
         $users = array_slice($users, $start, $limit);
 
         return new JsonResponse(
-            [
+            array(
                 'users' => $users,
                 'count' => $count
-            ]
+            )
         );
     }
 
@@ -338,7 +338,7 @@ class UsersController extends Controller
         }
 
         // properties
-        $properties = [];
+        $properties = array();
         foreach ($request->request->all() as $key => $value) {
             if (substr($key, 0, 9) === 'property_') {
                 $key = substr($key, 9);
@@ -348,7 +348,7 @@ class UsersController extends Controller
         if (count($properties)) {
             $user->setProperties($properties);
         } else {
-            $user->setProperties([]);
+            $user->setProperties(array());
         }
 
         // roles
@@ -356,7 +356,7 @@ class UsersController extends Controller
         if ($roles) {
             $user->setRoles(explode(',', $roles));
         } else {
-            $user->setRoles([]);
+            $user->setRoles(array());
         }
 
         // groups
@@ -417,31 +417,31 @@ class UsersController extends Controller
         $allGroups = $groupManager->findAll();
         $everyoneGroupId = $groupManager->getEveryoneGroupId();
 
-        $groups = [];
+        $groups = array();
         foreach ($allGroups as $group) {
             if ($group->getId() == $everyoneGroupId) {
                 continue;
             }
 
-            $groups[] = [
+            $groups[] = array(
                 'id'    => $group->getId(),
                 'title' => $group->getName()
-            ];
+            );
         }
 
-        $roles = [];
+        $roles = array();
         foreach ($this->container->getParameter('security.role_hierarchy.roles') as $role => $subRoles) {
             if (!$this->isGranted($role)) {
                 continue;
             }
 
-            $roles[] = ['id' => $role, 'title' => ucfirst(str_replace('_', ' ', $role))];
+            $roles[] = array('id' => $role, 'title' => ucfirst(str_replace('_', ' ', $role)));
         }
 
-        $data = [
+        $data = array(
             'groups' => $groups,
             'roles'  => $roles,
-        ];
+        );
 
         return new JsonResponse($data);
     }
@@ -464,10 +464,10 @@ class UsersController extends Controller
         $password = $generator->create($minLength, PasswordGenerator::TYPE_UNPRONOUNCABLE);
 
         return new JsonResponse(
-            [
+            array(
                 'password' => $password,
                 'success'  => true
-            ]
+            )
         );
     }
 }

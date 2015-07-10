@@ -31,44 +31,43 @@ class LinksController extends Controller
      */
     public function listAction(Request $request)
     {
-        $tid = $request->get('tid');
+        $nodeId = $request->get('tid');
         $language = $request->get('language');
         $version = $request->get('version');
         $incoming = $request->get('incoming', false);
 
         $displayLanguage = $language;
 
-        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $nodeManager = $this->get('phlexible_tree.node_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $linkRepository = $this->getDoctrine()->getRepository('PhlexibleElementBundle:ElementLink');
 
-        $tree = $treeManager->getByNodeId($tid);
-        $node = $tree->get($tid);
+        $node = $nodeManager->find($nodeId);
 
         $element = $elementService->findElement($node->getTypeId());
         $elementVersion = $elementService->findElementVersion($element, $version);
 
-        $result = [];
+        $result = array();
 
         if ($incoming) {
-            $links = $linkRepository->findBy(['type' => 'link-internal', 'target' => $node->getId()]);
+            $links = $linkRepository->findBy(array('type' => 'link-internal', 'target' => $node->getId()));
         } else {
-            $links = $linkRepository->findBy(['elementVersion' => $elementVersion]);
+            $links = $linkRepository->findBy(array('elementVersion' => $elementVersion));
         }
 
         foreach ($links as $link) {
-            $result[] = [
+            $result[] = array(
                 'id'      => $link->getId(),
                 'iconCls' => 'p-element-component-icon',
                 'type'    => $link->getType(),
                 'title'   => $link->getField(),
                 'content' => $link->getTarget(),
-                'link'    => [],
+                'link'    => array(),
                 'raw'     => 'raw'
-            ];
+            );
         }
 
-        return new JsonResponse(['links' => $result]);
+        return new JsonResponse(array('links' => $result));
     }
 
     /**
@@ -157,19 +156,19 @@ class LinksController extends Controller
 
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $data = [];
+        $data = array();
         foreach ($results as $row) {
             $siteroot = $siterootManager->find($row['siteroot_id']);
-            $data[] = [
+            $data[] = array(
                 'id'    => $row['id'],
                 'type'  => ($siterootId === $row['siteroot_id'] ? 'internal' : 'intrasiteroot'),
                 'tid'   => $row['id'],
                 'eid'   => $row['eid'],
                 'title' => $siteroot->getTitle($language)
                     . ' :: ' . $row['title'] . ' [' . $row['id'] . ']',
-            ];
+            );
         }
 
-        return new JsonResponse(['results' => $data]);
+        return new JsonResponse(array('results' => $data));
     }
 }

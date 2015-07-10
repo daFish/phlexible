@@ -28,9 +28,9 @@ class LsCommand extends ContainerAwareCommand
         $this
             ->setName('media-manager:ls')
             ->setDefinition(
-                [
+                array(
                     new InputArgument('id', InputArgument::OPTIONAL, 'Folder ID.'),
-                ]
+                )
             )
             ->setDescription('Show folder contents.');
     }

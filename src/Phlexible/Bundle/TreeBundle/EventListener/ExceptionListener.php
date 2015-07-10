@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
+use Phlexible\Bundle\CmsBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -33,7 +33,7 @@ class ExceptionListener
     private $configurator;
 
     /**
-     * @var ContentTreeManagerInterface
+     * @var TreeManagerInterface
      */
     private $treeManager;
 
@@ -48,16 +48,16 @@ class ExceptionListener
     private $debug;
 
     /**
-     * @param \Twig_Environment           $twig
-     * @param ConfiguratorInterface       $configurator
-     * @param ContentTreeManagerInterface $treeManager
-     * @param LoggerInterface             $logger
-     * @param boolean                     $debug
+     * @param \Twig_Environment     $twig
+     * @param ConfiguratorInterface $configurator
+     * @param TreeManagerInterface  $treeManager
+     * @param LoggerInterface       $logger
+     * @param boolean               $debug
      */
     public function __construct(
         \Twig_Environment $twig,
         ConfiguratorInterface $configurator,
-        ContentTreeManagerInterface $treeManager,
+        TreeManagerInterface $treeManager,
         LoggerInterface $logger = null,
         $debug = false)
     {
@@ -124,11 +124,11 @@ class ExceptionListener
             return;
         }
 
-        $treeNode = $this->treeManager->findByTreeId($tid)->get($tid);
+        $node = $this->treeManager->getByNodeId($tid)->get($tid);
 
         $request->attributes->set('tid', $tid);
-        $request->attributes->set('routeDocument', $treeNode);
-        $request->attributes->set('contentDocument', $treeNode);
+        $request->attributes->set('routeDocument', $node);
+        $request->attributes->set('contentDocument', $node);
 
         $configuration = $this->configurator->configure($request);
         if ($configuration->hasResponse()) {

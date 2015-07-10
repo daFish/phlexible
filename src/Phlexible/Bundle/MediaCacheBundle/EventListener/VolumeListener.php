@@ -76,11 +76,11 @@ class VolumeListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
+        return array(
             VolumeEvents::CREATE_FILE => 'onCreateFile',
             VolumeEvents::REPLACE_FILE => 'onReplaceFile',
             VolumeEvents::DELETE_FILE => 'onDeleteFile',
-        ];
+        );
     }
 
     /**
@@ -106,7 +106,7 @@ class VolumeListener implements EventSubscriberInterface
     {
         $fileId = $event->getFile()->getId();
 
-        foreach ($this->cacheManager->findBy(['fileId' => $fileId]) as $cacheItem) {
+        foreach ($this->cacheManager->findBy(array('fileId' => $fileId)) as $cacheItem) {
             $this->cacheManager->deleteCacheItem($cacheItem);
         }
     }
@@ -116,8 +116,8 @@ class VolumeListener implements EventSubscriberInterface
      */
     private function processFile(ExtendedFileInterface $file)
     {
-        $systemTemplates = $this->templateManager->findBy(['system' => true, 'cache' => true]);
-        $otherTemplates = $this->templateManager->findBy(['system' => false, 'cache' => true]);
+        $systemTemplates = $this->templateManager->findBy(array('system' => true, 'cache' => true));
+        $otherTemplates = $this->templateManager->findBy(array('system' => false, 'cache' => true));
         foreach ($systemTemplates as $index => $systemTemplate) {
             if (!$systemTemplate instanceof ImageTemplate) {
                 $otherTemplates[] = $systemTemplate;

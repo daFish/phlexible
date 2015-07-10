@@ -52,12 +52,12 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     /**
      * @var ParserInterface[]
      */
-    private $parsers = [];
+    private $parsers = array();
 
     /**
      * @var DumperInterface[]
      */
-    private $dumpers = [];
+    private $dumpers = array();
 
     /**
      * @var TemplateCollection

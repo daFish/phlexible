@@ -22,11 +22,11 @@ class MessageRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_MESSAGES',
             'ROLE_MESSAGE_FILTERS',
             'ROLE_MESSAGE_SUBSCRIPTIONS',
-        ];
+        );
     }
 
     /**

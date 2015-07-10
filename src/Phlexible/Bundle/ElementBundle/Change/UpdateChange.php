@@ -27,7 +27,7 @@ class UpdateChange extends Change
     /**
      * @var ElementSource[]
      */
-    private $outdatedElementSources = [];
+    private $outdatedElementSources = array();
 
     /**
      * @param Elementtype     $elementtype

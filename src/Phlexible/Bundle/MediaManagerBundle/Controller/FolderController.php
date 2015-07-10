@@ -62,7 +62,7 @@ class FolderController extends Controller
 
         $user = $this->getUser();
 
-        $children = [];
+        $children = array();
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder ExtendedFolderInterface */
 
@@ -80,7 +80,7 @@ class FolderController extends Controller
             */
             $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
 
-            $tmp = [
+            $tmp = array(
                 'id'        => $subFolder->getId(),
                 'text'      => $subFolder->getName(),
                 'leaf'      => false,
@@ -91,13 +91,13 @@ class FolderController extends Controller
                 'allowChildren' => true,
                 'isTarget'  => true,
                 'rights'    => $userRights,
-            ];
+            );
 
             if ($volume->countFoldersByParentFolder($subFolder)) {
                 $tmp['children'] = $this->recurseFolders($subFolder);
                 $tmp['expanded'] = false;
             } else {
-                $tmp['children'] = [];
+                $tmp['children'] = array();
                 $tmp['expanded'] = true;
             }
 
@@ -119,7 +119,7 @@ class FolderController extends Controller
     {
         $folderId = $request->get('node', null);
 
-        $data = [];
+        $data = array();
 
         $slots = new Slots();
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
@@ -152,8 +152,8 @@ class FolderController extends Controller
 
                 $slot = new SiteSlot();
                 $slot->setData(
-                    [
-                        [
+                    array(
+                        array(
                             'id'        => $rootFolder->getId(),
                             'site_id'   => $volume->getId(),
                             'text'      => $rootFolder->getName(),
@@ -165,8 +165,8 @@ class FolderController extends Controller
                             'allowDrop' => true,
                             'versions'  => $volume->hasFeature('versions'),
                             'rights'    => $userRights,
-                        ]
-                    ]
+                        )
+                    )
                 );
 
                 $slots->append($slot);
@@ -201,7 +201,7 @@ class FolderController extends Controller
                 $folder = $volume->findFolder($folderId);
 
                 if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $rootFolder)) {
-                    return new JsonResponse([]);
+                    return new JsonResponse(array());
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
@@ -227,7 +227,7 @@ class FolderController extends Controller
                     $usedIn = $folderUsageService->getUsedIn($folder);
                     // TODO: also files in folder!
 
-                    $tmp = [
+                    $tmp = array(
                         'id'        => $subFolder->getId(),
                         'site_id'   => $volume->getId(),
                         'text'      => $subFolder->getName(),
@@ -240,12 +240,12 @@ class FolderController extends Controller
                         'rights'    => $userRights,
                         'used_in'   => $usedIn,
                         'used'      => $usage,
-                    ];
+                    );
 
                     if (!$volume->countFoldersByParentFolder($subFolder)) {
                         //$tmp['leaf'] = true;
                         $tmp['expanded'] = true;
-                        $tmp['children'] = [];
+                        $tmp['children'] = array();
                     }
 
                     $data[] = $tmp;
@@ -284,14 +284,14 @@ class FolderController extends Controller
         try {
             $folder = $volume->createFolder($parentFolder, $name, array(), $this->getUser()->getId());
 
-            return new ResultResponse(true, 'Folder created.', [
+            return new ResultResponse(true, 'Folder created.', array(
                 'folder_id'   => $folder->getId(),
                 'folder_name' => $folder->getName()
-            ]);
+            ));
         } catch (AlreadyExistsException $e) {
-            return new ResultResponse(false, $e->getMessage(), [
+            return new ResultResponse(false, $e->getMessage(), array(
                 'folder_name' => 'Folder already exists.'
-            ]);
+            ));
         } catch (\Exception $e) {
             return new ResultResponse(false, $e->getMessage());
         }
@@ -316,9 +316,9 @@ class FolderController extends Controller
 
         $volume->renameFolder($folder, $folderName, $this->getUser()->getId());
 
-        return new ResultResponse(true, 'Folder renamed.', [
+        return new ResultResponse(true, 'Folder renamed.', array(
             'folder_name' => $folderName
-        ]);
+        ));
     }
 
     /**
@@ -343,7 +343,7 @@ class FolderController extends Controller
 
         $volume->deleteFolder($folder, $this->getUser()->getId());
 
-        return new ResultResponse(true, 'Folder deleted', ['parent_id' => $folder->getParentId()]);
+        return new ResultResponse(true, 'Folder deleted', array('parent_id' => $folder->getParentId()));
     }
 
     /**
@@ -389,7 +389,7 @@ class FolderController extends Controller
             $calculator = new SizeCalculator();
             $calculatedSize = $calculator->calculate($volume, $folder);
 
-            $data = [
+            $data = array(
                 'title'       => $folder->getName(),
                 'type'        => 'folder',
                 'path'        => '/' . $folder->getPath(),
@@ -400,9 +400,9 @@ class FolderController extends Controller
                 'create_user' => $folder->getCreateUserId(),
                 'modify_time' => $folder->getModifiedAt()->format('U') * 1000,
                 'modify_user' => $folder->getModifyUserId(),
-            ];
+            );
         } catch (\Exception $e) {
-            $data = [];
+            $data = array();
         }
 
         return new JsonResponse($data);

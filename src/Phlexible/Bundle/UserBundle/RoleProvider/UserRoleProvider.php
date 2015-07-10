@@ -22,10 +22,10 @@ class UserRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_USERS',
             'ROLE_GROUPS',
-        ];
+        );
     }
 
     /**

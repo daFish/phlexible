@@ -22,9 +22,9 @@ class MediaCacheRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_MEDIA_CACHE',
-        ];
+        );
     }
 
     /**

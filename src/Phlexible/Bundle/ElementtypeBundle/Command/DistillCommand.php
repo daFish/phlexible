@@ -98,7 +98,7 @@ class DistillCommand extends ContainerAwareCommand
     private function iterateStructure(ClassMap $classMap, ElementtypeStructure $structure, ElementtypeStructureNode $node)
     {
         $fieldRegistry = $this->getContainer()->get('phlexible_elementtype.field.registry');
-        $data = [];
+        $data = array();
 
         foreach ($structure->getChildNodes($node->getDsId()) as $childNode) {
             $field = $fieldRegistry->getField($childNode->getType());

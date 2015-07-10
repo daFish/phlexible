@@ -1,0 +1,5 @@
+services:
+    phlexible_tree.file.tree_manager:
+        class: Phlexible\Bundle\TreeBundle\File\TreeManager
+        arguments:
+            - @phlexible_siteroot.siteroot_manager

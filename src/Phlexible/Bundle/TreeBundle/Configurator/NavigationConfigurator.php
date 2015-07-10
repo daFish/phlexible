@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\TreeBundle\Configurator;
 
-use Phlexible\Bundle\ElementRendererBundle\Configurator\ConfiguratorInterface;
-use Phlexible\Bundle\ElementRendererBundle\Configurator\Configuration;
-use Phlexible\Bundle\ElementRendererBundle\ElementRendererEvents;
-use Phlexible\Bundle\ElementRendererBundle\Event\ConfigureEvent;
-use Phlexible\Bundle\SiterootBundle\Entity\Url;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
+use Phlexible\Bundle\CmsBundle\Configurator\Configuration;
+use Phlexible\Bundle\CmsBundle\Configurator\ConfiguratorInterface;
+use Phlexible\Bundle\CmsBundle\Event\ConfigureEvent;
+use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,23 +50,24 @@ class NavigationConfigurator implements ConfiguratorInterface
      */
     public function configure(Request $request, Configuration $renderConfiguration)
     {
+        return;
         if (!$renderConfiguration->hasFeature('treeNode')) {
             return;
         }
 
-        /** @var Url $siterootUrl */
-        $siterootUrl = $request->attributes->get('siterootUrl');
+        /** @var Siteroot $siteroot */
+        $siteroot = $request->attributes->get('siteroot');
 
-        $navigations = [];
+        $navigations = array();
 
-        foreach ($siterootUrl->getSiteroot()->getNavigations() as $siterootNavigation) {
+        foreach ($siteroot->getNavigations() as $siterootNavigation) {
             $startTid = $siterootNavigation->getStartTreeId();
             $currentTreeNode = $treeNode = $renderConfiguration->get('treeNode');
             if ($startTid) {
                 $treeNode = $currentTreeNode->getTree()->get($startTid);
             }
 
-            $navigations[$siterootNavigation->getTitle()] = new ContentTreeContext(
+            $navigations[$siterootNavigation->getTitle()] = new NodeContext(
                 $treeNode,
                 $currentTreeNode,
                 $siterootNavigation->getMaxDepth()
@@ -78,6 +79,6 @@ class NavigationConfigurator implements ConfiguratorInterface
             ->setVariable('navigation', $navigations);
 
         $event = new ConfigureEvent($renderConfiguration);
-        $this->dispatcher->dispatch(ElementRendererEvents::CONFIGURE_NAVIGATION, $event);
+        $this->dispatcher->dispatch(TreeEvents::CONFIGURE_NAVIGATION, $event);
     }
 }

@@ -105,7 +105,7 @@ class Elementtype implements IdentifiableInterface
     /**
      * @var array
      */
-    private $mappings = [];
+    private $mappings = array();
 
     /**
      * @var ElementtypeStructure

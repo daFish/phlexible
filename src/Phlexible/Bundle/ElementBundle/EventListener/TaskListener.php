@@ -11,7 +11,9 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 use Phlexible\Bundle\TaskBundle\Entity\Task;
 use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\PublishNodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
+use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -49,17 +51,17 @@ class TaskListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
-            TreeEvents::PUBLISH_NODE => 'onPublishNode',
-            TreeEvents::SET_NODE_OFFLINE => 'onSetNodeOffline',
-            TreeEvents::DELETE_NODE => 'onDeleteNode',
-        ];
+        return array(
+            TreeEvents::PUBLISH_NODE_CONTEXT     => 'onPublishNode',
+            TreeEvents::SET_NODE_OFFLINE_CONTEXT => 'onSetNodeOffline',
+            TreeEvents::DELETE_NODE              => 'onDeleteNode',
+        );
     }
 
     /**
-     * @param PublishNodeEvent $event
+     * @param PublishNodeContextEvent $event
      */
-    public function onPublishNode(PublishNodeEvent $event)
+    public function onPublishNode(PublishNodeContextEvent $event)
     {
         if (!$this->taskManager) {
             return;
@@ -73,20 +75,20 @@ class TaskListener implements EventSubscriberInterface
         }
 
         $this->doTask(
-            [
+            array(
                 'type' => 'element',
                 'type_id' => $node->getId(),
                 'language' => $language
-            ],
+            ),
             'element.publish',
             $this->tokenStorage->getToken()->getUser()->getId()
         );
     }
 
     /**
-     * @param SetNodeOfflineEvent $event
+     * @param SetNodeOfflineContextEvent $event
      */
-    public function onSetNodeOffline(SetNodeOfflineEvent $event)
+    public function onSetNodeOffline(SetNodeOfflineContextEvent $event)
     {
         if (!$this->taskManager) {
             return;
@@ -100,11 +102,11 @@ class TaskListener implements EventSubscriberInterface
         }
 
         $this->doTask(
-            [
+            array(
                 'type' => 'element',
                 'type_id' => $node->getId(),
                 'language' => $language
-            ],
+            ),
             'element.set_offline',
             $this->tokenStorage->getToken()->getUser()->getId()
         );
@@ -127,10 +129,10 @@ class TaskListener implements EventSubscriberInterface
         }
 
         $this->doTask(
-            [
+            array(
                 'type' => 'element',
                 'type_id' => $node->getId()
-            ],
+            ),
             'element.delete',
             $this->tokenStorage->getToken()->getUser()->getId()
         );
@@ -144,14 +146,14 @@ class TaskListener implements EventSubscriberInterface
     private function doTask(array $payload, $type, $userId)
     {
         $tasks = $this->taskManager->findBy(
-            [
+            array(
                 'type' => $type,
-                'finiteState' => [
+                'finiteState' => array(
                     Task::STATUS_OPEN,
                     Task::STATUS_REJECTED,
                     Task::STATUS_REOPENED,
-                ]
-            ]
+                )
+            )
         );
 
         if (!$tasks) {

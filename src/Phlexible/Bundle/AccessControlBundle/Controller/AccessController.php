@@ -38,7 +38,7 @@ class AccessController extends Controller
         $limit  = $request->get('limit', 20);
         $offset = $request->get('start', 0);
 
-        $userProvider = $this->get('phlexible_access_control.provider.user');
+        $userProvider = $this->get('phlexible_access_control.user_security_provider');
 
         $data = $userProvider->getAll($query, $limit, $offset);
 
@@ -57,7 +57,7 @@ class AccessController extends Controller
         $limit  = $request->get('limit', 20);
         $offset = $request->get('start', 0);
 
-        $userProvider = $this->get('phlexible_access_control.provider.group');
+        $userProvider = $this->get('phlexible_access_control.group_security_provider');
 
         $data = $userProvider->getAll($query, $limit, $offset);
 
@@ -77,11 +77,11 @@ class AccessController extends Controller
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         $permissions = array();
         foreach ($permissionRegistry->get($objectType)->all() as $permission) {
-            $permissions[] = [
+            $permissions[] = array(
                 'name'    => $permission->getName(),
                 'bit'     => $permission->getBit(),
                 'iconCls' => 'null',
-            ];
+            );
         }
 
         return new JsonResponse(array('permissions' => $permissions));
@@ -179,11 +179,11 @@ class AccessController extends Controller
                         $modifiedRow['language']
                     );
 
-                    if (!in_array($rightRow['status'], [
+                    if (!in_array($rightRow['status'], array(
                         \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_INHERITABLE,
                         \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_SINGLE,
                         \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_STOPPED
-                    ])) {
+                    ))) {
                         continue;
                     }
 

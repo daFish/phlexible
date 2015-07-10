@@ -1,0 +1,76 @@
+services:
+    phlexible_tree.node_enhancer:
+        class: Phlexible\Bundle\TreeBundle\Routing\Enhancer\NodeEnhancer
+        arguments: [@phlexible_tree.tree_manager]
+        tags:
+            - {name: phlexible_tree.route_enhancer, priority: 500}
+
+    phlexible_tree.siteroot_enhancer:
+        class: Phlexible\Bundle\TreeBundle\Routing\Enhancer\SiterootEnhancer
+        arguments: [@phlexible_siteroot.siteroot_manager]
+        tags:
+            - {name: phlexible_tree.route_enhancer, priority: 400}
+
+    phlexible_tree.security_enhancer:
+        class: Phlexible\Bundle\TreeBundle\Routing\Enhancer\SecurityEnhancer
+        tags:
+            - {name: phlexible_tree.route_enhancer, priority: -200}
+
+    phlexible_tree.cache_enhancer:
+        class: Phlexible\Bundle\TreeBundle\Routing\Enhancer\CacheEnhancer
+        tags:
+            - {name: phlexible_tree.route_enhancer, priority: -300}
+
+    phlexible_tree.matcher.dummy_collection:
+        class: Symfony\Component\Routing\RouteCollection
+        public: false
+
+    phlexible_tree.matcher.dummy_context:
+        class: Symfony\Component\Routing\RequestContext
+        public: false
+
+    phlexible_tree.final_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher
+        arguments:
+            - @phlexible_tree.matcher.dummy_collection
+            - @phlexible_tree.matcher.dummy_context
+
+    phlexible_tree.nested_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        arguments:
+            - @phlexible_tree.route_provider
+            - @phlexible_tree.final_matcher
+        tags:
+            - {name: monolog.logger, channel: router}
+
+    phlexible_tree.candidates:
+        class: Phlexible\Bundle\TreeBundle\Routing\Candidates\Candidates
+        arguments: [[de, en]]
+
+    phlexible_tree.route_provider:
+        class: Phlexible\Bundle\TreeBundle\Routing\RouteProvider
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @phlexible_siteroot.siteroot_hostname_mapper
+            - @phlexible_tree.candidates
+
+    phlexible_tree.url_generator:
+        class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
+        arguments:
+            - @phlexible_tree.route_provider
+            - @logger
+        tags:
+            - {name: monolog.logger, channel: router}
+
+    phlexible_tree.router:
+        class: Phlexible\Bundle\TreeBundle\Routing\TreeRouter
+        arguments:
+            - @router.request_context
+            - @phlexible_tree.nested_matcher
+            - @phlexible_tree.url_generator
+            - ""
+            - @event_dispatcher
+            - @phlexible_tree.route_provider
+        tags:
+            - {name: monolog.logger, channel: router}
+            - {name: router, priority: 100}

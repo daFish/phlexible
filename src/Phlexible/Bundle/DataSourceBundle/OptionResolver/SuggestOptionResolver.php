@@ -26,9 +26,9 @@ class SuggestOptionResolver implements OptionResolverInterface
     public function resolve(MetaSetField $field)
     {
         $dataSourceId = $field->getOptions();
-        $options = [
+        $options = array(
             'source_id' => $dataSourceId,
-        ];
+        );
 
         return $options;
     }

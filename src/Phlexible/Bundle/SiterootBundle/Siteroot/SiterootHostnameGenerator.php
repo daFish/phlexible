@@ -18,20 +18,21 @@ use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 class SiterootHostnameGenerator
 {
     /**
-     * @var array
+     * @var SiterootHostnameMapper
      */
-    private $urlMappings;
+    private $mapper;
 
     /**
-     * @param array $urlMappings
+     * @param SiterootHostnameMapper $mapper
      */
-    public function __construct(array $urlMappings)
+    public function __construct(SiterootHostnameMapper $mapper)
     {
-        $this->urlMappings = $urlMappings;
+        $this->mapper = $mapper;
     }
 
     /**
      * @param Siteroot $siteroot
+     * @param string   $language
      *
      * @return string
      */
@@ -42,10 +43,6 @@ class SiterootHostnameGenerator
         $siterootUrl = $siteroot->getDefaultUrl($language);
         $hostname = $siterootUrl->getHostname();
 
-        if (isset($this->urlMappings[$hostname])) {
-            $hostname = $this->urlMappings[$hostname];
-        }
-
-        return $hostname;
+        return $this->mapper->toLocal($hostname);
     }
 }

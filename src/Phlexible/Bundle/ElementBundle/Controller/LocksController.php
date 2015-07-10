@@ -38,7 +38,7 @@ class LocksController extends Controller
 
         $locks = $lockManager->findAll();
 
-        $data = [];
+        $data = array();
         foreach ($locks as $lock) {
             /* @var $lock ElementLock */
             $username = '(unknown user)';
@@ -47,17 +47,17 @@ class LocksController extends Controller
                 $username = $user->getDisplayName();
             }
 
-            $data[] = [
+            $data[] = array(
                 'id'        => $lock->getId(),
                 'uid'       => $lock->getUserId(),
                 'user'      => $username,
                 'ts'        => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                 'eid'       => $lock->getElement()->getEid(),
                 'lock_type' => $lock->getType(),
-            ];
+            );
         }
 
-        return new JsonResponse(['locks' => $data]);
+        return new JsonResponse(array('locks' => $data));
     }
 
     /**
@@ -89,7 +89,7 @@ class LocksController extends Controller
         $uid = $this->getUser()->getId();
 
         $lockManager = $this->get('phlexible_element.element_lock_manager');
-        $myLocks = $lockManager->findBy(['userId' => $uid]);
+        $myLocks = $lockManager->findBy(array('userId' => $uid));
 
         foreach ($myLocks as $lock) {
             $lockManager->deleteLock($lock);

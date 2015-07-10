@@ -41,7 +41,7 @@ class ElementtypeStructureIterator implements \RecursiveIterator
 
         $this->iterator = $dsId
             ? new \ArrayIterator($tree->getChildNodes($dsId))
-            : new \ArrayIterator([$tree->getRootNode()]);
+            : new \ArrayIterator(array($tree->getRootNode()));
     }
 
     /**

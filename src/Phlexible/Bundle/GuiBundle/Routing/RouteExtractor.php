@@ -40,24 +40,24 @@ class RouteExtractor implements RouteExtractorInterface
         $baseUrl = $request->getBaseUrl();
         $basePath = $request->getBasePath();
 
-        $routes = [];
+        $routes = array();
         foreach ($this->router->getRouteCollection() as $id => $route) {
             /* @var $route Route */
 
             $compiledRoute = $route->compile();
             $variables = $compiledRoute->getVariables();
             $routeDefaults = $route->getDefaults();
-            $defaults = [];
+            $defaults = array();
             foreach ($routeDefaults as $key => $default) {
                 $defaults[$key] = $default;
             }
 
             try {
-                $routes[$id] = [
+                $routes[$id] = array(
                     'path'      => $baseUrl . $route->getPath(),
                     'variables' => array_values($variables),
                     'defaults'  => $defaults,
-                ];
+                );
             } catch (\Exception $e) {
             }
         }

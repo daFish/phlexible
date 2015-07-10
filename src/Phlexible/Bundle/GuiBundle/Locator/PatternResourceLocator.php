@@ -29,7 +29,7 @@ class PatternResourceLocator extends FileLocator
      * @param null|string     $path   The path to the global resource directory
      * @param array           $paths  An array of paths where to look for resources
      */
-    public function __construct(KernelInterface $kernel, $path = null, array $paths = [])
+    public function __construct(KernelInterface $kernel, $path = null, array $paths = array())
     {
         $this->kernel = $kernel;
         if (null !== $path && !in_array($path, $paths)) {
@@ -48,7 +48,7 @@ class PatternResourceLocator extends FileLocator
      */
     public function locate($name, $currentPath = null, $first = true)
     {
-        $paths = [];
+        $paths = array();
         $path = $this->kernel->getRootDir() . '/Resources/' . $currentPath;
         if (file_exists($path)) {
             $paths[] = $path;
@@ -65,7 +65,7 @@ class PatternResourceLocator extends FileLocator
         }
 
         $finder = new Finder();
-        $files = [];
+        $files = array();
         foreach ($finder->in($paths)->files()->name($name) as $file) {
             /* @var $file SplFileInfo */
             if ($first) {

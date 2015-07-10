@@ -22,8 +22,8 @@ use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Elementtype\Field\FieldRegistry;
 use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -48,7 +48,7 @@ class DataSaver
     private $fieldRegistry;
 
     /**
-     * @var TreeManager
+     * @var TreeManagerInterface
      */
     private $treeManager;
 
@@ -80,12 +80,12 @@ class DataSaver
     /**
      * @var ElementStructure[]
      */
-    private $structures = [];
+    private $structures = array();
 
     /**
      * @param ElementService           $elementService
      * @param FieldRegistry            $fieldRegistry
-     * @param TreeManager              $treeManager
+     * @param TreeManagerInterface     $treeManager
      * @param TeaserManagerInterface   $teaserManager
      * @param ElementMetaSetResolver   $elementMetaSetResolver
      * @param ElementMetaDataManager   $elementMetaDataManager
@@ -95,7 +95,7 @@ class DataSaver
     public function __construct(
         ElementService $elementService,
         FieldRegistry $fieldRegistry,
-        TreeManager $treeManager,
+        TreeManagerInterface $treeManager,
         TeaserManagerInterface $teaserManager,
         ElementMetaSetResolver $elementMetaSetResolver,
         ElementMetaDataManager $elementMetaDataManager,
@@ -124,7 +124,7 @@ class DataSaver
     {
         $eid = $request->get('eid');
         $language = $request->get('language');
-        $tid = $request->get('tid');
+        $nodeId = $request->get('tid');
         $teaserId = $request->get('teaser_id');
         $isPublish = $request->get('isPublish');
         $values = $request->get('values');
@@ -143,8 +143,7 @@ class DataSaver
         $oldVersion = $oldElementVersion->getVersion();
         $isMaster = $element->getMasterLanguage() === $language;
 
-        $tree = $this->treeManager->getByNodeId($tid);
-        $node = $tree->get($tid);
+        $node = $this->treeManager->getByNodeId($nodeId)->get($nodeId);
 
         $teaser = null;
         if ($teaserId) {
@@ -188,22 +187,22 @@ class DataSaver
         }
 
         // TODO: available languages
-        $this->saveMeta($elementVersion, $language, $isMaster, ['de'], $request);
+        $this->saveMeta($elementVersion, $language, $isMaster, array('de'), $request);
 
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->eventDispatcher->dispatch(ElementEvents::SAVE_ELEMENT, $event);
 
-        $publishSlaves = [];
+        $publishSlaves = array();
         if ($isPublish) {
             $publishSlaves = $this->checkPublishSlaves($elementVersion, $node, $teaser, $language);
             if ($teaser) {
                 $this->publishTeaser($elementVersion, $teaser, $language, $user->getId(), $publishComment, $publishSlaves);
             } else {
-                $this->publishTreeNode($elementVersion, $node, $language, $user->getId(), $publishComment, $publishSlaves);
+                $this->publishNode($elementVersion, $node, $language, $user->getId(), $publishComment, $publishSlaves);
             }
         }
 
-        return [$elementVersion, $node, $teaser, $publishSlaves];
+        return array($elementVersion, $node, $teaser, $publishSlaves);
     }
 
     /**
@@ -255,13 +254,15 @@ class DataSaver
     }
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
-     * @param Request           $request
+     * @param NodeContext $nodeContext
+     * @param string      $language
+     * @param Request     $request
      */
-    private function saveNodeData(TreeNodeInterface $node, $language, Request $request)
+    private function saveNodeData(NodeContext $nodeContext, $language, Request $request)
     {
         // save configuration
+
+        $node = $nodeContext->getNode();
 
         if ($request->get('configuration')) {
             $configuration = json_decode($request->get('configuration'), true);
@@ -397,10 +398,10 @@ class DataSaver
             $node->removeAttribute('routing');
         }
 
-        $event = new SaveNodeDataEvent($node, $language, $request);
+        $event = new SaveNodeDataEvent($nodeContext, $language, $request);
         $this->eventDispatcher->dispatch(ElementEvents::SAVE_NODE_DATA, $event);
 
-        $node->getTree()->updateNode($node);
+        $nodeContext->getTree()->updateNode($nodeContext);
     }
 
     /**
@@ -496,7 +497,7 @@ class DataSaver
     private function applyStructure(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values)
     {
         $this->structures[null] = $rootElementStructure;
-        $map = [null => $rootElementStructure->getDataId()];
+        $map = array(null => $rootElementStructure->getDataId());
 
         foreach ($values as $key => $value) {
             $parts = explode('__', $key);
@@ -663,16 +664,16 @@ class DataSaver
     }
 
     /**
-     * @param ElementVersion    $elementVersion
-     * @param TreeNodeInterface $node
-     * @param Teaser            $teaser
-     * @param string            $language
+     * @param ElementVersion $elementVersion
+     * @param NodeContext    $node
+     * @param Teaser         $teaser
+     * @param string         $language
      *
      * @return array
      */
-    private function checkPublishSlaves(ElementVersion $elementVersion, TreeNodeInterface $node, Teaser $teaser = null, $language)
+    private function checkPublishSlaves(ElementVersion $elementVersion, NodeContext $node, Teaser $teaser = null, $language)
     {
-        $publishSlaves = ['elements' => [], 'languages' => []];
+        $publishSlaves = array('elements' => array(), 'languages' => array());
 
         if ($elementVersion->getElement()->getMasterLanguage() !== $language) {
             return $publishSlaves;
@@ -688,7 +689,7 @@ class DataSaver
                     if (!$this->teaserManager->isAsync($teaser, $slaveLanguage)) {
                         $publishSlaves['languages'][] = $slaveLanguage;
                     } else {
-                        $publishSlaves['elements'][] = [$teaser->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1];
+                        $publishSlaves['elements'][] = array($teaser->getId(), $slaveLanguage, $elementVersion->getVersion(), 'async', 1);
                     }
                 }
                 // TODO: needed?
@@ -706,7 +707,7 @@ class DataSaver
                     if (!$node->getTree()->isAsync($node, $slaveLanguage)) {
                         $publishSlaves['languages'][] = $slaveLanguage;
                     } else {
-                        $publishSlaves['elements'][] = [$node->getId(), $slaveLanguage, 0, 'async', 1];
+                        $publishSlaves['elements'][] = array($node->getId(), $slaveLanguage, 0, 'async', 1);
                     }
                 }
                 // TODO: needed?
@@ -730,7 +731,7 @@ class DataSaver
      * @param string|null    $comment
      * @param array          $publishSlaves
      */
-    private function publishTeaser(ElementVersion $elementVersion, Teaser $teaser = null, $language, $userId, $comment = null, array $publishSlaves = [])
+    private function publishTeaser(ElementVersion $elementVersion, Teaser $teaser = null, $language, $userId, $comment = null, array $publishSlaves = array())
     {
         $this->teaserManager->publishTeaser(
             $teaser,
@@ -755,20 +756,18 @@ class DataSaver
     }
 
     /**
-     * @param ElementVersion    $elementVersion
-     * @param TreeNodeInterface $treeNode
-     * @param string            $language
-     * @param string            $userId
-     * @param string|null       $comment
-     * @param array             $publishSlaves
+     * @param ElementVersion $elementVersion
+     * @param NodeContext    $node
+     * @param string         $language
+     * @param string         $userId
+     * @param string|null    $comment
+     * @param array          $publishSlaves
      */
-    private function publishTreeNode(ElementVersion $elementVersion, TreeNodeInterface $treeNode, $language, $userId, $comment = null, array $publishSlaves = [])
+    private function publishNode(ElementVersion $elementVersion, NodeContext $node, $language, $userId, $comment = null, array $publishSlaves = array())
     {
-        $tree = $treeNode->getTree();
-
         // publish node
-        $tree->publish(
-            $treeNode,
+        $node->getTree()->publish(
+            $node,
             $elementVersion->getVersion(),
             $language,
             $userId,
@@ -778,8 +777,8 @@ class DataSaver
         if (!empty($publishSlaves['languages'])) {
             foreach ($publishSlaves['languages'] as $slaveLanguage) {
                 // publish slave node
-                $tree->publish(
-                    $treeNode,
+                $this->treeManager->publish(
+                    $node,
                     $elementVersion->getVersion(),
                     $slaveLanguage,
                     $userId,

@@ -10,12 +10,9 @@ namespace Phlexible\Bundle\ElementBundle\Twig\Extension;
 
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElement;
 use Phlexible\Bundle\ElementBundle\ContentElement\ContentElementLoader;
-use Phlexible\Bundle\TeaserBundle\ContentTeaser\ContentTeaser;
-use Phlexible\Bundle\TeaserBundle\ContentTeaser\DelegatingContentTeaserManager;
-use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TeaserBundle\Teaser\TeaserContext;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -36,16 +33,16 @@ class ElementExtension extends \Twig_Extension
     private $requestStack;
 
     /**
-     * @var DelegatingContentTeaserManager
+     * @var TeaserManagerInterface
      */
     private $teaserManager;
 
     /**
-     * @param ContentElementLoader           $contentElementLoader
-     * @param DelegatingContentTeaserManager $teaserManager
-     * @param RequestStack                   $requestStack
+     * @param ContentElementLoader   $contentElementLoader
+     * @param TeaserManagerInterface $teaserManager
+     * @param RequestStack           $requestStack
      */
-    public function __construct(ContentElementLoader $contentElementLoader, DelegatingContentTeaserManager $teaserManager, RequestStack $requestStack)
+    public function __construct(ContentElementLoader $contentElementLoader, TeaserManagerInterface $teaserManager, RequestStack $requestStack)
     {
         $this->contentElementLoader = $contentElementLoader;
         $this->teaserManager = $teaserManager;
@@ -57,13 +54,13 @@ class ElementExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('element', [$this, 'element']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('element', array($this, 'element')),
+        );
     }
 
     /**
-     * @param TreeNodeInterface|ContentTreeContext|int $eid
+     * @param TeaserContext|NodeContext|int $eid
      *
      * @return ContentElement|null
      */
@@ -71,18 +68,14 @@ class ElementExtension extends \Twig_Extension
     {
         $language = $this->requestStack->getCurrentRequest()->getLocale();
 
-        if ($eid instanceof ContentTeaser) {
-            $teaser = $eid;
+        if ($eid instanceof TeaserContext) {
+            $teaser = $eid->getTeaser();
             $eid = $teaser->getTypeId();
             $version = $this->teaserManager->getPublishedVersion($teaser, $language);
-        } elseif ($eid instanceof TreeNodeInterface) {
+        } elseif ($eid instanceof NodeContext) {
             $node = $eid;
             $eid = $node->getTypeId();
-            $version = $node->getTree()->getVersion($node, $language);
-        } elseif ($eid instanceof ContentTreeContext) {
-            $node = $eid->getNode();
-            $eid = $node->getTypeId();
-            $version = $node->getTree()->getVersion($node, $language);
+            $version = $node->getTree()->getPublishedVersion($node, $language);
         } else {
             return null;
         }

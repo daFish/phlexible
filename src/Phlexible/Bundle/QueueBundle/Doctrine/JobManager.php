@@ -131,7 +131,7 @@ class JobManager implements JobManagerInterface
     public function addUniqueJob(Job $job)
     {
         $queueItem = $this->getJobRepository()->findBy(
-            ['command' => $job->getCommand(), 'arguments' => $job->getArguments()]
+            array('command' => $job->getCommand(), 'arguments' => $job->getArguments())
         );
 
         if ($queueItem) {

@@ -33,7 +33,7 @@ class CacheStatusPortlet extends Portlet
     {
         $this
             ->setId('cachestatus-portlet')
-            ->setTitle($translator->trans('mediacache.cache_status', [], 'gui'))
+            ->setTitle($translator->trans('mediacache.cache_status', array(), 'gui'))
             ->setClass('Phlexible.mediacache.portlet.CacheStatus')
             ->setIconClass('p-mediacache-component-icon')
             ->setRole('ROLE_MEDIA_CACHE');

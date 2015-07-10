@@ -35,18 +35,18 @@ class SiterootController extends Controller
     {
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroots = [];
+        $siteroots = array();
         foreach ($siterootManager->findAll() as $siteroot) {
-            $siteroots[] = [
+            $siteroots[] = array(
                 'id'    => $siteroot->getId(),
                 'title' => $siteroot->getTitle(),
-            ];
+            );
         }
 
-        return new JsonResponse([
+        return new JsonResponse(array(
             'siteroots' => $siteroots,
             'count'     => count($siteroots)
-        ]);
+        ));
     }
 
     /**
@@ -112,17 +112,17 @@ class SiterootController extends Controller
 
         $siteroot = $siterootRepository->find($siterootId);
 
-        $data = [
+        $data = array(
             'titles'          => $siteroot->getTitles(),
-            'navigations'     => [],
-            'properties'      => [],
-            'specialtids'     => [],
-            'urls'            => [],
-        ];
+            'navigations'     => array(),
+            'properties'      => array(),
+            'specialtids'     => array(),
+            'urls'            => array(),
+        );
 
         // get all siteroot navigations
         foreach ($siteroot->getNavigations() as $navigation) {
-            $data['navigations'][] = [
+            $data['navigations'][] = array(
                 'id'         => $navigation->getId(),
                 'title'      => $navigation->getTitle(),
                 'handler'    => $navigation->getHandler(),
@@ -131,7 +131,7 @@ class SiterootController extends Controller
                 'supports'   => '', //call_user_func(array($navigation->getHandler(), 'getSupportedFlags')),
                 'flags'      => $navigation->getFlags(),
                 'additional' => $navigation->getAdditional()
-            ];
+            );
         }
 
         // TODO: siteroot properties from bundles
@@ -143,23 +143,23 @@ class SiterootController extends Controller
         */
 
         foreach ($siteroot->getSpecialTids() as $specialTid) {
-            $data['specialtids'][] = [
+            $data['specialtids'][] = array(
                 'siteroot_id' => $siterootId,
                 'key'         => $specialTid['name'],
                 'language'    => !empty($specialTid['language']) ? $specialTid['language'] : null,
                 'tid'         => $specialTid['treeId'],
-            ];
+            );
         }
 
         foreach ($siteroot->getUrls() as $url) {
-            $data['urls'][] = [
+            $data['urls'][] = array(
                 'id'             => $url->getId(),
                 'global_default' => $url->isGlobalDefault(),
                 'default'        => $url->isDefault(),
                 'hostname'       => $url->getHostname(),
                 'language'       => $url->getLanguage(),
                 'target'         => $url->getTarget(),
-            ];
+            );
         }
 
         return new JsonResponse($data);

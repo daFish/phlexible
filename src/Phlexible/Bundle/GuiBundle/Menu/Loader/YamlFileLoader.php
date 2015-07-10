@@ -71,7 +71,7 @@ class YamlFileLoader implements LoaderInterface
                 $handlerData['parent'] = null;
             }
             if (!isset($handlerData['roles'])) {
-                $handlerData['roles'] = [];
+                $handlerData['roles'] = array();
             }
 
             $handlers->set($name, new MenuItem($handlerData['handle'], $handlerData['parent'], $handlerData['roles']));

@@ -27,7 +27,7 @@ class TreePermissionProvider implements PermissionProviderInterface
     /**
      * @param string $objectType
      */
-    public function __construct($objectType = 'Phlexible\Bundle\TreeBundle\Entity\TreeNode')
+    public function __construct($objectType = 'Phlexible\Bundle\TreeBundle\Node\NodeContext')
     {
         $this->objectType = $objectType;
     }
@@ -37,13 +37,13 @@ class TreePermissionProvider implements PermissionProviderInterface
      */
     public function getPermissions()
     {
-        return new PermissionCollection($this->objectType, [
+        return new PermissionCollection($this->objectType, array(
             new Permission('VIEW', 1),
             new Permission('EDIT', 2),
             new Permission('CREATE', 4),
             new Permission('DELETE', 8),
             new Permission('PUBLISH', 16),
             new Permission('ACCESS', 32),
-        ]);
+        ));
     }
 }

@@ -28,7 +28,7 @@ class OnlineController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $configurator = $this->get('phlexible_element_renderer.configurator');
+        $configurator = $this->get('phlexible_cms.configurator');
         $configuration = $configurator->configure($request);
         if ($configuration->hasResponse()) {
             return $configuration->getResponse();

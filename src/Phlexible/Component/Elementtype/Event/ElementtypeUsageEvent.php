@@ -21,7 +21,7 @@ class ElementtypeUsageEvent extends ElementtypeEvent
     /**
      * @var \Phlexible\Component\Elementtype\Usage\Usage[]
      */
-    private $usage = [];
+    private $usage = array();
 
     /**
      * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype

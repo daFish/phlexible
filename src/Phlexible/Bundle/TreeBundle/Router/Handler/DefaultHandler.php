@@ -8,13 +8,14 @@
 
 namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -37,9 +38,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $logger;
 
     /**
-     * @var ContentTreeManagerInterface
+     * @var EntityManagerInterface
      */
-    private $contentTreeManager;
+    private $em;
+
+    /**
+     * @var NodeManagerInterface
+     */
+    private $treeManager;
 
     /**
      * @var SiterootRequestMatcher
@@ -67,23 +73,26 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $requestContext;
 
     /**
-     * @param LoggerInterface             $logger
-     * @param ContentTreeManagerInterface $treeManager
-     * @param SiterootRequestMatcher      $siterootRequestMatcher
-     * @param SiterootHostnameGenerator   $siterootHostnameGenerator
-     * @param string                      $languages
-     * @param string                      $defaultLanguage
+     * @param LoggerInterface           $logger
+     * @param EntityManagerInterface    $em
+     * @param NodeManagerInterface      $treeManager
+     * @param SiterootRequestMatcher    $siterootRequestMatcher
+     * @param SiterootHostnameGenerator $siterootHostnameGenerator
+     * @param string                    $languages
+     * @param string                    $defaultLanguage
      */
     public function __construct(
         LoggerInterface $logger,
-        ContentTreeManagerInterface $treeManager,
+        EntityManagerInterface $em,
+        NodeManagerInterface $treeManager,
         SiterootRequestMatcher $siterootRequestMatcher,
         SiterootHostnameGenerator $siterootHostnameGenerator,
         $languages,
         $defaultLanguage)
     {
         $this->logger = $logger;
-        $this->contentTreeManager = $treeManager;
+        $this->em = $em;
+        $this->treeManager = $treeManager;
         $this->siterootRequestMatcher = $siterootRequestMatcher;
         $this->siterootHostnameGenerator = $siterootHostnameGenerator;
         $this->languages = explode(',', $languages);
@@ -111,9 +120,9 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
-        /* @var $treeNode TreeNodeInterface */
+        /* @var $treeNode NodeInterface */
         $treeNode = $name;
         $language = isset($parameters['language']) ? $parameters['language'] : 'de';
         $encode = false;
@@ -132,7 +141,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
                 $scheme = $treeNode->getAttribute('https', 'http');
             }
 
-            $siteroot = $this->contentTreeManager->findByTreeId($treeNode->getId())->getSiteroot();
+            $siteroot = $this->treeManager->getBySiteRootId($treeNode->getId())->getSiteroot();
 
             $hostname = $this->siterootHostnameGenerator->generate($siteroot, $language);
 
@@ -175,6 +184,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     public function matchRequest(Request $request)
     {
+        $repo = $this->em->getRepository('PhlexibleTreeBundle:Route');
+        echo $request->getPathInfo();
+        $route = $repo->findBy(array('path' => $request->getPathInfo()));
+        dump($route);die;
+
         $tree = $this->findTree($request);
 
         if (null === $tree) {
@@ -197,7 +211,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         if (isset($parameters['_route_object'])) {
             $treeNode = $parameters['_route_object'];
-            /* @var $treeNode TreeNodeInterface */
+            /* @var $treeNode NodeInterface */
             if ($cache = $treeNode->getAttribute('cache')) {
                 $configuration = new Cache(array());
 
@@ -251,7 +265,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         $siterootUrl = $siteroot->getDefaultUrl();
         $request->attributes->set('siterootUrl', $siterootUrl);
 
-        return $this->contentTreeManager->find($siteroot->getId());
+        return $this->treeManager->find($siteroot->getId());
     }
 
     /**
@@ -264,7 +278,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     protected function matchIdentifiers(Request $request, ContentTreeInterface $tree)
     {
-        $match = [];
+        $match = array();
         $path = $request->getPathInfo();
         $language = null;
         $tid = null;
@@ -272,7 +286,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         /* @var $siterootUrl Url */
         $siterootUrl = $request->attributes->get('siterootUrl');
 
-        $attributes = [];
+        $attributes = array();
 
         if (!strlen($path) || $path === '/') {
             $language = $siterootUrl->getLanguage();
@@ -357,12 +371,12 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * Generate path
      *
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
      * @return string
      */
-    protected function generatePath(TreeNodeInterface $node, $language)
+    protected function generatePath(NodeInterface $node, $language)
     {
         if ($this->requestContext->getParameter('preview')) {
             return $this->generatePreviewPath($node, $language);
@@ -375,7 +389,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         // have paths
         $pathNodes = array_reverse($tree->getPath($node));
 
-        $parts = [];
+        $parts = array();
 
         foreach ($pathNodes as $pathNode) {
             if ($tree->isViewable($pathNode)) {
@@ -441,7 +455,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         return $path;
     }
 
-    protected function generatePreviewPath(TreeNodeInterface $node, $language)
+    protected function generatePreviewPath(NodeInterface $node, $language)
     {
         return "/admin/frontend/preview/$language/{$node->getId()}";
     }

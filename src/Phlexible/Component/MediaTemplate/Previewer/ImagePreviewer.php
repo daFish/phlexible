@@ -89,7 +89,7 @@ class ImagePreviewer implements PreviewerInterface
 
         $debug = json_encode($template->toArray(), JSON_PRETTY_PRINT);
 
-        $data = [
+        $data = array(
             'path'     => $cacheFilename,
             'file'     => basename($cacheFilename),
             'size'     => filesize($cacheFilename),
@@ -99,7 +99,7 @@ class ImagePreviewer implements PreviewerInterface
             'debug'    => $debug,
             'width'    => $size[0],
             'height'   => $size[1],
-        ];
+        );
 
         return $data;
     }

@@ -45,7 +45,7 @@ class TempStorage
     public function all()
     {
         if (!$this->count()) {
-            return [];
+            return array();
         }
 
         return $this->session->get('mediamanager.temp_files');

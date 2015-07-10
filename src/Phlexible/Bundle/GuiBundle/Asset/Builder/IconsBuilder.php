@@ -103,7 +103,7 @@ class IconsBuilder
      */
     private function buildIcons(array $bindings, $baseUrl, $basePath)
     {
-        $data = [];
+        $data = array();
 
         foreach ($bindings as $binding) {
             foreach ($binding->getResources() as $resource) {
@@ -126,14 +126,14 @@ class IconsBuilder
 
                 $selector = sprintf('.p-%s-%s-icon', str_replace('phlexible', '', $bundle), $name);
 
-                $data[] = [
+                $data[] = array(
                     'bundle'    => $bundle,
                     'path'      => $path,
                     'file'      => $file,
                     'name'      => $name,
                     'selector'  => $selector,
                     'extension' => $extension,
-                ];
+                );
             }
         }
 

@@ -52,12 +52,12 @@ class PuliMetaSetRepository implements MetaSetRepositoryInterface
     /**
      * @var ParserInterface[]
      */
-    private $parsers = [];
+    private $parsers = array();
 
     /**
      * @var DumperInterface[]
      */
-    private $dumpers = [];
+    private $dumpers = array();
 
     /**
      * @var MetaSetCollection

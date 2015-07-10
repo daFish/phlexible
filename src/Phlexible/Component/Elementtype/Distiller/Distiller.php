@@ -56,27 +56,27 @@ class Distiller
 
     private function iterate(ElementtypeStructure $structure, ElementtypeStructureNode $node)
     {
-        $data = [];
+        $data = array();
 
         foreach ($structure->getChildNodes($node->getDsId()) as $childNode) {
             $field = $this->fieldRegistry->getField($childNode->getType());
 
             if ($field->isField()) {
-                $data[$childNode->getName()] = [
+                $data[$childNode->getName()] = array(
                     'node'  => $childNode,
                     'field' => $field,
-                ];
+                );
             }
 
             if ($structure->hasChildNodes($childNode->getDsId())) {
                 $childData = $this->iterate($structure, $childNode);
 
                 if ($childNode->isRepeatable() || $childNode->isOptional()) {
-                    $data[$node->getName()] = [
+                    $data[$node->getName()] = array(
                         'node'     => $childNode,
                         'field'    => $field,
                         'children' => $childData
-                    ];
+                    );
                 } else {
                     $data = array_merge($data, $childData);
                 }

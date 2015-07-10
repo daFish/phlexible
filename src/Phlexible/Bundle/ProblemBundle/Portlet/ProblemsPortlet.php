@@ -34,7 +34,7 @@ class ProblemsPortlet extends Portlet
     {
         $this
             ->setId('problems-portlet')
-            ->setTitle($translator->trans('problems.problems', [], 'gui'))
+            ->setTitle($translator->trans('problems.problems', array(), 'gui'))
             ->setClass('Phlexible.problems.portlet.Problems')
             ->setIconClass('p-problem-portlet-icon')
             ->setRole('ROLE_PROBLEMS');
@@ -49,28 +49,28 @@ class ProblemsPortlet extends Portlet
      */
     public function getData()
     {
-        $data = [];
+        $data = array();
 
         $problems = $this->fetcher->fetch();
 
-        $allowedSeverities = [
+        $allowedSeverities = array(
             Problem::SEVERITY_CRITICAL,
             Problem::SEVERITY_WARNING,
-        ];
+        );
 
         foreach ($problems as $problem) {
             if (!in_array($problem->getSeverity(), $allowedSeverities)) {
                 continue;
             }
 
-            $data[] = [
+            $data[] = array(
                 'id'       => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
                 'iconCls'  => $problem->getIconClass(),
                 'severity' => $problem->getSeverity(),
                 'msg'      => $problem->getMessage(),
                 'hint'     => $problem->getHint(),
                 'link'     => $problem->getLink(),
-            ];
+            );
         }
 
         if (!count($data)) {

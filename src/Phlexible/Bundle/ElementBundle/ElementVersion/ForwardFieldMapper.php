@@ -23,7 +23,7 @@ class ForwardFieldMapper implements FieldMapperInterface
      */
     public function accept($key)
     {
-        return in_array($key, ['forward']);
+        return in_array($key, array('forward'));
     }
 
     /**

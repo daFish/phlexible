@@ -27,7 +27,7 @@ class Folder extends BaseFolder implements ExtendedFolderInterface, Hierarchical
      * @var array
      * @ORM\Column(name="metasets", type="simple_array", nullable=true)
      */
-    private $metasets = [];
+    private $metasets = array();
 
     /**
      * @param string $metaSetId

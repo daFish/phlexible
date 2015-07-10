@@ -28,12 +28,10 @@ class PhlexibleTeaserExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('doctrine.yml');
-        $loader->load('mediator.yml');
-        $loader->load('content.yml');
+        $loader->load('mediators.yml');
         $loader->load('configurators.yml');
 
         $container->setAlias('phlexible_teaser.teaser_manager', 'phlexible_teaser.doctrine.teaser_manager');
         $container->setAlias('phlexible_teaser.teaser_service', 'phlexible_teaser.doctrine.teaser_manager');
-        $container->setAlias('phlexible_teaser.state_manager', 'phlexible_teaser.doctrine.state_manager');
     }
 }

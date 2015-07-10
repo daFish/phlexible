@@ -16,32 +16,42 @@ namespace Phlexible\Bundle\TreeBundle;
 class TreeEvents
 {
     /**
-     * Fired before a new tree node is created.
+     * Fired after configuring navigation
+     */
+    const CONFIGURE_NAVIGATION = 'phlexible_tree.configure_navigation';
+
+    /**
+     * Fired after configuring node
+     */
+    const CONFIGURE_TREE_NODE = 'phlexible_tree.configure_tree_node';
+
+    /**
+     * Fired before a new node is created.
      */
     const BEFORE_CREATE_NODE = 'phlexible_tree.before_create_node';
 
     /**
-     * Fired after a new tree node has been created.
+     * Fired after a new node has been created.
      */
     const CREATE_NODE = 'phlexible_tree.create_node';
 
     /**
-     * Fired before a tree node instance is created.
+     * Fired before a node instance is created.
      */
     const BEFORE_CREATE_NODE_INSTANCE = 'phlexible_tree.before_create_node_instance';
 
     /**
-     * Fired after a tree node instance has been created.
+     * Fired after a node instance has been created.
      */
     const CREATE_NODE_INSTANCE = 'phlexible_tree.create_node_instance';
 
     /**
-     * Fired before a tree node is updated.
+     * Fired before a node is updated.
      */
     const BEFORE_UPDATE_NODE = 'phlexible_tree.before_update_node';
 
     /**
-     * Fired after a tree node has updated.
+     * Fired after a node has updated.
      */
     const UPDATE_NODE = 'phlexible_tree.update_node';
 
@@ -56,68 +66,158 @@ class TreeEvents
     const DELETE_NODE = 'phlexible_tree.delete_node';
 
     /**
-     * Fired before a tree node is published.
+     * Fired before a node is published.
      */
-    const BEFORE_PUBLISH_NODE = 'phlexible_tree.before_publish_node';
+    const BEFORE_CREATE_STATE = 'phlexible_tree.before_create_state';
 
     /**
-     * Fired after a tree node is published.
+     * Fired after a node is published.
      */
-    const PUBLISH_NODE = 'phlexible_tree.publish_node';
+    const CREATE_STATE = 'phlexible_tree.create_state';
 
     /**
-     * Fired before a tree node is set offline.
+     * Fired before a node is published.
      */
-    const BEFORE_SET_NODE_OFFLINE = 'phlexible_tree.before_set_node_offline';
+    const BEFORE_UPDATE_STATE = 'phlexible_tree.before_update_state';
+
+    /**
+     * Fired after a node is published.
+     */
+    const UPDATE_STATE = 'phlexible_tree.update_state';
+
+    /**
+     * Fired before a node is set offline.
+     */
+    const BEFORE_DELETE_STATE = 'phlexible_tree.before_delete_state';
 
     /**
      * Fired after a node is set offline.
      */
-    const SET_NODE_OFFLINE = 'phlexible_tree.set_node_offline';
+    const DELETE_STATE = 'phlexible_tree.delete_state';
 
     /**
-     * Fired before a tree node is moved.
+     * Fired before a node is published.
      */
-    const BEFORE_MOVE_NODE = 'phlexible_tree.before_move_node';
+    const BEFORE_CREATE_NODE_CONTEXT = 'phlexible_tree.before_create_node_context';
 
     /**
-     * Fired after a tree node has been moved.
+     * Fired after a node is published.
      */
-    const MOVE_NODE = 'phlexible_tree.move_node';
+    const CREATE_NODE_CONTEXT = 'phlexible_tree.create_node_context';
 
     /**
-     * Fired before a tree nodes sort mode is changed.
+     * Fired after a node is published.
      */
-    const BEFORE_SET_NODE_SORT_MODE = 'phlexible_tree.before_set_node_sort_mode';
+    const BEFORE_CREATE_NODE_INSTANCE_CONTEXT = 'phlexible_tree.before_create_node_instance_context';
 
     /**
-     * Fired after a tree nodes sort mode has been changed.
+     * Fired after a node is published.
      */
-    const SET_NODE_SORT_MODE = 'phlexible_tree.set_node_sort_mode';
+    const CREATE_NODE_INSTANCE_CONTEXT = 'phlexible_tree.create_node_instance_context';
 
     /**
-     * Fired before tree node is reordered.
+     * Fired before a node is published.
      */
-    const BEFORE_REORDER_NODE = 'phlexible_tree.before_reorder_node';
+    const BEFORE_UPDATE_NODE_CONTEXT = 'phlexible_tree.before_update_node_context';
 
     /**
-     * Fired after tree nodes have been reordered.
+     * Fired after a node is published.
      */
-    const REORDER_NODE = 'phlexible_tree.reorder_node';
+    const UPDATE_NODE_CONTEXT = 'phlexible_tree.update_node_context';
+
+    /**
+     * Fired before a node is published.
+     */
+    const BEFORE_DELETE_NODE_CONTEXT = 'phlexible_tree.before_delete_node_context';
+
+    /**
+     * Fired after a node is published.
+     */
+    const DELETE_NODE_CONTEXT = 'phlexible_tree.delete_node_context';
+
+    /**
+     * Fired before a node is published.
+     */
+    const BEFORE_PUBLISH_NODE_CONTEXT = 'phlexible_tree.before_publish_node_context';
+
+    /**
+     * Fired after a node is published.
+     */
+    const PUBLISH_NODE_CONTEXT = 'phlexible_tree.publish_node_context';
+
+    /**
+     * Fired before a node is set offline.
+     */
+    const BEFORE_SET_NODE_OFFLINE_CONTEXT = 'phlexible_tree.before_set_node_offline_context';
+
+    /**
+     * Fired after a node is set offline.
+     */
+    const SET_NODE_OFFLINE_CONTEXT = 'phlexible_tree.set_node_offline_context';
+
+    /**
+     * Fired before a node is moved.
+     */
+    const BEFORE_MOVE_NODE_CONTEXT = 'phlexible_tree.before_move_node_context';
+
+    /**
+     * Fired after a node has been moved.
+     */
+    const MOVE_NODE_CONTEXT = 'phlexible_tree.move_node_context';
+
+    /**
+     * Fired before node is reordered.
+     */
+    const BEFORE_REORDER_NODE_CONTEXT = 'phlexible_tree.before_reorder_node_context';
+
+    /**
+     * Fired after nodes have been reordered.
+     */
+    const REORDER_NODE_CONTEXT = 'phlexible_tree.reorder_node_context';
 
     /**
      * Fired before node children are reordered.
      */
-    const BEFORE_REORDER_CHILD_NODE = 'phlexible_tree.before_reorder_child_nodes';
+    const BEFORE_REORDER_CHILD_NODES_CONTEXT = 'phlexible_tree.before_reorder_child_nodes_context';
 
     /**
      * Fired after node children have been reordered.
      */
-    const REORDER_CHILD_NODES = 'phlexible_tree.reorder_child_nodes';
+    const REORDER_CHILD_NODES_CONTEXT = 'phlexible_tree.reorder_child_nodes_context';
 
     /**
-     * Fired when the tree is filtered
+     * Fired when the is filtered
      */
     const TREE_FILTER = 'phlexible_tree.tree_filter';
+
+    /**
+     * Fired before a new route is created.
+     */
+    const BEFORE_CREATE_ROUTE = 'phlexible_tree.before_create_route';
+
+    /**
+     * Fired after a new route has been created.
+     */
+    const CREATE_ROUTE = 'phlexible_tree.create_route';
+
+    /**
+     * Fired before a route is updated.
+     */
+    const BEFORE_UPDATE_ROUTE = 'phlexible_tree.before_update_route';
+
+    /**
+     * Fired after a route has updated.
+     */
+    const UPDATE_ROUTE = 'phlexible_tree.update_route';
+
+    /**
+     * Fired before a route is deleted.
+     */
+    const BEFORE_DELETE_ROUTE = 'phlexible_tree.before_delete_route';
+
+    /**
+     * Fired after a route is deleted.
+     */
+    const DELETE_ROUTE = 'phlexible_tree.delete_route';
 
 }

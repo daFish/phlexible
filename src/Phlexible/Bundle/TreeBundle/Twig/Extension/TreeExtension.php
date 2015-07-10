@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\TreeBundle\Twig\Extension;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeContext;
-use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Bundle\TreeBundle\Node\ReferenceNodeContext;
 use Phlexible\Bundle\TreeBundle\Pattern\PatternResolver;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,9 +26,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class TreeExtension extends \Twig_Extension
 {
     /**
-     * @var ContentTreeManagerInterface
+     * @var TreeManagerInterface
      */
-    private $contentTreeManager;
+    private $treeManager;
 
     /**
      * @var PatternResolver
@@ -51,21 +51,26 @@ class TreeExtension extends \Twig_Extension
     private $tokenStorage;
 
     /**
-     * @param ContentTreeManagerInterface   $contentTreeManager
+     * @var array
+     */
+    private $navigations = array();
+
+    /**
+     * @param TreeManagerInterface          $treeManager
      * @param PatternResolver               $patternResolver
      * @param RequestStack                  $requestStack
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param TokenStorageInterface         $tokenStorage
      */
     public function __construct(
-        ContentTreeManagerInterface $contentTreeManager,
+        TreeManagerInterface $treeManager,
         PatternResolver $patternResolver,
         RequestStack $requestStack,
         AuthorizationCheckerInterface $authorizationChecker,
         TokenStorageInterface $tokenStorage
     )
     {
-        $this->contentTreeManager = $contentTreeManager;
+        $this->treeManager = $treeManager;
         $this->patternResolver = $patternResolver;
         $this->requestStack = $requestStack;
         $this->authorizationChecker = $authorizationChecker;
@@ -77,32 +82,83 @@ class TreeExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('tree_node', [$this, 'treeNode']),
-            new \Twig_SimpleFunction('node_granted', [$this, 'nodeGranted']),
-            new \Twig_SimpleFunction('page_title', [$this, 'pageTitle']),
-            new \Twig_SimpleFunction('page_title_pattern', [$this, 'pageTitlePattern']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('navigation', array($this, 'navigation')),
+            new \Twig_SimpleFunction('tree_node', array($this, 'treeNode')),
+            new \Twig_SimpleFunction('node_granted', array($this, 'nodeGranted')),
+            new \Twig_SimpleFunction('page_title', array($this, 'pageTitle')),
+            new \Twig_SimpleFunction('page_title_pattern', array($this, 'pageTitlePattern')),
+        );
     }
 
     /**
-     * @param string $treeId
+     * @param string $name
      *
-     * @return ContentTreeContext
+     * @return NodeContext|null
      */
-    public function treeNode($treeId)
+    public function navigation($name)
     {
-        $tree = $this->contentTreeManager->findByTreeId($treeId);
+        if (!isset($this->navigations[$name])) {
+            $request = $this->requestStack->getCurrentRequest();
+
+            if (!$request->attributes->has('siteroot')) {
+                throw new \InvalidArgumentException("Need a siteroot request attribute for navigations.");
+            }
+            if (!$request->attributes->has('node')) {
+                throw new \InvalidArgumentException("Need a node request attribute for navigations");
+            }
+
+            $siteroot = $request->attributes->get('siteroot');
+            $currentNode = $request->attributes->get('node');
+
+            $navigations = $siteroot->getNavigations();
+            $siterootNavigation = null;
+            foreach ($navigations as $navigation) {
+                if ($navigation->getTitle() === $name) {
+                    $siterootNavigation = $navigation;
+                    break;
+                }
+            }
+
+            if (!$siterootNavigation) {
+                return $this->navigations[$name] = null;
+            }
+
+            $startTid = $siterootNavigation->getStartTreeId();
+            $node = null;
+            if ($startTid) {
+                $node = $currentNode->getTree()->get($startTid);
+            }
+
+            $this->navigations[$name] = new ReferenceNodeContext(
+                $node->getNode(),
+                $node->getTree(),
+                $node->getTree()->getDefaultLanguage(),
+                $currentNode,
+                $siterootNavigation->getMaxDepth()
+            );
+        }
+
+        return $this->navigations[$name];
+    }
+
+    /**
+     * @param string $nodeId
+     *
+     * @return NodeContext
+     */
+    public function treeNode($nodeId)
+    {
+        $tree = $this->treeManager->getByNodeId($nodeId);
         if (!$tree) {
             return null;
         }
-        $treeNode = $tree->get($treeId);
 
-        return new ContentTreeContext($treeNode);
+        return $tree->get($nodeId);
     }
 
     /**
-     * @param TreeNodeInterface|ContentTreeContext $node
+     * @param NodeContext $node
      *
      * @return bool
      */
@@ -112,20 +168,18 @@ class TreeExtension extends \Twig_Extension
             return false;
         }
 
-        /* @var $nodes TreeNodeInterface[] */
+        /* @var $nodes NodeContext[] */
 
-        if ($node instanceof ContentTreeContext) {
+        if ($node instanceof NodeContext) {
             $nodes = array($node->getNode());
         } elseif (is_array($node)) {
             $nodes = $node;
-        } elseif (!$node instanceof TreeNodeInterface) {
-            return false;
         } else {
             $nodes = array($node);
         }
 
         foreach ($nodes as $node) {
-            if ($node instanceof ContentTreeContext) {
+            if ($node instanceof NodeContext) {
                 $node = $node->getNode();
             }
 
@@ -138,43 +192,43 @@ class TreeExtension extends \Twig_Extension
     }
 
     /**
-     * @param string            $name
-     * @param string            $language
-     * @param TreeNodeInterface $treeNode
-     * @param Siteroot          $siteroot
+     * @param string      $name
+     * @param string      $language
+     * @param NodeContext $node
+     * @param Siteroot    $siteroot
      *
      * @return string
      */
-    public function pageTitle($name = 'default', $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
+    public function pageTitle($name = 'default', $language = null, NodeContext $node = null, Siteroot $siteroot = null)
     {
         $request = $this->requestStack->getCurrentRequest();
 
         if ($siteroot === null) {
-            $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
+            $siteroot = $request->attributes->get('siteroot');
         }
 
-        if ($treeNode === null) {
-            $treeNode = $request->get('contentDocument');
+        if ($node === null) {
+            $node = $request->get('node');
         }
 
         if ($language === null) {
             $language = $request->getLocale();
         }
 
-        $title = $this->patternResolver->replace($name, $siteroot, $treeNode->getTree()->getContent($treeNode), $language);
+        $title = $this->patternResolver->replace($name, $siteroot, $node->getTree()->getContent($node), $language);
 
         return $title;
     }
 
     /**
-     * @param string            $pattern
-     * @param string            $language
-     * @param TreeNodeInterface $treeNode
-     * @param Siteroot          $siteroot
+     * @param string      $pattern
+     * @param string      $language
+     * @param NodeContext $node
+     * @param Siteroot    $siteroot
      *
      * @return string
      */
-    public function pageTitlePattern($pattern, $language = null, TreeNodeInterface $treeNode = null, Siteroot $siteroot = null)
+    public function pageTitlePattern($pattern, $language = null, NodeContext $node = null, Siteroot $siteroot = null)
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -182,15 +236,15 @@ class TreeExtension extends \Twig_Extension
             $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
         }
 
-        if ($treeNode === null) {
-            $treeNode = $request->get('contentDocument');
+        if ($node === null) {
+            $node = $request->get('contentDocument');
         }
 
         if ($language === null) {
             $language = $request->getLocale();
         }
 
-        $title = $this->patternResolver->replacePattern($pattern, $siteroot, $treeNode->getTree()->getContent($treeNode), $language);
+        $title = $this->patternResolver->replacePattern($pattern, $siteroot, $node->getTree()->getContent($node), $language);
 
         return $title;
     }

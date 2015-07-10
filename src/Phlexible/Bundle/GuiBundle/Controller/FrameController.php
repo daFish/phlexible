@@ -38,10 +38,10 @@ class FrameController extends Controller
     {
         $viewIndex = $this->get('phlexible_gui.view.index');
 
-        return [
+        return array(
             'scripts'  => $viewIndex->get($request),
             'noScript' => $viewIndex->getNoScript(),
-        ];
+        );
     }
 
     /**
@@ -104,6 +104,6 @@ class FrameController extends Controller
             'routes' => $extractedRoutes->getRoutes(),
         )));
 
-        return new Response($content, 200, ['Content-type' => 'text/javascript; charset=utf-8']);
+        return new Response($content, 200, array('Content-type' => 'text/javascript; charset=utf-8'));
     }
 }

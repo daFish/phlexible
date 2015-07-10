@@ -45,9 +45,9 @@ class IconBuilder
      *
      * @return string
      */
-    public function getAssetPath($icon, array $params = [])
+    public function getAssetPath($icon, array $params = array())
     {
-        $overlay = [];
+        $overlay = array();
 
         if (!empty($params['status'])) {
             $overlay['status'] = $params['status'];

@@ -37,7 +37,7 @@ class BundlesController extends Controller
      */
     public function listAction()
     {
-        $modules = [];
+        $modules = array();
 
         $components = $this->container->getParameter('kernel.bundles');
 
@@ -52,18 +52,18 @@ class BundlesController extends Controller
                 $package = current($namespaceParts);
             }
 
-            $icon = 'p-' . str_replace(['bundle', 'phlexible'], ['', ''], strtolower($id)) . '-component-icon';
+            $icon = 'p-' . str_replace(array('bundle', 'phlexible'), array('', ''), strtolower($id)) . '-component-icon';
 
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
-            $modules[$id] = [
+            $modules[$id] = array(
                 'id'          => $id,
                 'classname'   => $className,
                 'package'     => $package,
                 'icon'        => $icon,
                 'path'        => $path,
-            ];
+            );
         }
 
         ksort($modules);
@@ -86,7 +86,7 @@ class BundlesController extends Controller
     {
         $bundles = $this->container->getParameter('kernel.bundles');
 
-        $packageList = [];
+        $packageList = array();
         foreach ($bundles as $id => $class) {
             $reflection = new \ReflectionClass($class);
             $namespace = $reflection->getNamespaceName();
@@ -94,13 +94,13 @@ class BundlesController extends Controller
             $packageList[$package] = 1;
         }
 
-        $packages = [];
+        $packages = array();
         foreach (array_keys($packageList) as $package) {
-            $packages[] = ['id' => $package, 'title' => ucfirst($package), 'checked' => true];
+            $packages[] = array('id' => $package, 'title' => ucfirst($package), 'checked' => true);
         }
 
-        return new JsonResponse([
+        return new JsonResponse(array(
             'packages' => $packages,
-        ]);
+        ));
     }
 }

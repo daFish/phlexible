@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Element\Publish;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 
 /**
  * Selection item
@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
 class SelectionItem
 {
     /**
-     * @var TreeNodeInterface|Teaser
+     * @var NodeInterface|Teaser
      */
     private $target;
 
@@ -54,7 +54,7 @@ class SelectionItem
     private $path;
 
     /**
-     * @param TreeNodeInterface|Teaser $target
+     * @param NodeInterface|Teaser $target
      * @param int                      $version
      * @param string                   $language
      * @param string                   $title
@@ -114,7 +114,7 @@ class SelectionItem
     }
 
     /**
-     * @return TreeNodeInterface|Teaser
+     * @return NodeInterface|Teaser
      */
     public function getTarget()
     {

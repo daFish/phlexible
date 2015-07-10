@@ -30,10 +30,10 @@ class FolderCommand extends ContainerAwareCommand
         $this
             ->setName('media-manager:folder')
             ->setDefinition(
-                [
+                array(
                     new InputArgument('id', InputArgument::REQUIRED, 'Folder ID.'),
                     new InputOption('with-attributes', null, InputOption::VALUE_NONE, 'Include attributes.'),
-                ]
+                )
             )
             ->setDescription('Show folder info.');
     }

@@ -54,10 +54,10 @@ class TreeController extends Controller
         $tree = $treeManager->getBySiteRootId($siterootId);
         $rootNode = $tree->getRoot();
 
-        $data = [];
+        $data = array();
         if ($rootNode) {
             if ($tid === null || $tid < 1) {
-                $data = [$nodeSerializer->serializeNode($rootNode, $language)];
+                $data = array($nodeSerializer->serializeNode($rootNode, $language));
             } else {
                 $node = $tree->get($tid);
 
@@ -94,23 +94,23 @@ class TreeController extends Controller
         $elementtype = $elementService->findElementtype($element);
         $childElementtypes = $elementService->findAllowedChildren($elementtype);
 
-        $data = [];
+        $data = array();
         foreach ($childElementtypes as $childElementtype) {
-            if (!in_array($childElementtype->getType(), [Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE])) {
+            if (!in_array($childElementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE))) {
                 continue;
             }
 
-            $data[$childElementtype->getTitle().'_'.$childElementtype->getId()] = [
+            $data[$childElementtype->getTitle().'_'.$childElementtype->getId()] = array(
                 'id'    => $childElementtype->getId(),
                 'title' => $childElementtype->getTitle(),
                 'icon'  => $iconResolver->resolveElementtype($childElementtype),
                 'type'  => $childElementtype->getType(),
-            ];
+            );
         }
         ksort($data);
         $data = array_values($data);
 
-        return new JsonResponse(['elementtypes' => $data]);
+        return new JsonResponse(array('elementtypes' => $data));
     }
 
     /**
@@ -137,27 +137,27 @@ class TreeController extends Controller
             $language = $element->getMasterLanguage();
         }
 
-        $firstString = $this->get('translator')->trans('elements.first', [], 'gui');
+        $firstString = $this->get('translator')->trans('elements.first', array(), 'gui');
 
-        $data = [];
-        $data[] = [
+        $data = array();
+        $data[] = array(
             'id'    => '0',
             'title' => $firstString,
             'icon'  => $iconResolver->resolveIcon('_top.gif'),
-        ];
+        );
 
         foreach ($tree->getChildren($node) as $childNode) {
             $childElement = $elementService->findElement($childNode->getTypeId());
             $childElementVersion = $elementService->findLatestElementVersion($childElement);
 
-            $data[] = [
+            $data[] = array(
                 'id'    => $childNode->getId(),
                 'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()) . ' [' . $childNode->getId() . ']',
-                'icon'  => $iconResolver->resolveTreeNode($childNode, $language),
-            ];
+                'icon'  => $iconResolver->resolveNode($childNode, $language),
+            );
         }
 
-        return new JsonResponse(['elements' => $data]);
+        return new JsonResponse(array('elements' => $data));
     }
 
     /**
@@ -191,14 +191,14 @@ class TreeController extends Controller
 
         $elementSource = $elementService->findElementSource($elementtypeId);
 
-        $element = $elementService->createElement($elementSource, $masterLanguage, $userId);
+        $elementVersion = $elementService->createElement($elementSource, $masterLanguage, $userId);
+        $element = $elementVersion->getElement();
 
-        $node = $tree->create(
+        $node = $tree->createNode(
             $parentNode,
             $afterNode,
-            'element-' . $elementSource->getType(),
-            $element->getEid(),
-            [],
+            $elementVersion,
+            array(),
             $this->getUser()->getId(),
             $sortMode,
             $sortDir,
@@ -209,13 +209,13 @@ class TreeController extends Controller
         return new ResultResponse(
             true,
             'Element EID "' . $element->getEid() . ' (' . $masterLanguage . ')" created.',
-            [
+            array(
                 'eid'             => $element->getEid(),
                 'tid'             => $node->getId(),
                 'master_language' => $masterLanguage,
                 'navigation'      => $navigation,
                 'restricted'      => $restricted
-            ]
+            )
         );
     }
 
@@ -264,7 +264,7 @@ class TreeController extends Controller
         $sourceEid = $sourceNode->getTypeId();
 
         $select = $db->select()
-            ->from($db->prefix . 'element', ['element_type_id', 'masterlanguage'])
+            ->from($db->prefix . 'element', array('element_type_id', 'masterlanguage'))
             ->where('eid = ?', $sourceEid);
 
         $sourceElementRow = $db->fetchRow($select);
@@ -292,7 +292,7 @@ class TreeController extends Controller
             $targetId
         );
 
-        return new ResultResponse(true, 'Element copied.', ['id' => $targetId]);
+        return new ResultResponse(true, 'Element copied.', array('id' => $targetId));
     }
 
     /**
@@ -321,7 +321,7 @@ class TreeController extends Controller
 
         $tree->move($node, $targetNode, $this->getUser()->getId());
 
-        return new ResultResponse(true, 'Element moved.', ['id' => $id, 'parent_id' => $targetId]);
+        return new ResultResponse(true, 'Element moved.', array('id' => $id, 'parent_id' => $targetId));
     }
 
     /**
@@ -349,25 +349,25 @@ class TreeController extends Controller
         $instances = $treeManager->getInstanceNodes($node);
 
         if (count($instances) > 1) {
-            $instancesArray = [];
+            $instancesArray = array();
             foreach ($instances as $instanceNode) {
                 $siteroot = $siterootManager->find($instanceNode->getTree()->getSiterootId());
                 $instanceTitle = $treeMeditator->getField($instanceNode, 'backend', $language);
 
-                $instancesArray[] = [
+                $instancesArray[] = array(
                     $instanceNode->getId(),
                     $siteroot->getTitle(),
                     $instanceTitle,
                     $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
                     (bool) $instanceNode->getTree()->isInstanceMaster($instanceNode),
                     (bool) ($instanceNode->getId() === $nodeId)
-                ];
+                );
             }
 
             return new ResultResponse(true, '', $instancesArray);
         }
 
-        return new ResultResponse(true, '', []);
+        return new ResultResponse(true, '', array());
     }
 
     /**
@@ -382,7 +382,7 @@ class TreeController extends Controller
     {
         $treeIds = $request->get('id');
         if (!is_array($treeIds)) {
-            $treeIds = [$treeIds];
+            $treeIds = array($treeIds);
         }
 
         $treeManager = $this->get('phlexible_tree.tree_manager');

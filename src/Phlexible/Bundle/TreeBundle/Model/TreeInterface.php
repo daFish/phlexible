@@ -8,7 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Model;
 
-use Phlexible\Bundle\TreeBundle\Entity\TreeNodeOnline;
+use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
  * Tree interface
@@ -34,7 +35,7 @@ interface TreeInterface
     /**
      * Return the root node
      *
-     * @return TreeNodeInterface
+     * @return NodeInterface
      */
     public function getRoot();
 
@@ -43,7 +44,7 @@ interface TreeInterface
      *
      * @param int $id
      *
-     * @return TreeNodeInterface
+     * @return NodeContext
      */
     public function get($id);
 
@@ -60,7 +61,7 @@ interface TreeInterface
      * @param mixed       $typeId
      * @param string|null $type
      *
-     * @return TreeNodeInterface[]
+     * @return NodeContext[]
      */
     public function getByTypeId($typeId, $type = null);
 
@@ -75,159 +76,194 @@ interface TreeInterface
     /**
      * Return child nodes
      *
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
      *
-     * @return TreeNodeInterface[]
+     * @return NodeContext[]
      */
-    public function getChildren(TreeNodeInterface $node);
+    public function getChildren(NodeContext $node);
 
     /**
      * Are child nodes present?
      *
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
      *
      * @return bool
      */
-    public function hasChildren(TreeNodeInterface $node);
+    public function hasChildren(NodeContext $node);
 
     /**
      * Return parent node
      *
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
      *
-     * @return TreeNodeInterface
+     * @return NodeContext
      */
-    public function getParent(TreeNodeInterface $node);
+    public function getParent(NodeContext $node);
 
     /**
      * Return ID path array
      *
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
      *
      * @return array
      */
-    public function getIdPath(TreeNodeInterface $node);
+    public function getIdPath(NodeContext $node);
 
     /**
      * Return node path array
      *
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
      *
-     * @return TreeNodeInterface[]
+     * @return NodeContext[]
      */
-    public function getPath(TreeNodeInterface $node);
+    public function getPath(NodeContext $node);
 
     /**
      * Is the given node the root node?
      *
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
      *
      * @return bool
      */
-    public function isRoot(TreeNodeInterface $node);
+    public function isRoot(NodeContext $node);
 
     /**
      * Is childId a child of parentId?
      *
-     * @param TreeNodeInterface $childNode
-     * @param TreeNodeInterface $parentNode
+     * @param NodeContext $childNode
+     * @param NodeContext $parentNode
      *
      * @return bool
      */
-    public function isChildOf(TreeNodeInterface $childNode, TreeNodeInterface $parentNode);
+    public function isChildOf(NodeContext $childNode, NodeContext $parentNode);
 
     /**
      * Is parentId a parent of childId?
      *
-     * @param TreeNodeInterface $parentNode
-     * @param TreeNodeInterface $childNode
+     * @param NodeContext $parentNode
+     * @param NodeContext $childNode
      *
      * @return bool
      */
-    public function isParentOf(TreeNodeInterface $parentNode, TreeNodeInterface $childNode);
+    public function isParentOf(NodeContext $parentNode, NodeContext $childNode);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
+     * @param string      $language
      *
      * @return bool
      */
-    public function isInstance(TreeNodeInterface $node);
+    public function isViewable(NodeContext $node, $language = null);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
+     * @param string      $language
      *
      * @return bool
      */
-    public function isInstanceMaster(TreeNodeInterface $node);
+    public function hasViewableChildren(NodeContext $node, $language = null);
 
     /**
-     * Return instance nodes for the given nodes from THIS tree.
+     * @param NodeContext $node
+     * @param string      $field
+     * @param string      $language
      *
-     * @param TreeNodeInterface $node
-     *
-     * @return TreeNodeInterface[]
+     * @return string
      */
-    public function getInstances(TreeNodeInterface $node);
+    public function getField(NodeContext $node, $field, $language = null);
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
+     * @param NodeContext $node
+     * @param string      $language
      *
-     * @return bool
+     * @return mixed
      */
-    public function isPublished(TreeNodeInterface $node, $language);
+    public function getContent(NodeContext $node, $language = null);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeContext $node
      *
-     * @return array
+     * @return string
      */
-    public function getPublishedLanguages(TreeNodeInterface $node);
+    public function getTemplate(NodeContext $node);
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
+     * Create a node
      *
-     * @return int|null
+     * @param NodeContext $parentNode
+     * @param NodeContext $afterNode
+     * @param mixed       $contentDocument
+     * @param array       $attributes
+     * @param string      $userId
+     * @param string      $sortMode
+     * @param string      $sortDir
+     * @param bool        $navigation
+     * @param bool        $needAuthentication
+     *
+     * @return NodeInterface
      */
-    public function getPublishedVersion(TreeNodeInterface $node, $language);
+    public function createNode(
+        NodeContext $parentNode,
+        NodeContext $afterNode = null,
+        $contentDocument,
+        array $attributes,
+        $userId,
+        $sortMode = 'free',
+        $sortDir = 'asc',
+        $navigation = false,
+        $needAuthentication = false
+    );
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
+     * @param NodeContext $parentNode
+     * @param NodeContext $afterNode
+     * @param NodeContext $sourceNode
+     * @param string      $userId
      *
-     * @return \DateTime|null
+     * @return NodeInterface
      */
-    public function getPublishedAt(TreeNodeInterface $node, $language);
+    public function createNodeInstance(
+        NodeContext $parentNode,
+        NodeContext $afterNode = null,
+        NodeContext $sourceNode,
+        $userId
+    );
 
     /**
-     * @param TreeNodeInterface $node
+     * Reorder node
      *
-     * @return array
+     * @param NodeContext $node
+     * @param NodeContext $beforeNode
+     *
+     * @throws InvalidNodeMoveException
      */
-    public function getPublishedVersions(TreeNodeInterface $node);
+    public function reorder(NodeContext $node, NodeContext $beforeNode);
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
+     * Reorder node
      *
-     * @return bool
+     * @param NodeContext $node
+     * @param array       $sortIds
+     *
+     * @throws InvalidNodeMoveException
      */
-    public function isAsync(TreeNodeInterface $node, $language);
+    public function reorderChildren(NodeContext $node, array $sortIds);
 
     /**
-     * @param TreeNodeInterface $node
+     * Move node
      *
-     * @return TreeNodeOnline[]
+     * @param NodeContext $node
+     * @param NodeContext $toNode
+     * @param string      $uid
      */
-    public function findOnlineByTreeNode(TreeNodeInterface $node);
+    public function move(NodeContext $node, NodeContext $toNode, $uid);
 
     /**
-     * @param TreeNodeInterface $node
-     * @param string            $language
+     * Delete node
      *
-     * @return TreeNodeOnline
+     * @param NodeContext $node
+     * @param string      $userId
+     * @param string      $comment
      */
-    public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language);
-
+    public function delete(NodeContext $node, $userId, $comment = null);
 }

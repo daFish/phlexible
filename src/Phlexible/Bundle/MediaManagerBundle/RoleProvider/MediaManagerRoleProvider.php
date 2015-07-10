@@ -22,10 +22,10 @@ class MediaManagerRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_MEDIA',
             'ROLE_MEDIA_ACCESS_CONTROL',
-        ];
+        );
     }
 
     /**

@@ -38,15 +38,15 @@ class ValuesController extends Controller
         $datasource = $datasourceManager->find($sourceId);
         $keys = $datasource->getValuesForLanguage($language);
 
-        $data = [];
+        $data = array();
         foreach ($keys as $key) {
             if (!$key) {
                 continue;
             }
 
-            $data[] = ['key' => $key, 'value' => $key];
+            $data[] = array('key' => $key, 'value' => $key);
         }
 
-        return new JsonResponse(['values' => $data]);
+        return new JsonResponse(array('values' => $data));
     }
 }

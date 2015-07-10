@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
-use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 
 /**
  * Delegating content tree manager
@@ -25,12 +25,12 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     private $siterootManager;
 
     /**
-     * @var TreeManager
+     * @var NodeManagerInterface
      */
     private $treeManager;
 
     /**
-     * @var MediatorInterface
+     * @var TreeMediatorInterface
      */
     private $mediator;
 
@@ -41,11 +41,14 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
 
     /**
      * @param SiterootManagerInterface $siterootManager
-     * @param TreeManager              $treeManager
-     * @param MediatorInterface        $mediator
+     * @param NodeManagerInterface     $treeManager
+     * @param TreeMediatorInterface        $mediator
      */
-    public function __construct(SiterootManagerInterface $siterootManager, TreeManager $treeManager, MediatorInterface $mediator)
-    {
+    public function __construct(
+        SiterootManagerInterface $siterootManager,
+        NodeManagerInterface $treeManager,
+        TreeMediatorInterface $mediator
+    ) {
         $this->siterootManager = $siterootManager;
         $this->treeManager = $treeManager;
         $this->mediator = $mediator;
@@ -57,7 +60,7 @@ class DelegatingContentTreeManager implements ContentTreeManagerInterface
     public function findAll()
     {
         if (null === $this->trees) {
-            $this->trees = [];
+            $this->trees = array();
             foreach ($this->siterootManager->findAll() as $siteroot) {
                 $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
                 $this->trees[] = new DelegatingContentTree($tree, $siteroot, $this->mediator);

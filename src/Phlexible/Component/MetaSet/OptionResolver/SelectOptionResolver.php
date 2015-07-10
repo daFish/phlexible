@@ -24,9 +24,9 @@ class SelectOptionResolver implements OptionResolverInterface
      */
     public function resolve(MetaSetField $field)
     {
-        $options = [];
+        $options = array();
         foreach (explode(',', $field->getOptions()) as $value) {
-            $options[] = [$value, $value];
+            $options[] = array($value, $value);
         }
 
         return $options;

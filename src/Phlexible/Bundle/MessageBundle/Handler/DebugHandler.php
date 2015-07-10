@@ -20,14 +20,14 @@ class DebugHandler implements HandlerInterface
     /**
      * @var array
      */
-    private $messages = [];
+    private $messages = array();
 
     /**
      * {@inheritdoc}
      */
     public function handle(Message $message)
     {
-        $this->messages[] = [
+        $this->messages[] = array(
             'subject'      => $message->getSubject(),
             'body'         => $message->getBody(),
             'type'         => $message->getType(),
@@ -38,7 +38,7 @@ class DebugHandler implements HandlerInterface
             'role'         => $message->getRole(),
             'user'         => $message->getUser(),
             'createdAt'    => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-        ];
+        );
     }
 
     /**

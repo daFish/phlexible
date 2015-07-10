@@ -130,6 +130,6 @@ class PreviewController extends Controller
 
         $file = new File($filename);
 
-        return new Response(file_get_contents($filename), 200, ['Content-type' => $file->getMimeType()]);
+        return new Response(file_get_contents($filename), 200, array('Content-type' => $file->getMimeType()));
     }
 }

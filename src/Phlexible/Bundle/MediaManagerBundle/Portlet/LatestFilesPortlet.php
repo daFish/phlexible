@@ -64,7 +64,7 @@ class LatestFilesPortlet extends Portlet
     {
         $this
             ->setId('mediamanager-portlet')
-            ->setTitle($translator->trans('mediamanager.latest_files', [], 'gui'))
+            ->setTitle($translator->trans('mediamanager.latest_files', array(), 'gui'))
             ->setClass('Phlexible.mediamanager.portlet.LatestFiles')
             ->setIconClass('p-mediamanager-portlet-icon')
             ->setRole('ROLE_MEDIA');
@@ -83,9 +83,9 @@ class LatestFilesPortlet extends Portlet
      */
     public function getSettings()
     {
-        return [
+        return array(
             'style' => $this->style
-        ];
+        );
     }
 
     /**
@@ -95,7 +95,7 @@ class LatestFilesPortlet extends Portlet
      */
     public function getData()
     {
-        $data = [];
+        $data = array();
 
         try {
             $volumes = $this->volumeManager->all();
@@ -110,13 +110,13 @@ class LatestFilesPortlet extends Portlet
                 }
 
                 $cacheItems = $this->cacheManager->findByFile($file);
-                $cacheStatus = [];
+                $cacheStatus = array();
                 foreach ($cacheItems as $cacheItem) {
                     $cacheStatus[$cacheItem->getTemplateKey()] =
                         $cacheItem->getCacheStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
                 }
 
-                $data[] = [
+                $data[] = array(
                     'id'                => sprintf('%s___%s', $file->getId(), $file->getVersion()),
                     'file_id'           => $file->getId(),
                     'file_version'      => $file->getVersion(),
@@ -126,10 +126,10 @@ class LatestFilesPortlet extends Portlet
                     'time'              => $file->getCreatedAt()->format('U'),
                     'title'             => $file->getName(),
                     'cache'             => $cacheStatus
-                ];
+                );
             }
         } catch (\Exception $e) {
-            $data = [];
+            $data = array();
         }
 
         return $data;

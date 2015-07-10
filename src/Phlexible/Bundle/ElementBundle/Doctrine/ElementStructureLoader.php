@@ -56,7 +56,7 @@ class ElementStructureLoader
     /**
      * @var ElementStructure[]
      */
-    private $map = [];
+    private $map = array();
 
     /**
      * Load data
@@ -84,9 +84,9 @@ class ElementStructureLoader
         $structureRows = $this->queryStructures($elementVersion);
         $dataRows = $this->queryValues($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
 
-        $structures = [
+        $structures = array(
             null => $rootStructure = new ElementStructure()
-        ];
+        );
 
         $rootId = null;
         $rootStructure->setDefaultLanguage($defaultLanguage);
@@ -115,7 +115,7 @@ class ElementStructureLoader
                 $myParentNode = $myNode;
                 do {
                     $myParentNode = $elementtypeStructure->getNode($myParentNode->getParentDsId());
-                } while (in_array($myParentNode->getType(), ['reference', 'referenceroot']));
+                } while (in_array($myParentNode->getType(), array('reference', 'referenceroot')));
 
                 $structure = new ElementStructure();
                 $structure
@@ -155,7 +155,7 @@ class ElementStructureLoader
                         $myParentNode = $myNode;
                         do {
                             $myParentNode = $elementtypeStructure->getNode($myParentNode->getParentDsId());
-                        } while (in_array($myParentNode->getType(), ['reference', 'referenceroot']));
+                        } while (in_array($myParentNode->getType(), array('reference', 'referenceroot')));
 
                         $structure = new ElementStructure();
                         $structure
@@ -225,7 +225,7 @@ class ElementStructureLoader
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select(
-                [
+                array(
                     'es.id',
                     'es.data_id',
                     'es.parent_id',
@@ -234,7 +234,7 @@ class ElementStructureLoader
                     'es.sort',
                     'es.ds_id',
                     'es.name',
-                ]
+                )
             )
             ->from('element_structure', 'es')
             ->where($qb->expr()->eq('es.element_version_id', $elementVersion->getId()))
@@ -242,7 +242,7 @@ class ElementStructureLoader
 
         $result = $this->connection->fetchAll($qb->getSQL());
 
-        $data = [];
+        $data = array();
         foreach ($result as $row) {
             $data[$row['parent_ds_id']][] = $row;
         }
@@ -261,7 +261,7 @@ class ElementStructureLoader
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select(
-                [
+                array(
                     'esv.id',
                     'esv.ds_id',
                     'esv.language',
@@ -271,7 +271,7 @@ class ElementStructureLoader
                     'esv.type',
                     'esv.content AS value',
                     'esv.options',
-                ]
+                )
             )
             ->from('element_structure_value', 'esv')
             ->where($qb->expr()->eq('esv.eid', $eid))
@@ -279,7 +279,7 @@ class ElementStructureLoader
 
         $result = $this->connection->fetchAll($qb->getSQL());
 
-        $data = [];
+        $data = array();
         foreach ($result as $row) {
             $data[$row['structure_id']][] = $row;
         }

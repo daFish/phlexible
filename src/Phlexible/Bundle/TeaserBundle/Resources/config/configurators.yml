@@ -4,7 +4,7 @@ services:
         public: false
         arguments: [@event_dispatcher, @logger, @phlexible_teaser.teaser_manager, @phlexible_element.element_service]
         tags:
-            - {name: phlexible_element_renderer.configurator, priority: 600}
+            - {name: phlexible_cms.configurator, priority: 600}
             - {name: monolog.logger, channel: element_renderer}
 
     phlexible_teaser.configuration.layoutarea:
@@ -13,9 +13,9 @@ services:
         arguments:
             - @phlexible_element.element_service
             - @phlexible_element.element_source_manager
-            - @phlexible_teaser.content_teaser_manager.delegating
+            - @phlexible_teaser.teaser_manager
             - @event_dispatcher
             - @logger
         tags:
-            - {name: phlexible_element_renderer.configurator, priority: -300}
+            - {name: phlexible_cms.configurator, priority: -300}
             - {name: monolog.logger, channel: element_renderer}

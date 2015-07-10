@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\TeaserBundle\Model;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
  * Teaser manager interface
@@ -44,21 +44,21 @@ interface TeaserManagerInterface
     public function findOneBy(array $criteria);
 
     /**
-     * @param mixed             $layoutarea
-     * @param TreeNodeInterface $treeNode
+     * @param mixed       $layoutarea
+     * @param NodeContext $node
      *
      * @return Teaser[]
      */
-    public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode);
+    public function findForLayoutAreaAndNodeContext($layoutarea, NodeContext $node);
 
     /**
-     * @param mixed               $layoutarea
-     * @param TreeNodeInterface[] $treeNodePath
-     * @param bool                $includeLocalHidden
+     * @param mixed       $layoutarea
+     * @param NodeContext $forNode
+     * @param bool        $includeLocalHidden
      *
      * @return Teaser[]
      */
-    public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath, $includeLocalHidden = true);
+    public function findCascadingForLayoutAreaAndNode($layoutarea, NodeContext $forNode, $includeLocalHidden = true);
 
     /**
      * @param Teaser $teaser
@@ -95,6 +95,14 @@ interface TeaserManagerInterface
      * @return array
      */
     public function getPublishedLanguages(Teaser $teaser);
+
+    /**
+     * @param Teaser $teaser
+     * @param string $language
+     *
+     * @return \DateTime|null
+     */
+    public function getPublishedAt(Teaser $teaser, $language);
 
     /**
      * @param Teaser $teaser
@@ -137,21 +145,21 @@ interface TeaserManagerInterface
     /**
      * Create teaser
      *
-     * @param int    $treeId
-     * @param int    $eid
-     * @param string $layoutareaId
-     * @param string $type
-     * @param int    $typeId
-     * @param int    $prevId
-     * @param array  $stopIds
-     * @param array  $hideIds
-     * @param string $masterLanguage
-     * @param string $userId
+     * @param NodeContext $node
+     * @param int         $eid
+     * @param string      $layoutareaId
+     * @param string      $type
+     * @param int         $typeId
+     * @param int         $prevId
+     * @param array       $stopIds
+     * @param array       $hideIds
+     * @param string      $masterLanguage
+     * @param string      $userId
      *
      * @return Teaser
      */
     public function createTeaser(
-        $treeId,
+        NodeContext $node,
         $eid,
         $layoutareaId,
         $type,
@@ -165,14 +173,14 @@ interface TeaserManagerInterface
     /**
      * Create teaser instance
      *
-     * @param TreeNodeInterface $treeNode
-     * @param Teaser            $teaser
-     * @param int               $layoutAreaId
-     * @param string            $userId
+     * @param NodeContext $node
+     * @param Teaser      $teaser
+     * @param int         $layoutAreaId
+     * @param string      $userId
      *
      * @return Teaser
      */
-    public function createTeaserInstance(TreeNodeInterface $treeNode, Teaser $teaser, $layoutAreaId, $userId);
+    public function createTeaserInstance(NodeContext $node, Teaser $teaser, $layoutAreaId, $userId);
 
     /**
      * @param Teaser $teaser

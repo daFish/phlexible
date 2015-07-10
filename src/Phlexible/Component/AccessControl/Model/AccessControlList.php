@@ -87,6 +87,14 @@ class AccessControlList
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return count($this->entries) === 0;
+    }
+
+    /**
      * @param Permission                $permission
      * @param SecurityIdentityInterface $securityIdentity
      * @param string|null               $objectLanguage

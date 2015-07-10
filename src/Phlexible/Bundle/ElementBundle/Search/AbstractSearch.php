@@ -14,7 +14,7 @@ use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -35,9 +35,9 @@ abstract class AbstractSearch implements SearchProviderInterface
     private $elementService;
 
     /**
-     * @var TreeManager
+     * @var NodeManagerInterface
      */
-    private $treeManager;
+    private $nodeManager;
 
     /**
      * @var SiterootManagerInterface
@@ -62,7 +62,7 @@ abstract class AbstractSearch implements SearchProviderInterface
     /**
      * @param Connection                    $connection
      * @param ElementService                $elementService
-     * @param TreeManager                   $treeManager
+     * @param NodeManagerInterface          $nodeManager
      * @param SiterootManagerInterface      $siterootManager
      * @param IconResolver                  $iconResolver
      * @param AuthorizationCheckerInterface $authorizationChecker
@@ -71,7 +71,7 @@ abstract class AbstractSearch implements SearchProviderInterface
     public function __construct(
         Connection $connection,
         ElementService $elementService,
-        TreeManager $treeManager,
+        NodeManagerInterface $nodeManager,
         SiterootManagerInterface $siterootManager,
         IconResolver $iconResolver,
         AuthorizationCheckerInterface $authorizationChecker,
@@ -79,7 +79,7 @@ abstract class AbstractSearch implements SearchProviderInterface
     {
         $this->connection = $connection;
         $this->elementService = $elementService;
-        $this->treeManager = $treeManager;
+        $this->nodeManager = $nodeManager;
         $this->siterootManager = $siterootManager;
         $this->iconResolver = $iconResolver;
         $this->authorizationChecker = $authorizationChecker;
@@ -125,9 +125,9 @@ abstract class AbstractSearch implements SearchProviderInterface
             $language = $this->defaultLanguage;
         }
 
-        $results = [];
+        $results = array();
         foreach ($rows as $row) {
-            $node = $this->treeManager->getByNodeId($row['id'])->get($row['id']);
+            $node = $this->nodeManager->find($row['id']);
 
             if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('VIEW', $node)) {
                 continue;
@@ -153,7 +153,7 @@ abstract class AbstractSearch implements SearchProviderInterface
                 $createUser = 'Unknown';
             }
 
-            $icon = $this->iconResolver->resolveTreeNode($node, $language);
+            $icon = $this->iconResolver->resolveNode($node, $language);
 
             $results[] = new SearchResult(
                 $node->getId(),

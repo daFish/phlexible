@@ -115,10 +115,10 @@ class DoctrineDriver extends AbstractDriver
         }
 
         $folder = $this->getFolderRepository()->findOneBy(
-            [
+            array(
                 'volumeId' => $this->getVolume()->getId(),
                 'id'       => $id
-            ]
+            )
         );
 
         if ($folder) {
@@ -134,10 +134,10 @@ class DoctrineDriver extends AbstractDriver
     public function findRootFolder()
     {
         $folder = $this->getFolderRepository()->findOneBy(
-            [
+            array(
                 'volumeId' => $this->getVolume()->getId(),
                 'parentId' => null
-            ]
+            )
         );
 
         if ($folder) {
@@ -155,10 +155,10 @@ class DoctrineDriver extends AbstractDriver
         $path = ltrim($path, '/');
 
         $folder = $this->getFolderRepository()->findOneBy(
-            [
+            array(
                 'volumeId' => $this->getVolume()->getId(),
                 'path'     => $path
-            ]
+            )
         );
 
         if ($folder) {
@@ -174,9 +174,9 @@ class DoctrineDriver extends AbstractDriver
     public function findFoldersByParentFolder(FolderInterface $parentFolder)
     {
         $folders = $this->getFolderRepository()->findBy(
-            [
+            array(
                 'parentId' => $parentFolder->getId(),
-            ]
+            )
         );
 
         foreach ($folders as $folder) {
@@ -223,10 +223,10 @@ class DoctrineDriver extends AbstractDriver
     public function findFile($id, $version = 1)
     {
         $file = $this->getFileRepository()->findOneBy(
-            [
+            array(
                 'id'      => $id,
                 'version' => $version
-            ]
+            )
         );
 
         if ($file) {
@@ -367,10 +367,10 @@ class DoctrineDriver extends AbstractDriver
         $folder = $this->findFolderByPath($folderPath);
 
         $file = $this->getFileRepository()->findOneBy(
-            [
+            array(
                 'name'   => $name,
                 'folder' => $folder
-            ]
+            )
         );
 
         if ($file) {
@@ -386,9 +386,9 @@ class DoctrineDriver extends AbstractDriver
     public function findFileVersions($id)
     {
         $files = $this->getFileRepository()->findBy(
-            [
+            array(
                 'id' => $id
-            ]
+            )
         );
 
         foreach ($files as $file) {
@@ -409,9 +409,9 @@ class DoctrineDriver extends AbstractDriver
         $start = null,
         $includeHidden = false)
     {
-        $criteria = [
+        $criteria = array(
             'folder' => $folder
-        ];
+        );
 
         if (!$includeHidden) {
             $criteria['hidden'] = false;
@@ -450,7 +450,7 @@ class DoctrineDriver extends AbstractDriver
      */
     public function findLatestFiles($limit = 20)
     {
-        $files = $this->getFileRepository()->findBy([], ['createdAt' => 'DESC'], $limit);
+        $files = $this->getFileRepository()->findBy(array(), array('createdAt' => 'DESC'), $limit);
 
         foreach ($files as $file) {
             /* @var $file FileInterface */

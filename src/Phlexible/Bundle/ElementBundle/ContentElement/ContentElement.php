@@ -61,7 +61,7 @@ class ContentElement
     /**
      * @var array
      */
-    private $mappedField = [];
+    private $mappedField = array();
 
     /**
      * @var ElementStructure

@@ -26,13 +26,13 @@ class LinkExtractor
     /**
      * @var LinkExtractorInterface[]
      */
-    private $extractors = [];
+    private $extractors = array();
 
     /**
      * @param FieldRegistry            $fieldRegistry
      * @param LinkExtractorInterface[] $extractors
      */
-    public function __construct(FieldRegistry $fieldRegistry, array $extractors = [])
+    public function __construct(FieldRegistry $fieldRegistry, array $extractors = array())
     {
         $this->fieldRegistry = $fieldRegistry;
 
@@ -60,7 +60,7 @@ class LinkExtractor
     {
         $field = $this->fieldRegistry->getField($value->getType());
 
-        $links = [];
+        $links = array();
         foreach ($this->extractors as $extractor) {
             if ($extractor->supports($value, $field)) {
                 foreach ($extractor->extract($value, $field) as $link) {

@@ -24,6 +24,7 @@ interface ElementHistoryManagerInterface
     const ACTION_SAVE_ELEMENT_SLAVE     = 'saveElementSlave';
 
     const ACTION_CREATE_NODE          = 'createNode';
+    const ACTION_UPDATE_NODE          = 'updateNode';
     const ACTION_DELETE_NODE          = 'deleteNode';
     const ACTION_MOVE_NODE            = 'moveNode';
     const ACTION_CREATE_NODE_INSTANCE = 'createNodeInstance';

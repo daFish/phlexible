@@ -11,15 +11,15 @@ namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
-use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeVersion;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Event\PublishTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\SetTeaserOfflineEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
-use Phlexible\Bundle\TeaserBundle\Model\StateManagerInterface;
+use Phlexible\Bundle\TeaserBundle\Mediator\TeaserMediatorInterface;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
+use Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -29,26 +29,25 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class TeaserManager implements TeaserManagerInterface
 {
-    const TYPE_TEASER = 'teaser';
-    const TYPE_CATCH = 'catch';
-    const TYPE_INHERITED = 'inherited';
-    const TYPE_STOP = 'stop';
-    const TYPE_HIDE = 'hide';
-
     /**
      * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * @var StateManagerInterface
+     * @var TeaserHasher
      */
-    private $stateManager;
+    private $teaserHasher;
 
     /**
      * @var ElementHistoryManagerInterface
      */
     private $elementHistoryManager;
+
+    /**
+     * @var TeaserMediatorInterface
+     */
+    private $mediator;
 
     /**
      * @var EventDispatcherInterface
@@ -61,20 +60,28 @@ class TeaserManager implements TeaserManagerInterface
     private $teaserRepository;
 
     /**
+     * @var EntityRepository
+     */
+    private $teaserOnlineRepository;
+
+    /**
      * @param EntityManager                  $entityManager
-     * @param StateManagerInterface          $stateManager
+     * @param TeaserHasher                   $teaserHasher
      * @param ElementHistoryManagerInterface $elementHistoryManager
+     * @param TeaserMediatorInterface        $mediator
      * @param EventDispatcherInterface       $dispatcher
      */
     public function __construct(
         EntityManager $entityManager,
-        StateManagerInterface $stateManager,
+        TeaserHasher $teaserHasher,
         ElementHistoryManagerInterface $elementHistoryManager,
+        TeaserMediatorInterface $mediator,
         EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
-        $this->stateManager = $stateManager;
+        $this->teaserHasher = $teaserHasher;
         $this->elementHistoryManager = $elementHistoryManager;
+        $this->mediator = $mediator;
         $this->dispatcher = $dispatcher;
     }
 
@@ -88,6 +95,18 @@ class TeaserManager implements TeaserManagerInterface
         }
 
         return $this->teaserRepository;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    private function getTeaserOnlineRepository()
+    {
+        if (null === $this->teaserOnlineRepository) {
+            $this->teaserOnlineRepository = $this->entityManager->getRepository('PhlexibleTeaserBundle:TeaserOnline');
+        }
+
+        return $this->teaserOnlineRepository;
     }
 
     /**
@@ -117,31 +136,30 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findForLayoutAreaAndTreeNodePath($layoutarea, array $treeNodePath, $includeLocalHidden = true)
+    public function findCascadingForLayoutAreaAndNode($layoutarea, NodeContext $forNode, $includeLocalHidden = true)
     {
         /* @var $teasers Teaser[] */
-        $teasers = [];
-        $forTreeId = end($treeNodePath)->getId();
+        $teasers = array();
+        $forNodeId = $forNode->getId();
 
-        foreach ($treeNodePath as $treeNode) {
-            /* @var $treeNode TreeNodeInterface */
-            foreach ($this->findForLayoutAreaAndTreeNode($layoutarea, $treeNode) as $teaser) {
-                if ($treeNode->getId() !== $forTreeId && $teaser->hasStopId($treeNode->getId())) {
+        foreach ($forNode->getPath() as $node) {
+            foreach ($this->findForLayoutAreaAndNodeContext($layoutarea, $node) as $teaser) {
+                if ($node->getId() !== $forNodeId && $teaser->hasStopId($node->getId())) {
                     continue;
                 }
-                if ($teaser->hasStopId($forTreeId)) {
+                if ($teaser->hasStopId($forNodeId)) {
                     $teaser->setStopped();
                 }
-                if ($teaser->hasHideId($forTreeId)) {
+                if ($teaser->hasHideId($forNodeId)) {
                     $teaser->setHidden();
                 }
 
                 $teasers[$teaser->getId()] = $teaser;
             }
 
-            if ($treeNode->getId() !== $forTreeId) {
+            if ($node->getId() !== $forNodeId) {
                 foreach ($teasers as $index => $teaser) {
-                    if ($teaser->hasStopId($treeNode->getId())) {
+                    if ($teaser->hasStopId($node->getId())) {
                         unset($teasers[$index]);
                     }
                 }
@@ -160,13 +178,13 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findForLayoutAreaAndTreeNode($layoutarea, TreeNodeInterface $treeNode)
+    public function findForLayoutAreaAndNodeContext($layoutarea, NodeContext $node)
     {
         $teasers = $this->getTeaserRepository()->findBy(
-            [
+            array(
                 'layoutareaId' => $layoutarea->getId(),
-                'treeId'       => $treeNode->getId()
-            ]
+                'nodeId'       => $node->getId()
+            )
         );
 
         return $teasers;
@@ -200,10 +218,10 @@ class TeaserManager implements TeaserManagerInterface
     public function getInstances(Teaser $teaser)
     {
         return $this->getTeaserRepository()->findBy(
-            [
+            array(
                 'type'   => $teaser->getType(),
                 'typeId' => $teaser->getTypeId(),
-            ]
+            )
         );
     }
 
@@ -212,7 +230,7 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function isPublished(Teaser $teaser, $language)
     {
-        return $this->stateManager->isPublished($teaser, $language);
+        return $this->findOneOnlineByTeaserAndLanguage($teaser, $language) ? true : false;
     }
 
     /**
@@ -220,7 +238,25 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function getPublishedLanguages(Teaser $teaser)
     {
-        return $this->stateManager->getPublishedLanguages($teaser);
+        $language = array();
+        foreach ($this->findOnlineByTeaser($teaser) as $teaserOnline) {
+            $language[] = $teaserOnline->getLanguage();
+        }
+
+        return $language;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublishedAt(Teaser $teaser, $language)
+    {
+        $teaserOnline = $this->findOneOnlineByTeaserAndLanguage($teaser, $language);
+        if (!$teaserOnline) {
+            return null;
+        }
+
+        return $teaserOnline->getPublishedAt();
     }
 
     /**
@@ -228,7 +264,12 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function getPublishedVersion(Teaser $teaser, $language)
     {
-        return $this->stateManager->getPublishedVersion($teaser, $language);
+        $teaserOnline = $this->findOneOnlineByTeaserAndLanguage($teaser, $language);
+        if (!$teaserOnline) {
+            return null;
+        }
+
+        return $teaserOnline->getVersion();
     }
 
     /**
@@ -236,7 +277,12 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function getPublishedVersions(Teaser $teaser)
     {
-        return $this->stateManager->getPublishedVersions($teaser);
+        $versions = array();
+        foreach ($this->findOnlineByTeaser($teaser) as $teaserOnline) {
+            $versions[$teaserOnline->getLanguage()] = $teaserOnline->getVersion();
+        }
+
+        return $versions;
     }
 
     /**
@@ -244,7 +290,21 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function isAsync(Teaser $teaser, $language)
     {
-        return $this->stateManager->isAsync($teaser, $language);
+        $teaserOnline = $this->findOneOnlineByTeaserAndLanguage($teaser, $language);
+        if (!$teaserOnline) {
+            return false;
+        }
+
+        $version = $this->mediator->getContentDocument($this, $teaser, $language)->getVersion();
+
+        if ($version === $teaserOnline->getVersion()) {
+            return false;
+        }
+
+        $publishedHash = $teaserOnline->getHash();
+        $currentHash = $this->teaserHasher->hashTeaser($teaser, $version, $language);
+
+        return $publishedHash === $currentHash;
     }
 
     /**
@@ -252,7 +312,7 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function findOnlineByTeaser(Teaser $teaser)
     {
-        return $this->stateManager->findByTeaser($teaser);
+        return $this->getTeaserOnlineRepository()->findBy(array('teaser' => $teaser->getId()));
     }
 
     /**
@@ -260,14 +320,14 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language)
     {
-        return $this->stateManager->findOneByTeaserAndLanguage($teaser, $language);
+        return $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser->getId(), 'language' => $language));
     }
 
     /**
      * {@inheritdoc}
      */
     public function createTeaser(
-        $treeId,
+        NodeContext $node,
         $eid,
         $layoutareaId,
         $type,
@@ -277,11 +337,10 @@ class TeaserManager implements TeaserManagerInterface
         array $hideIds = null,
         $masterLanguage = 'en',
         $userId
-    )
-    {
+    ) {
         $teaser = new Teaser();
         $teaser
-            ->setTreeId($treeId)
+            ->setNodeId($node->getId())
             ->setEid($eid)
             ->setLayoutareaId($layoutareaId)
             ->setType($type)
@@ -343,12 +402,12 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createTeaserInstance(TreeNodeInterface $treeNode, Teaser $teaser, $layoutAreaId, $userId)
+    public function createTeaserInstance(NodeContext $node, Teaser $teaser, $layoutAreaId, $userId)
     {
         $teaser = clone $teaser;
         $teaser
             ->setId(null)
-            ->setTreeId($treeNode->getId())
+            ->setNodeId($node->getId())
             ->setLayoutareaId($layoutAreaId)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime);
@@ -425,7 +484,25 @@ class TeaserManager implements TeaserManagerInterface
             return null;
         }
 
-        $teaserOnline = $this->stateManager->publish($teaser, $version, $language, $userId);
+        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
+        if (!$teaserOnline) {
+            $teaserOnline = new TeaserOnline();
+            $teaserOnline
+                ->setTeaser($teaser);
+        }
+
+        $teaserOnline
+            ->setLanguage($language)
+            ->setVersion($version)
+            ->setHash($this->teaserHasher->hashTeaser($teaser, $version, $language))
+            ->setPublishedAt(new \DateTime())
+            ->setPublishUserId($userId);
+
+        $this->entityManager->persist($teaserOnline);
+        $this->entityManager->flush($teaserOnline);
+
+        $event = new PublishTeaserEvent($teaser, $language, $version);
+        $this->dispatcher->dispatch(TeaserEvents::PUBLISH_TEASER, $event);
 
         $this->elementHistoryManager->insert(
             ElementHistoryManagerInterface::ACTION_PUBLISH_TEASER,
@@ -437,9 +514,6 @@ class TeaserManager implements TeaserManagerInterface
             $language,
             $comment
         );
-
-        $event = new PublishTeaserEvent($teaser, $language, $version);
-        $this->dispatcher->dispatch(TeaserEvents::PUBLISH_TEASER, $event);
 
         return $teaserOnline;
     }
@@ -454,7 +528,14 @@ class TeaserManager implements TeaserManagerInterface
             return null;
         }
 
-        $this->stateManager->setOffline($teaser, $language);
+        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
+        if ($teaserOnline) {
+            $this->entityManager->remove($teaserOnline);
+            $this->entityManager->flush();
+        }
+
+        $event = new SetTeaserOfflineEvent($teaser, $language);
+        $this->dispatcher->dispatch(TeaserEvents::SET_TEASER_OFFLINE, $event);
 
         $this->elementHistoryManager->insert(
             ElementHistoryManagerInterface::ACTION_PUBLISH_TEASER,
@@ -466,8 +547,5 @@ class TeaserManager implements TeaserManagerInterface
             $language,
             $comment
         );
-
-        $event = new SetTeaserOfflineEvent($teaser, $language);
-        $this->dispatcher->dispatch(TeaserEvents::SET_TEASER_OFFLINE, $event);
     }
 }

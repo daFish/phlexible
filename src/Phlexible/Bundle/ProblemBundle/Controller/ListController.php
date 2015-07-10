@@ -38,9 +38,9 @@ class ListController extends Controller
     {
         $problemFetcher = $this->get('phlexible_problem.problem_fetcher');
 
-        $data = [];
+        $data = array();
         foreach ($problemFetcher->fetch() as $problem) {
-            $data[] = [
+            $data[] = array(
                 'id'            => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
                 'iconCls'       => $problem->getIconClass(),
                 'severity'      => $problem->getSeverity(),
@@ -50,7 +50,7 @@ class ListController extends Controller
                 'createdAt'     => $problem->getCreatedAt()->format('Y-m-d H:i:s'),
                 'lastCheckedAt' => $problem->getLastCheckedAt()->format('Y-m-d H:i:s'),
                 'source'        => $problem->isLive() ? 'live' : 'cached',
-            ];
+            );
         }
 
         return new JsonResponse($data);

@@ -32,7 +32,7 @@ class ResourcesController extends Controller
             file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/ValidateWindow.js')) .
             file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/scripts/SetPasswordWindow.js'));
 
-        return new Response($content, 200, ['Content-Type' => 'text/javascript']);
+        return new Response($content, 200, array('Content-Type' => 'text/javascript'));
     }
 
     /**
@@ -44,7 +44,7 @@ class ResourcesController extends Controller
     {
         $content = file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/styles/users.css'));
 
-        return new Response($content, 200, ['Content-Type' => 'text/css']);
+        return new Response($content, 200, array('Content-Type' => 'text/css'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ResourcesController extends Controller
     {
         $content = '';
 
-        return new Response($content, 200, ['Content-Type' => 'text/css']);
+        return new Response($content, 200, array('Content-Type' => 'text/css'));
     }
 
     /**
@@ -73,7 +73,7 @@ class ResourcesController extends Controller
         $translations = $this->get('resourcesTranslations');
         $content = $translations->get($language);
 
-        return new Response($content, 200, ['Content-Type' => 'text/javascript']);
+        return new Response($content, 200, array('Content-Type' => 'text/javascript'));
     }
 }
 

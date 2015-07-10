@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\TreeBundle\ContentTree;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
+use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeIdentifier;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
 use Phlexible\Component\Identifier\IdentifiableInterface;
 
@@ -34,7 +34,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     private $siteroot;
 
     /**
-     * @var MediatorInterface
+     * @var TreeMediatorInterface
      */
     private $mediator;
 
@@ -46,10 +46,10 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * @param TreeInterface     $tree
      * @param Siteroot          $siteroot
-     * @param MediatorInterface $mediator
+     * @param TreeMediatorInterface $mediator
      * @param string            $language
      */
-    public function __construct(TreeInterface $tree, Siteroot $siteroot, MediatorInterface $mediator, $language = null)
+    public function __construct(TreeInterface $tree, Siteroot $siteroot, TreeMediatorInterface $mediator, $language = null)
     {
         $this->tree = $tree;
         $this->siteroot = $siteroot;
@@ -67,6 +67,14 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
         $this->language = $language;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultLanguage()
+    {
+        return $this->language;
     }
 
     /**
@@ -148,9 +156,9 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function createContentTreeNodeFromTreeNode(TreeNodeInterface $treeNode)
+    public function createContentTreeNodeFromTreeNode(NodeInterface $treeNode)
     {
-        $contentNode = new ContentTreeNode();
+        $contentNode = new ContentNode();
         $contentNode
             ->setLanguage($this->language)
             ->setId($treeNode->getId())
@@ -203,9 +211,9 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getChildren(TreeNodeInterface $node)
+    public function getChildren(NodeInterface $node)
     {
-        $children = [];
+        $children = array();
         foreach ($this->tree->getChildren($node) as $childNode) {
             $children[] = $this->get($childNode->getId());
         }
@@ -216,7 +224,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function hasChildren(TreeNodeInterface $node)
+    public function hasChildren(NodeInterface $node)
     {
         return $this->tree->hasChildren($node);
     }
@@ -224,7 +232,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getParent(TreeNodeInterface $node)
+    public function getParent(NodeInterface $node)
     {
         $parentNode = $node->getParentNode();
         if (!$parentNode) {
@@ -237,7 +245,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getIdPath(TreeNodeInterface $node)
+    public function getIdPath(NodeInterface $node)
     {
         return $this->tree->getIdPath($node);
     }
@@ -245,9 +253,9 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getPath(TreeNodeInterface $node)
+    public function getPath(NodeInterface $node)
     {
-        $path = [];
+        $path = array();
         foreach ($this->tree->getPath($node) as $pathNode) {
             $path[] = $this->get($pathNode->getId());
         }
@@ -258,7 +266,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isRoot(TreeNodeInterface $node)
+    public function isRoot(NodeInterface $node)
     {
         return $this->tree->isRoot($node);
     }
@@ -266,7 +274,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isChildOf(TreeNodeInterface $childNode, TreeNodeInterface $parentNode)
+    public function isChildOf(NodeInterface $childNode, NodeInterface $parentNode)
     {
         return $this->tree->isChildOf($childNode, $parentNode);
     }
@@ -274,7 +282,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isParentOf(TreeNodeInterface $parentNode, TreeNodeInterface $childNode)
+    public function isParentOf(NodeInterface $parentNode, NodeInterface $childNode)
     {
         return $this->tree->isChildOf($childNode, $parentNode);
     }
@@ -282,7 +290,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isInstance(TreeNodeInterface $node)
+    public function isInstance(NodeInterface $node)
     {
         return $this->tree->isInstance($node);
     }
@@ -290,7 +298,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isInstanceMaster(TreeNodeInterface $node)
+    public function isInstanceMaster(NodeInterface $node)
     {
         return $this->tree->isInstanceMaster($node);
     }
@@ -298,7 +306,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getInstances(TreeNodeInterface $node)
+    public function getInstances(NodeInterface $node)
     {
         return $this->tree->getInstances($node);
     }
@@ -306,7 +314,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isPublished(TreeNodeInterface $node, $language = null)
+    public function isPublished(NodeInterface $node, $language = null)
     {
         return $this->tree->isPublished($node, $language ?: $this->language);
     }
@@ -314,7 +322,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getPublishedLanguages(TreeNodeInterface $node)
+    public function getPublishedLanguages(NodeInterface $node)
     {
         return $this->tree->getPublishedLanguages($node);
     }
@@ -322,7 +330,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersion(TreeNodeInterface $node, $language = null)
+    public function getPublishedVersion(NodeInterface $node, $language = null)
     {
         return $this->tree->getPublishedVersion($node, $language ?: $this->language);
     }
@@ -330,7 +338,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getPublishedAt(TreeNodeInterface $node, $language = null)
+    public function getPublishedAt(NodeInterface $node, $language = null)
     {
         return $this->tree->getPublishedAt($node, $language ?: $this->language);
     }
@@ -338,7 +346,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersions(TreeNodeInterface $node)
+    public function getPublishedVersions(NodeInterface $node)
     {
         return $this->tree->getPublishedVersions($node);
     }
@@ -346,7 +354,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isAsync(TreeNodeInterface $node, $language = null)
+    public function isAsync(NodeInterface $node, $language = null)
     {
         return $this->tree->isAsync($node, $language ?: $this->language);
     }
@@ -354,7 +362,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function findOnlineByTreeNode(TreeNodeInterface $node)
+    public function findOnlineByTreeNode(NodeInterface $node)
     {
         return $this->tree->findOnlineByTreeNode($node);
     }
@@ -362,7 +370,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function findOneOnlineByTreeNodeAndLanguage(TreeNodeInterface $node, $language = null)
+    public function findOneOnlineByTreeNodeAndLanguage(NodeInterface $node, $language = null)
     {
         return $this->tree->findOneOnlineByTreeNodeAndLanguage($node, $language ?: $this->language);
     }
@@ -370,9 +378,9 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getVersion(TreeNodeInterface $node, $language)
+    public function getVersion(NodeInterface $node, $language)
     {
-        return $this->mediator->getContentDocument($node)->getVersion();
+        return $this->mediator->getContentDocument($node, $language ?: $this->language)->getVersion();
     }
 
     /**
@@ -411,7 +419,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function isViewable(TreeNodeInterface $node, $language = null)
+    public function isViewable(NodeInterface $node, $language = null)
     {
         $isPublished = true;
         if (1) {
@@ -424,7 +432,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function hasViewableChildren(TreeNodeInterface $node, $language = null)
+    public function hasViewableChildren(NodeInterface $node, $language = null)
     {
         foreach ($this->getChildren($node) as $childNode) {
             if ($this->isViewable($childNode, $language)) {
@@ -438,15 +446,15 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getContent(TreeNodeInterface $node)
+    public function getContent(NodeInterface $node, $language = null)
     {
-        return $this->mediator->getContentDocument($node);
+        return $this->mediator->getContentDocument($node, $language ?: $this->language);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getTemplate(TreeNodeInterface $node)
+    public function getTemplate(NodeInterface $node)
     {
         return $this->mediator->getTemplate($node);
     }
@@ -454,7 +462,7 @@ class DelegatingContentTree implements ContentTreeInterface, \IteratorAggregate,
     /**
      * {@inheritdoc}
      */
-    public function getField(TreeNodeInterface $node, $field, $language = null)
+    public function getField(NodeInterface $node, $field, $language = null)
     {
         return $this->mediator->getField($node, $field, $language ?: $this->language);
     }

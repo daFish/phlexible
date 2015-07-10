@@ -12,7 +12,7 @@ use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 
 /**
  * Content tree interface
@@ -54,39 +54,39 @@ interface ContentTreeInterface extends TreeInterface
     public function getSpecialTids($language = null);
 
     /**
-     * @param TreeNodeInterface $treeNode
+     * @param NodeInterface $treeNode
      *
-     * @return ContentTreeNode
+     * @return ContentNode
      */
-    public function createContentTreeNodeFromTreeNode(TreeNodeInterface $treeNode);
+    public function createContentTreeNodeFromTreeNode(NodeInterface $treeNode);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
      * @return int
      */
-    public function getVersion(TreeNodeInterface $node, $language);
+    public function getVersion(NodeInterface $node, $language);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      * @param string            $language
      *
      * @return bool
      */
-    public function isViewable(TreeNodeInterface $node, $language = null);
+    public function isViewable(NodeInterface $node, $language = null);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
      * @return null
      */
-    public function getContent(TreeNodeInterface $node);
+    public function getContent(NodeInterface $node);
 
     /**
-     * @param TreeNodeInterface $node
+     * @param NodeInterface $node
      *
      * @return string
      */
-    public function getTemplate(TreeNodeInterface $node);
+    public function getTemplate(NodeInterface $node);
 }

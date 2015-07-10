@@ -60,13 +60,36 @@ class Checker
     }
 
     /**
+     * @return ChangeCollection
+     */
+    public function hasChanges()
+    {
+        $allElementtypes = $this->elementtypeService->findAllElementtypes();
+        foreach ($allElementtypes as $elementtype) {
+            $oldElementSources = $this->elementSourceManager->findByElementtype($elementtype);
+            if (!$oldElementSources) {
+                return true;
+            }
+            if ($elementtype->getType() === 'reference') {
+                foreach ($oldElementSources as $oldElementSource) {
+                    if ($oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param bool $forceChange
      *
      * @return ChangeCollection
      */
-    public function check($forceChange = false)
+    public function createChanges($forceChange = false)
     {
-        $changes = [];
+        $changes = array();
 
         $allElementtypes = $this->elementtypeService->findAllElementtypes();
 
@@ -75,7 +98,7 @@ class Checker
             $elementSources[$elementSource->getElementtypeId()][] = $elementSource;
         }
 
-        $referenceElementtypeIds = [];
+        $referenceElementtypeIds = array();
         // handle references
         foreach ($allElementtypes as $elementtype) {
             if ($elementtype->getType() !== 'reference') {
@@ -87,9 +110,9 @@ class Checker
                 $changes[] = new AddChange($elementtype, true);
             } else {
                 $usage = $this->elementtypeUsageManager->getUsage($elementtype);
-                $outdatedElementSources = [];
+                $outdatedElementSources = array();
                 foreach ($oldElementSources as $oldElementSource) {
-                    if ($forceChange ||$oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
+                    if ($forceChange || $oldElementSource->getElementtypeRevision() < $elementtype->getRevision()) {
                         $outdatedElementSources[] = $oldElementSource;
                     }
                 }
@@ -111,7 +134,7 @@ class Checker
                 $changes[] = new AddChange($elementtype, true);
             } else {
                 $usage = $this->elementtypeUsageManager->getUsage($elementtype);
-                $outdatedElementSources = [];
+                $outdatedElementSources = array();
                 $referenceIds = array_intersect_key(
                     array_flip($elementtype->getStructure()->getReferences()),
                     $referenceElementtypeIds

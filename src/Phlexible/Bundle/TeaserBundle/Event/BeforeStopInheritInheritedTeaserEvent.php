@@ -20,7 +20,7 @@ class BeforeStopInheritInheritedTeaserEvent extends Event
     /**
      * @var int
      */
-    private $treeId;
+    private $nodeId;
 
     /**
      * @var int
@@ -38,14 +38,14 @@ class BeforeStopInheritInheritedTeaserEvent extends Event
     private $layoutareaId;
 
     /**
-     * @param int $treeId
+     * @param int $nodeId
      * @param int $eid
      * @param int $teaserId
      * @param int $layoutareaId
      */
-    public function __construct($treeId, $eid, $teaserId, $layoutareaId)
+    public function __construct($nodeId, $eid, $teaserId, $layoutareaId)
     {
-        $this->treeId = $treeId;
+        $this->nodeId = $nodeId;
         $this->eid = $eid;
         $this->teaserId = $teaserId;
         $this->layoutareaId = $layoutareaId;
@@ -54,9 +54,9 @@ class BeforeStopInheritInheritedTeaserEvent extends Event
     /**
      * @return int
      */
-    public function getTreeId()
+    public function getNodeId()
     {
-        return $this->treeId;
+        return $this->nodeId;
     }
 
     /**

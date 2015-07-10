@@ -36,15 +36,13 @@ class SearchController extends Controller
         $language = $request->get('language');
         $query = $request->get('query');
 
-        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $nodeManager = $this->get('phlexible_tree.node_manager');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
         $conn = $this->get('database_connection');
 
-        $tree = $treeManager->getBySiteRootId($siterootId);
-
         $qb = $conn->createQueryBuilder();
         $qb
-            ->select('t.id AS tid', 'e.latest_version AS version', 'evmf.backend AS title')
+            ->select('t.id AS nodeId', 'e.latest_version AS version', 'evmf.backend AS title')
             ->from('tree', 't')
             ->join('t', 'element', 'e', 't.type_id = e.eid')
             ->join('e', 'element_version', 'ev', 'ev.eid = e.eid AND ev.version = e.latest_version')
@@ -56,11 +54,11 @@ class SearchController extends Controller
         $result = $conn->fetchAll($qb->getSQL());
 
         foreach ($result as $key => $row) {
-            $treeNode = $tree->get($row['tid']);
-            $result[$key]['icon'] = $iconResolver->resolveTreeNode($treeNode, $language);
+            $node = $nodeManager->find($row['nodeId']);
+            $result[$key]['icon'] = $iconResolver->resolveNode($node, $language);
         }
 
-        return new JsonResponse(['results' => $result]);
+        return new JsonResponse(array('results' => $result));
     }
 
     /**
@@ -75,23 +73,23 @@ class SearchController extends Controller
 
         // TODO: meta search
 
-        $results = [];
+        $results = array();
         foreach ($this->get('phlexible_media_manager.volume_manager')->all() as $volume) {
             $files = $volume->search($query);
 
             foreach ($files as $file) {
                 /* @var $file ExtendedFileInterface */
 
-                $results[] = [
+                $results[] = array(
                     'id'        => $file->getId(),
                     'version'   => $file->getVersion(),
                     'name'      => $file->getName(),
                     'folder_id' => $file->getFolderId(),
-                ];
+                );
             }
         }
 
-        return new JsonResponse(['results' => $results]);
+        return new JsonResponse(array('results' => $results));
     }
 
     /**

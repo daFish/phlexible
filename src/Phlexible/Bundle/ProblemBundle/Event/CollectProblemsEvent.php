@@ -21,7 +21,7 @@ class CollectProblemsEvent extends Event
     /**
      * @var Problem[]
      */
-    private $problems = [];
+    private $problems = array();
 
     /**
      * @return Problem[]

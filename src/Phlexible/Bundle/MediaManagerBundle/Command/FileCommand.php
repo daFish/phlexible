@@ -30,10 +30,10 @@ class FileCommand extends ContainerAwareCommand
         $this
             ->setName('media-manager:file')
             ->setDefinition(
-                [
+                array(
                     new InputArgument('id', InputArgument::REQUIRED, 'File ID.'),
                     new InputOption('with-attributes', null, InputOption::VALUE_NONE, 'Include attributes.'),
-                ]
+                )
             )
             ->setDescription('Show file info');
     }

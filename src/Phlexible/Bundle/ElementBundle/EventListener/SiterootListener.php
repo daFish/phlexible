@@ -11,7 +11,8 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
-use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\Elementtype\ElementtypeService;
 use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
@@ -30,12 +31,12 @@ class SiterootListener
     private $elementService;
 
     /**
-     * @var \Phlexible\Component\Elementtype\ElementtypeService
+     * @var ElementtypeService
      */
     private $elementtypeService;
 
     /**
-     * @var TreeManager
+     * @var TreeManagerInterface
      */
     private $treeManager;
 
@@ -51,15 +52,15 @@ class SiterootListener
 
     /**
      * @param ElementService       $elementService
-     * @param \Phlexible\Component\Elementtype\ElementtypeService   $elementtypeService
-     * @param TreeManager          $treeManager
+     * @param ElementtypeService   $elementtypeService
+     * @param TreeManagerInterface $treeManager
      * @param UserManagerInterface $userManager
      * @param string               $masterLanguage
      */
     public function __construct(
         ElementService $elementService,
         ElementtypeService $elementtypeService,
-        TreeManager $treeManager,
+        TreeManagerInterface $treeManager,
         UserManagerInterface $userManager,
         $masterLanguage)
     {
@@ -92,9 +93,9 @@ class SiterootListener
             ->setDsId(Uuid::generate())
             ->setName('data')
             ->setType('tab')
-            ->setLabels(['fieldLabel' => ['de' => 'Daten', 'en' => 'Data']])
-            ->setConfiguration([])
-            ->setValidation([]);
+            ->setLabels(array('fieldLabel' => array('de' => 'Daten', 'en' => 'Data')))
+            ->setConfiguration(array())
+            ->setValidation(array());
 
         $textfield = new ElementtypeStructureNode();
         $textfield
@@ -103,23 +104,23 @@ class SiterootListener
             ->setDsId(Uuid::generate())
             ->setName('title')
             ->setType('textfield')
-            ->setLabels(['fieldLabel' => ['de' => 'Titel', 'en' => 'Title']])
-            ->setConfiguration(['required' => 'always'])
-            ->setValidation([]);
+            ->setLabels(array('fieldLabel' => array('de' => 'Titel', 'en' => 'Title')))
+            ->setConfiguration(array('required' => 'always'))
+            ->setValidation(array());
 
         $elementtypeStructure
             ->addNode($root)
             ->addNode($tab)
             ->addNode($textfield);
 
-        $mappings = [
-            'backend' => [
-                'fields' => [
-                    ['ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1]
-                ],
+        $mappings = array(
+            'backend' => array(
+                'fields' => array(
+                    array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)
+                ),
                 'pattern' => '$1'
-            ]
-        ];
+            )
+        );
 
         $user = $this->userManager->find($siteroot->getModifyUserId());
 
@@ -136,9 +137,13 @@ class SiterootListener
 
         $elementSource = $this->elementService->createElementSource($elementtype);
 
-        $element = $this->elementService->createElement($elementSource, $this->masterLanguage, $siteroot->getModifyUserId());
+        $elementVersion = $this->elementService->createElement($elementSource, $this->masterLanguage, $siteroot->getModifyUserId());
 
-        $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
-        $tree->init('element-structure', $element->getEid(), $element->getCreateUserId());
+        $this->treeManager->createTree(
+            $siteroot->getId(),
+            'element-structure',
+            $elementVersion->getElement()->getEid(),
+            $elementVersion->getElement()->getCreateUserId()
+        );
     }
 }

@@ -35,7 +35,7 @@ services:
         class: Phlexible\Bundle\ElementBundle\Element\Publish\Publisher
         arguments:
             - @phlexible_element.element_service
-            - @phlexible_tree.tree_manager
+            - @phlexible_tree.node_manager
             - @phlexible_teaser.teaser_manager
             - @security.authorization_checker
 
@@ -44,7 +44,7 @@ services:
         arguments:
             - @phlexible_element.element_service
             - @phlexible_elementtype.elementtype_service
-            - @phlexible_tree.tree_manager
+            - @phlexible_tree.node_manager
             - @phlexible_teaser.teaser_manager
             - @security.authorization_checker
 
@@ -155,7 +155,7 @@ services:
     #phlexible_element.portlet.latest:
     #    class: Phlexible\Bundle\ElementBundle\Portlet\LatestElementsPortlet
     #    public: false
-    #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.tree_manager, @doctrine.dbal.default_connection, %phlexible_element.portlet.num_items%]
+    #    arguments: [@translator, @phlexible_element.version.repository, @phlexible_tree.node_manager, @doctrine.dbal.default_connection, %phlexible_element.portlet.num_items%]
     #    tags:
     #        - {name: phlexible_dashboard.portlet}
 
@@ -173,7 +173,7 @@ services:
         arguments:
             - @doctrine.dbal.default_connection
             - @phlexible_element.element_service
-            - @phlexible_tree.tree_manager
+            - @phlexible_tree.node_manager
             - @phlexible_siteroot.siteroot_manager
             - @phlexible_element.icon_resolver
             - @security.authorization_checker
@@ -206,7 +206,7 @@ services:
         public: false
         arguments:
             - @phlexible_element.content_loader
-            - @phlexible_teaser.content_teaser_manager.delegating
+            - @phlexible_teaser.teaser_manager
             - @request_stack
         tags:
             - {name: twig.extension}

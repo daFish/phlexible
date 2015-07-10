@@ -39,18 +39,18 @@ class GetConfigListener
         $user = $this->tokenStorage->getToken()->getUser();
         $config = $event->getConfig();
 
-        $defaultPortlets = [
-            'online-portlet'   => [
+        $defaultPortlets = array(
+            'online-portlet'   => array(
                 'mode' => 'opened',
                 'col'  => 1,
                 'pos'  => 1
-            ],
-            'problems-portlet' => [
+            ),
+            'problems-portlet' => array(
                 'mode' => 'opened',
                 'col'  => 0,
                 'pos'  => 2
-            ]
-        ];
+            )
+        );
 
         if ($user->getProperty('portlets')) {
             $portlets = json_decode($user->getProperty('portlets'), true);

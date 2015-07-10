@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Tree;
 
 use Phlexible\Bundle\TreeBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
  * Tree iterator
@@ -29,19 +29,17 @@ class TreeIterator implements \Iterator, \RecursiveIterator
     /**
      * Create a new tree iterator for a tree or a specific node.
      *
-     * @param TreeInterface|\Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface $tree TreeInterface: traverse tree from root node
-     *                                              TreeNodeInterface: traverse a subtree
+     * @param NodeContext|TreeInterface $tree TreeInterface: traverse from root node
+     *                                        NodeContext: traverse from this node
      *
      * @throws \Exception
      */
     public function __construct($tree)
     {
         if ($tree instanceof TreeInterface) {
-            /* @var $tree TreeInterface */
             $node = $tree->getRoot();
-            $this->iterator = new \ArrayIterator([$node]);
-        } elseif ($tree instanceof TreeNodeInterface) {
-            /* @var $tree \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface */
+            $this->iterator = new \ArrayIterator(array($node));
+        } elseif ($tree instanceof NodeContext) {
             $node = $tree;
             $tree = $tree->getTree();
             $this->iterator = new \ArrayIterator($tree->getChildren($node));
@@ -53,7 +51,7 @@ class TreeIterator implements \Iterator, \RecursiveIterator
     /**
      * Get current node.
      *
-     * @return \Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface
+     * @return NodeContext
      */
     public function current()
     {

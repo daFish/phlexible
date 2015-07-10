@@ -57,7 +57,7 @@ class Folder implements FolderInterface
      * @var array
      * @ORM\Column(type="json_array", nullable=true)
      */
-    protected $attributes = [];
+    protected $attributes = array();
 
     /**
      * @var bool
@@ -121,10 +121,10 @@ class Folder implements FolderInterface
      */
     public function getContentObjectIdentifiers()
     {
-        return [
+        return array(
             'type' => 'folder',
             'id'   => $this->id,
-        ];
+        );
     }
 
     /**
@@ -140,7 +140,7 @@ class Folder implements FolderInterface
      */
     public function getIdPath()
     {
-        $path = [$this->id];
+        $path = array($this->id);
         $current = $this;
         while ($current->getParentId()) {
             $path[] = $current->getParentId();

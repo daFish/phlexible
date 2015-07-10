@@ -74,7 +74,7 @@ class ElementtypeService
      */
     public function findElementtypeByType($type)
     {
-        $elementtypes = [];
+        $elementtypes = array();
         foreach ($this->elementtypeManager->findAll() as $elementtype) {
             if ($elementtype->getType() === $type) {
                 $elementtypes[] = $elementtype;
@@ -156,14 +156,14 @@ class ElementtypeService
         $flush = true)
     {
         if (!$icon) {
-            $icons = [
+            $icons = array(
                 Elementtype::TYPE_FULL            => 'artikel_list.gif',
                 Elementtype::TYPE_STRUCTURE       => 'nav_haupt.gif',
                 Elementtype::TYPE_LAYOUTAREA      => '_fallback.gif',
                 Elementtype::TYPE_LAYOUTCONTAINER => '_fallback.gif',
                 Elementtype::TYPE_PART            => 'teaser_hellblau_list.gif',
                 Elementtype::TYPE_REFERENCE       => '_fallback.gif',
-            ];
+            );
 
             $icon = $icons[$type];
         }
@@ -244,7 +244,7 @@ class ElementtypeService
 
         $rii = new \RecursiveIteratorIterator($sourceElementtype->getStructure(), \RecursiveIteratorIterator::SELF_FIRST);
 
-        $dsIdMap = [];
+        $dsIdMap = array();
         foreach ($rii as $sourceNode) {
             /* @var $sourceNode ElementtypeStructureNode */
             if ($sourceNode->isReferenced()) {

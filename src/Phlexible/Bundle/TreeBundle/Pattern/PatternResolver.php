@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\TreeBundle\Pattern;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Pattern resolver
@@ -25,20 +24,13 @@ class PatternResolver
     private $projectTitle;
 
     /**
-     * @var TranslatorInterface
+     * @param array  $patterns
+     * @param string $projectTitle
      */
-    private $translator;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array               $patterns
-     * @param string              $projectTitle
-     */
-    public function __construct(TranslatorInterface $translator, array $patterns, $projectTitle)
+    public function __construct(array $patterns, $projectTitle)
     {
         $this->projectTitle = $projectTitle;
         $this->patterns = $patterns;
-        $this->translator = $translator;
     }
 
     /**
@@ -74,14 +66,22 @@ class PatternResolver
      */
     public function replacePattern($pattern, Siteroot $siteroot, ElementVersion $elementVersion, $language)
     {
-        $replace = [
-            '%s' => $siteroot->getTitle(),
-            '%b' => $elementVersion->getBackendTitle($language),
-            '%p' => $elementVersion->getPageTitle($language),
-            '%n' => $elementVersion->getNavigationTitle($language),
-            '%r' => $this->projectTitle,
-        ];
+        if (strpos('%s', $pattern) !== false) {
+            $pattern = str_replace('%s', $siteroot->getTitle($language), $pattern);
+        }
+        if (strpos('%b', $pattern) !== false) {
+            $pattern = str_replace('%b', $elementVersion->getBackendTitle($language), $pattern);
+        }
+        if (strpos('%p', $pattern) !== false) {
+            $pattern = str_replace('%p', $elementVersion->getPageTitle($language), $pattern);
+        }
+        if (strpos('%n', $pattern) !== false) {
+            $pattern = str_replace('%n', $elementVersion->getNavigationTitle($language), $pattern);
+        }
+        if (strpos('%t', $pattern) !== false) {
+            $pattern = str_replace('%t', $this->projectTitle, $pattern);
+        }
 
-        return str_replace(array_keys($replace), array_values($replace), $pattern);
+        return $pattern;
     }
 }

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Event;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\Event;
 class LoadDataEvent extends Event
 {
     /**
-     * @var TreeNodeInterface
+     * @var NodeContext
      */
     private $node;
 
@@ -40,12 +40,12 @@ class LoadDataEvent extends Event
     private $data;
 
     /**
-     * @param TreeNodeInterface $node
-     * @param Teaser            $teaser
-     * @param string            $language
-     * @param object            $data
+     * @param NodeContext $node
+     * @param Teaser      $teaser
+     * @param string      $language
+     * @param object      $data
      */
-    public function __construct(TreeNodeInterface $node, Teaser $teaser = null, $language, $data)
+    public function __construct(NodeContext $node, Teaser $teaser = null, $language, $data)
     {
         $this->node = $node;
         $this->teaser = $teaser;
@@ -54,7 +54,7 @@ class LoadDataEvent extends Event
     }
 
     /**
-     * @return TreeNodeInterface
+     * @return NodeContext
      */
     public function getNode()
     {

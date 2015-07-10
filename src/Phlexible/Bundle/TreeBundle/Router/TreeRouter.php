@@ -9,7 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\Router;
 
 use Phlexible\Bundle\TreeBundle\Exception\BadMethodCallException;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter;
 
 /**
@@ -24,7 +25,7 @@ class TreeRouter extends DynamicRouter
      */
     public function supports($name)
     {
-        return $name instanceof TreeNodeInterface;
+        return $name instanceof NodeInterface || $name instanceof NodeContext;
     }
 
     /**

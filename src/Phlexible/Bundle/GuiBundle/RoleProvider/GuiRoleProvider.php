@@ -22,9 +22,9 @@ class GuiRoleProvider extends RoleProvider
      */
     public function provideRoles()
     {
-        return [
+        return array(
             'ROLE_BUNDLES',
-        ];
+        );
     }
 
     /**

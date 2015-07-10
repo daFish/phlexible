@@ -65,10 +65,10 @@ class SiterootExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return [
-            new \Twig_SimpleFunction('special_tid', [$this, 'specialTid']),
-            new \Twig_SimpleFunction('current_siteroot', [$this, 'currentSiteroot']),
-        ];
+        return array(
+            new \Twig_SimpleFunction('special_tid', array($this, 'specialTid')),
+            new \Twig_SimpleFunction('current_siteroot', array($this, 'currentSiteroot')),
+        );
     }
 
     /**
@@ -88,8 +88,8 @@ class SiterootExtension extends \Twig_Extension
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request->attributes->has('siterootUrl')) {
-            $siteroot = $request->attributes->get('siterootUrl')->getSiteroot();
+        if ($request->attributes->has('siteroot')) {
+            $siteroot = $request->attributes->get('siteroot');
         } else {
             $siteroot = $this->siterootRequestMatcher->matchRequest($request);
         }

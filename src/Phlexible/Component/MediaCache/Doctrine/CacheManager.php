@@ -88,7 +88,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function findByFile($fileId, $fileVersion = null)
     {
-        $criteria = ['fileId' => $fileId];
+        $criteria = array('fileId' => $fileId);
         if ($fileVersion) {
             $criteria['fileVersion'] = $fileVersion;
         }
@@ -101,7 +101,7 @@ class CacheManager implements CacheManagerInterface
      */
     public function findByTemplateAndFile($templateKey, $fileId, $fileVersion)
     {
-        return $this->getCacheRepository()->findOneBy(['templateKey' => $templateKey, 'fileId' => $fileId, 'fileVersion' => $fileVersion]);
+        return $this->getCacheRepository()->findOneBy(array('templateKey' => $templateKey, 'fileId' => $fileId, 'fileVersion' => $fileVersion));
     }
 
     /**

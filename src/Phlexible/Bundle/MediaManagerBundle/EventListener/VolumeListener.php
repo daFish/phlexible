@@ -90,13 +90,13 @@ class VolumeListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
-            VolumeEvents::BEFORE_CREATE_FILE   => ['onBeforeCreateFile', 500],
-            VolumeEvents::BEFORE_CREATE_FOLDER => ['onBeforeCreateFolder', 500],
-            VolumeEvents::BEFORE_REPLACE_FILE  => ['onBeforeReplaceFile', 500],
+        return array(
+            VolumeEvents::BEFORE_CREATE_FILE   => array('onBeforeCreateFile', 500),
+            VolumeEvents::BEFORE_CREATE_FOLDER => array('onBeforeCreateFolder', 500),
+            VolumeEvents::BEFORE_REPLACE_FILE  => array('onBeforeReplaceFile', 500),
             VolumeEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
             VolumeEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
-        ];
+        );
     }
 
     /**

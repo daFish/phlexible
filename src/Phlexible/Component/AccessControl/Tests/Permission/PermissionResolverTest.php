@@ -33,12 +33,12 @@ class PermissionResolverTest extends \PHPUnit_Framework_TestCase
     {
         return new PermissionCollection(
             'type1',
-            [
+            array(
                 new Permission('read', 1),
                 new Permission('create', 2),
                 new Permission('update', 4),
                 new Permission('delete', 8),
-            ]
+            )
         );
 
     }

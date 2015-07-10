@@ -41,7 +41,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
 
-        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry);
+        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, false);
 
         $result = $voter->vote(
             new PreAuthenticatedToken(new User(), 'username', 'test', array('ROLE_USER')),
@@ -59,7 +59,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
 
-        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry);
+        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, false);
 
         $result = $voter->vote(
             new PreAuthenticatedToken(new User(), 'username', 'test', array('ROLE_USER')),
@@ -77,7 +77,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
 
-        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry);
+        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, false);
 
         $result = $voter->vote(
             new PreAuthenticatedToken(new User(), 'username', 'test', array('ROLE_USER')),
@@ -88,12 +88,24 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
     }
 
-    public function testVoteIsDenied()
+    /**
+     * @return $this
+     */
+    private function createUser()
     {
-        $object = new TestObject();
         $user = new User();
-        $user->setId('testUser');
-        $permissions = new PermissionCollection(
+
+        return $user->setId('testUser');
+    }
+
+    /**
+     * @param $object
+     *
+     * @return PermissionCollection
+     */
+    private function createPermissions($object)
+    {
+        return new PermissionCollection(
             $object->getType(),
             array(
                 new Permission('VIEW', 1),
@@ -101,13 +113,20 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
                 new Permission('DELETE', 4),
             )
         );
+    }
+
+    public function testVoteIsDeniedOnEmptyAclWithUnpermissiveStrategy()
+    {
+        $object = new TestObject();
+        $user = $this->createUser();
+        $permissions = $this->createPermissions($object);
         $acl = new AccessControlList($permissions, $object);
         $permissionRegistry = new PermissionRegistry(array($permissions));
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
         $accessManager->findAcl($object)->willReturn($acl);
 
-        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry);
+        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, false);
 
         $result = $voter->vote(
             new PreAuthenticatedToken($user, 'username', 'test', array('ROLE_USER')),
@@ -118,19 +137,33 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $result);
     }
 
+    public function testVoteIsGrantedOnEmptyAclWithPermissiveStrategy()
+    {
+        $object = new TestObject();
+        $user = $this->createUser();
+        $permissions = $this->createPermissions($object);
+        $acl = new AccessControlList($permissions, $object);
+        $permissionRegistry = new PermissionRegistry(array($permissions));
+
+        $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
+        $accessManager->findAcl($object)->willReturn($acl);
+
+        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, true);
+
+        $result = $voter->vote(
+            new PreAuthenticatedToken($user, 'username', 'test', array('ROLE_USER')),
+            $object,
+            array('VIEW')
+        );
+
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $result);
+    }
+
     public function testVoteIsGranted()
     {
         $object = new TestObject();
-        $user = new User();
-        $user->setId('testUser');
-        $permissions = new PermissionCollection(
-            $object->getType(),
-            array(
-                new Permission('VIEW', 1),
-                new Permission('EDIT', 2),
-                new Permission('DELETE', 4),
-            )
-        );
+        $user = $this->createUser();
+        $permissions = $this->createPermissions($object);
         $acl = new AccessControlList($permissions, $object);
         $ace = new AccessControlEntry();
         $ace
@@ -145,7 +178,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
         $accessManager->findAcl($object)->willReturn($acl);
 
-        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry);
+        $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, false);
 
         $result = $voter->vote(
             new PreAuthenticatedToken($user, 'cred', 'test', array('ROLE_USER')),

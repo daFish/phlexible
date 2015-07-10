@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\ElementBundle\Controller;
 use Phlexible\Bundle\ElementBundle\Element\Publish\Selection;
 use Phlexible\Bundle\ElementBundle\Exception\RuntimeException;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
+use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -54,7 +54,7 @@ class PublishController extends Controller
             $eid = $node->getEid();
             //$fileUsage->update($node->getEid());
 
-            $data = [];
+            $data = array();
 
             $elementVersionManager = Makeweb_Elements_Element_Version_Manager::getInstance();
             $elementVersion = $elementVersionManager->get($node->getEid(), $version);
@@ -115,7 +115,7 @@ class PublishController extends Controller
         if ($languages) {
             $languages = explode(',', $languages);
         } else {
-            $languages = [$language];
+            $languages = array($language);
         }
 
         $selector = $this->get('phlexible_element.publish.selector');
@@ -138,18 +138,18 @@ class PublishController extends Controller
             $selection->merge($langSelection);
         }
 
-        $result = [];
+        $result = array();
         foreach ($selection->all() as $selectionItem) {
-            if ($selectionItem->getTarget() instanceof TreeNodeInterface) {
+            if ($selectionItem->getTarget() instanceof NodeInterface) {
                 $id = $selectionItem->getTarget()->getId();
-                $icon = $iconResolver->resolveTreeNode($selectionItem->getTarget(), $selectionItem->getLanguage());
+                $icon = $iconResolver->resolveNode($selectionItem->getTarget(), $selectionItem->getLanguage());
             } else {
                 $id = $selectionItem->getTarget()->getId();
                 $icon = $iconResolver->resolveTeaser($selectionItem->getTarget(), $selectionItem->getLanguage());
             }
 
-            $result[] = [
-                'type'      => $selectionItem->getTarget() instanceof TreeNodeInterface ? 'full_element' : 'part_element',
+            $result[] = array(
+                'type'      => $selectionItem->getTarget() instanceof NodeInterface ? 'full_element' : 'part_element',
                 'instance'  => $selectionItem->isInstance(),
                 'depth'     => $selectionItem->getDepth(),
                 'path'      => $selectionItem->getPath(),
@@ -160,10 +160,10 @@ class PublishController extends Controller
                 'title'     => $selectionItem->getTitle(),
                 'icon'      => $icon,
                 'action'    => true,
-            ];
+            );
         }
 
-        return new JsonResponse(['preview' => $result]);
+        return new JsonResponse(array('preview' => $result));
     }
 
     /**
@@ -187,7 +187,7 @@ class PublishController extends Controller
             throw new RuntimeException('Another advanced publish running.');
         }
 
-        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $treeManager = $this->get('phlexible_tree.node_manager');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
 
@@ -195,9 +195,9 @@ class PublishController extends Controller
             set_time_limit(15);
             if ($row['type'] === 'full_element') {
                 $tree = $treeManager->getByNodeId($row['id']);
-                $treeNode = $tree->get($row['id']);
+                $node = $tree->get($row['id']);
 
-                $tree->publish($treeNode, $row['version'], $row['language'], $this->getUser()->getId(), $comment);
+                $tree->publish($node, $row['version'], $row['language'], $this->getUser()->getId(), $comment);
             } elseif ($row['type'] === 'part_element') {
                 $teaser = $teaserManager->find($row['id']);
 
@@ -214,16 +214,16 @@ class PublishController extends Controller
             */
         }
 
-        $data = [];
+        $data = array();
 
         $tree = $treeManager->getByNodeId($tid);
-        $treeNode = $tree->get($tid);
+        $node = $tree->get($tid);
 
-        $data = [
+        $data = array(
             'tid' => $tid,
             'language' => $language,
-            'icon' => $iconResolver->resolveTreeNode($treeNode, $language),
-        ];
+            'icon' => $iconResolver->resolveNode($node, $language),
+        );
 
         $lock->release();
 

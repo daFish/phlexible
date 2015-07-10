@@ -40,17 +40,17 @@ class UsageController extends Controller
 
         $elementtype = $elementtypeService->findElementtype($id);
 
-        $usages = [];
+        $usages = array();
         foreach ($usageManager->getUsage($elementtype) as $usage) {
-            $usages[] = [
+            $usages[] = array(
                 'type'           => $usage->getType(),
                 'as'             => $usage->getAs(),
                 'id'             => $usage->getId(),
                 'title'          => $usage->getTitle(),
                 'latest_version' => $usage->getLatestVersion(),
-            ];
+            );
         }
 
-        return new JsonResponse(['list' => $usages, 'total' => count($usages)]);
+        return new JsonResponse(array('list' => $usages, 'total' => count($usages)));
     }
 }
