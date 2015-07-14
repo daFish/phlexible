@@ -15,7 +15,7 @@ use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface
 /**
  * User security provider
  *
- * @author Marco Fischer <mf@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class UserSecurityProvider implements SecurityProviderInterface, SecurityResolverInterface
 {
@@ -65,13 +65,10 @@ class UserSecurityProvider implements SecurityProviderInterface, SecurityResolve
 
         $data = array();
         foreach ($users as $user) {
-            $name = $user->getDisplayName();
-
             $data[] = array(
-                'type'       => 'user',
-                'objectType' => 'uid',
-                'objectId'   => $user->getId(),
-                'label'      => $name
+                'securityType' => get_class($user),
+                'securityId'   => $user->getId(),
+                'securityName' => $user->getDisplayName(),
             );
         }
 

@@ -129,7 +129,7 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
         }
 
         if (!$foundResource) {
-            throw new \Exception();
+            throw new \Exception("Resource for $elementtypeId not found.");
         }
 
         return $this->loadDomFromResource($foundResource);

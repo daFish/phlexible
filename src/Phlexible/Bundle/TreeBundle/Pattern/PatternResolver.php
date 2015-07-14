@@ -66,19 +66,19 @@ class PatternResolver
      */
     public function replacePattern($pattern, Siteroot $siteroot, ElementVersion $elementVersion, $language)
     {
-        if (strpos('%s', $pattern) !== false) {
+        if (strpos($pattern, '%s') !== false) {
             $pattern = str_replace('%s', $siteroot->getTitle($language), $pattern);
         }
-        if (strpos('%b', $pattern) !== false) {
+        if (strpos($pattern, '%b') !== false) {
             $pattern = str_replace('%b', $elementVersion->getBackendTitle($language), $pattern);
         }
-        if (strpos('%p', $pattern) !== false) {
+        if (strpos($pattern, '%p') !== false) {
             $pattern = str_replace('%p', $elementVersion->getPageTitle($language), $pattern);
         }
-        if (strpos('%n', $pattern) !== false) {
+        if (strpos($pattern, '%n') !== false) {
             $pattern = str_replace('%n', $elementVersion->getNavigationTitle($language), $pattern);
         }
-        if (strpos('%t', $pattern) !== false) {
+        if (strpos($pattern, '%t') !== false) {
             $pattern = str_replace('%t', $this->projectTitle, $pattern);
         }
 

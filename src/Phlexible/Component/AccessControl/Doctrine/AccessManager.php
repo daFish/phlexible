@@ -8,12 +8,10 @@
 
 namespace Phlexible\Component\AccessControl\Doctrine;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
-use Phlexible\Component\AccessControl\AccessControlEvents;
-use Phlexible\Component\AccessControl\Event\AccessControlEntryEvent;
-use Phlexible\Component\AccessControl\Model\AccessControlList;
+use Phlexible\Component\AccessControl\Domain\AccessControlList;
+use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
@@ -42,9 +40,9 @@ class AccessManager implements AccessManagerInterface
     private $dispatcher;
 
     /**
-     * @var EntityRepository
+     * @var array
      */
-    private $accessControlEntryRepository;
+    private $objectIds = array();
 
     /**
      * @param PermissionRegistry       $permissionRegistry
@@ -56,18 +54,65 @@ class AccessManager implements AccessManagerInterface
         $this->permissionRegistry = $permissionRegistry;
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
+
+        $this->objectIds = new \SplObjectStorage();
     }
 
     /**
-     * @return EntityRepository
+     * @return Connection
      */
-    private function getAccessControlEntryRepository()
+    private function getConnection()
     {
-        if (null === $this->accessControlEntryRepository) {
-            $this->accessControlEntryRepository = $this->entityManager->getRepository('PhlexibleAccessControlBundle:AccessControlEntry');
+        return $this->entityManager->getConnection();
+    }
+
+    /**
+     * @param ObjectIdentityInterface $objectIdentity
+     *
+     * @return int
+     */
+    private function findObjectIdentityId(ObjectIdentityInterface $objectIdentity)
+    {
+        if ($this->objectIds->contains($objectIdentity)) {
+            return $this->objectIds->offsetGet($objectIdentity);
         }
 
-        return $this->accessControlEntryRepository;
+        $conn = $this->getConnection();
+
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select('id')
+            ->from('acl_object_identity')
+            ->where($qb->expr()->eq('type', $qb->expr()->literal($objectIdentity->getType())))
+            ->andWhere($qb->expr()->eq('identifier', $qb->expr()->literal($objectIdentity->getIdentifier())));
+
+        $id = $conn->fetchColumn($qb);
+
+        if ($id) {
+            $this->objectIds->attach($objectIdentity, $id);
+        }
+
+        return $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createObjectIdentity(ObjectIdentityInterface $objectIdentity)
+    {
+        $conn = $this->getConnection();
+
+        if ($this->findObjectIdentityId($objectIdentity)) {
+            throw new \Exception("Identity is already persisted.");
+        }
+
+        $data = array(
+            'type'       => $objectIdentity->getType(),
+            'identifier' => $objectIdentity->getIdentifier(),
+        );
+        $conn->insert('acl_object_identity', $data);
+
+        return $this->findObjectIdentityId($objectIdentity);
     }
 
     /**
@@ -77,18 +122,31 @@ class AccessManager implements AccessManagerInterface
      */
     public function findAcl(ObjectIdentityInterface $objectIdentity)
     {
+        $conn = $this->getConnection();
+
+        $qb = $conn->createQueryBuilder();
+        $qb
+            ->select(array('e.security_type', 'e.security_identifier', 'e.mask', 'e.stop_mask', 'e.no_inherit_mask'))
+            ->from('acl_object_identity', 'oi')
+            ->join('oi', 'acl_entry', 'e', $qb->expr()->eq('oi.id', 'e.object_identity_id'))
+            ->where($qb->expr()->eq('oi.type', $qb->expr()->literal($objectIdentity->getType())))
+            ->andWhere($qb->expr()->eq('oi.identifier', $qb->expr()->literal($objectIdentity->getIdentifier())));
+
+        $entries = $conn->fetchAll($qb);
+
         $acl = new AccessControlList($this->permissionRegistry->get($objectIdentity->getType()), $objectIdentity);
 
-        $aces = $this->getAccessControlEntryRepository()
-            ->findBy(
-                array(
-                    'objectType' => $objectIdentity->getType(),
-                    'objectId' => $objectIdentity->getIdentifier(),
+        foreach ($entries as $entry) {
+            $acl->addEntry(
+                new Entry(
+                    $acl,
+                    $entry['security_type'],
+                    $entry['security_identifier'],
+                    $entry['mask'],
+                    $entry['stop_mask'],
+                    $entry['no_inherit_mask']
                 )
             );
-
-        foreach ($aces as $ace) {
-            $acl->addAccessControlEntry($ace);
         }
 
         return $acl;
@@ -99,18 +157,47 @@ class AccessManager implements AccessManagerInterface
      */
     public function updateAcl(AccessControlList $acl)
     {
-        die("test");
-        $event = new AccessControlEntryEvent($ace);
-        if ($this->dispatcher->dispatch(AccessControlEvents::BEFORE_SET_RIGHT, $event)->isPropagationStopped()) {
-            return $this;
+        $conn = $this->getConnection();
+
+        $objectIdentityId = $this->findObjectIdentityId($acl->getObjectIdentity());
+
+        if (!$objectIdentityId) {
+            $objectIdentityId = $this->createObjectIdentity($acl->getObjectIdentity());
         }
 
-        $this->entityManager->persist($ace);
-        $this->entityManager->flush($ace);
+        $conn->delete('acl_entry', array(
+            'object_identity_id' => $objectIdentityId,
+        ));
 
-        $event = new AccessControlEntryEvent($ace);
-        $this->dispatcher->dispatch(AccessControlEvents::SET_RIGHT, $event);
+        foreach ($acl->getEntries() as $entry) {
+            $conn->insert('acl_entry', array(
+                'object_identity_id'  => $objectIdentityId,
+                'security_type'       => $entry->getSecurityType(),
+                'security_identifier' => $entry->getSecurityIdentifier(),
+                'mask'                => $entry->getMask(),
+                'stop_mask'           => $entry->getStopMask(),
+                'no_inherit_mask'     => $entry->getNoInheritMask(),
+            ));
+        }
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteAcl(ObjectIdentityInterface $objectIdentity)
+    {
+        $conn = $this->getConnection();
+
+        $conn->delete('acl_entry', array(
+            'type'       => $objectIdentity->getType(),
+            'identifier' => $objectIdentity->getIdentifier(),
+        ));
+
+        $conn->delete('acl_object_identity', array(
+            'type'       => $objectIdentity->getType(),
+            'identifier' => $objectIdentity->getIdentifier(),
+        ));
     }
 }

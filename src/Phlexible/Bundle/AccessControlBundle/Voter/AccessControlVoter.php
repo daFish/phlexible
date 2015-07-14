@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\Voter;
 
+use Phlexible\Component\AccessControl\Domain\ObjectIdentity;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\AccessManagerInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
-use Phlexible\Component\AccessControl\Model\ObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\UserSecurityIdentity;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
@@ -94,7 +94,7 @@ class AccessControlVoter implements VoterInterface
 
         $acl = $this->accessManager->findAcl($identity);
 
-        if ($acl->isEmpty()) {
+        if (!count($acl)) {
             if ($this->permissiveOnEmptyAcl) {
                 return self::ACCESS_GRANTED;
             } else {

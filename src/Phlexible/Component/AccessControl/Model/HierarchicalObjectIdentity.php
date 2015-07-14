@@ -2,6 +2,7 @@
 
 namespace Phlexible\Component\AccessControl\Model;
 
+use Phlexible\Component\AccessControl\Domain\ObjectIdentity;
 use Phlexible\Component\AccessControl\Exception\InvalidDomainObjectException;
 use Symfony\Component\Security\Core\Util\ClassUtils;
 

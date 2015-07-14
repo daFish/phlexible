@@ -9,8 +9,10 @@
 namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Component\AccessControl\Domain\Entry;
+use Phlexible\Component\AccessControl\Domain\ObjectIdentity;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
-use Phlexible\Component\AccessControl\Model\ObjectIdentity;
+use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -121,85 +123,50 @@ class AccessController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $rightType = $request->get('right_type');
-        $deleted   = $request->get('deleted');
-        $modified  = $request->get('modified');
+        $objectType = $request->get('objectType');
+        $objectId   = $request->get('objectId');
+        $data       = $request->get('identities');
 
-        if (!$deleted && !$modified) {
+        if (!$data) {
             throw new InvalidArgumentException('No save data.');
         }
 
-        if ($deleted) {
-            $deleted = json_decode($deleted, true);
+        $identities = json_decode($data, true);
+
+        if ($objectType === 'teaser') {
+            $path = array($objectId);
+        } elseif ($objectType === 'Phlexible\Bundle\TreeBundle\Node\NodeContext') {
+            $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
+            $node = $tree->get($objectId);
+            $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($node);
+        } else {
+            throw new \Exception("Unsupported object type $objectType");
         }
 
-        if ($modified) {
-            $modified = json_decode($modified, true);
+        $accessManager = $this->get('phlexible_access_control.access_manager');
+        $acl = $accessManager->findAcl($objectIdentity);
+
+        if (!$acl) {
+            $acl = $accessManager->createAcl($objectIdentity);
         }
 
-        $contentRightsManager = $this->get('phlexible_access_control.rights');
-        $permissions = $this->get('phlexible_access_control.permissions');
+        foreach ($acl->getEntries() as $ace) {
+            $acl->removeEntry($ace);
+        }
+        foreach ($identities as $objectIdentity) {
+            $ace = new Entry(
+                $acl,
+                $objectIdentity['securityType'],
+                $objectIdentity['securityId'],
+                $objectIdentity['mask'],
+                $objectIdentity['stopMask'],
+                $objectIdentity['noInheritMask']
+            );
 
-        $contentRights = $permissions->getAll();
-
-        if ($deleted) {
-            foreach ($deleted as $deletedRow) {
-                $rights = array_keys($contentRights[$rightType][$deletedRow['content_type']]);
-
-                foreach ($rights as $right) {
-                    $contentRightsManager->removeRight(
-                        $rightType,
-                        $deletedRow['content_type'],
-                        $deletedRow['content_id'],
-                        $deletedRow['object_type'],
-                        $deletedRow['object_id'],
-                        $right,
-                        $deletedRow['language']
-                    );
-                }
-            }
+            $acl->addEntry($ace);
         }
 
-        if ($modified) {
-            foreach ($modified as $modifiedRow) {
-                foreach ($modifiedRow['rights'] as $rightRow) {
-                    // if name of right is not present (e.g. component
-                    // was deinstalled) do not save the right
-                    if (empty($rightRow['right'])) {
-                        continue;
-                    }
-
-                    $contentRightsManager->removeRight(
-                        $rightType,
-                        $modifiedRow['content_type'],
-                        $modifiedRow['content_id'],
-                        $modifiedRow['object_type'],
-                        $modifiedRow['object_id'],
-                        $rightRow['right'],
-                        $modifiedRow['language']
-                    );
-
-                    if (!in_array($rightRow['status'], array(
-                        \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_INHERITABLE,
-                        \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_SINGLE,
-                        \Phlexible\Component\AccessControl\Rights\Rights::RIGHT_STATUS_STOPPED
-                    ))) {
-                        continue;
-                    }
-
-                    $contentRightsManager->setRight(
-                        $rightType,
-                        $modifiedRow['content_type'],
-                        $modifiedRow['content_id'],
-                        $modifiedRow['object_type'],
-                        $modifiedRow['object_id'],
-                        $rightRow['right'],
-                        $rightRow['status'],
-                        $modifiedRow['language']
-                    );
-                }
-            }
-        }
+        $accessManager->updateAcl($acl);
 
         return new ResultResponse(true, 'Rights saved.');
     }

@@ -138,8 +138,12 @@ class FileUsageUpdater
 
         foreach ($flags as $fileId => $fileVersions) {
             foreach ($fileVersions as $fileVersion => $flag) {
-                $volume = $this->volumeManager->getByFileId($fileId);
-                $file = $volume->findFile($fileId, $fileVersion);
+                try {
+                    $volume = $this->volumeManager->getByFileId($fileId);
+                    $file = $volume->findFile($fileId, $fileVersion);
+                } catch (\Exception $e) {
+                    continue;
+                }
 
                 $qb = $fileUsageRepository->createQueryBuilder('fu');
                 $qb

@@ -8,7 +8,11 @@ services:
 
     phlexible_access_control.security_resolver:
         class: Phlexible\Component\AccessControl\SecurityProvider\DelegatingSecurityResolver
-        arguments: [[@phlexible_access_control.user_security_provider, @phlexible_access_control.group_security_provider]]
+        arguments:
+            -
+                - @phlexible_access_control.user_security_provider
+                - @phlexible_access_control.group_security_provider
+                - @phlexible_access_control.role_security_provider
 
     phlexible_access_control.user_security_provider:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\UserSecurityProvider
@@ -17,6 +21,10 @@ services:
     phlexible_access_control.group_security_provider:
         class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\GroupSecurityProvider
         arguments: [@phlexible_user.group_manager]
+
+    phlexible_access_control.role_security_provider:
+        class: Phlexible\Bundle\AccessControlBundle\SecurityProvider\RoleSecurityProvider
+        arguments: [@security.role_hierarchy, %security.role_hierarchy.roles%]
 
     # voters
     phlexible_access_control.voter.rights:

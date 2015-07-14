@@ -249,7 +249,7 @@ class XmlParser implements ParserInterface
         if ($childNodes->length) {
             foreach ($childNodes as $childNode) {
                 /* @var $childNode Element */
-                $this->loadNode($childNode, $elementtypeStructure, $elementtypeStructureNode, $isReferenced);
+                $this->loadNode($childNode, $elementtypeStructure, $elementtypeStructureNode, (bool) ($isReferenced || $referenceElementtypeId));
             }
         }
 

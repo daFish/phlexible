@@ -122,7 +122,8 @@ class GetConfigListener
                     $tree = $this->treeManager->getBySiterootId($siterootId);
                     $root = $tree->getRoot();
 
-                    if (!$this->authorizationChecker->isGranted(array('right' => 'VIEW', 'language' => $language), $root)) {
+                    if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
+                        !$this->authorizationChecker->isGranted(array('permission' => 'VIEW', 'language' => $language), $root)) {
                         continue;
                     }
 

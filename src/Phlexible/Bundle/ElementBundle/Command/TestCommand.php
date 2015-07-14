@@ -26,44 +26,8 @@ class TestCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('element:test')
+            ->setName('element:test-transform')
             ->setDescription('test.');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEnabled()
-    {
-        return false;
-    }
-
-    /**
-     * @param ElementStructure $structure
-     *
-     * @return ElementStructure
-     */
-    private function iterateStructure(ElementStructure $structure)
-    {
-        $elementStructure = new ElementStructure();
-        $elementStructure
-            ->setId($structure->getId())
-            ->setDsId($structure->getDsId())
-            ->setName($structure->getName())
-            //->setParentId($structure->getParentId())
-            //->setParentDsId($structure->getParentDsId())
-            ->setParentName($structure->getParentName());
-        ;
-
-        foreach ($structure->getValues() as $value) {
-            $elementStructure->setValue($value);
-        }
-
-        foreach ($structure->getStructures() as $childStructure) {
-            $elementStructure->addStructure($this->iterateStructure($childStructure));
-        }
-
-        return $elementStructure;
     }
 
     /**
@@ -71,13 +35,78 @@ class TestCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $imagine = new \Imagine\Imagick\Imagine();
-        $im = $imagine->open('/Users/swentz/Pictures/test-drive-unlimited-20050518034855099.jpg');
-        $m = $im->show();
-        print_r($m->toArray());
+        $elementManager = $this->getContainer()->get('phlexible_element.element_manager');
+        $elementVersionManager = $this->getContainer()->get('phlexible_element.element_version_manager');
+        $elementService = $this->getContainer()->get('phlexible_element.element_service');
+        $this->getContainer()->get('doctrine.dbal.default_connection')->getConfiguration()->setSQLLogger(null);
+        $doctrine = $this->getContainer()->get('doctrine.orm.default_entity_manager');
 
-        $output->writeln('x');
+        $elements = $elementManager->findBy(array());
+
+        $i = 0;
+        $needFlush = false;
+        foreach ($elements as $element) {
+            //if ($element->getEid() !== 67) continue;
+            $elementVersions = $elementVersionManager->findBy(array('element' => $element));
+            foreach ($elementVersions as $elementVersion) {
+                $output->writeln($i . ') ' . $element->getEid() . ' ' . $elementVersion->getVersion());
+
+                $structure = $elementService->findElementStructure($elementVersion);
+
+                $content = $this->structureToJson($structure);
+
+                $elementVersion->setContent($content);
+                $elementVersionManager->updateElementVersion($elementVersion, false);
+                $i++;
+
+                if ($i % 100 === 0) {
+                    $needFlush = true;
+                }
+            }
+            if ($needFlush) {
+                $output->writeln('flush');
+                $doctrine->flush();
+                $doctrine->clear();
+                $needFlush = false;
+            }
+        }
+
+        $doctrine->flush();
+        $doctrine->clear();
+
         return 0;
+    }
+
+    private function structureToJson(ElementStructure $structure)
+    {
+        if (!$structure->getId()) {
+            return null;
+        }
+
+        $values = array();
+        foreach ($structure->getLanguages() as $language) {
+            foreach ($structure->getValues($language) as $value) {
+                $values[$value->getDsId()][$language] = $value->getValue();
+            }
+        }
+
+        $children = array();
+        foreach ($structure->getStructures() as $subStructure) {
+            $child = $this->structureToJson($subStructure);
+            if ($child) {
+                $children[] = $child;
+            }
+        }
+
+        $result = array(
+            'id' => $structure->getType() !== 'root' ? (int) $structure->getId() : null,
+            'dsId' => $structure->getType() !== 'root' ? $structure->getDsId() : null,
+            'parent' => $structure->getParentName(),
+            'values' => $values,
+            'children' => $children,
+        );
+
+        return $result;
     }
 }
 

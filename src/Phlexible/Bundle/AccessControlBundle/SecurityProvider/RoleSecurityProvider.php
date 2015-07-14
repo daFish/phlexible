@@ -11,25 +11,33 @@ namespace Phlexible\Bundle\AccessControlBundle\SecurityProvider;
 use Phlexible\Bundle\UserBundle\Model\GroupManagerInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityProviderInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface;
+use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 /**
- * Group security provider
+ * Role security provider
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class GroupSecurityProvider implements SecurityProviderInterface, SecurityResolverInterface
+class RoleSecurityProvider implements SecurityProviderInterface, SecurityResolverInterface
 {
     /**
-     * @var GroupManagerInterface
+     * @var RoleHierarchyInterface
      */
-    private $groupManager;
+    private $roleHierarchy;
 
     /**
-     * @param GroupManagerInterface $groupManager
+     * @var array
      */
-    public function __construct(GroupManagerInterface $groupManager)
+    private $roles;
+
+    /**
+     * @param RoleHierarchyInterface $roleHierarchy
+     * @param array                  $roles
+     */
+    public function __construct(RoleHierarchyInterface $roleHierarchy, array $roles)
     {
-        $this->groupManager = $groupManager;
+        $this->roleHierarchy = $roleHierarchy;
+        $this->roles = $roles;
     }
 
     /**
@@ -37,11 +45,11 @@ class GroupSecurityProvider implements SecurityProviderInterface, SecurityResolv
      */
     public function resolveName($securityType, $securityId)
     {
-        if ($securityType !== 'Phlexible\Bundle\UserBundle\Entity\Group') {
+        if ($securityType !== 'Symfony\Component\Security\Core\Role') {
             return null;
         }
 
-        return $this->groupManager->find($securityId)->getName();
+        return $securityId;
     }
 
     /**
@@ -49,19 +57,17 @@ class GroupSecurityProvider implements SecurityProviderInterface, SecurityResolv
      */
     public function getAll($query, $limit, $offset)
     {
-        $groups = $this->groupManager->findBy(array(), array('name' => 'ASC'), $limit, $offset);
-
         $data = array();
-        foreach ($groups as $group) {
+        foreach ($this->roles as $role) {
             $data[] = array(
-                'securityType' => get_class($group),
-                'securityId'   => $group->getId(),
-                'securityName' => $group->getName(),
+                'securityType' => 'Symfony\Component\Security\Core\Role',
+                'securityId'   => $role,
+                'securityName' => $role,
             );
         }
 
         return array(
-            'count' => count($data), // TODO: countBy()
+            'count' => count($data),
             'data'  => $data,
         );
     }

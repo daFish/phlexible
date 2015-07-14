@@ -1,18 +1,32 @@
 <?php
 
-namespace Phlexible\Component\AccessControl\Model;
+namespace Phlexible\Component\AccessControl\Domain;
 
 use Phlexible\Component\AccessControl\Exception\InvalidDomainObjectException;
+use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Core\Util\ClassUtils;
 
 /**
- * ObjectIdentity implementation.
+ * Object identity
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ObjectIdentity implements ObjectIdentityInterface
 {
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
     private $identifier;
+
+    /**
+     * @var string
+     */
     private $type;
 
     /**
@@ -62,6 +76,14 @@ class ObjectIdentity implements ObjectIdentityInterface
         }
 
         throw new InvalidDomainObjectException('$domainObject must either implement the DomainObjectInterface, or have a method named "getId".');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

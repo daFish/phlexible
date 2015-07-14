@@ -101,6 +101,22 @@ class ElementVersionManager implements ElementVersionManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findOneBy(array $criteria, array $orderBy = null)
+    {
+        return $this->getElementVersionRepository()->findOneBy($criteria, $orderBy);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->getElementVersionRepository()->findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findByElementSource(ElementSource $elementSource)
     {
         return $this->getElementVersionRepository()->findBy(array('elementSource' => $elementSource));

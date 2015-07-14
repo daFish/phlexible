@@ -98,6 +98,12 @@ class ElementVersion
     private $triggerLanguage;
 
     /**
+     * @var array
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    private $content;
+
+    /**
      * @var ArrayCollection|ElementVersionMappedField[]
      * @ORM\OneToMany(targetEntity="ElementVersionMappedField", mappedBy="elementVersion", indexBy="language")
      */
@@ -432,5 +438,25 @@ class ElementVersion
         }
 
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param array $content
+     *
+     * @return $this
+     */
+    public function setContent(array $content = null)
+    {
+        $this->content = $content;
+
+        return $this;
     }
 }

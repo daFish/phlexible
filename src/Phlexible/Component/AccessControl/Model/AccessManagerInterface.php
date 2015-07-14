@@ -8,6 +8,8 @@
 
 namespace Phlexible\Component\AccessControl\Model;
 
+use Phlexible\Component\AccessControl\Domain\AccessControlList;
+
 /**
  * Access manager interface
  *
@@ -28,4 +30,9 @@ interface AccessManagerInterface
      * @return $this
      */
     public function updateAcl(AccessControlList $acl);
+
+    /**
+     * @param ObjectIdentityInterface $objectIdentity
+     */
+    public function deleteAcl(ObjectIdentityInterface $objectIdentity);
 }

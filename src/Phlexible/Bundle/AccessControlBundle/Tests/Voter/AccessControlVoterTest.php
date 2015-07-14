@@ -2,10 +2,10 @@
 
 namespace Phlexible\phlexible\src\Phlexible\Bundle\AccessControlBundle\Tests\Voter;
 
-use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
 use Phlexible\Bundle\AccessControlBundle\Voter\AccessControlVoter;
 use Phlexible\Bundle\UserBundle\Entity\User;
-use Phlexible\Component\AccessControl\Model\AccessControlList;
+use Phlexible\Component\AccessControl\Domain\AccessControlList;
+use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
@@ -115,16 +115,15 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testVoteIsDeniedOnEmptyAclWithUnpermissiveStrategy()
+    public function testVoteIsDeniedOnUnknownAclWithUnpermissiveStrategy()
     {
         $object = new TestObject();
         $user = $this->createUser();
         $permissions = $this->createPermissions($object);
-        $acl = new AccessControlList($permissions, $object);
         $permissionRegistry = new PermissionRegistry(array($permissions));
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
-        $accessManager->findAcl($object)->willReturn($acl);
+        $accessManager->findAcl($object)->willReturn(new AccessControlList($permissions, $object));
 
         $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, false);
 
@@ -137,16 +136,15 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $result);
     }
 
-    public function testVoteIsGrantedOnEmptyAclWithPermissiveStrategy()
+    public function testVoteIsGrantedOnUnknownAclWithPermissiveStrategy()
     {
         $object = new TestObject();
         $user = $this->createUser();
         $permissions = $this->createPermissions($object);
-        $acl = new AccessControlList($permissions, $object);
         $permissionRegistry = new PermissionRegistry(array($permissions));
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');
-        $accessManager->findAcl($object)->willReturn($acl);
+        $accessManager->findAcl($object)->willReturn(new AccessControlList($permissions, $object));
 
         $voter = new AccessControlVoter($accessManager->reveal(), $permissionRegistry, true);
 
@@ -165,14 +163,8 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
         $user = $this->createUser();
         $permissions = $this->createPermissions($object);
         $acl = new AccessControlList($permissions, $object);
-        $ace = new AccessControlEntry();
-        $ace
-            ->setMask(7)
-            ->setObjectId($object->getIdentifier())
-            ->setObjectType($object->getType())
-            ->setSecurityId($user->getId())
-            ->setSecurityType(get_class($user));
-        $acl->addAccessControlEntry($ace);
+        $ace = new Entry($acl, get_class($user), $user->getId(), 7, 0, 0);
+        $acl->addEntry($ace);
         $permissionRegistry = new PermissionRegistry(array($permissions));
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');

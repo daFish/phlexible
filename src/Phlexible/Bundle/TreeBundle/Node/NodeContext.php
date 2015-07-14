@@ -10,13 +10,15 @@ namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 
 /**
  * Node context
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class NodeContext
+class NodeContext implements DomainObjectInterface
 {
     /**
      * @var NodeInterface
@@ -43,6 +45,22 @@ class NodeContext
         $this->node = $node;
         $this->tree = $tree;
         $this->language = $language;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectIdentifier()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getObjectType()
+    {
+        return get_class($this);
     }
 
     /**

@@ -6,9 +6,10 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Component\AccessControl\Model;
+namespace Phlexible\Component\AccessControl\Domain;
 
-use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
+use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
+use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\Permission;
 use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 
@@ -17,7 +18,7 @@ use Phlexible\Component\AccessControl\Permission\PermissionCollection;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class AccessControlList
+class AccessControlList implements \Countable
 {
     /**
      * @var PermissionCollection
@@ -30,14 +31,14 @@ class AccessControlList
     private $objectIdentity;
 
     /**
-     * @var AccessControlEntry[]
+     * @var Entry[]
      */
     private $entries;
 
     /**
      * @param PermissionCollection    $permissions
      * @param ObjectIdentityInterface $objectIdentity
-     * @param AccessControlEntry[]    $accessControlEntries
+     * @param Entry[]                 $accessControlEntries
      */
     public function __construct(
         PermissionCollection $permissions,
@@ -67,19 +68,19 @@ class AccessControlList
     }
 
     /**
-     * @return AccessControlEntry[]
+     * @return Entry[]
      */
-    public function getAccessControlEntries()
+    public function getEntries()
     {
         return $this->entries;
     }
 
     /**
-     * @param AccessControlEntry $ace
+     * @param Entry $ace
      *
      * @return $this
      */
-    public function addAccessControlEntry(AccessControlEntry $ace)
+    public function addEntry(Entry $ace)
     {
         $this->entries[] = $ace;
 
@@ -87,11 +88,19 @@ class AccessControlList
     }
 
     /**
-     * @return bool
+     * @param Entry $ace
+     *
+     * @return $this
      */
-    public function isEmpty()
+    public function removeEntry(Entry $ace)
     {
-        return count($this->entries) === 0;
+        foreach ($this->entries as $index => $entry) {
+            if ($ace->getId() === $entry->getId()) {
+                unset($this->entries[$index]);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -106,7 +115,7 @@ class AccessControlList
         foreach ($this->entries as $entry) {
             if (
                 $entry->getSecurityType() === $securityIdentity->getType() &&
-                $entry->getSecurityId() === $securityIdentity->getIdentifier()
+                $entry->getSecurityIdentifier() === $securityIdentity->getIdentifier()
             ) {
                 return $permission->test($entry->getMask());
             }
@@ -138,14 +147,14 @@ class AccessControlList
 
         $ace = null;
         foreach ($this->entries as $entry) {
-            if ($entry->getSecurityId() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
+            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
                 $ace = $entry;
                 break;
             }
         }
 
         if (!$ace) {
-            $ace = new AccessControlEntry();
+            $ace = new Entry();
             $ace
                 ->setObjectType($this->objectIdentity->getType())
                 ->setObjectId($this->objectIdentity->getIdentifier())
@@ -172,11 +181,19 @@ class AccessControlList
     {
         $aces = null;
         foreach ($this->entries as $index => $entry) {
-            if ($entry->getSecurityId() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
+            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
                 unset($this->entries[$index]);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->entries);
     }
 }

@@ -65,4 +65,34 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('foo', $result);
     }
+
+    public function testReplacePatterWithSiterootPlaceholder()
+    {
+        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot->getTitle('de')->willReturn('foo');
+        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
+        $elementVersion->getBackendTitle('de')->shouldNotBeCalled();
+        $elementVersion->getPageTitle('de')->shouldNotBeCalled();
+        $elementVersion->getNavigationTitle('de')->shouldNotBeCalled();
+
+        $patternResolver = new PatternResolver(array(), 'title');
+        $result = $patternResolver->replacePattern('%s-test', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+
+        $this->assertSame('foo-test', $result);
+    }
+
+    public function testReplacePatterWithElementVersionPlaceholder()
+    {
+        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot->getTitle('de')->shouldNotBeCalled();
+        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
+        $elementVersion->getBackendTitle('de')->willReturn('foo');
+        $elementVersion->getPageTitle('de')->willReturn('bar');
+        $elementVersion->getNavigationTitle('de')->willReturn('baz');
+
+        $patternResolver = new PatternResolver(array(), 'title');
+        $result = $patternResolver->replacePattern('%b-%p-%n-test', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+
+        $this->assertSame('foo-bar-baz-test', $result);
+    }
 }

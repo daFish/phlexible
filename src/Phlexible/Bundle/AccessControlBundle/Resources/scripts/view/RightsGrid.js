@@ -1,6 +1,7 @@
 Ext.provide('Phlexible.accesscontrol.RightsGrid');
 
 Ext.require('Phlexible.accesscontrol.model.AccessControlEntry');
+Ext.require('Phlexible.accesscontrol.model.SecurityIdentity');
 Ext.require('Ext.ux.IconCombo');
 Ext.require('Ext.ux.grid.RowActions');
 
@@ -17,7 +18,6 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     objectType: null,
     languageEnabled: false,
-    deletedSubjects: [],
 
     getDefaultUrls: function () {
         return {
@@ -302,19 +302,14 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 store: new Ext.data.JsonStore({
                     url: this.urls.users,
                     root: 'data',
-                    id: 'objectId',
+                    id: 'securityId',
                     totalProperty: 'total',
-                    fields: [
-                        'type',
-                        'objectType',
-                        'objectId',
-                        'label'
-                    ],
+                    fields: Phlexible.accesscontrol.model.SecurityIdentity,
                     autoLoad: false
                 }),
                 pageSize: 20,
-                displayField: 'label',
-                valueField: 'objectId',
+                displayField: 'securityName',
+                valueField: 'securityId',
                 emptyText: this.strings.users,
                 selectOnFocus: true,
                 mode: 'remote',
@@ -338,17 +333,12 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 store: new Ext.data.JsonStore({
                     url: this.urls.groups,
                     root: 'data',
-                    id: 'objectId',
-                    fields: [
-                        'type',
-                        'objectType',
-                        'objectId',
-                        'label'
-                    ],
+                    id: 'securityId',
+                    fields: Phlexible.accesscontrol.model.SecurityIdentity,
                     autoLoad: false
                 }),
-                displayField: 'label',
-                valueField: 'objectId',
+                displayField: 'securityName',
+                valueField: 'securityId',
                 emptyText: this.strings.groups,
                 selectOnFocus: true,
                 mode: 'remote',
@@ -524,14 +514,6 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
     deleteAction: function (grid, record, action, row, col) {
         grid.store.remove(record);
-
-        grid.deletedSubjects.push({
-            objectType: grid.objectType,
-            objectId: grid.objectId,
-            securityType: record.data.securityType,
-            securityId: record.data.securityId,
-            language: record.data.language
-        });
     },
 
     linkAction: function (grid, record, action, row, col) {
@@ -594,6 +576,22 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     },
 
     onAdd: function (combo) {
+        var securityIdentity = combo.getStore().getById(combo.getValue()),
+            entry = new Phlexible.accesscontrol.model.AccessControlEntry({
+                id: null,
+                objectType: this.objectType,
+                objectId: this.objectId,
+                securityType: securityIdentity.get('securityType'),
+                securityId: securityIdentity.get('securityId'),
+                securityName: securityIdentity.get('securityName'),
+                mask: 0,
+                stopMask: 0,
+                noInheritMask: 0
+            });
+
+        this.store.insert(0, entry);
+        return;
+
         var key = combo.getValue();
         var r = combo.getStore().getById(key);
         combo.clearValue();
@@ -635,44 +633,18 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     },
 
     onSave: function () {
-        var mr = this.store.getModifiedRecords();
+        var identities = [];
 
-        var modified = [];
-        var deleted = this.deletedSubjects;
-
-        for (var i = 0; i < mr.length; i++) {
-            var skip = false;
-            for (var j = 0; j < deleted.length; j++) {
-                if (deleted[j].objectType == mr[i].data.objectType &&
-                    deleted[j].objectId == mr[i].data.objectId) {
-                    skip = true;
-                    break;
-                }
-            }
-
-            if (skip) {
-                continue;
-            }
-
-            modified.push({
-                securityType: mr[i].data.securityType,
-                securityId: mr[i].data.securityId,
-                objectType: this.objectType,
-                objectId: this.objectId,
-                language: mr[i].data.language,
-                rights: mr[i].data.rights
-            });
-        }
-
-        //Phlexible.console.log(modified);
-        //Phlexible.console.log(deleted);
+        this.store.each(function(r) {
+            identities.push(r.data);
+        });
 
         Ext.Ajax.request({
             url: this.urls.save,
             params: {
                 objectType: this.objectType,
-                modified: Ext.encode(modified),
-                deleted: Ext.encode(deleted)
+                objectId: this.objectId,
+                identities: Ext.encode(identities)
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
@@ -683,7 +655,6 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     this.store.reload();
 
                     this.store.commitChanges();
-                    this.deletedSubjects = [];
                 }
                 else {
                     Ext.MessageBox.alert('Warning', data.msg);

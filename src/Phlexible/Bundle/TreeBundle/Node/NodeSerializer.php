@@ -102,7 +102,7 @@ class NodeSerializer
     {
         $userRights = array();
         if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            if (!$this->authorizationChecker->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
+            if (!$this->authorizationChecker->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
                 return null;
             }
 

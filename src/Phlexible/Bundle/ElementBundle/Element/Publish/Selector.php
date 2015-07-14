@@ -238,7 +238,7 @@ class Selector
             }
         }
         if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
-            if (!$this->authorizationChecker->isGranted($node, array('right' => 'PUBLISH', 'language' => $language))) {
+            if (!$this->authorizationChecker->isGranted($node, array('permission' => 'PUBLISH', 'language' => $language))) {
                 $include = false;
             }
         }

@@ -41,5 +41,7 @@ class PhlexibleAccessControlExtension extends Extension
             'phlexible_access_control.access_manager',
             'phlexible_access_control.doctrine.access_manager'
         );
+
+        $container->setParameter('phlexible_access_control.backend_type_orm', true);
     }
 }

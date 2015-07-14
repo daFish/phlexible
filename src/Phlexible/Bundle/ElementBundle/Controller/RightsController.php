@@ -137,22 +137,25 @@ class RightsController extends Controller
 
         $acl = $accessManager->findAcl($identity);
 
-        $resolver = $this->get('phlexible_access_control.security_resolver');
-
         $identities = array();
-        foreach ($acl->getAccessControlEntries() as $ace) {
-            $identities[] = array(
-                'id'             => $ace->getId(),
-                'objectType'     => $ace->getObjectType(),
-                'objectId'       => $ace->getObjectId(),
-                'mask'           => $ace->getMask(),
-                'stopMask'       => $ace->getStopMask(),
-                'noInheritMask'  => $ace->getNoInheritMask(),
-                'objectLanguage' => $ace->getObjectLanguage(),
-                'securityType'   => $ace->getSecurityType(),
-                'securityId'     => $ace->getSecurityId(),
-                'securityName'   => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityId()),
-            );
+
+        if ($acl) {
+            $resolver = $this->get('phlexible_access_control.security_resolver');
+
+            foreach ($acl->getEntries() as $ace) {
+                $identities[] = array(
+                    'id'             => $ace->getId(),
+                    'objectType'     => $acl->getObjectIdentity()->getType(),
+                    'objectId'       => $acl->getObjectIdentity()->getIdentifier(),
+                    'mask'           => $ace->getMask(),
+                    'stopMask'       => $ace->getStopMask(),
+                    'noInheritMask'  => $ace->getNoInheritMask(),
+                    'objectLanguage' => null,
+                    'securityType'   => $ace->getSecurityType(),
+                    'securityId'     => $ace->getSecurityIdentifier(),
+                    'securityName'   => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
+                );
+            }
         }
 
         return new JsonResponse(array('identities' => $identities));
