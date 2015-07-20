@@ -20,11 +20,11 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
     public function testReplaceWithUnknownPatternWillFallbackToElementVersionPageTitle()
     {
         $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
-        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
-        $elementVersion->getPageTitle('de')->willReturn('pageTitle');
+        $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
+        $node->getField('page', 'de')->willReturn('pageTitle');
 
         $patternResolver = new PatternResolver(array(), 'title');
-        $result = $patternResolver->replace('test', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+        $result = $patternResolver->replace('test', $siteroot->reveal(), $node->reveal(), 'de');
 
         $this->assertSame('pageTitle', $result);
     }
@@ -32,10 +32,10 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
     public function testReplaceWithKnownPattern()
     {
         $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
-        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
+        $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
 
         $patternResolver = new PatternResolver(array('test' => '%t'), 'title');
-        $result = $patternResolver->replace('test', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+        $result = $patternResolver->replace('test', $siteroot->reveal(), $node->reveal(), 'de');
 
         $this->assertSame('title', $result);
     }
@@ -43,10 +43,10 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
     public function testReplacePattern()
     {
         $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
-        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
+        $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
 
         $patternResolver = new PatternResolver(array(), 'title');
-        $result = $patternResolver->replacePattern('%t', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+        $result = $patternResolver->replacePattern('%t', $siteroot->reveal(), $node->reveal(), 'de');
 
         $this->assertSame('title', $result);
     }
@@ -55,13 +55,13 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
     {
         $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
         $siteroot->getTitle('de')->shouldNotBeCalled();
-        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
-        $elementVersion->getBackendTitle('de')->shouldNotBeCalled();
-        $elementVersion->getPageTitle('de')->shouldNotBeCalled();
-        $elementVersion->getNavigationTitle('de')->shouldNotBeCalled();
+        $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
+        $node->getField('backend', 'de')->shouldNotBeCalled();
+        $node->getField('page', 'de')->shouldNotBeCalled();
+        $node->getField('navigation', 'de')->shouldNotBeCalled();
 
         $patternResolver = new PatternResolver(array(), 'title');
-        $result = $patternResolver->replacePattern('foo', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+        $result = $patternResolver->replacePattern('foo', $siteroot->reveal(), $node->reveal(), 'de');
 
         $this->assertSame('foo', $result);
     }
@@ -70,13 +70,13 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
     {
         $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
         $siteroot->getTitle('de')->willReturn('foo');
-        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
-        $elementVersion->getBackendTitle('de')->shouldNotBeCalled();
-        $elementVersion->getPageTitle('de')->shouldNotBeCalled();
-        $elementVersion->getNavigationTitle('de')->shouldNotBeCalled();
+        $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
+        $node->getField('backend', 'de')->shouldNotBeCalled();
+        $node->getField('page', 'de')->shouldNotBeCalled();
+        $node->getField('navigation', 'de')->shouldNotBeCalled();
 
         $patternResolver = new PatternResolver(array(), 'title');
-        $result = $patternResolver->replacePattern('%s-test', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+        $result = $patternResolver->replacePattern('%s-test', $siteroot->reveal(), $node->reveal(), 'de');
 
         $this->assertSame('foo-test', $result);
     }
@@ -85,13 +85,13 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
     {
         $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
         $siteroot->getTitle('de')->shouldNotBeCalled();
-        $elementVersion = $this->prophesize('Phlexible\Bundle\ElementBundle\Entity\ElementVersion');
-        $elementVersion->getBackendTitle('de')->willReturn('foo');
-        $elementVersion->getPageTitle('de')->willReturn('bar');
-        $elementVersion->getNavigationTitle('de')->willReturn('baz');
+        $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
+        $node->getField('backend', 'de')->willReturn('foo');
+        $node->getField('page', 'de')->willReturn('bar');
+        $node->getField('navigation', 'de')->willReturn('baz');
 
         $patternResolver = new PatternResolver(array(), 'title');
-        $result = $patternResolver->replacePattern('%b-%p-%n-test', $siteroot->reveal(), $elementVersion->reveal(), 'de');
+        $result = $patternResolver->replacePattern('%b-%p-%n-test', $siteroot->reveal(), $node->reveal(), 'de');
 
         $this->assertSame('foo-bar-baz-test', $result);
     }

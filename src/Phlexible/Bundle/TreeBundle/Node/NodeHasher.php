@@ -75,7 +75,7 @@ class NodeHasher
      */
     private function createHashValuesByNode(NodeInterface $node, $version, $language)
     {
-        $eid = $node->getTypeId();
+        $eid = $node->getContentId();
 
         $attributes = $node->getAttributes();
         $attributes['navigation'] = $node->getInNavigation();

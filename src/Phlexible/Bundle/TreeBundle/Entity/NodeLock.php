@@ -1,0 +1,138 @@
+<?php
+/**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
+ */
+
+namespace Phlexible\Bundle\TreeBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Lock
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @ORM\Entity(repositoryClass = "Phlexible\Bundle\TreeBundle\Entity\Repository\NodeLockRepository")
+ * @ORM\Table(name="Node_lock")
+ */
+class NodeLock
+{
+    const TYPE_PERMANENTLY = 'permanently';
+    const TYPE_TEMPORARY = 'temporary';
+
+    /**
+     * @var int
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @var int
+     * @ORM\Column(name="node_id", type="integer")
+     */
+    private $nodeId;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=2, options={"fixed"=true})
+     */
+    private $language;
+
+    /**
+     * @var string
+     * @ORM\Column(name="user_id", type="string", length=36, options={"fixed"=true})
+     */
+    private $userId;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="locked_at", type="datetime")
+     */
+    private $lockedAt;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=11, options={"default"="temporary"})
+     */
+    private $type;
+
+    /**
+     * @param int    $nodeId
+     * @param string $language
+     * @param string $userId
+     * @param string $type
+     */
+    public function __construct($nodeId, $language, $userId, $type)
+    {
+        $this->nodeId = $nodeId;
+        $this->language = $language;
+        $this->userId = $userId;
+        $this->type = $type;
+        $this->lockedAt = new \DateTime();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNodeId()
+    {
+        return $this->nodeId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLockedAt()
+    {
+        return $this->lockedAt;
+    }
+
+    /**
+     * Touch lock
+     *
+     * @return $this
+     */
+    public function touch()
+    {
+        $this->lockedAt = new \DateTime();
+
+        return $this;
+    }
+}

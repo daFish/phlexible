@@ -19,8 +19,9 @@ Phlexible.elements.accordion.Versions = Ext.extend(Ext.grid.GridPanel, {
             fields: [
                 {name: 'version', type: 'int'},
                 {name: 'format', type: 'int'},
-                {name: 'create_date', type: 'date', dateFormat: 'Y-m-d H:i:s'},
-                {name: 'was_published', type: 'boolean'}
+                {name: 'createdAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
+                {name: 'isPublished', type: 'boolean'},
+                {name: 'wasPublished', type: 'boolean'}
             ],
             id: 'version'
         });
@@ -31,7 +32,7 @@ Phlexible.elements.accordion.Versions = Ext.extend(Ext.grid.GridPanel, {
                 dataIndex: 'version',
                 width: 40,
                 renderer: function (v, md, r) {
-                    if (this.element.data.properties.online_version == r.data.version) {
+                    if (this.element.getTreeNode().attributes.publishedVersion == r.data.version) {
                         md.attr += 'style="font-weight: bold;"';
                     }
                     if (r.data.was_published) {
@@ -42,13 +43,14 @@ Phlexible.elements.accordion.Versions = Ext.extend(Ext.grid.GridPanel, {
             },
             {
                 header: this.strings.date,
-                dataIndex: 'create_date',
+                dataIndex: 'createdAt',
                 width: 80,
                 renderer: function (v, md, r) {
-                    if (this.element.data.properties.online_version == r.data.version) {
+                    if (!v) return '';
+                    if (this.element.getTreeNode().attributes.publishedVersion == r.data.version) {
                         md.attr += 'style="font-weight: bold;"';
                     }
-                    if (r.data.was_published) {
+                    if (r.data.wasPublished) {
                         md.attr += 'style="font-style: italic;"';
                     }
                     return v.format('Y-m-d H:i:s');
@@ -71,14 +73,14 @@ Phlexible.elements.accordion.Versions = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.elements.accordion.Versions.superclass.initComponent.call(this);
     },
 
-    load: function (data, element) {
+    load: function (element) {
         this.element = element;
 
-        this.setTitle(this.strings.versions + ' [' + data.versions.length + ']');
-        this.store.loadData(data.versions);
+        this.setTitle(this.strings.versions + ' [' + element.getVersions().length + ']');
+        this.store.loadData(element.getVersions());
 
-        this.language = data.properties.language;
-        this.version = data.properties.version;
+        this.language = element.getLanguage();
+        this.version = element.getVersion();
 
         var r = this.store.getById(this.version);
         if (r) {

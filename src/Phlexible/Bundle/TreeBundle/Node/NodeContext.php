@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\TreeBundle\Node;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
-use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 
 /**
  * Node context
@@ -88,11 +87,19 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
+     * @return int
+     */
+    public function getSiterootId()
+    {
+        return $this->node->getSiterootId();
+    }
+
+    /**
      * @return string
      */
     public function getType()
     {
-        return $this->node->getType();
+        return $this->node->getContentType();
     }
 
     /**
@@ -124,7 +131,7 @@ class NodeContext implements DomainObjectInterface
      */
     public function getTypeId()
     {
-        return $this->node->getTypeId();
+        return $this->node->getContentId();
     }
 
     /**
@@ -175,6 +182,42 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
+     * @return string
+     */
+    public function getCreateUserId()
+    {
+        return $this->node->getCreateUserId();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->node->getCreatedAt($this);
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return bool
+     */
+    public function isPublished($language = null)
+    {
+        return $this->tree->isPublished($this, $language ?: $this->language);
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return string
+     */
+    public function getPublishUserId($language = null)
+    {
+        return $this->tree->getPublishUserId($this, $language ?: $this->language);
+    }
+
+    /**
      * @param string $language
      *
      * @return \DateTime|null
@@ -182,6 +225,26 @@ class NodeContext implements DomainObjectInterface
     public function getPublishedAt($language = null)
     {
         return $this->tree->getPublishedAt($this, $language ?: $this->language);
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return int
+     */
+    public function getPublishedVersion($language = null)
+    {
+        return $this->tree->getPublishedVersion($this, $language ?: $this->language);
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return bool
+     */
+    public function isAsync($language = null)
+    {
+        return $this->tree->isAsync($this, $language ?: $this->language);
     }
 
     /**
@@ -314,7 +377,7 @@ class NodeContext implements DomainObjectInterface
      */
     public function isAvailable($language = null)
     {
-        return $this->tree->isPublished($this, $language ?: $this->language);
+        return $this->isPublished($this, $language ?: $this->language);
     }
 
     /**
@@ -352,5 +415,13 @@ class NodeContext implements DomainObjectInterface
     public function getField($field, $language = null)
     {
         return $this->tree->getField($this, $field, $language ?: $this->language);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->tree->getTemplate($this);
     }
 }

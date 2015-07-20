@@ -63,8 +63,8 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
         });
 
         this.compareElement = new Phlexible.elements.Element({
-            siteroot_id: this.element.siteroot_id,
-            language: this.element.language
+            siteroot_id: this.element.getSiterootId(),
+            language: this.element.getLanguage()
         });
 
         this.items = [
@@ -188,11 +188,11 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
                 xtype: 'iconcombo',
                 hidden: true,
                 width: 140,
-                value: this.element.language,
+                value: this.element.getLanguage(),
                 emptyText: this.strings.diff.language,
                 store: new Ext.data.JsonStore({
                     fields: ['langKey', 'text', 'iconCls'],
-                    data: this.element.languages
+                    data: this.element.getLanguages()
                 }),
                 valueField: 'langKey',
                 displayField: 'text',
@@ -292,7 +292,7 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
                     } else {
                         this.hideDiff();
 
-                        if (this.element.data.diff && this.element.data.diff.enabled) {
+                        if (this.element.getDiff() && this.element.getDiff().enabled) {
                             this.element.reload();
                         }
                     }
@@ -390,9 +390,9 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
         // load diff data
         var tb = this.getTopToolbar();
         var v = [];
-        for (var i = 0; i < element.data.versions.length; i++) {
-            if (element.data.versions[i]['format'] > 1) {
-                v.push(element.data.versions[i]);
+        for (var i = 0; i < element.getVersions().length; i++) {
+            if (element.getVersions()['format'] > 1) {
+                v.push(element.getVersions());
             }
         }
 
@@ -401,13 +401,13 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
             toVersion = this.diffParams.version;
         }
         else {
-            toVersion = element.version > 1 ? element.version - 1 : element.version;
+            toVersion = element.getVersion() > 1 ? element.getVersion() - 1 : element.getVersion();
         }
 
         tb.items.items[this.btnIndex.version_from].store.loadData(v);
         tb.items.items[this.btnIndex.version_to].store.loadData(v);
         tb.items.items[this.btnIndex.version_from].setValue(toVersion);
-        tb.items.items[this.btnIndex.version_to].setValue(element.version);
+        tb.items.items[this.btnIndex.version_to].setValue(element.getVersion());
 
         if (this.diffParams.enabled) {
             tb.items.items[this.btnIndex.compare_to].toggle(true);
@@ -451,15 +451,15 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
         //var versionValue = toValue > fromValue ? toValue : fromValue;
 
         this.compareElement.reload({
-            id: this.element.tid,
-            teaser_id: this.element.data.properties.teaser_id || null,
-            version: this.element.version,
+            id: this.element.getNodeId(),
+            teaserId: this.element.getTeaserId(),
+            version: this.element.getVersion(),
             language: langValue,
             lock: 0,
             diff: 1,
-            diff_language: langValue,
-            diff_version_from: fromValue,
-            diff_version_to: toValue
+            diffLanguage: langValue,
+            diffVersionFrom: fromValue,
+            diffVersionTo: toValue
         });
     },
 

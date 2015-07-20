@@ -59,26 +59,26 @@ interface NodeInterface
     /**
      * @return string
      */
-    public function getType();
+    public function getContentType();
 
     /**
      * @param string $type
      *
      * @return $this
      */
-    public function setType($type);
+    public function setContentType($type);
 
     /**
      * @return string
      */
-    public function getTypeId();
+    public function getContentId();
 
     /**
      * @param string $typeId
      *
      * @return $this
      */
-    public function setTypeId($typeId);
+    public function setContentId($typeId);
 
     /**
      * @return array

@@ -1,0 +1,33 @@
+Ext.provide('Phlexible.tree.model.Node');
+
+Phlexible.tree.model.Node = Ext.data.Record.create([
+    {name: 'id', type: 'int'},
+    {name: 'siterootId', type: 'string'},
+    {name: 'type', type: 'string'},
+    {name: 'typeId', type: 'string'},
+    {name: 'backendTitle', type: 'string'},
+    {name: 'pageTitle', type: 'string'},
+    {name: 'navigationTitle', type: 'string'},
+    {name: 'customDate', type: 'date', dateFormat: 'Y-m-d H:i:s'},
+    {name: 'forward', type: 'string'},
+    {name: 'sortMode', type: 'string'},
+    {name: 'sortDir', type: 'string'},
+    {name: 'sort', type: 'int'},
+    {name: 'icon', type: 'string'},
+    {name: 'inNavigation', type: 'bool'},
+    {name: 'isRestricted', type: 'bool'},
+    {name: 'isInstance', type: 'bool'},
+    {name: 'createdAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
+    {name: 'createdBy', type: 'string'},
+    {name: 'isPublished', type: 'bool'},
+    {name: 'publishedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
+    {name: 'pbulishedBy', type: 'string'},
+    {name: 'isAsync', type: 'bool'},
+    {name: 'publishedVersion', type: 'int'},
+    {name: 'allowedChildren'},
+    {name: 'permissions'},
+    {name: 'hideChildren', type: 'bool'},
+    {name: 'elementtypeId', type: 'string'},
+    {name: 'elementtypeName', type: 'string'},
+    {name: 'elementtypeType', type: 'string'}
+]);

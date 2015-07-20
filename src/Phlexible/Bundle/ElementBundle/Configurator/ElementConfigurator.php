@@ -73,6 +73,7 @@ class ElementConfigurator implements ConfiguratorInterface
      */
     public function configure(Request $request, Configuration $renderConfiguration)
     {
+        return;
         if (!$renderConfiguration->hasFeature('eid')) {
             return;
         }

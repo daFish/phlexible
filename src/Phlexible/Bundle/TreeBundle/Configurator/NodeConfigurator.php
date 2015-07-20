@@ -114,10 +114,9 @@ class NodeConfigurator implements ConfiguratorInterface
 
         $renderConfiguration
             ->addFeature('node')
-            ->set('node', $node)
-            ->setVariable('nodeContext', $node)
+            ->setVariable('node', $node)
             ->addFeature('eid')
-            ->set('eid', $node->getNode()->getTypeId())
+            ->set('eid', $node->getNode()->getContentId())
             ->set('version', $version)
             ->set('language', $request->getLocale());
 

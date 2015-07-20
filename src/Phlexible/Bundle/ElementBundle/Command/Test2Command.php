@@ -8,11 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use CG\Core\DefaultGeneratorStrategy;
-use CG\Generator\PhpClass;
-use Phlexible\Bundle\ElementBundle\Proxy\Distiller;
-use Phlexible\Bundle\ElementBundle\Proxy\PhpClassGenerator;
-use Phlexible\Bundle\ElementBundle\Proxy\PhpClassWriter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,12 +35,7 @@ class Test2Command extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $elementSourceManager = $this->getContainer()->get('phlexible_element.element_source_manager');
-        $fieldRegistry = $this->getContainer()->get('phlexible_elementtype.field.registry');
-
-        $generator = new PhpClassGenerator(
-            new Distiller($fieldRegistry),
-            new PhpClassWriter('./proxy')
-        );
+        $generator = $this->getContainer()->get('phlexible_element.proxy.class_generator');
 
         $elementtypes = array();
         foreach ($elementSourceManager->findBy(array()) as $elementSource) {

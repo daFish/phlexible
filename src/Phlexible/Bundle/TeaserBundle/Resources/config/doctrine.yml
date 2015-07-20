@@ -4,6 +4,5 @@ services:
         arguments:
             - @doctrine.orm.entity_manager
             - @phlexible_teaser.teaser_hasher
-            - @phlexible_element.element_history_manager
             - @phlexible_teaser.teaser_mediator
             - @event_dispatcher

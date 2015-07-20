@@ -9,27 +9,16 @@ Phlexible.elements.accordion.DataTemplate = new Ext.XTemplate(
     '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.element]}</div><hr /><div style="clear: left;" /></td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.eid]}:</th><td>{eid}</td></tr>',
     '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{version}</td></tr>',
-    '<tpl if="unique_id && unique_id != \'null\'">',
-    '<tr><th>{[Phlexible.elements.Strings.unique_id]}:</th><td>{unique_id}</td></tr>',
-    '</tpl>',
-    '<tr><th>{[Phlexible.elements.Strings.masterlanguage]}:</th><td>{[Phlexible.inlineIcon("p-gui-"+values.masterlanguage+"-icon")]} {masterlanguage}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{author}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{create_date}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{createdBy}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{createdAt}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.type]}:</th><td>{elementtypeName}</td></tr>',
 
-    '<tpl if="online_version && online_version != \'null\'">',
+    '<tpl if="isPublished">',
     '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.online_version]}</div><hr /><div style="clear: left;" /></td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{online_version}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.publisher]}:</th><td>{publisher}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.published]}:</th><td>{publish_date}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{publishedVersion}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.publisher]}:</th><td>{publishedBy}</td></tr>',
+    '<tr><th>{[Phlexible.elements.Strings.published]}:</th><td>{publishedAt}</td></tr>',
     '</tpl>',
-
-    '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.elementtype]}</div><hr /><div style="clear: left;" /></td></tr>',
-    //'<tr><th>{[Phlexible.elements.Strings.id]}:</th><td>{et_id}</td></tr>',
-    '<tpl if="et_unique_id && et_unique_id != \'null\'">',
-    '<tr><th>{[Phlexible.elements.Strings.unique_id]}:</th><td>{et_unique_id}</td></tr>',
-    '</tpl>',
-    '<tr><th>{[Phlexible.elements.Strings.title]}:</th><td>{et_title}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{et_version}</td></tr>',
 
     '</table>',
     '</div>',
@@ -51,24 +40,18 @@ Phlexible.elements.accordion.Data = Ext.extend(Ext.Panel, {
             store: new Ext.data.SimpleStore({
                 id: 'dummy_id',
                 fields: [
-                    'dummy_id',
-                    'backend_title', //this.strings.backend_title, '&nbsp;'],
-                    'page_title', //this.strings.page_title, '&nbsp;'],
-                    'navigation_title', //this.strings.navigation_title, '&nbsp;'],
-                    'tid', //this.strings.tid, '&nbsp;'],
-                    'teaser_id',
-                    'eid', //this.strings.eid, '&nbsp;'],
-                    'version', //this.strings.version, '&nbsp;'],
-                    'language', //this.strings.language, '&nbsp;'],
-                    'unique_id', //this.strings.unique_id, '&nbsp;'],
-                    'et_id', //this.strings.element_type_id, '&nbsp;'],
-                    'et_title', //this.strings.element_type_title, '&nbsp;'],
-                    'et_version', //this.strings.element_type_version, '&nbsp;'],
-                    'et_unique_id', //this.strings.element_type_unique_id, '&nbsp;'],
-                    'author', //this.strings.author, '&nbsp;'],
-                    'status', //this.strings.status, '&nbsp;'],
-                    'create_date', //this.strings.created, '&nbsp;'],
-                    'publish_date' //, this.strings.published, '&nbsp;']
+                    'eid',
+                    'version',
+                    'language',
+                    'masterLanguage',
+                    'createdBy',
+                    'createdAt',
+                    'elementtypeName',
+                    'elementtypeRevision',
+                    'isPublished',
+                    'publishedVersion',
+                    'publishedAt',
+                    'publishedBy'
                 ]
             }),
             tpl: Phlexible.elements.accordion.DataTemplate,
@@ -81,30 +64,24 @@ Phlexible.elements.accordion.Data = Ext.extend(Ext.Panel, {
         Phlexible.elements.accordion.Data.superclass.initComponent.call(this);
     },
 
-    load: function (data) {
-        var store = this.getComponent(0).store;
+    load: function (element) {
+        var store = this.getComponent(0).getStore();
         store.removeAll();
-        var r = new Ext.data.Record(data.properties);
+        var r = new Ext.data.Record({
+            eid: element.getEid(),
+            version: element.getVersion(),
+            language: element.getLanguage(),
+            masterLanguage: element.getMasterLanguage(),
+            createdBy: element.getCreatedBy(),
+            createdAt: element.getCreatedAt(),
+            elementtypeName: element.getElementtypeName(),
+            elementtypeRevision: element.getElementtypeRevision(),
+            isPublished: element.getTreeNode().attributes.isPublished,
+            publishedVersion: element.getTreeNode().attributes.publishedVersion,
+            publishedAt: element.getTreeNode().attributes.publishedAt,
+            publishedBy: element.getTreeNode().attributes.publishedBy
+        });
         store.add(r);
-        return;
-
-        r.beginEdit();
-        for (var i in data.properties) {
-            r.set(i, data.properties[i]);
-            continue;
-            if (i == 'status') {
-                data[i] = data.properties[i] ? this.strings.published : this.strings.not_published;
-            }
-            r = store.getById(i);
-            if (r) {
-//                r.beginEdit();
-                r.set('value', data.properties[i]);
-//                r.endEdit();
-//                r.commit();
-            }
-        }
-        r.endEdit();
-        r.commit();
     }
 });
 

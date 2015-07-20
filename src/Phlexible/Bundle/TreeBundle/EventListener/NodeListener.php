@@ -8,13 +8,13 @@
 
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
-use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineContextEvent;
+use Phlexible\Bundle\TreeBundle\Model\NodeChangeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\RouteManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\LanguagePathDecorator;
@@ -43,19 +43,19 @@ class NodeListener implements EventSubscriberInterface
     private $siterootManager;
 
     /**
-     * @var ElementHistoryManagerInterface
+     * @var NodeChangeManagerInterface
      */
     private $historyManager;
 
     /**
-     * @param RouteManagerInterface          $routeManager
-     * @param SiterootManagerInterface       $siterootManager
-     * @param ElementHistoryManagerInterface $historyManager
+     * @param RouteManagerInterface      $routeManager
+     * @param SiterootManagerInterface   $siterootManager
+     * @param NodeChangeManagerInterface $historyManager
      */
     public function __construct(
         RouteManagerInterface $routeManager,
         SiterootManagerInterface $siterootManager,
-        ElementHistoryManagerInterface $historyManager
+        NodeChangeManagerInterface $historyManager
     ) {
         $this->routeManager = $routeManager;
         $this->siterootManager = $siterootManager;
@@ -86,7 +86,7 @@ class NodeListener implements EventSubscriberInterface
 
         $this->historyManager->insert(
             'createNode',
-            $node->getTypeId(),
+            $node->getContentId(),
             $node->getCreateUserId(),
             $node->getId(),
             null,
@@ -105,7 +105,7 @@ class NodeListener implements EventSubscriberInterface
 
         $this->historyManager->insert(
             'createNodeInstance',
-            $node->getTypeId(),
+            $node->getContentId(),
             $node->getCreateUserId(),
             $node->getId(),
             null,
@@ -147,7 +147,7 @@ class NodeListener implements EventSubscriberInterface
 
         $this->historyManager->insert(
             'publishNode',
-            $node->getTypeId(),
+            $node->getContentId(),
             $node->getCreateUserId(),
             $node->getId(),
             null,
@@ -174,7 +174,7 @@ class NodeListener implements EventSubscriberInterface
 
         $this->historyManager->insert(
             'setNodeOffline',
-            $node->getTypeId(),
+            $node->getContentId(),
             $node->getCreateUserId(),
             $node->getId(),
             null,
@@ -217,7 +217,7 @@ class NodeListener implements EventSubscriberInterface
 
         $this->historyManager->insert(
             'moveNode',
-            $node->getTypeId(),
+            $node->getContentId(),
             $node->getCreateUserId(),
             $node->getId(),
             null,
@@ -236,7 +236,7 @@ class NodeListener implements EventSubscriberInterface
 
         $this->historyManager->insert(
             'deleteNode',
-            $node->getTypeId(),
+            $node->getContentId(),
             $node->getCreateUserId(),
             $node->getId(),
             null,

@@ -90,19 +90,19 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
         Phlexible.elements.accordion.Meta.superclass.initComponent.call(this);
     },
 
-    load: function (data) {
-        if (data.properties.et_type != 'full' || !data.meta || !data.meta.fields) {
+    load: function (element) {
+        if (element.getElementtypeType() != 'full' || !element.getMeta() || !element.getMeta().fields) {
             this.hide();
             return;
         }
 
-        this.language = data.properties.language;
-        this.master = data.properties.master || 0;
+        this.language = element.getLanguage();
+        this.master = element.getIsMaster() || 0;
 
-        this.setTitle(this.strings.meta + ' [' + data.meta.fields.length + ']');
+        this.setTitle(this.strings.meta + ' [' + element.getMeta().fields.length + ']');
 
         this.store.removeAll();
-        this.store.loadData(data.meta.fields);
+        this.store.loadData(element.getMeta().fields);
 
         this.show();
     },

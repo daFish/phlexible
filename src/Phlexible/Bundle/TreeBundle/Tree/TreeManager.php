@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Tree;
 
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
-use Phlexible\Bundle\TreeBundle\Entity\StructureElementNode;
+use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
 use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
@@ -130,12 +130,12 @@ class TreeManager implements TreeManagerInterface
      */
     public function createTree($siterootId, $type, $typeId, $userId)
     {
-        $node = new StructureElementNode();
+        $node = new StructureNode();
         $node
             ->setSiterootId($siterootId)
             ->setParentNode(null)
-            ->setType($type)
-            ->setTypeId($typeId)
+            ->setContentType($type)
+            ->setContentId($typeId)
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime);
 

@@ -9,7 +9,7 @@ services:
 
     phlexible_tree.mediator.element:
         class: Phlexible\Bundle\TreeBundle\Mediator\ElementTreeMediator
-        arguments: [@phlexible_element.element_service, @phlexible_tree.mediator.online_version_strategy]
+        arguments: [@phlexible_element.element_service, @phlexible_tree.mediator.online_version_strategy, @phlexible_element.proxy.class_manager]
 
     phlexible_tree.mediator:
         class: Phlexible\Bundle\TreeBundle\Mediator\DelegatingTreeMediator

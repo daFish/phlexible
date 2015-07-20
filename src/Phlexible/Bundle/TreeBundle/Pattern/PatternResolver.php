@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Pattern;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
  * Pattern resolver
@@ -36,14 +37,14 @@ class PatternResolver
     /**
      * Resolved page title by configured pattern
      *
-     * @param string         $patternName
-     * @param Siteroot       $siteroot
-     * @param ElementVersion $elementVersion
-     * @param string         $language
+     * @param string      $patternName
+     * @param Siteroot    $siteroot
+     * @param NodeContext $node
+     * @param string      $language
      *
      * @return string
      */
-    public function replace($patternName, Siteroot $siteroot, ElementVersion $elementVersion, $language)
+    public function replace($patternName, Siteroot $siteroot, NodeContext $node, $language)
     {
         if (!isset($this->patterns[$patternName])) {
             $pattern = '%p';
@@ -51,32 +52,32 @@ class PatternResolver
             $pattern = $this->patterns[$patternName];
         }
 
-        return $this->replacePattern($pattern, $siteroot, $elementVersion, $language);
+        return $this->replacePattern($pattern, $siteroot, $node, $language);
     }
 
     /**
      * Resolve page title by pattern
      *
-     * @param string         $pattern
-     * @param Siteroot       $siteroot
-     * @param ElementVersion $elementVersion
-     * @param string         $language
+     * @param string      $pattern
+     * @param Siteroot    $siteroot
+     * @param NodeContext $node
+     * @param string      $language
      *
      * @return string
      */
-    public function replacePattern($pattern, Siteroot $siteroot, ElementVersion $elementVersion, $language)
+    public function replacePattern($pattern, Siteroot $siteroot, NodeContext $node, $language)
     {
         if (strpos($pattern, '%s') !== false) {
             $pattern = str_replace('%s', $siteroot->getTitle($language), $pattern);
         }
         if (strpos($pattern, '%b') !== false) {
-            $pattern = str_replace('%b', $elementVersion->getBackendTitle($language), $pattern);
+            $pattern = str_replace('%b', $node->getField('backend', $language), $pattern);
         }
         if (strpos($pattern, '%p') !== false) {
-            $pattern = str_replace('%p', $elementVersion->getPageTitle($language), $pattern);
+            $pattern = str_replace('%p', $node->getField('page', $language), $pattern);
         }
         if (strpos($pattern, '%n') !== false) {
-            $pattern = str_replace('%n', $elementVersion->getNavigationTitle($language), $pattern);
+            $pattern = str_replace('%n', $node->getField('navigation', $language), $pattern);
         }
         if (strpos($pattern, '%t') !== false) {
             $pattern = str_replace('%t', $this->projectTitle, $pattern);

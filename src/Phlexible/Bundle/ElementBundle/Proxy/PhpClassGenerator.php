@@ -50,6 +50,14 @@ class PhpClassGenerator
     }
 
     /**
+     * @return mixed
+     */
+    public function getManagerFile()
+    {
+        return $this->writer->getManagerFile();
+    }
+
+    /**
      * @param Elementtype[] $elementtypes
      *
      * @return string
@@ -69,14 +77,29 @@ class PhpClassGenerator
             $namespace = self::NS_PREFIX . $classname;
             $fqName = $namespace . '\\' . $classname;
 
-            $class = $this->generateClass($fqName, $data);
+            $class = $this->generateMainClass($fqName, $data, $elementtype);
             $this->generateInlineClasses($namespace, $class, $data);
             $this->generateReferenceClasses(self::NS_PREFIX . 'Reference', $class, $data);
 
-            $class->setConstant('ELEMENTTYPE_ID', $elementtype->getId());
-            $class->setConstant('ELEMENTTYPE_REVISION', $elementtype->getRevision());
-            $class->setConstant('ELEMENTTYPE_NAME', $elementtype->getUniqueId());
-            $class->setAttribute('elementtypeId', $elementtype->getId());
+            $class
+                ->setConstant('ELEMENTTYPE_ID', $elementtype->getId())
+                ->setConstant('ELEMENTTYPE_REVISION', $elementtype->getRevision())
+                ->setConstant('ELEMENTTYPE_NAME', $elementtype->getUniqueId())
+                ->setAttribute('elementtypeId', $elementtype->getId());
+        }
+
+        foreach ($this->classMap->all() as $class) {
+            $getChildrenParts = $class->getAttributeOrElse('__getChildren', array());
+            if (count($getChildrenParts)) {
+                $class->getMethod('__getChildren')
+                    ->setBody("return array(\n".implode(',' . PHP_EOL, (array) $getChildrenParts)."\n);");
+            }
+
+            $setChildrenParts = $class->getAttributeOrElse('__setChildren', array());
+            if (count($getChildrenParts)) {
+                $class->getMethod('__setChildren')
+                    ->setBody("foreach (\$children as \$name => \$nameChildren) {\n    foreach (\$nameChildren as \$child) {\n".implode(PHP_EOL, (array) $setChildrenParts)."\n    }\n}");
+            }
         }
 
         return $this->writer->write($this->classMap);
@@ -90,6 +113,145 @@ class PhpClassGenerator
     private function normalizeName($name)
     {
         return $this->toCamelCase(str_replace(' ', '', ucfirst(strtolower($name))));
+    }
+
+    /**
+     * @param string      $className
+     * @param array       $data
+     * @param Elementtype $elementtype
+     *
+     * @return PhpClass
+     */
+    private function generateMainClass($className, array $data, Elementtype $elementtype)
+    {
+        $constr = PhpMethod::create('__construct')
+            ->addParameter(PhpParameter::create('id')
+                ->setDefaultValue(null))
+            ->addParameter(PhpParameter::create('version')
+                ->setDefaultValue(null))
+            ->setBody("\$this->__id = \$id;\n\$this->__version = \$version;\n")
+            ->setDocblock("/**\n * @param string \$id\n * @param int \$version\n */\n");
+
+        $idProperty = PhpProperty::create('__id')
+            ->setVisibility('private')
+            ->setDocblock("\n/** @var string */\n");
+
+        $versionProperty = PhpProperty::create('__version')
+            ->setVisibility('private')
+            ->setDocblock("\n/** @var int */\n");
+
+        $idGetter = PhpMethod::create('__id')
+            ->setBody("return \$this->__id;\n")
+            ->setDocblock("/**\n * @return string\n */\n");
+
+        $versionGetter = PhpMethod::create('__version')
+            ->setBody("return \$this->__version;\n")
+            ->setDocblock("/**\n * @return int\n */\n");
+
+        $elementtypeIdGetter = PhpMethod::create('__elementtypeId')
+            ->setBody("return '{$elementtype->getId()}';\n")
+            ->setDocblock("/**\n * @return string\n */\n");
+
+        $elementtypeRevisionGetter = PhpMethod::create('__elementtypeRevision')
+            ->setBody("return '{$elementtype->getRevision()}';\n")
+            ->setDocblock("/**\n * @return int\n */\n");
+
+        $elementtypeNameGetter = PhpMethod::create('__elementtypeName')
+            ->setBody("return '{$elementtype->getUniqueId()}';\n")
+            ->setDocblock("/**\n * @return int\n */\n");
+
+        $toArray = PhpMethod::create('__toArray')
+            ->setBody("\$children = array();\nforeach (\$this->__getChildren() as \$name => \$nameChildren) {\n    foreach (\$nameChildren as \$child) {\n        \$childData = \$child->__toArray();\n        \$childData['parent'] = \$name;\n        \$children[] = \$childData;\n    }\n}\nreturn array(\n    'id' => \$this->__id(),\n    'version' => \$this->__version(),\n    'values' => \$this->__getValues(),\n    'children' => \$children\n);")
+            ->setDocblock("/**\n * @return \\Phlexible\\Bundle\\ElementBundle\\Proxy\\ChildStructureInterface[]\n */\n");
+
+        $class = $this->generateClass($className, $data)
+            ->addInterfaceName('Phlexible\Bundle\ElementBundle\Proxy\MainStructureInterface')
+            ->setProperty($idProperty)
+            ->setProperty($versionProperty)
+            ->setMethod($constr)
+            ->setMethod($idGetter)
+            ->setMethod($versionGetter)
+            ->setMethod($elementtypeIdGetter)
+            ->setMethod($elementtypeRevisionGetter)
+            ->setMethod($elementtypeNameGetter)
+            ->setMethod($toArray);
+
+        return $class;
+    }
+
+    /**
+     * @param string                   $className
+     * @param array                    $data
+     * @param ElementtypeStructureNode $node
+     *
+     * @return PhpClass
+     */
+    private function generateChildClass($className, array $data, ElementtypeStructureNode $node)
+    {
+        $constr = PhpMethod::create('__construct')
+            ->addParameter(PhpParameter::create('id')
+                ->setDefaultValue(null))
+            ->setBody("\$this->__id = \$id;\n")
+            ->setDocblock("/**\n * @param string \$id\n */\n");
+
+        $idProperty = PhpProperty::create('__id')
+            ->setVisibility('private')
+            ->setDocblock("\n/** @var string */\n");
+
+        $idGetter = PhpMethod::create('__id')
+            ->setBody("return \$this->__id;\n")
+            ->setDocblock("/**\n * @return string\n */\n");
+
+        $nameGetter = PhpMethod::create('__name')
+            ->setBody("return \$this->__name;\n")
+            ->setDocblock("/**\n * @return string\n */\n");
+
+        $dsIdGetter = PhpMethod::create('__dsId')
+            ->setBody("return '{$node->getDsId()}';\n")
+            ->setDocblock("/**\n * @return string\n */\n");
+
+        $toArray = PhpMethod::create('__toArray')
+            ->setBody("\$children = array();\nforeach (\$this->__getChildren() as \$name => \$nameChildren) {\n    foreach (\$nameChildren as \$child) {\n        \$childData = \$child->__toArray();\n        \$childData['parent'] = \$name;\n        \$children[] = \$childData;\n    }\n}\nreturn array(\n    'id' => \$this->__id(),\n    'dsId' => \$this->__dsId(),\n    'parent' => null,\n    'values' => \$this->__getValues(),\n    'children' => \$children\n);")
+            ->setDocblock("/**\n * @return \\Phlexible\\Bundle\\ElementBundle\\Proxy\\ChildStructureInterface[]\n */\n");
+
+        $class = $this->generateClass($className, $data)
+            ->addInterfaceName('Phlexible\Bundle\ElementBundle\Proxy\ChildStructureInterface')
+            ->setAttribute('dsId', $node->getDsId())
+            ->addInterfaceName('Phlexible\Bundle\ElementBundle\Proxy\ChildStructureInterface')
+            ->setProperty($idProperty)
+            ->setMethod($constr)
+            ->setMethod($dsIdGetter)
+            ->setMethod($idGetter)
+            ->setMethod($nameGetter)
+            ->setMethod($toArray)
+            ->setConstant('DS_ID', $node->getDsId());
+
+        $class->setMethod(PhpMethod::create('__name')->setBody("return '{$node->getName()}';"));
+
+        return $class;
+    }
+
+    /**
+     * @param string $namespace
+     * @param string $section
+     *
+     * @return PhpClass
+     */
+    private function generateChildInterface($namespace, $section)
+    {
+        $className = $namespace . ucfirst($section) . 'Interface';
+
+        if ($this->classMap->has($className)) {
+            return $this->classMap->get($className);
+        }
+
+        $class = PhpClass::create($className)
+            ->setAttribute('interface', 1)
+            ->setDocblock("/**\n * DO NOT EDIT THIS FILE - IT WAS CREATED BY PHLEXIBLE'S PROXY GENERATOR\n * " . get_class($this) . "\n */\n");
+
+        $this->classMap->add($className, $class);
+
+        return $class;
     }
 
     /**
@@ -110,14 +272,12 @@ class PhpClassGenerator
         $class = PhpClass::create($className)
             ->setMethod(PhpMethod::create('__construct'))
             ->setFinal(true)
-            ->setDocblock("/**\n * DO NOT EDIT THIS FILE - IT WAS CREATED BY PHLEXIBLE'S PROXY GENERATOR\n * " . get_class($this) . "\n */\n");
+            ->setDocblock("/**\n * DO NOT EDIT THIS FILE - IT WAS CREATED BY PHLEXIBLE'S PROXY GENERATOR\n * " . get_class($this) . "\n */\n")
+            ->setAttribute('__getChildren', new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS))
+            ->setAttribute('__setChildren', new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS));
 
-        $setValue = PhpMethod::create('__setValue')
-            ->addParameter(PhpParameter::create('dsId'))
-            ->addParameter(PhpParameter::create('value'))
-            ->setDocblock("/**\n * @param string \$dsId\n * @param mixed \$value\n */\n")
-            ->setBody('throw new \\Exception("Unknown dsId $dsId");');
-        $class->setMethod($setValue);
+        $setValuesParts = [];
+        $getValuesParts = [];
 
         foreach ($items as $item) {
             $node = $item['node'];
@@ -146,10 +306,30 @@ class PhpClassGenerator
                 ->addParameter($setterValue);
             $class->setMethod($setter);
 
-            $setValue
-                ->setBody("if (\$dsId === '{$node->getDsId()}') {\n    \$this->$setterName(\$value);\n    return;\n}\n".$setValue->getBody());
-            $class->setConstant('DS_ID', $node->getDsId());
+            $setValuesParts[] = "    if (\$dsId === '{$node->getDsId()}') {\n        \$this->$setterName(\$value);\n        continue;\n    }";
+            $getValuesParts[] = "    '{$node->getDsId()}' => \$this->$getterName(),";
         }
+
+        $setValues = PhpMethod::create('__setValues')
+            ->addParameter(PhpParameter::create('values')->setType('array'))
+            ->setBody("foreach (\$values as \$dsId => \$value) {\n".implode(PHP_EOL, $setValuesParts)."\n}")
+            ->setDocblock("/**\n * @param array \$values\n */\n");
+        $class->setMethod($setValues);
+
+        $getValues = PhpMethod::create('__getValues')
+            ->setBody("return array(\n".implode(PHP_EOL, $getValuesParts)."\n);")
+            ->setDocblock("/**\n * @return array\n */\n");
+        $class->setMethod($getValues);
+
+        $getChildren = PhpMethod::create('__getChildren')
+            ->setBody("return array();")
+            ->setDocblock("/**\n * @return \\Phlexible\\Bundle\\ElementBundle\\Proxy\\ChildStructureInterface[]\n */\n");
+        $class->setMethod($getChildren);
+
+        $setChildren = PhpMethod::create('__setChildren')
+            ->addParameter(PhpParameter::create('children')->setType('array'))
+            ->setDocblock("/**\n * @param array \$children\n */\n");
+        $class->setMethod($setChildren);
 
         $this->classMap->add($className, $class);
 
@@ -186,24 +366,9 @@ class PhpClassGenerator
         $allowed = array();
         foreach ($items as $item) {
             $name = $this->normalizeName($item['node']->getName());
-            $fqName = $namespace . '\\' . $name;
+            $fqName = $namespace . '\\' . $parentClass->getShortName() . $name;
 
-            $class = $this->generateClass($fqName, $item['children']);
-            $class->setAttribute('dsId', $item['node']->getDsId());
-            $idProperty = PhpProperty::create('__id')
-                ->setVisibility('private')
-                ->setDocblock("\n/** @var string */\n");
-            $class->setProperty($idProperty);
-            $constr = PhpMethod::create('__construct')
-                ->addParameter(PhpParameter::create('id')
-                    ->setDefaultValue(null))
-                ->setBody("\$this->__id = \$id;\n")
-                ->setDocblock("/**\n * @param string \$id\n */\n");
-            $class->setMethod($constr);
-            $idGetter = PhpMethod::create('__getId')
-                ->setBody("return \$this->__id;\n")
-                ->setDocblock("/**\n * @return string\n */\n");
-            $class->setMethod($idGetter);
+            $class = $this->generateChildClass($fqName, $item['children'], $item['node']);
 
             $classes[$name] = $class;
 
@@ -248,12 +413,15 @@ class PhpClassGenerator
         }
 
         if (count($allowed)) {
-            foreach ($allowed as $name => $allow) {
-                $name = $this->normalizeName($name);
-                $lcName = lcfirst($name);
-                $ucName = ucfirst($name);
+            $getChildrenParts = array();
+            $setChildrenParts = array();
 
-                $interface = $this->generateChildInterface($parentClass->getName(), $this->toCamelCase($name));
+            foreach ($allowed as $name => $allow) {
+                $normalizedName = $this->normalizeName($name);
+                $lcName = lcfirst($normalizedName);
+                $ucName = ucfirst($normalizedName);
+
+                $interface = $this->generateChildInterface($parentClass->getName(), $normalizedName);
 
                 // add arraycollection import to parent
                 $parentClass->addUseStatement('Doctrine\Common\Collections\ArrayCollection');
@@ -278,31 +446,11 @@ class PhpClassGenerator
                     ->setVisibility('private')
                     ->setDocblock("\n/** @var ArrayCollection */\n");
                 $parentClass->setProperty($property);
+
+                $parentClass->getAttribute('__getChildren')->append("    '{$name}' => \$this->{$lcName}->toArray()");
+                $parentClass->getAttribute('__setChildren')->append("        if (\$name === '{$name}') {\n            \$this->{$lcName}->add(\$child);\n            continue;\n        }");
             }
         }
-    }
-
-    /**
-     * @param string $namespace
-     * @param string $section
-     *
-     * @return PhpClass
-     */
-    private function generateChildInterface($namespace, $section)
-    {
-        $className = $namespace . ucfirst($section) . 'Interface';
-
-        if ($this->classMap->has($className)) {
-            return $this->classMap->get($className);
-        }
-
-        $class = PhpClass::create($className)
-            ->setAttribute('interface', 1)
-            ->setDocblock("/**\n * DO NOT EDIT THIS FILE - IT WAS CREATED BY PHLEXIBLE'S PROXY GENERATOR\n * " . get_class($this) . "\n */\n");
-
-        $this->classMap->add($className, $class);
-
-        return $class;
     }
 
     /**
@@ -337,22 +485,7 @@ class PhpClassGenerator
             $name = $this->normalizeName($item['node']->getName());
             $fqName = $namespace . '\\' . $name;
 
-            $class = $this->generateClass($fqName, $item['children']);
-            $class->setAttribute('dsId', $item['node']->getDsId());
-            $idProperty = PhpProperty::create('__id')
-                ->setVisibility('private')
-                ->setDocblock("\n/** @var string */\n");
-            $class->setProperty($idProperty);
-            $constr = PhpMethod::create('__construct')
-                ->addParameter(PhpParameter::create('id')
-                    ->setDefaultValue(null))
-                ->setBody("\$this->__id = \$id;\n")
-                ->setDocblock("/**\n * @param string \$id\n */\n");
-            $class->setMethod($constr);
-            $idGetter = PhpMethod::create('__getId')
-                ->setBody("return \$this->__id;\n")
-                ->setDocblock("/**\n * @return string\n */\n");
-            $class->setMethod($idGetter);
+            $class = $this->generateChildClass($fqName, $item['children'], $item['node']);
 
             $classes[$name] = $class;
 
@@ -395,12 +528,15 @@ class PhpClassGenerator
         }
 
         if (count($allowed)) {
-            foreach ($allowed as $name => $allow) {
-                $name = $this->normalizeName($name);
-                $lcName = lcfirst($name);
-                $ucName = ucfirst($name);
+            $getChildrenParts = array();
+            $setChildrenParts = array();
 
-                $interface = $this->generateChildInterface($parentClass->getName(), $this->toCamelCase($name));
+            foreach ($allowed as $name => $allow) {
+                $normalizedName = $this->normalizeName($name);
+                $lcName = lcfirst($normalizedName);
+                $ucName = ucfirst($normalizedName);
+
+                $interface = $this->generateChildInterface($parentClass->getName(), $normalizedName);
 
                 // add arraycollection import to parent
                 $parentClass->addUseStatement('Doctrine\Common\Collections\ArrayCollection');
@@ -425,6 +561,9 @@ class PhpClassGenerator
                     ->setVisibility('private')
                     ->setDocblock("\n/** @var ArrayCollection */\n");
                 $parentClass->setProperty($property);
+
+                $parentClass->getAttribute('__getChildren')->append("    '{$name}' => \$this->{$lcName}->toArray()");
+                $parentClass->getAttribute('__setChildren')->append("        if (\$name === '{$name}') {\n            \$this->{$lcName}->add(\$child);\n            continue;\n        }");
             }
         }
     }

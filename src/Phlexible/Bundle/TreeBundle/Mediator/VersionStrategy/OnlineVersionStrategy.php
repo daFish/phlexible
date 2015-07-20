@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
+use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
@@ -40,11 +41,14 @@ class OnlineVersionStrategy implements VersionStrategyInterface
             throw new \InvalidArgumentException("No language");
         }
 
-        $element = $this->elementService->findElement($node->getNode()->getTypeId());
+        $element = $this->elementService->findElement($node->getNode()->getContentId());
 
-        return $this->elementService->findElementVersion(
-            $element,
-            $node->getTree()->getPublishedVersion($node, $language)
-        );
+        if ($node->getNode() instanceof StructureNode) {
+            $version = $element->getLatestVersion();
+        } else {
+            $version = $node->getTree()->getPublishedVersion($node, $language);
+        }
+
+        return $this->elementService->findElementVersion($element, $version);
     }
 }

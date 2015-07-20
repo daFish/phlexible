@@ -46,10 +46,10 @@ Phlexible.elements.accordion.Diff = Ext.extend(Ext.Panel, {
         this.body.update(Phlexible.elements.Strings.no_differences);
     },
 
-    load: function (data, element) {
+    load: function (element) {
         this.empty();
 
-        this.diff = element.data.diff;
+        this.diff = element.getDiff();
     }
 });
 

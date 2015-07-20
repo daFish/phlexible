@@ -88,7 +88,7 @@ class LatestElementsPortlet extends Portlet
 
         foreach ($nodes as $node) {
             $element = $this->elementService->findElement($node->getTypeId());
-            $elementVersion = $this->elementService->findLatestElementVersion($element);
+            $elementVersion = $this->elementService->findElementVersion($element, $element->getLatestVersion());
 
             $baseTitle = $elementVersion->getBackendTitle('de', 'en');
             $baseTitleArr = str_split($baseTitle, 16);

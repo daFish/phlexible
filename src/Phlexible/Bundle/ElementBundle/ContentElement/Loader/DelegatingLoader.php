@@ -38,10 +38,9 @@ class DelegatingLoader implements LoaderInterface
     {
         $element = $this->elementService->findElement($eid);
         if ($version === -1) {
-            $elementVersion = $this->elementService->findLatestElementVersion($element);
-        } else {
-            $elementVersion = $this->elementService->findElementVersion($element, $version);
+            $version = $element->getLatestVersion();
         }
+        $elementVersion = $this->elementService->findElementVersion($element, $version);
 
         if (!$elementVersion) {
             return null;

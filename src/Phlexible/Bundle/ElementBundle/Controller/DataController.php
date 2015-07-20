@@ -17,7 +17,6 @@ use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
-use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Elementtype\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Component\Elementtype\Model\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -100,13 +99,11 @@ class DataController extends Controller
             throw new InvalidArgumentException('Unknown data requested.');
         }
 
-        if ($version) {
-            $elementVersion = $elementService->findElementVersion($element, $version);
-        } else {
-            $elementVersion = $elementService->findLatestElementVersion($element);
+        if (!$version) {
+            $version = $element->getLatestVersion();
         }
 
-        $elementStructure = $elementService->findElementStructure($elementVersion, $language);
+        $elementVersion = $elementService->findElementVersion($element, $version);
 
         $elementtype = $elementService->findElementtype($element);
         $elementtypeStructure = $elementtype->getStructure();
@@ -133,20 +130,23 @@ class DataController extends Controller
         $versions = array();
         foreach (array_reverse($elementService->getVersions($element)) as $version) {
             $versions[$version] = array(
-                'version'       => $version,
-                'format'        => 2,
-                'create_date'   => date('Y-m-d H:i:s'),
-                'is_published'  => false,
-                'was_published' => false,
+                'version'      => $version,
+                'format'       => 2,
+                'createdAt'    => date('Y-m-d H:i:s'),
+                'isPublished'  => false,
+                'wasPublished' => false,
             );
         }
 
         foreach ($publishedVersions as $publishedVersion) {
-            $versions[$publishedVersion->getVersion()]['online'] = true;
+            if (!$publishedVersion->getVersion()) {
+                continue;
+            }
+            $versions[$publishedVersion->getVersion()]['isPublished'] = true;
             if ($publishedVersion->getVersion() === $onlineVersion) {
-                $versions[$publishedVersion->getVersion()]['is_published'] = true;
+                $versions[$publishedVersion->getVersion()]['isPublished'] = true;
             } else {
-                $versions[$publishedVersion->getVersion()]['was_published'] = true;
+                $versions[$publishedVersion->getVersion()]['wasPublished'] = true;
             }
         }
 
@@ -158,12 +158,12 @@ class DataController extends Controller
         if ($teaser) {
             foreach ($teaserManager->getInstances($teaser) as $instanceTeaser) {
                 $instance = array(
-                    'id'              => $instanceTeaser->getId(),
-                    'instance_master' => false,
-                    'modify_time'     => $instanceTeaser->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'icon'            => $iconResolver->resolveTeaser($instanceTeaser, $language),
-                    'type'            => 'teaser',
-                    'link'            => array(),
+                    'id'             => $instanceTeaser->getId(),
+                    'instanceMaster' => false,
+                    'modifiedAt'     => $instanceTeaser->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'icon'           => $iconResolver->resolveTeaser($instanceTeaser, $language),
+                    'type'           => 'teaser',
+                    'link'           => array(),
                 );
 
                 $instances[] = $instance;
@@ -172,12 +172,12 @@ class DataController extends Controller
             foreach ($nodeManager->getInstanceNodes($node->getNode()) as $instanceNode) {
                 $instanceNodeContext = $treeManager->getByNodeId($instanceNode->getId())->get($instanceNode->getId());
                 $instance = array(
-                    'id'              => $instanceNode->getId(),
-                    'instance_master' => false,
-                    'modify_time'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'icon'            => $iconResolver->resolveNode($instanceNodeContext, $language),
-                    'type'            => 'treenode',
-                    'link'            => array(),
+                    'id'             => $instanceNode->getId(),
+                    'instanceMaster' => false,
+                    'modifiedAt'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'icon'           => $iconResolver->resolveNode($instanceNodeContext, $language),
+                    'type'           => 'treenode',
+                    'link'           => array(),
                 );
 
                 if ($instanceNode->getSiterootId() !== $tree->getSiterootId()) {
@@ -210,6 +210,8 @@ class DataController extends Controller
         // diff
 
         if ($diff && $diffVersionFrom) {
+            $elementStructure = $elementService->findElementStructure($elementVersion, $language);
+
             $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
             $fromElementStructure = $elementService->findElementStructure($fromElementVersion);
 
@@ -231,10 +233,10 @@ class DataController extends Controller
         $diffInfo = null;
         if ($diff) {
             $diffInfo = array(
-                'enabled'      => $diff,
-                'version_from' => $diffVersionFrom,
-                'version_to'   => $diffVersionTo,
-                'language'     => $diffLanguage,
+                'enabled'     => $diff,
+                'versionFrom' => $diffVersionFrom,
+                'versionTo'   => $diffVersionTo,
+                'language'    => $diffLanguage,
             );
         }
 
@@ -353,15 +355,6 @@ class DataController extends Controller
             );
         }
 
-        // redirects
-        // TODO: auslagern
-
-        $redirects = array();
-        if (!$teaser && $this->container->has('redirectsManager')) {
-            $redirectsManager = $this->get('redirectsManager');
-            $redirects = $redirectsManager->getForTidAndLanguage($treeId, $language);
-        }
-
         // preview / online url
 
         $urls = array(
@@ -456,7 +449,7 @@ class DataController extends Controller
 
         // rights
 
-        $userRights = array();
+        $permissions = array();
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             if ($this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
@@ -465,98 +458,54 @@ class DataController extends Controller
 
             // TODO: fix
             foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
+                $permissions[] = $permission->getName();
             }
         } else {
             foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
+                $permissions[] = $permission->getName();
             }
         }
-
-        $status = '';
-        if ($node->getTree()->isPublished($node, $language)) {
-            $status = $node->getTree()->isAsync($node, $language) ? 'async' : 'online';
-        }
-
-        $icon = $iconResolver->resolveNode($node, $language);
-
-        $createUser = $userManager->find($elementVersion->getCreateUserId());
-
-        // glue together
-
-        $properties = array(
-            'tid'              => $treeId,
-            'eid'              => $eid,
-            'siteroot_id'      => empty($teaserId) ? $node->getTree()->getSiterootId() : null,
-            'teaser_id'        => $teaserId,
-            'language'         => $language,
-            'version'          => $elementVersion->getVersion(),
-            'is_published'     => $isPublished,
-            'master'           => $language == $element->getMasterLanguage() ? true : false,
-            'status'           => $status,
-            'backend_title'    => mb_substr(
-                strip_tags($elementVersion->getBackendTitle($language, $elementMasterLanguage)),
-                0,
-                30,
-                'UTF-8'
-            ),
-            'page_title'       => mb_substr(
-                strip_tags($elementVersion->getPageTitle($language, $elementMasterLanguage)),
-                0,
-                30,
-                'UTF-8'
-            ),
-            'navigation_title' => mb_substr(
-                strip_tags($elementVersion->getNavigationTitle($language, $elementMasterLanguage)),
-                0,
-                30,
-                'UTF-8'
-            ),
-            'unique_id'        => $element->getUniqueID(),
-            'et_id'            => $elementtype->getId(),
-            'et_title'         => $elementtype->getTitle(),
-            'et_version'       => $elementVersion->getElementTypeVersion() . ' [' . $elementtype->getRevision() . ']',
-            'et_unique_id'     => $elementtype->getUniqueId(),
-            'et_type'          => $elementtype->getType(),
-            'author'           => $createUser->getDisplayName(),
-            'create_date'      => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
-            'publish_date'     => $publishDate,
-            'publisher'        => $publishUser ? $publishUser->getDisplayName() : null,
-            'latest_version'   => (int) $latestVersion,
-            'online_version'   => (int) $onlineVersion,
-            'masterlanguage'   => $elementMasterLanguage,
-            'sort_mode'        => $node->getSortMode(),
-            'sort_dir'         => $node->getSortDir(),
-            'icon'             => $icon,
-            'navigation'       => $node->getInNavigation(),
-        );
 
         $elementtypeSerializer = new ElementtypeArraySerializer();
         $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
 
         $elementSerializer = new ElementArraySerializer();
-        $serializedValues = $elementSerializer->serialize($elementStructure, $language);
+        $serializedValues = $elementSerializer->serialize($elementVersion, $language);
 
         $data = array(
-            'success'             => true,
-            'properties'          => $properties,
-            'configuration'       => $configuration,
+            'success' => true,
+
+            'nodeId'         => $node->getId(),
+            'type'           => $node->getType(),
+            'eid'            => $eid,
+            'language'       => $language,
+            'version'        => $elementVersion->getVersion(),
+            'createdAt'      => $elementVersion->getCreatedAt()->format('Y-m-d H:i:s'),
+            'createdBy'      => $elementVersion->getCreateUserId(),
+            'latestVersion'  => $element->getLatestVersion(),
+            'masterLanguage' => $element->getMasterLanguage(),
+            'isMaster'       => $language == $element->getMasterLanguage() ? true : false,
+
             'comment'             => $elementVersion->getComment(),
-            'meta'                => $meta,
-            'redirects'           => $redirects,
-            'default_tab'         => $elementtype->getDefaultTab(),
-            'default_content_tab' => $elementtype->getDefaultContentTab(),
-            'lockinfo'            => $lockInfo,
-            'diff'                => $diffInfo,
-            'urls'                => $urls,
-            'context'             => $context,
-            'pager'               => $pager,
-            'rights'              => $userRights,
-            'instances'           => $instances,
-            'children'            => $allowedChildren,
-            'versions'            => $versions,
+            'defaultTab'          => $elementtype->getDefaultTab(),
+            'defaultContentTab'   => $elementtype->getDefaultContentTab(),
             'valueStructure'      => $serializedValues,
             'structure'           => $serializedStructure,
+            'elementtypeId'       => $elementtype->getId(),
+            'elementtypeRevision' => $elementVersion->getElementTypeVersion() . ' [' . $elementtype->getRevision() . ']',
+            'elementtypeName'     => $elementtype->getUniqueId(),
+            'elementtypeType'     => $elementtype->getType(),
+            'meta'                => $meta,
+            'diff'                => $diffInfo,
+
+            'pager'               => $pager,
+            'urls'                => $urls,
+            'permissions'         => $permissions,
+            'instances'           => $instances,
+            'configuration'       => $configuration,
+            'allowedChildren'     => $allowedChildren,
+            'versions'            => $versions,
+            'lockInfo'            => $lockInfo,
         );
 
         $data = (object) $data;

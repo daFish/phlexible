@@ -19,15 +19,15 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             load: this.onLoadElement,
             setLanguage: this.onSetLanguage,
             publishAdvanced: function (element) {
-                if (element.properties.teaser_id) {
-                    element.teaserNode = null;
+                if (element.getTeaserId()) {
+                    element.setTeaserNode(null);
                     this.getRootNode().reload();
                 }
             },
             setOffline: function (element) {
-                if (element.properties.teaser_id) {
-                    if (element.teaserNode && 'function' == typeof element.teaserNode.setText) {
-                        var iconEl = element.teaserNode.getUI().getIconEl();
+                if (element.getTeaserId()) {
+                    if (element.getTeaserNode() && 'function' == typeof element.getTeaserNode().setText) {
+                        var iconEl = element.getTeaserNode().getUI().getIconEl();
                         if (iconEl.src.match(/\/status\/[a-z]+/)) {
                             iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '');
                         }
@@ -35,17 +35,17 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                 }
             },
             setOfflineAdvanced: function (element) {
-                if (element.properties.teaser_id) {
-                    element.teaserNode = null;
+                if (element.getTeaserId()) {
+                    element.setTeaserNode(null);
                     this.getRootNode().reload();
                 }
             },
             save: function (element, result) {
-                if (element.properties.teaser_id) {
-                    if (element.teaserNode && 'function' == typeof element.teaserNode.setText) {
+                if (element.getTeaserId()) {
+                    if (element.getTeaserNode() && 'function' == typeof element.getTeaserNode().setText) {
                         var data = result.data;
-                        element.teaserNode.setText(data.title);
-                        var iconEl = element.teaserNode.getUI().getIconEl();
+                        element.getTeaserNode().setText(data.title);
+                        var iconEl = element.getTeaserNode().getUI().getIconEl();
                         if (data.status) {
                             if (iconEl.src.match(/\/status\/[a-z]+/)) {
                                 iconEl.src = iconEl.src.replace(/\/status\/[a-z]+/, '/status/' + data.status);
@@ -68,7 +68,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
         this.loader = new Phlexible.teasers.ElementLayoutTreeLoader({
             dataUrl: Phlexible.Router.generate('teasers_layout_tree'),
             baseParams: {
-                language: this.element.language
+                language: this.element.getLanguage()
             },
             preloadChildren: true,
             listeners: {
@@ -133,7 +133,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         var node = item.parentMenu.node;
                         var w = new Phlexible.teasers.NewTeaserWindow({
                             submitParams: {
-                                siteroot_id: this.element.siteroot_id,
+                                siteroot_id: this.element.getSiterootId(),
                                 tree_id: node.attributes.parent_tid, //this.element.tid,
                                 eid: node.attributes.parent_eid, //this.element.eid,
                                 layoutarea_id: node.attributes.area_id
@@ -372,9 +372,9 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                                     },
                                     success: function (node) {
                                         // reload full element if current teaser is deleted
-                                        if (this.element.teaserNode &&
-                                            this.element.teaserNode.id &&
-                                            this.element.teaserNode.id == node.id) {
+                                        if (this.element.getTeaserNode() &&
+                                            this.element.getTeaserNode().id &&
+                                            this.element.getTeaserNode().id == node.id) {
                                             this.element.load(node.attributes.parent_tid, null, null, 1);
                                         }
                                         else {
@@ -518,7 +518,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         return;
                     }
 
-                    if (this.element.isAllowed('CREATE')) {
+                    if (this.element.isGranted('CREATE')) {
                         this.items.items[2].enable();
                         this.items.items[3].enable();
                         this.items.items[4].enable();
@@ -530,7 +530,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
                         this.items.items[9].disable();
                     }
 
-                    if (this.element.isAllowed('DELETE')) {
+                    if (this.element.isGranted('DELETE')) {
                         this.items.items[11].enable();
                     }
                     else {
@@ -547,7 +547,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     onSetLanguage: function (element, language) {
-        if (element.properties && element.properties.et_type != 'part') {
+        if (element.getElementtypeType() != 'part') {
             return;
         }
 
@@ -555,7 +555,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     onLoadElement: function (element) {
-        if (element.properties.et_type != 'full' && element.properties.et_type != 'structure') {
+        if (element.getElementtypeType() != 'full' && element.getElementtypeType() != 'structure') {
             return;
         }
 
@@ -566,10 +566,10 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
         this.disable();
 
         this.loader.baseParams = {
-            tid: element.tid,
-            eid: element.eid,
-            siteroot_id: element.siteroot_id,
-            language: language || element.language
+            tid: element.getNodeId(),
+            eid: element.getEid(),
+            siteroot_id: element.getSiterootId(),
+            language: language || element.getLanguage()
         };
 
         var root = new Ext.tree.AsyncTreeNode({

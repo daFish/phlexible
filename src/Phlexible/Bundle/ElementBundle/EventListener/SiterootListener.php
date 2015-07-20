@@ -141,7 +141,7 @@ class SiterootListener
 
         $this->treeManager->createTree(
             $siteroot->getId(),
-            'element-structure',
+            'element',
             $elementVersion->getElement()->getEid(),
             $elementVersion->getElement()->getCreateUserId()
         );

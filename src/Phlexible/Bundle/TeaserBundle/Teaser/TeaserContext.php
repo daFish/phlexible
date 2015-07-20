@@ -35,15 +35,22 @@ class TeaserContext
     private $node;
 
     /**
+     * @var string
+     */
+    private $language;
+
+    /**
      * @param TeaserManagerInterface $teaserManager
      * @param Teaser                 $teaser
      * @param NodeContext            $node
+     * @param string                 $language
      */
-    public function __construct(TeaserManagerInterface $teaserManager, Teaser $teaser, NodeContext $node)
+    public function __construct(TeaserManagerInterface $teaserManager, Teaser $teaser, NodeContext $node, $language)
     {
         $this->teaserManager = $teaserManager;
         $this->teaser = $teaser;
         $this->node = $node;
+        $this->language = $language;
     }
 
     /**
@@ -96,7 +103,7 @@ class TeaserContext
      */
     public function publishedAt($language = null)
     {
-        return $this->teaserManager->getPublishedAt($this->teaser, $language);
+        return $this->teaserManager->getPublishedAt($this->teaser, $language ?: $this->language);
     }
 
     /**
@@ -106,7 +113,7 @@ class TeaserContext
      */
     public function available($language = null)
     {
-        return $this->teaserManager->isPublished($this->teaser, $language);
+        return $this->teaserManager->isPublished($this->teaser, $language ?: $this->language);
     }
 
     /**
@@ -124,7 +131,7 @@ class TeaserContext
      */
     public function content($language = null)
     {
-        return $this->teaserManager->getContent($this->teaser, $language);
+        return $this->teaserManager->getContent($this->teaser, $language ?: $this->language);
     }
 
     /**
@@ -135,6 +142,14 @@ class TeaserContext
      */
     public function field($field, $language = null)
     {
-        return $this->teaserManager->getField($this->teaser, $field, $language);
+        return $this->teaserManager->getField($this->teaser, $field, $language ?: $this->language);
+    }
+
+    /**
+     * @return string
+     */
+    public function template()
+    {
+        return $this->teaserManager->getTemplate($this->teaser);
     }
 }

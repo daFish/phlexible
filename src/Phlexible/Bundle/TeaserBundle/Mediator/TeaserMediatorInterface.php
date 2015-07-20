@@ -43,4 +43,12 @@ interface TeaserMediatorInterface
      * @return mixed
      */
     public function getContentDocument(TeaserManagerInterface $teaserManager, Teaser $teaser, $language);
+
+    /**
+     * @param TeaserManagerInterface $teaserManager
+     * @param Teaser                 $teaser
+     *
+     * @return string
+     */
+    public function getTemplate(TeaserManagerInterface $teaserManager, Teaser $teaser);
 }

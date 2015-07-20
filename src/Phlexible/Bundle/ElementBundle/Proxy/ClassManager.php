@@ -25,11 +25,6 @@ class ClassManager
     /**
      * @var array
      */
-    private $interfaceMap;
-
-    /**
-     * @var array
-     */
     private $fileMap;
 
     /**
@@ -70,7 +65,7 @@ class ClassManager
     {
         $content = $elementVersion->getContent();
 
-        $item = $this->createByElementtypeId($elementVersion->getElement()->getElementtypeId());
+        $item = $this->createByElementVersion($elementVersion);
 
         if ($content) {
             $this->fill($content, $item);
@@ -87,64 +82,62 @@ class ClassManager
      */
     private function fill($content, $item)
     {
+        $values = array();
         foreach ($content['values'] as $key => $value) {
-            $item->__setValue($key, $value['de']);
+            $values[$key] = $value['de'];
         }
+        $item->__setValues($values);
 
         if ($content['children']) {
+            $children = array();
             foreach ($content['children'] as $childContent) {
-                $childItem = $this->createByDsId($childContent['dsId'], !empty($childContent['id']) ? $childContent['id'] : null);
+                $children[$childContent['parent']][] = $childItem = $this->createByDsId($childContent['dsId'], !empty($childContent['id']) ? $childContent['id'] : null);
                 $this->fill($childContent, $childItem);
-                $adder = 'add' . ucfirst($this->toCamelCase($childContent['parent']));
-                $item->$adder($childItem);
             }
+            $item->__setChildren($children);
         }
 
         return $item;
     }
 
     /**
-     * @param string $elementtypeId
+     * @param ElementVersion $elementVersion
      *
-     * @return mixed
+     * @return MainStructureInterface
+     * @throws \Exception
      */
-    public function createByElementtypeId($elementtypeId)
+    public function createByElementVersion(ElementVersion $elementVersion)
     {
+        $elementtypeId = $elementVersion->getElement()->getElementtypeId();
+
+        if (!isset($this->elementtypeIdMap[$elementtypeId])) {
+            throw new \Exception("Elementtype ID $elementtypeId not found in map.");
+        }
+
         $className = $this->elementtypeIdMap[$elementtypeId];
         $filename = $this->fileMap[$className];
         include_once $this->dir . '/' . $filename;
 
-        return new $className();
+        return new $className($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
     }
 
     /**
      * @param string $dsId
      * @param string $id
      *
-     * @return mixed
+     * @return ChildStructureInterface
+     * @throws \Exception
      */
     public function createByDsId($dsId, $id = null)
     {
+        if (!isset($this->dsIdMap[$dsId])) {
+            throw new \Exception("dsId $dsId not found in map.");
+        }
+
         $className = $this->dsIdMap[$dsId];
         $filename = $this->fileMap[$className];
         include_once $this->dir . '/' . $filename;
 
         return new $className($id);
-    }
-
-    /**
-     * @param string $str
-     * @param bool   $capitaliseFirstChar
-     *
-     * @return string
-     */
-    private function toCamelCase($str, $capitaliseFirstChar = true)
-    {
-        if ($capitaliseFirstChar) {
-            $str[0] = strtoupper($str[0]);
-        }
-        $func = create_function('$c', 'return strtoupper($c[1]);');
-
-        return preg_replace_callback('/_([a-z])/', $func, $str);
     }
 }

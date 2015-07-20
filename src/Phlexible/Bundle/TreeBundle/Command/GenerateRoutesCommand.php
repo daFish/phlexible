@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Command;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\TreeBundle\Entity\FullElementNode;
+use Phlexible\Bundle\TreeBundle\Entity\PageNode;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\LanguagePathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\NodeIdPathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\PathGenerator;
@@ -72,7 +72,7 @@ class GenerateRoutesCommand extends ContainerAwareCommand
             $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
             foreach ($rii as $node) {
                 if ($tree->isPublished($node, $language)) {
-                    if (!$node->getNode() instanceof FullElementNode) {
+                    if (!$node->getNode() instanceof PageNode) {
                         continue;
                     }
                     $newRoute = $routeGenerator->generateNodeRoute($node, $siteroot, $language);

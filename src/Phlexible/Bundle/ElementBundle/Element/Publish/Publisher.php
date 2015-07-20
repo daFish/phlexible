@@ -261,12 +261,11 @@ class Publisher
             return $result;
         }
 
-        $element = $this->elementService->findElement($node->getTypeId(), $version);
-        if ($version) {
-            $elementVersion = $this->elementService->findElementVersion($element, $version);
-        } else {
-            $elementVersion = $this->elementService->findLatestElementVersion($element);
+        $element = $this->elementService->findElement($node->getContentId());
+        if (!$version) {
+            $version = $element->getLatestVersion();
         }
+        $elementVersion = $this->elementService->findElementVersion($element, $version);
 
         $result['treenode_' . $node->getId()] = array(
             'type'      => 'full_element',

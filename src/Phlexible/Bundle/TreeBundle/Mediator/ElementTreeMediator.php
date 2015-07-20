@@ -10,8 +10,9 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\TreeBundle\Entity\FullElementNode;
-use Phlexible\Bundle\TreeBundle\Entity\StructureElementNode;
+use Phlexible\Bundle\ElementBundle\Proxy\ClassManager;
+use Phlexible\Bundle\TreeBundle\Entity\PageNode;
+use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy\VersionStrategyInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
@@ -33,13 +34,20 @@ class ElementTreeMediator implements TreeMediatorInterface
     private $versionStrategy;
 
     /**
+     * @var ClassManager
+     */
+    private $classManager;
+
+    /**
      * @param ElementService           $elementService
      * @param VersionStrategyInterface $versionStrategy
+     * @param ClassManager             $classManager
      */
-    public function __construct(ElementService $elementService, VersionStrategyInterface $versionStrategy)
+    public function __construct(ElementService $elementService, VersionStrategyInterface $versionStrategy, ClassManager $classManager)
     {
         $this->elementService = $elementService;
         $this->versionStrategy = $versionStrategy;
+        $this->classManager = $classManager;
     }
 
     /**
@@ -47,7 +55,7 @@ class ElementTreeMediator implements TreeMediatorInterface
      */
     public function accept(NodeContext $node)
     {
-        return $node->getNode()->getType() === 'element-full' || $node->getNode()->getType() === 'element-structure';
+        return $node->getNode()->getContentType() === 'element' || $node->getNode()->getContentType() === 'element';
     }
 
     /**
@@ -55,19 +63,27 @@ class ElementTreeMediator implements TreeMediatorInterface
      */
     public function getField(NodeContext $node, $field, $language)
     {
-        $elementVersion = $this->getContentDocument($node, $language);
+        $elementVersion = $this->versionStrategy->find($node, $language);
+
+        if (!$elementVersion) {
+            return null;
+        }
 
         return $elementVersion->getMappedField($field, $language);
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return ElementVersion
      */
     public function getContentDocument(NodeContext $node, $language = null)
     {
-        return $this->versionStrategy->find($node, $language);
+        $elementVersion = $this->versionStrategy->find($node, $language);
+
+        if (!$elementVersion) {
+            return null;
+        }
+
+        return $this->classManager->create($elementVersion);
     }
 
     /**
@@ -75,7 +91,7 @@ class ElementTreeMediator implements TreeMediatorInterface
      */
     public function getTemplate(NodeContext $node)
     {
-        $element = $this->elementService->findElement($node->getNode()->getTypeId());
+        $element = $this->elementService->findElement($node->getNode()->getContentId());
         $elementSource = $this->elementService->findElementSource($element->getElementtypeId());
 
         $template = $elementSource->getTemplate();
@@ -92,7 +108,7 @@ class ElementTreeMediator implements TreeMediatorInterface
      */
     public function isViewable(NodeContext $node)
     {
-        return $node->getNode()->getType() === 'element-full';
+        return $node->getNode()->getContentType() === 'element';
     }
 
     /**
@@ -106,11 +122,11 @@ class ElementTreeMediator implements TreeMediatorInterface
 
         switch ($contentDocument->getElementSource()->getType()) {
             case 'full':
-                $node = new FullElementNode();
+                $node = new PageNode();
                 break;
 
             case 'structure':
-                $node = new StructureElementNode();
+                $node = new StructureNode();
                 break;
 
             default:
@@ -118,8 +134,8 @@ class ElementTreeMediator implements TreeMediatorInterface
         }
 
         $node
-            ->setType('element')
-            ->setTypeId($contentDocument->getElement()->getEid());
+            ->setContentType('element')
+            ->setContentId($contentDocument->getElement()->getEid());
 
         return $node;
     }

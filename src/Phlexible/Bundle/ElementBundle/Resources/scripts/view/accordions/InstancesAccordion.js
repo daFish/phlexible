@@ -84,30 +84,30 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
         Phlexible.elements.accordion.Instances.superclass.initComponent.call(this);
     },
 
-    load: function (data) {
+    load: function (element) {
         // Only show for full and part elements
-        if (data.properties.et_type != 'full' && data.properties.et_type != 'part') {
+        if (element.getElementtypeType() != 'full' && element.getElementtypeType() != 'part') {
             this.hide();
             return;
         }
 
         // Only show for elements with more then one instance
-        if (!data.instances.length || data.instances.length < 2) {
+        if (!element.getInstances().length || element.getInstances().length < 2) {
             this.hide();
             return;
         }
 
-        if (data.properties.et_type == 'part') {
+        if (element.getElementtypeType() == 'part') {
             this.setIconClass('p-teasers-teaser_reference-icon');
         }
         else {
             this.setIconClass('p-element-alias-icon');
         }
 
-        this.setTitle(this.strings.instances + ' [' + data.instances.length + ']');
-        this.store.loadData(data.instances);
+        this.setTitle(this.strings.instances + ' [' + element.getInstances().length + ']');
+        this.store.loadData(element.getInstances());
 
-        var r = this.store.getById(data.properties.tid);
+        var r = this.store.getById(element.getNodeId());
         if (r) {
             this.getSelectionModel().selectRecords([r]);
         }

@@ -100,52 +100,24 @@ class NodeSerializer
      */
     public function serializeNode(NodeContext $node, $language)
     {
-        $userRights = array();
+        $permissions = array();
         if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
             if (!$this->authorizationChecker->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
                 return null;
             }
 
             // TODO: fix
-            $userRights = array();
             foreach ($this->permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
+                $permissions[] = $permission->getName();
             }
         } else {
-            $userRights = array();
             foreach ($this->permissionRegistry->get(get_class($node))->all() as $permission) {
-                $userRights[] = $permission->getName();
+                $permissions[] = $permission->getName();
             }
         }
 
-        $eid = $node->getNode()->getTypeId();
-        $element = $this->elementService->findElement($eid);
-        $elementVersion = $this->elementService->findLatestElementVersion($element);
-
-        //$identifier = new Makeweb_Elements_Element_Identifier($eid);
-        $lockQtip = '';
-        /*
-        #if ($lockInfo = $lockManager->getLockInformation($identifier))
-        #{
-        #    if ($lockInfo['lock_uid'] == MWF_Env::getUid())
-        #    {
-        #        $lockQtip = '<hr>Locked by me.';
-        #    }
-        #    else
-        #    {
-        #        try
-        #        {
-        #            $user = MWF_Core_Users_User_Peer::getByUserID($lockInfo['lock_uid']);
-        #        }
-        #        catch (Exception $e)
-        #        {
-        #            $user = MWF_Core_Users_User_Peer::getSystemUser();
-        #        }
-        #
-        #        $lockQtip = '<hr>Locked by '.$user->getUsername().'.';
-        #    }
-        #}
-        */
+        $typeId = $node->getTypeId();
+        $element = $this->elementService->findElement($typeId);
 
         $elementtype = $this->elementService->findElementtype($element);
         $allowedElementtypeIds = array();
@@ -153,36 +125,46 @@ class NodeSerializer
             $allowedElementtypeIds[] = $allowedElementtype->getId();
         }
 
-        $qtip = 'TID: ' . $node->getId() . '<br />' .
-            'EID: ' . $element->getEid() . '<br />' .
-            'Version: ' . $elementVersion->getVersion() . '<br />' .
-            '<hr>' .
-            'Element Type: ' . $elementtype->getTitle() . '<br />' .
-            'Element Type Version: ' . $elementtype->getRevision() .
-            $lockQtip;
+        $qtip = "ID: {$node->getId()}<br />Type: {$node->getType()}<br />Type ID: {$node->getTypeId()}";
 
         $data = array(
-            'id'                  => $node->getID(),
-            'eid'                 => $element->getEid(),
-            'text'                => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()),
-            'icon'                => $this->iconResolver->resolveNode($node, $language),
-            'navigation'          => $node->getNode()->getInNavigation(),
-            'restricted'          => $node->getNode()->getNeedAuthentication(),
-            'element_type'        => $elementtype->getTitle(),
-            'element_type_id'     => $elementtype->getId(),
-            'element_type_type'   => $elementtype->getType(),
-            'alias'               => $node->getTree()->isInstance($node),
+            'id'              => $node->getId(),
+            'text'            => $node->getField('backend', $language),
+
+            'siterootId'      => $node->getSiterootId(),
+            'type'            => $node->getType(),
+            'typeId'          => $node->getTypeId(),
+            'backendTitle'    => $node->getField('backend', $language),
+            'pageTitle'       => $node->getField('page', $language),
+            'navigationTitle' => $node->getField('navigation', $language),
+            'customDate'      => $node->getField('date', $language),
+            'forward'         => $node->getField('redirect', $language),
+            'sortMode'        => $node->getSortMode(),
+            'sortDir'         => $node->getSortDir(),
+            'sort'            => $node->getSort(),
+            'icon'            => $this->iconResolver->resolveNode($node, $language),
+            'inNavigation'    => $node->getInNavigation(),
+            'isRestricted'    => $node->getAttribute('security'),
+            'isInstance'      => $node->getTree()->isInstance($node),
+            'createdAt'       => $node->getCreatedAt()->format('Y-m-d H:i:s'),
+            'createdBy'       => $node->getCreateUserId(),
+            'isPublished'      => $node->isPublished($language),
+            'publishedAt'      => $node->getPublishedAt($language) ? $node->getPublishedAt($language)->format('Y-m-d H:i:s') : null,
+            'publishedBy'      => $node->getPublishUserId($language),
+            'isAsync'          => $node->isAsync($language),
+            'publishedVersion' => $node->getPublishedVersion($language),
+
+            'allowedChildren' => $allowedElementtypeIds,
+            'permissions'     => $permissions,
+            'hideChildren'    => $elementtype->getHideChildren() ? true : false,
+
+            'elementtypeId'     => $elementtype->getId(),
+            'elementtypeName'   => $elementtype->getTitle(),
+            'elementtypeType'   => $elementtype->getType(),
+
             'allow_drag'          => true,
-            'sort_mode'           => $node->getNode()->getSortMode(),
-            'areas'               => array(355),
-            'allowed_et'          => $allowedElementtypeIds,
-            'is_published'        => $node->getTree()->isPublished($node, $language),
-            'rights'              => $userRights,
+            'areas'               => array(),
             'qtip'                => $qtip,
-            'allow_children'      => $elementtype->getHideChildren() ? false : true,
-            'default_tab'         => $elementtype->getDefaultTab(),
-            'default_content_tab' => $elementtype->getDefaultContentTab(),
-            'masterlanguage'      => $element->getMasterLanguage()
         );
 
         if (count($node->getTree()->getChildren($node)) && !$elementtype->getHideChildren()) {

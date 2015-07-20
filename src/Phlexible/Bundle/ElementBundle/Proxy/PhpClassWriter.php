@@ -32,6 +32,14 @@ class PhpClassWriter
     }
 
     /**
+     * @return mixed
+     */
+    public function getManagerFile()
+    {
+        return $this->outputDir . '/ClassManager.php';
+    }
+
+    /**
      * @param PhpClassMap $classMap
      *
      * @return array

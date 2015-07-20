@@ -23,8 +23,8 @@ Phlexible.elements.accordion.Comment = Ext.extend(Ext.FormPanel, {
         Phlexible.elements.accordion.Comment.superclass.initComponent.call(this);
     },
 
-    load: function (data) {
-        this.getComponent(0).setValue(data.comment);
+    load: function (element) {
+        this.getComponent(0).setValue(element.getComment());
     },
 
     getData: function () {

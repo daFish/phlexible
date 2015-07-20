@@ -8,10 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use Phlexible\Bundle\ElementBundle\Proxy\ClassManagerFactory;
-use Phlexible\Bundle\ElementBundle\Proxy\Distiller;
-use Phlexible\Bundle\ElementBundle\Proxy\PhpClassGenerator;
-use Phlexible\Bundle\ElementBundle\Proxy\PhpClassWriter;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,23 +34,18 @@ class Test3Command extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $elementSourceManager = $this->getContainer()->get('phlexible_element.element_source_manager');
-        $elementService = $this->getContainer()->get('phlexible_element.element_service');$fieldRegistry = $this->getContainer()->get('phlexible_elementtype.field.registry');
+        $elementService = $this->getContainer()->get('phlexible_element.element_service');
 
-        $generator = new PhpClassGenerator(
-            new Distiller($fieldRegistry),
-            new PhpClassWriter('./proxy')
-        );
+        $element = $elementService->findElement(40);
+        $elementVersion = $elementService->findElementVersion($element, 30);
 
-        $element = $elementService->findElement(67);
-        $elementVersion = $elementService->findElementVersion($element, 29);
+        $classManager = $this->getContainer()->get('phlexible_element.proxy.class_manager');
 
-        $classManagerFactory = new ClassManagerFactory($generator, $elementSourceManager);
-
-        $classManager = $classManagerFactory->factory();
         $news = $classManager->create($elementVersion);
+        dump($news);die;
 
-        dump($news);
+        $x = $news->getMain()->first();
+        dump($news->__toArray());
 
         return 0;
     }

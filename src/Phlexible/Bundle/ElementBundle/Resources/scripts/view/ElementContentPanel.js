@@ -43,10 +43,10 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
         element.prototypes.clear();
         this.removeAll();
 
-        this.structure = element.data.structure;
-        this.valueStructure = element.data.valueStructure;
+        this.structure = element.getStructure();
+        this.valueStructure = element.getValueStructure();
 
-        if (!Ext.isEmpty(element.data.structure)) { // Ext.type(element.data.structure) == 'object') {
+        if (!Ext.isEmpty(element.getStructure())) { // Ext.type(element.data.structure) == 'object') {
             //if(this.isVisible()) {
             this.lateRender();
 
@@ -85,16 +85,16 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
                 };
                 lazy = true;
                 noTitle = false;
-                if (this.lastTab && this.lastEtId === this.element.data.properties.et_id) {
+                if (this.lastTab && this.lastEtId === this.element.getElementtypeId()) {
                     targetPanel.activeTab = this.lastTab;
                 }
-                else if (this.element.data.default_content_tab !== undefined) {
-                    targetPanel.activeTab = this.element.data.default_content_tab;
+                else if (!Ext.isEmpty(this.element.getDefaultContentTab())) {
+                    targetPanel.activeTab = this.element.getDefaultContentTab();
                     this.lastTab = targetPanel.activeTab;
                 }
             }
 
-            this.lastEtId = this.element.data.properties.et_id;
+            this.lastEtId = this.element.getElementtypeId();
 
             items = Phlexible.elements.ElementDataTabHelper.loadItems(structureNodes, valueStructure, this, this.element);
 

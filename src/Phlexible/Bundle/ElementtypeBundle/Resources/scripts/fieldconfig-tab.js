@@ -19,16 +19,16 @@ Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueS
         titleCollapse: true,
         animCollapse: false,
 
-        isMaster: element.master,
-        isDiff: !!element.data.diff,
+        isMaster: element.getIsMaster(),
+        isDiff: !!element.getDiff(),
         isSortable: (item.configuration.sortable ? true : false),
         //groupId: groupId,
         element: element,
 
         listeners: {
             activate: function (c) {
-                if (c.items && c.element && c.element.data && c.element.data.properties) {
-                    c.currentETID = c.element.data.properties.et_id;
+                if (c.items && c.element) {
+                    c.currentETID = c.element.getElementtypeId();
                     c.currentActive = c.items.indexOf(this.layout.activeItem);
                 }
             }

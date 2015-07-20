@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy;
 
-use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
@@ -22,7 +22,7 @@ interface VersionStrategyInterface
      * @param NodeContext $node
      * @param string      $language
      *
-     * @return Element
+     * @return ElementVersion
      */
     public function find(NodeContext $node, $language);
 }

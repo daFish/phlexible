@@ -38,20 +38,22 @@ class ClassManagerFactory
     }
 
     /**
-     *
+     * @return ClassManager
      */
     public function factory()
     {
-        if (!file_exists('./proxy/ClassManager.php')) {
+        $classManagerFile = $this->generator->getManagerFile();
+
+        if (!file_exists($classManagerFile)) {
             $elementtypes = array();
             foreach ($this->elementSourceManager->findBy(array()) as $elementSource) {
                 $elementtypes[] = $this->elementSourceManager->findElementtype($elementSource->getElementtypeId());
             }
 
-            $this->generator->generate($elementtypes);
+            $classManagerFile = $this->generator->generate($elementtypes);
         }
 
-        $classManager = include_once './proxy/ClassManager.php';
+        $classManager = include_once $classManagerFile;
 
         return $classManager;
     }

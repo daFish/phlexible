@@ -1,0 +1,4 @@
+trees:
+    parent: main
+    handle: trees
+    roles: [ROLE_ELEMENTS]

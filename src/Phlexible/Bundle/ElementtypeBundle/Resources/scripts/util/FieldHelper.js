@@ -69,8 +69,8 @@ Phlexible.fields.FieldHelper = {
             masterValue: '', // TODO
             attributes: itemValue ? itemValue.attributes : {},
 
-            isMaster: element.master,
-            isDiff: !!element.data.diff,
+            isMaster: element.getIsMaster(),
+            isDiff: !!element.getDiff(),
 
             isSynchronized: (item.configuration['synchronized'] === 'synchronized' || item.configuration['synchronized'] === 'synchronized_unlink'),
             hasUnlink: item.configuration['synchronized'] === 'synchronized_unlink',
@@ -120,11 +120,13 @@ Phlexible.fields.FieldHelper = {
         };
 
         if (item.configuration.readonly) {
+            debugger;
             config.readOnly = true;
             config.ctCls = 'x-item-disabled';
         }
 
         if (config.isDiff) {
+            debugger;
             config.readOnly = true;
         }
 

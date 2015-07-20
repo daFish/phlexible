@@ -203,8 +203,8 @@ class XmlContentTree implements ContentTreeInterface, \IteratorAggregate, Identi
     {
         $contentNode = new ContentNode();
         $contentNode
-            ->setTypeId($treeNode->getTypeId())
-            ->setType($treeNode->getType())
+            ->setContentId($treeNode->getContentId())
+            ->setContentType($treeNode->getContentType())
             ->setTree($this)
             ->setParentNode($treeNode->getParentNode())
             ->setInNavigation($treeNode->getInNavigation())

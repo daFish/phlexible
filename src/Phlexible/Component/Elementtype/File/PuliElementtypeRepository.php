@@ -142,13 +142,14 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
     {
         $content = $this->dumper->dump($elementtype);
 
-        $filename = strtolower("{$elementtype->getId()}..xml");
+        $filename = strtolower("{$elementtype->getId()}.xml");
         $path = "{$this->dumpDir}/$filename";
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile($path, $content);
 
         $resourcePath = "{$this->puliResourceDir}/$filename";
+
         $resource = new FileResource($path, $resourcePath);
         $this->puliRepository->add($resourcePath, $resource);
     }

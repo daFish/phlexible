@@ -41,6 +41,8 @@ class PhlexibleTreeExtension extends Extension
         $container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.doctrine.node_manager');
         //$container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.file.node_manager');
         $container->setAlias('phlexible_tree.route_manager', 'phlexible_tree.doctrine.route_manager');
+        $container->setAlias('phlexible_tree.node_lock_manager', 'phlexible_tree.doctrine.node_lock_manager');
+        $container->setAlias('phlexible_tree.node_change_manager', 'phlexible_tree.doctrine.node_change_manager');
 
         $container->setParameter('phlexible_tree.backend_type_orm', true);
     }

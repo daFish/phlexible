@@ -215,7 +215,7 @@ class TreeExtension extends \Twig_Extension
             $language = $request->getLocale();
         }
 
-        $title = $this->patternResolver->replace($name, $siteroot, $node->getTree()->getContent($node), $language);
+        $title = $this->patternResolver->replace($name, $siteroot, $node, $language);
 
         return $title;
     }
@@ -244,7 +244,7 @@ class TreeExtension extends \Twig_Extension
             $language = $request->getLocale();
         }
 
-        $title = $this->patternResolver->replacePattern($pattern, $siteroot, $node->getTree()->getContent($node), $language);
+        $title = $this->patternResolver->replacePattern($pattern, $siteroot, $node, $language);
 
         return $title;
     }

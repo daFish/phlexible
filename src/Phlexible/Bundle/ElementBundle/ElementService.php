@@ -8,15 +8,13 @@
 
 namespace Phlexible\Bundle\ElementBundle;
 
-use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
+use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructureManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
 use Phlexible\Component\Elementtype\Model\Elementtype;
@@ -40,19 +38,9 @@ class ElementService
     private $elementVersionManager;
 
     /**
-     * @var ElementStructureManagerInterface
-     */
-    private $elementStructureManager;
-
-    /**
      * @var ElementSourceManagerInterface
      */
     private $elementSourceManager;
-
-    /**
-     * @var ElementHistoryManagerInterface
-     */
-    private $elementHistoryManager;
 
     /**
      * @var ViabilityManagerInterface
@@ -65,38 +53,24 @@ class ElementService
     private $fieldMapper;
 
     /**
-     * @param ElementManagerInterface          $elementManager
-     * @param ElementVersionManagerInterface   $elementVersionManager
-     * @param ElementStructureManagerInterface $elementStructureManager
-     * @param ElementSourceManagerInterface    $elementSourceManager
-     * @param ElementHistoryManagerInterface   $elementHistoryManager
-     * @param ViabilityManagerInterface        $viabilityManager
-     * @param FieldMapper                      $fieldMapper
+     * @param ElementManagerInterface        $elementManager
+     * @param ElementVersionManagerInterface $elementVersionManager
+     * @param ElementSourceManagerInterface  $elementSourceManager
+     * @param ViabilityManagerInterface      $viabilityManager
+     * @param FieldMapper                    $fieldMapper
      */
     public function __construct(
         ElementManagerInterface $elementManager,
         ElementVersionManagerInterface $elementVersionManager,
-        ElementStructureManagerInterface $elementStructureManager,
         ElementSourceManagerInterface $elementSourceManager,
-        ElementHistoryManagerInterface $elementHistoryManager,
         ViabilityManagerInterface $viabilityManager,
-        FieldMapper $fieldMapper)
-    {
+        FieldMapper $fieldMapper
+    ) {
         $this->elementManager = $elementManager;
         $this->elementVersionManager = $elementVersionManager;
-        $this->elementStructureManager = $elementStructureManager;
         $this->elementSourceManager = $elementSourceManager;
-        $this->elementHistoryManager = $elementHistoryManager;
         $this->viabilityManager = $viabilityManager;
         $this->fieldMapper = $fieldMapper;
-    }
-
-    /**
-     * @return ElementStructureManagerInterface
-     */
-    public function getElementStructureManager()
-    {
-        return $this->elementStructureManager;
     }
 
     /**
@@ -127,52 +101,6 @@ class ElementService
     /**
      * @param Element $element
      *
-     * @return ElementVersion
-     */
-    public function findLatestElementVersion(Element $element)
-    {
-        $elementVersion = $this->elementVersionManager->find($element, $element->getLatestVersion());
-
-        return $elementVersion;
-    }
-
-    /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
-     *
-     * @return Element[]
-     */
-    public function findElementsByElementtype(Elementtype $elementtype)
-    {
-        return $this->elementManager->findBy(array('elementtypeId' => $elementtype->getId()));
-    }
-
-    /**
-     * @param Element $element
-     * @param array   $languages
-     *
-     * @return ElementVersion
-     */
-    public function findOnlineLanguage(Element $element, $languages)
-    {
-        // TODO: fetch online language
-        return current($languages);
-    }
-
-    /**
-     * @param Element $element
-     * @param string  $language
-     *
-     * @return ElementVersion
-     */
-    public function findOnlineElementVersion(Element $element, $language)
-    {
-        // TODO: fetch online version
-        return $this->findLatestElementVersion($element);
-    }
-
-    /**
-     * @param Element $element
-     *
      * @return array
      */
     public function getVersions(Element $element)
@@ -181,22 +109,9 @@ class ElementService
     }
 
     /**
-     * @param ElementVersion $elementVersion
-     * @param string         $defaultLanguage
-     *
-     * @return ElementStructure
-     */
-    public function findElementStructure(ElementVersion $elementVersion, $defaultLanguage = null)
-    {
-        $elementVersionData = $this->elementStructureManager->find($elementVersion, $defaultLanguage);
-
-        return $elementVersionData;
-    }
-
-    /**
      * @param Element $element
      *
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype
+     * @return Elementtype
      */
     public function findElementtype(Element $element)
     {
@@ -224,7 +139,7 @@ class ElementService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
      * @return Elementtype[]
      */
@@ -286,31 +201,21 @@ class ElementService
         $this->elementManager->updateElement($element, false);
         $this->elementVersionManager->updateElementVersion($elementVersion);
 
-        $this->elementHistoryManager->insert(
-            ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT,
-            $element->getEid(),
-            $userId,
-            null,
-            null,
-            1,
-            $masterLanguage
-        );
-
         return $elementVersion;
     }
 
     /**
-     * @param Element          $element
-     * @param ElementStructure $elementStructure
-     * @param string           $triggerLanguage
-     * @param string           $userId
-     * @param string           $comment
+     * @param Element $element
+     * @param array   $content
+     * @param string  $triggerLanguage
+     * @param string  $userId
+     * @param string  $comment
      *
      * @return ElementVersion
      */
-    public function createElementVersion(Element $element, ElementStructure $elementStructure = null, $triggerLanguage, $userId, $comment = null)
+    public function createElementVersion(Element $element, array $content, $triggerLanguage, $userId, $comment = null)
     {
-        $oldElementVersion = $this->findLatestElementVersion($element);
+        $oldElementVersion = $this->findElementVersion($element, $element->getLatestVersion());
 
         $elementSource = $this->findElementSource($element->getElementtypeId());
 
@@ -323,6 +228,7 @@ class ElementService
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime())
             ->setComment($comment)
+            ->setContent($content ?: null)
             ->setTriggerLanguage($triggerLanguage);
 
         $elementVersion
@@ -332,30 +238,18 @@ class ElementService
 
         $this->elementManager->updateElement($element, false);
 
-        if ($elementStructure) {
-            $this->fixElementVersion($elementStructure, $elementVersion);
-            $this->elementStructureManager->updateElementStructure($elementStructure, false);
+        if ($content) {
+            die("content");
+            $this->fieldMapper->apply($elementVersion, $content, $elementStructure->getLanguages());
         }
 
-        $this->fieldMapper->apply($elementVersion, $elementStructure, $elementStructure->getLanguages());
-
         $this->elementVersionManager->updateElementVersion($elementVersion, true);
-
-        $this->elementHistoryManager->insert(
-            ElementHistoryManagerInterface::ACTION_CREATE_ELEMENT_VERSION,
-            $element->getEid(),
-            $userId,
-            null,
-            null,
-            $elementVersion->getVersion(),
-            $triggerLanguage
-        );
 
         return $elementVersion;
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
      * @return ElementSource
      */
@@ -382,20 +276,5 @@ class ElementService
     public function deleteElement(Element $element)
     {
         $this->elementManager->deleteElement($element);
-    }
-
-    /**
-     * @param ElementStructure $elementStructure
-     * @param ElementVersion   $elementVersion
-     */
-    private function fixElementVersion(ElementStructure $elementStructure, ElementVersion $elementVersion)
-    {
-        $elementStructure->setElementVersion($elementVersion);
-
-        $rii = new \RecursiveIteratorIterator($elementStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($rii as $structure) {
-            /* @var $structure ElementStructure */
-            $structure->setElementVersion($elementVersion);
-        }
     }
 }

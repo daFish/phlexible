@@ -81,11 +81,11 @@ class LinkController extends Controller
                 $tree = $treeManager->getBySiteRootID($siterootId);
                 $rootNode = $tree->getRoot();
 
-                $element = $elementService->findElement($rootNode->getTypeId());
+                $element = $elementService->findElement($rootNode->getContentId());
 
                 $data[] = array(
                     'id'       => $rootNode->getId(),
-                    'eid'      => (int) $rootNode->getTypeId(),
+                    'eid'      => (int) $rootNode->getContentId(),
                     'text'     => $siteroot->getTitle(),
                     'icon'     => $iconResolver->resolveNode($rootNode, $language),
                     // 'cls'      => 'siteroot-node',
@@ -238,7 +238,7 @@ class LinkController extends Controller
                 $rootNode = $tree->getRoot();
 
                 $element = $elementService->findElement($rootNode->getTypeId());
-                $elementVersion = $elementService->findLatestElementVersion($element);
+                $elementVersion = $elementService->findElementVersion($element, $element->getLatestVersion());
 
                 $children = false;
                 if ($targetTree && $siteroot->getId() === $targetTree->getSiterootId()) {
@@ -327,7 +327,7 @@ class LinkController extends Controller
             $node = $tree->get($treeId);
 
             $element = $elementService->findelement($node->getTypeId());
-            $elementVersion = $elementService->findLatestElementVersion($element);
+            $elementVersion = $elementService->findElementVersion($element, $element->getLatestVersion());
 
             if (!isset($data[$treeId])) {
                 $data[$node->getId()] = array(
@@ -352,7 +352,7 @@ class LinkController extends Controller
 
                 if (!isset($data[$parentNode->getId()])) {
                     $element = $elementService->findElement($parentNode->getTypeId());
-                    $elementVersion = $elementService->findLatestElementVersion($element);
+                    $elementVersion = $elementService->findElementVersion($element, $element->getLatestVersion());
 
                     $data[$parentNode->getId()] = array(
                         'id'       => $parentNode->getId(),
@@ -435,7 +435,7 @@ class LinkController extends Controller
 
         foreach ($nodes as $node) {
             $element = $elementService->findElement($node->getTypeId());
-            $elementVersion = $elementService->findLatestElementVersion($element);
+            $elementVersion = $elementService->findElementVersion($element, $element->getLatestVersion());
             $elementtype = $elementService->findElementtype($element);
 
             $tid = $node->getId();

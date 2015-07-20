@@ -38,11 +38,11 @@ Phlexible.elements.Element = function (config) {
     if (config.language) {
         this.language = config.language;
     }
-    if (config.siteroot_id) {
-        this.siteroot_id = config.siteroot_id;
+    if (config.siterootId) {
+        this.siterootId = config.siterootId;
 
         var checkedLanguage = this.language || Phlexible.Config.get('language.frontend');
-        var siterootLanguages = Phlexible.Config.get('user.siteroot.languages')[this.siteroot_id];
+        var siterootLanguages = Phlexible.Config.get('user.siteroot.languages')[this.siterootId];
         var langBtns = [], hasChecked = false;
         for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
             var languageRow = Phlexible.Config.get('set.language.frontend')[i];
@@ -83,23 +83,59 @@ Phlexible.elements.Element = function (config) {
 };
 
 Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
-    siteroot_id: '',
-    tid: '',
-    eid: '',
-    language: '',
-    version: '',
-    master: false,
-    title: '',
+    nodeId: null,
+    teaserId: null,
+    type: null,
+    eid: null,
+    language: null,
+    version: null,
+    createdAt: null,
+    createdBy: null,
+    latestVersion: null,
+    masterLanguage: null,
+    isMaster: null,
+    comment: null,
+    defaultTab: null,
+    defaultContentTab: null,
+    valueStructure: null,
+    structure: null,
+    elementtypeId: null,
+    elementtypeName: null,
+    elementtypeRevision: null,
+    elementtypeType: null,
+    meta: null,
+    diff: null,
+    pager: null,
+    urls: null,
+    permissions: null,
+    instances: null,
+    configuration: null,
+    allowedChildren: null,
+    versions: null,
+    lockInfo: null,
+
     treeNode: null,
-    properties: null,
-    preview_url: null,
     loaded: false,
+
+    loadTreeNode: function(treeNode, version, language, doLock) {
+        var loadParams = {
+            id: treeNode.attributes.id,
+            type: 'node',
+            siterootId: null,
+            language: language || this.language || null,
+            version: version || null,
+            lock: doLock ? 1 : 0
+        };
+
+        this.reload(loadParams);
+        this.setTreeNode(treeNode);
+    },
 
     loadEid: function (eid, version, language, doLock) {
         var loadParams = {
             id: null,
             eid: eid || null,
-            siteroot_id: this.siteroot_id || null,
+            siterootId: this.siterootId || null,
             language: language || this.language || null,
             version: version || null,
             lock: doLock ? 1 : 0
@@ -112,7 +148,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         var loadParams = {
             id: null,
             teaser_id: teaser_id,
-            siteroot_id: this.siteroot_id || null,
+            siterootId: this.siterootId || null,
             language: language || this.language || null,
             version: version || null,
             lock: doLock ? 1 : 0
@@ -126,7 +162,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             id: id || null,
             teaser_id: null,
             eid: null,
-            siteroot_id: null,
+            siterootId: null,
             language: language || this.language || null,
             version: version || null,
             lock: doLock ? 1 : 0
@@ -149,17 +185,8 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             params.id = this.tid;
         }
 
-        if (params.teaser_id === undefined && this.properties && this.properties.teaser_id && this.properties.teaser_id !== undefined) {
-            delete params.id;
-            params.teaser_id = this.properties.teaser_id;
-        }
-
-        if (params.eid === undefined) {
-            params.eid = this.eid;
-        }
-
-        if (params.siteroot_id === undefined) {
-            params.siteroot_id = this.siteroot_id;
+        if (params.siterootId === undefined) {
+            params.siterootId = this.siterootId;
         }
 
         if (params.language === undefined) {
@@ -196,22 +223,38 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         var elementData = Ext.decode(response.responseText);
 
         if (elementData.success) {
-            var properties = elementData.properties;
+            this.nodeId = elementData.nodeId;
+            this.teaserId = elementData.teaserId;
+            this.type = elementData.type;
+            this.eid = elementData.eid;
+            this.language = elementData.language;
+            this.version = elementData.version;
+            this.createdAt = elementData.createdAt;
+            this.createdBy = elementData.createdBy;
+            this.latestVersion = elementData.latestVersion;
+            this.masterLanguage = elementData.masterLanguage;
+            this.isMaster = elementData.isMaster;
+            this.comment = elementData.comment;
+            this.defaultTab = elementData.defaultTab;
+            this.defaultContentTab = elementData.defaultContentTab;
+            this.valueStructure = elementData.valueStructure;
+            this.structure = elementData.structure;
+            this.elementtypeId = elementData.elementtypeId;
+            this.elementtypeRevision = elementData.elementtypeRevision;
+            this.elementtypeName = elementData.elementtypeName;
+            this.elementtypeType = elementData.elementtypeType;
+            this.meta = elementData.meta;
+            this.diff = elementData.diff;
+            this.pager = elementData.pager;
+            this.urls = elementData.urls;
+            this.permissions = elementData.permissions;
+            this.instances = elementData.instances;
+            this.configuration = elementData.configuration;
+            this.allowedChildren = elementData.allowedChildren;
+            this.versions = elementData.versions;
+            this.lockinfo = elementData.lockInfo;
 
-            this.data = elementData;
-            this.properties = properties;
-
-            this.master = properties.master;
-            this.tid = properties.tid;
-            this.eid = properties.eid;
-            this.language = properties.language;
-            this.version = properties.version;
-            this.title = properties.backend_title;
-            this.preview_url = properties.preview_url;
-            this.masterlanguage = properties.masterlanguage;
-            this.icon = properties.icon;
-
-            this.setLockStatus(elementData.lockinfo);
+            this.setLockStatus(this.lockinfo);
 
             this.loaded = true;
 
@@ -224,11 +267,11 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             this.setStatusLocked();
         }
 
-        var historyKey = this.tid + '_' + this.version + '_' + this.language;
+        var historyKey = this.id + '_' + this.version + '_' + this.language;
         if (this.history.indexOfKey(historyKey) !== false) {
             this.history.removeKey(historyKey);
         }
-        this.history.add(historyKey, [this.tid, this.version, this.language, this.title, properties.icon, new Date().getTime()]);
+        this.history.add(historyKey, [this.id, this.version, this.language, this.title, elementData.icon, new Date().getTime()]);
         this.fireEvent('historychange', this, this.history);
     },
 
@@ -240,16 +283,16 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     save: function(parameters) {
         parameters = parameters || {};
 
-        if (!this.tid) {
+        if (!this.getNodeId()) {
             Ext.MessageBox.alert('Failure', 'Save not possible, no element loaded.');
             return;
         }
 
-        parameters.tid = this.tid;
-        parameters.teaser_id = this.properties.teaser_id;
-        parameters.eid = this.eid;
-        parameters.language = this.language;
-        parameters.version = this.version;
+        parameters.tid = this.getNodeId();
+        parameters.teaser_id = this.getTeaserId();
+        parameters.eid = this.getEid();
+        parameters.language = this.getLanguage();
+        parameters.version = this.getVersion();
 
         var errors = [];
 
@@ -321,8 +364,132 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         }
     },
 
+    getLanguages: function() {
+        return this.languages;
+    },
+
+    getSiterootId: function() {
+        return this.siterootId;
+    },
+
+    getNodeId: function() {
+        return this.nodeId;
+    },
+
+    getTeaserId: function() {
+        return this.nodeId;
+    },
+
+    getType: function() {
+        return this.type;
+    },
+
+    getEid: function() {
+        return this.eid;
+    },
+
     getLanguage: function () {
         return this.language;
+    },
+
+    getVersion: function() {
+        return this.version;
+    },
+
+    getCreatedAt: function() {
+        return this.createdAt;
+    },
+
+    getCreatedBy: function() {
+        return this.createdBy;
+    },
+
+    getLatestVersion: function() {
+        return this.latestVersion;
+    },
+
+    getMasterLanguage: function() {
+        return this.masterLanguage;
+    },
+
+    getIsMaster: function() {
+        return this.isMaster;
+    },
+
+    getComment: function() {
+        return this.comment;
+    },
+
+    getDefaultTab: function() {
+        return this.defaultTab;
+    },
+
+    getDefaultContentTab: function() {
+        return this.defaultContentTab;
+    },
+
+    getValueStructure: function() {
+        return this.valueStructure;
+    },
+
+    getStructure: function() {
+        return this.structure;
+    },
+
+    getElementtypeId: function() {
+        return this.elementtypeId;
+    },
+
+    getElementtypeName: function() {
+        return this.elementtypeName;
+    },
+
+    getElementtypeRevision: function() {
+        return this.elementtypeRevision;
+    },
+
+    getElementtypeType: function() {
+        return this.elementtypeType;
+    },
+
+    getMeta: function() {
+        return this.meta || [];
+    },
+
+    getDiff: function() {
+        return this.diff || null;
+    },
+
+    getPager: function() {
+        return this.pager || null;
+    },
+
+    getUrls: function() {
+        return this.urls || {};
+    },
+
+    getPermissions: function() {
+        return this.permissions || [];
+    },
+
+    getInstances: function() {
+        return this.instances || [];
+    },
+
+    getConfiguration: function() {
+        return this.configuration || {};
+    },
+
+    getAllowedChildren: function() {
+        return this.allowedChildren || [];
+    },
+
+    getVersions: function() {
+        return this.versions || [];
+    },
+
+    getLockInfo: function() {
+        return this.lockInfo || [];
     },
 
     setLanguage: function (language, noReload) {
@@ -337,18 +504,15 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         }
     },
 
-    getRights: function () {
-        if (!this.data || !this.data.rights) {
-            return [];
-        }
-
-        return this.data.rights;
+    isGranted: function (permission) {
+        return this.getPermissions().indexOf(permission) !== -1;
     },
 
-    isAllowed: function (right) {
-        var rights = this.getRights();
-
-        return rights.indexOf(right) !== -1;
+    /**
+     * @deprecated
+     */
+    isAllowed: function (permission) {
+        return this.isGranted(permission);
     },
 
     setTreeNode: function (node) {
@@ -384,7 +548,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             sort_mode: sort_mode,
             language: this.language,
             submitParams: {
-                siteroot_id: this.siteroot_id,
+                siterootId: this.siterootId,
                 eid: node ? node.attributes.eid : this.eid,
                 id: node ? node.id : this.tid
             },
@@ -407,7 +571,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             sort_mode: node.attributes.sort_mode,
             language: this.language,
             submitParams: {
-                siteroot_id: this.siteroot_id,
+                siterootId: this.siterootId,
                 eid: node.attributes.eid,
                 id: node.id
             },
@@ -587,15 +751,15 @@ Phlexible.elements.Teaser = function (config) {
         'load'
     );
 
-    if (config.siteroot_id) {
-        this.siteroot_id = config.siteroot_id;
+    if (config.siterootId) {
+        this.siterootId = config.siterootId;
     }
     if (config.language) {
         this.language = config.language;
     }
 };
 Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
-    siteroot_id: '',
+    siterootId: '',
     id: '',
     eid: '',
     language: '',
@@ -611,7 +775,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
         }
 
         var loadParams = {
-            siteroot_id: this.siteroot_id,
+            siterootId: this.siterootId,
             eid: eid,
             language: language
         };
@@ -629,8 +793,8 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
             params = {};
         }
 
-        if (!params.siteroot_id) {
-            params.siteroot_id = this.siteroot_id;
+        if (!params.siterootId) {
+            params.siterootId = this.siterootId;
         }
         if (params.eid === undefined) {
             params.eid = this.eid;
@@ -683,7 +847,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
          var w = new Phlexible.elements.NewElementWindow({
          element_type_id: element_type_id,
          submitParams: {
-         siteroot_id: this.siteroot_id,
+         siterootId: this.siterootId,
          eid: node.attributes.eid,
          id: node.id
          },

@@ -12,7 +12,6 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Teaser\TeaserContext;
-use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -117,7 +116,7 @@ class TeaserExtension extends \Twig_Extension
 
             $teasers = array();
             foreach ($this->teaserManager->findCascadingForLayoutAreaAndNode($area, $node, false) as $teaser) {
-                $teasers[] = new TeaserContext($this->teaserManager, $teaser, $node);
+                $teasers[] = new TeaserContext($this->teaserManager, $teaser, $node, $request->getLocale());
             }
 
             if (!count($teasers)) {

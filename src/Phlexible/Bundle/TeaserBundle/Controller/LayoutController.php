@@ -121,7 +121,7 @@ class LayoutController extends Controller
                     case 'teaser':
                     case 'element':
                         $teaserElement = $elementService->findElement($teaser->getTypeId());
-                        $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
+                        $teaserElementVersion = $elementService->findElementVersion($teaserElement, $teaserElement->getLatestVersion());
 
                         $cls = '';
                         if (!$teaser->isStopped()) {
@@ -230,7 +230,7 @@ class LayoutController extends Controller
             if ('element' == $teaser->getType()) {
                 $teaserElement = $elementService->findElement($teaser->getTypeId());
                 $teaserElementtype = $elementService->findElementtype($teaserElement);
-                $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
+                $teaserElementVersion = $elementService->findElementVersion($teaserElement, $teaserElement->getLatestVersion());
 
                 if (!empty($filter['status'])) {
                     $status = explode(',', $filter['status']);
@@ -416,7 +416,7 @@ class LayoutController extends Controller
 
         foreach ($teasers as $teaser) {
             $teaserElement = $elementService->findElement($teaser->getTypeId());
-            $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
+            $teaserElementVersion = $elementService->findElementVersion($teaserElement, $teaserElement->getLatestVersion());
             $data[] = array(
                 'id'    => $teaser->getId(),
                 'title' => $teaserElementVersion->getBackendTitle($language),
@@ -838,7 +838,7 @@ class LayoutController extends Controller
                 switch ($teaser->getType()) {
                     case 'element':
                         $teaserElement = $elementService->findElement($teaser->getTypeId());
-                        $teaserElementVersion = $elementService->findLatestElementVersion($teaserElement);
+                        $teaserElementVersion = $elementService->findElementVersion($teaserElement, $teaserElement->getLatestVersion());
 
                         $areaRoot['children'][] = array(
                             'id'            => $teaser->getId(),

@@ -36,11 +36,11 @@ class TreeController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/tree", name="tree_tree")
+     * @Route("/nodes", name="tree_nodes")
      */
     public function treeAction(Request $request)
     {
-        $siterootId = $request->get('siteroot_id');
+        $siterootId = $request->get('siterootId');
         $tid = $request->get('node');
         $language = $request->get('language');
 
@@ -148,7 +148,7 @@ class TreeController extends Controller
 
         foreach ($tree->getChildren($node) as $childNode) {
             $childElement = $elementService->findElement($childNode->getTypeId());
-            $childElementVersion = $elementService->findLatestElementVersion($childElement);
+            $childElementVersion = $elementService->findElementVersion($childElement, $childElement->getLatestVersion());
 
             $data[] = array(
                 'id'    => $childNode->getId(),

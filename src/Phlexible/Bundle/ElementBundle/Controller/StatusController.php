@@ -141,7 +141,7 @@ class StatusController extends Controller
                 break;
             }
             $element = $elementService->findElement($eid);
-            $elementVersion = $elementService->findLatestElementVersion($element);
+            $elementVersion = $elementService->findElementVersion($element, $element->getLatestVersion());
             $out .= '  ' . str_pad($elementVersion->getBackendTitle('de', 'en') . ' [' . $eid . ']', 40, ' ')
                 . ' => ' . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' versions' . PHP_EOL;
             $i++;

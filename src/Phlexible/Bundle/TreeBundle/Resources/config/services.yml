@@ -65,7 +65,7 @@ services:
         arguments:
             - @phlexible_tree.doctrine.route_manager
             - @phlexible_siteroot.siteroot_manager
-            - @phlexible_element.element_history_manager
+            - @phlexible_tree.node_change_manager
         tags:
             - {name: kernel.event_subscriber}
 

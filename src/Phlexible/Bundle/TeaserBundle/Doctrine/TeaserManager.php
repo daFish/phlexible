@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Event\PublishTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\SetTeaserOfflineEvent;
@@ -40,11 +39,6 @@ class TeaserManager implements TeaserManagerInterface
     private $teaserHasher;
 
     /**
-     * @var ElementHistoryManagerInterface
-     */
-    private $elementHistoryManager;
-
-    /**
      * @var TeaserMediatorInterface
      */
     private $mediator;
@@ -65,22 +59,19 @@ class TeaserManager implements TeaserManagerInterface
     private $teaserOnlineRepository;
 
     /**
-     * @param EntityManager                  $entityManager
-     * @param TeaserHasher                   $teaserHasher
-     * @param ElementHistoryManagerInterface $elementHistoryManager
-     * @param TeaserMediatorInterface        $mediator
-     * @param EventDispatcherInterface       $dispatcher
+     * @param EntityManager            $entityManager
+     * @param TeaserHasher             $teaserHasher
+     * @param TeaserMediatorInterface  $mediator
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         EntityManager $entityManager,
         TeaserHasher $teaserHasher,
-        ElementHistoryManagerInterface $elementHistoryManager,
         TeaserMediatorInterface $mediator,
         EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
         $this->teaserHasher = $teaserHasher;
-        $this->elementHistoryManager = $elementHistoryManager;
         $this->mediator = $mediator;
         $this->dispatcher = $dispatcher;
     }
@@ -295,7 +286,7 @@ class TeaserManager implements TeaserManagerInterface
             return false;
         }
 
-        $version = $this->mediator->getContentDocument($this, $teaser, $language)->getVersion();
+        $version = $this->mediator->getContentDocument($this, $teaser, $language)->__version();
 
         if ($version === $teaserOnline->getVersion()) {
             return false;
@@ -321,6 +312,30 @@ class TeaserManager implements TeaserManagerInterface
     public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language)
     {
         return $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser->getId(), 'language' => $language));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent(Teaser $teaser, $language)
+    {
+        return $this->mediator->getContentDocument($this, $teaser, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getField(Teaser $teaser, $field, $language)
+    {
+        return $this->mediator->getField($this, $teaser, $field, $language);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplate(Teaser $teaser)
+    {
+        return $this->mediator->getTemplate($this, $teaser);
     }
 
     /**
@@ -383,16 +398,6 @@ class TeaserManager implements TeaserManagerInterface
             );
         */
 
-        if ($type === 'element') {
-            $this->elementHistoryManager->insert(
-                ElementHistoryManagerInterface::ACTION_CREATE_TEASER,
-                $teaser->getTypeId(),
-                $userId,
-                null,
-                $teaser->getId()
-            );
-        }
-
         $event = new TeaserEvent($teaser);
         $this->dispatcher->dispatch(TeaserEvents::CREATE_TEASER, $event);
 
@@ -419,16 +424,6 @@ class TeaserManager implements TeaserManagerInterface
 
         $this->entityManager->persist($teaser);
         $this->entityManager->flush($teaser);
-
-        if ($teaser->getType() === 'element') {
-            $this->elementHistoryManager->insert(
-                ElementHistoryManagerInterface::ACTION_CREATE_TEASER_INSTANCE,
-                $teaser->getTypeId(),
-                $userId,
-                null,
-                $teaser->getId()
-            );
-        }
 
         $event = new TeaserEvent($teaser);
         $this->dispatcher->dispatch(TeaserEvents::CREATE_TEASER_INSTANCE, $event);
@@ -459,16 +454,6 @@ class TeaserManager implements TeaserManagerInterface
 
         $this->entityManager->remove($teaser);
         $this->entityManager->flush();
-
-        if ($teaser->getType() === 'element') {
-            $this->elementHistoryManager->insert(
-                ElementHistoryManagerInterface::ACTION_DELETE_TEASER,
-                $teaser->getTypeId(),
-                $userId,
-                null,
-                $teaser->getId()
-            );
-        }
 
         $event = new TeaserEvent($teaser);
         $this-> dispatcher->dispatch(TeaserEvents::DELETE_TEASER, $event);
@@ -504,17 +489,6 @@ class TeaserManager implements TeaserManagerInterface
         $event = new PublishTeaserEvent($teaser, $language, $version);
         $this->dispatcher->dispatch(TeaserEvents::PUBLISH_TEASER, $event);
 
-        $this->elementHistoryManager->insert(
-            ElementHistoryManagerInterface::ACTION_PUBLISH_TEASER,
-            $teaser->getTypeId(),
-            $userId,
-            null,
-            $teaser->getId(),
-            $version,
-            $language,
-            $comment
-        );
-
         return $teaserOnline;
     }
 
@@ -536,16 +510,5 @@ class TeaserManager implements TeaserManagerInterface
 
         $event = new SetTeaserOfflineEvent($teaser, $language);
         $this->dispatcher->dispatch(TeaserEvents::SET_TEASER_OFFLINE, $event);
-
-        $this->elementHistoryManager->insert(
-            ElementHistoryManagerInterface::ACTION_PUBLISH_TEASER,
-            $teaser->getTypeId(),
-            $userId,
-            null,
-            $teaser->getId(),
-            null,
-            $language,
-            $comment
-        );
     }
 }

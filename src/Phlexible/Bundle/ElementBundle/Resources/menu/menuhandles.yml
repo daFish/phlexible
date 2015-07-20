@@ -1,4 +1,0 @@
-elements:
-    parent: main
-    handle: elements
-    roles: [ROLE_ELEMENTS]

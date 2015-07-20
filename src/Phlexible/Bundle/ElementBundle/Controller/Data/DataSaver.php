@@ -138,7 +138,7 @@ class DataSaver
         $elementtype = $this->elementService->findElementtype($element);
         $elementtypeStructure = $elementtype->getStructure();
 
-        $oldElementVersion = $this->elementService->findLatestElementVersion($element);
+        $oldElementVersion = $this->elementService->findElementVersion($element, $element->getLatestVersion());
         $oldElementStructure = $this->elementService->findElementStructure($oldElementVersion, 'de');
         $oldVersion = $oldElementVersion->getVersion();
         $isMaster = $element->getMasterLanguage() === $language;

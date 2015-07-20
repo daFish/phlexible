@@ -52,10 +52,12 @@ class PreviewVersionStrategy implements VersionStrategyInterface
     {
         $element = $this->elementService->findElement($teaser->getTypeId());
 
-        if ($this->version) {
-            return $this->elementService->findElementVersion($element, $this->version);
+        $version = $this->version;
+        if (!$version) {
+        } else {
+            $version = $element->getLatestVersion();
         }
 
-        return $this->elementService->findLatestElementVersion($element);
+        return $this->elementService->findElementVersion($element, $this->version);
     }
 }

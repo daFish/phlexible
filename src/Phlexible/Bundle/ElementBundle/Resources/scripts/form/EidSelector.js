@@ -60,7 +60,7 @@ Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
 
     initComponent: function () {
         if (this.element) {
-            this.siteroot_id = this.element.siteroot_id;
+            this.siteroot_id = this.element.getSiterootId();
         }
 
         if (this.intrasiteroot) {

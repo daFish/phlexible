@@ -1,7 +1,6 @@
 Ext.provide('Phlexible.elements.ElementAccordion');
 
 Ext.require('Phlexible.elements.accordion.Comment');
-Ext.require('Phlexible.elements.accordion.Configuration');
 Ext.require('Phlexible.elements.accordion.Data');
 Ext.require('Phlexible.elements.accordion.Diff');
 Ext.require('Phlexible.elements.accordion.Instances');
@@ -43,13 +42,6 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
             }
         ];
 
-        if (Phlexible.User.isGranted('ROLE_ELEMENT_CONFIG')) {
-            this.items.push({
-                xtype: 'elements-configurationaccordion',
-                collapsed: true
-            });
-        }
-
         if (Phlexible.User.isGranted('ROLE_ELEMENT_META')) {
             this.items.push({
                 xtype: 'elements-metaaccordion',
@@ -84,7 +76,7 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
                     },
                     loadTeaser: function (id) {
                         this.element.reload({
-                            teaser_id: id
+                            teaserId: id
                         });
                     },
                     scope: this
@@ -106,12 +98,12 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
     },
 
     onLoadElement: function (element) {
-        this.eid = element.eid;
-        this.version = element.version;
-        this.language = element.language;
+        this.eid = element.getEid();
+        this.version = element.getVersion();
+        this.language = element.getLanguage();
 
-        this.items.each(function (acc) {
-            acc.load(element.data, element);
+        this.items.each(function (accordion) {
+            accordion.load(element);
         });
     },
 

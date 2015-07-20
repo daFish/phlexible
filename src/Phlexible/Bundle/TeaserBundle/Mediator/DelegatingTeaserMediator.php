@@ -80,6 +80,18 @@ class DelegatingTeaserMediator implements TeaserMediatorInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getTemplate(TeaserManagerInterface $teaserManager, Teaser $teaser)
+    {
+        if ($mediator = $this->findMediator($teaser)) {
+            return $mediator->getTemplate($teaserManager, $teaser);
+        }
+
+        return null;
+    }
+
+    /**
      * @param Teaser $teaser
      *
      * @return TeaserMediatorInterface|null

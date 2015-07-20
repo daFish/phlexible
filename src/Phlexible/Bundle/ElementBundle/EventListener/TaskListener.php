@@ -124,7 +124,7 @@ class TaskListener implements EventSubscriberInterface
         $node = $event->getNode();
         $language = null;
 
-        if ($node->getType() !== 'element') {
+        if ($node->getContentType() !== 'element') {
             return;
         }
 

@@ -48,15 +48,15 @@ class Node implements NodeInterface, HierarchicalDomainObjectInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(name="content_type", type="string", length=50)
      */
-    private $type;
+    private $contentType;
 
     /**
      * @var int
-     * @ORM\Column(name="type_id", type="integer", nullable=true)
+     * @ORM\Column(name="content_id", type="integer", nullable=true)
      */
-    private $typeId;
+    private $contentId;
 
     /**
      * @var int
@@ -197,17 +197,17 @@ class Node implements NodeInterface, HierarchicalDomainObjectInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getContentType()
     {
-        return $this->type;
+        return $this->contentType;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setType($type)
+    public function setContentType($contentType)
     {
-        $this->type = $type;
+        $this->contentType = $contentType;
 
         return $this;
     }
@@ -215,17 +215,17 @@ class Node implements NodeInterface, HierarchicalDomainObjectInterface
     /**
      * {@inheritdoc}
      */
-    public function getTypeId()
+    public function getContentId()
     {
-        return $this->typeId;
+        return $this->contentId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setTypeId($typeId)
+    public function setContentId($contentId)
     {
-        $this->typeId = $typeId;
+        $this->contentId = $contentId;
 
         return $this;
     }

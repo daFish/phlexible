@@ -247,12 +247,11 @@ class Selector
             return;
         }
 
-        $element = $this->elementService->findElement($node->getTypeId());
-        if ($version) {
-            $elementVersion = $this->elementService->findElementVersion($element, $version);
-        } else {
-            $elementVersion = $this->elementService->findLatestElementVersion($element);
+        $element = $this->elementService->findElement($node->getContentId());
+        if (!$version) {
+            $version = $element->getLatestVersion();
         }
+        $elementVersion = $this->elementService->findElementVersion($element, $version);
 
         $selection->add(
             new SelectionItem(
@@ -287,7 +286,7 @@ class Selector
         $onlyOffline,
         $includeTeaserInstances)
     {
-        $element = $this->elementService->findElement($node->getTypeId());
+        $element = $this->elementService->findElement($node->getContentId());
         $elementtype = $this->elementService->findElementtype($element);
 
         $layoutareas = array();
@@ -355,7 +354,7 @@ class Selector
         }
 
         $element = $this->elementService->findElement($teaser->getTypeId());
-        $elementVersion = $this->elementService->findLatestElementVersion($element);
+        $elementVersion = $this->elementService->findElementVersion($element, $element->getLatestVersion());
 
         $selection->add(
             new SelectionItem(

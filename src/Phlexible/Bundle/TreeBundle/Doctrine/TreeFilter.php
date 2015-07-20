@@ -312,7 +312,7 @@ class TreeFilter implements TreeFilterInterface
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->from('tree', 't')
+            ->from('node', 't')
             ->leftJoin('t', 'element', 'e', 'LEFT(t.type, 7) = "element" AND t.type_id = e.eid')
             ->where($qb->expr()->eq('t.parent_id', $this->tid));
 

@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
@@ -52,10 +51,11 @@ class PreviewVersionStrategy implements VersionStrategyInterface
     {
         $element = $this->elementService->findElement($node->getTypeId());
 
-        if ($this->version) {
-            return $this->elementService->findElementVersion($element, $this->version);
+        $version = $this->version;
+        if (!$version) {
+            $version = $element->getLatestVersion();
         }
 
-        return $this->elementService->findLatestElementVersion($element);
+        return $this->elementService->findElementVersion($element, $version);
     }
 }

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Command;
 
-use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
+use Phlexible\Bundle\ElementBundle\ElementVersion\Diff\Differ;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -57,14 +57,13 @@ class DiffCommand extends ContainerAwareCommand
 
         $fromElementVersion = $elementService->findElementVersion($element, $version);
         $toElementVersion = $elementService->findElementVersion($element, $compareVersion);
-        $fromElementStructure = $elementService->findElementStructure($fromElementVersion, 'de');
-        $toElementStructure = $elementService->findElementStructure($toElementVersion, 'de');
 
         $differ = new Differ();
-        $differ->diff($fromElementStructure, $toElementStructure);
+        $diff = $differ->diff($fromElementVersion->getContent(), $toElementVersion->getContent());
 
         $output->writeln("Diffing EID $eid from version $version to version $compareVersion.");
-        $output->writeln($fromElementStructure->dump());
+        dump($diff);
+        //$output->writeln($result);
 
         return 0;
     }

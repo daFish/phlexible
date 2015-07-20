@@ -12,3 +12,13 @@ services:
         arguments:
             - @doctrine.orm.entity_manager
             - @event_dispatcher
+
+    phlexible_tree.doctrine.node_lock_manager:
+        class: Phlexible\Bundle\TreeBundle\Doctrine\NodeLockManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]
+
+    phlexible_tree.doctrine.node_change_manager:
+        class: Phlexible\Bundle\TreeBundle\Doctrine\NodeChangeManager
+        public: false
+        arguments: [@doctrine.orm.entity_manager]

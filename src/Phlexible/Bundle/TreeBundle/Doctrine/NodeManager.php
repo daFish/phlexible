@@ -274,6 +274,6 @@ class NodeManager implements NodeManagerInterface
      */
     public function getInstanceNodes(NodeInterface $node)
     {
-        return $this->findBy(array('type' => $node->getType(), 'typeId' => $node->getTypeId()));
+        return $this->findBy(array('type' => $node->getContentType(), 'typeId' => $node->getContentId()));
     }
 }

@@ -381,7 +381,7 @@ class Tree implements TreeInterface
             return false;
         }
 
-        $version = $this->mediator->getContentDocument($node, $language ?: $this->defaultLanguage)->getVersion();
+        $version = $this->mediator->getContentDocument($node, $language ?: $this->defaultLanguage)->__version();
 
         if ($version === $state->getVersion()) {
             return false;

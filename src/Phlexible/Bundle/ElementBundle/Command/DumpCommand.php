@@ -30,7 +30,7 @@ class DumpCommand extends ContainerAwareCommand
             ->setName('element:dump')
             ->setDescription('Dump element structure.')
             ->addArgument('eid', InputArgument::REQUIRED, 'Element ID')
-            ->addOption('ver', null, InputOption::VALUE_REQUIRED, 'Element version')
+            ->addOption('version', null, InputOption::VALUE_REQUIRED, 'Element version')
             ->addOption('language', null, InputOption::VALUE_REQUIRED, 'Element language')
             ->addOption('values', null, InputOption::VALUE_NONE, 'Show values');
     }
@@ -52,13 +52,12 @@ class DumpCommand extends ContainerAwareCommand
             return 1;
         }
 
-        if ($version = $input->getOption('ver')) {
-            $elementVersion = $elementService->findElementVersion($element, $version);
-        } else {
-            $elementVersion = $elementService->findLatestElementVersion($element);
+        $version = $input->getOption('version');
+        if (!$version) {
+            $version = $element->getLatestVersion();
         }
 
-        $elementStructure = $elementService->findElementStructure($elementVersion, 'de');
+        $elementVersion = $elementService->findElementVersion($element, $version);
 
         $output->write("<fg=red>Element $eid - Version {$elementVersion->getVersion()}");
         if ($version && $version != $element->getLatestVersion()) {
@@ -66,7 +65,7 @@ class DumpCommand extends ContainerAwareCommand
         }
         $output->writeln(" - Title {$elementVersion->getBackendTitle('de')}</fg=red>");
 
-        $output->writeln($elementStructure->dump($input->getOption('values'), $input->getOption('language')));
+        $output->writeln($elementVersion->getContent());
 
         return 0;
     }

@@ -133,8 +133,8 @@ abstract class AbstractSearch implements SearchProviderInterface
                 continue;
             }
 
-            $element = $this->elementService->findElement($node->getTypeId());
-            $elementVersion = $this->elementService->findLatestElementVersion($element);
+            $element = $this->elementService->findElement($node->getContentId());
+            $elementVersion = $this->elementService->findElementVersion($element, $element->getLatestVersion());
             $siteroot = $this->siterootManager->find($node->getTree()->getSiterootId());
 
             $handlerData = array(

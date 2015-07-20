@@ -74,8 +74,8 @@ class XmlTreeParser
         $node->setId($id);
         $node->setSiterootId($siterootId);
         $node->setParentNode($parentNode);
-        $node->setType($type);
-        $node->setTypeId($typeId);
+        $node->setContentType($type);
+        $node->setContentId($typeId);
         $node->setSort($sort);
         $node->setSortMode($sortMode);
         $node->setSortDir($sortDir);
