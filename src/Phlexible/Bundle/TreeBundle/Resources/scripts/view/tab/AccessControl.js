@@ -41,7 +41,7 @@ Phlexible.tree.view.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Right
             scope: this
         });
 
-        Phlexible.elements.tab.AccessControl.superclass.initComponent.call(this);
+        Phlexible.tree.view.tab.AccessControl.superclass.initComponent.call(this);
     },
 
     getLanguageData: function () {

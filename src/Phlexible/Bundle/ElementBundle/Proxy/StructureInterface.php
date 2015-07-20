@@ -21,6 +21,11 @@ interface StructureInterface
     public function __getValues();
 
     /**
+     * @return array
+     */
+    public function __getValueDescriptors();
+
+    /**
      * @param array $values
      */
     public function __setValues(array $values);

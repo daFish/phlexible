@@ -9,12 +9,10 @@
 namespace Phlexible\Bundle\ElementBundle\Controller;
 
 use Phlexible\Bundle\ElementBundle\ElementEvents;
-use Phlexible\Bundle\ElementBundle\ElementStructure\Diff\Differ;
-use Phlexible\Bundle\ElementBundle\ElementStructure\Serializer\ArraySerializer as ElementArraySerializer;
-use Phlexible\Bundle\ElementBundle\Entity\ElementLock;
+use Phlexible\Bundle\ElementBundle\ElementVersion\Diff\Differ;
+use Phlexible\Bundle\ElementBundle\ElementVersion\Serializer\ArraySerializer as ElementVersionArraySerializer;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
 use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
-use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Component\Elementtype\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
@@ -61,8 +59,8 @@ class DataController extends Controller
         $nodeManager = $this->get('phlexible_tree.node_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
-        $elementHistoryManager = $this->get('phlexible_element.element_history_manager');
-        $lockManager = $this->get('phlexible_element.element_lock_manager');
+        $nodeChangeManager = $this->get('phlexible_tree.node_change_manager');
+        $nodeLockManager = $this->get('phlexible_tree.node_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
 
         $teaser = null;
@@ -77,7 +75,7 @@ class DataController extends Controller
             $tree = $treeManager->getByNodeId($treeId);
             $tree->setDefaultLanguage($language);
             $node = $tree->get($treeId);
-            $eid = $node->getTypeId();
+            $eid = $node->getContentId();
         } else {
             throw new InvalidArgumentException('Unknown data requested.');
         }
@@ -112,16 +110,16 @@ class DataController extends Controller
         // versions
 
         if ($teaser) {
-            $publishedVersions = $elementHistoryManager->findBy(
+            $publishActions = $nodeChangeManager->findBy(
                 array(
                     'teaserId' => $teaser->getId(),
                     'action'   => 'publishTeaser'
                 )
             );
         } else {
-            $publishedVersions = $elementHistoryManager->findBy(
+            $publishActions = $nodeChangeManager->findBy(
                 array(
-                    'treeId' => $node->getId(),
+                    'nodeId' => $node->getId(),
                     'action' => 'publishNode'
                 )
             );
@@ -138,15 +136,15 @@ class DataController extends Controller
             );
         }
 
-        foreach ($publishedVersions as $publishedVersion) {
-            if (!$publishedVersion->getVersion()) {
+        foreach ($publishActions as $publishAction) {
+            if (!$publishAction->getVersion()) {
                 continue;
             }
-            $versions[$publishedVersion->getVersion()]['isPublished'] = true;
-            if ($publishedVersion->getVersion() === $onlineVersion) {
-                $versions[$publishedVersion->getVersion()]['isPublished'] = true;
+            $versions[$publishAction->getVersion()]['isPublished'] = true;
+            if ($publishAction->getVersion() === $onlineVersion) {
+                $versions[$publishAction->getVersion()]['isPublished'] = true;
             } else {
-                $versions[$publishedVersion->getVersion()]['wasPublished'] = true;
+                $versions[$publishAction->getVersion()]['wasPublished'] = true;
             }
         }
 
@@ -243,10 +241,10 @@ class DataController extends Controller
         // lock
 
         if ($unlockId !== null) {
-            $unlockElement = $elementService->findElement($unlockId);
-            if ($unlockElement && $lockManager->isLockedByUser($unlockElement, $language, $this->getUser()->getId())) {
+            $unlockNode = $tree->get($unlockId);
+            if ($unlockElement && $nodeLockManager->isLockedByUser($unlockNode, $language, $this->getUser()->getId())) {
                 try {
-                    $lockManager->unlock($unlockElement, $this->getUser()->getId());
+                    $nodeLockManager->unlock($unlockNode, $this->getUser()->getId());
                 } catch (\Exception $e) {
                     // unlock failed
                 }
@@ -261,20 +259,16 @@ class DataController extends Controller
 
         $lock = null;
         if ($doLock && !$diff) {
-            if (!$lockManager->isLockedByOtherUser($element, $language, $this->getUser()->getId())) {
-                $lock = $lockManager->lock(
-                    $element,
-                    $this->getUser()->getId(),
-                    $language
+            if (!$nodeLockManager->isLockedByOtherUser($node, $language, $this->getUser()->getId())) {
+                $lock = $nodeLockManager->lock(
+                    $node,
+                    $this->getUser()->getId()
                 );
             }
         }
 
         if (!$lock) {
-            $lock = $lockManager->findMasterLock($element);
-            if (!$lock) {
-                $lock = $lockManager->findSlaveLock($element, $language);
-            }
+            $lock = $nodeLockManager->findLock($node);
         }
 
         $lockInfo = null;
@@ -432,7 +426,7 @@ class DataController extends Controller
         if (!$teaser) {
             $parentNode = $tree->getParent($node);
             if ($parentNode) {
-                $parentElement = $elementService->findElement($parentNode->getTypeId());
+                $parentElement = $elementService->findElement($parentNode->getContentId());
                 $parentElementtype = $elementService->findElementtype($parentElement);
                 if ($parentElementtype->getHideChildren()) {
                     $filter = new TreeFilter(
@@ -469,14 +463,14 @@ class DataController extends Controller
         $elementtypeSerializer = new ElementtypeArraySerializer();
         $serializedStructure = $elementtypeSerializer->serialize($elementtypeStructure);
 
-        $elementSerializer = new ElementArraySerializer();
+        $elementSerializer = new ElementVersionArraySerializer();
         $serializedValues = $elementSerializer->serialize($elementVersion, $language);
 
         $data = array(
             'success' => true,
 
             'nodeId'         => $node->getId(),
-            'type'           => $node->getType(),
+            'type'           => $node->getContentType(),
             'eid'            => $eid,
             'language'       => $language,
             'version'        => $elementVersion->getVersion(),

@@ -32,6 +32,8 @@ class PhlexibleTreeExtension extends Extension
         $loader->load('mediators.yml');
         $loader->load('configurators.yml');
         $loader->load('routing.yml');
+        $loader->load('field_mappers.yml');
+        $loader->load('link_extractors.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);

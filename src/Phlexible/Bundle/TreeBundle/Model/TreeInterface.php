@@ -174,11 +174,26 @@ interface TreeInterface
 
     /**
      * @param NodeContext $node
+     *
+     * @return array
+     */
+    public function getFieldMappings(NodeContext $node);
+
+    /**
+     * @param NodeContext $node
      * @param string      $language
+     * @param int         $version
      *
      * @return mixed
      */
-    public function getContent(NodeContext $node, $language = null);
+    public function getContent(NodeContext $node, $language = null, $version = null);
+
+    /**
+     * @param NodeContext $node
+     *
+     * @return array
+     */
+    public function getContentVersions(NodeContext $node);
 
     /**
      * @param NodeContext $node

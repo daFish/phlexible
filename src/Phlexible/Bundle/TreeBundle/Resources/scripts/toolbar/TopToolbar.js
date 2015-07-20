@@ -72,7 +72,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             menu: this.extendedMenuIndex.getRange()
         };
 
-        if (!Phlexible.Config.get('elements.publish.comment_required')) {
+        if (!Phlexible.Config.get('tree.publish.comment_required')) {
             publishBtn.xtype = 'tbsplit';
             publishBtn.handler = this.onQuickPublish;
             publishBtn.menu = [
@@ -650,7 +650,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
     },
 
     onQuickPublish: function () {
-        if (Phlexible.Config.get('elements.publish.confirm_required')) {
+        if (Phlexible.Config.get('tree.publish.confirm_required')) {
             Ext.MessageBox.confirm(this.strings.warning, this.strings.confirm_publish_dialog, function (btn) {
                 if (btn == 'yes') {
                     this.onPublish();
@@ -695,7 +695,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
 
         var w = new windowClass({
-            comment_required: Phlexible.Config.get('elements.publish.comment_required'),
+            comment_required: Phlexible.Config.get('tree.publish.comment_required'),
             tid: this.element.getNodeId(),
             teaserId: this.element.getTeaserId(),
             language: this.element.getLanguage(),
@@ -856,7 +856,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         }
 
         var w = new windowClass({
-            comment_required: Phlexible.Config.get('elements.publish.comment_required'),
+            comment_required: Phlexible.Config.get('tree.publish.comment_required'),
             listeners: {
                 submit: function (values) {
                     var comment = values.comment || false;

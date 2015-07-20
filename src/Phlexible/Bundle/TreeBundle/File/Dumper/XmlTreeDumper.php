@@ -66,11 +66,11 @@ class XmlTreeDumper
             $nodeNode->appendChild($nodeTypeAttr);
 
             $typeAttr = $dom->createAttribute('type');
-            $typeAttr->value = $node->getType();
+            $typeAttr->value = $node->getContentType();
             $nodeNode->appendChild($typeAttr);
 
             $typeIdAttr = $dom->createAttribute('typeId');
-            $typeIdAttr->value = $node->getTypeId();
+            $typeIdAttr->value = $node->getContentId();
             $nodeNode->appendChild($typeIdAttr);
 
             $sortAttr = $dom->createAttribute('sort');

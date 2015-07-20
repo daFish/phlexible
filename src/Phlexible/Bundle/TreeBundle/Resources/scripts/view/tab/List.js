@@ -61,7 +61,7 @@ Phlexible.tree.view.tab.List = Ext.extend(Ext.Panel, {
         this.items = [
             {
                 region: 'north',
-                xtype: 'elements-listgridfilter',
+                xtype: 'tree-tab-list-filter',
                 collapsible: true,
                 collapsed: true,
                 collapseMode: 'mini',

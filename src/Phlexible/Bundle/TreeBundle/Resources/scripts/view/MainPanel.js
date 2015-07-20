@@ -4,16 +4,18 @@ Ext.require('Phlexible.tree.view.Tree');
 Ext.require('Phlexible.teasers.view.Tree');
 Ext.require('Phlexible.tree.toolbar.TopToolbar');
 Ext.require('Phlexible.element.window.FileLinkWindow');
+Ext.require('Phlexible.element.Element');
 
+Ext.require('Phlexible.element.view.tab.Data');
+Ext.require('Phlexible.tree.view.tab.AccessControl');
+Ext.require('Phlexible.tree.view.tab.Cache');
 Ext.require('Phlexible.tree.view.tab.Changes');
+Ext.require('Phlexible.tree.view.tab.Configuration');
 Ext.require('Phlexible.tree.view.tab.List');
 Ext.require('Phlexible.tree.view.tab.Links');
-Ext.require('Phlexible.element.view.tab.Data');
 Ext.require('Phlexible.tree.view.tab.Preview');
-Ext.require('Phlexible.tree.view.tab.AccessControl');
 Ext.require('Phlexible.tree.view.tab.Routing');
 Ext.require('Phlexible.tree.view.tab.Security');
-Ext.require('Phlexible.tree.view.tab.Cache');
 
 /**
  * Input params:
@@ -35,7 +37,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
 
     loadParams: function (params) {
         if (params.diff) {
-            this.getElementPanel().getComponent(1).getComponent(1).diffParams = params.diff;
+            this.getNodeTabs().getComponent(1).getComponent(1).diffParams = params.diff;
         }
 
         // load element
@@ -77,7 +79,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
             this.baseTitle = this.params.title;
         }
 
-        this.element = new Phlexible.elements.Element({
+        this.element = new Phlexible.element.Element({
             siterootId: this.params.siterootId,
             language: Phlexible.Config.get('language.frontend'),
             startParams: this.params
@@ -94,16 +96,16 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
             beforeSave: this.disable,
             beforeSetOffline: this.disable,
             beforeSetOfflineAdvanced: this.disable,
-
             load: this.enable,
             saveFailure: this.enable,
             publishFailure: this.enable,
             publishAdvancedFailure: this.enable,
             setOfflineFailure: this.enable,
-            setOfflineAdvancedFailure: this.enable
+            setOfflineAdvancedFailure: this.enable,
+            scope: this
         });
 
-        var dummyElement = new Phlexible.elements.Element({});
+        var dummyElement = new Phlexible.element.Element({});
         dummyElement.properties = {
             et_type: 'area'
         };
@@ -175,14 +177,14 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                                         // this.catchPanel.disable();
                                         // this.getTopToolbar().enable();
                                         this.getContentPanel().getLayout().setActiveItem(this.layoutListPanelIndex);
-                                        this.getLayoutListPanel().element.id = this.element.id;
-                                        this.getLayoutListPanel().element.eid = this.element.eid;
-                                        this.getLayoutListPanel().element.language = this.element.language;
-                                        this.getLayoutListPanel().element.areaId = areaId;
-                                        this.getLayoutListPanel().element.treeNode = node.getOwnerTree().getRootNode();
-                                        this.getLayoutListPanel().element.sortMode = 'free';
-                                        this.getLayoutListPanel().element.sortDir = 'asc';
-                                        this.getLayoutListPanel().doLoad(this.getLayoutListPanel().element);
+                                        this.getTeaserList().element.id = this.element.id;
+                                        this.getTeaserList().element.eid = this.element.eid;
+                                        this.getTeaserList().element.language = this.element.language;
+                                        this.getTeaserList().element.areaId = areaId;
+                                        this.getTeaserList().element.treeNode = node.getOwnerTree().getRootNode();
+                                        this.getTeaserList().element.sortMode = 'free';
+                                        this.getTeaserList().element.sortDir = 'asc';
+                                        this.getTeaserList().doLoad(this.getLayoutListPanel().element);
                                     },
                                     scope: this
                                 }
@@ -456,6 +458,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
             items: [{
                 xtype: 'tabpanel',
                 activeTab: 1,
+                deferredRender: false,
                 items: [
                     {
                         xtype: 'tree-tab-list',
@@ -475,7 +478,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                         }
                     },
                     {
-                        xtype: 'elements-tab-data',
+                        xtype: 'element-tab-data',
                         tabKey: 'data',
                         element: this.element,
                         accordionCollapsed: this.accordionCollapsed
@@ -571,9 +574,10 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
             }]
         }];
 
-        this.tbar = new Phlexible.elements.TopToolbar({
+        this.tbar = [{
+            xtype: 'tree-toptoolbar',
             element: this.element
-        });
+        }];
 
         this.element.on({
             historychange: function () {
@@ -656,12 +660,20 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
         return this.getComponent(1);
     },
 
-    getElementPanel: function() {
+    getNodeTabs: function() {
         return this.getContentPanel().getComponent(0);
     },
 
-    getLayoutListPanel: function() {
+    getNodeList: function() {
+        return this.getNodeTabs().getComponent(0);
+    },
+
+    getTeaserTabs: function() {
         return this.getContentPanel().getComponent(1);
+    },
+
+    getTeaserList: function() {
+        return this.getTeaserTabs().getComponent(0);
     },
 
     onLoadElement: function (element) {
@@ -693,8 +705,9 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     onAfterLoadElement: function (element) {
+        debugger;
         // set active tab to default value
-        this.items.each(function (item) {
+        this.getNodeTabs().items.each(function (item) {
             //Phlexible.console.debug('xxx', element.data.default_tab, item.tabKey);
             if (element.getDefaultTab() === item.tabKey) {
                 this.setActiveTab(item);
@@ -703,11 +716,11 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
         }, this);
 
         // if current tab is disabled, select list tab (because it's always active)
-        if (this.activeTab.disabled) {
-            this.setActiveTab(0);
+        if (this.getNodeTabs().activeTab.disabled) {
+            this.getNodeTabs().setActiveTab(1);
 
-            if (this.activeTab.disabled) {
-                this.setActiveTab(1);
+            if (this.getNodeTabs().activeTab.disabled) {
+                this.getNodeTabs().setActiveTab(0);
             }
         }
 

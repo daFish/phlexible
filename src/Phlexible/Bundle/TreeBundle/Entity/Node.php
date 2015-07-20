@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
@@ -48,7 +49,7 @@ class Node implements NodeInterface, HierarchicalDomainObjectInterface
 
     /**
      * @var string
-     * @ORM\Column(name="content_type", type="string", length=50)
+     * @ORM\Column(name="content_type", type="string")
      */
     private $contentType;
 
@@ -99,6 +100,14 @@ class Node implements NodeInterface, HierarchicalDomainObjectInterface
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->mappedFields = new ArrayCollection();
+    }
 
     /**
      * {@inheritdoc}

@@ -10,8 +10,6 @@ namespace Phlexible\Bundle\ElementBundle\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\ElementBundle\ElementStructure\LinkExtractor\LinkExtractor;
-use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructure as StructureEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementStructureValue as ValueEntity;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
@@ -42,26 +40,18 @@ class ElementStructureManager implements ElementStructureManagerInterface
     private $fieldRegistry;
 
     /**
-     * @var LinkExtractor
-     */
-    private $linkExtractor;
-
-    /**
-     * @param EntityManager                 $entityManager
-     * @param ElementStructureLoader        $elementStructureLoader
-     * @param FieldRegistry                 $fieldRegistry
-     * @param LinkExtractor                 $linkExtractor
+     * @param EntityManager          $entityManager
+     * @param ElementStructureLoader $elementStructureLoader
+     * @param FieldRegistry          $fieldRegistry
      */
     public function __construct(
         EntityManager $entityManager,
         ElementStructureLoader $elementStructureLoader,
-        FieldRegistry $fieldRegistry,
-        LinkExtractor $linkExtractor)
-    {
+        FieldRegistry $fieldRegistry
+    ) {
         $this->entityManager = $entityManager;
         $this->elementStructureLoader = $elementStructureLoader;
         $this->fieldRegistry = $fieldRegistry;
-        $this->linkExtractor = $linkExtractor;
     }
 
     /**

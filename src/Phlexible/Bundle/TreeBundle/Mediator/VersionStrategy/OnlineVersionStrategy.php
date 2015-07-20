@@ -35,7 +35,7 @@ class OnlineVersionStrategy implements VersionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function find(NodeContext $node, $language)
+    public function findElementVersion(NodeContext $node, $language)
     {
         if (!$language) {
             throw new \InvalidArgumentException("No language");

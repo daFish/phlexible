@@ -142,7 +142,7 @@ Phlexible.tree.view.Tree = Ext.extend(Ext.tree.TreePanel, {
 
         this.loader = new Phlexible.tree.tree.TreeLoader({
             dataUrl: this.dataUrl,
-            uiProvider: Phlexible.elements.tree.TreeNodeUI,
+            uiProvider: Phlexible.tree.tree.TreeNodeUI,
             baseParams: {
                 siterootId: this.element.getSiterootId(),
                 language: this.element.getLanguage()

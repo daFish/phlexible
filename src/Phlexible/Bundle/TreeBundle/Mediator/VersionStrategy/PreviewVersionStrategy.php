@@ -47,9 +47,13 @@ class PreviewVersionStrategy implements VersionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function find(NodeContext $node, $language)
+    public function findElementVersion(NodeContext $node, $language)
     {
-        $element = $this->elementService->findElement($node->getTypeId());
+        $element = $this->elementService->findElement($node->getContentId());
+
+        if (!$element) {
+            return null;
+        }
 
         $version = $this->version;
         if (!$version) {

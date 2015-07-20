@@ -18,7 +18,7 @@ Phlexible.tree.view.tab.Links = Ext.extend(Ext.grid.GridPanel, {
 
         // create the data store
         this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elements_links_list'),
+            url: Phlexible.Router.generate('tree_links'),
             root: 'links',
             totalProperty: 'total',
             id: 'id',
@@ -40,20 +40,24 @@ Phlexible.tree.view.tab.Links = Ext.extend(Ext.grid.GridPanel, {
                 }
             },
             {
+                header: this.strings.language,
+                width: 50,
+                dataIndex: 'language'
+            },
+            {
+                header: this.strings.version,
+                width: 50,
+                dataIndex: 'version'
+            },
+            {
                 header: this.strings.field,
                 width: 250,
-                dataIndex: 'title'
+                dataIndex: 'field'
             },
             {
                 header: this.strings.content,
                 width: 300,
-                dataIndex: 'content'
-            },
-            {
-                header: this.strings.raw,
-                width: 200,
-                hidden: true,
-                dataIndex: 'raw'
+                dataIndex: 'target'
             }
         ];
 
@@ -71,7 +75,6 @@ Phlexible.tree.view.tab.Links = Ext.extend(Ext.grid.GridPanel, {
             beforePageText: this.strings.paging_before_page_text,
             afterPageText: this.strings.paging_after_page_text
         });
-
 
         this.tbar = [
             {

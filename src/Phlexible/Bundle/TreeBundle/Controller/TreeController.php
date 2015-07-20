@@ -62,7 +62,7 @@ class TreeController extends Controller
                 $node = $tree->get($tid);
 
                 // check if children of this node should be shown
-                $element = $elementService->findElement($node->getTypeId());
+                $element = $elementService->findElement($node->getContentId());
                 $elementtype = $elementService->findElementtype($element);
 
                 $nodes = $tree->getChildren($node);
@@ -130,7 +130,7 @@ class TreeController extends Controller
 
         $tree = $treeManager->getByNodeID($id);
         $node = $tree->get($id);
-        $eid = $node->getTypeId();
+        $eid = $node->getContentId();
         $element = $elementService->findElement($eid);
 
         if (!$language) {
@@ -147,7 +147,7 @@ class TreeController extends Controller
         );
 
         foreach ($tree->getChildren($node) as $childNode) {
-            $childElement = $elementService->findElement($childNode->getTypeId());
+            $childElement = $elementService->findElement($childNode->getContentId());
             $childElementVersion = $elementService->findElementVersion($childElement, $childElement->getLatestVersion());
 
             $data[] = array(
@@ -261,7 +261,7 @@ class TreeController extends Controller
 
         $tree = $treeManager->getByNodeId($sourceId);
         $sourceNode = $tree->get($sourceId);
-        $sourceEid = $sourceNode->getTypeId();
+        $sourceEid = $sourceNode->getContentId();
 
         $select = $db->select()
             ->from($db->prefix . 'element', array('element_type_id', 'masterlanguage'))
@@ -391,7 +391,7 @@ class TreeController extends Controller
         foreach ($treeIds as $treeId) {
             $tree = $treeManager->getByNodeId($treeId);
             $node = $tree->get($treeId);
-            $element = $elementService->findElement($node->getTypeId());
+            $element = $elementService->findElement($node->getContentId());
 
             $elementService->deleteElement($element);
             $tree->delete($node, $this->getUser()->getId());

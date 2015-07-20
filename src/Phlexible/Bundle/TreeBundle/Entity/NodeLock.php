@@ -15,8 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity(repositoryClass = "Phlexible\Bundle\TreeBundle\Entity\Repository\NodeLockRepository")
- * @ORM\Table(name="Node_lock")
+ * @ORM\Entity(repositoryClass="Phlexible\Bundle\TreeBundle\Entity\Repository\NodeLockRepository")
+ * @ORM\Table(name="node_lock")
  */
 class NodeLock
 {
@@ -39,12 +39,6 @@ class NodeLock
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=2, options={"fixed"=true})
-     */
-    private $language;
-
-    /**
-     * @var string
      * @ORM\Column(name="user_id", type="string", length=36, options={"fixed"=true})
      */
     private $userId;
@@ -63,14 +57,12 @@ class NodeLock
 
     /**
      * @param int    $nodeId
-     * @param string $language
      * @param string $userId
      * @param string $type
      */
-    public function __construct($nodeId, $language, $userId, $type)
+    public function __construct($nodeId, $userId, $type)
     {
         $this->nodeId = $nodeId;
-        $this->language = $language;
         $this->userId = $userId;
         $this->type = $type;
         $this->lockedAt = new \DateTime();
@@ -90,14 +82,6 @@ class NodeLock
     public function getNodeId()
     {
         return $this->nodeId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->language;
     }
 
     /**

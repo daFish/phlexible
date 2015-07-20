@@ -54,7 +54,7 @@ class Distiller
             $field = $this->fieldRegistry->getField($childNode->getType());
 
             if ($field->isField()) {
-                $data[$childNode->getName()] = array(
+                $data[] = array(
                     'name'  => $childNode->getName(),
                     'node'  => $childNode,
                     'field' => $field,
@@ -65,7 +65,7 @@ class Distiller
                 $childData = $this->iterate($structure, $childNode, $depth + 1);
 
                 if ($childNode->isRepeatable() || $childNode->isOptional()) {
-                    $data[$childNode->getName()] = array(
+                    $data[] = array(
                         'name'     => $childNode->getName(),
                         'node'     => $childNode,
                         'field'    => $field,

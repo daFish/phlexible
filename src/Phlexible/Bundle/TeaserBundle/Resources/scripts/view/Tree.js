@@ -65,7 +65,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
             scope: this
         });
 
-        this.loader = new Phlexible.teasers.ElementLayoutTreeLoader({
+        this.loader = new Phlexible.teasers.tree.TreeLoader({
             dataUrl: Phlexible.Router.generate('teasers_layout_tree'),
             baseParams: {
                 language: this.element.getLanguage()

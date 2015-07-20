@@ -36,11 +36,26 @@ interface TreeMediatorInterface
 
     /**
      * @param NodeContext $node
+     *
+     * @return array
+     */
+    public function getFieldMappings(NodeContext $node);
+
+    /**
+     * @param NodeContext $node
      * @param string      $language
+     * @param int         $version
      *
      * @return mixed
      */
-    public function getContentDocument(NodeContext $node, $language);
+    public function getContent(NodeContext $node, $language, $version = null);
+
+    /**
+     * @param NodeContext $node
+     *
+     * @return array
+     */
+    public function getContentVersions(NodeContext $node);
 
     /**
      * @param NodeContext $node

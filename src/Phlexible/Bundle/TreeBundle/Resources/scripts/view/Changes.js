@@ -12,14 +12,14 @@ Phlexible.tree.view.Changes = Ext.extend(Ext.grid.GridPanel, {
     initComponent: function () {
         // create the data store
         this.store = new Ext.data.JsonStore({
-            url: Phlexible.Router.generate('elements_history'),
+            url: Phlexible.Router.generate('tree_changes'),
             baseParams: {},
             root: 'history',
             totalProperty: 'total',
             id: 'id',
             fields: Phlexible.tree.model.Change,
             remoteSort: true,
-            sortInfo: {field: 'create_time', direction: 'DESC'}
+            sortInfo: {field: 'createdAt', direction: 'DESC'}
         });
 
         // create the column model
@@ -40,13 +40,7 @@ Phlexible.tree.view.Changes = Ext.extend(Ext.grid.GridPanel, {
             {
                 header: this.strings.tid,
                 width: 55,
-                dataIndex: 'tid',
-                sortable: true
-            },
-            {
-                header: this.strings.eid,
-                width: 55,
-                dataIndex: 'eid',
+                dataIndex: 'nodeId',
                 sortable: true
             },
             {
@@ -77,7 +71,7 @@ Phlexible.tree.view.Changes = Ext.extend(Ext.grid.GridPanel, {
             {
                 header: this.strings.date,
                 width: 130,
-                dataIndex: 'create_time',
+                dataIndex: 'createdAt',
                 sortable: true
             }
         ];

@@ -24,5 +24,5 @@ interface VersionStrategyInterface
      *
      * @return ElementVersion
      */
-    public function find(NodeContext $node, $language);
+    public function findElementVersion(NodeContext $node, $language);
 }

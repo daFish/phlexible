@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\DependencyInjection\Compiler;
+namespace Phlexible\Bundle\TreeBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -25,10 +25,10 @@ class AddFieldMappersPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $mappers = array();
-        foreach ($container->findTaggedServiceIds('phlexible_element.field_mapper') as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('phlexible_tree.field_mapper') as $id => $attributes) {
             $mappers[] = new Reference($id);
         }
-        $mapper = $container->findDefinition('phlexible_element.field_mapper');
+        $mapper = $container->findDefinition('phlexible_tree.field_mapper');
         $mapper->replaceArgument(2, $mappers);
     }
 }

@@ -97,7 +97,7 @@ class NodeContext implements DomainObjectInterface
     /**
      * @return string
      */
-    public function getType()
+    public function getContentType()
     {
         return $this->node->getContentType();
     }
@@ -129,7 +129,7 @@ class NodeContext implements DomainObjectInterface
     /**
      * @return string
      */
-    public function getTypeId()
+    public function getContentId()
     {
         return $this->node->getContentId();
     }
@@ -398,19 +398,36 @@ class NodeContext implements DomainObjectInterface
 
     /**
      * @param string $language
+     * @param int    $version
      *
-     * @return bool
+     * @return mixed
      */
-    public function getContent($language = null)
+    public function getContent($language = null, $version = null)
     {
-        return $this->tree->getContent($this, $language ?: $this->language);
+        return $this->tree->getContent($this, $language ?: $this->language, $version);
+    }
+
+    /**
+     * @return array
+     */
+    public function getContentVersions()
+    {
+        return $this->tree->getContentVersions($this);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldMappings()
+    {
+        return $this->tree->getFieldMappings($this);
     }
 
     /**
      * @param string $field
      * @param string $language
      *
-     * @return bool
+     * @return mixed
      */
     public function getField($field, $language = null)
     {

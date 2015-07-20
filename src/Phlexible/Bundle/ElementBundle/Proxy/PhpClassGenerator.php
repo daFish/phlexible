@@ -240,6 +240,7 @@ class PhpClassGenerator
     private function generateChildInterface($namespace, $section)
     {
         $className = $namespace . ucfirst($section) . 'Interface';
+        $className = $namespace . 'Interface';
 
         if ($this->classMap->has($className)) {
             return $this->classMap->get($className);
@@ -276,12 +277,14 @@ class PhpClassGenerator
             ->setAttribute('__getChildren', new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS))
             ->setAttribute('__setChildren', new \ArrayObject(array(), \ArrayObject::ARRAY_AS_PROPS));
 
-        $setValuesParts = [];
-        $getValuesParts = [];
+        $setValueParts = [];
+        $getValueParts = [];
+        $getValueDescriptorParts = [];
 
         foreach ($items as $item) {
             $node = $item['node'];
             $field = $item['field'];
+            $nodeType = $node->getType();
             $dataType = $field->getDataType();
 
             $valueName = lcfirst($this->toCamelCase($node->getName()));
@@ -306,20 +309,26 @@ class PhpClassGenerator
                 ->addParameter($setterValue);
             $class->setMethod($setter);
 
-            $setValuesParts[] = "    if (\$dsId === '{$node->getDsId()}') {\n        \$this->$setterName(\$value);\n        continue;\n    }";
-            $getValuesParts[] = "    '{$node->getDsId()}' => \$this->$getterName(),";
+            $setValueParts[] = "    if (\$dsId === '{$node->getDsId()}') {\n        \$this->$setterName(\$value);\n        continue;\n    }";
+            $getValueParts[] = "    '{$node->getDsId()}' => \$this->$getterName(),";
+            $getValueDescriptorParts[] = "    '{$node->getDsId()}' => array('name' => '{$node->getName()}', 'type' => '$nodeType', 'dataType' => '$dataType', 'value' => \$this->$getterName()),";
         }
 
         $setValues = PhpMethod::create('__setValues')
             ->addParameter(PhpParameter::create('values')->setType('array'))
-            ->setBody("foreach (\$values as \$dsId => \$value) {\n".implode(PHP_EOL, $setValuesParts)."\n}")
+            ->setBody("foreach (\$values as \$dsId => \$value) {\n".implode(PHP_EOL, $setValueParts)."\n}")
             ->setDocblock("/**\n * @param array \$values\n */\n");
         $class->setMethod($setValues);
 
         $getValues = PhpMethod::create('__getValues')
-            ->setBody("return array(\n".implode(PHP_EOL, $getValuesParts)."\n);")
+            ->setBody("return array(\n".implode(PHP_EOL, $getValueParts)."\n);")
             ->setDocblock("/**\n * @return array\n */\n");
         $class->setMethod($getValues);
+
+        $getValueDescriptors = PhpMethod::create('__getValueDescriptors')
+            ->setBody("return array(\n".implode(PHP_EOL, $getValueDescriptorParts)."\n);")
+            ->setDocblock("/**\n * @return array\n */\n");
+        $class->setMethod($getValueDescriptors);
 
         $getChildren = PhpMethod::create('__getChildren')
             ->setBody("return array();")
@@ -365,8 +374,17 @@ class PhpClassGenerator
 
         $allowed = array();
         foreach ($items as $item) {
+            $parent = $item['node']->getParentNode();
+            if ($parent->getType() === 'referenceroot') {
+                $parent = $parent->getParentNode();
+                if ($parent->getType() === 'reference') {
+                    $parent = $parent->getParentNode();
+                }
+            }
+            $parentName = $this->normalizeName($parent->getName());
+
             $name = $this->normalizeName($item['node']->getName());
-            $fqName = $namespace . '\\' . $parentClass->getShortName() . $name;
+            $fqName = $namespace . '\\' . $parentClass->getShortName() . $parentName . $name;
 
             $class = $this->generateChildClass($fqName, $item['children'], $item['node']);
 
@@ -376,15 +394,6 @@ class PhpClassGenerator
             $ucName = ucfirst($name);
 
             if ($item['node']->isRepeatable()) {
-                $parent = $item['node']->getParentNode();
-                if ($parent->getType() === 'referenceroot') {
-                    $parent = $parent->getParentNode();
-                    if ($parent->getType() === 'reference') {
-                        $parent = $parent->getParentNode();
-                    }
-                }
-                $parentName = $parent->getName();
-
                 $allowed[$parentName] = $fqName;
 
                 $interface = $this->generateChildInterface($parentClass->getName(), $this->toCamelCase($parentName));
@@ -413,9 +422,6 @@ class PhpClassGenerator
         }
 
         if (count($allowed)) {
-            $getChildrenParts = array();
-            $setChildrenParts = array();
-
             foreach ($allowed as $name => $allow) {
                 $normalizedName = $this->normalizeName($name);
                 $lcName = lcfirst($normalizedName);

@@ -8,11 +8,9 @@
 
 namespace Phlexible\Bundle\ElementBundle;
 
-use Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper\FieldMapper;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
@@ -48,29 +46,21 @@ class ElementService
     private $viabilityManager;
 
     /**
-     * @var FieldMapper
-     */
-    private $fieldMapper;
-
-    /**
      * @param ElementManagerInterface        $elementManager
      * @param ElementVersionManagerInterface $elementVersionManager
      * @param ElementSourceManagerInterface  $elementSourceManager
      * @param ViabilityManagerInterface      $viabilityManager
-     * @param FieldMapper                    $fieldMapper
      */
     public function __construct(
         ElementManagerInterface $elementManager,
         ElementVersionManagerInterface $elementVersionManager,
         ElementSourceManagerInterface $elementSourceManager,
-        ViabilityManagerInterface $viabilityManager,
-        FieldMapper $fieldMapper
+        ViabilityManagerInterface $viabilityManager
     ) {
         $this->elementManager = $elementManager;
         $this->elementVersionManager = $elementVersionManager;
         $this->elementSourceManager = $elementSourceManager;
         $this->viabilityManager = $viabilityManager;
-        $this->fieldMapper = $fieldMapper;
     }
 
     /**
@@ -196,8 +186,6 @@ class ElementService
             ->setCreateUserId($userId)
             ->setCreatedAt(new \DateTime());
 
-        $this->fieldMapper->apply($elementVersion);
-
         $this->elementManager->updateElement($element, false);
         $this->elementVersionManager->updateElementVersion($elementVersion);
 
@@ -240,7 +228,6 @@ class ElementService
 
         if ($content) {
             die("content");
-            $this->fieldMapper->apply($elementVersion, $content, $elementStructure->getLanguages());
         }
 
         $this->elementVersionManager->updateElementVersion($elementVersion, true);

@@ -74,7 +74,7 @@ class ElementExtension extends \Twig_Extension
             $version = $this->teaserManager->getPublishedVersion($teaser, $language);
         } elseif ($eid instanceof NodeContext) {
             $node = $eid;
-            $eid = $node->getTypeId();
+            $eid = $node->getContentId();
             $version = $node->getTree()->getPublishedVersion($node, $language);
         } else {
             return null;

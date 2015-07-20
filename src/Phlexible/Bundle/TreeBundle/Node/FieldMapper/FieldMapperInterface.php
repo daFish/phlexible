@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\ElementVersion\FieldMapper;
+namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
  * Field mapper interface
@@ -23,11 +23,12 @@ interface FieldMapperInterface
     public function accept($key);
 
     /**
-     * @param array  $structure
-     * @param string $language
-     * @param array  $mapping
+     * @param ValueExtractorInterface $valueExtractor
+     * @param mixed                   $content
+     * @param array                   $mapping
+     * @param string                  $language
      *
      * @return string|null
      */
-    public function map(array $structure, $language, array $mapping);
+    public function map(ValueExtractorInterface $valueExtractor, $content, array $mapping, $language);
 }

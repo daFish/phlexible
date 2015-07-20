@@ -381,7 +381,7 @@ class Tree implements TreeInterface
             return false;
         }
 
-        $version = $this->mediator->getContentDocument($node, $language ?: $this->defaultLanguage)->__version();
+        $version = $this->mediator->getContent($node, $language ?: $this->defaultLanguage)->__version();
 
         if ($version === $state->getVersion()) {
             return false;
@@ -428,9 +428,25 @@ class Tree implements TreeInterface
     /**
      * {@inheritdoc}
      */
-    public function getContent(NodeContext $node, $language = null)
+    public function getFieldMappings(NodeContext $node)
     {
-        return $this->mediator->getContentDocument($node, $language ?: $this->defaultLanguage);
+        return $this->mediator->getFieldMappings($node);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent(NodeContext $node, $language = null, $version = null)
+    {
+        return $this->mediator->getContent($node, $language ?: $this->defaultLanguage, $version);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentVersions(NodeContext $node)
+    {
+        return $this->mediator->getContentVersions($node);
     }
 
     /**
@@ -537,8 +553,8 @@ class Tree implements TreeInterface
         $node
             ->setSiterootId($this->siterootId)
             ->setParentNode($parentNode->getNode())
-            ->setType($sourceNode->getType())
-            ->setTypeId($sourceNode->getTypeId())
+            ->setType($sourceNode->getContentType())
+            ->setTypeId($sourceNode->getContentId())
             ->setAttributes($sourceNode->getAttributes())
             ->setSort($sort)
             ->setSortMode($sourceNode->getSortMode())

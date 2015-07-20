@@ -18,7 +18,6 @@ services:
             - @doctrine.orm.entity_manager
             - @phlexible_element.doctrine.element_structure_loader
             - @phlexible_elementtype.field.registry
-            - @phlexible_element.link_extractor
 
     phlexible_element.doctrine.element_structure_loader:
         class: Phlexible\Bundle\ElementBundle\Doctrine\ElementStructureLoader

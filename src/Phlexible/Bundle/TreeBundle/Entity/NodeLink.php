@@ -36,7 +36,7 @@ class NodeLink
 
     /**
      * @var int
-     * @ORM\Column(type="int")
+     * @ORM\Column(type="integer")
      */
     private $version;
 

@@ -35,39 +35,45 @@ class LinksController extends Controller
         $language = $request->get('language');
         $version = $request->get('version');
         $incoming = $request->get('incoming', false);
-
-        $displayLanguage = $language;
+        $limit = $request->get('limit', 25);
+        $start = $request->get('start', 0);
 
         $nodeManager = $this->get('phlexible_tree.node_manager');
-        $elementService = $this->get('phlexible_element.element_service');
         $linkRepository = $this->getDoctrine()->getRepository('PhlexibleTreeBundle:NodeLink');
 
         $node = $nodeManager->find($nodeId);
 
-        $element = $elementService->findElement($node->getContentId());
-        $elementVersion = $elementService->findElementVersion($element, $version);
-
         $result = array();
 
+        $qb = $linkRepository->createQueryBuilder('c')->select('COUNT(c.id)');
         if ($incoming) {
-            $links = $linkRepository->findBy(array('type' => 'link-internal', 'target' => $node->getId()));
+            $criteria = array('type' => 'node', 'target' => $node->getId());
+            $qb
+                ->where($qb->expr()->eq('c.type', $qb->expr()->literal('node')))
+                ->andWhere($qb->expr()->eq('c.target', $qb->expr()->literal($node->getId())));
         } else {
-            $links = $linkRepository->findBy(array('elementVersion' => $elementVersion));
+            $criteria = array('nodeId' => $node->getId());
+            $qb->where($qb->expr()->eq('c.nodeId', $qb->expr()->literal($node->getId())));
         }
+
+        $links = $linkRepository->findBy($criteria, array('version' => 'DESC'), $limit, $start);
+        $total = $qb->getQuery()->getSingleScalarResult();
+
 
         foreach ($links as $link) {
             $result[] = array(
-                'id'      => $link->getId(),
-                'iconCls' => 'p-element-component-icon',
-                'type'    => $link->getType(),
-                'title'   => $link->getField(),
-                'content' => $link->getTarget(),
-                'link'    => array(),
-                'raw'     => 'raw'
+                'id'       => $link->getId(),
+                'type'     => $link->getType(),
+                'language' => $link->getLanguage(),
+                'version'  => $link->getVersion(),
+                'field'    => $link->getField(),
+                'target'   => $link->getTarget(),
+                'iconCls'  => 'p-element-component-icon',
+                'link'     => array(),
             );
         }
 
-        return new JsonResponse(array('links' => $result));
+        return new JsonResponse(array('links' => $result, 'total' => $total));
     }
 
     /**

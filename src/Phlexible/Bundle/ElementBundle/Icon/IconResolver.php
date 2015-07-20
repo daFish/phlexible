@@ -137,7 +137,7 @@ class IconResolver
             }
         }
 
-        $element = $this->elementService->findElement($node->getTypeId());
+        $element = $this->elementService->findElement($node->getContentId());
 
         if (!count($parameters)) {
             return $this->resolveElement($element);

@@ -36,7 +36,7 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        this.compareElement = new Phlexible.elements.Element({
+        this.compareElement = new Phlexible.element.Element({
             siteroot_id: this.element.getSiterootId(),
             language: this.element.getLanguage()
         });
@@ -235,7 +235,17 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
                 disabled: true,
                 listWidth: 200,
                 emptyText: this.strings.diff.to_version,
-                tpl: Phlexible.elements.DiffVersionComboTemplate,
+                tpl: new Ext.XTemplate(
+                    '<tpl for=".">',
+                    '<div class="x-combo-list-item">',
+                    '<tpl if="values.is_published"><b></tpl>',
+                    '<tpl if="values.was_published"><i></tpl>',
+                    '{version} [{date}]',
+                    '<tpl if="values.was_published"></i></tpl>',
+                    '<tpl if="values.is_published"></b></tpl>',
+                    '</div>',
+                    '</tpl>'
+                ),
                 //value: (parseInt(this.element.version, 10) - 1),
                 store: new Ext.data.JsonStore({
                     fields: [

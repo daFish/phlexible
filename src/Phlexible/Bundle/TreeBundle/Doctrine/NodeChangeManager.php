@@ -87,7 +87,7 @@ class NodeChangeManager implements NodeChangeManagerInterface
         $qb->select('COUNT(h.id)');
         $this->applyCriteriaToQueryBuilder($criteria, $qb);
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -99,7 +99,7 @@ class NodeChangeManager implements NodeChangeManagerInterface
     private function applyCriteriaToQueryBuilder(array $criteria, QueryBuilder $qb)
     {
         foreach ($criteria as $key => $value) {
-            if (in_array($key, array('treeId', 'teaserId', 'eid', 'version'))) {
+            if (in_array($key, array('nodeId', 'version'))) {
                 $qb->andWhere($qb->expr()->eq("h.$key", $value));
             } elseif (in_array($key, array('language', 'action'))) {
                 $qb->andWhere($qb->expr()->eq("h.$key", $qb->expr()->literal($value)));
@@ -118,8 +118,8 @@ class NodeChangeManager implements NodeChangeManagerInterface
     {
         $entry = new NodeChange(
             $node->getId(),
-            $node->getType(),
-            $node->getTypeId(),
+            $node->getContentType(),
+            $node->getContentId(),
             $language,
             $version,
             $action,

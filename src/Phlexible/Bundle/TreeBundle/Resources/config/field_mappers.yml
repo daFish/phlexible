@@ -1,0 +1,32 @@
+services:
+    phlexible_tree.field_mapper:
+        class: Phlexible\Bundle\TreeBundle\Node\FieldMapper\FieldMapper
+        arguments:
+            - @phlexible_tree.element_value_extractor
+            - %phlexible_cms.languages.available%
+            - []
+
+    phlexible_tree.element_value_extractor:
+        class: Phlexible\Bundle\TreeBundle\Node\FieldMapper\ElementValueExtractor
+        public: false
+
+    # field mappers
+    phlexible_tree.pattern_field_mapper:
+        class: Phlexible\Bundle\TreeBundle\Node\FieldMapper\PatternFieldMapper
+        tags:
+            - {name: phlexible_tree.field_mapper}
+
+    phlexible_tree.simple_field_mapper:
+        class: Phlexible\Bundle\TreeBundle\Node\FieldMapper\SimpleFieldMapper
+        tags:
+            - {name: phlexible_tree.field_mapper}
+
+    phlexible_tree.date_field_mapper:
+        class: Phlexible\Bundle\TreeBundle\Node\FieldMapper\DateFieldMapper
+        tags:
+            - {name: phlexible_tree.field_mapper}
+
+    phlexible_tree.link_field_mapper:
+        class: Phlexible\Bundle\TreeBundle\Node\FieldMapper\LinkFieldMapper
+        tags:
+            - {name: phlexible_tree.field_mapper}

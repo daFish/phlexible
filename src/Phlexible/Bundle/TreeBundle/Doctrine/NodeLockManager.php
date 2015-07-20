@@ -56,167 +56,46 @@ class NodeLockManager implements NodeLockManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function isLocked(NodeContext $node, $language)
+    public function isLocked(NodeContext $node)
     {
-        if ($this->isMasterLocked($node)) {
-            return true;
-        }
+        $lock = $this->getLockRepository()->findOneBy(array('nodeId' => $node->getId()));
 
-        if ($element->getMasterLanguage() === $language) {
-            return false;
-        }
-
-        return $this->isSlaveLocked($element, $language);
+        return $lock !== null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isMasterLocked(NodeContext $node)
+    public function isLockedByUser(NodeContext $node, $userId)
     {
-        $locks = $this->getLockRepository()->findBy(array('nodeId' => $node->getId()));
+        $lock = $this->getLockRepository()->findOneBy(array('nodeId' => $node->getId(), 'userId' => $userId));
 
-        foreach ($locks as $lock) {
-            if ($lock->getLanguage() === null) {
-                return true;
-            }
-        }
-
-        return false;
+        return $lock !== null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isSlaveLocked(NodeContext $node, $language)
+    public function isLockedByOtherUser(NodeContext $node, $userId)
     {
-        $locks = $this->getLockRepository()->findBy(array('nodeId' => $node->getId()));
+        $lock = $this->getLockRepository()->findOneByNodeAndNotUserId($node, $userId);
 
-        foreach ($locks as $lock) {
-            if ($lock->getLanguage() === $language) {
-                return true;
-            }
-        }
-
-        return false;
+        return $lock !== null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isLockedByUser(NodeContext $node, $language, $userId)
+    public function lock(NodeContext $node, $userId, $type = NodeLock::TYPE_TEMPORARY)
     {
-        if ($this->isMasterLockedByUser($node, $userId)) {
-            return true;
-        }
-
-        if ($element->getMasterLanguage() === $language) {
-            return false;
-        }
-
-        return $this->isSlaveLockedByUser($element, $language, $userId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isMasterLockedByUser(NodeContext $node, $userId)
-    {
-        $locks = $this->getLockRepository()->findBy(array('nodeId' => $node->getId(), 'userId' => $userId));
-
-        foreach ($locks as $lock) {
-            if ($lock->getLanguage() === null) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isSlaveLockedByUser(NodeContext $node, $language, $userId)
-    {
-        $locks = $this->getLockRepository()->findBy(array('nodeId' => $node->getId(), 'userId' => $userId));
-
-        foreach ($locks as $lock) {
-            if ($lock->getLanguage() === $language) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isLockedByOtherUser(NodeContext $node, $language, $userId)
-    {
-        if ($this->isMasterLockedByOtherUser($node, $userId)) {
-            return true;
-        }
-
-        if ($element->getMasterLanguage() === $language) {
-            return false;
-        }
-
-        return $this->isSlaveLockedByOtherUser($node, $language, $userId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isMasterLockedByOtherUser(NodeContext $node, $userId)
-    {
-        $locks = $this->getLockRepository()->findByNodeAndNotUserId($node, $userId);
-
-        foreach ($locks as $lock) {
-            if ($lock->getLanguage() === null) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isSlaveLockedByOtherUser(NodeContext $node, $language, $userId)
-    {
-        $locks = $this->getLockRepository()->findByNodeAndNotUserId($node, $userId);
-
-        foreach ($locks as $lock) {
-            if ($lock->getLanguage() === $language) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function lock(NodeContext $node, $userId, $language = null, $type = NodeLock::TYPE_TEMPORARY)
-    {
-        if (!$language || $element->getMasterLanguage() === $language) {
-            if ($this->isMasterLockedByOtherUser($element, $userId)) {
-                throw new LockFailedException('Can\'t aquire lock, already locked.');
-            }
-        } else {
-            if ($this->isSlaveLockedByOtherUser($element, $language, $userId)) {
-                throw new LockFailedException('Can\'t aquire lock, already locked.');
-            }
+        if ($this->isLockedByOtherUser($node, $userId)) {
+            throw new LockFailedException('Can\'t aquire lock, already locked.');
         }
 
         $lock = new NodeLock(
             $node->getId(),
-            $language,
-            $type,
-            $userId
+            $userId,
+            $type
         );
 
         $this->entityManager->persist($lock);
@@ -228,21 +107,27 @@ class NodeLockManager implements NodeLockManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function unlock(NodeContext $node, $language = null)
+    public function unlock(NodeContext $node)
     {
-        if (!$language || $element->getMasterLanguage() === $language) {
-            if ($this->isMasterLocked($node)) {
-                throw new LockFailedException('Can\'t aquire lock, already locked.');
-            }
-        } else {
-            if ($this->isSlaveLocked($node, $language)) {
-                throw new LockFailedException('Can\'t aquire lock, already locked.');
-            }
+        if ($this->isLocked($node)) {
+            throw new LockFailedException('Can\'t aquire lock, already locked.');
         }
 
-        $lock = $this->getLockRepository()->findOneBy(array('nodeId' => $node->getId(), 'language' => $language));
+        $lock = $this->getLockRepository()->findOneBy(array('nodeId' => $node->getId()));
 
         $this->entityManager->remove($lock);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findLock(NodeContext $node)
+    {
+        if (!$this->isLocked($node)) {
+            return null;
+        }
+
+        return $this->getLockRepository()->findOneBy(array('nodeId' => $node->getId()));
     }
 
     /**
@@ -251,22 +136,6 @@ class NodeLockManager implements NodeLockManagerInterface
     public function find($id)
     {
         return $this->getLockRepository()->find($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findMasterLock(NodeContext $node)
-    {
-        return $this->getLockRepository()->findOneBy(array('nodeId' => $node->getId(), 'language' => null));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findSlaveLock(NodeContext $node, $language)
-    {
-        return $this->getLockRepository()->findOneBy(array('nodeId' => $node->getId(), 'language' => $language));
     }
 
     /**

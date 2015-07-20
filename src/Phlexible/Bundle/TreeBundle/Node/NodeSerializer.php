@@ -116,7 +116,7 @@ class NodeSerializer
             }
         }
 
-        $typeId = $node->getTypeId();
+        $typeId = $node->getContentId();
         $element = $this->elementService->findElement($typeId);
 
         $elementtype = $this->elementService->findElementtype($element);
@@ -125,20 +125,20 @@ class NodeSerializer
             $allowedElementtypeIds[] = $allowedElementtype->getId();
         }
 
-        $qtip = "ID: {$node->getId()}<br />Type: {$node->getType()}<br />Type ID: {$node->getTypeId()}";
+        $qtip = "ID: {$node->getId()}<br />Type: {$node->getContentType()}<br />Type ID: {$node->getContentId()}";
 
         $data = array(
             'id'              => $node->getId(),
             'text'            => $node->getField('backend', $language),
 
             'siterootId'      => $node->getSiterootId(),
-            'type'            => $node->getType(),
-            'typeId'          => $node->getTypeId(),
+            'type'            => $node->getContentType(),
+            'typeId'          => $node->getContentId(),
             'backendTitle'    => $node->getField('backend', $language),
             'pageTitle'       => $node->getField('page', $language),
             'navigationTitle' => $node->getField('navigation', $language),
             'customDate'      => $node->getField('date', $language),
-            'forward'         => $node->getField('redirect', $language),
+            'forward'         => $node->getField('forward', $language),
             'sortMode'        => $node->getSortMode(),
             'sortDir'         => $node->getSortDir(),
             'sort'            => $node->getSort(),

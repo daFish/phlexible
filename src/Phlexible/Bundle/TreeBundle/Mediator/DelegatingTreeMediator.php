@@ -66,10 +66,34 @@ class DelegatingTreeMediator implements TreeMediatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getContentDocument(NodeContext $node, $language)
+    public function getFieldMappings(NodeContext $node)
     {
         if ($mediator = $this->findMediator($node)) {
-            return $mediator->getContentDocument($node, $language);
+            return $mediator->getFieldMappings($node);
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent(NodeContext $node, $language, $version = null)
+    {
+        if ($mediator = $this->findMediator($node)) {
+            return $mediator->getContent($node, $language, $version);
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentVersions(NodeContext $node)
+    {
+        if ($mediator = $this->findMediator($node)) {
+            return $mediator->getContentVersions($node);
         }
 
         return null;

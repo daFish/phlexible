@@ -53,7 +53,7 @@ class LayoutController extends Controller
 
         $tree = $treeManager->getByNodeId($nodeId);
         $node = $tree->get($nodeId);
-        $element = $elementService->findElement($node->getTypeId());
+        $element = $elementService->findElement($node->getContentId());
         $elementMasterLanguage = $element->getMasterLanguage();
         $elementtype = $elementService->findElementtype($element);
 
@@ -186,7 +186,7 @@ class LayoutController extends Controller
         $node = $treeManager->getByNodeId($nodeId)->get($nodeId);
 
         if (!$language) {
-            $element = $elementService->findElement($node->getTypeId());
+            $element = $elementService->findElement($node->getContentId());
             $language = $elementMasterLanguage = $element->getMasterLanguage();
         }
 

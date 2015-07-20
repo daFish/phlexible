@@ -1,0 +1,35 @@
+services:
+    phlexible_tree.link_extractor:
+        class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\LinkExtractor
+        arguments:
+            - @phlexible_tree.element_values_extractor
+            -
+                - @phlexible_tree.link_extractor.link_field
+                - @phlexible_tree.link_extractor.file_field
+                - @phlexible_tree.link_extractor.folder_field
+                - @phlexible_tree.link_extractor.text
+
+    phlexible_tree.element_values_extractor:
+        class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\ElementValuesExtractor
+        public: false
+
+    # link extractor
+    phlexible_tree.link_extractor.link_field:
+        class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\LinkFieldLinkExtractor
+        tags:
+            - {name: phlexible_tree.link_extractor}
+
+    phlexible_tree.link_extractor.file_field:
+            class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\FileFieldLinkExtractor
+            tags:
+                - {name: phlexible_tree.link_extractor}
+
+    phlexible_tree.link_extractor.folder_field:
+            class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\FolderFieldLinkExtractor
+            tags:
+                - {name: phlexible_tree.link_extractor}
+
+    phlexible_tree.link_extractor.text:
+            class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\TextLinkExtractor
+            tags:
+                - {name: phlexible_tree.link_extractor}

@@ -55,7 +55,7 @@ Phlexible.tree.view.tab.Preview = Ext.extend(Ext.Panel, {
 
         this.initToolbar();
 
-        Phlexible.elements.tab.Preview.superclass.initComponent.call(this);
+        Phlexible.tree.view.tab.Preview.superclass.initComponent.call(this);
     },
 
     initToolbar: function() {

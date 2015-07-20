@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
  * Node lock repository
@@ -20,39 +20,18 @@ use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
 class NodeLockRepository extends EntityRepository
 {
     /**
-     * @param Element $element
-     * @param string  $userId
+     * @param NodeContext $node
+     * @param string      $notUserId
      *
      * @return NodeLock
      */
-    public function findByNodeAndUserId(Element $element, $userId)
-    {
-        return $this->findBy(array('element' => $element, 'userId' => $userId));
-    }
-
-    /**
-     * @param Element $element
-     * @param string  $notUserId
-     *
-     * @return ElementLock
-     */
-    public function findByElementAndNotUserId(Element $element, $notUserId)
+    public function findOneByNodeAndNotUserId(NodeContext $node, $notUserId)
     {
         $qb = $this->createQueryBuilder('l');
         $qb
-            ->where($qb->expr()->eq('l.element', $element->getEid()))
+            ->where($qb->expr()->eq('l.nodeId', $node->getId()))
             ->andWhere($qb->expr()->neq('l.userId', $qb->expr()->literal($notUserId)));
 
         return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Element $element
-     *
-     * @return ElementLock[]
-     */
-    public function findByEid(Element $element)
-    {
-        return $this->findBy(array('element' => $element));
     }
 }

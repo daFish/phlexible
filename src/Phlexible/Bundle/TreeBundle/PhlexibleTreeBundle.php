@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
+use Phlexible\Bundle\TreeBundle\DependencyInjection\Compiler\AddFieldMappersPass;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -42,8 +43,8 @@ class PhlexibleTreeBundle extends Bundle
         );
         */
 
+        $container->addCompilerPass(new AddFieldMappersPass());
         $container->addCompilerPass($this->buildMappingCompilerPass());
-
         $container->addCompilerPass(
             new RegisterRouteEnhancersPass('phlexible_tree.router', 'phlexible_tree.route_enhancer')
         );

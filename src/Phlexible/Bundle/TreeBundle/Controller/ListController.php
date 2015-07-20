@@ -54,7 +54,7 @@ class ListController extends Controller
 
         $tree = $treeManager->getByNodeID($tid);
         $node = $tree->get($tid);
-        $eid = $node->getTypeId();
+        $eid = $node->getContentId();
         $element = $elementService->findElement($eid);
         $elementMasterLanguage = $element->getMasterLanguage();
 

@@ -99,8 +99,6 @@ Phlexible.tree.view.tab.Configuration = Ext.extend(Ext.form.FormPanel, {
             this.getComponent(3).show();
             this.getComponent(4).show();
         }
-
-        this.show();
     },
 
     onInternalSave: function (parameters, errors) {

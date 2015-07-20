@@ -57,7 +57,7 @@ class LinkController extends Controller
                 $tree = $treeManager->getBySiteRootId($currentSiterootId);
                 $node = $tree->getRoot();
             }
-            $element = $elementService->findElement($node->getTypeId());
+            $element = $elementService->findElement($node->getContentId());
             $language = $element->getMasterLanguage();
         }
 
@@ -434,7 +434,7 @@ class LinkController extends Controller
         $data = array();
 
         foreach ($nodes as $node) {
-            $element = $elementService->findElement($node->getTypeId());
+            $element = $elementService->findElement($node->getContentId());
             $elementVersion = $elementService->findElementVersion($element, $element->getLatestVersion());
             $elementtype = $elementService->findElementtype($element);
 
@@ -444,7 +444,7 @@ class LinkController extends Controller
 
             $dataNode = array(
                 'id'       => $node->getId(),
-                'eid'      => $node->getTypeId(),
+                'eid'      => $node->getContentId(),
                 'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $tid . ']',
                 'icon'     => $iconResolver->resolveNode($node, $language),
                 'children' => !$tree->hasChildren($node)
