@@ -1,7 +1,7 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
 Ext.require('Phlexible.elementtypes.field.Accordion');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
+Ext.require('Phlexible.element.ElementDataTabHelper');
 
 Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, valueStructure, element) {
     var config = {
@@ -26,7 +26,7 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
     };
 
     if (item.children) {
-        config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element);
+        config.items = Phlexible.element.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element);
 
         var allowedItems = {}, has = false;
         Ext.each (item.children, function(child) {

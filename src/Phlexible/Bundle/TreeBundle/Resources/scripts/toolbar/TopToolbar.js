@@ -1,17 +1,17 @@
-Ext.provide('Phlexible.tree.view.TopToolbar');
+Ext.provide('Phlexible.tree.toolbar.TopToolbar');
 
-Ext.require('Phlexible.teasers.PublishTeaserWindow');
-Ext.require('Phlexible.teasers.SetTeaserOfflineWindow');
-Ext.require('Phlexible.elements.HistoryWindow');
-Ext.require('Phlexible.elements.LocksWindow');
-Ext.require('Phlexible.elements.NewTaskWindow');
-Ext.require('Phlexible.elements.PublishTreeNodeWindow');
-Ext.require('Phlexible.elements.SetTreeNodeOfflineWindow');
+Ext.require('Phlexible.teasers.window.PublishTeaserWindow');
+Ext.require('Phlexible.teasers.window.SetTeaserOfflineWindow');
+Ext.require('Phlexible.tree.window.ChangesWindow');
+Ext.require('Phlexible.tree.window.LocksWindow');
+Ext.require('Phlexible.element.window.NewTaskWindow');
+Ext.require('Phlexible.tree.window.PublishTreeNodeWindow');
+Ext.require('Phlexible.tree.window.SetTreeNodeOfflineWindow');
 
 /**
  *
  */
-Phlexible.tree.view.TopToolbar = Ext.extend(Ext.Toolbar, {
+Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
     strings: Phlexible.elements.Strings,
     cls: 'p-elements-main-panel',
 
@@ -30,7 +30,7 @@ Phlexible.tree.view.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.populateTbar();
         this.items = this.tbarIndex.getRange();
 
-        Phlexible.tree.view.TopToolbar.superclass.initComponent.call(this);
+        Phlexible.tree.toolbar.TopToolbar.superclass.initComponent.call(this);
     },
 
     populateTbar: function () {
@@ -1006,4 +1006,4 @@ Phlexible.tree.view.TopToolbar = Ext.extend(Ext.Toolbar, {
     }
 });
 
-Ext.reg('tree-toptoolbar', Phlexible.tree.view.TopToolbar);
+Ext.reg('tree-toptoolbar', Phlexible.tree.toolbar.TopToolbar);

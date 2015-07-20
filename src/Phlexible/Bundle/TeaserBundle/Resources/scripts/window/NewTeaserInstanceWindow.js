@@ -1,8 +1,8 @@
-Ext.provide('Phlexible.teasers.NewTeaserInstanceWindow');
+Ext.provide('Phlexible.teasers.window.NewTeaserInstanceWindow');
 
-Ext.require('Phlexible.elements.ElementsTree');
+Ext.require('Phlexible.tree.view.Tree');
 
-Phlexible.teasers.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
+Phlexible.teasers.window.NewTeaserInstanceWindow = Ext.extend(Ext.Window, {
     title: Phlexible.teasers.Strings.add_teaser_reference,
     strings: Phlexible.teasers.Strings,
     iconCls: 'p-teasers-teaser_reference-icon',

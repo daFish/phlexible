@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.Format');
+Ext.provide('Phlexible.element.Format');
 
-Phlexible.elements.Format = {
+Phlexible.element.Format = {
     elementIcon: function (icon, meta, record) {
         return '<img src="' + icon + '" width="18" height="18" border="0" title="' + record.get('element_type') + '" alt="' + record.get('element_type') + '" />';
     },

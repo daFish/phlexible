@@ -1,10 +1,10 @@
-Ext.provide('Phlexible.elements.portlet.LatestElementsRecord');
-Ext.provide('Phlexible.elements.portlet.LatestElementsPortlet');
-Ext.provide('Phlexible.elements.portlet.LatestElements');
+Ext.provide('Phlexible.element.portlet.LatestElementsRecord');
+Ext.provide('Phlexible.element.portlet.LatestElementsPortlet');
+Ext.provide('Phlexible.element.portlet.LatestElements');
 
 Ext.require('Ext.ux.Portlet');
 
-Phlexible.elements.portlet.LatestElementsRecord = Ext.data.Record.create([
+Phlexible.element.portlet.LatestElementsRecord = Ext.data.Record.create([
     {name: 'ident', type: 'string'},
     {name: 'eid', type: 'string'},
     {name: 'language', type: 'string'},
@@ -16,7 +16,7 @@ Phlexible.elements.portlet.LatestElementsRecord = Ext.data.Record.create([
     {name: 'menu'}
 ]);
 
-Phlexible.elements.portlet.LatestElementsPortlet = new Ext.XTemplate(
+Phlexible.element.portlet.LatestElementsPortlet = new Ext.XTemplate(
     '<table width="100%" cellpadding="0" cellspacing="0" border="0">',
     '<colgroup>',
     '<col width="20" />',
@@ -46,7 +46,7 @@ Phlexible.elements.portlet.LatestElementsPortlet = new Ext.XTemplate(
     '</table>'
 );
 
-Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
+Phlexible.element.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
     title: Phlexible.elements.Strings.latest_element_changes,
     strings: Phlexible.elements.Strings,
     iconCls: 'p-element-portlet-icon',
@@ -55,7 +55,7 @@ Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
 
     initComponent: function () {
         this.store = new Ext.data.SimpleStore({
-            fields: Phlexible.elements.portlet.LatestElementsRecord,
+            fields: Phlexible.element.portlet.LatestElementsRecord,
             id: 'ident',
             sortInfo: {field: 'time', direction: 'DESC'}
         });
@@ -64,7 +64,7 @@ Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
         if (data) {
             Ext.each(data, function (item) {
                 item.time = new Date(item.time * 1000);
-                this.add(new Phlexible.elements.portlet.LatestElementsRecord(item, item.ident));
+                this.add(new Phlexible.element.portlet.LatestElementsRecord(item, item.ident));
             }, this.store);
         }
 
@@ -79,7 +79,7 @@ Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
                 deferEmptyText: false,
                 autoHeight: true,
                 store: this.store,
-                tpl: Phlexible.elements.portlet.LatestElementsPortlet,
+                tpl: Phlexible.element.portlet.LatestElementsPortlet,
                 listeners: {
                     click: {
                         fn: function (c, index, node) {
@@ -100,7 +100,7 @@ Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
             }
         ];
 
-        Phlexible.elements.portlet.LatestElements.superclass.initComponent.call(this);
+        Phlexible.element.portlet.LatestElements.superclass.initComponent.call(this);
     },
 
     updateData: function (data) {
@@ -112,7 +112,7 @@ Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
             var r = this.store.getById(row.ident);
             if (!r) {
                 row.time = new Date(row.time * 1000);
-                this.store.insert(0, new Phlexible.elements.portlet.LatestElementsRecord(row, row.ident));
+                this.store.insert(0, new Phlexible.element.portlet.LatestElementsRecord(row, row.ident));
 
                 Ext.fly('elements_last_' + row.ident).frame('#8db2e3', 1);
             }
@@ -129,4 +129,4 @@ Phlexible.elements.portlet.LatestElements = Ext.extend(Ext.ux.Portlet, {
     }
 });
 
-Ext.reg('elements-portlet-latestelements', Phlexible.elements.portlet.LatestElements);
+Ext.reg('elements-portlet-latestelements', Phlexible.element.portlet.LatestElements);

@@ -90,4 +90,4 @@ Phlexible.tree.view.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Right
     }
 });
 
-Ext.reg('tree-tab-accesscontrol', Phlexible.elements.view.tab.AccessControl);
+Ext.reg('tree-tab-accesscontrol', Phlexible.tree.view.tab.AccessControl);

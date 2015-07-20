@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.accordion.Instances');
+Ext.provide('Phlexible.element.view.accordion.Instances');
 
-Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
+Phlexible.element.view.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.instances,
     cls: 'p-elements-versions-accordion',
@@ -81,7 +81,7 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
             }
         }, this);
 
-        Phlexible.elements.accordion.Instances.superclass.initComponent.call(this);
+        Phlexible.element.view.accordion.Instances.superclass.initComponent.call(this);
     },
 
     load: function (element) {
@@ -116,4 +116,4 @@ Phlexible.elements.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
     }
 });
 
-Ext.reg('elements-instancesaccordion', Phlexible.elements.accordion.Instances);
+Ext.reg('elements-instancesaccordion', Phlexible.element.view.accordion.Instances);

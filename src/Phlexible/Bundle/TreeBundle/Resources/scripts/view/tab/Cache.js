@@ -82,4 +82,4 @@ Phlexible.tree.view.tab.Cache = Ext.extend(Ext.form.FormPanel, {
     }
 });
 
-Ext.reg('elements-tab-cache', Phlexible.elements.tab.Cache);
+Ext.reg('tree-tab-cache', Phlexible.tree.view.tab.Cache);

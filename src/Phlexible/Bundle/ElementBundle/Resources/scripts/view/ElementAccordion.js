@@ -1,13 +1,13 @@
-Ext.provide('Phlexible.elements.ElementAccordion');
+Ext.provide('Phlexible.element.view.ElementAccordion');
 
-Ext.require('Phlexible.elements.accordion.Comment');
-Ext.require('Phlexible.elements.accordion.Data');
-Ext.require('Phlexible.elements.accordion.Diff');
-Ext.require('Phlexible.elements.accordion.Instances');
-Ext.require('Phlexible.elements.accordion.Meta');
-Ext.require('Phlexible.elements.accordion.Versions');
+Ext.require('Phlexible.element.view.accordion.Comment');
+Ext.require('Phlexible.element.view.accordion.Data');
+Ext.require('Phlexible.element.view.accordion.Diff');
+Ext.require('Phlexible.element.view.accordion.Instances');
+Ext.require('Phlexible.element.view.accordion.Meta');
+Ext.require('Phlexible.element.view.accordion.Versions');
 
-Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
+Phlexible.element.view.ElementAccordion = Ext.extend(Ext.Panel, {
 //    title: Phlexible.elements.Strings.properties,
 //    header: true,
     cls: 'p-elements-accordion',
@@ -31,7 +31,7 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
 
         this.populateItems();
 
-        Phlexible.elements.ElementAccordion.superclass.initComponent.call(this);
+        Phlexible.element.view.ElementAccordion.superclass.initComponent.call(this);
     },
 
     populateItems: function () {
@@ -167,4 +167,4 @@ Phlexible.elements.ElementAccordion = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-elementaccordion', Phlexible.elements.ElementAccordion);
+Ext.reg('elements-elementaccordion', Phlexible.element.view.ElementAccordion);

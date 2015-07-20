@@ -1,11 +1,11 @@
-Ext.provide('Phlexible.elements.Element');
-Ext.provide('Phlexible.elements.Teaser');
+Ext.provide('Phlexible.element.Element');
+Ext.provide('Phlexible.element.Teaser');
 
 Ext.require('Phlexible.fields.Prototypes');
-Ext.require('Phlexible.elements.NewElementInstanceWindow');
-Ext.require('Phlexible.elements.NewElementWindow');
+Ext.require('Phlexible.tree.window.NewElementInstanceWindow');
+Ext.require('Phlexible.tree.window.NewElementWindow');
 
-Phlexible.elements.Element = function (config) {
+Phlexible.element.Element = function (config) {
     this.addEvents(
         'beforeLoad',
         'load',
@@ -82,7 +82,7 @@ Phlexible.elements.Element = function (config) {
     this.history = new Ext.util.MixedCollection();
 };
 
-Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
+Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
     nodeId: null,
     teaserId: null,
     type: null,
@@ -353,7 +353,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             });
 
             if (result.data.publish_other && result.data.publish_other.length) {
-                var w = new Phlexible.elements.PublishSlaveWindow({
+                var w = new Phlexible.element.PublishSlaveWindow({
                     data: result.data.publish_other
                 });
                 w.show();
@@ -543,7 +543,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
             sort_mode = null;
         }
 
-        var w = new Phlexible.elements.NewElementWindow({
+        var w = new Phlexible.element.NewElementWindow({
             element_type_id: element_type_id,
             sort_mode: sort_mode,
             language: this.language,
@@ -566,7 +566,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
         if (!node) {
             node = this.getTreeNode();
         }
-        var w = new Phlexible.elements.NewElementInstanceWindow({
+        var w = new Phlexible.element.NewElementInstanceWindow({
             element_type_id: element_type_id,
             sort_mode: node.attributes.sort_mode,
             language: this.language,
@@ -745,7 +745,7 @@ Ext.extend(Phlexible.elements.Element, Ext.util.Observable, {
     }
 });
 
-Phlexible.elements.Teaser = function (config) {
+Phlexible.element.Teaser = function (config) {
     this.addEvents(
         'beforeLoad',
         'load'
@@ -758,7 +758,7 @@ Phlexible.elements.Teaser = function (config) {
         this.language = config.language;
     }
 };
-Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
+Ext.extend(Phlexible.element.Teaser, Ext.util.Observable, {
     siterootId: '',
     id: '',
     eid: '',
@@ -844,7 +844,7 @@ Ext.extend(Phlexible.elements.Teaser, Ext.util.Observable, {
          if(!node) {
          node = this.getTreeNode();
          }
-         var w = new Phlexible.elements.NewElementWindow({
+         var w = new Phlexible.element.NewElementWindow({
          element_type_id: element_type_id,
          submitParams: {
          siterootId: this.siterootId,

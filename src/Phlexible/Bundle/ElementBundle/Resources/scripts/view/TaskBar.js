@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.TaskBar');
+Ext.provide('Phlexible.element.TaskBar');
 
-Phlexible.elements.TaskBar = Ext.extend(Ext.Toolbar, {
+Phlexible.element.TaskBar = Ext.extend(Ext.Toolbar, {
     strings: Phlexible.tasks.Strings,
     cls: 'p-tasks-toolbar',
 
@@ -89,7 +89,7 @@ Phlexible.elements.TaskBar = Ext.extend(Ext.Toolbar, {
             }
         });
 
-        Phlexible.elements.TaskBar.superclass.initComponent.call(this);
+        Phlexible.element.TaskBar.superclass.initComponent.call(this);
     },
 
     updateTaskInfo: function () {
@@ -213,4 +213,4 @@ Phlexible.elements.TaskBar = Ext.extend(Ext.Toolbar, {
     }
 });
 
-Ext.reg('elements-taskbar', Phlexible.elements.TaskBar);
+Ext.reg('elements-taskbar', Phlexible.element.TaskBar);

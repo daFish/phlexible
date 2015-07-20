@@ -1,6 +1,6 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
+Ext.require('Phlexible.element.ElementDataTabHelper');
 
 Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueStructure, element) {
     var config = {
@@ -36,7 +36,7 @@ Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueS
     };
 
     if (item.children) {
-        config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element);
+        config.items = Phlexible.element.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element);
     }
 
     return config;

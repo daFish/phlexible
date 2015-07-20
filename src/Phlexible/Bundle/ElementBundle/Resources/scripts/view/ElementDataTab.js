@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.ElementDataTab');
+Ext.provide('Phlexible.element.ElementDataTab');
 
-Phlexible.elements.ElementDataTab = Ext.extend(Ext.Panel, {
+Phlexible.element.ElementDataTab = Ext.extend(Ext.Panel, {
     cls: 'p-elements-data-tab',
     header: false,
     frame: false,
@@ -15,4 +15,4 @@ Phlexible.elements.ElementDataTab = Ext.extend(Ext.Panel, {
     layout: 'form'
 });
 
-Ext.reg('elements-elementdatatab', Phlexible.elements.ElementDataTab);
+Ext.reg('elements-elementdatatab', Phlexible.element.ElementDataTab);

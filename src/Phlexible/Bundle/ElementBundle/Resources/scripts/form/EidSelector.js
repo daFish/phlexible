@@ -1,11 +1,11 @@
-Ext.provide('Phlexible.elements.EidNodeUi');
-Ext.provide('Phlexible.elements.EidLoader');
-Ext.provide('Phlexible.elements.EidSelectorMenu');
-Ext.provide('Phlexible.elements.EidSelector');
+Ext.provide('Phlexible.element.EidNodeUi');
+Ext.provide('Phlexible.element.EidLoader');
+Ext.provide('Phlexible.element.EidSelectorMenu');
+Ext.provide('Phlexible.element.EidSelector');
 
 Ext.require('Ext.ux.TreeSelector');
 
-Phlexible.elements.EidNodeUi = Ext.extend(Ext.tree.TreeNodeUI, {
+Phlexible.element.EidNodeUi = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
     onClick: function (e) {
         if (this.node.attributes.disabled) {
@@ -14,11 +14,11 @@ Phlexible.elements.EidNodeUi = Ext.extend(Ext.tree.TreeNodeUI, {
 
             return;
         }
-        Phlexible.elements.EidNodeUi.superclass.onClick.call(this, e);
+        Phlexible.element.EidNodeUi.superclass.onClick.call(this, e);
     }
 });
 
-Phlexible.elements.EidLoader = Ext.extend(Ext.tree.TreeLoader, {
+Phlexible.element.EidLoader = Ext.extend(Ext.tree.TreeLoader, {
     clearOnLoad: true,
     preloadChildren: true,
     createNode: function (attr) {
@@ -32,7 +32,7 @@ Phlexible.elements.EidLoader = Ext.extend(Ext.tree.TreeLoader, {
         //if(typeof attr.uiProvider == 'string'){
         //   attr.uiProvider = this.uiProviders[attr.uiProvider] || eval(attr.uiProvider);
         //}
-        attr.uiProvider = Phlexible.elements.EidNodeUi;
+        attr.uiProvider = Phlexible.element.EidNodeUi;
         var node;
         if (attr.nodeType) {
             node = new Ext.tree.TreePanel.nodeTypes[attr.nodeType](attr);
@@ -47,12 +47,12 @@ Phlexible.elements.EidLoader = Ext.extend(Ext.tree.TreeLoader, {
     }
 });
 
-Phlexible.elements.EidSelectorMenu = Ext.extend(Ext.menu.TreeMenu, {
+Phlexible.element.EidSelectorMenu = Ext.extend(Ext.menu.TreeMenu, {
     cls: 'x-tree-menu m-eid-selector'
 });
 
 // Implementation class for created the tree powered form field
-Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
+Phlexible.element.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
     maxHeight: 200,
     elementTypeIds: '',
     nodeId: '',
@@ -82,7 +82,7 @@ Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
             useArrows: true,
             selModel: new Ext.tree.ActivationModel(),
             rootVisible: false,
-            loader: new Phlexible.elements.EidLoader({
+            loader: new Phlexible.element.EidLoader({
                 url: url,
                 baseParams: {
                     language: this.language,
@@ -137,7 +137,7 @@ Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
 //            loader.doPreload(node);
 //        });
 
-        Phlexible.elements.EidSelector.superclass.initComponent.call(this);
+        Phlexible.element.EidSelector.superclass.initComponent.call(this);
 
         // selecting folders is not allowed, so filter them
         this.tree.getSelectionModel().on('beforeselect', this.beforeSelection, this);
@@ -149,7 +149,7 @@ Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
 
     onRender: function () {
         Ext.ux.TreeSelector.superclass.onRender.apply(this, arguments);
-        this.menu = new Phlexible.elements.EidSelectorMenu(Ext.apply(this.menuConfig || {}, {tree: this.tree}));
+        this.menu = new Phlexible.element.EidSelectorMenu(Ext.apply(this.menuConfig || {}, {tree: this.tree}));
         this.menu.render();
 
         this.tree.body.addClass('x-tree-selector');
@@ -164,5 +164,5 @@ Phlexible.elements.EidSelector = Ext.extend(Ext.ux.TreeSelector, {
     }
 });
 
-Ext.reg('tidselector', Phlexible.elements.EidSelector);
+Ext.reg('tidselector', Phlexible.element.EidSelector);
 

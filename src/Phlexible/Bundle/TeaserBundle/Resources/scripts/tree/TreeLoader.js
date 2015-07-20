@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.teasers.ElementLayoutTreeLoader');
+Ext.provide('Phlexible.teasers.tree.TreeLoader');
 
-Phlexible.teasers.ElementLayoutTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
+Phlexible.teasers.tree.TreeLoader = Ext.extend(Ext.tree.TreeLoader, {
     /**
      * Override this function for custom TreeNode node implementation
      */

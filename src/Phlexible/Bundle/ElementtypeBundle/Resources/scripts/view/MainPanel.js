@@ -6,9 +6,9 @@ Ext.require('Phlexible.elementtypes.ElementtypeField');
 Ext.require('Phlexible.elementtypes.ElementtypeRoot');
 Ext.require('Phlexible.elementtypes.ElementtypeUsage');
 Ext.require('Phlexible.elementtypes.ElementtypeViability');
-Ext.require('Phlexible.elements.Element');
-Ext.require('Phlexible.elements.ElementContentPanel');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
+Ext.require('Phlexible.element.Element');
+Ext.require('Phlexible.element.view.ElementContentPanel');
+Ext.require('Phlexible.element.ElementDataTabHelper');
 Ext.require('Ext.ux.GUID');
 
 Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
@@ -25,7 +25,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     initComponent: function () {
-        element = new Phlexible.elements.Element({});
+        element = new Phlexible.element.Element({});
         element.lockinfo = {status: 'edit'};
 
         this.items = [
@@ -428,7 +428,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
             }
         };
         previewPanel.element.master = this.getPreviewWrap().getTopToolbar().items.items[0].pressed;
-        previewPanel.structure = Phlexible.elements.ElementDataTabHelper.fixStructure(this.processPreviewNodes(rootNode));
+        previewPanel.structure = Phlexible.element.ElementDataTabHelper.fixStructure(this.processPreviewNodes(rootNode));
         previewPanel.valueStructure = {
             structures: [],
             values: {}

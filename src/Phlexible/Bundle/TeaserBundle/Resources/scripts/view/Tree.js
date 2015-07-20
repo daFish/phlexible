@@ -1,11 +1,11 @@
-Ext.provide('Phlexible.teasers.ElementLayoutTree');
+Ext.provide('Phlexible.teasers.view.Tree');
 
-Ext.require('Phlexible.teasers.ElementLayoutTreeNodeUI');
-Ext.require('Phlexible.teasers.ElementLayoutTreeLoader');
-Ext.require('Phlexible.teasers.NewTeaserWindow');
-Ext.require('Phlexible.teasers.NewTeaserInstanceWindow');
+Ext.require('Phlexible.teasers.tree.TreeNodeUI');
+Ext.require('Phlexible.teasers.tree.TreeLoader');
+Ext.require('Phlexible.teasers.window.NewTeaserWindow');
+Ext.require('Phlexible.teasers.window.NewTeaserInstanceWindow');
 
-Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
+Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
     title: Phlexible.teasers.Strings.layout,
     strings: Phlexible.teasers.Strings,
     rootVisible: false,
@@ -543,7 +543,7 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
             }
         });
 
-        Phlexible.teasers.ElementLayoutTree.superclass.initComponent.call(this);
+        Phlexible.teasers.view.Tree.superclass.initComponent.call(this);
     },
 
     onSetLanguage: function (element, language) {
@@ -597,4 +597,4 @@ Phlexible.teasers.ElementLayoutTree = Ext.extend(Ext.tree.TreePanel, {
     }
 });
 
-Ext.reg('teasers-layout-tree', Phlexible.teasers.ElementLayoutTree);
+Ext.reg('teasers-tree', Phlexible.teasers.view.Tree);

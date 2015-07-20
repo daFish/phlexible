@@ -1,4 +1,4 @@
-Ext.provide('Phlexible.elements.NewTaskWindow');
+Ext.provide('Phlexible.element.window.NewTaskWindow');
 
-Phlexible.elements.NewTaskWindow = Ext.extend(Ext.Window, {
+Phlexible.element.window.NewTaskWindow = Ext.extend(Ext.Window, {
 });

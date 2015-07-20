@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.ElementContentTabPanel');
+Ext.provide('Phlexible.element.view.ElementContentTabPanel');
 
-Phlexible.elements.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
+Phlexible.element.view.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
     strings: Phlexible.elements.Strings,
     cls: 'p-elements-data-tabs',
     frame: false,
@@ -29,7 +29,7 @@ Phlexible.elements.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
             scope: this
         });
 
-        Phlexible.elements.ElementContentTabPanel.superclass.initComponent.call(this);
+        Phlexible.element.view.ElementContentTabPanel.superclass.initComponent.call(this);
     },
 
 //    fetchDisabled: function(c) {
@@ -66,4 +66,4 @@ Phlexible.elements.ElementContentTabPanel = Ext.extend(Ext.TabPanel, {
     }
 });
 
-Ext.reg('elements-elementcontenttabpanel', Phlexible.elements.ElementContentTabPanel);
+Ext.reg('elements-elementcontenttabpanel', Phlexible.element.view.ElementContentTabPanel);

@@ -1,8 +1,8 @@
-Ext.provide('Phlexible.teasers.PublishTeaserWindow');
+Ext.provide('Phlexible.teasers.window.PublishTeaserWindow');
 
 Ext.require('Phlexible.gui.util.Dialog');
 
-Phlexible.teasers.PublishTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
+Phlexible.teasers.window.PublishTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.teasers.Strings.publish_teaser,
     width: 530,
     minWidth: 530,

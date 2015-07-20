@@ -2,7 +2,7 @@ Ext.provide('Phlexible.tree.view.tab.List');
 
 Ext.require('Phlexible.tree.model.Node');
 Ext.require('Phlexible.tree.view.tab.ListFilter');
-Ext.require('Phlexible.elements.DeleteInstancesWindow');
+Ext.require('Phlexible.tree.window.DeleteInstancesWindow');
 
 Phlexible.tree.view.tab.List = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,

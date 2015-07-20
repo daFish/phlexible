@@ -1,31 +1,6 @@
-Ext.provide('Phlexible.elements.accordion.DataTemplate');
-Ext.provide('Phlexible.elements.accordion.Data');
+Ext.provide('Phlexible.element.view.accordion.Data');
 
-Phlexible.elements.accordion.DataTemplate = new Ext.XTemplate(
-    '<tpl for=".">',
-    '<div class="data-wrap">',
-    '<table style="width:100%">',
-
-    '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.element]}</div><hr /><div style="clear: left;" /></td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.eid]}:</th><td>{eid}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{version}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{createdBy}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{createdAt}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.type]}:</th><td>{elementtypeName}</td></tr>',
-
-    '<tpl if="isPublished">',
-    '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.online_version]}</div><hr /><div style="clear: left;" /></td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{publishedVersion}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.publisher]}:</th><td>{publishedBy}</td></tr>',
-    '<tr><th>{[Phlexible.elements.Strings.published]}:</th><td>{publishedAt}</td></tr>',
-    '</tpl>',
-
-    '</table>',
-    '</div>',
-    '</tpl>'
-);
-
-Phlexible.elements.accordion.Data = Ext.extend(Ext.Panel, {
+Phlexible.element.view.accordion.Data = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.information,
     cls: 'p-elements-data-accordion',
@@ -54,14 +29,36 @@ Phlexible.elements.accordion.Data = Ext.extend(Ext.Panel, {
                     'publishedBy'
                 ]
             }),
-            tpl: Phlexible.elements.accordion.DataTemplate,
+            tpl: new Ext.XTemplate(
+                '<tpl for=".">',
+                '<div class="data-wrap">',
+                '<table style="width:100%">',
+
+                '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.element]}</div><hr /><div style="clear: left;" /></td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.eid]}:</th><td>{eid}</td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{version}</td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.author]}:</th><td>{createdBy}</td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.created]}:</th><td>{createdAt}</td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.type]}:</th><td>{elementtypeName}</td></tr>',
+
+                '<tpl if="isPublished">',
+                '<tr><td colspan="2" style="padding-top: 3px"><div style="float: left; font-style: italic; margin-right: 5px;">{[Phlexible.elements.Strings.online_version]}</div><hr /><div style="clear: left;" /></td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.version]}:</th><td>{publishedVersion}</td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.publisher]}:</th><td>{publishedBy}</td></tr>',
+                '<tr><th>{[Phlexible.elements.Strings.published]}:</th><td>{publishedAt}</td></tr>',
+                '</tpl>',
+
+                '</table>',
+                '</div>',
+                '</tpl>'
+            ),
             autoHeight: true,
             singleSelect: true,
             overClass: 'x-view-over',
             itemSelector: 'div.data-wrap'
         });
 
-        Phlexible.elements.accordion.Data.superclass.initComponent.call(this);
+        Phlexible.element.view.accordion.Data.superclass.initComponent.call(this);
     },
 
     load: function (element) {
@@ -85,4 +82,4 @@ Phlexible.elements.accordion.Data = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-dataaccordion', Phlexible.elements.accordion.Data);
+Ext.reg('elements-dataaccordion', Phlexible.element.view.accordion.Data);

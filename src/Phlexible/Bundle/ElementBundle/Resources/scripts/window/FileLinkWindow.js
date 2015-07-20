@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.FileLinkWindow');
+Ext.provide('Phlexible.element.window.FileLinkWindow');
 
-Phlexible.elements.FileLinkWindow = Ext.extend(Ext.Window, {
+Phlexible.element.window.FileLinkWindow = Ext.extend(Ext.Window, {
     title: 'File Links',
     width: 700,
     height: 250,
@@ -82,6 +82,6 @@ Phlexible.elements.FileLinkWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.elements.FileLinkWindow.superclass.initComponent.call(this);
+        Phlexible.element.window.FileLinkWindow.superclass.initComponent.call(this);
     }
 });

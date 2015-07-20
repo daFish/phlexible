@@ -3,7 +3,7 @@ Ext.provide('Phlexible.tree.view.Tree');
 Ext.require('Phlexible.tree.tree.TreeDropZone');
 Ext.require('Phlexible.tree.tree.TreeLoader');
 Ext.require('Phlexible.tree.tree.TreeNodeUI');
-Ext.require('Phlexible.elements.DeleteInstancesWindow');
+Ext.require('Phlexible.tree.window.DeleteInstancesWindow');
 
 Phlexible.tree.view.Tree = Ext.extend(Ext.tree.TreePanel, {
     strings: Phlexible.elements.Strings,

@@ -66,6 +66,7 @@
         "/phlexible/phlexibleteaser/icons": "src/Phlexible/Bundle/TeaserBundle/Resources/public/icons",
         "/phlexible/phlexibleteaser/scripts": "src/Phlexible/Bundle/TeaserBundle/Resources/scripts",
         "/phlexible/phlexibletree/icons": "src/Phlexible/Bundle/TreeBundle/Resources/public/icons",
+        "/phlexible/phlexibletree/menu": "src/Phlexible/Bundle/TreeBundle/Resources/public/menu",
         "/phlexible/phlexibletree/scripts": "src/Phlexible/Bundle/TreeBundle/Resources/scripts",
         "/phlexible/phlexibletree/styles": "src/Phlexible/Bundle/TreeBundle/Resources/styles",
         "/phlexible/phlexibleuser/icons": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
@@ -345,6 +346,10 @@
         "97bfe98b-d3ec-5655-a57d-cfef98ba3d11": {
             "query": "/phlexible/phlexibletree/icons/*.png",
             "type": "phlexible/icons"
+        },
+        "ff349132-be9f-519a-87be-bcb003bfc1e9": {
+            "query": "/phlexible/phlexibletree/menu/*.yml",
+            "type": "phlexible/menu"
         },
         "ce349132-be9f-519a-87be-bcb003bfc1e9": {
             "query": "/phlexible/phlexibletree/scripts/**/*.js",

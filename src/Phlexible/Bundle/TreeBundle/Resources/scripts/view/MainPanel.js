@@ -1,15 +1,14 @@
 Ext.provide('Phlexible.tree.view.MainPanel');
 
-Ext.require('Phlexible.tree.tree.Tree');
-Ext.require('Phlexible.teasers.ElementLayoutTree');
-Ext.require('Phlexible.elements.ElementPanel');
-Ext.require('Phlexible.elements.TopToolbar');
-Ext.require('Phlexible.elements.FileLinkWindow');
+Ext.require('Phlexible.tree.view.Tree');
+Ext.require('Phlexible.teasers.view.Tree');
+Ext.require('Phlexible.tree.toolbar.TopToolbar');
+Ext.require('Phlexible.element.window.FileLinkWindow');
 
 Ext.require('Phlexible.tree.view.tab.Changes');
 Ext.require('Phlexible.tree.view.tab.List');
 Ext.require('Phlexible.tree.view.tab.Links');
-Ext.require('Phlexible.tree.view.tab.Data');
+Ext.require('Phlexible.element.view.tab.Data');
 Ext.require('Phlexible.tree.view.tab.Preview');
 Ext.require('Phlexible.tree.view.tab.AccessControl');
 Ext.require('Phlexible.tree.view.tab.Routing');
@@ -151,7 +150,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                                     scope: this
                                 }
                             },{
-                                xtype: 'teasers-layout-tree',
+                                xtype: 'teasers-tree',
                                 region: 'south',
                                 height: 200,
                                 split: true,
@@ -502,7 +501,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                         element: this.element
                     },
                     {
-                        xtype: 'elements-tab-cache',
+                        xtype: 'tree-tab-cache',
                         tabKey: 'cache',
                         element: this.element
                     },

@@ -1,9 +1,9 @@
-Ext.provide('Phlexible.teasers.ElementLayoutPanel');
+Ext.provide('Phlexible.teasers.view.LayoutAreas');
 
 Ext.require('Phlexible.elements.Teaser');
-Ext.require('Phlexible.teasers.ElementLayoutTree');
+Ext.require('Phlexible.teasers.view.Tree');
 
-Phlexible.teasers.ElementLayoutPanel = Ext.extend(Ext.Panel, {
+Phlexible.teasers.LayoutAreas = Ext.extend(Ext.Panel, {
     title: Phlexible.teasers.Strings.layout,
     strings: Phlexible.teasers.Strings,
     iconCls: 'p-element-tab_layout-icon',
@@ -32,7 +32,7 @@ Phlexible.teasers.ElementLayoutPanel = Ext.extend(Ext.Panel, {
 
         this.items = [
             {
-                xtype: 'teasers-layout-tree',
+                xtype: 'teasers-tree',
                 region: 'west',
                 width: 200,
                 split: true,
@@ -89,7 +89,7 @@ Phlexible.teasers.ElementLayoutPanel = Ext.extend(Ext.Panel, {
             }
         ];
 
-        Phlexible.teasers.ElementLayoutPanel.superclass.initComponent.call(this);
+        Phlexible.teasers.view.LayoutAreas.superclass.initComponent.call(this);
     },
 
     onLoadElement: function () {
@@ -135,4 +135,4 @@ Phlexible.teasers.ElementLayoutPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('teasers-layout-panel', Phlexible.teasers.ElementLayoutPanel);
+Ext.reg('teasers-layout-areas', Phlexible.teasers.view.LayoutAreas);

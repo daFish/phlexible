@@ -1,16 +1,18 @@
-Ext.provide('Phlexible.teasers.ElementLayoutTreeNodeUI');
+Ext.provide('Phlexible.teasers.tree.TreeNodeUI');
 
-Phlexible.teasers.ElementLayoutTreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
+Phlexible.teasers.tree.TreeNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
     renderElements: function (n, a, targetNode, bulkRender) {
-        Phlexible.teasers.ElementLayoutTreeNodeUI.superclass.renderElements.call(this, n, a, targetNode, bulkRender);
+        Phlexible.teasers.tree.TreeNodeUI.superclass.renderElements.call(this, n, a, targetNode, bulkRender);
+
         this.onTextChange(n, n.text);
     },
 
     // private
     onTextChange: function (node, text, oldText) {
         text = this.applyNodeConfigToText(node, text);
-        Phlexible.teasers.ElementLayoutTreeNodeUI.superclass.onTextChange.call(this, node, text, oldText);
+
+        Phlexible.teasers.tree.TreeNodeUI.superclass.onTextChange.call(this, node, text, oldText);
     },
 
     applyNodeConfigToText: function (n, text) {

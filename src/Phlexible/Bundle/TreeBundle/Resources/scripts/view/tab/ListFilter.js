@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.tree.view.ListFilter');
+Ext.provide('Phlexible.tree.view.tab.ListFilter');
 
-Phlexible.tree.view.ListFilter = Ext.extend(Ext.form.FormPanel, {
+Phlexible.tree.view.tab.ListFilter = Ext.extend(Ext.form.FormPanel, {
     strings: Phlexible.elements.Strings,
     bodyStyle: 'background-color: #DFE8F6; padding: 5px;',
     animCollapse: false,
@@ -16,7 +16,7 @@ Phlexible.tree.view.ListFilter = Ext.extend(Ext.form.FormPanel, {
             this.doLayout();
         }, this);
 
-        Phlexible.tree.view.ListFilter.superclass.initComponent.call(this);
+        Phlexible.tree.view.tab.ListFilter.superclass.initComponent.call(this);
     },
 
     populateItems: function () {
@@ -222,4 +222,4 @@ Phlexible.tree.view.ListFilter = Ext.extend(Ext.form.FormPanel, {
     }
 });
 
-Ext.reg('tree-list-filter', Phlexible.tree.view.ListFilder);
+Ext.reg('tree-tab-list-filter', Phlexible.tree.view.tab.ListFilter);

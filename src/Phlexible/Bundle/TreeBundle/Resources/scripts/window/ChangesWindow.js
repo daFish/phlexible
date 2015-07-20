@@ -1,6 +1,6 @@
 Ext.provide('Phlexible.tree.window.ChangesWindow');
 
-Ext.require('Phlexible.elements.HistoryFilter');
+Ext.require('Phlexible.tree.view.ChangesFilter');
 
 Phlexible.tree.window.ChangesWindow = Ext.extend(Ext.Window, {
     title: Phlexible.elements.Strings.history,

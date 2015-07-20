@@ -1,8 +1,8 @@
-Ext.provide('Phlexible.teasers.SetTeaserOfflineWindow');
+Ext.provide('Phlexible.teasers.window.SetTeaserOfflineWindow');
 
 Ext.require('Phlexible.gui.util.Dialog');
 
-Phlexible.teasers.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog, {
+Phlexible.teasers.window.SetTeaserOfflineWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.teasers.Strings.set_teaser_offline,
     width: 530,
     minWidth: 530,

@@ -1,37 +1,11 @@
-Ext.provide('Phlexible.elements.DiffVersionComboTemplate');
-Ext.provide('Phlexible.elements.tab.Data');
+Ext.provide('Phlexible.element.view.tab.Data');
 
-Ext.require('Phlexible.elements.ElementAccordion');
-Ext.require('Phlexible.elements.ElementContentPanel');
-Ext.require('Phlexible.elements.accordion.QuickInfo');
-Ext.require('Phlexible.elements.PublishSlaveWindow');
+Ext.require('Phlexible.element.view.ElementAccordion');
+Ext.require('Phlexible.element.view.ElementContentPanel');
+Ext.require('Phlexible.element.view.accordion.QuickInfo');
+Ext.require('Phlexible.tree.window.PublishSlaveWindow');
 
-/*Phlexible.elements.xElementDataTabs = Ext.extend(Ext.TabPanel, {
- // private
- xadjustBodyWidth : function(w){
- if(this.header){
- this.header.setWidth(w);
- }
- if(this.footer){
- this.footer.setWidth(w);
- }
- return w;
- }
- });*/
-
-Phlexible.elements.DiffVersionComboTemplate = new Ext.XTemplate(
-    '<tpl for=".">',
-    '<div class="x-combo-list-item">',
-    '<tpl if="values.is_published"><b></tpl>',
-    '<tpl if="values.was_published"><i></tpl>',
-    '{version} [{date}]',
-    '<tpl if="values.was_published"></i></tpl>',
-    '<tpl if="values.is_published"></b></tpl>',
-    '</div>',
-    '</tpl>'
-);
-
-Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
+Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.data,
     iconCls: 'p-element-tab_data-icon',
@@ -212,7 +186,17 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
                 width: 80,
                 listWidth: 200,
                 emptyText: this.strings.diff.from_version,
-                tpl: Phlexible.elements.DiffVersionComboTemplate,
+                tpl: new Ext.XTemplate(
+                    '<tpl for=".">',
+                    '<div class="x-combo-list-item">',
+                    '<tpl if="values.is_published"><b></tpl>',
+                    '<tpl if="values.was_published"><i></tpl>',
+                    '{version} [{date}]',
+                    '<tpl if="values.was_published"></i></tpl>',
+                    '<tpl if="values.is_published"></b></tpl>',
+                    '</div>',
+                    '</tpl>'
+                ),
                 //value: (parseInt(this.element.version, 10) - 1),
                 store: new Ext.data.JsonStore({
                     fields: [
@@ -357,7 +341,7 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
             ? this.element.startParams.diff
             : {};
 
-        Phlexible.elements.tab.Data.superclass.initComponent.call(this);
+        Phlexible.element.view.tab.Data.superclass.initComponent.call(this);
     },
 
     getFormPanel: function () {
@@ -615,4 +599,4 @@ Phlexible.elements.tab.Data = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-tab-data', Phlexible.elements.tab.Data);
+Ext.reg('element-tab-data', Phlexible.element.view.tab.Data);

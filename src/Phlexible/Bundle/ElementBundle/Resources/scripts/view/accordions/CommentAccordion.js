@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.accordion.Comment');
+Ext.provide('Phlexible.element.view.accordion.Comment');
 
-Phlexible.elements.accordion.Comment = Ext.extend(Ext.FormPanel, {
+Phlexible.element.view.accordion.Comment = Ext.extend(Ext.FormPanel, {
     title: Phlexible.elements.Strings.comment,
     cls: 'p-elements-comment-accordion',
     iconCls: 'p-element-comment-icon',
@@ -20,7 +20,7 @@ Phlexible.elements.accordion.Comment = Ext.extend(Ext.FormPanel, {
             }
         ];
 
-        Phlexible.elements.accordion.Comment.superclass.initComponent.call(this);
+        Phlexible.element.view.accordion.Comment.superclass.initComponent.call(this);
     },
 
     load: function (element) {
@@ -32,4 +32,4 @@ Phlexible.elements.accordion.Comment = Ext.extend(Ext.FormPanel, {
     }
 });
 
-Ext.reg('elements-commentaccordion', Phlexible.elements.accordion.Comment);
+Ext.reg('elements-commentaccordion', Phlexible.element.view.accordion.Comment);

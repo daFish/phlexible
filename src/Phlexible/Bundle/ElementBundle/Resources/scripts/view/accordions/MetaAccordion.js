@@ -1,9 +1,9 @@
-Ext.provide('Phlexible.elements.accordion.Meta');
+Ext.provide('Phlexible.element.view.accordion.Meta');
 
 Ext.require('Phlexible.metasets.util.Fields');
 Ext.require('Phlexible.gui.grid.TypeColumnModel');
 
-Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
+Phlexible.element.view.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
     strings: Phlexible.elements.Strings,
     title: Phlexible.elements.Strings.meta,
     cls: 'p-elements-meta-accordion',
@@ -87,7 +87,7 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
             scope: this
         });
 
-        Phlexible.elements.accordion.Meta.superclass.initComponent.call(this);
+        Phlexible.element.view.accordion.Meta.superclass.initComponent.call(this);
     },
 
     load: function (element) {
@@ -155,4 +155,4 @@ Phlexible.elements.accordion.Meta = Ext.extend(Ext.grid.EditorGridPanel, {
     }
 });
 
-Ext.reg('elements-metaaccordion', Phlexible.elements.accordion.Meta);
+Ext.reg('elements-metaaccordion', Phlexible.element.view.accordion.Meta);

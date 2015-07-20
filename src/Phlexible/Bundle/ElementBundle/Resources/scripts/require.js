@@ -1,1 +1,1 @@
-Ext.require('Phlexible.elements.portlet.LatestElements');
+Ext.require('Phlexible.element.portlet.LatestElements');

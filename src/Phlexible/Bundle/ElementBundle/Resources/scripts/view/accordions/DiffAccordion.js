@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.accordion.Diff');
+Ext.provide('Phlexible.element.view.accordion.Diff');
 
-Phlexible.elements.accordion.Diff = Ext.extend(Ext.Panel, {
+Phlexible.element.view.accordion.Diff = Ext.extend(Ext.Panel, {
     title: Phlexible.elements.Strings.differences,
     cls: 'p-elements-diff-accordion',
     iconCls: 'p-element-diff-icon',
@@ -39,7 +39,7 @@ Phlexible.elements.accordion.Diff = Ext.extend(Ext.Panel, {
 
         this.html = Phlexible.elements.Strings.no_differences;
 
-        Phlexible.elements.accordion.Diff.superclass.initComponent.call(this);
+        Phlexible.element.view.accordion.Diff.superclass.initComponent.call(this);
     },
 
     empty: function () {
@@ -53,4 +53,4 @@ Phlexible.elements.accordion.Diff = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-diffaccordion', Phlexible.elements.accordion.Diff);
+Ext.reg('elements-diffaccordion', Phlexible.element.view.accordion.Diff);

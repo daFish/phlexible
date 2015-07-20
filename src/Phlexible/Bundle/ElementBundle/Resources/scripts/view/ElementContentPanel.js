@@ -1,10 +1,10 @@
-Ext.provide('Phlexible.elements.ElementContentPanel');
+Ext.provide('Phlexible.element.view.ElementContentPanel');
 
-Ext.require('Phlexible.elements.ElementContentTabPanel');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
-//xt.require('Phlexible.elements.ElementDataTab');
+Ext.require('Phlexible.element.view.ElementContentTabPanel');
+Ext.require('Phlexible.element.ElementDataTabHelper');
+//xt.require('Phlexible.element.ElementDataTab');
 
-Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
+Phlexible.element.view.ElementContentPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.elements.Strings,
     cls: 'p-elements-content-panel',
     frame: false,
@@ -36,7 +36,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
             scope: this
         });
 
-        Phlexible.elements.ElementContentPanel.superclass.initComponent.call(this);
+        Phlexible.element.view.ElementContentPanel.superclass.initComponent.call(this);
     },
 
     onLoadElement: function (element) {
@@ -67,9 +67,9 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
 
 //            this.disable();
 
-            structureNodes = Phlexible.elements.ElementDataTabHelper.fixStructure(structureNodes, valueStructure, null);
+            structureNodes = Phlexible.element.ElementDataTabHelper.fixStructure(structureNodes, valueStructure, null);
 
-            Phlexible.elements.ElementDataTabHelper.importPrototypes(structureNodes, this.element);
+            Phlexible.element.ElementDataTabHelper.importPrototypes(structureNodes, this.element);
 
             if (structureNodes[0].type === 'tab' && structureNodes.length > 1) {
                 targetPanel = {
@@ -96,7 +96,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
 
             this.lastEtId = this.element.getElementtypeId();
 
-            items = Phlexible.elements.ElementDataTabHelper.loadItems(structureNodes, valueStructure, this, this.element);
+            items = Phlexible.element.ElementDataTabHelper.loadItems(structureNodes, valueStructure, this, this.element);
 
             /*
              Ext.each(structure, function(item) {
@@ -140,7 +140,7 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
 
 //            for(var i=0; i<structure.length; i++) {
 //
-//                var formPanel = new Phlexible.elements.ElementDataTab({
+//                var formPanel = new Phlexible.element.ElementDataTab({
 //                    title: structure[i].name,
 //                    element: this.element,
 //                    disabled: this.element.locked_by_me ? false : true
@@ -231,4 +231,4 @@ Phlexible.elements.ElementContentPanel = Ext.extend(Ext.Panel, {
     }
 });
 
-Ext.reg('elements-elementcontentpanel', Phlexible.elements.ElementContentPanel);
+Ext.reg('elements-elementcontentpanel', Phlexible.element.view.ElementContentPanel);

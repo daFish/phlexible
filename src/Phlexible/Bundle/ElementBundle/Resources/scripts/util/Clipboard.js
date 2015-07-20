@@ -1,8 +1,8 @@
-Ext.provide('Phlexible.elements.util.Clipboard');
+Ext.provide('Phlexible.element.util.Clipboard');
 
 Ext.require('Phlexible.gui.util.Frame');
 
-Phlexible.elements.util.Clipboard = function () {
+Phlexible.element.util.Clipboard = function () {
     this.text = null;
     this.item = null;
     this.type = null;
@@ -24,7 +24,7 @@ Phlexible.elements.util.Clipboard = function () {
     });
 };
 
-Ext.extend(Phlexible.elements.util.Clipboard, Ext.util.Observable, {
+Ext.extend(Phlexible.element.util.Clipboard, Ext.util.Observable, {
     strings: Phlexible.elements.Strings,
 
     set: function (text, item, type) {

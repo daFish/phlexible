@@ -1,7 +1,7 @@
 Ext.provide('Phlexible.elementtypes.field.LinkField');
 
 Ext.require('Ext.ux.TwinComboBox');
-Ext.require('Phlexible.elements.LinkWindow');
+Ext.require('Phlexible.tree.window.LinkWindow');
 
 Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
     minChars: 2,
@@ -172,7 +172,7 @@ Phlexible.elementtypes.field.LinkField = Ext.extend(Ext.ux.TwinComboBox, {
             return;
         }
 
-        var w = new Phlexible.elements.LinkWindow({
+        var w = new Phlexible.element.window.LinkWindow({
             siteroot_id: this.siteroot_id,
             value: this.hiddenValue,
             allowed: this.allowed,

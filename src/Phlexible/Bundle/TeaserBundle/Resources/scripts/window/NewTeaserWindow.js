@@ -1,8 +1,8 @@
-Ext.provide('Phlexible.teasers.NewTeaserWindow');
+Ext.provide('Phlexible.teasers.window.NewTeaserWindow');
 
 Ext.require('Phlexible.gui.util.Dialog');
 
-Phlexible.teasers.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
+Phlexible.teasers.window.NewTeaserWindow = Ext.extend(Phlexible.gui.util.Dialog, {
     title: Phlexible.teasers.Strings.new_teaser,
     width: 450,
     minWidth: 450,

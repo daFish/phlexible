@@ -6,7 +6,7 @@ Phlexible.fields.FieldHelper = {
      * @param {Object} parentConfig
      * @param {Object} item
      * @param {Array} valueStructure
-     * @param {Phlexible.elements.Element} element
+     * @param {Phlexible.element.Element} element
      * @param {Number} repeatableId
      * @returns {Object}
      */

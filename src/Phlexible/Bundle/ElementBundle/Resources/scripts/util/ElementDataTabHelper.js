@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.elements.ElementDataTabHelper');
+Ext.provide('Phlexible.element.ElementDataTabHelper');
 
-Phlexible.elements.ElementDataTabHelper = {
+Phlexible.element.ElementDataTabHelper = {
     /**
      * Fix structure, removes all root, reference root and reference nodes
      * @param {Array} structureNodes
@@ -29,7 +29,7 @@ Phlexible.elements.ElementDataTabHelper = {
             }
 
             if (structureNodes[i].children && structureNodes[i].children.length) {
-                structureNodes[i].children = Phlexible.elements.ElementDataTabHelper.fixStructure(structureNodes[i].children, valueStructure);
+                structureNodes[i].children = Phlexible.element.ElementDataTabHelper.fixStructure(structureNodes[i].children, valueStructure);
             }
         }
 
@@ -38,7 +38,7 @@ Phlexible.elements.ElementDataTabHelper = {
             for (fromDsId in fixDsIds) {
                 if (fixDsIds.hasOwnProperty(fromDsId)) {
                     toDsId = fixDsIds[fromDsId];
-                    Phlexible.elements.ElementDataTabHelper.fixValueStructure(valueStructure, fromDsId, toDsId);
+                    Phlexible.element.ElementDataTabHelper.fixValueStructure(valueStructure, fromDsId, toDsId);
                 }
             }
         }
@@ -52,7 +52,7 @@ Phlexible.elements.ElementDataTabHelper = {
                 structure.parentDsId = toDsId;
             }
             if (structure.structures) {
-                Phlexible.elements.ElementDataTabHelper.fixValueStructure(structure, fromDsId, toDsId);
+                Phlexible.element.ElementDataTabHelper.fixValueStructure(structure, fromDsId, toDsId);
             }
         });
     },
@@ -61,7 +61,7 @@ Phlexible.elements.ElementDataTabHelper = {
      * Import all field/group prototypes
      *
      * @param {Array} structureNodes
-     * @param {Phlexible.elements.Element} element
+     * @param {Phlexible.element.Element} element
      */
     importPrototypes: function(structureNodes, element) {
         Ext.each(structureNodes, function(structureNode) {
@@ -72,7 +72,7 @@ Phlexible.elements.ElementDataTabHelper = {
             }
 
             if (structureNode.children && structureNode.children.length) {
-                Phlexible.elements.ElementDataTabHelper.importPrototypes(structureNode.children, element);
+                Phlexible.element.ElementDataTabHelper.importPrototypes(structureNode.children, element);
             }
         });
     },
@@ -87,7 +87,7 @@ Phlexible.elements.ElementDataTabHelper = {
                     plain: true,
                     border: false,
                     bodyStyle: 'padding: 5px;',
-                    html: String.format(Phlexible.elements.Strings.empty_tab, parentConfig.title)
+                    html: String.format(Phlexible.element.Strings.empty_tab, parentConfig.title)
                 }
             ]
         }

@@ -1,7 +1,7 @@
 Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
 Ext.require('Phlexible.elementtypes.field.Group');
-Ext.require('Phlexible.elements.ElementDataTabHelper');
+Ext.require('Phlexible.element.ElementDataTabHelper');
 
 Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valueStructure, element, repeatableId) {
     var minRepeat = parseInt(item.configuration.repeat_min, 10) || 0,
@@ -63,7 +63,7 @@ Phlexible.fields.Registry.addFactory('group', function (parentConfig, item, valu
     };
 
     if (item.children) {
-        config.items = Phlexible.elements.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element, groupId ? groupId : repeatableId, true);
+        config.items = Phlexible.element.ElementDataTabHelper.loadItems(item.children, valueStructure, config, element, groupId ? groupId : repeatableId, true);
 
         var allowedItems = {}, has = false;
         Ext.each (item.children, function(child) {
