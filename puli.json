@@ -66,7 +66,7 @@
         "/phlexible/phlexibleteaser/icons": "src/Phlexible/Bundle/TeaserBundle/Resources/public/icons",
         "/phlexible/phlexibleteaser/scripts": "src/Phlexible/Bundle/TeaserBundle/Resources/scripts",
         "/phlexible/phlexibletree/icons": "src/Phlexible/Bundle/TreeBundle/Resources/public/icons",
-        "/phlexible/phlexibletree/menu": "src/Phlexible/Bundle/TreeBundle/Resources/public/menu",
+        "/phlexible/phlexibletree/menu": "src/Phlexible/Bundle/TreeBundle/Resources/menu",
         "/phlexible/phlexibletree/scripts": "src/Phlexible/Bundle/TreeBundle/Resources/scripts",
         "/phlexible/phlexibletree/styles": "src/Phlexible/Bundle/TreeBundle/Resources/styles",
         "/phlexible/phlexibleuser/icons": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
