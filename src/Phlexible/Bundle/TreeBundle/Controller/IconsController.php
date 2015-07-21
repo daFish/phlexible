@@ -38,12 +38,13 @@ class IconsController extends Controller
         foreach ($puliDiscovery->findByType('phlexible/node-icons') as $binding) {
             foreach ($binding->getResources() as $resource) {
                 $icons[] = array(
-                    'icon' => $resource->getPath(),
+                    'name' => $resource->getName(),
+                    'url'  => $this->generateUrl('tree_icon', array('icon' => $resource->getName())),
                 );
             }
         }
 
-        return new JsonResponse($icons);
+        return new JsonResponse(array('icons' => $icons));
     }
 
     /**
@@ -57,15 +58,32 @@ class IconsController extends Controller
      */
     public function iconAction(Request $request, $icon)
     {
-        $params = $request->query->all();
+        $puliDiscovery = $this->get('puli.discovery');
 
-        $iconBuilder = $this->get('phlexible_element.icon_builder');
-        $cacheFilename = $iconBuilder->getAssetPath($icon, $params);
+        $parameters = $request->query->all();
+
+        $filename = null;
+        foreach ($puliDiscovery->findByType('phlexible/node-icons') as $binding) {
+            foreach ($binding->getResources() as $resource) {
+                if ($resource->getName() === $icon) {
+                    $filename = $resource->getFilesystemPath();
+                    break 2;
+                }
+            }
+        }
+
+        if ($parameters) {
+            $iconBuilder = $this->get('phlexible_element.icon_builder');
+            $filename = $iconBuilder->createParameterIcon($filename, $parameters);
+            $mimetype = 'image/png';
+        } else {
+            $mimetype = 'image/gif';
+        }
 
         return $this->get('igorw_file_serve.response_factory')
             ->create(
-                $cacheFilename,
-                'image/png',
+                $filename,
+                $mimetype,
                 array(
                     'absolute_path' => true,
                     'inline' => true,

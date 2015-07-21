@@ -143,7 +143,7 @@ class IconResolver
 
         $parameters['icon'] = basename($this->resolveElementSource($this->elementService->findElementSource($element->getElementtypeId())));
 
-        return $this->router->generate('elements_icon', $parameters);
+        return $this->router->generate('tree_icon', $parameters);
     }
 
     /**
@@ -174,6 +174,6 @@ class IconResolver
 
         $parameters['icon'] = basename($this->resolveElementSource($this->elementService->findElementSource($element->getElementtypeId())));
 
-        return $this->router->generate('elements_icon', $parameters);
+        return $this->router->generate('tree_icon', $parameters);
     }
 }

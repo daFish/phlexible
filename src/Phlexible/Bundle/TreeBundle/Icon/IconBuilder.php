@@ -38,53 +38,38 @@ class IconBuilder
     }
 
     /**
-     * Get asset path
+     * Create parameter icon
      *
-     * @param string $icon
+     * @param string $filename
      * @param array  $params
      *
      * @return string
      */
-    public function getAssetPath($icon, array $params = array())
+    public function createParameterIcon($filename, array $params = array())
     {
-        $overlay = array();
+        $overlays = array();
 
-        if (!empty($params['status'])) {
-            $overlay['status'] = $params['status'];
-        }
-
-        if (!empty($params['timer'])) {
-            $overlay['timer'] = $params['timer'];
+        if (!empty($params['status']) && in_array($params['status'], array('async', 'online'))) {
+            $overlays['status'] = $params['status'];
         }
 
         if (!empty($params['lock'])) {
-            $overlay['lock'] = $params['lock'];
+            $overlays['lock'] = 1;
         }
 
         if (!empty($params['instance'])) {
-            $overlay['instance'] = $params['instance'];
+            $overlays['instance'] = 1;
         }
 
-        if (!empty($params['sort'])) {
-            $overlay['sort'] = $params['sort'];
-        }
+        $fallback = $this->locator->locate('@PhlexibleTreeBundle/Resources/public/node-icons/_fallback.gif');
 
-        $fallback = $this->locator->locate('@PhlexibleElementtypeBundle/Resources/public/elementtypes/icon_notfound.gif');
-
-        if ($icon === null) {
+        if (!$filename || !file_exists($filename)) {
             $filename = $fallback;
-        } else {
-            $prefix = '@PhlexibleElementtypeBundle/Resources/public/elementtypes/';
-            $filename = $this->locator->locate($prefix. $icon);
-
-            if (!file_exists($filename)) {
-                $filename = $fallback;
-            }
         }
 
-        $cacheFilename = $this->cacheDir . '/' . md5(basename($filename) . '__' . implode('__', $overlay)) . '.png';
+        $cacheFilename = $this->cacheDir . '/' . md5(basename($filename) . '__' . json_encode($overlays)) . '.png';
 
-        if (!file_exists($cacheFilename) || (time() - filemtime($cacheFilename)) > 60 * 60 * 24 * 30) {
+        if (1 || !file_exists($cacheFilename) || (time() - filemtime($cacheFilename)) > 60 * 60 * 24 * 30) {
             $target = imagecreate(18, 18);
             $black = imagecolorallocate($target, 0, 0, 0);
             imagecolortransparent($target, $black);
@@ -93,48 +78,37 @@ class IconBuilder
             imagecopy($target, $iconSource, 0, 0, 0, 0, 18, 18);
             imagedestroy($iconSource);
 
-            $overlayDir = '@PhlexibleElementBundle/Resources/public/overlays/';
+            $overlayDir = '@PhlexibleTreeBundle/Resources/public/overlays/';
 
-            if (!empty($overlay['status'])) {
+            if (!empty($overlays['status'])) {
+                if ($overlays['status'] === 'async') {
+                    imagefilter($target, IMG_FILTER_COLORIZE, 100, 0, 0);
+                } else {
+                    imagefilter($target, IMG_FILTER_COLORIZE, 0, 100, 0);
+                }
+                /*
                 // apply status overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'status_' . $overlay['status'] . '.gif')
+                    $this->locator->locate($overlayDir . 'status_' . $overlays['status'] . '.gif')
                 );
                 imagecopy($target, $overlayIcon, 9, 9, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
+                */
             }
 
-            if (!empty($overlay['timer'])) {
-                // apply timer overlay
-                $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'timer.gif')
-                );
-                imagecopy($target, $overlayIcon, 10, 0, 0, 0, 8, 8);
-                imagedestroy($overlayIcon);
-            }
-
-            if (!empty($overlay['sort'])) {
-                // apply timer overlay
-                $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'sort_' . $overlay['sort'] . '.gif')
-                );
-                imagecopy($target, $overlayIcon, 10, 0, 0, 0, 8, 8);
-                imagedestroy($overlayIcon);
-            }
-
-            if (!empty($overlay['instance'])) {
+            if (!empty($overlays['instance'])) {
                 // apply alias overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'instance_' . $overlay['instance'] . '.gif')
+                    $this->locator->locate($overlayDir . 'instance.gif')
                 );
                 imagecopy($target, $overlayIcon, 0, 10, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
             }
 
-            if (!empty($overlay['lock'])) {
+            if (!empty($overlays['lock'])) {
                 // apply lock overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'lock_' . $overlay['lock'] . '.gif')
+                    $this->locator->locate($overlayDir . 'lock.gif')
                 );
                 imagecopy($target, $overlayIcon, 0, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);

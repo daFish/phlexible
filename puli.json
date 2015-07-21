@@ -18,7 +18,6 @@
         "/phlexible/phlexibleelement/menu": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
         "/phlexible/phlexibleelement/scripts": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
         "/phlexible/phlexibleelement/styles": "src/Phlexible/Bundle/ElementBundle/Resources/styles",
-        "/phlexible/phlexibleelementtype/node-icons": "src/Phlexible/Bundle/ElementtypeBundle/Resources/public/elementtypes",
         "/phlexible/phlexibleelementtype/icons": "src/Phlexible/Bundle/ElementtypeBundle/Resources/public/icons",
         "/phlexible/phlexibleelementtype/menu": "src/Phlexible/Bundle/ElementtypeBundle/Resources/menu",
         "/phlexible/phlexibleelementtype/scripts": "src/Phlexible/Bundle/ElementtypeBundle/Resources/scripts",
@@ -68,6 +67,7 @@
         "/phlexible/phlexibleteaser/scripts": "src/Phlexible/Bundle/TeaserBundle/Resources/scripts",
         "/phlexible/phlexibletree/icons": "src/Phlexible/Bundle/TreeBundle/Resources/public/icons",
         "/phlexible/phlexibletree/menu": "src/Phlexible/Bundle/TreeBundle/Resources/menu",
+        "/phlexible/phlexibletree/node-icons": "src/Phlexible/Bundle/TreeBundle/Resources/public/node-icons",
         "/phlexible/phlexibletree/scripts": "src/Phlexible/Bundle/TreeBundle/Resources/scripts",
         "/phlexible/phlexibletree/styles": "src/Phlexible/Bundle/TreeBundle/Resources/styles",
         "/phlexible/phlexibleuser/icons": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
@@ -155,14 +155,6 @@
         "f5544b71-d3fb-5c0e-b5c5-cd89c074a24c": {
             "query": "/phlexible/phlexibleelementtype/menu/*.yml",
             "type": "phlexible/menu"
-        },
-        "177e862e-6a6a-541f-aab4-bc4d5498b4c0": {
-            "query": "/phlexible/phlexibleelementtype/node-icons/*.gif",
-            "type": "phlexible/node-icons"
-        },
-        "2f23bcd0-2bc4-5c24-942a-7d640be08c40": {
-            "query": "/phlexible/phlexibleelementtype/node-icons/*.png",
-            "type": "phlexible/node-icons"
         },
         "997e7153-0a1c-5562-95d8-df0a37463e40": {
             "query": "/phlexible/phlexibleelementtype/scripts/**/*.js",
@@ -359,6 +351,14 @@
         "ff349132-be9f-519a-87be-bcb003bfc1e9": {
             "query": "/phlexible/phlexibletree/menu/*.yml",
             "type": "phlexible/menu"
+        },
+        "177e862e-6a6a-541f-aab4-bc4d5498b4c0": {
+            "query": "/phlexible/phlexibletree/node-icons/*.gif",
+            "type": "phlexible/node-icons"
+        },
+        "2f23bcd0-2bc4-5c24-942a-7d640be08c40": {
+            "query": "/phlexible/phlexibletree/node-icons/*.png",
+            "type": "phlexible/node-icons"
         },
         "ce349132-be9f-519a-87be-bcb003bfc1e9": {
             "query": "/phlexible/phlexibletree/scripts/**/*.js",
