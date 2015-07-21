@@ -68,8 +68,8 @@ class PathGenerator implements PathGeneratorInterface
 
         foreach ($pathNodes as $pathNode) {
             /* @var $pathNode NodeContext */
-            if ($tree->isViewable($pathNode, $language)) {
-                $parts[] = $tree->getField($node, 'navigation', $language);
+            if ($pathNode->isViewable($language)) {
+                $parts[] = $node->getField('navigation', $language);
             }
         }
 
@@ -79,7 +79,7 @@ class PathGenerator implements PathGeneratorInterface
             }
 
             $currentNode = $pathNodes[0];
-            $parts[] = $tree->getField($currentNode, 'navigation', $language);
+            $parts[] = $currentNode->getField('navigation', $language);
         }
 
         $parts = array_map(array($this->slugify, 'slugify'), $parts);

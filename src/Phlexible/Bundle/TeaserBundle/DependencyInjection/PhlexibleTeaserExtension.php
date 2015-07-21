@@ -29,7 +29,6 @@ class PhlexibleTeaserExtension extends Extension
         $loader->load('services.yml');
         $loader->load('doctrine.yml');
         $loader->load('mediators.yml');
-        $loader->load('configurators.yml');
 
         $container->setAlias('phlexible_teaser.teaser_manager', 'phlexible_teaser.doctrine.teaser_manager');
         $container->setAlias('phlexible_teaser.teaser_service', 'phlexible_teaser.doctrine.teaser_manager');

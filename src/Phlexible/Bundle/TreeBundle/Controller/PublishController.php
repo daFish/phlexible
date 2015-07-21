@@ -119,7 +119,7 @@ class PublishController extends Controller
         }
 
         $selector = $this->get('phlexible_element.publish.selector');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $selection = new Selection();
         foreach ($languages as $language) {
@@ -189,7 +189,7 @@ class PublishController extends Controller
 
         $treeManager = $this->get('phlexible_tree.node_manager');
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         foreach ($data as $row) {
             set_time_limit(15);

@@ -30,7 +30,6 @@ class PhlexibleTreeExtension extends Extension
         $loader->load('doctrine.yml');
         $loader->load('file.yml');
         $loader->load('mediators.yml');
-        $loader->load('configurators.yml');
         $loader->load('routing.yml');
         $loader->load('field_mappers.yml');
         $loader->load('link_extractors.yml');
@@ -39,8 +38,18 @@ class PhlexibleTreeExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         $container->setParameter('phlexible_tree.patterns', $config['patterns']);
+        $container->setParameter('phlexible_tree.create.restricted', $config['create']['restricted']);
+        $container->setParameter('phlexible_tree.create.use_multilanguage', $config['create']['use_multilanguage']);
+        $container->setParameter('phlexible_tree.portlet.num_items', $config['portlet']['num_items']);
+        $container->setParameter('phlexible_tree.publish.comment_required', $config['publish']['comment_required']);
+        $container->setParameter('phlexible_tree.publish.confirm_required', $config['publish']['confirm_required']);
+        $container->setParameter(
+            'phlexible_tree.publish.cross_language_publish_offline',
+            $config['publish']['cross_language_publish_offline']
+        );
 
         $container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.doctrine.node_manager');
+        $container->setAlias('phlexible_tree.node_state_manager', 'phlexible_tree.doctrine.node_state_manager');
         //$container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.file.node_manager');
         $container->setAlias('phlexible_tree.route_manager', 'phlexible_tree.doctrine.route_manager');
         $container->setAlias('phlexible_tree.node_lock_manager', 'phlexible_tree.doctrine.node_lock_manager');

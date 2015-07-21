@@ -96,7 +96,7 @@ Phlexible.tree.view.tab.Links = Ext.extend(Ext.grid.GridPanel, {
         this.on({
             show: {
                 fn: function () {
-                    if (this.store.baseParams.tid != this.element.getNodeId() ||
+                    if (this.store.baseParams.nodeId != this.element.getNodeId() ||
                         this.store.baseParams.version != this.element.getVersion() ||
                         this.store.baseParams.language != this.element.getLanguage()) {
                         this.onRealLoad(this.element.getNodeId(), this.element.getVersion(), this.element.getLanguage());
@@ -140,9 +140,9 @@ Phlexible.tree.view.tab.Links = Ext.extend(Ext.grid.GridPanel, {
         }
     },
 
-    onRealLoad: function (tid, version, language) {
+    onRealLoad: function (nodeId, version, language) {
         this.store.baseParams = {
-            tid: tid,
+            nodeId: nodeId,
             version: version,
             language: language,
             incoming: this.includeIncoming

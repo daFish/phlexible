@@ -39,25 +39,55 @@ class LinksController extends Controller
         $start = $request->get('start', 0);
 
         $nodeManager = $this->get('phlexible_tree.node_manager');
-        $linkRepository = $this->getDoctrine()->getRepository('PhlexibleTreeBundle:NodeLink');
+        $linkRepository = $this->getDoctrine()->getManager()->getRepository('PhlexibleTreeBundle:NodeLink');
 
         $node = $nodeManager->find($nodeId);
 
         $result = array();
 
-        $qb = $linkRepository->createQueryBuilder('c')->select('COUNT(c.id)');
+        $queryBuilder = $linkRepository->createQueryBuilder('l');
+        $queryBuilder
+            ->andWhere(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq('l.nodeId', $node->getId()),
+                    $queryBuilder->expr()->eq('l.version', $version),
+                    $queryBuilder->expr()->eq('l.language', $queryBuilder->expr()->literal($language))
+                )
+            )
+            ->setFirstResult($start)
+            ->setMaxResults($limit);
+
+        $countQueryBuilder = $linkRepository->createQueryBuilder('l')->select('COUNT(l.id)');
+        $countQueryBuilder
+            ->andWhere(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq('l.nodeId', $node->getId()),
+                    $queryBuilder->expr()->eq('l.version', $version),
+                    $queryBuilder->expr()->eq('l.language', $queryBuilder->expr()->literal($language))
+                )
+            );
+
         if ($incoming) {
-            $criteria = array('type' => 'node', 'target' => $node->getId());
-            $qb
-                ->where($qb->expr()->eq('c.type', $qb->expr()->literal('node')))
-                ->andWhere($qb->expr()->eq('c.target', $qb->expr()->literal($node->getId())));
-        } else {
-            $criteria = array('nodeId' => $node->getId());
-            $qb->where($qb->expr()->eq('c.nodeId', $qb->expr()->literal($node->getId())));
+            $queryBuilder->orWhere(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq('l.type', $queryBuilder->expr()->literal('node')),
+                    $queryBuilder->expr()->eq('l.version', $version),
+                    $queryBuilder->expr()->eq('l.language', $queryBuilder->expr()->literal($language)),
+                    $queryBuilder->expr()->eq('l.target', $node->getId())
+                )
+            );
+            $countQueryBuilder->orWhere(
+                $queryBuilder->expr()->andX(
+                    $countQueryBuilder->expr()->eq('l.type', $countQueryBuilder->expr()->literal('node')),
+                    $countQueryBuilder->expr()->eq('l.version', $version),
+                    $countQueryBuilder->expr()->eq('l.language', $countQueryBuilder->expr()->literal($language)),
+                    $countQueryBuilder->expr()->eq('l.target', $node->getId())
+                )
+            );
         }
 
-        $links = $linkRepository->findBy($criteria, array('version' => 'DESC'), $limit, $start);
-        $total = $qb->getQuery()->getSingleScalarResult();
+        $links = $queryBuilder->getQuery()->getResult();
+        $total = $countQueryBuilder->getQuery()->getSingleScalarResult();
 
 
         foreach ($links as $link) {

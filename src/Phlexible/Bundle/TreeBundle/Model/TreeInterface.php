@@ -58,22 +58,6 @@ interface TreeInterface
     public function has($id);
 
     /**
-     * @param mixed       $typeId
-     * @param string|null $type
-     *
-     * @return NodeContext[]
-     */
-    public function getByTypeId($typeId, $type = null);
-
-    /**
-     * @param mixed       $typeId
-     * @param string|null $type
-     *
-     * @return bool
-     */
-    public function hasByTypeId($typeId, $type = null);
-
-    /**
      * Return child nodes
      *
      * @param NodeContext $node
@@ -146,61 +130,6 @@ interface TreeInterface
      * @return bool
      */
     public function isParentOf(NodeContext $parentNode, NodeContext $childNode);
-
-    /**
-     * @param NodeContext $node
-     * @param string      $language
-     *
-     * @return bool
-     */
-    public function isViewable(NodeContext $node, $language = null);
-
-    /**
-     * @param NodeContext $node
-     * @param string      $language
-     *
-     * @return bool
-     */
-    public function hasViewableChildren(NodeContext $node, $language = null);
-
-    /**
-     * @param NodeContext $node
-     * @param string      $field
-     * @param string      $language
-     *
-     * @return string
-     */
-    public function getField(NodeContext $node, $field, $language = null);
-
-    /**
-     * @param NodeContext $node
-     *
-     * @return array
-     */
-    public function getFieldMappings(NodeContext $node);
-
-    /**
-     * @param NodeContext $node
-     * @param string      $language
-     * @param int         $version
-     *
-     * @return mixed
-     */
-    public function getContent(NodeContext $node, $language = null, $version = null);
-
-    /**
-     * @param NodeContext $node
-     *
-     * @return array
-     */
-    public function getContentVersions(NodeContext $node);
-
-    /**
-     * @param NodeContext $node
-     *
-     * @return string
-     */
-    public function getTemplate(NodeContext $node);
 
     /**
      * Create a node

@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TeaserBundle\Teaser;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Mediator\TeaserMediatorInterface;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
@@ -20,9 +21,9 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 class TeaserContext
 {
     /**
-     * @var TeaserManagerInterface
+     * @var TeaserMediatorInterface
      */
-    private $teaserManager;
+    private $mediator;
 
     /**
      * @var Teaser
@@ -40,14 +41,14 @@ class TeaserContext
     private $language;
 
     /**
-     * @param TeaserManagerInterface $teaserManager
-     * @param Teaser                 $teaser
-     * @param NodeContext            $node
-     * @param string                 $language
+     * @param TeaserMediatorInterface $mediator
+     * @param Teaser                  $teaser
+     * @param NodeContext             $node
+     * @param string                  $language
      */
-    public function __construct(TeaserManagerInterface $teaserManager, Teaser $teaser, NodeContext $node, $language)
+    public function __construct(TeaserMediatorInterface $mediator, Teaser $teaser, NodeContext $node, $language)
     {
-        $this->teaserManager = $teaserManager;
+        $this->mediator = $mediator;
         $this->teaser = $teaser;
         $this->node = $node;
         $this->language = $language;
@@ -72,17 +73,49 @@ class TeaserContext
     /**
      * @return int
      */
-    public function id()
+    public function getId()
     {
         return $this->teaser->getId();
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function title()
+    public function getNodeId()
     {
-        return $this->field("page");
+        return $this->teaser->getNodeId();
+    }
+
+    /**
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->teaser->getType();
+    }
+
+    /**
+     * @return int
+     */
+    public function getTypeId()
+    {
+        return $this->teaser->getTypeId();
+    }
+
+    /**
+     * @return int
+     */
+    public function isHidden()
+    {
+        return $this->teaser->isHidden();
+    }
+
+    /**
+     * @return int
+     */
+    public function isStopped()
+    {
+        return $this->teaser->isStopped();
     }
 
     /**
@@ -91,7 +124,7 @@ class TeaserContext
      *
      * @return array
      */
-    public function attribute($key, $default = null)
+    public function getAttribute($key, $default = null)
     {
         return $this->teaser->getAttribute($key, $default);
     }
@@ -101,9 +134,9 @@ class TeaserContext
      *
      * @return \DateTime|null
      */
-    public function publishedAt($language = null)
+    public function getPublishedAt($language = null)
     {
-        return $this->teaserManager->getPublishedAt($this->teaser, $language ?: $this->language);
+        return $this->mediator->getPublishedAt($this->teaser, $language ?: $this->language);
     }
 
     /**
@@ -111,27 +144,17 @@ class TeaserContext
      *
      * @return bool
      */
-    public function available($language = null)
+    public function isAvailable($language = null)
     {
-        return $this->teaserManager->isPublished($this->teaser, $language ?: $this->language);
+        return $this->mediator->isPublished($this->teaser, $language ?: $this->language);
     }
 
     /**
      * @return bool
      */
-    public function viewable()
+    public function isViewable()
     {
-        return $this->teaserManager->isViewable($this->teaser);
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return bool
-     */
-    public function content($language = null)
-    {
-        return $this->teaserManager->getContent($this->teaser, $language ?: $this->language);
+        return $this->mediator->isViewable($this->teaser);
     }
 
     /**
@@ -140,16 +163,26 @@ class TeaserContext
      *
      * @return bool
      */
-    public function field($field, $language = null)
+    public function getField($field, $language = null)
     {
-        return $this->teaserManager->getField($this->teaser, $field, $language ?: $this->language);
+        return $this->mediator->getField($this->teaser, $field, $language ?: $this->language);
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return bool
+     */
+    public function getContent($language = null)
+    {
+        return $this->mediator->getContent($this->teaser, $language ?: $this->language);
     }
 
     /**
      * @return string
      */
-    public function template()
+    public function getTemplate()
     {
-        return $this->teaserManager->getTemplate($this->teaser);
+        return $this->mediator->getTemplate($this->teaser);
     }
 }

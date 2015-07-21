@@ -8,21 +8,13 @@
 
 namespace Phlexible\Bundle\TreeBundle\Node;
 
-use Phlexible\Bundle\ElementBundle\Element\ElementHasher;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
-
 /**
  * Node hasher
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class NodeHasher
+class NodeHasher implements NodeHasherInterface
 {
-    /**
-     * @var ElementHasher
-     */
-    private $elementHasher;
-
     /**
      * @var string
      */
@@ -34,23 +26,21 @@ class NodeHasher
     private $hashes = array();
 
     /**
-     * @param ElementHasher $elementHasher
-     * @param string        $algo
+     * @param string $algo
      */
-    public function __construct(ElementHasher $elementHasher, $algo = 'md5')
+    public function __construct($algo = 'md5')
     {
-        $this->elementHasher = $elementHasher;
         $this->algo = $algo;
     }
 
     /**
-     * @param NodeInterface $node
-     * @param int               $version
-     * @param string            $language
+     * @param NodeContext $node
+     * @param int         $version
+     * @param string      $language
      *
      * @return string
      */
-    public function hashNode(NodeInterface $node, $version, $language)
+    public function hashNode(NodeContext $node, $version, $language)
     {
         $identifier = "{$node->getId()}__{$version}__{$language}";
 
@@ -58,8 +48,7 @@ class NodeHasher
             return $this->hashes[$identifier];
         }
 
-        $values = $this->createHashValuesByNode($node, $version, $language);
-        $hash = $this->hashValues($values);
+        $hash = $this->hashValues($this->createHashValuesByNode($node, $version, $language));
 
         $this->hashes[$identifier] = $hash;
 
@@ -67,21 +56,17 @@ class NodeHasher
     }
 
     /**
-     * @param NodeInterface $node
-     * @param int               $version
-     * @param string            $language
+     * @param NodeContext $node
+     * @param int         $version
+     * @param string      $language
      *
      * @return array
      */
-    private function createHashValuesByNode(NodeInterface $node, $version, $language)
+    private function createHashValuesByNode(NodeContext $node, $version, $language)
     {
-        $eid = $node->getContentId();
-
-        $attributes = $node->getAttributes();
-        $attributes['navigation'] = $node->getInNavigation();
-
-        $values = $this->elementHasher->createHashValuesByEid($eid, $version, $language);
-        $values['attributes'] = $attributes;
+        $values = $node->getAttributes();
+        $values['navigation'] = $node->getInNavigation();
+        $values['content'] = $node->getContent($language, $version);
 
         return $values;
     }

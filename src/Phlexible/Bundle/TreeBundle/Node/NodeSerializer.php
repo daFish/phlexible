@@ -8,8 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Node;
 
-use Phlexible\Bundle\ElementBundle\ElementService;
-use Phlexible\Bundle\ElementBundle\Icon\IconResolver;
+use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -22,12 +21,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class NodeSerializer
 {
     /**
-     * @var ElementService
-     */
-    private $elementService;
-
-    /**
-     * @var IconResolver
+     * @var \Phlexible\Bundle\TreeBundle\Icon\IconResolver
      */
     private $iconResolver;
 
@@ -47,20 +41,17 @@ class NodeSerializer
     private $authorizationChecker;
 
     /**
-     * @param ElementService                $elementService
-     * @param IconResolver                  $iconResolver
+     * @param \Phlexible\Bundle\TreeBundle\Icon\IconResolver                  $iconResolver
      * @param NodeManagerInterface          $nodeManager
      * @param PermissionRegistry            $permissionRegistry
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
-        ElementService $elementService,
         IconResolver $iconResolver,
         NodeManagerInterface $nodeManager,
         PermissionRegistry $permissionRegistry,
         AuthorizationCheckerInterface $authorizationChecker)
     {
-        $this->elementService = $elementService;
         $this->iconResolver = $iconResolver;
         $this->nodeManager = $nodeManager;
         $this->permissionRegistry = $permissionRegistry;
@@ -116,14 +107,9 @@ class NodeSerializer
             }
         }
 
-        $typeId = $node->getContentId();
-        $element = $this->elementService->findElement($typeId);
-
-        $elementtype = $this->elementService->findElementtype($element);
+        // TODO: both from mediator?
         $allowedElementtypeIds = array();
-        foreach ($this->elementService->findAllowedChildren($elementtype) as $allowedElementtype) {
-            $allowedElementtypeIds[] = $allowedElementtype->getId();
-        }
+        $hideChildren = false;
 
         $qtip = "ID: {$node->getId()}<br />Type: {$node->getContentType()}<br />Type ID: {$node->getContentId()}";
 
@@ -156,18 +142,19 @@ class NodeSerializer
 
             'allowedChildren' => $allowedElementtypeIds,
             'permissions'     => $permissions,
-            'hideChildren'    => $elementtype->getHideChildren() ? true : false,
+            'hideChildren'    => $hideChildren,
 
-            'elementtypeId'     => $elementtype->getId(),
-            'elementtypeName'   => $elementtype->getTitle(),
-            'elementtypeType'   => $elementtype->getType(),
+            // TODO: fix
+            'elementtypeId'     => null,//$elementtype->getId(),
+            'elementtypeName'   => null,//$elementtype->getTitle(),
+            'elementtypeType'   => null,//$elementtype->getType(),
 
             'allow_drag'          => true,
             'areas'               => array(),
             'qtip'                => $qtip,
         );
 
-        if (count($node->getTree()->getChildren($node)) && !$elementtype->getHideChildren()) {
+        if (count($node->getTree()->getChildren($node)) && !$hideChildren) {
             $data['leaf'] = false;
             $data['expanded'] = false;
         } else {

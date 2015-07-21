@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Structure element node
+ * Structure node
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -19,4 +19,59 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class StructureNode extends Node
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getInNavigation()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCache()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getController()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTemplate()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutes()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNeedAuthentication()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityExpression()
+    {
+        return null;
+    }
 }

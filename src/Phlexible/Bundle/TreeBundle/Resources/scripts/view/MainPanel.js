@@ -705,7 +705,6 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     onAfterLoadElement: function (element) {
-        debugger;
         // set active tab to default value
         this.getNodeTabs().items.each(function (item) {
             //Phlexible.console.debug('xxx', element.data.default_tab, item.tabKey);

@@ -88,7 +88,7 @@ class TreeController extends Controller
         $eid = $request->get('eid');
 
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $element = $elementService->findElement($eid);
         $elementtype = $elementService->findElementtype($element);
@@ -126,7 +126,7 @@ class TreeController extends Controller
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $tree = $treeManager->getByNodeID($id);
         $node = $tree->get($id);

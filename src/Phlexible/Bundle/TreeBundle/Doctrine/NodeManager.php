@@ -10,14 +10,10 @@ namespace Phlexible\Bundle\TreeBundle\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
-use Phlexible\Bundle\TreeBundle\Entity\NodeState;
 use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
-use Phlexible\Bundle\TreeBundle\Event\NodeOnlineEvent;
 use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
-use Phlexible\Bundle\TreeBundle\Node\NodeHasher;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -32,11 +28,6 @@ class NodeManager implements NodeManagerInterface
      * @var EntityManagerInterface
      */
     private $entityManager;
-
-    /**
-     * @var NodeHasher
-     */
-    private $nodeHasher;
 
     /**
      * @var EventDispatcherInterface
@@ -56,18 +47,15 @@ class NodeManager implements NodeManagerInterface
     /**
      * @param EntityManagerInterface   $entityManager
      * @param SiterootManagerInterface $siterootManager
-     * @param NodeHasher               $nodeHasher
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         SiterootManagerInterface $siterootManager,
-        NodeHasher $nodeHasher,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->siterootManager = $siterootManager;
-        $this->nodeHasher = $nodeHasher;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -81,18 +69,6 @@ class NodeManager implements NodeManagerInterface
         }
 
         return $this->nodeRepository;
-    }
-
-    /**
-     * @return EntityRepository
-     */
-    private function getNodeOnlineRepository()
-    {
-        if (null === $this->nodeOnlineRepository) {
-            $this->nodeOnlineRepository = $this->entityManager->getRepository('PhlexibleTreeBundle:NodeState');
-        }
-
-        return $this->nodeOnlineRepository;
     }
 
     /**
@@ -122,25 +98,76 @@ class NodeManager implements NodeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findStateBy(array $criteria)
+    public function findOneByNodeType($nodeType = null, array $instanceTypes = array(), array $criteria, array $orderBy = null)
     {
-        return $this->getNodeOnlineRepository()->findBy($criteria);
+        if ($nodeType) {
+            $nodeRepository = $this->entityManager->getRepository($nodeType);
+        } else {
+            $nodeRepository = $this->getNodeRepository();
+        }
+
+        $qb = $nodeRepository->createQueryBuilder('n')
+            ->setMaxResults(1);
+
+        foreach ($criteria as $field => $value) {
+            if ($value === null) {
+                $qb->andWhere($qb->expr()->isNull("n.$field"));
+            } else {
+                $qb->andWhere($qb->expr()->eq("n.$field", $qb->expr()->literal($value)));
+            }
+        }
+
+        if ($orderBy) {
+            foreach ($orderBy as $field => $dir) {
+                $qb->addOrderBy("n.$field", $dir);
+            }
+        }
+
+        if ($instanceTypes) {
+            $qb->andWhere("n INSTANCE OF (".implode(',', $instanceTypes).")");
+        }
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return $result;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findOneStateBy(array $criteria)
+    public function findByNodeType($nodeType = null, array $instanceTypes = array(), array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->getNodeOnlineRepository()->findOneBy($criteria);
-    }
+        if ($nodeType) {
+            $nodeRepository = $this->entityManager->getRepository($nodeType);
+        } else {
+            $nodeRepository = $this->getNodeRepository();
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hashNode(NodeInterface $node, $version, $language)
-    {
-        return $this->nodeHasher->hashNode($node, $version, $language);
+        $qb = $nodeRepository->createQueryBuilder('n')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
+
+        foreach ($criteria as $field => $value) {
+            if ($value === null) {
+                $qb->andWhere($qb->expr()->isNull("n.$field"));
+            } else {
+                $qb->andWhere($qb->expr()->eq("n.$field", $qb->expr()->literal($value)));
+            }
+        }
+
+        if ($orderBy) {
+            foreach ($orderBy as $field => $dir) {
+                $qb->addOrderBy("n.$field", $dir);
+            }
+        }
+
+        if ($instanceTypes) {
+            $qb->andWhere("n INSTANCE OF (".implode(',', $instanceTypes).")");
+        }
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
 
     /**
@@ -150,14 +177,14 @@ class NodeManager implements NodeManagerInterface
     {
         $event = new NodeEvent($node);
         if ($this->entityManager->contains($node)) {
-            $isUpdate = true;
-            $eventName = TreeEvents::BEFORE_UPDATE_NODE;
+            $beforeEventName = TreeEvents::BEFORE_UPDATE_NODE;
+            $eventName = TreeEvents::UPDATE_NODE;
         } else {
-            $isUpdate = false;
-            $eventName = TreeEvents::BEFORE_CREATE_NODE;
+            $beforeEventName = TreeEvents::BEFORE_CREATE_NODE;
+            $eventName = TreeEvents::CREATE_NODE;
 
         }
-        if ($this->eventDispatcher->dispatch($eventName, $event)->isPropagationStopped()) {
+        if ($this->eventDispatcher->dispatch($beforeEventName, $event)->isPropagationStopped()) {
             return false;
         }
 
@@ -167,52 +194,9 @@ class NodeManager implements NodeManagerInterface
         }
 
         $event = new NodeEvent($node);
-        if ($isUpdate) {
-            $eventName = TreeEvents::BEFORE_UPDATE_NODE;
-            $historyName = ElementHistoryManagerInterface::ACTION_UPDATE_NODE;
-        } else {
-            $eventName = TreeEvents::BEFORE_CREATE_NODE;
-            $historyName = ElementHistoryManagerInterface::ACTION_CREATE_NODE;
-        }
-
         $this->eventDispatcher->dispatch($eventName, $event);
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function updateState(NodeState $nodeOnline)
-    {
-        $event = new NodeOnlineEvent($nodeOnline);
-        if ($this->entityManager->contains($nodeOnline)) {
-            $isUpdate = true;
-            $eventName = TreeEvents::BEFORE_UPDATE_STATE;
-        } else {
-            $isUpdate = false;
-            $eventName = TreeEvents::BEFORE_CREATE_STATE;
-
-        }
-        if ($this->eventDispatcher->dispatch($eventName, $event)->isPropagationStopped()) {
-            return false;
-        }
-
-        $this->entityManager->persist($nodeOnline);
-        $this->entityManager->flush($nodeOnline);
-
-        $event = new NodeOnlineEvent($nodeOnline);
-        if ($isUpdate) {
-            $eventName = TreeEvents::UPDATE_STATE;
-            $historyName = ElementHistoryManagerInterface::ACTION_UPDATE_NODE;
-        } else {
-            $eventName = TreeEvents::CREATE_STATE;
-            $historyName = ElementHistoryManagerInterface::ACTION_CREATE_NODE;
-        }
-
-        $this->eventDispatcher->dispatch($eventName, $event);
-
-        return $nodeOnline;
     }
 
     /**
@@ -229,26 +213,7 @@ class NodeManager implements NodeManagerInterface
         $this->entityManager->flush($node);
 
         $event = new NodeEvent($node);
-        $this->eventDispatcher->dispatch(TreeEvents::BEFORE_DELETE_NODE, $event);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteState(NodeState $nodeOnline)
-    {
-        $event = new NodeOnlineEvent($nodeOnline);
-        if ($this->eventDispatcher->dispatch(TreeEvents::BEFORE_DELETE_STATE, $event)->isPropagationStopped()) {
-            return false;
-        }
-
-        $this->entityManager->remove($nodeOnline);
-        $this->entityManager->flush($nodeOnline);
-
-        $event = new NodeOnlineEvent($nodeOnline);
-        $this->eventDispatcher->dispatch(TreeEvents::BEFORE_DELETE_STATE, $event);
+        $this->eventDispatcher->dispatch(TreeEvents::DELETE_NODE, $event);
 
         return $this;
     }

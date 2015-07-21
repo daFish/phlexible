@@ -47,7 +47,7 @@ class LinkController extends Controller
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         if (null === $language) {
             if ($id != 'root') {
@@ -197,7 +197,7 @@ class LinkController extends Controller
 
         $treeManager = $this->get('phlexible_tree.node_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         // TODO: switch to master language of element
         $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
@@ -306,7 +306,7 @@ class LinkController extends Controller
         $treeManager = $this->get('phlexible_tree.node_manager');
         $elementService = $this->get('phlexible_element.element_service');
 
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $select = $db->select()
             ->distinct()
@@ -429,7 +429,7 @@ class LinkController extends Controller
     private function recurseLinkNodes(array $nodes, $language, $mode, NodeContext $targetNode = null)
     {
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $data = array();
 

@@ -15,6 +15,7 @@ use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
 use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
+use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
 use Phlexible\Component\Elementtype\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Component\Elementtype\Model\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -58,7 +59,7 @@ class DataController extends Controller
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $nodeManager = $this->get('phlexible_tree.node_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
         $nodeChangeManager = $this->get('phlexible_tree.node_change_manager');
         $nodeLockManager = $this->get('phlexible_tree.node_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
@@ -242,7 +243,7 @@ class DataController extends Controller
 
         if ($unlockId !== null) {
             $unlockNode = $tree->get($unlockId);
-            if ($unlockElement && $nodeLockManager->isLockedByUser($unlockNode, $language, $this->getUser()->getId())) {
+            if ($unlockNode && $nodeLockManager->isLockedByUser($unlockNode, $this->getUser()->getId())) {
                 try {
                     $nodeLockManager->unlock($unlockNode, $this->getUser()->getId());
                 } catch (\Exception $e) {
@@ -257,18 +258,10 @@ class DataController extends Controller
             $doLock = false;
         }
 
-        $lock = null;
-        if ($doLock && !$diff) {
-            if (!$nodeLockManager->isLockedByOtherUser($node, $language, $this->getUser()->getId())) {
-                $lock = $nodeLockManager->lock(
-                    $node,
-                    $this->getUser()->getId()
-                );
-            }
-        }
+        $lock = $nodeLockManager->findLock($node);
 
-        if (!$lock) {
-            $lock = $nodeLockManager->findLock($node);
+        if ($doLock && !$diff && !$lock) {
+            $lock = $nodeLockManager->lock($node, $this->getUser()->getId());
         }
 
         $lockInfo = null;
@@ -278,16 +271,16 @@ class DataController extends Controller
 
             $lockInfo = array(
                 'status'   => 'locked',
-                'id'       => $lock->getElement()->getEid(),
+                'nodeId'   => $lock->getNodeId(),
                 'username' => $lockUser->getDisplayName(),
-                'time'     => $lock->getLockedAt()->format('Y-m-d H:i:s'),
+                'lockedAt' => $lock->getLockedAt()->format('Y-m-d H:i:s'),
                 'age'      => time() - $lock->getLockedAt()->format('U'),
                 'type'     => $lock->getType(),
             );
 
             if ($lock->getUserId() === $this->getUser()->getId()) {
                 $lockInfo['status'] = 'edit';
-            } elseif ($lock->getType() == ElementLock::TYPE_PERMANENTLY) {
+            } elseif ($lock->getType() == NodeLock::TYPE_PERMANENTLY) {
                 $lockInfo['status'] = 'locked_permanently';
             }
         } elseif ($diff) {
@@ -300,7 +293,7 @@ class DataController extends Controller
                 'username' => '',
                 'time'     => '',
                 'age'      => 0,
-                'type'     => ElementLock::TYPE_TEMPORARY,
+                'type'     => NodeLock::TYPE_TEMPORARY,
             );
         }
 
@@ -373,7 +366,7 @@ class DataController extends Controller
 
             if ($isPublished) {
                 if ($teaser) {
-                    $teaserOnline = $teaserManager->findOneOnlineByTeaserAndLanguage($teaser, $language);
+                    $teaserOnline = $teaserManager->findOneStateByTeaserAndLanguage($teaser, $language);
                     $publishDate = $teaserOnline->getPublishedAt()->format('Y-m-d H:i:s');
                     $publishUser = $userManager->find($teaserOnline->getPublishUserId());
                     $onlineVersion = $teaserOnline->getVersion();
@@ -523,7 +516,7 @@ class DataController extends Controller
         $teaserId = $request->get('teaser_id');
         $language = $request->get('language');
 
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
         $dataSaver = $this->get('phlexible_element.request.data_saver');
 
         list($elementVersion, $node, $teaser, $publishSlaves) = $dataSaver->save($request, $this->getUser());

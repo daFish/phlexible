@@ -25,13 +25,15 @@ class NodeLockRepository extends EntityRepository
      *
      * @return NodeLock
      */
-    public function findOneByNodeAndNotUserId(NodeContext $node, $notUserId)
+    public function lockExistsByNodeAndNotUserId(NodeContext $node, $notUserId)
     {
         $qb = $this->createQueryBuilder('l');
         $qb
+            ->select('l.id')
             ->where($qb->expr()->eq('l.nodeId', $node->getId()))
-            ->andWhere($qb->expr()->neq('l.userId', $qb->expr()->literal($notUserId)));
+            ->andWhere($qb->expr()->neq('l.userId', $qb->expr()->literal($notUserId)))
+            ->setMaxResults(1);
 
-        return $qb->getQuery()->getResult();
+        return count($qb->getQuery()->getScalarResult()) > 0;
     }
 }

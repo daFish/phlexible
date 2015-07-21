@@ -78,9 +78,7 @@ class NodeLockManager implements NodeLockManagerInterface
      */
     public function isLockedByOtherUser(NodeContext $node, $userId)
     {
-        $lock = $this->getLockRepository()->findOneByNodeAndNotUserId($node, $userId);
-
-        return $lock !== null;
+        return $this->getLockRepository()->lockExistsByNodeAndNotUserId($node, $userId);
     }
 
     /**

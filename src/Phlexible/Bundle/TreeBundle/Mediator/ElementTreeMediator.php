@@ -13,9 +13,11 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Proxy\ClassManager;
 use Phlexible\Bundle\TreeBundle\Entity\PageNode;
+use Phlexible\Bundle\TreeBundle\Entity\PartNode;
 use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy\VersionStrategyInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Elementtype\Model\Elementtype;
 
 /**
  * Element tree mediator
@@ -185,12 +187,16 @@ class ElementTreeMediator implements TreeMediatorInterface
         }
 
         switch ($contentDocument->getElementSource()->getType()) {
-            case 'full':
+            case Elementtype::TYPE_FULL:
                 $node = new PageNode();
                 break;
 
-            case 'structure':
+            case Elementtype::TYPE_STRUCTURE:
                 $node = new StructureNode();
+                break;
+
+            case Elementtype::TYPE_PART:
+                $node = new PartNode();
                 break;
 
             default:

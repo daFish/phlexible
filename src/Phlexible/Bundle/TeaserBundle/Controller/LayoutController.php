@@ -46,10 +46,10 @@ class LayoutController extends Controller
 
         $translator = $this->get('translator');
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $teaserService = $this->get('phlexible_teaser.teaser_service');
+        $areaManager = $this->get('phlexible_teaser.area_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $elementSourceManager = $this->get('phlexible_element.element_source_manager');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $tree = $treeManager->getByNodeId($nodeId);
         $node = $tree->get($nodeId);
@@ -74,7 +74,7 @@ class LayoutController extends Controller
                 $elementMasterLanguage
             );
 
-            $teasers = $teaserService->findCascadingForLayoutAreaAndNode($layoutarea, $node);
+            $teasers = $areaManager->findCascadingByAreaAndNode($layoutarea, $node);
             // $language,
             // $availableLanguages
             // preview = true
@@ -120,9 +120,6 @@ class LayoutController extends Controller
                     case 'inherited':
                     case 'teaser':
                     case 'element':
-                        $teaserElement = $elementService->findElement($teaser->getTypeId());
-                        $teaserElementVersion = $elementService->findElementVersion($teaserElement, $teaserElement->getLatestVersion());
-
                         $cls = '';
                         if (!$teaser->isStopped()) {
                             $cls .= 'inherit ';
@@ -137,9 +134,8 @@ class LayoutController extends Controller
                         $teaserData = array_merge(
                             $teaserData,
                             array(
-                                'text'      => $teaserElementVersion->getBackendTitle($language),
+                                'text'      => $teaser->getField('backend', $language),
                                 'icon'      => $iconResolver->resolveTeaser($teaser, $language),
-                                'eid'       => $teaserElement->getEid(),
                                 'inherited' => $teaser->getNodeId() !== $nodeId,
                                 'inherit'   => !$teaser->isStopped(),
                                 'cls'       => trim($cls),
@@ -181,7 +177,7 @@ class LayoutController extends Controller
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $node = $treeManager->getByNodeId($nodeId)->get($nodeId);
 
@@ -249,7 +245,7 @@ class LayoutController extends Controller
                     }
                 }
 
-                $teaserOnline = $teaserManager->findOneOnlineByTeaserAndLanguage($teaser, $language);
+                $teaserOnline = $teaserManager->findOneStateByTeaserAndLanguage($teaser, $language);
 
                 if (!empty($filter['date'])) {
                     $date = $filter['date'];
@@ -361,7 +357,7 @@ class LayoutController extends Controller
 
         $elementSourceManager = $this->get('phlexible_element.element_source_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $elementtype = $elementSourceManager->findElementtype($id);
         $childElementtypes = $elementService->findAllowedChildren($elementtype);
@@ -399,7 +395,7 @@ class LayoutController extends Controller
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $elementService = $this->get('phlexible_element.element_service');
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $data = array();
         $data[] = array(
@@ -766,7 +762,7 @@ class LayoutController extends Controller
         $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $elementSourceManager = $this->get('phlexible_element.element_source_manager');
         $nodeSerializer = $this->get('phlexible_tree.node_serializer');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $tree = $treeManager->getBySiteRootId($siterootId);
 

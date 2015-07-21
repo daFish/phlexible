@@ -120,7 +120,7 @@ class NodeConfigurator implements ConfiguratorInterface
             ->set('version', $version)
             ->set('language', $request->getLocale());
 
-        if ($template = $tree->getTemplate($node)) {
+        if ($template = $node->getTemplate()) {
             $renderConfiguration
                 ->addFeature('template')
                 ->setVariable('template', $template);

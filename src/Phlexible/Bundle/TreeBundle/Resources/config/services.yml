@@ -1,10 +1,32 @@
 services:
+    phlexible_element.icon_builder:
+        class: Phlexible\Bundle\TreeBundle\Icon\IconBuilder
+        arguments: [@file_locator, %phlexible_element.overlay.cache_dir%]
+
+    phlexible_tree.icon_resolver:
+        class: Phlexible\Bundle\TreeBundle\Icon\IconResolver
+        arguments: [@router, @phlexible_element.element_service, @phlexible_teaser.teaser_manager]
+
+    phlexible_tree.node_context_factory:
+        class: Phlexible\Bundle\TreeBundle\Node\NodeContextFactory
+        arguments:
+            - @phlexible_tree.mediator
+
+    phlexible_tree.tree_factory:
+        class: Phlexible\Bundle\TreeBundle\Tree\TreeFactory
+        arguments:
+            - @phlexible_tree.node_manager
+            - @phlexible_tree.node_state_manager
+            - @phlexible_tree.node_context_factory
+            - @phlexible_tree.node_hasher
+            - @event_dispatcher
+
     phlexible_tree.tree_manager:
         class: Phlexible\Bundle\TreeBundle\Tree\TreeManager
         arguments:
             - @phlexible_siteroot.siteroot_manager
             - @phlexible_tree.node_manager
-            - @phlexible_tree.mediator
+            - @phlexible_tree.tree_factory
             - @event_dispatcher
 
     phlexible_tree.tree_dumper:
@@ -21,15 +43,14 @@ services:
     phlexible_tree.node_serializer:
         class: Phlexible\Bundle\TreeBundle\Node\NodeSerializer
         arguments:
-            - @phlexible_element.element_service
-            - @phlexible_element.icon_resolver
+            - @phlexible_tree.icon_resolver
             - @phlexible_tree.node_manager
             - @phlexible_access_control.permission_registry
             - @security.authorization_checker
 
     phlexible_tree.node_hasher:
         class: Phlexible\Bundle\TreeBundle\Node\NodeHasher
-        arguments: [@phlexible_element.element_hasher]
+        arguments: ["sha1"]
 
     phlexible_tree.node_sorter:
         class: Phlexible\Bundle\TreeBundle\Node\NodeSorter
@@ -66,10 +87,10 @@ services:
             - @phlexible_siteroot.siteroot_manager
             - @phlexible_tree.tree_manager
             - @security.authorization_checker
-            - %phlexible_element.publish.comment_required%
-            - %phlexible_element.publish.confirm_required%
-            - %phlexible_element.create.use_multilanguage%
-            - %phlexible_element.create.restricted%
+            - %phlexible_tree.publish.comment_required%
+            - %phlexible_tree.publish.confirm_required%
+            - %phlexible_tree.create.use_multilanguage%
+            - %phlexible_tree.create.restricted%
             - %phlexible_cms.languages.available%
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
@@ -97,6 +118,44 @@ services:
         arguments: [@router, @phlexible_tree.node_manager]
         tags:
             - {name: kernel.event_listener, event: kernel.response, method: onResponse}
+
+    # portlets
+    phlexible_tree.portlet.latest_node_changes:
+        class: Phlexible\Bundle\TreeBundle\Portlet\LatestNodeChangesPortlet
+        public: false
+        arguments:
+            - @translator
+            - @phlexible_tree.tree_manager
+            - @phlexible_tree.node_manager
+            - @phlexible_tree.icon_resolver
+            - %phlexible_tree.portlet.num_items%
+        tags:
+            - {name: phlexible_dashboard.portlet}
+
+    # searches
+    phlexible_tree.search.node_id:
+        class: Phlexible\Bundle\TreeBundle\Search\NodeIdSearch
+        public: false
+        arguments:
+            - @phlexible_tree.tree_manager
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_tree.icon_resolver
+            - @security.authorization_checker
+            - %phlexible_cms.languages.default%
+        tags:
+            - {name: phlexible_search.provider}
+
+    phlexible_tree.search.node_title:
+        class: Phlexible\Bundle\TreeBundle\Search\NodeTitleSearch
+        public: false
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @phlexible_tree.tree_manager
+            - @phlexible_siteroot.siteroot_manager
+            - @phlexible_tree.icon_resolver
+            - @security.authorization_checker
+        tags:
+            - {name: phlexible_search.provider}
 
     # twig extensions
     phlexible_tree.twig.tree_extension:

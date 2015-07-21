@@ -1,7 +1,7 @@
 services:
-    phlexible_teaser.teaser_hasher:
-        class: Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher
-        arguments: [@phlexible_element.element_hasher]
+    phlexible_teaser.area_manager:
+        class: Phlexible\Bundle\TeaserBundle\Area\AreaManager
+        arguments: [@phlexible_tree.node_manager]
 
     phlexible_teaser.layoutarea.manager:
         class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager

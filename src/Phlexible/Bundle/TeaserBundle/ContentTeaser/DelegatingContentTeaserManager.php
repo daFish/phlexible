@@ -151,7 +151,7 @@ class DelegatingContentTeaserManager
      */
     public function findOnlineByTeaser(ContentTeaser $teaser)
     {
-        return $this->teaserManager->findOnlineByTeaser($teaser);
+        return $this->teaserManager->findTeaserState($teaser);
     }
 
     /**
@@ -159,7 +159,7 @@ class DelegatingContentTeaserManager
      */
     public function findOneOnlineByTeaserAndLanguage(ContentTeaser $teaser, $language)
     {
-        return $this->teaserManager->findOneOnlineByTeaserAndLanguage($teaser, $language);
+        return $this->teaserManager->findOneStateByTeaserAndLanguage($teaser, $language);
     }
 
     /**

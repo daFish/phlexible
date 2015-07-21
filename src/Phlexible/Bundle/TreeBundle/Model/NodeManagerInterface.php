@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Model;
 
-use Phlexible\Bundle\TreeBundle\Entity\NodeState;
-
 /**
  * Node manager interface
  *
@@ -43,6 +41,28 @@ interface NodeManagerInterface
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     /**
+     * @param string $nodeType
+     * @param array  $instanceTypes
+     * @param array  $criteria
+     * @param array  $orderBy
+     *
+     * @return NodeInterface
+     */
+    public function findOneByNodeType($nodeType = null, array $instanceTypes = array(), array $criteria, array $orderBy = null);
+
+    /**
+     * @param string $nodeType
+     * @param array  $instanceTypes
+     * @param array  $criteria
+     * @param array  $orderBy
+     * @param int    $limit
+     * @param int    $offset
+     *
+     * @return NodeInterface[]
+     */
+    public function findByNodeType($nodeType = null, array $instanceTypes = array(), array $criteria, array $orderBy = null, $limit = null, $offset = null);
+
+    /**
      * @param NodeInterface $node
      *
      * @return bool
@@ -66,31 +86,8 @@ interface NodeManagerInterface
     public function getInstanceNodes(NodeInterface $node);
 
     /**
-     * @param array $criteria
-     *
-     * @return NodeState[]
-     */
-    public function findStateBy(array $criteria);
-
-    /**
-     * @param array $criteria
-     *
-     * @return NodeState
-     */
-    public function findOneStateBy(array $criteria);
-
-    /**
      * @param NodeInterface $node
-     * @param int               $version
-     * @param string            $language
-     *
-     * @return string
-     */
-    public function hashNode(NodeInterface $node, $version, $language);
-
-    /**
-     * @param NodeInterface $node
-     * @param bool              $flush
+     * @param bool          $flush
      *
      * @return $this
      */
@@ -102,14 +99,4 @@ interface NodeManagerInterface
      * @return $this
      */
     public function deleteNode(NodeInterface $node);
-
-    /**
-     * @param NodeState $nodeOnline
-     */
-    public function updateState(NodeState $nodeOnline);
-
-    /**
-     * @param NodeState $nodeOnline
-     */
-    public function deleteState(NodeState $nodeOnline);
 }

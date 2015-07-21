@@ -11,12 +11,12 @@ namespace Phlexible\Bundle\TeaserBundle\Doctrine;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
+use Phlexible\Bundle\TeaserBundle\Entity\TeaserState;
 use Phlexible\Bundle\TeaserBundle\Event\PublishTeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Event\SetTeaserOfflineEvent;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Mediator\TeaserMediatorInterface;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
-use Phlexible\Bundle\TeaserBundle\Teaser\TeaserHasher;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -32,11 +32,6 @@ class TeaserManager implements TeaserManagerInterface
      * @var EntityManager
      */
     private $entityManager;
-
-    /**
-     * @var TeaserHasher
-     */
-    private $teaserHasher;
 
     /**
      * @var TeaserMediatorInterface
@@ -56,22 +51,19 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * @var EntityRepository
      */
-    private $teaserOnlineRepository;
+    private $teaserStateRepository;
 
     /**
      * @param EntityManager            $entityManager
-     * @param TeaserHasher             $teaserHasher
      * @param TeaserMediatorInterface  $mediator
      * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         EntityManager $entityManager,
-        TeaserHasher $teaserHasher,
         TeaserMediatorInterface $mediator,
         EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
-        $this->teaserHasher = $teaserHasher;
         $this->mediator = $mediator;
         $this->dispatcher = $dispatcher;
     }
@@ -91,13 +83,13 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * @return EntityRepository
      */
-    private function getTeaserOnlineRepository()
+    private function getTeaserStateRepository()
     {
-        if (null === $this->teaserOnlineRepository) {
-            $this->teaserOnlineRepository = $this->entityManager->getRepository('PhlexibleTeaserBundle:TeaserOnline');
+        if (null === $this->teaserStateRepository) {
+            $this->teaserStateRepository = $this->entityManager->getRepository('PhlexibleTeaserBundle:TeaserState');
         }
 
-        return $this->teaserOnlineRepository;
+        return $this->teaserStateRepository;
     }
 
     /**
@@ -122,63 +114,6 @@ class TeaserManager implements TeaserManagerInterface
     public function findOneBy(array $criteria)
     {
         return $this->getTeaserRepository()->findOneBy($criteria);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findCascadingForLayoutAreaAndNode($layoutarea, NodeContext $forNode, $includeLocalHidden = true)
-    {
-        /* @var $teasers Teaser[] */
-        $teasers = array();
-        $forNodeId = $forNode->getId();
-
-        foreach ($forNode->getPath() as $node) {
-            foreach ($this->findForLayoutAreaAndNodeContext($layoutarea, $node) as $teaser) {
-                if ($node->getId() !== $forNodeId && $teaser->hasStopId($node->getId())) {
-                    continue;
-                }
-                if ($teaser->hasStopId($forNodeId)) {
-                    $teaser->setStopped();
-                }
-                if ($teaser->hasHideId($forNodeId)) {
-                    $teaser->setHidden();
-                }
-
-                $teasers[$teaser->getId()] = $teaser;
-            }
-
-            if ($node->getId() !== $forNodeId) {
-                foreach ($teasers as $index => $teaser) {
-                    if ($teaser->hasStopId($node->getId())) {
-                        unset($teasers[$index]);
-                    }
-                }
-            } elseif (!$includeLocalHidden) {
-                foreach ($teasers as $index => $teaser) {
-                    if ($teaser->isHidden()) {
-                        unset($teasers[$index]);
-                    }
-                }
-            }
-        }
-
-        return $teasers;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findForLayoutAreaAndNodeContext($layoutarea, NodeContext $node)
-    {
-        $teasers = $this->getTeaserRepository()->findBy(
-            array(
-                'layoutareaId' => $layoutarea->getId(),
-                'nodeId'       => $node->getId()
-            )
-        );
-
-        return $teasers;
     }
 
     /**
@@ -221,7 +156,7 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function isPublished(Teaser $teaser, $language)
     {
-        return $this->findOneOnlineByTeaserAndLanguage($teaser, $language) ? true : false;
+        return $this->findOneStateByTeaserAndLanguage($teaser, $language) ? true : false;
     }
 
     /**
@@ -230,7 +165,7 @@ class TeaserManager implements TeaserManagerInterface
     public function getPublishedLanguages(Teaser $teaser)
     {
         $language = array();
-        foreach ($this->findOnlineByTeaser($teaser) as $teaserOnline) {
+        foreach ($this->findTeaserState($teaser) as $teaserOnline) {
             $language[] = $teaserOnline->getLanguage();
         }
 
@@ -242,12 +177,12 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function getPublishedAt(Teaser $teaser, $language)
     {
-        $teaserOnline = $this->findOneOnlineByTeaserAndLanguage($teaser, $language);
-        if (!$teaserOnline) {
+        $teaserState = $this->findOneStateByTeaserAndLanguage($teaser, $language);
+        if (!$teaserState) {
             return null;
         }
 
-        return $teaserOnline->getPublishedAt();
+        return $teaserState->getPublishedAt();
     }
 
     /**
@@ -255,12 +190,12 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function getPublishedVersion(Teaser $teaser, $language)
     {
-        $teaserOnline = $this->findOneOnlineByTeaserAndLanguage($teaser, $language);
-        if (!$teaserOnline) {
+        $teaserState = $this->findOneStateByTeaserAndLanguage($teaser, $language);
+        if (!$teaserState) {
             return null;
         }
 
-        return $teaserOnline->getVersion();
+        return $teaserState->getVersion();
     }
 
     /**
@@ -269,8 +204,8 @@ class TeaserManager implements TeaserManagerInterface
     public function getPublishedVersions(Teaser $teaser)
     {
         $versions = array();
-        foreach ($this->findOnlineByTeaser($teaser) as $teaserOnline) {
-            $versions[$teaserOnline->getLanguage()] = $teaserOnline->getVersion();
+        foreach ($this->findTeaserState($teaser) as $teaserState) {
+            $versions[$teaserState->getLanguage()] = $teaserState->getVersion();
         }
 
         return $versions;
@@ -281,19 +216,19 @@ class TeaserManager implements TeaserManagerInterface
      */
     public function isAsync(Teaser $teaser, $language)
     {
-        $teaserOnline = $this->findOneOnlineByTeaserAndLanguage($teaser, $language);
-        if (!$teaserOnline) {
+        $teaserState = $this->findOneStateByTeaserAndLanguage($teaser, $language);
+        if (!$teaserState) {
             return false;
         }
 
         $version = $this->mediator->getContentDocument($this, $teaser, $language)->__version();
 
-        if ($version === $teaserOnline->getVersion()) {
+        if ($version === $teaserState->getVersion()) {
             return false;
         }
 
-        $publishedHash = $teaserOnline->getHash();
-        $currentHash = $this->teaserHasher->hashTeaser($teaser, $version, $language);
+        $publishedHash = $teaserState->getHash();
+        $currentHash = '123';
 
         return $publishedHash === $currentHash;
     }
@@ -301,17 +236,17 @@ class TeaserManager implements TeaserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOnlineByTeaser(Teaser $teaser)
+    public function findTeaserState(Teaser $teaser)
     {
-        return $this->getTeaserOnlineRepository()->findBy(array('teaser' => $teaser->getId()));
+        return $this->getTeaserStateRepository()->findBy(array('teaser' => $teaser->getId()));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language)
+    public function findOneStateByTeaserAndLanguage(Teaser $teaser, $language)
     {
-        return $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser->getId(), 'language' => $language));
+        return $this->getTeaserStateRepository()->findOneBy(array('teaser' => $teaser->getId(), 'language' => $language));
     }
 
     /**
@@ -469,27 +404,27 @@ class TeaserManager implements TeaserManagerInterface
             return null;
         }
 
-        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
-        if (!$teaserOnline) {
-            $teaserOnline = new TeaserOnline();
-            $teaserOnline
+        $teaserState = $this->getTeaserStateRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
+        if (!$teaserState) {
+            $teaserState = new TeaserState();
+            $teaserState
                 ->setTeaser($teaser);
         }
 
-        $teaserOnline
+        $teaserState
             ->setLanguage($language)
             ->setVersion($version)
             ->setHash($this->teaserHasher->hashTeaser($teaser, $version, $language))
             ->setPublishedAt(new \DateTime())
             ->setPublishUserId($userId);
 
-        $this->entityManager->persist($teaserOnline);
-        $this->entityManager->flush($teaserOnline);
+        $this->entityManager->persist($teaserState);
+        $this->entityManager->flush($teaserState);
 
         $event = new PublishTeaserEvent($teaser, $language, $version);
         $this->dispatcher->dispatch(TeaserEvents::PUBLISH_TEASER, $event);
 
-        return $teaserOnline;
+        return $teaserState;
     }
 
     /**
@@ -502,9 +437,9 @@ class TeaserManager implements TeaserManagerInterface
             return null;
         }
 
-        $teaserOnline = $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
-        if ($teaserOnline) {
-            $this->entityManager->remove($teaserOnline);
+        $teaserState = $this->getTeaserStateRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
+        if ($teaserState) {
+            $this->entityManager->remove($teaserState);
             $this->entityManager->flush();
         }
 

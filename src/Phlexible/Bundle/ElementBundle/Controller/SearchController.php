@@ -37,7 +37,7 @@ class SearchController extends Controller
         $query = $request->get('query');
 
         $nodeManager = $this->get('phlexible_tree.node_manager');
-        $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
         $conn = $this->get('database_connection');
 
         $qb = $conn->createQueryBuilder();

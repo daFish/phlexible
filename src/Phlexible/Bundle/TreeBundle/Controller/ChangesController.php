@@ -33,9 +33,9 @@ class ChangesController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $nodeId   = $request->get('filter_node_id', null);
-        $action   = $request->get('filter_action', null);
-        $comment  = $request->get('filter_comment', null);
+        $nodeId   = $request->get('nodeId', null);
+        $action   = $request->get('action', null);
+        $comment  = $request->get('comment', null);
         $sort     = $request->get('sort', 'createdAt');
         $dir      = $request->get('dir', 'DESC');
         $offset   = $request->get('start', 0);
@@ -44,17 +44,13 @@ class ChangesController extends Controller
         $criteria = array();
 
         if ($nodeId) {
-            $criteria['tid'] = $nodeId;
+            $criteria['nodeId'] = $nodeId;
         }
         if ($action) {
             $criteria['action'] = $action;
         }
         if ($comment) {
             $criteria['comment'] = $comment;
-        }
-
-        if ($sort === 'create_time') {
-            $sort = 'createdAt';
         }
 
         $changeManager = $this->get('phlexible_tree.node_change_manager');

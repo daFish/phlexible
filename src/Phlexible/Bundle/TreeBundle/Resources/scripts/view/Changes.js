@@ -72,7 +72,8 @@ Phlexible.tree.view.Changes = Ext.extend(Ext.grid.GridPanel, {
                 header: this.strings.date,
                 width: 130,
                 dataIndex: 'createdAt',
-                sortable: true
+                sortable: true,
+                renderer: Ext.util.Format.dateRenderer('Y-m-d H:i:s')
             }
         ];
 

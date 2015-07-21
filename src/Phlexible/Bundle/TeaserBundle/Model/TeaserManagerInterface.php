@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TeaserBundle\Model;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TeaserBundle\Entity\TeaserOnline;
+use Phlexible\Bundle\TeaserBundle\Entity\TeaserState;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
@@ -42,23 +42,6 @@ interface TeaserManagerInterface
      * @return Teaser
      */
     public function findOneBy(array $criteria);
-
-    /**
-     * @param mixed       $layoutarea
-     * @param NodeContext $node
-     *
-     * @return Teaser[]
-     */
-    public function findForLayoutAreaAndNodeContext($layoutarea, NodeContext $node);
-
-    /**
-     * @param mixed       $layoutarea
-     * @param NodeContext $forNode
-     * @param bool        $includeLocalHidden
-     *
-     * @return Teaser[]
-     */
-    public function findCascadingForLayoutAreaAndNode($layoutarea, NodeContext $forNode, $includeLocalHidden = true);
 
     /**
      * @param Teaser $teaser
@@ -130,17 +113,17 @@ interface TeaserManagerInterface
     /**
      * @param Teaser $teaser
      *
-     * @return TeaserOnline
+     * @return TeaserState
      */
-    public function findOnlineByTeaser(Teaser $teaser);
+    public function findTeaserState(Teaser $teaser);
 
     /**
      * @param Teaser $teaser
      * @param string $language
      *
-     * @return TeaserOnline[]
+     * @return TeaserState[]
      */
-    public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language);
+    public function findOneStateByTeaserAndLanguage(Teaser $teaser, $language);
 
     /**
      * Create teaser

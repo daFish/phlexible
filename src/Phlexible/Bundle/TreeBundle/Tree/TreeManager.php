@@ -11,11 +11,9 @@ namespace Phlexible\Bundle\TreeBundle\Tree;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
-use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tree manager
@@ -35,14 +33,9 @@ class TreeManager implements TreeManagerInterface
     private $nodeManager;
 
     /**
-     * @var TreeMediatorInterface
+     * @var TreeFactoryInterface
      */
-    private $mediator;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private $treeFactory;
 
     /**
      * @var TreeInterface[]
@@ -52,19 +45,16 @@ class TreeManager implements TreeManagerInterface
     /**
      * @param SiterootManagerInterface $siterootManager
      * @param NodeManagerInterface     $nodeManager
-     * @param TreeMediatorInterface    $mediator
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param TreeFactoryInterface     $treeFactory
      */
     public function __construct(
         SiterootManagerInterface $siterootManager,
         NodeManagerInterface $nodeManager,
-        TreeMediatorInterface $mediator,
-        EventDispatcherInterface $eventDispatcher
+        TreeFactoryInterface $treeFactory
     ) {
         $this->siterootManager = $siterootManager;
         $this->nodeManager = $nodeManager;
-        $this->mediator = $mediator;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->treeFactory = $treeFactory;
     }
 
     /**
@@ -73,7 +63,7 @@ class TreeManager implements TreeManagerInterface
     public function getBySiteRootId($siteRootId)
     {
         if (!isset($this->trees[$siteRootId])) {
-            $tree = new Tree($siteRootId, $this->nodeManager, $this->mediator, $this->eventDispatcher);
+            $tree = $this->treeFactory->factory($siteRootId);
             $this->trees[$siteRootId] = $tree;
         }
 
