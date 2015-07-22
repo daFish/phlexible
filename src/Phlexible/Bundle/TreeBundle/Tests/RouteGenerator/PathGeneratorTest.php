@@ -24,9 +24,9 @@ class PathGeneratorTest extends \PHPUnit_Framework_TestCase
         $tree = $this->prophesize('Phlexible\Bundle\TreeBundle\Tree\Tree');
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
         $node->getTree()->willReturn($tree->reveal());
+        $node->isViewable('de')->willReturn(true);
+        $node->getField('navigation', 'de')->willReturn('foo');
         $tree->getPath($node)->willReturn(array($node));
-        $tree->isViewable($node, 'de')->willReturn(true);
-        $tree->getField($node, 'navigation', 'de')->willReturn('foo');
         $decorator->decoratePath(Argument::type('Phlexible\Bundle\TreeBundle\RouteGenerator\Path'), $node, 'de')->shouldBeCalled();
 
         $generator = new PathGenerator(array($decorator->reveal()));

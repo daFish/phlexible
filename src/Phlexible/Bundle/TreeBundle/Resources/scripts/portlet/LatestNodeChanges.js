@@ -66,7 +66,7 @@ Phlexible.tree.portlet.LatestNodeChanges = Ext.extend(Ext.ux.Portlet, {
                     '</tr>',
                     '<tpl for=".">',
                     '<tr class="elements-wrap" id="elements_last_{nodeId}">',
-                    '<td class="elements-portlet-icon"><img src="{[Phlexible.baseUrl]}{icon}" title="{title}" width="18" height="18"/></td>',
+                    '<td class="elements-portlet-icon"><img src="{icon}" title="{title}" width="18" height="18"/></td>',
                     '<td class="elements-portlet-title">{title}</td>',
                     '<td class="elements-portlet-language">{[Phlexible.inlineIcon("p-gui-" + values.language + "-icon")]}</td>',
                     '<td class="elements-portlet-version">{version}</td>',

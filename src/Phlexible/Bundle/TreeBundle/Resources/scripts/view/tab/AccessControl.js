@@ -22,8 +22,7 @@ Phlexible.tree.view.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Right
 
     initComponent: function () {
         this.urls = {
-            identities: Phlexible.Router.generate('elements_rights_identities'),
-            add: Phlexible.Router.generate('elements_rights_add')
+            identities: Phlexible.Router.generate('tree_access_identities')
         };
 
         this.element.on({

@@ -4,9 +4,10 @@ services:
         arguments:
             - @phlexible_tree.element_values_extractor
             -
-                - @phlexible_tree.link_extractor.link_field
+                - @phlexible_tree.link_extractor.datasource
                 - @phlexible_tree.link_extractor.file_field
                 - @phlexible_tree.link_extractor.folder_field
+                - @phlexible_tree.link_extractor.link_field
                 - @phlexible_tree.link_extractor.text
 
     phlexible_tree.element_values_extractor:
@@ -14,8 +15,8 @@ services:
         public: false
 
     # link extractor
-    phlexible_tree.link_extractor.link_field:
-        class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\LinkFieldLinkExtractor
+    phlexible_tree.link_extractor.datasource:
+        class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\DatasourceLinkExtractor
         tags:
             - {name: phlexible_tree.link_extractor}
 
@@ -28,6 +29,11 @@ services:
             class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\FolderFieldLinkExtractor
             tags:
                 - {name: phlexible_tree.link_extractor}
+
+    phlexible_tree.link_extractor.link_field:
+        class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\LinkFieldLinkExtractor
+        tags:
+            - {name: phlexible_tree.link_extractor}
 
     phlexible_tree.link_extractor.text:
             class: Phlexible\Bundle\TreeBundle\Node\LinkExtractor\TextLinkExtractor

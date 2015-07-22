@@ -1,5 +1,5 @@
 services:
-    phlexible_element.icon_builder:
+    phlexible_tree.icon_builder:
         class: Phlexible\Bundle\TreeBundle\Icon\IconBuilder
         arguments: [@file_locator, %phlexible_element.overlay.cache_dir%]
 

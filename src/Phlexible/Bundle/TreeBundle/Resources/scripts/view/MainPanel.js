@@ -202,7 +202,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                                 deferEmptyText: false
                             },
                             store: new Ext.data.JsonStore({
-                                url: Phlexible.Router.generate('elements_search_elements'),
+                                url: Phlexible.Router.generate('tree_search_nodes'),
                                 baseParams: {
                                     siterootId: this.element.getSiterootId(),
                                     query: '',
@@ -282,7 +282,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                                 xtype: 'dataview',
                                 cls: 'p-elements-resource-media-panel',
                                 store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('elements_search_media'),
+                                    url: Phlexible.Router.generate('tree_search_files'),
                                     baseParams: {
                                         siterootId: this.element.getSiterootId(),
                                         query: ''

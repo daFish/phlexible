@@ -73,7 +73,7 @@ class IconsController extends Controller
         }
 
         if ($parameters) {
-            $iconBuilder = $this->get('phlexible_element.icon_builder');
+            $iconBuilder = $this->get('phlexible_tree.icon_builder');
             $filename = $iconBuilder->createParameterIcon($filename, $parameters);
             $mimetype = 'image/png';
         } else {

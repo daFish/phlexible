@@ -81,19 +81,12 @@ class IconBuilder
             $overlayDir = '@PhlexibleTreeBundle/Resources/public/overlays/';
 
             if (!empty($overlays['status'])) {
-                if ($overlays['status'] === 'async') {
-                    imagefilter($target, IMG_FILTER_COLORIZE, 100, 0, 0);
-                } else {
-                    imagefilter($target, IMG_FILTER_COLORIZE, 0, 100, 0);
-                }
-                /*
                 // apply status overlay
                 $overlayIcon = imagecreatefromgif(
                     $this->locator->locate($overlayDir . 'status_' . $overlays['status'] . '.gif')
                 );
-                imagecopy($target, $overlayIcon, 9, 9, 0, 0, 8, 8);
+                imagecopy($target, $overlayIcon, 10, 10, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
-                */
             }
 
             if (!empty($overlays['instance'])) {

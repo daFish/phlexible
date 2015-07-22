@@ -68,7 +68,7 @@ class IconResolver
             $icon = '_fallback.gif';
         }
 
-        return '/bundles/phlexibleelementtype/elementtypes/' . $icon;
+        return '/bundles/phlexibletree/node-icons/' . $icon;
     }
 
     /**

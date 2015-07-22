@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\Controller;
+namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Search controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/elements/search")
+ * @Route("/tree/search")
  * @Security("is_granted('ROLE_ELEMENTS')")
  */
 class SearchController extends Controller
@@ -28,9 +28,9 @@ class SearchController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/elements", name="elements_search_elements")
+     * @Route("/nodes", name="tree_search_nodes")
      */
-    public function elementsAction(Request $request)
+    public function nodesAction(Request $request)
     {
         $siterootId = $request->get('siteroot_id');
         $language = $request->get('language');
@@ -65,9 +65,9 @@ class SearchController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/media", name="elements_search_media")
+     * @Route("/media", name="tree_search_files")
      */
-    public function mediaAction(Request $request)
+    public function filesAction(Request $request)
     {
         $query = $request->get('query');
 
@@ -96,9 +96,9 @@ class SearchController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/medialink", name="elements_search_medialink")
+     * @Route("/filelink", name="tree_search_filelink")
      */
-    public function medialinkAction(Request $request)
+    public function filelinkAction(Request $request)
     {
         $fileId = $request->get('file_id');
 
