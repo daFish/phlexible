@@ -53,7 +53,7 @@ class AccessControlVoter implements VoterInterface
     /**
      * @param AccessManagerInterface $accessManager
      * @param PermissionRegistry     $permissionRegistry
-     * @param bool                   $permissiveOnEmpty
+     * @param bool                   $permissiveOnEmptyAcl
      */
     public function __construct(AccessManagerInterface $accessManager, PermissionRegistry $permissionRegistry, $permissiveOnEmptyAcl)
     {
@@ -101,9 +101,9 @@ class AccessControlVoter implements VoterInterface
                 return self::ACCESS_DENIED;
             }
         }
-        $securityIdentity = UserSecurityIdentity::fromToken($token);
+        //$securityIdentity = UserSecurityIdentity::fromToken($token);
 
-        if ($acl->check($permission, $securityIdentity, $objectLanguage)) {
+        if ($acl->check($permission, $token, $objectLanguage)) {
             return self::ACCESS_GRANTED;
         }
 

@@ -377,8 +377,8 @@ class DataController extends Controller
         $permissions = array();
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
-            if ($this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
-                return null;
+            if (!$this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
+                return new JsonResponse(array('success' => false, 'message' => 'no permission'));
             }
 
             // TODO: fix

@@ -133,9 +133,7 @@ class AccessController extends Controller
 
         $identities = json_decode($data, true);
 
-        if ($objectType === 'teaser') {
-            $path = array($objectId);
-        } elseif ($objectType === 'Phlexible\Bundle\TreeBundle\Node\NodeContext') {
+        if ($objectType === 'Phlexible\Bundle\TreeBundle\Node\NodeContext') {
             $tree = $this->get('phlexible_tree.tree_manager')->getByNodeId($objectId);
             $node = $tree->get($objectId);
             $objectIdentity = HierarchicalObjectIdentity::fromDomainObject($node);

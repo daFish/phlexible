@@ -35,7 +35,7 @@ Phlexible.tree.view.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Right
 
         this.on({
             show: function () {
-                this.lazyLoad(this.element.getNodeId(), this.element.getTeaserId());
+                this.lazyLoad(this.element.getNodeId());
             },
             scope: this
         });
@@ -52,23 +52,12 @@ Phlexible.tree.view.tab.AccessControl = Ext.extend(Phlexible.accesscontrol.Right
 
     onLoadElement: function (element) {
         if (!this.hidden) {
-            this.lazyLoad(element.getNodeId(), element.getTeaserId());
+            this.lazyLoad(element.getNodeId());
         }
     },
 
-    lazyLoad: function (nodeId, teaserId) {
-        var objectType, objectId;
-
-        if (teaserId && teaserId !== undefined) {
-            objectType = 'Phlexible\\Bundle\\TeaserBundle\\Teaser\\TeaserContext';
-            objectId = teaserId;
-        }
-        else {
-            objectType = 'Phlexible\\Bundle\\TreeBundle\\Node\\NodeContext';
-            objectId = nodeId;
-        }
-
-        this.doLoad(objectType, objectId);
+    lazyLoad: function (nodeId) {
+        this.doLoad('Phlexible\\Bundle\\TreeBundle\\Node\\NodeContext', nodeId);
     },
 
     onGetLock: function (element) {
