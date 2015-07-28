@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\Twig\Extension;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Node\Model\NodeInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 

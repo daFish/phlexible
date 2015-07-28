@@ -11,8 +11,6 @@ namespace Phlexible\Bundle\TreeBundle\Icon;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
-use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Elementtype\Model\Elementtype;
@@ -36,23 +34,13 @@ class IconResolver
     private $elementService;
 
     /**
-     * @var TeaserManagerInterface
+     * @param RouterInterface $router
+     * @param ElementService  $elementService
      */
-    private $teaserManager;
-
-    /**
-     * @param RouterInterface        $router
-     * @param ElementService         $elementService
-     * @param TeaserManagerInterface $teaserManager
-     */
-    public function __construct(
-        RouterInterface $router,
-        ElementService $elementService,
-        TeaserManagerInterface $teaserManager)
+    public function __construct( RouterInterface $router, ElementService $elementService)
     {
         $this->router = $router;
         $this->elementService = $elementService;
-        $this->teaserManager = $teaserManager;
     }
 
     /**
@@ -136,37 +124,6 @@ class IconResolver
         }
 
         $element = $this->elementService->findElement($node->getContentId());
-
-        if (!count($parameters)) {
-            return $this->resolveElement($element);
-        }
-
-        $parameters['icon'] = basename($this->resolveElementSource($this->elementService->findElementSource($element->getElementtypeId())));
-
-        return $this->router->generate('tree_icon', $parameters);
-    }
-
-    /**
-     * Resolve teaser to icon
-     *
-     * @param Teaser $teaser
-     * @param string $language
-     *
-     * @return string
-     */
-    public function resolveTeaser(Teaser $teaser, $language)
-    {
-        $parameters = array();
-
-        if ($this->teaserManager->isPublished($teaser, $language)) {
-            $parameters['status'] = $this->teaserManager->isAsync($teaser, $language) ? 'async': 'online';
-        }
-
-        if ($this->teaserManager->isInstance($teaser)) {
-            $parameters['instance'] = $this->teaserManager->isInstanceMaster($teaser) ? 'master' : 'slave';
-        }
-
-        $element = $this->elementService->findElement($teaser->getTypeId());
 
         if (!count($parameters)) {
             return $this->resolveElement($element);

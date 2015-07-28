@@ -1,7 +1,0 @@
-services:
-    phlexible_teaser.doctrine.teaser_manager:
-        class: Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager
-        arguments:
-            - @doctrine.orm.entity_manager
-            - @phlexible_teaser.teaser_mediator
-            - @event_dispatcher

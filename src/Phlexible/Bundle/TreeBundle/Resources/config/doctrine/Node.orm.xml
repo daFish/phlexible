@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="Phlexible\Component\Node\Domain\Node" table="node" inheritance-type="SINGLE_TABLE">
+        <discriminator-column name="node_type" type="string" />
+
+        <id name="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="siterootId" column="siteroot_id" type="string" />
+        <field name="contentType" column="content_type" type="string"/>
+        <field name="contentId" column="content_id" type="integer" nullable="true" />
+        <field name="sort" type="integer" />
+        <field name="sortMode" column="sort_mode" type="string" nullable="true" />
+        <field name="sortDir" column="sort_dir" type="string" nullable="true" />
+        <field name="attributes" type="json_array" nullable="true" />
+        <field name="createUserId" column="create_user_id" type="string" length="36">
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </field>
+        <field name="createdAt" column="created_at" type="datetime" />
+
+        <many-to-one target-entity="Node" field="parentNode">
+            <join-column name="parent_id" referenced-column-name="id" />
+        </many-to-one>
+    </entity>
+
+</doctrine-mapping>

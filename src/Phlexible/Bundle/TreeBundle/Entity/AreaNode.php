@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Component\Node\Domain\Node;
 
 /**
  * Area node

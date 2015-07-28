@@ -25,11 +25,6 @@ class LoadDataEvent extends Event
     private $node;
 
     /**
-     * @var Teaser
-     */
-    private $teaser;
-
-    /**
      * @var string
      */
     private $language;
@@ -41,14 +36,12 @@ class LoadDataEvent extends Event
 
     /**
      * @param NodeContext $node
-     * @param Teaser      $teaser
      * @param string      $language
      * @param object      $data
      */
-    public function __construct(NodeContext $node, Teaser $teaser = null, $language, $data)
+    public function __construct(NodeContext $node, $language, $data)
     {
         $this->node = $node;
-        $this->teaser = $teaser;
         $this->language = $language;
         $this->data = $data;
     }
@@ -59,14 +52,6 @@ class LoadDataEvent extends Event
     public function getNode()
     {
         return $this->node;
-    }
-
-    /**
-     * @return Teaser
-     */
-    public function getTeaser()
-    {
-        return $this->teaser;
     }
 
     /**

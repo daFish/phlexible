@@ -9,11 +9,7 @@
 namespace Phlexible\Bundle\CmsBundle\Usage;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\ElementBundle\Entity\Element;
-use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
-use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Volume\VolumeManager;
 
@@ -30,60 +26,32 @@ class FolderUsageUpdater
     private $entityManager;
 
     /**
-     * @var NodeManagerInterface
-     */
-    private $nodeManager;
-
-    /**
-     * @var TeaserManager
-     */
-    private $teaserManager;
-
-    /**
      * @var VolumeManager
      */
     private $volumeManager;
 
     /**
-     * @param EntityManager        $entityManager
-     * @param NodeManagerInterface $nodeManager
-     * @param TeaserManager        $teaserManager
-     * @param VolumeManager        $volumeManager
+     * @param EntityManager $entityManager
+     * @param VolumeManager $volumeManager
      */
-    public function __construct(
-        EntityManager $entityManager,
-        NodeManagerInterface $nodeManager,
-        TeaserManager $teaserManager,
-        VolumeManager $volumeManager)
+    public function __construct(EntityManager $entityManager, VolumeManager $volumeManager)
     {
         $this->entityManager = $entityManager;
-        $this->nodeManager = $nodeManager;
-        $this->teaserManager = $teaserManager;
         $this->volumeManager = $volumeManager;
     }
 
     /**
-     * @param Element $element
-     * @param bool    $flush
+     * @param NodeContext $node
+     * @param bool        $flush
      *
      * @return array
      */
-    public function updateUsage(Element $element, $flush = true)
+    public function updateUsage(NodeContext $node, $flush = true)
     {
-        $eid = $element->getEid();
-
-        $elementLinkRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLink');
+        $nodeLinkRepository = $this->entityManager->getRepository('PhlexibleTreeBundle:NodeLink');
         $folderUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FolderUsage');
 
-        $qb = $elementLinkRepository->createQueryBuilder('l');
-        $qb
-            ->select('l')
-            ->join('l.elementVersion', 'ev')
-            ->join('ev.element', 'e')
-            ->where($qb->expr()->eq('e.eid', $eid))
-            ->andWhere($qb->expr()->eq('l.type', $qb->expr()->literal('folder')));
-        $folderLinks = $qb->getQuery()->getResult();
-        /* @var $folderLinks ElementLink[] */
+        $folderLinks = $nodeLinkRepository->findBy(array('nodeId' => $node->getId(), 'type' => 'folder'));
 
         $flags = array();
 
@@ -94,34 +62,25 @@ class FolderUsageUpdater
                 $flags[$folderId] = 0;
             }
 
-            $linkVersion = $folderLink->getElementVersion()->getVersion();
+            $versions = $node->getContentVersions();
+            sort($versions);
+            $latestVersion = end($versions);
+
+            $linkVersion = $folderLink->getVersion();
             $old = true;
 
             // add flag STATUS_LATEST if this link is a link to the latest element version
-            if ($linkVersion === $element->getLatestVersion()) {
+            if ($linkVersion === $latestVersion) {
                 $flags[$folderId] |= FolderUsage::STATUS_LATEST;
                 $old = false;
             }
 
-            // add flag STATUS_ONLINE if this link is used in an online teaser version
-            $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
-            foreach ($teasers as $teaser) {
-                if ($this->teaserManager->getPublishedVersion($teaser, $folderLink->getLanguage()) === $linkVersion) {
+            // add flag STATUS_ONLINE if this link is used in an online node version
+            foreach ($node->getPublishedVersions() as $language => $onlineVersion) {
+                if ($onlineVersion === $linkVersion) {
                     $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
                     $old = false;
                     break;
-                }
-            }
-
-            // add flag STATUS_ONLINE if this link is used in an online node version
-            $nodes = $this->nodeManager->findBy(array('type' => 'element', 'typeId' => $eid));
-            foreach ($nodes as $node) {
-                foreach ($this->nodeManager->findOneStateBy(array('node' => $node, 'language' => $fileLink->getLanguage())) as $nodeOnline) {
-                    if ($nodeOnline->getVersion() === $linkVersion) {
-                        $flags[$folderId] |= FolderUsage::STATUS_ONLINE;
-                        $old = false;
-                        break;
-                    }
                 }
             }
 
@@ -135,9 +94,9 @@ class FolderUsageUpdater
             $volume = $this->volumeManager->getByFolderId($folderId);
             $folder = $volume->findFolder($folderId);
 
-            $folderUsage = $folderUsageRepository->findOneBy(array('folder' => $folder, 'usageType' => 'element', 'usageId' => $eid));
+            $folderUsage = $folderUsageRepository->findOneBy(array('folder' => $folder, 'usageType' => 'node', 'usageId' => $node->getId()));
             if (!$folderUsage) {
-                $folderUsage = new FolderUsage($folder, 'element', $eid, $flag);
+                $folderUsage = new FolderUsage($folder, 'node', $node->getId(), $flag);
                 $this->entityManager->persist($folderUsage);
             } else {
                 if ($flag) {

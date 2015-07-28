@@ -178,7 +178,7 @@ class MetaDataManager implements MetaDataManagerInterface
             $qb->andWhere($qb->expr()->eq("m.$field", $qb->expr()->literal($value)));
         }
 
-        $rows = $connection->fetchAll($qb->getSQL());
+        $rows = $qb->execute()->fetchAll();
 
         $metaDatas = array();
 

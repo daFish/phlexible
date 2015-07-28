@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Command;
 
 use Phlexible\Bundle\TreeBundle\Entity\NodeMappedField;
-use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
+use Phlexible\Component\Tree\TreeIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -52,6 +52,9 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
 
             $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
             foreach ($rii as $node) {
+                if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
+                    $output->writeln(get_class($node) . " {$node->getId()}");
+                }
                 $versions = $node->getContentVersions();
                 if (!$versions) {
                     $output->writeln("Skipping {$node->getId()}, no versions");
@@ -74,6 +77,10 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
                         }
 
                         $mappedField->setMapping($extractedFields);
+
+                        if ($output->getVerbosity() > OutputInterface::VERBOSITY_VERBOSE) {
+                            $output->writeln("  $version-$language " . json_encode($extractedFields));
+                        }
                     }
                 }
 

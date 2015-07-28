@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\TreeBundle\Portlet;
 
 use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -27,7 +27,7 @@ class LatestNodeChangesPortlet extends Portlet
     private $treeManager;
 
     /**
-     * @var NodeManagerInterface
+     * @var \Phlexible\Component\Node\Model\NodeManagerInterface
      */
     private $nodeManager;
 

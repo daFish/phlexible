@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * Node context

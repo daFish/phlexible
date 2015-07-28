@@ -8,9 +8,10 @@
 
 namespace Phlexible\Bundle\TreeBundle\Node;
 
+use Phlexible\Bundle\TreeBundle\Entity\PartNode;
 use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * Node context factory
@@ -20,7 +21,7 @@ use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 class NodeContextFactory implements NodeContextFactoryInterface
 {
     /**
-     * @var NodeInterface
+     * @var \Phlexible\Component\Node\Model\NodeInterface
      */
     protected $node;
 
@@ -41,6 +42,12 @@ class NodeContextFactory implements NodeContextFactoryInterface
      */
     public function factory(TreeInterface $tree, NodeInterface $node, $language)
     {
-        return new NodeContext($node, $tree, $this->mediator, $language);
+        if ($node instanceof PartNode) {
+            $class = __NAMESPACE__ . '\TeaserContext';
+        } else {
+            $class = __NAMESPACE__ . '\NodeContext';
+        }
+
+        return new $class($node, $tree, $this->mediator, $language);
     }
 }

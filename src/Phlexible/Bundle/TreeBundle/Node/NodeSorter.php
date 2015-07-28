@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * NodeSorter
@@ -40,7 +40,7 @@ class NodeSorter
     }
 
     /**
-     * @param NodeInterface $node
+     * @param \Phlexible\Component\Node\Model\NodeInterface $node
      *
      * @return array
      */
@@ -99,7 +99,7 @@ class NodeSorter
                 break;
         }
 
-        $result = $this->connection->fetchAll($queryBuilder->getSQL());
+        $result = $queryBuilder->execute()->fetchAll();
         $result = array_column($result, 'id');
 
         return $result;

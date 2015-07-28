@@ -13,9 +13,9 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
 use Phlexible\Bundle\TreeBundle\File\Parser\XmlTreeParser;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
-use Phlexible\Bundle\TreeBundle\Tree\Tree;
+use Phlexible\Component\Node\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\Tree\Tree;
 
 class NodeManager implements NodeManagerInterface
 {

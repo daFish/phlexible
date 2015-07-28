@@ -51,6 +51,8 @@ class LayoutController extends Controller
         $elementSourceManager = $this->get('phlexible_element.element_source_manager');
         $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
+        $this->get('phlexible_tree.mediator.element')->setVersionStrategy($this->get('phlexible_tree.mediator.preview_version_strategy'));
+
         $tree = $treeManager->getByNodeId($nodeId);
         $node = $tree->get($nodeId);
         $element = $elementService->findElement($node->getContentId());
@@ -80,73 +82,55 @@ class LayoutController extends Controller
             // preview = true
 
             $areaRoot = array(
-                'id'         => 'area_' . $layoutarea->getId(),
-                'area_id'    => $layoutarea->getId(),
-                'parent_tid' => $nodeId,
-                'parent_eid' => $element->getEid(),
-                'text'       => $layoutarea->getTitle(),
-                'icon'       => $iconResolver->resolveElementtype($layoutarea),
-                'type'       => $layoutarea->getType(),
-                'inherited'  => null, //true,
-                'cls'        => 'siteroot-node',
-                'leaf'       => true,
-                'expanded'   => true,
-                'allowDrag'  => true,
-                'allowDrop'  => false,
-                'children'   => array(),
-                'qtip'       => $translator->trans('elements.doubleclick_to_sort', array(), 'gui'),
+                'id'        => 'area_' . $layoutarea->getId(),
+                'areaId'    => $layoutarea->getId(),
+                'parentId'  => $nodeId,
+                'text'      => $layoutarea->getTitle(),
+                'icon'      => $iconResolver->resolveElementtype($layoutarea),
+                'type'      => $layoutarea->getType(),
+                'inherited' => null, //true,
+                'cls'       => 'siteroot-node',
+                'leaf'      => true,
+                'expanded'  => true,
+                'allowDrag' => true,
+                'allowDrop' => false,
+                'children'  => array(),
+                'qtip'      => $translator->trans('elements.doubleclick_to_sort', array(), 'gui'),
             );
 
             foreach ($teasers as $teaser) {
                 /* @var $teaser Teaser */
-                $teaserData = array(
-                    'id'            => $teaser->getId(),
-                    'layoutarea_id' => $layoutarea->getId(),
-                    'parent_tid'    => $nodeId,
-                    'parent_eid'    => $element->getEid(),
-                    'type'          => $teaser->getType(),
-                    'inherited'     => false,
-                    'inherit'       => false,
-                    'leaf'          => true,
-                    'hide'          => false,
-                    'expanded'      => false,
-                    'cls'           => '',
-                    'children'      => array(),
-                    'allowDrag'     => false,
-                    'allowDrop'     => false,
-                );
 
-                switch ($teaser->getType()) {
-                    case 'inherited':
-                    case 'teaser':
-                    case 'element':
-                        $cls = '';
-                        if (!$teaser->isStopped()) {
-                            $cls .= 'inherit ';
-                        }
-                        if ($teaser->isHidden()) {
-                            $cls .= 'dont-show ';
-                        }
-                        if ($teaser->getNodeId() !== $nodeId) {
-                            $cls .= 'inherited ';
-                        }
-
-                        $teaserData = array_merge(
-                            $teaserData,
-                            array(
-                                'text'      => $teaser->getField('backend', $language),
-                                'icon'      => $iconResolver->resolveTeaser($teaser, $language),
-                                'inherited' => $teaser->getNodeId() !== $nodeId,
-                                'inherit'   => !$teaser->isStopped(),
-                                'cls'       => trim($cls),
-                                'hide'      => $teaser->isHidden(),
-                            )
-                        );
-                        break;
-
-                    default:
-                        continue;
+                $cls = '';
+                if (!$teaser->isStopped($node)) {
+                    $cls .= 'inherit ';
                 }
+                if ($teaser->isHidden($node)) {
+                    $cls .= 'dont-show ';
+                }
+                if ($teaser->getParent()->getId() !== $nodeId) {
+                    $cls .= 'inherited ';
+                }
+
+                $teaser->getField('backend', $language);
+
+                $teaserData = array(
+                    'id'        => $teaser->getId(),
+                    'areaId'    => $layoutarea->getId(),
+                    'parentId'  => $nodeId,
+                    'type'      => $teaser->getContentType(),
+                    'expanded'  => false,
+                    'children'  => array(),
+                    'allowDrag' => false,
+                    'allowDrop' => false,
+                    'text'      => $teaser->getField('backend', $language),
+                    'icon'      => $iconResolver->resolveNode($teaser, $language),
+                    'leaf'      => true,
+                    'inherited' => $teaser->getParent()->getId() !== $nodeId,
+                    'inherit'   => !$teaser->isStopped($node),
+                    'cls'       => trim($cls),
+                    'hide'      => $teaser->isHidden($node),
+                );
 
                 $areaRoot['children'][] = $teaserData;
             }

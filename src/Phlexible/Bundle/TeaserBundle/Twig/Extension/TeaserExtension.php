@@ -10,8 +10,7 @@ namespace Phlexible\Bundle\TeaserBundle\Twig\Extension;
 
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
-use Phlexible\Bundle\TeaserBundle\Teaser\TeaserContext;
+use Phlexible\Bundle\TeaserBundle\Area\AreaManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -32,9 +31,9 @@ class TeaserExtension extends \Twig_Extension
     private $elementSourceManager;
 
     /**
-     * @var TeaserManagerInterface
+     * @var AreaManager
      */
-    private $teaserManager;
+    private $areaManager;
 
     /**
      * @var RequestStack
@@ -54,19 +53,19 @@ class TeaserExtension extends \Twig_Extension
     /**
      * @param ElementService                $elementService
      * @param ElementSourceManagerInterface $elementSourceManager
-     * @param TeaserManagerInterface        $teaserManager
+     * @param AreaManager                   $areaManager
      * @param RequestStack                  $requestStack
      */
     public function __construct(
         ElementService $elementService,
         ElementSourceManagerInterface $elementSourceManager,
-        TeaserManagerInterface $teaserManager,
+        AreaManager $areaManager,
         RequestStack $requestStack
     )
     {
         $this->elementService = $elementService;
         $this->elementSourceManager = $elementSourceManager;
-        $this->teaserManager = $teaserManager;
+        $this->areaManager = $areaManager;
         $this->requestStack = $requestStack;
     }
 
@@ -114,10 +113,7 @@ class TeaserExtension extends \Twig_Extension
             }
             $area = $this->areas[$name];
 
-            $teasers = array();
-            foreach ($this->teaserManager->findCascadingForLayoutAreaAndNode($area, $node, false) as $teaser) {
-                $teasers[] = new TeaserContext($this->teaserManager, $teaser, $node, $request->getLocale());
-            }
+            $teasers = $this->areaManager->findCascadingByAreaAndNode($area, $node, false);
 
             if (!count($teasers)) {
                 return $this->teasers[$name] = array();

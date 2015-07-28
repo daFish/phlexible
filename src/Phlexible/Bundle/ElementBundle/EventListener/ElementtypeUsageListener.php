@@ -58,7 +58,7 @@ class ElementtypeUsageListener
             ->where($qb->expr()->eq('e.elementtype_id', $qb->expr()->literal($elementtypeId)))
             ->groupBy('ev.eid');
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
+        $rows = $qb->execute()->fetchAll();
 
         foreach ($rows as $row) {
             $event->addUsage(

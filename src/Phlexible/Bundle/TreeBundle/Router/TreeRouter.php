@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\Router;
 
 use Phlexible\Bundle\TreeBundle\Exception\BadMethodCallException;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Node\Model\NodeInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter;
 
 /**

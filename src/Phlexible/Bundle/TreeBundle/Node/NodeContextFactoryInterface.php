@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * Node context factory interface
@@ -20,7 +20,7 @@ interface NodeContextFactoryInterface
 {
     /**
      * @param TreeInterface $tree
-     * @param NodeInterface $node
+     * @param \Phlexible\Component\Node\Model\NodeInterface $node
      * @param string        $language
      *
      * @return NodeContext

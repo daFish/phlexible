@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Mediator;
 
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * Tree mediator interface
@@ -74,7 +74,7 @@ interface TreeMediatorInterface
     /**
      * @param mixed $contentDocument
      *
-     * @return NodeInterface
+     * @return \Phlexible\Component\Node\Model\NodeInterface
      */
     public function createNodeForContentDocument($contentDocument);
 }

@@ -8,8 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Command;
 
-use Phlexible\Bundle\TreeBundle\Entity\NodeMappedField;
-use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
+use Phlexible\Component\Tree\TreeIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

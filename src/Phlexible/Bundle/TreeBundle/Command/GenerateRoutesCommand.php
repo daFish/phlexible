@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\RouteGenerator\NodeIdPathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\PathGenerator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\SuffixPathDecorator;
-use Phlexible\Bundle\TreeBundle\Tree\TreeIterator;
+use Phlexible\Component\Tree\TreeIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

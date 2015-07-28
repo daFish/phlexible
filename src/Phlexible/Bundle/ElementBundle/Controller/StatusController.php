@@ -43,33 +43,33 @@ class StatusController extends Controller
         $qb = $conn->createQueryBuilder()
             ->select('COUNT(e.eid)')
             ->from('element', 'e');
-        $numElements = $conn->fetchColumn($qb->getSQL());
+        $numElements = $qb->execute()->fetchColumn();
 
         $qb = $conn->createQueryBuilder()
             ->select('DISTINCT t.type_id')
             ->from('tree', 't')
             ->join('t', 'element', 'e', 't.type_id = e.eid')
             ->where('t.type = "element"');
-        $numTreeElements = count($conn->fetchAll($qb->getSQL()));
+        $numTreeElements = count($qb->execute()->fetchAll());
 
         $qb = $conn->createQueryBuilder()
             ->select('DISTINCT t.type_id')
             ->from('teaser', 't')
             ->join('t', 'element', 'e', 't.type_id = e.eid')
             ->where('t.type = "element"');
-        $numTeaserElements = count($conn->fetchAll($qb->getSQL()));
+        $numTeaserElements = count($qb->execute()->fetchAll());
 
         $qb = $conn->createQueryBuilder()
             ->select('COUNT(e.eid)')
             ->from('element', 'e')
             ->where('eid NOT IN (SELECT DISTINCT type_id FROM tree WHERE type = "element")')
             ->andWhere('eid NOT IN (SELECT DISTINCT type_id FROM teaser WHERE type = "element")');
-        $numUnusedElements = $conn->fetchColumn($qb->getSQL());
+        $numUnusedElements = $qb->execute()->fetchColumn();
 
         $qb = $conn->createQueryBuilder()
             ->select('COUNT(ev.id)')
             ->from('element_version', 'ev');
-        $numElementVersions = $conn->fetchColumn($qb->getSQL());
+        $numElementVersions = $qb->execute()->fetchColumn();
 
         $qb = $conn->createQueryBuilder()
             ->select(array('ev.eid, COUNT(ev.eid) AS cnt'))
@@ -77,7 +77,7 @@ class StatusController extends Controller
             ->groupBy('ev.eid')
             ->orderBy('cnt', 'DESC');
         $numGroupedElementVersions = array();
-        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+        foreach ($qb->execute()->fetchAll() as $row) {
             $numGroupedElementVersions[$row['eid']] = $row['cnt'];
         }
 
@@ -86,19 +86,19 @@ class StatusController extends Controller
         $qb = $conn->createQueryBuilder()
             ->select('COUNT(et.id)')
             ->from('elementtype', 'et');
-        $numElementTypes = $conn->fetchColumn($qb->getSQL());
+        $numElementTypes = $qb->execute()->fetchColumn();
 
         $qb = $conn->createQueryBuilder()
             ->select('COUNT(et.id)')
             ->from('elementtype', 'et')
             ->where('et.id NOT IN (SELECT DISTINCT element_type_id FROM element)')
             ->where('et.id NOT IN (SELECT DISTINCT reference_id FROM elementtype_structure)');
-        $numUnusedElementTypes = $conn->fetchColumn($qb);
+        $numUnusedElementTypes = $qb->execute()->fetchColumn();
 
         $qb = $conn->createQueryBuilder()
             ->select('COUNT(etv.id)')
             ->from('elementtype_version', 'etv');
-        $numElementTypeVersions = $conn->fetchColumn($qb->getSQL());
+        $numElementTypeVersions = $qb->execute()->fetchColumn();
 
         $qb = $conn->createQueryBuilder()
             ->select(array('etv.elementtype_id', 'COUNT(etv.id) AS cnt'))
@@ -106,7 +106,7 @@ class StatusController extends Controller
             ->groupBy('etv.elementtype_id')
             ->orderBy('cnt', 'DESC');
         $numGroupedElementTypeVersions = array();
-        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+        foreach ($qb->execute()->fetchAll() as $row) {
             $numGroupedElementTypeVersions[$row['elementtype_id']] = $row['cnt'];
         }
 
@@ -117,7 +117,7 @@ class StatusController extends Controller
             ->groupBy('et.id')
             ->orderBy('cnt', 'DESC');
         $numGroupedElementTypeElements = array();
-        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+        foreach ($qb->execute()->fetchAll() as $row) {
             $numGroupedElementTypeElements[$row['id']] = $row['cnt'];
         }
 

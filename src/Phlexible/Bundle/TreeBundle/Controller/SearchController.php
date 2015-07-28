@@ -51,7 +51,7 @@ class SearchController extends Controller
             ->andWhere($qb->expr()->eq('t.siteroot_id', $qb->expr()->literal($siterootId)))
             ->andWhere($qb->expr()->like('evmf.backend', $qb->expr()->literal("%$query%")));
 
-        $result = $conn->fetchAll($qb->getSQL());
+        $result = $qb->execute()->fetchAll();
 
         foreach ($result as $key => $row) {
             $node = $nodeManager->find($row['nodeId']);

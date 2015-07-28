@@ -9,11 +9,8 @@
 namespace Phlexible\Bundle\CmsBundle\Usage;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\ElementBundle\Entity\Element;
-use Phlexible\Bundle\ElementBundle\Entity\ElementLink;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FileUsage;
-use Phlexible\Bundle\TeaserBundle\Doctrine\TeaserManager;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
+use Phlexible\Bundle\TreeBundle\Entity\NodeLink;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Volume\VolumeManager;
 
@@ -30,60 +27,32 @@ class FileUsageUpdater
     private $entityManager;
 
     /**
-     * @var NodeManagerInterface
-     */
-    private $nodeManager;
-
-    /**
-     * @var TeaserManager
-     */
-    private $teaserManager;
-
-    /**
      * @var VolumeManager
      */
     private $volumeManager;
 
     /**
-     * @param EntityManager        $entityManager
-     * @param NodeManagerInterface $nodeManager
-     * @param TeaserManager        $teaserManager
-     * @param VolumeManager        $volumeManager
+     * @param EntityManager $entityManager
+     * @param VolumeManager $volumeManager
      */
-    public function __construct(
-        EntityManager $entityManager,
-        NodeManagerInterface $nodeManager,
-        TeaserManager $teaserManager,
-        VolumeManager $volumeManager)
+    public function __construct(EntityManager $entityManager, VolumeManager $volumeManager)
     {
         $this->entityManager = $entityManager;
-        $this->nodeManager = $nodeManager;
-        $this->teaserManager = $teaserManager;
         $this->volumeManager = $volumeManager;
     }
 
     /**
-     * @param Element $element
-     * @param bool    $flush
+     * @param NodeContext $node
+     * @param bool        $flush
      *
      * @return array
      */
-    public function updateUsage(Element $element, $flush = true)
+    public function updateUsage(NodeContext $node, $flush = true)
     {
-        $eid = $element->getEid();
-
-        $elementLinkRepository = $this->entityManager->getRepository('PhlexibleElementBundle:ElementLink');
+        $nodeLinkRepository = $this->entityManager->getRepository('PhlexibleTreeBundle:NodeLink');
         $fileUsageRepository = $this->entityManager->getRepository('PhlexibleMediaManagerBundle:FileUsage');
 
-        $qb = $elementLinkRepository->createQueryBuilder('l');
-        $qb
-            ->select('l')
-            ->join('l.elementVersion', 'ev')
-            ->join('ev.element', 'e')
-            ->where($qb->expr()->eq('e.eid', $eid))
-            ->andWhere($qb->expr()->eq('l.type', $qb->expr()->literal('file')));
-        $fileLinks = $qb->getQuery()->getResult();
-        /* @var $fileLinks ElementLink[] */
+        $fileLinks = $nodeLinkRepository->findBy(array('nodeId' => $node->getId(), 'type' => 'file'));
 
         $flags = array();
 
@@ -99,34 +68,25 @@ class FileUsageUpdater
                 $flags[$fileId][$fileVersion] = 0;
             }
 
-            $linkVersion = $fileLink->getElementVersion()->getVersion();
+            $versions = $node->getContentVersions();
+            sort($versions);
+            $latestVersion = end($versions);
+
+            $linkVersion = $fileLink->getVersion();
             $old = true;
 
             // add flag STATUS_LATEST if this link is a link to the latest element version
-            if ($linkVersion === $element->getLatestVersion()) {
+            if ($linkVersion === $latestVersion) {
                 $flags[$fileId][$fileVersion] |= FileUsage::STATUS_LATEST;
                 $old = false;
             }
 
-            // add flag STATUS_ONLINE if this link is used in an online teaser version
-            $teasers = $this->teaserManager->findBy(array('typeId' => $eid, 'type' => 'element'));
-            foreach ($teasers as $teaser) {
-                if ($this->teaserManager->getPublishedVersion($teaser, $fileLink->getLanguage()) === $linkVersion) {
+            // add flag STATUS_ONLINE if this link is used in an online node version
+            foreach ($node->getPublishedVersions() as $language => $onlineVersion) {
+                if ($onlineVersion === $linkVersion) {
                     $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
                     $old = false;
                     break;
-                }
-            }
-
-            // add flag STATUS_ONLINE if this link is used in an online node version
-            $nodes = $this->nodeManager->findBy(array('type' => 'element', 'typeId' => $eid));
-            foreach ($nodes as $node) {
-                foreach ($this->nodeManager->findOneStateBy(array('node' => $node, 'language' => $fileLink->getLanguage())) as $nodeOnline) {
-                    if ($nodeOnline->getVersion() === $linkVersion) {
-                        $flags[$fileId][$fileVersion] |= FileUsage::STATUS_ONLINE;
-                        $old = false;
-                        break;
-                    }
                 }
             }
 
@@ -149,8 +109,8 @@ class FileUsageUpdater
                 $qb
                     ->select('fu')
                     ->join('fu.file', 'f')
-                    ->where($qb->expr()->eq('fu.usageType', $qb->expr()->literal('element')))
-                    ->andWhere($qb->expr()->eq('fu.usageId', $eid))
+                    ->where($qb->expr()->eq('fu.usageType', $qb->expr()->literal('node')))
+                    ->andWhere($qb->expr()->eq('fu.usageId', $node->getId()))
                     ->andWhere($qb->expr()->eq('f.id', $qb->expr()->literal($file->getId())))
                     ->andWhere($qb->expr()->eq('f.version', $file->getVersion()))
                     ->setMaxResults(1);
@@ -159,7 +119,7 @@ class FileUsageUpdater
                     if (!$flag) {
                         continue;
                     }
-                    $folderUsage = new FileUsage($file, 'element', $eid, $flag);
+                    $folderUsage = new FileUsage($file, 'node', $node->getId(), $flag);
                     $this->entityManager->persist($folderUsage);
                 } else {
                     $fileUsage = current($fileUsages);

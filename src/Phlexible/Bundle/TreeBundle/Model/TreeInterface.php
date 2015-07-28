@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * Tree interface

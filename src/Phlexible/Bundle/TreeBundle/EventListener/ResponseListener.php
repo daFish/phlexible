@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 

@@ -34,7 +34,6 @@ class PhlexibleElementExtension extends Extension
 
         $container->setAlias('phlexible_element.element_manager', 'phlexible_element.doctrine.element_manager');
         $container->setAlias('phlexible_element.element_version_manager', 'phlexible_element.doctrine.element_version_manager');
-        $container->setAlias('phlexible_element.element_structure_manager', 'phlexible_element.doctrine.element_structure_manager');
         $container->setAlias('phlexible_element.element_source_manager', 'phlexible_element.doctrine.element_source_manager');
     }
 }

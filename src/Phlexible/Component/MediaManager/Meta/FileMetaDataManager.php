@@ -62,7 +62,7 @@ class FileMetaDataManager extends MetaDataManager
             ->from($this->getTableName(), 'm')
             ->where($qb->expr()->like('m.value', $qb->expr()->literal("%$value%")));
 
-        $rows = $connection->fetchAll($qb->getSQL());
+        $rows = $qb->execute()->fetchAll();
 
         $metaDatas = array();
 

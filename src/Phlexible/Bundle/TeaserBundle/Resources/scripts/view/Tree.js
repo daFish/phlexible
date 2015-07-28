@@ -133,10 +133,8 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                         var node = item.parentMenu.node;
                         var w = new Phlexible.teasers.NewTeaserWindow({
                             submitParams: {
-                                siteroot_id: this.element.getSiterootId(),
-                                tree_id: node.attributes.parent_tid, //this.element.tid,
-                                eid: node.attributes.parent_eid, //this.element.eid,
-                                layoutarea_id: node.attributes.area_id
+                                tree_id: node.attributes.parentId,
+                                areaId: node.attributes.areaId
                             },
                             listeners: {
                                 success: function (window, result) {
@@ -164,12 +162,12 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                         var w = new Phlexible.teasers.NewTeaserInstanceWindow({
                             element: this.element,
                             listeners: {
-                                teaserSelect: function (forTeaserId, layoutAreaId, tid) {
+                                teaserSelect: function (forTeaserId, areaId, tid) {
                                     Ext.Ajax.request({
                                         url: Phlexible.Router.generate('teasers_layout_createinstance'),
                                         params: {
                                             for_teaser_id: forTeaserId,
-                                            id: layoutAreaId,
+                                            id: areaId,
                                             tid: tid
                                         },
                                         success: function (response) {
@@ -204,8 +202,8 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('teasers_layout_inherit'),
                                 params: {
-                                    tree_id: node.attributes.parent_tid,
-                                    teaser_id: node.id
+                                    nodeId: node.attributes.parentId,
+                                    id: node.id
                                 },
                                 success: function (response, options, node) {
                                     var data = Ext.decode(response.responseText);
@@ -224,8 +222,8 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('teasers_layout_stop'),
                                 params: {
-                                    tree_id: node.attributes.parent_tid,
-                                    teaser_id: node.id
+                                    nodeId: node.attributes.parentId,
+                                    id: node.id
                                 },
                                 success: function (response, options, node) {
                                     var data = Ext.decode(response.responseText);
@@ -254,8 +252,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('teasers_layout_hide'),
                                 params: {
-                                    tree_id: node.attributes.parent_tid,
-                                    teaser_id: node.id
+                                    id: node.id
                                 },
                                 success: function (response, options, node) {
                                     var data = Ext.decode(response.responseText);
@@ -267,15 +264,13 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                                     } else {
                                         Ext.MessageBox.alert('Failure', data.msg);
                                     }
-                                    //                          node.parentNode.reload();
                                 }.createDelegate(this, [node], true)
                             });
                         } else {
                             Ext.Ajax.request({
                                 url: Phlexible.Router.generate('teasers_layout_show'),
                                 params: {
-                                    tree_id: node.attributes.parent_tid,
-                                    teaser_id: node.id
+                                    id: node.id
                                 },
                                 success: function (response, options, node) {
                                     var data = Ext.decode(response.responseText);
@@ -287,7 +282,6 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                                     } else {
                                         Ext.MessageBox.alert('Failure', data.msg);
                                     }
-                                    //                          node.parentNode.reload();
                                 }.createDelegate(this, [node], true)
                             });
                         }
@@ -330,9 +324,9 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                                 Ext.Ajax.request({
                                     url: Phlexible.Router.generate('teasers_layout_createinstance'),
                                     params: {
-                                        for_teaser_id: forNode.id,
-                                        id: node.attributes.area_id,
-                                        tid: node.attributes.parent_tid
+                                        id: forNode.id,
+                                        areaId: node.attributes.areaId,
+                                        targetId: node.attributes.parentId
                                     },
                                     success: function (response) {
                                         var data = Ext.decode(response.responseText);
@@ -367,7 +361,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                                 Ext.Ajax.request({
                                     url: Phlexible.Router.generate('teasers_layout_delete'),
                                     params: {
-                                        teaser_id: node.id,
+                                        id: node.id,
                                         type: node.attributes.type
                                     },
                                     success: function (node) {
@@ -375,7 +369,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                                         if (this.element.getTeaserNode() &&
                                             this.element.getTeaserNode().id &&
                                             this.element.getTeaserNode().id == node.id) {
-                                            this.element.load(node.attributes.parent_tid, null, null, 1);
+                                            this.element.load(node.attributes.parentIid, null, null, 1);
                                         }
                                         else {
                                             // reload layout panel only
@@ -399,7 +393,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
             },
             dblclick: function (node, e) {
                 if (node.attributes.type == 'area' || node.attributes.type == 'layout') {
-                    this.fireEvent('areaselect', node.attributes.area_id, node);
+                    this.fireEvent('areaselect', node.attributes.areaId, node);
                     return false;
                 }
 

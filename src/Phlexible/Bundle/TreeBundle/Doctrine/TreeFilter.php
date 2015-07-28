@@ -212,12 +212,9 @@ class TreeFilter implements TreeFilterInterface
     private function fetchCount()
     {
         $qb = $this->createFilterQueryBuilder();
-        $qb->select(array('t.id'));
+        $qb->select('COUNT(t.id)');
 
-        //$cnt = $this->_db->fetchOne($select);
-        $cnt = count($this->connection->fetchAll($qb->getSQL()));
-
-        return $cnt;
+        return $qb->execute()->fetchColumn();
     }
 
     /**
@@ -228,11 +225,9 @@ class TreeFilter implements TreeFilterInterface
         $qb = $this->createFilterAndSortQueryBuilder();
         $qb->select(array('t.id'));
 
-        $rows = $this->connection->fetchAll($qb->getSQL());
-
         $ids = array();
-        foreach ($rows as $row) {
-            $ids[] = $row['id'];
+        while ($id = $qb->execute()->fetchColumn()) {
+            $ids[] = $id;
         }
 
         return $ids;

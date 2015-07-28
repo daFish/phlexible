@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\TeaserBundle\Area;
 
 use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Teaser\TeaserContext;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Node\Model\NodeManagerInterface;
 
 /**
  * Area manager
@@ -21,7 +21,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 class AreaManager
 {
     /**
-     * @var NodeManagerInterface
+     * @var \Phlexible\Component\Node\Model\NodeManagerInterface
      */
     private $nodeManager;
 
@@ -87,14 +87,15 @@ class AreaManager
      */
     public function findByAreaAndNode($area, NodeContext $node)
     {
-        $teasers = $this->nodeManager->findByNodeType(
-            'Phlexible\Bundle\TreeBundle\Entity\PartNode',
-            array(),
-            array('areaId' => $area->getId(), 'parentNode' => $node->getId())
+        $teasers = $node->getTree()->getChildren(
+            $node,
+            array('Phlexible\Bundle\TreeBundle\Entity\PartNode')
         );
 
         foreach ($teasers as $index => $teaser) {
-            $teasers[$index] = new TeaserContext($this->nodeManager, $teaser, $node, 'de');
+            if ($teaser->getAreaId() !== $area->getId()) {
+                unset($teasers[$index]);
+            }
         }
 
         return $teasers;

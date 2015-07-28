@@ -116,7 +116,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
         this.items = [{
             region: 'west',
             header: false,
-            width: 230,
+            width: 240,
             split: true,
             collapsible: true,
             collapseMode: 'mini',

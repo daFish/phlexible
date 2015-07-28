@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\CmsBundle\Usage;
 
 use Phlexible\Bundle\ElementBundle\Entity\Element;
+use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
  * Usage updater
@@ -38,13 +39,13 @@ class UsageUpdater
     }
 
     /**
-     * @param Element $element
+     * @param NodeContext $node
      *
      * @return array
      */
-    public function updateUsage(Element $element)
+    public function updateUsage(NodeContext $node)
     {
-        $this->fileUsageUpdater->updateUsage($element);
-        $this->folderUsageUpdater->updateUsage($element);
+        $this->fileUsageUpdater->updateUsage($node);
+        $this->folderUsageUpdater->updateUsage($node);
     }
 }

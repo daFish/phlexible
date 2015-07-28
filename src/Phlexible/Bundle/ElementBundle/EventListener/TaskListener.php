@@ -10,12 +10,12 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\TaskBundle\Entity\Task;
 use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
-use Phlexible\Bundle\TreeBundle\Event\NodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
+use Phlexible\Component\Node\Event\NodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -113,7 +113,7 @@ class TaskListener implements EventSubscriberInterface
     }
 
     /**
-     * @param NodeEvent $event
+     * @param \Phlexible\Component\Node\Event\NodeEvent $event
      */
     public function onDeleteNode(NodeEvent $event)
     {

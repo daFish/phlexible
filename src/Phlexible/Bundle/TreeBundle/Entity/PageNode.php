@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\TreeBundle\Model\PageInterface;
+use Phlexible\Component\Node\Domain\Node;
 
 /**
  * Page node

@@ -33,7 +33,7 @@ class ElementVersionRepository extends EntityRepository
             ->from('element_version', 'ev')
             ->where($qb->expr()->eq('ev.eid', $element->getEid()));
 
-        $statement = $conn->executeQuery($qb->getSQL());
+        $statement = $qb->execute();
 
         $versions = array();
         while ($version = $statement->fetchColumn()) {

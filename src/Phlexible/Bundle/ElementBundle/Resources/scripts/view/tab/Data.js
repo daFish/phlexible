@@ -83,8 +83,8 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
                 items: [
                     {
                         border: false,
-                        width: 220,
-                        minWidth: 220,
+                        width: 320,
+                        minWidth: 320,
                         title: this.strings.properties,
                         autoScroll: true,
                         items: [

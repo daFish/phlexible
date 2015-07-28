@@ -12,7 +12,6 @@ use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementVersion\Diff\Differ;
 use Phlexible\Bundle\ElementBundle\ElementVersion\Serializer\ArraySerializer as ElementVersionArraySerializer;
 use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
-use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
@@ -43,8 +42,7 @@ class DataController extends Controller
      */
     public function loadAction(Request $request)
     {
-        $treeId = (int) $request->get('id');
-        $teaserId = (int) $request->get('teaser_id');
+        $nodeId = (int) $request->get('id');
         $language = $request->get('language');
         $version = $request->get('version');
         $unlockId = $request->get('unlock');
@@ -55,7 +53,6 @@ class DataController extends Controller
         $diffVersionTo = (int) $request->get('diff_version_to');
         $diffLanguage = $request->get('diff_language');
 
-        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $nodeManager = $this->get('phlexible_tree.node_manager');
         $elementService = $this->get('phlexible_element.element_service');
@@ -64,22 +61,10 @@ class DataController extends Controller
         $nodeLockManager = $this->get('phlexible_tree.node_lock_manager');
         $userManager = $this->get('phlexible_user.user_manager');
 
-        $teaser = null;
-        if ($teaserId) {
-            $teaser = $teaserManager->find($teaserId);
-            $eid = $teaser->getTypeId();
-            $treeId = $teaser->getNodeId();
-            $tree = $treeManager->getByNodeId($treeId);
-            $tree->setDefaultLanguage($language);
-            $node = $tree->get($treeId);
-        } elseif ($treeId) {
-            $tree = $treeManager->getByNodeId($treeId);
-            $tree->setDefaultLanguage($language);
-            $node = $tree->get($treeId);
-            $eid = $node->getContentId();
-        } else {
-            throw new InvalidArgumentException('Unknown data requested.');
-        }
+        $tree = $treeManager->getByNodeId($nodeId);
+        $tree->setDefaultLanguage($language);
+        $node = $tree->get($nodeId);
+        $eid = $node->getContentId();
 
         $element = $elementService->findElement($eid);
         $elementMasterLanguage = $element->getMasterLanguage();
@@ -88,15 +73,8 @@ class DataController extends Controller
             $language = $elementMasterLanguage;
         }
 
-        if ($teaser) {
-            $isPublished = $teaserManager->isPublished($teaser, $language);
-            $onlineVersion = $teaserManager->getPublishedVersion($teaser, $language);
-        } elseif ($treeId) {
-            $isPublished = $tree->isPublished($node, $language);
-            $onlineVersion = $tree->getPublishedVersion($node, $language);
-        } else {
-            throw new InvalidArgumentException('Unknown data requested.');
-        }
+        $isPublished = $tree->isPublished($node, $language);
+        $onlineVersion = $tree->getPublishedVersion($node, $language);
 
         if (!$version) {
             $version = $element->getLatestVersion();
@@ -109,22 +87,12 @@ class DataController extends Controller
         $type = $elementtype->getType();
 
         // versions
-
-        if ($teaser) {
-            $publishActions = $nodeChangeManager->findBy(
-                array(
-                    'teaserId' => $teaser->getId(),
-                    'action'   => 'publishTeaser'
-                )
-            );
-        } else {
-            $publishActions = $nodeChangeManager->findBy(
-                array(
-                    'nodeId' => $node->getId(),
-                    'action' => 'publishNode'
-                )
-            );
-        }
+        $publishActions = $nodeChangeManager->findBy(
+            array(
+                'nodeId' => $node->getId(),
+                'action' => 'publishNode'
+            )
+        );
 
         $versions = array();
         foreach (array_reverse($elementService->getVersions($element)) as $version) {
@@ -154,56 +122,39 @@ class DataController extends Controller
         // instances
 
         $instances = array();
-        if ($teaser) {
-            foreach ($teaserManager->getInstances($teaser) as $instanceTeaser) {
-                $instance = array(
-                    'id'             => $instanceTeaser->getId(),
-                    'instanceMaster' => false,
-                    'modifiedAt'     => $instanceTeaser->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'icon'           => $iconResolver->resolveTeaser($instanceTeaser, $language),
-                    'type'           => 'teaser',
-                    'link'           => array(),
+        foreach ($nodeManager->getInstanceNodes($node->getNode()) as $instanceNode) {
+            $instanceNodeContext = $treeManager->getByNodeId($instanceNode->getId())->get($instanceNode->getId());
+            $instance = array(
+                'id'             => $instanceNode->getId(),
+                'instanceMaster' => false,
+                'modifiedAt'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
+                'icon'           => $iconResolver->resolveNode($instanceNodeContext, $language),
+                'type'           => 'treenode',
+                'link'           => array(),
+            );
+
+            if ($instanceNode->getSiterootId() !== $tree->getSiterootId()) {
+                $instance['link'] = array(
+                    'start_tid_path' => '/' . implode('/', $treeManager->getByNodeId($instanceNode->getId())->getIdPath($instanceNode)),
                 );
-
-                $instances[] = $instance;
             }
-        } else {
-            foreach ($nodeManager->getInstanceNodes($node->getNode()) as $instanceNode) {
-                $instanceNodeContext = $treeManager->getByNodeId($instanceNode->getId())->get($instanceNode->getId());
-                $instance = array(
-                    'id'             => $instanceNode->getId(),
-                    'instanceMaster' => false,
-                    'modifiedAt'     => $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'icon'           => $iconResolver->resolveNode($instanceNodeContext, $language),
-                    'type'           => 'treenode',
-                    'link'           => array(),
-                );
 
-                if ($instanceNode->getSiterootId() !== $tree->getSiterootId()) {
-                    $instance['link'] = array(
-                        'start_tid_path' => '/' . implode('/', $treeManager->getByNodeId($instanceNode->getId())->getIdPath($instanceNode)),
-                    );
-                }
-
-                $instances[] = $instance;
-            }
+            $instances[] = $instance;
         }
 
         // allowed child elements
 
         $allowedChildren = array();
-        if (!$teaser) {
-            foreach ($elementService->findAllowedChildren($elementtype) as $childElementtype) {
-                if ($childElementtype->getType() !== 'full') {
-                    continue;
-                }
-
-                $allowedChildren[] = array(
-                    $childElementtype->getId(),
-                    $childElementtype->getTitle(),
-                    $iconResolver->resolveElementtype($childElementtype),
-                );
+        foreach ($elementService->findAllowedChildren($elementtype) as $childElementtype) {
+            if ($childElementtype->getType() !== 'full') {
+                continue;
             }
+
+            $allowedChildren[] = array(
+                $childElementtype->getId(),
+                $childElementtype->getTitle(),
+                $iconResolver->resolveElementtype($childElementtype),
+            );
         }
 
         // diff
@@ -365,16 +316,9 @@ class DataController extends Controller
             }
 
             if ($isPublished) {
-                if ($teaser) {
-                    $teaserOnline = $teaserManager->findOneStateByTeaserAndLanguage($teaser, $language);
-                    $publishDate = $teaserOnline->getPublishedAt()->format('Y-m-d H:i:s');
-                    $publishUser = $userManager->find($teaserOnline->getPublishUserId());
-                    $onlineVersion = $teaserOnline->getVersion();
-                } else {
-                    $publishDate = $tree->getPublishedAt($node, $language)->format('Y-m-d H:i:s');
-                    $publishUser = $userManager->find($tree->getPublishUserId($node, $language));
-                    $onlineVersion = $tree->getPublishedVersion($node, $language);
-                }
+                $publishDate = $tree->getPublishedAt($node, $language)->format('Y-m-d H:i:s');
+                $publishUser = $userManager->find($tree->getPublishUserId($node, $language));
+                $onlineVersion = $tree->getPublishedVersion($node, $language);
             }
 
             $latestVersion = $element->getLatestVersion();
@@ -382,12 +326,8 @@ class DataController extends Controller
 
         // configuration
 
-        if ($teaser) {
-            $configuration = $teaser->getAttributes();
-        } else {
-            $configuration = $node->getAttributes();
-            $configuration['navigation'] = $node->getInNavigation() ? true : false;
-        }
+        $configuration = $node->getAttributes();
+        $configuration['navigation'] = $node->getInNavigation() ? true : false;
 
         // context
         // TODO: repair element context
@@ -416,21 +356,19 @@ class DataController extends Controller
         // pager
 
         $pager = array();
-        if (!$teaser) {
-            $parentNode = $tree->getParent($node);
-            if ($parentNode) {
-                $parentElement = $elementService->findElement($parentNode->getContentId());
-                $parentElementtype = $elementService->findElementtype($parentElement);
-                if ($parentElementtype->getHideChildren()) {
-                    $filter = new TreeFilter(
-                        $this->get('doctrine.dbal.default_connection'),
-                        $request->getSession(),
-                        $this->get('event_dispatcher'),
-                        $parentNode->getId(),
-                        $language
-                    );
-                    $pager = $filter->getPager($node->getId());
-                }
+        $parentNode = $tree->getParent($node);
+        if ($parentNode) {
+            $parentElement = $elementService->findElement($parentNode->getContentId());
+            $parentElementtype = $elementService->findElementtype($parentElement);
+            if ($parentElementtype->getHideChildren()) {
+                $filter = new TreeFilter(
+                    $this->get('doctrine.dbal.default_connection'),
+                    $request->getSession(),
+                    $this->get('event_dispatcher'),
+                    $parentNode->getId(),
+                    $language
+                );
+                $pager = $filter->getPager($node->getId());
             }
         }
 
@@ -496,7 +434,7 @@ class DataController extends Controller
         );
 
         $data = (object) $data;
-        $event = new LoadDataEvent($node, $teaser, $language, $data);
+        $event = new LoadDataEvent($node, $language, $data);
         $this->get('event_dispatcher')->dispatch(ElementEvents::LOAD_DATA, $event);
         $data = (array) $data;
 

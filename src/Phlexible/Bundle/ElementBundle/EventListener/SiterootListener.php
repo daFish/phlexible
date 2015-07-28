@@ -11,7 +11,6 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\Elementtype\ElementtypeService;

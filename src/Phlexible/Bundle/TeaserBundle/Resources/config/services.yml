@@ -3,20 +3,10 @@ services:
         class: Phlexible\Bundle\TeaserBundle\Area\AreaManager
         arguments: [@phlexible_tree.node_manager]
 
-    phlexible_teaser.layoutarea.manager:
-        class: Phlexible\Bundle\TeaserBundle\Layoutarea\LayoutareaManager
-
     phlexible_teaser.rights.provider:
         class: Phlexible\Bundle\TeaserBundle\AccessControl\TeaserRightsProvider
         tags:
             - {name: phlexible_access_control.rights}
-
-    # event listeners
-    phlexible_teaser.listener.apply_successor:
-        class: Phlexible\Bundle\TeaserBundle\EventListener\ApplySuccessorListener
-        arguments: [@doctrine.dbal.default_connection]
-        tags:
-            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
 
     # role providers
     phlexible_teaser.role_provider:
@@ -32,7 +22,7 @@ services:
         arguments:
             - @phlexible_element.element_service
             - @phlexible_element.element_source_manager
-            - @phlexible_teaser.teaser_manager
+            - @phlexible_teaser.area_manager
             - @request_stack
         tags:
             - {name: twig.extension}

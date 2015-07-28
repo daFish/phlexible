@@ -1,6 +1,6 @@
 services:
     phlexible_tree.doctrine.node_manager:
-        class: Phlexible\Bundle\TreeBundle\Doctrine\NodeManager
+        class: Phlexible\Component\Node\Doctrine\NodeManager
         arguments:
             - @doctrine.orm.entity_manager
             - @phlexible_siteroot.siteroot_manager

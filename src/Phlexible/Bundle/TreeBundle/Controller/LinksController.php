@@ -166,7 +166,7 @@ class LinksController extends Controller
             $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
         }
 
-        $results1 = $conn->fetchAll($qb->getSQL());
+        $results1 = $qb->execute()->fetchAll();
 
         $qb = $conn->createQueryBuilder();
         $qb
@@ -186,7 +186,7 @@ class LinksController extends Controller
             $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
         }
 
-        $results2 = $conn->fetchAll($qb->getSQL());
+        $results2 = $qb->execute()->fetchAll();
 
         $results = array_merge($results1, $results2);
 

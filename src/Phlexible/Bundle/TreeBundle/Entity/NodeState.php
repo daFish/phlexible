@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Component\Node\Domain\Node;
 
 /**
  * Node state
@@ -30,7 +31,7 @@ class NodeState
 
     /**
      * @var Node
-     * @ORM\ManyToOne(targetEntity="Node")
+     * @ORM\ManyToOne(targetEntity="Phlexible\Component\Node\Domain\Node")
      * @ORM\JoinColumn(name="tree_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $node;

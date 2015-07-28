@@ -5,7 +5,7 @@ services:
 
     phlexible_tree.icon_resolver:
         class: Phlexible\Bundle\TreeBundle\Icon\IconResolver
-        arguments: [@router, @phlexible_element.element_service, @phlexible_teaser.teaser_manager]
+        arguments: [@router, @phlexible_element.element_service]
 
     phlexible_tree.node_context_factory:
         class: Phlexible\Bundle\TreeBundle\Node\NodeContextFactory
@@ -13,7 +13,7 @@ services:
             - @phlexible_tree.mediator
 
     phlexible_tree.tree_factory:
-        class: Phlexible\Bundle\TreeBundle\Tree\TreeFactory
+        class: Phlexible\Component\Tree\TreeFactory
         arguments:
             - @phlexible_tree.node_manager
             - @phlexible_tree.node_state_manager
@@ -22,7 +22,7 @@ services:
             - @event_dispatcher
 
     phlexible_tree.tree_manager:
-        class: Phlexible\Bundle\TreeBundle\Tree\TreeManager
+        class: Phlexible\Component\Tree\TreeManager
         arguments:
             - @phlexible_siteroot.siteroot_manager
             - @phlexible_tree.node_manager

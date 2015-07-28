@@ -61,7 +61,7 @@ class TestCommand extends ContainerAwareCommand
         $path = $this->getContainer()->getParameter('kernel.root_dir') . '/Resources/elementtypes/';
         $filesystem->mkdir($path);
 
-        $rows = $conn->fetchAll($qb->getSQL());
+        $rows = $qb->execute()->fetchAll();
 
         $map = array();
         foreach ($rows as $row) {
@@ -78,7 +78,7 @@ class TestCommand extends ContainerAwareCommand
                 ->from('elementtype_version', 'etv')
                 ->where("elementtype_id = {$row['id']}")
                 ->orderBy('etv.version', 'DESC');
-            $versionRow = $conn->fetchAssoc($versionQb->getSQL());
+            $versionRow = $versionQb->execute()->fetchAll();
 
             $structure = $this->buildStructure($conn, $row['id'], $versionRow['version'], $map);
 
@@ -134,7 +134,8 @@ class TestCommand extends ContainerAwareCommand
             ->andWhere("elementtype_version = $version")
             ->orderBy('ets.sort', 'ASC');
 
-        foreach ($conn->fetchAll($qb->getSQL()) as $row) {
+        dump($qb->execute()->fetchAll());die;
+        foreach ($qb->execute()->fetchAll() as $row) {
             $type = $row['type'];
 
             $labels = json_decode($row['labels'], true);

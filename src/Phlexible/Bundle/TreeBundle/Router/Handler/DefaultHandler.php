@@ -14,8 +14,8 @@ use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -75,7 +75,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * @param LoggerInterface           $logger
      * @param EntityManagerInterface    $em
-     * @param NodeManagerInterface      $treeManager
+     * @param \Phlexible\Component\Node\Model\NodeManagerInterface      $treeManager
      * @param SiterootRequestMatcher    $siterootRequestMatcher
      * @param SiterootHostnameGenerator $siterootHostnameGenerator
      * @param string                    $languages
@@ -122,7 +122,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      */
     public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
-        /* @var $treeNode NodeInterface */
+        /* @var $treeNode \Phlexible\Component\Node\Model\NodeInterface */
         $treeNode = $name;
         $language = isset($parameters['language']) ? $parameters['language'] : 'de';
         $encode = false;
@@ -211,7 +211,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         if (isset($parameters['_route_object'])) {
             $treeNode = $parameters['_route_object'];
-            /* @var $treeNode NodeInterface */
+            /* @var $treeNode \Phlexible\Component\Node\Model\NodeInterface */
             if ($cache = $treeNode->getAttribute('cache')) {
                 $configuration = new Cache(array());
 
@@ -371,7 +371,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     /**
      * Generate path
      *
-     * @param NodeInterface $node
+     * @param \Phlexible\Component\Node\Model\NodeInterface $node
      * @param string            $language
      *
      * @return string

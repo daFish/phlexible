@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\File\Parser;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\TreeBundle\Entity\NodeState;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * XML tree parser
@@ -38,9 +38,9 @@ class XmlTreeParser
      * @param ArrayCollection        $states
      * @param string                 $siterootId
      * @param \SimpleXMLElement      $nodeNode
-     * @param NodeInterface|null $parentNode
+     * @param \Phlexible\Component\Node\Model\NodeInterface|null $parentNode
      *
-     * @return NodeInterface
+     * @return \Phlexible\Component\Node\Model\NodeInterface
      * @throws \Exception
      */
     private function parseNode(ArrayCollection $nodes, ArrayCollection $states, $siterootId, \SimpleXMLElement $nodeNode, NodeInterface $parentNode = null)
@@ -70,7 +70,7 @@ class XmlTreeParser
         }
 
         $node = new $nodeType();
-        /* @var $node NodeInterface */
+        /* @var $node \Phlexible\Component\Node\Model\NodeInterface */
         $node->setId($id);
         $node->setSiterootId($siterootId);
         $node->setParentNode($parentNode);

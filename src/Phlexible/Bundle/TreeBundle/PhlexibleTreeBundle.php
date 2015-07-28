@@ -27,21 +27,29 @@ class PhlexibleTreeBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $modelDir = realpath(__DIR__.'/Resources/config/doctrine/model');
+        $modelDir = realpath(__DIR__.'/Resources/config/doctrine');
         $mappings = array(
-            $modelDir => 'Phlexible\Bundle\TreeBundle\Model',
+            $modelDir => 'Phlexible\Component\Node\Domain',
         );
 
-        /*
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createXmlMappingDriver(
                 $mappings,
                 array(null),
                 'phlexible_tree.backend_type_orm',
-                array('PhlexibleTreeBundle' => 'Phlexible\Bundle\TreeBundle\Model')
+                array('PhlexibleNode' => 'Phlexible\Component\Node\Domain')
             )
         );
-        */
+
+        $container->addCompilerPass(
+            DoctrineOrmMappingsPass::createAnnotationMappingDriver(
+                array('Phlexible\Bundle\TreeBundle\Entity'),
+                array(realpath(__DIR__.'/Entity')),
+                array(null),
+                'phlexible_tree.backend_type_orm',
+                array('PhlexibleTreeBundle' => 'Phlexible\Bundle\TreeBundle\Entity')
+            )
+        );
 
         $container->addCompilerPass(new AddFieldMappersPass());
         $container->addCompilerPass($this->buildMappingCompilerPass());

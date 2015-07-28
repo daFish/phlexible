@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
-use Phlexible\Bundle\TreeBundle\Model\NodeManagerInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
+use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -26,7 +26,7 @@ class NodeSerializer
     private $iconResolver;
 
     /**
-     * @var NodeManagerInterface
+     * @var \Phlexible\Component\Node\Model\NodeManagerInterface
      */
     private $nodeManager;
 
@@ -42,7 +42,7 @@ class NodeSerializer
 
     /**
      * @param \Phlexible\Bundle\TreeBundle\Icon\IconResolver                  $iconResolver
-     * @param NodeManagerInterface          $nodeManager
+     * @param \Phlexible\Component\Node\Model\NodeManagerInterface          $nodeManager
      * @param PermissionRegistry            $permissionRegistry
      * @param AuthorizationCheckerInterface $authorizationChecker
      */

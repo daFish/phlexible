@@ -2,7 +2,6 @@ Ext.provide('Phlexible.siteroots.UrlGrid');
 
 Ext.require('Phlexible.siteroots.model.Url');
 Ext.require('Phlexible.siteroots.grid.LanguageCheckColumn');
-Ext.require('Phlexible.element.EidSelector');
 
 Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     title: Phlexible.siteroots.Strings.url_mappings,
@@ -113,15 +112,7 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 dataIndex: 'target',
                 sortable: true,
                 width: 200,
-                editor: new Phlexible.elements.EidSelector({
-                    labelSeparator: '',
-                    element: {
-                        siteroot_id: this.siterootId
-                    },
-                    width: 300,
-                    listWidth: 283,
-                    treeWidth: 283
-                })
+                editor: new Ext.form.NumberField()
             },
             this.actions
         ];
@@ -197,10 +188,6 @@ Phlexible.siteroots.UrlGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.siterootId = id;
 
         this.store.loadData(data.urls);
-
-        var cm = this.getColumnModel();
-        var editor = cm.getCellEditor(4, 0);
-        editor.field.setSiterootId(id);
     },
 
     /**

@@ -10,6 +10,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Bundle\TreeBundle\Model\PartInterface;
+use Phlexible\Component\Node\Domain\Node;
 
 /**
  * Part node
@@ -42,5 +43,135 @@ class PartNode extends Node implements PartInterface
         $this->areaId = $areaId;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStopIds()
+    {
+        return $this->getAttribute('stopIds', array());
+    }
+
+    /**
+     * @param array $stopIds
+     *
+     * @return $this
+     */
+    public function setStopIds($stopIds = array())
+    {
+        $this->setAttribute('stopIds', $stopIds);
+
+        return $this;
+    }
+
+    /**
+     * @param int $stopId
+     *
+     * @return $this
+     */
+    public function addStopId($stopId)
+    {
+        $stopIds = $this->getStopIds();
+
+        if (!in_array($stopId, $stopIds)) {
+            $stopIds[] = $stopId;
+            $this->setStopIds($stopIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $stopId
+     *
+     * @return $this
+     */
+    public function removeStopId($stopId)
+    {
+        $stopIds = $this->getStopIds();
+
+        if (in_array($stopId, $stopIds)) {
+            unset($stopIds[array_search($stopId, $stopIds)]);
+            $this->setStopIds($stopIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $stopId
+     *
+     * @return bool
+     */
+    public function hasStopId($stopId)
+    {
+        $stopIds = $this->getStopIds();
+
+        return in_array($stopId, $stopIds);
+    }
+
+    /**
+     * @return array
+     */
+    public function getHideIds()
+    {
+        return $this->getAttribute('hideIds', array());
+    }
+
+    /**
+     * @param array $hideIds
+     *
+     * @return $this
+     */
+    public function setHideIds($hideIds)
+    {
+        return $this->setAttribute('hideIds', $hideIds);
+    }
+
+    /**
+     * @param int $hideId
+     *
+     * @return $this
+     */
+    public function addHideId($hideId)
+    {
+        $hideIds = $this->getHideIds();
+
+        if (!in_array($hideId, $hideIds)) {
+            $hideIds[] = $hideId;
+            $this->setHideIds($hideIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $hideId
+     *
+     * @return $this
+     */
+    public function removeHideId($hideId)
+    {
+        $hideIds = $this->getHideIds();
+
+        if (in_array($hideId, $hideIds)) {
+            unset($hideIds[array_search($hideId, $hideIds)]);
+            $this->setHideIds($hideIds);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param int $hideId
+     *
+     * @return bool
+     */
+    public function hasHideId($hideId)
+    {
+        $hideIds = $this->getHideIds();
+
+        return in_array($hideId, $hideIds);
     }
 }

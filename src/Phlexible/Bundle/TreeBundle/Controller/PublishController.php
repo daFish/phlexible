@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 use Phlexible\Bundle\ElementBundle\Element\Publish\Selection;
 use Phlexible\Bundle\ElementBundle\Exception\RuntimeException;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

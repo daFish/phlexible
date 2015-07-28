@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Bundle\TreeBundle\Model\NodeInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
+use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * Node context
@@ -21,7 +21,7 @@ use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 class NodeContext implements DomainObjectInterface
 {
     /**
-     * @var NodeInterface
+     * @var \Phlexible\Component\Node\Model\NodeInterface
      */
     protected $node;
 
@@ -41,7 +41,7 @@ class NodeContext implements DomainObjectInterface
     protected $language;
 
     /**
-     * @param NodeInterface         $node
+     * @param \Phlexible\Component\Node\Model\NodeInterface         $node
      * @param TreeInterface         $tree
      * @param TreeMediatorInterface $mediator
      * @param string                $language
@@ -71,7 +71,7 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
-     * @return NodeInterface
+     * @return \Phlexible\Component\Node\Model\NodeInterface
      */
     public function getNode()
     {
