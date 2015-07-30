@@ -49,7 +49,6 @@ class ListController extends Controller
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_tree.icon_resolver');
         $nodeSerializer = $this->get('phlexible_tree.node_serializer');
 
         $tree = $treeManager->getByNodeID($tid);

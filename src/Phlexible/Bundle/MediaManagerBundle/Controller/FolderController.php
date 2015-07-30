@@ -58,9 +58,7 @@ class FolderController extends Controller
         $volume = $folder->getVolume();
         $subFolders = $volume->findFoldersByParentFolder($folder);
 
-        $permissions = $this->get('phlexible_access_control.permissions');
-
-        $user = $this->getUser();
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $children = array();
         foreach ($subFolders as $subFolder) {
@@ -70,27 +68,23 @@ class FolderController extends Controller
                 continue;
             }
 
-            // TODO: rights
-            /*
-            $userRights = $subFolder->getRights(MWF_Env::getUser());
-            if (null === $userRights) {
-                continue;
+            // TODO: fix
+            $userRights = array();
+            foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
+                $userRights[] = $permission->getName();
             }
-            $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
-            */
-            $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
 
             $tmp = array(
-                'id'        => $subFolder->getId(),
-                'text'      => $subFolder->getName(),
-                'leaf'      => false,
-                'numChilds' => $volume->countFilesByFolder($subFolder),
-                'draggable' => true,
-                'expanded'  => true,
-                'allowDrop' => true,
+                'id'            => $subFolder->getId(),
+                'text'          => $subFolder->getName(),
+                'leaf'          => false,
+                'numChilds'     => $volume->countFilesByFolder($subFolder),
+                'draggable'     => true,
+                'expanded'      => true,
+                'allowDrop'     => true,
                 'allowChildren' => true,
-                'isTarget'  => true,
-                'rights'    => $userRights,
+                'isTarget'      => true,
+                'rights'        => $userRights,
             );
 
             if ($volume->countFoldersByParentFolder($subFolder)) {
@@ -136,15 +130,7 @@ class FolderController extends Controller
                     continue;
                 }
 
-                // TODO: rights
-                /*
-                $userRights = $rootFolder->getRights(MWF_Env::getUser());
-                if (null === $userRights)
-                {
-                    continue;
-                }
-                $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
-                */
+                // TODO: fix
                 $userRights = array();
                 foreach ($permissionRegistry->get(get_class($rootFolder))->all() as $permission) {
                     $userRights[] = $permission->getName();
@@ -200,25 +186,18 @@ class FolderController extends Controller
                 $volume = $volumeManager->getByFolderId($folderId);
                 $folder = $volume->findFolder($folderId);
 
-                if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $folder)) {
                     return new JsonResponse(array());
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-                    if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $rootFolder)) {
+                    if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $subFolder)) {
                         continue;
                     }
 
-                    /*
-                    $userRights = $subFolder->getRights(MWF_Env::getUser());
-                    if (null === $userRights)
-                    {
-                        continue;
-                    }
+                    // TODO: fix
                     $userRights = array();
-                    */
-                    $userRights = array();
-                    foreach ($permissionRegistry->get(get_class($subFolder)) as $permission) {
+                    foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
                         $userRights[] = $permission->getName();
                     }
 

@@ -36,8 +36,7 @@ class FolderController extends Controller
             $rootFolder = $volume->findRootFolder();
 
             if (!$this->isGranted('FOLDER_READ', $rootFolder)) {
-                // TODO: uncomment
-                //continue;
+                continue;
             }
 
             $data[] = array(
