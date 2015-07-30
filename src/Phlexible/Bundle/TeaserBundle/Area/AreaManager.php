@@ -63,13 +63,13 @@ class AreaManager
 
             if ($node->getId() !== $forNodeId) {
                 foreach ($teasers as $index => $teaser) {
-                    if ($teaser->hasStopId($node->getId())) {
+                    if ($teaser->hasStopId($forNode->getId())) {
                         unset($teasers[$index]);
                     }
                 }
             } elseif (!$includeLocalHidden) {
                 foreach ($teasers as $index => $teaser) {
-                    if ($teaser->isHidden()) {
+                    if ($teaser->isHidden($forNode)) {
                         unset($teasers[$index]);
                     }
                 }

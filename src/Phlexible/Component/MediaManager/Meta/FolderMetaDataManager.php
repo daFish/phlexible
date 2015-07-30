@@ -10,9 +10,9 @@ namespace Phlexible\Component\MediaManager\Meta;
 
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\MetaSet\Doctrine\MetaDataManager;
-use Phlexible\Component\MetaSet\Model\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
-use Phlexible\Component\MetaSet\Model\MetaSet;
 
 /**
  * Folder meta data manager

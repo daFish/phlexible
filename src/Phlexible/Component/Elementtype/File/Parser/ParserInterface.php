@@ -9,7 +9,7 @@
 namespace Phlexible\Component\Elementtype\File\Parser;
 
 use FluentDOM\Document;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
  * Parser interface
@@ -21,14 +21,14 @@ interface ParserInterface
     /**
      * @param string $xml
      *
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     public function parseString($xml);
 
     /**
      * @param Document $dom
      *
-     * @return Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     public function parse(Document $dom);
 }

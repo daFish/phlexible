@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaManager\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;

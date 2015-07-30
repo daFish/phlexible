@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\SiterootBundle\ProblemChecker;
 
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
-use Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerInterface;
+use Phlexible\Bundle\ProblemBundle\Model\ProblemCheckerInterface;
 use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 
 /**

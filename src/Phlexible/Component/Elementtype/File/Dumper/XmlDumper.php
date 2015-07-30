@@ -10,10 +10,10 @@ namespace Phlexible\Component\Elementtype\File\Dumper;
 
 use FluentDOM\Document;
 use FluentDOM\Element;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Exception\InvalidArgumentException;
-use Phlexible\Component\Elementtype\Model\Elementtype;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 
 /**
  * XML dumper
@@ -87,7 +87,7 @@ class XmlDumper implements DumperInterface
 
     /**
      * @param ElementtypeStructure     $structure
-     * @param ElementtypeStructureNode $node
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode $node
      * @param Element                  $element
      *
      * @return Element

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\Elementtype\Event;
 
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\Event;
 class ElementtypeEvent extends Event
 {
     /**
-     * @var Elementtype
+     * @var \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     private $elementtype;
 

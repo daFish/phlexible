@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Command;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedVolumeInterface;
-use Phlexible\Component\Volume\Model\FolderIterator;
+use Phlexible\Component\Volume\Folder\FolderIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

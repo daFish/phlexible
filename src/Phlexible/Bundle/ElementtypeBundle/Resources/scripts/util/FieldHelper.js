@@ -120,13 +120,13 @@ Phlexible.fields.FieldHelper = {
         };
 
         if (item.configuration.readonly) {
-            debugger;
+            //debugger;
             config.readOnly = true;
             config.ctCls = 'x-item-disabled';
         }
 
         if (config.isDiff) {
-            debugger;
+            //debugger;
             config.readOnly = true;
         }
 
@@ -154,6 +154,7 @@ Phlexible.fields.FieldHelper = {
     },
 
     diff: function (styleEl) {
+        //debugger;
         if (!this.attributes || !this.attributes.diff) {
             return;
         }
@@ -162,23 +163,24 @@ Phlexible.fields.FieldHelper = {
             styleEl = this.el;
         }
 
-        switch (this.attributes.diff) {
-            case 'modified':
+        switch (this.attributes.type) {
+            case 'change':
                 styleEl.addClass('p-fields-diff-modified');
                 break;
 
-            case 'added':
+            case 'add':
                 styleEl.addClass('p-fields-diff-added');
                 break;
 
-            case 'removed':
+            case 'remove':
                 styleEl.addClass('p-fields-diff-removed');
                 break;
         }
     },
 
     inlineDiff: function (targetEl, clickEl) {
-        if (!this.element || !this.attributes || !this.attributes.diff || this.attributes.diff !== 'modified') {
+        //debugger;
+        if (!this.element || !this.attributes || !this.attributes.diff || this.attributes.type !== 'change') {
             return;
         }
 
@@ -197,7 +199,7 @@ Phlexible.fields.FieldHelper = {
 
             if (!this.diffEl) {
                 var height = (targetEl.getHeight && targetEl.getHeight() > 32) ? targetEl.getHeight() : 32;
-                var html = '_old_value: ' + this.attributes.oldValue + '<br/>_diff: ' + this.attributes.diffValue;
+                var html = '_old_value: ' + this.attributes.diffValue + '<br/>_diff: ' + this.attributes.diff;
 
                 this.diffEl = targetEl.insertSibling({
                     tag: 'div',

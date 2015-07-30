@@ -22,95 +22,112 @@ class Differ
      * @param array $from
      * @param array $to
      *
-     * @return DiffResult
+     * @return array
      */
     public function diff(array $from, array $to)
     {
-        $diff = $this->diffChild($from, $to);
-
-        return $diff;
+        return $this->diffChild($from, $to);
     }
 
     /**
-     * @param array $from
-     * @param array $to
+     * @param array  $from
+     * @param array  $to
      *
      * @return array
      */
     private function diffChild(array $from, array $to)
     {
-        $diff = array('children' => array(), 'values' => array());
+        $fromValues = isset($from['values']) ? $from['values'] : array();
+        $toValues = isset($to['values']) ? $to['values'] : array();
 
-        $fromValues = $from['values'];
-        $toValues = $to['values'];
+        $values = array();
 
-        foreach ($fromValues as $dsId => $fromLanguageValues) {
-            foreach ($fromLanguageValues as $language => $fromValue) {
-                if (isset($toValues[$dsId][$language])) {
-                    $toValue = $toValues[$dsId][$language];
-
-                    if ($fromValue !== $toValue) {
-                        $diff['values'][$dsId][$language] = array(
-                            'type' => 'change',
-                            'diff' => $this->diffValue($fromValue, $toValue),
-                            'from' => $fromValue,
-                            'to'   => $toValue,
+        foreach ($fromValues as $fromValue) {
+            $found = false;
+            foreach ($toValues as $toValue) {
+                if ($fromValue['id'] === $toValue['id']) {
+                    $found = true;
+                    if ($fromValue['content'] != $toValue['content']) {
+                        $fromValue['attributes'] = array(
+                            'type'      => 'change',
+                            'diff'      => $this->diffValue($fromValue['content'], $toValue['content']),
+                            'diffValue' => $toValue['content'],
                         );
                     }
-                } else {
-                    $diff['values'][$dsId][$language] = array(
-                        'type'  => 'add',
-                        'value' => $fromValue
-                    );
-                }
-            }
-        }
-
-        foreach ($toValues as $dsId => $toLanguageValues) {
-            foreach ($toLanguageValues as $language => $toValue) {
-                if (!isset($fromValues[$dsId])) {
-                    $diff['values'][$dsId][$language] = array(
-                        'type'  => 'remove',
-                        'value' => $toValue
-                    );
-                }
-            }
-        }
-
-        foreach ($from['children'] as $name => $fromChild) {
-            $found = false;
-            foreach ($to['children'] as $toChild) {
-                if ($fromChild['id'] === $toChild['id']) {
-                    $found = true;
-                    $diff['children'][$name][] = $this->diffChild($fromChild, $toChild);
+                    $values[] = $fromValue;
                     break;
                 }
             }
             if (!$found) {
-                $diff['children'][$name][] = array(
+                $fromValue['attributes'] = array(
+                    'type' => 'add',
+                );
+                $values[] = $fromValue;
+            }
+        }
+
+        foreach ($toValues as $toValue) {
+            $found = false;
+            foreach ($fromValues as $fromValue) {
+                if ($fromValue['id'] === $toValue['id']) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $toValue['attributes'] = array(
+                    'type' => 'remove',
+                );
+                $values[] = $toValue;
+            }
+        }
+
+        $fromChildren = isset($from['structures']) ? $from['structures'] : array();
+        $toChildren = isset($to['structures']) ? $to['structures'] : array();
+
+        $children = array();
+
+        foreach ($fromChildren as $fromChild) {
+            $found = false;
+            foreach ($toChildren as $toChild) {
+                if ($fromChild['id'] === $toChild['id']) {
+                    $found = true;
+                    $child = $this->diffChild($fromChild, $toChild);
+                    $child['attributes'] = array(
+                        'type' => 'change',
+                    );
+                    $children[] = $child;
+                    break;
+                }
+            }
+            if (!$found) {
+                $fromChild['attributes'] = array(
                     'type'  => 'add',
-                    'child' => $fromChild
                 );
+                $children[] = $fromChild;
             }
         }
 
-        foreach ($to['children'] as $name => $toChild) {
+        foreach ($toChildren as $name => $toChild) {
             $found = false;
-            foreach ($from['children'] as $fromChild) {
+            foreach ($fromChildren as $fromChild) {
                 if ($fromChild['id'] === $toChild['id']) {
                     $found = true;
                     break;
                 }
             }
             if (!$found) {
-                $diff['children'][$name][] = array(
-                    'type'  => 'remove',
-                    'child' => $toChild
+                $toChild['attributes'] = array(
+                    'type' => 'remove',
                 );
+                $children[] = $toChild;
             }
         }
 
-        return $diff;
+        $from['values'] = $values;
+        $from['structures'] = $children;
+
+        return $from;
     }
 
     /**
@@ -121,6 +138,10 @@ class Differ
      */
     private function diffValue($fromValue, $toValue)
     {
+        if (is_array($fromValue) ||is_array($toValue)) {
+            return '';
+        }
+
         $granularity = new Word;
         $diff = new Diff($granularity);
 

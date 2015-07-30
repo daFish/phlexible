@@ -11,10 +11,10 @@ namespace Phlexible\Component\MetaSet\Doctrine;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Component\MetaSet\Model\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
-use Phlexible\Component\MetaSet\Model\MetaSet;
 use Phlexible\Component\Suggest\Model\DataSourceManagerInterface;
 
 /**

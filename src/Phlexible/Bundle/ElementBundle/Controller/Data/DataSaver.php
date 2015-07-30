@@ -13,15 +13,14 @@ use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
-use Phlexible\Bundle\ElementBundle\Event\SaveTeaserDataEvent;
 use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager;
 use Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
 use Phlexible\Component\Elementtype\Field\FieldRegistry;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -410,7 +409,7 @@ class DataSaver
 
     /**
      * @param ElementStructure     $rootElementStructure
-     * @param ElementtypeStructure $elementtypeStructure
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $elementtypeStructure
      * @param array                $values
      *
      * @return ElementStructure

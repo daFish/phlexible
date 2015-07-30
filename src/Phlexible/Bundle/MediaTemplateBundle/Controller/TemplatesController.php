@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\MediaTemplateBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Component\MediaTemplate\Domain\AudioTemplate;
+use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Domain\VideoTemplate;
 use Phlexible\Component\MediaTemplate\Exception\InvalidArgumentException;
-use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
-use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
-use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Component\Elementtype\Model;
 
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**

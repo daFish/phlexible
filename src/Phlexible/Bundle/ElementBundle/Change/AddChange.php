@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Change;
 
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
  * Elementtype add change
@@ -23,7 +23,7 @@ class AddChange extends Change
     private $needImport = false;
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      * @param bool        $needImport
      */
     public function __construct(Elementtype $elementtype, $needImport)

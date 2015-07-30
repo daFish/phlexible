@@ -8,8 +8,8 @@
 
 namespace Phlexible\Component\MediaCache\Specifier;
 
+use Phlexible\Component\MediaTemplate\Domain\VideoTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
-use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
 use Temp\MediaConverter\Format\Video;
 
 /**

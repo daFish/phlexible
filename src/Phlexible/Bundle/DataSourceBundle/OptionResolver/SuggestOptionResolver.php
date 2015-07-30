@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\DataSourceBundle\OptionResolver;
 
-use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 use Phlexible\Component\MetaSet\OptionResolver\OptionResolverInterface;
 
 /**

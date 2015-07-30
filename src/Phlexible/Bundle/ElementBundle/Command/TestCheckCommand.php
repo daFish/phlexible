@@ -36,8 +36,8 @@ class TestCheckCommand extends ContainerAwareCommand
     {
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
 
-        $element = $elementService->findElement(40);
-        $elementVersion = $elementService->findElementVersion($element, 30);
+        $element = $elementService->findElement(288);
+        $elementVersion = $elementService->findElementVersion($element, 2);
 
         $classManager = $this->getContainer()->get('phlexible_element.proxy.class_manager');
 

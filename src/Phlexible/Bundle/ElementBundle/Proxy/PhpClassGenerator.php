@@ -12,8 +12,8 @@ use CG\Generator\PhpClass;
 use CG\Generator\PhpMethod;
 use CG\Generator\PhpParameter;
 use CG\Generator\PhpProperty;
-use Phlexible\Component\Elementtype\Model\Elementtype;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
  * Php class generator
@@ -58,7 +58,7 @@ class PhpClassGenerator
     }
 
     /**
-     * @param Elementtype[] $elementtypes
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype[] $elementtypes
      *
      * @return string
      */
@@ -118,7 +118,7 @@ class PhpClassGenerator
     /**
      * @param string      $className
      * @param array       $data
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
      * @return PhpClass
      */

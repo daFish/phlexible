@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Node;
 
+use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 
@@ -34,26 +35,49 @@ class ReferenceNodeContext extends NodeContext
     private $depth;
 
     /**
-     * @param NodeInterface $node
-     * @param TreeInterface $tree
-     * @param string        $language
-     * @param NodeContext   $referenceNode
-     * @param int           $maxDepth
-     * @param int           $depth
+     * @param NodeInterface         $node
+     * @param TreeInterface         $tree
+     * @param TreeMediatorInterface $mediator
+     * @param string                $language
+     * @param NodeContext           $referenceNode
+     * @param int                   $maxDepth
+     * @param int                   $depth
      */
     public function __construct(
         NodeInterface $node,
         TreeInterface $tree,
+        TreeMediatorInterface $mediator,
         $language,
         NodeContext $referenceNode = null,
         $maxDepth = null,
         $depth = 0)
     {
-        parent::__construct($node, $tree, $language);
+        parent::__construct($node, $tree, $mediator, $language);
 
         $this->referenceNode = $referenceNode;
         $this->maxDepth = $maxDepth;
         $this->depth = $depth;
+    }
+
+    /**
+     * @param NodeContext $node
+     * @param NodeContext $referenceNode
+     * @param int         $maxDepth
+     * @param int         $depth
+     *
+     * @return ReferenceNodeContext
+     */
+    public static function fromNodeContext(NodeContext $node, NodeContext $referenceNode = null, $maxDepth = null, $depth = 0)
+    {
+        return new self(
+            $node->getNode(),
+            $node->getTree(),
+            $node->getMediator(),
+            $node->getLanguage(),
+            $referenceNode,
+            $maxDepth,
+            $depth
+        );
     }
 
     /**
@@ -71,10 +95,8 @@ class ReferenceNodeContext extends NodeContext
                 continue;
             }
             if ($keep && $childNode->isAvailable()) {
-                $children[] = new self(
-                    $childNode->getNode(),
-                    $this->tree,
-                    $this->language,
+                $children[] = self::fromNodeContext(
+                    $childNode,
                     $this->referenceNode,
                     $this->maxDepth,
                     $this->depth + 1
@@ -100,10 +122,8 @@ class ReferenceNodeContext extends NodeContext
                 continue;
             }
             if ($keep && $childNode->isAvailable()) {
-                $children[] = new self(
-                    $childNode->getNode(),
-                    $this->tree,
-                    $this->language,
+                $children[] = self::fromNodeContext(
+                    $childNode,
                     $this->referenceNode,
                     $this->maxDepth,
                     $this->depth + 1
@@ -124,10 +144,8 @@ class ReferenceNodeContext extends NodeContext
             return null;
         }
 
-        return new self(
-            $this->tree->get($parentNode->getId())->getNode(),
-            $this->tree,
-            $this->language,
+        return self::fromNodeContext(
+            $this->getParent(),
             $this->referenceNode,
             $this->maxDepth,
             $this->depth - 1
@@ -146,10 +164,8 @@ class ReferenceNodeContext extends NodeContext
         $children = array();
         foreach ($this->tree->getChildren($this) as $childNode) {
             if ($childNode->isAvailable()) {
-                $children[] = new self(
-                    $childNode->getNode(),
-                    $this->tree,
-                    $this->language,
+                $children[] = self::fromNodeContext(
+                    $childNode,
                     $this->referenceNode,
                     $this->maxDepth,
                     $this->depth + 1

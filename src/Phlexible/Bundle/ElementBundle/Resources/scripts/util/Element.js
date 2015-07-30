@@ -267,12 +267,14 @@ Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
             this.setStatusLocked();
         }
 
-        var historyKey = this.id + '_' + this.version + '_' + this.language;
-        if (this.history.indexOfKey(historyKey) !== false) {
-            this.history.removeKey(historyKey);
+        if (!elementData.diff) {
+            var historyKey = elementData.nodeId + '_' + elementData.version + '_' + elementData.language;
+            if (this.history.indexOfKey(historyKey) !== false) {
+                this.history.removeKey(historyKey);
+            }
+            this.history.add(historyKey, [elementData.nodeId, elementData.version, elementData.language, this.getTreeNode().text, this.getTreeNode().attributes.icon, new Date().getTime()]);
+            this.fireEvent('historychange', this, this.history);
         }
-        this.history.add(historyKey, [this.id, this.version, this.language, this.title, elementData.icon, new Date().getTime()]);
-        this.fireEvent('historychange', this, this.history);
     },
 
     onLoadFailure: function () {

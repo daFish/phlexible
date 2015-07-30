@@ -10,14 +10,13 @@ namespace Phlexible\Bundle\CmsBundle\ProblemChecker;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
-use Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerInterface;
 
 /**
  * Special TID problem checker
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class SpecialTidChecker implements ProblemCheckerInterface
+class SpecialTidChecker implements \Phlexible\Bundle\ProblemBundle\Model\ProblemCheckerInterface
 {
     /**
      * @var EntityManager

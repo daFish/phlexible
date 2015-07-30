@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\Elementtype\Event;
 
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
@@ -24,7 +24,7 @@ class ElementtypeUsageEvent extends ElementtypeEvent
     private $usage = array();
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      */
     public function __construct(Elementtype $elementtype)
     {

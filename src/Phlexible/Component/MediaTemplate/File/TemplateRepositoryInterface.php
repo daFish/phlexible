@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaTemplate\File;
 
-use Phlexible\Component\MediaTemplate\Model\TemplateCollection;
+use Phlexible\Component\MediaTemplate\Domain\TemplateCollection;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**

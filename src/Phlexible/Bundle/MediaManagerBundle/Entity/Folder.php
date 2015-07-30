@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
-use Phlexible\Component\Volume\Model\Folder as BaseFolder;
+use Phlexible\Component\Volume\Domain\Folder as BaseFolder;
 
 /**
  * Folder

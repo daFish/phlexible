@@ -1,6 +1,6 @@
 services:
     phlexible_dashboard.portlets:
-        class: Phlexible\Bundle\DashboardBundle\Portlet\PortletCollection
+        class: Phlexible\Bundle\DashboardBundle\Domain\PortletCollection
         arguments: [[]]
 
     # event listeners

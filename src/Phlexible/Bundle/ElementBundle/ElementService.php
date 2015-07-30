@@ -14,8 +14,8 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
-use Phlexible\Component\Elementtype\Model\Elementtype;
 use Phlexible\Component\Elementtype\Model\ViabilityManagerInterface;
 
 /**
@@ -101,7 +101,7 @@ class ElementService
     /**
      * @param Element $element
      *
-     * @return Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     public function findElementtype(Element $element)
     {
@@ -119,7 +119,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
      * @return ElementVersion[]
      */
@@ -129,7 +129,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
      * @return Elementtype[]
      */
@@ -144,9 +144,9 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
      */
     public function findAllowedChildren(Elementtype $elementtype)
     {
@@ -236,7 +236,7 @@ class ElementService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
      * @return ElementSource
      */

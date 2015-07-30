@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\ElementBundle\Util;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
-use Phlexible\Component\MetaSet\Model\MetaSetField;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
@@ -70,7 +70,7 @@ class SuggestMetaFieldUtil
 
         $values = array();
         foreach ($fields as $field) {
-            /* @var $field MetaSetField */
+            /* @var $field \Phlexible\Component\MetaSet\Domain\MetaSetField */
             foreach ($this->metaDataManager->findByMetaSet($field->getMetaSet()) as $metaData) {
                 /* @var $metaData MetaDataInterface */
                 $value = $metaData->get($field->getId(), $valueBag->getLanguage());

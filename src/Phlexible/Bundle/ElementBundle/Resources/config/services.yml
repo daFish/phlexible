@@ -87,7 +87,11 @@ services:
 
     phlexible_element.listener.elementtype_usage:
         class: Phlexible\Bundle\ElementBundle\EventListener\ElementtypeUsageListener
-        arguments: [@doctrine.dbal.default_connection, @security.token_storage]
+        arguments:
+            - @phlexible_element.element_manager
+            - @phlexible_tree.node_manager
+            - @phlexible_tree.tree_manager
+            - @security.token_storage
         tags:
             - {name: kernel.event_listener, event: phlexible_elementtype.usage, method: onElementtypeUsage}
 

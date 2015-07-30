@@ -21,7 +21,7 @@ use Phlexible\Component\Node\Model\NodeInterface;
 class NodeContext implements DomainObjectInterface
 {
     /**
-     * @var \Phlexible\Component\Node\Model\NodeInterface
+     * @var NodeInterface
      */
     protected $node;
 
@@ -41,7 +41,7 @@ class NodeContext implements DomainObjectInterface
     protected $language;
 
     /**
-     * @param \Phlexible\Component\Node\Model\NodeInterface         $node
+     * @param NodeInterface         $node
      * @param TreeInterface         $tree
      * @param TreeMediatorInterface $mediator
      * @param string                $language
@@ -71,7 +71,7 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
-     * @return \Phlexible\Component\Node\Model\NodeInterface
+     * @return NodeInterface
      */
     public function getNode()
     {
@@ -84,6 +84,22 @@ class NodeContext implements DomainObjectInterface
     public function getTree()
     {
         return $this->tree;
+    }
+
+    /**
+     * @return TreeMediatorInterface
+     */
+    public function getMediator()
+    {
+        return $this->mediator;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
     }
 
     /**
@@ -385,7 +401,7 @@ class NodeContext implements DomainObjectInterface
      */
     public function isAvailable($language = null)
     {
-        return $this->isPublished($this, $language ?: $this->language);
+        return $this->isPublished($language ?: $this->language);
     }
 
     /**
@@ -395,9 +411,9 @@ class NodeContext implements DomainObjectInterface
      */
     public function isViewable($language = null)
     {
-        return $this->isPublished($language ?: $this->defaultLanguage) &&
+        return $this->isPublished($language ?: $this->language) &&
             $this->getNode()->getInNavigation() &&
-            $this->mediator->isViewable($this, $language ?: $this->defaultLanguage);
+            $this->mediator->isViewable($this, $language ?: $this->language);
     }
 
     /**
@@ -408,7 +424,7 @@ class NodeContext implements DomainObjectInterface
     public function hasViewableChildren($language = null)
     {
         foreach ($this->getChildren() as $childNode) {
-            if ($childNode->isViewable($language ?: $this->defaultLanguage)) {
+            if ($childNode->isViewable($language ?: $this->language)) {
                 return true;
             }
         }

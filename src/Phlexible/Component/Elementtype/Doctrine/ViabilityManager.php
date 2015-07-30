@@ -10,7 +10,7 @@ namespace Phlexible\Component\Elementtype\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeApply;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Model\ViabilityManagerInterface;
 
 /**
@@ -46,7 +46,7 @@ class ViabilityManager implements ViabilityManagerInterface
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
      * @return array
      */

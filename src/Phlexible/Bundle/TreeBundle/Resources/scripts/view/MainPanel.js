@@ -1,21 +1,22 @@
 Ext.provide('Phlexible.tree.view.MainPanel');
 
 Ext.require('Phlexible.tree.view.Tree');
+Ext.require('Phlexible.tree.view.History');
+Ext.require('Phlexible.tree.view.FileSearch');
+Ext.require('Phlexible.tree.view.NodeSearch');
 Ext.require('Phlexible.teasers.view.Tree');
 Ext.require('Phlexible.tree.toolbar.TopToolbar');
 Ext.require('Phlexible.element.window.FileLinkWindow');
 Ext.require('Phlexible.element.Element');
+Ext.require('Phlexible.tree.view.NodeProperties');
+Ext.require('Phlexible.tree.view.accordion.QuickInfo');
 
 Ext.require('Phlexible.element.view.tab.Data');
 Ext.require('Phlexible.tree.view.tab.AccessControl');
-Ext.require('Phlexible.tree.view.tab.Cache');
 Ext.require('Phlexible.tree.view.tab.Changes');
-Ext.require('Phlexible.tree.view.tab.Configuration');
 Ext.require('Phlexible.tree.view.tab.List');
 Ext.require('Phlexible.tree.view.tab.Links');
 Ext.require('Phlexible.tree.view.tab.Preview');
-Ext.require('Phlexible.tree.view.tab.Routing');
-Ext.require('Phlexible.tree.view.tab.Security');
 
 /**
  * Input params:
@@ -52,14 +53,14 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
             this.element.reload(loadParams);
         }
         // load tree
-        if (params.start_tid_path) {
-            if (params.start_tid_path && params.start_tid_path.substr(0, 3) !== '/-1') {
-                params.start_tid_path = '/-1' + params.start_tid_path;
+        if (params.startNodePath) {
+            if (params.startNodePath && params.startNodePath.substr(0, 3) !== '/-1') {
+                params.startNodePath = '/-1' + params.startNodePath;
             }
-            var n = this.getElementsTree().getSelectionModel().getSelectedNode();
-            if (!n || n.getPath() !== params.start_tid_path) {
+            var n = this.getTree().getSelectionModel().getSelectedNode();
+            if (!n || n.getPath() !== params.startNodePath) {
                 this.skipLoad = true;
-                this.getElementsTree().selectPath(params.start_tid_path, 'id');
+                this.getTree().selectPath(params.startNodePath, 'id');
             }
         }
     },
@@ -69,8 +70,8 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
 
         if (this.params.start_tid_path) {
             this.skipLoad = true;
-            if (this.params.start_tid_path.substr(0, 3) !== '/-1') {
-                this.params.start_tid_path = '/-1' + this.params.start_tid_path;
+            if (this.params.startNodePath.substr(0, 3) !== '/-1') {
+                this.params.startNodePath = '/-1' + this.params.startNodePath;
             }
         }
 
@@ -116,333 +117,96 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
         this.items = [{
             region: 'west',
             header: false,
-            width: 240,
+            width: 320,
             split: true,
             collapsible: true,
             collapseMode: 'mini',
             border: false,
-            layout: 'fit',
+            layout: 'border',
+            tbar: new Phlexible.tree.toolbar.TopToolbar({
+                element: this.element
+            }),
             items: [
                 {
+                    xtype: 'tree-tree',
+                    region: 'center',
+                    title: this.strings.tree,
+                    iconCls: 'p-element-tree-icon',
+                    header: false,
+                    element: this.element,
+                    startNodePath: this.params.startNodePath || false,
+                    listeners: {
+                        nodeSelect: this.onNodeSelect,
+                        newElement: function (node) {
+                            this.element.showNewElementWindow(node);
+                        },
+                        newAlias: function (node) {
+                            this.element.showNewAliasWindow(node);
+                        },
+                        scope: this
+                    }
+                },
+                {
                     xtype: 'tabpanel',
+                    region: 'south',
+                    height: 280,
                     activeTab: 0,
                     border: true,
                     cls: 'p-elements-resource-tabs',
                     items: [
                         {
+                            xtype: 'teasers-tree',
+                            tabTip: this.strings.teasers,
                             title: '&nbsp;',
-                            tabTip: this.strings.tree,
-                            iconCls: 'p-element-tree-icon',
-                            layout: 'border',
-                            border: false,
-                            items: [{
-                                xtype: 'tree-tree',
-                                region: 'center',
-                                header: false,
-                                element: this.element,
-                                start_tid_path: this.params.start_tid_path || false,
-                                listeners: {
-                                    nodeSelect: this.onNodeSelect,
-                                    newElement: function (node) {
-                                        this.element.showNewElementWindow(node);
-                                    },
-                                    newAlias: function (node) {
-                                        this.element.showNewAliasWindow(node);
-                                    },
-                                    scope: this
-                                }
-                            },{
-                                xtype: 'teasers-tree',
-                                region: 'south',
-                                height: 200,
-                                split: true,
-                                collapsible: true,
-                                // collapseMode: 'mini',
-                                collapsed: true,
-                                element: this.element,
-                                listeners: {
-                                    teaserselect: function (teaserId, node, language) {
-                                        // this.dataPanel.disable();
-                                        // this.catchPanel.disable();
-                                        // this.getTopToolbar().enable();
-                                        if (!language) language = null;
+                            iconCls: 'p-teaser-teaser-icon',
+                            element: this.element,
+                            listeners: {
+                                teaserselect: function (teaserId, node, language) {
+                                    // this.dataPanel.disable();
+                                    // this.catchPanel.disable();
+                                    // this.getTopToolbar().enable();
+                                    if (!language) language = null;
 
-                                        this.element.setTeaserNode(node);
+                                    this.element.setTeaserNode(node);
 
-                                        this.getContentPanel().getLayout().setActiveItem(this.elementPanelIndex);
-                                        this.element.loadTeaser(teaserId, false, language, true);
-                                    },
-                                    areaselect: function (areaId, node) {
-                                        // this.dataPanel.disable();
-                                        // this.catchPanel.disable();
-                                        // this.getTopToolbar().enable();
-                                        this.getContentPanel().getLayout().setActiveItem(this.layoutListPanelIndex);
-                                        this.getTeaserList().element.id = this.element.id;
-                                        this.getTeaserList().element.eid = this.element.eid;
-                                        this.getTeaserList().element.language = this.element.language;
-                                        this.getTeaserList().element.areaId = areaId;
-                                        this.getTeaserList().element.treeNode = node.getOwnerTree().getRootNode();
-                                        this.getTeaserList().element.sortMode = 'free';
-                                        this.getTeaserList().element.sortDir = 'asc';
-                                        this.getTeaserList().doLoad(this.getLayoutListPanel().element);
-                                    },
-                                    scope: this
-                                }
-                            }]
+                                    this.getContentPanel().getLayout().setActiveItem(this.elementPanelIndex);
+                                    this.element.loadTeaser(teaserId, false, language, true);
+                                },
+                                areaselect: function (areaId, node) {
+                                    // this.dataPanel.disable();
+                                    // this.catchPanel.disable();
+                                    // this.getTopToolbar().enable();
+                                    this.getContentPanel().getLayout().setActiveItem(this.layoutListPanelIndex);
+                                    this.getTeaserList().element.id = this.element.id;
+                                    this.getTeaserList().element.eid = this.element.eid;
+                                    this.getTeaserList().element.language = this.element.language;
+                                    this.getTeaserList().element.areaId = areaId;
+                                    this.getTeaserList().element.treeNode = node.getOwnerTree().getRootNode();
+                                    this.getTeaserList().element.sortMode = 'free';
+                                    this.getTeaserList().element.sortDir = 'asc';
+                                    this.getTeaserList().doLoad(this.getLayoutListPanel().element);
+                                },
+                                scope: this
+                            }
                         },
                         {
-                            xtype: 'grid',
+                            xtype: 'tree-node-search',
                             tabTip: this.strings.element_search,
                             title: '&nbsp;',
-                            iconCls: 'p-element-preview-icon',
-                            cls: 'p-elements-resource-search-panel',
-                            viewConfig: {
-                                forceFit: true,
-                                emptyText: this.strings.no_results,
-                                deferEmptyText: false
-                            },
-                            store: new Ext.data.JsonStore({
-                                url: Phlexible.Router.generate('tree_search_nodes'),
-                                baseParams: {
-                                    siterootId: this.element.getSiterootId(),
-                                    query: '',
-                                    language: this.element.getLanguage()
-                                },
-                                root: 'results',
-                                fields: ['tid', 'version', 'title', 'icon'],
-                                sortInfo: {field: 'title', direction: 'ASC'}
-                            }),
-                            sm: new Ext.grid.RowSelectionModel({
-                                singleSelect: true
-                            }),
-                            columns: [
-                                {
-                                    dataIndex: 'title',
-                                    header: this.strings.elements,
-                                    renderer: function (v, md, r) {
-                                        var icon = '<img src="' + r.data.icon + '" width="18" height="18" style="vertical-align: middle;" />';
-                                        var title = r.data.title;
-                                        var meta = r.data.tid;
-
-                                        return icon + ' ' + title + ' [' + meta + ']';
-                                    }
-                                }
-                            ],
-                            tbar: [
-                                {
-                                    xtype: 'textfield',
-                                    emptyText: this.strings.element_search,
-                                    enableKeyEvents: true,
-                                    anchor: '-10',
-                                    listeners: {
-                                        render: function (c) {
-                                            c.task = new Ext.util.DelayedTask(c.doSearch, this);
-                                        },
-                                        keyup: function (c, event) {
-                                            if (event.getKey() == event.ENTER) {
-                                                c.task.cancel();
-                                                c.doSearch();
-                                                return;
-                                            }
-
-                                            c.task.delay(500);
-                                        },
-                                        scope: this
-                                    },
-                                    doSearch: function () {
-                                        var c = this.getComponent(0).getComponent(0).getComponent(1);
-                                        var query = c.getTopToolbar().items.items[0].getValue();
-                                        if (!query) return;
-                                        var store = c.getStore();
-                                        store.baseParams.query = query;
-                                        store.baseParams.language = this.element.getLanguage();
-                                        store.load();
-                                    }.createDelegate(this)
-                                }
-                            ],
-                            listeners: {
-                                rowdblclick: function (c, itemIndex) {
-                                    var r = c.getStore().getAt(itemIndex);
-                                    if (!r) return;
-                                    this.element.reload({id: r.data.tid, version: r.data.version, language: this.element.getLanguage(), lock: 1});
-                                },
-                                scope: this
-                            }
+                            element: this.element
                         },
                         {
-                            xtype: 'panel',
+                            xtype: 'tree-file-search',
                             tabTip: this.strings.media_search,
                             title: '&nbsp;',
-                            iconCls: 'p-mediamanager-component-icon',
-                            layout: 'fit',
-                            bodyStyle: 'padding: 5px',
-                            autoScroll: true,
-                            border: false,
-                            items: {
-                                xtype: 'dataview',
-                                cls: 'p-elements-resource-media-panel',
-                                store: new Ext.data.JsonStore({
-                                    url: Phlexible.Router.generate('tree_search_files'),
-                                    baseParams: {
-                                        siterootId: this.element.getSiterootId(),
-                                        query: ''
-                                    },
-                                    root: 'results',
-                                    fields: ['id', 'version', 'name', 'folder_id'],
-                                    autoLoad: false
-                                }),
-                                itemSelector: 'div.p-elements-result-wrap',
-                                overClass: 'p-elements-result-wrap-over',
-                                style: 'overflow: auto',
-                                singleSelect: true,
-                                emptyText: this.strings.no_results,
-                                deferEmptyText: false,
-                                //autoHeight: true,
-                                tpl: new Ext.XTemplate(
-                                    '<tpl for=".">',
-                                    '<div class="p-elements-result-wrap" id="result-wrap-{id}" style="text-align: center">',
-                                    '<div><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {file_id: values.id, template_key: \"_mm_large\"})]}" width="96" height="96" /></div>',
-                                    '<span>{name}</span>',
-                                    '</div>',
-                                    '</tpl>'
-                                ),
-                                listeners: {
-                                    render: function (c) {
-                                        var v = c;
-                                        this.imageDragZone = new Ext.dd.DragZone(v.getEl(), {
-                                            ddGroup: 'imageDD',
-                                            containerScroll: true,
-                                            getDragData: function (e) {
-                                                var sourceEl = e.getTarget(v.itemSelector, 10);
-                                                if (sourceEl) {
-                                                    d = sourceEl.cloneNode(true);
-                                                    d.id = Ext.id();
-                                                    return v.dragData = {
-                                                        sourceEl: sourceEl,
-                                                        repairXY: Ext.fly(sourceEl).getXY(),
-                                                        ddel: d,
-                                                        record: v.getRecord(sourceEl)
-                                                    };
-                                                }
-                                            },
-                                            getRepairXY: function () {
-                                                return this.dragData.repairXY;
-                                            }
-                                        });
-                                    },
-                                    contextmenu: function (view, index, node, event) {
-                                        var record = view.store.getAt(index);
-                                        if (!record) {
-                                            return;
-                                        }
-
-                                        if (this.imageSearchContextMenu) {
-                                            this.imageSearchContextMenu.destroy();
-                                        }
-
-                                        this.imageSearchContextMenu = new Ext.menu.Menu({
-                                            items: [
-                                                {
-                                                    text: 'File Links',
-                                                    handler: function (menu) {
-                                                        var window = new Phlexible.elements.FileLinkWindow({
-                                                            file_id: record.data.id,
-                                                            file_name: record.data.name
-                                                        });
-                                                        window.show();
-                                                    },
-                                                    scope: this
-                                                }
-                                            ]
-                                        });
-
-                                        event.stopEvent();
-                                        var coords = event.getXY();
-
-                                        this.imageSearchContextMenu.showAt([coords[0], coords[1]]);
-
-                                    },
-                                    scope: this
-                                }
-                            },
-                            tbar: [
-                                {
-                                    xtype: 'textfield',
-                                    emptyText: this.strings.media_search,
-                                    enableKeyEvents: true,
-                                    anchor: '-10',
-                                    listeners: {
-                                        render: function (c) {
-                                            c.task = new Ext.util.DelayedTask(c.doSearch, this);
-                                        },
-                                        keyup: function (c, event) {
-                                            if (event.getKey() == event.ENTER) {
-                                                c.task.cancel();
-                                                c.doSearch();
-                                                return;
-                                            }
-
-                                            c.task.delay(500);
-                                        },
-                                        scope: this
-                                    },
-                                    doSearch: function () {
-                                        var viewWrap = this.getComponent(0).getComponent(0).getComponent(2);
-                                        var view = viewWrap.getComponent(0);
-                                        var query = viewWrap.getTopToolbar().items.items[0].getValue();
-                                        if (!query) return;
-                                        var store = view.getStore();
-                                        store.baseParams.query = query;
-                                        store.load();
-                                    }.createDelegate(this)
-                                }
-                            ]
+                            element: this.element
                         },
                         {
-                            xtype: 'grid',
+                            xtype: 'tree-history',
                             tabTip: this.strings.history,
                             title: '&nbsp;',
-                            iconCls: 'p-element-tab_history-icon',
-                            cls: 'p-elements-resource-history-panel',
                             border: false,
-                            viewConfig: {
-                                forceFit: true
-                            },
-                            store: new Ext.data.SimpleStore({
-                                fields: ['tid', 'version', 'language', 'title', 'icon', 'ts'],
-                                sortInfo: {field: 'ts', direction: 'DESC'}
-                            }),
-                            sm: new Ext.grid.RowSelectionModel({
-                                singleSelect: true
-                            }),
-                            columns: [
-                                {
-                                    dataIndex: 'title',
-                                    header: this.strings.history,
-                                    renderer: function (v, md, r) {
-                                        var icon = '<img src="' + r.data.icon + '" width="18" height="18" style="vertical-align: middle;" />';
-                                        var date = Math.floor(new Date().getTime() / 1000 - r.data.ts / 1000);
-                                        if (date) {
-                                            date = 'Geöffnet vor ' + Phlexible.Format.age(date);
-                                        } else {
-                                            date = 'Gerade geöffnet';
-                                        }
-                                        var title = r.data.title;
-                                        var meta = r.data.tid + ', v' + r.data.version + ', ' + r.data.language;
-
-                                        return icon + ' ' + title + ' [' + meta + ']<br />' +
-                                            '<span style="color: gray; font-size: 10px;">' + date + '</span>';
-                                    }
-                                }
-                            ],
-                            listeners: {
-                                rowdblclick: function (c, itemIndex) {
-                                    var r = c.getStore().getAt(itemIndex);
-                                    if (!r) return;
-                                    this.element.reload({id: r.data.tid, version: r.data.version, language: r.data.language, lock: 1});
-                                },
-                                scope: this
-                            }
+                            element: this.element
                         }
                     ]
                 }
@@ -489,26 +253,6 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                         element: this.element
                     },
                     {
-                        xtype: 'tree-tab-configuration',
-                        tabKey: 'configuration',
-                        element: this.element
-                    },
-                    {
-                        xtype: 'tree-tab-routing',
-                        tabKey: 'routing',
-                        element: this.element
-                    },
-                    {
-                        xtype: 'tree-tab-security',
-                        tabKey: 'security',
-                        element: this.element
-                    },
-                    {
-                        xtype: 'tree-tab-cache',
-                        tabKey: 'cache',
-                        element: this.element
-                    },
-                    {
                         xtype: 'tree-tab-accesscontrol',
                         tabKey: 'rights',
                         element: this.element
@@ -530,7 +274,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                         this.element.loadTeaser(teaserId, null, null, 1);
                     },
                     listLoadNode: function (nodeId) {
-                        var node = this.getElementsTree().getNodeById(nodeId);
+                        var node = this.getTree().getNodeById(nodeId);
                         if (node) {
                             // uber-node settings gedöns
                             node.select();
@@ -543,7 +287,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                         this.element.load(nodeId, null, null, 1);
                     },
                     listReloadNode: function (nodeId) {
-                        var node = this.getElementsTree().getNodeById(nodeId);
+                        var node = this.getTree().getNodeById(nodeId);
                         if (node) {
                             // uber-node settings gedöns
                             node.select();
@@ -572,20 +316,16 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                     scope: this
                 }
             }]
-        }];
-
-        this.tbar = [{
-            xtype: 'tree-toptoolbar',
+        },{
+            xtype: 'tree-node-properties',
+            region: 'east',
+            border: false,
+            width: 320,
+            minWidth: 320,
+            collapsible: true,
+            split: true,
             element: this.element
         }];
-
-        this.element.on({
-            historychange: function () {
-                var store = this.getComponent(0).getComponent(0).getComponent(3).getStore();
-                store.loadData(this.element.history.getRange());
-            },
-            scope: this
-        });
 
         Phlexible.tree.view.MainPanel.superclass.initComponent.call(this);
 
@@ -624,36 +364,20 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
 
     },
 
-    getLeftTabPanelWrap: function() {
+    getLeftPanel: function() {
         return this.getComponent(0);
     },
 
-    getLeftTabPanel: function() {
-        return this.getLeftTabPanelWrap().getComponent(0);
-    },
-
-    getTreeTab: function() {
-        return this.getLeftTabPanel().getComponent(0);
-    },
-
-    getMediaTab: function() {
-        return this.getLeftTabPanel().getComponent(1);
-    },
-
-    getElementSearchTab: function() {
-        return this.getLeftTabPanel().getComponent(2);
-    },
-
-    getElementHistoryTab: function() {
-        return this.getLeftTabPanel().getComponent(3);
-    },
-
-    getElementsTree: function() {
-        return this.getTreeTab().getComponent(0);
+    getLeftTabs: function() {
+        return this.getLeftPanel().getComponent(1);
     },
 
     getLayoutTree: function() {
-        return this.getTreeTab().getComponent(1);
+        return this.getLeftTabs().getComponent(0);
+    },
+
+    getTree: function() {
+        return this.getLeftPanel().getComponent(1);
     },
 
     getContentPanel: function() {
@@ -709,7 +433,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
         this.getNodeTabs().items.each(function (item) {
             //Phlexible.console.debug('xxx', element.data.default_tab, item.tabKey);
             if (element.getDefaultTab() === item.tabKey) {
-                this.setActiveTab(item);
+                this.getNodeTabs().setActiveTab(item);
                 return false;
             }
         }, this);

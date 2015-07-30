@@ -28,6 +28,9 @@ class ArraySerializer implements SerializerInterface
     /**
      * @param array  $structure
      * @param string $language
+     * @param string $parentId
+     * @param string $parentDsId
+     * @param string $parentName
      *
      * @return array
      */
@@ -49,12 +52,12 @@ class ArraySerializer implements SerializerInterface
         $dsId = isset($structure['dsId']) ? $structure['dsId'] : null;
         $name = $parentDsId . '_' . $dsId;
 
-        $structureDatas = array();
+        $children = array();
         foreach ($structure['children'] as $childStructure) {
-            $structureDatas[] = $this->walk($childStructure, $language, $id, $dsId, $name);
+            $children[] = $this->walk($childStructure, $language, $id, $dsId, $name);
         }
 
-        $structureData = array(
+        return array(
             'id'         => $id,
             'dsId'       => $dsId,
             'parentId'   => $parentId,
@@ -62,7 +65,7 @@ class ArraySerializer implements SerializerInterface
             'name'       => $name,
             'parentName' => $parentName,
             'attributes' => array(),
-            'structures' => $structureDatas,
+            'structures' => $children,
             'values'     => $valueDatas,
         );
 

@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -19,7 +18,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LatestFilesPortlet extends Portlet
+class LatestFilesPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
 {
     /**
      * @var VolumeManager

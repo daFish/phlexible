@@ -9,6 +9,7 @@
 namespace Phlexible\Component\Elementtype\Model;
 
 use Phlexible\Bundle\ElementtypeBundle\Entity\ElementtypeApply;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
  * Viability manager

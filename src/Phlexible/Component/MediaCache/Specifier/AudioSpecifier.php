@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaCache\Specifier;
 
-use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
+use Phlexible\Component\MediaTemplate\Domain\AudioTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Temp\MediaConverter\Format\Audio;
 
@@ -29,7 +29,7 @@ class AudioSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param AudioTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\AudioTemplate $template
      */
     public function getExtension(TemplateInterface $template)
     {
@@ -44,7 +44,7 @@ class AudioSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param AudioTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\AudioTemplate $template
      */
     public function specify(TemplateInterface $template)
     {

@@ -8,9 +8,9 @@
 
 namespace Phlexible\Component\MetaSet\File;
 
+use Phlexible\Component\MetaSet\Domain\MetaSetCollection;
 use Phlexible\Component\MetaSet\File\Dumper\DumperInterface;
 use Phlexible\Component\MetaSet\File\Parser\ParserInterface;
-use Phlexible\Component\MetaSet\Model\MetaSetCollection;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\EditableRepository;
@@ -60,7 +60,7 @@ class PuliMetaSetRepository implements MetaSetRepositoryInterface
     private $dumpers = array();
 
     /**
-     * @var MetaSetCollection
+     * @var \Phlexible\Component\MetaSet\Domain\MetaSetCollection
      */
     private $metasets;
 

@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MetaSet\File;
 
-use Phlexible\Component\MetaSet\Model\MetaSetCollection;
+use Phlexible\Component\MetaSet\Domain\MetaSetCollection;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
@@ -19,7 +19,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 interface MetaSetRepositoryInterface
 {
     /**
-     * @return MetaSetCollection
+     * @return \Phlexible\Component\MetaSet\Domain\MetaSetCollection
      */
     public function loadAll();
 

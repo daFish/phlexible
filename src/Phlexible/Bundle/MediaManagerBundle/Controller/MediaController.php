@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

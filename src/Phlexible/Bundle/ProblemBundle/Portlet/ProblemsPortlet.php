@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ProblemBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -19,7 +18,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>
  */
-class ProblemsPortlet extends Portlet
+class ProblemsPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
 {
     /**
      * @var ProblemFetcher

@@ -12,7 +12,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
     disabled: true,
     autoScroll: true,
     enableDD: true,
-    cls: 'p-elements-layout-tree',
+    cls: 'p-teaser-tree',
 
     initComponent: function () {
         this.element.on({
@@ -400,11 +400,6 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
                 node.select();
                 if (node.attributes.type == 'element' && !node.attributes.inherited) {
                     this.fireEvent('teaserselect', node.attributes.id, node);
-                }
-                else if (node.attributes.type == 'catch') {
-                    // legacy
-                    this.fireEvent('catchselect', node.attributes.id, node.attributes.catchConfig, node);
-                    return false;
                 }
 
                 e.stopEvent();

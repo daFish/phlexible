@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
 use Phlexible\Component\MediaCache\Specifier\ImageSpecifier;
-use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;

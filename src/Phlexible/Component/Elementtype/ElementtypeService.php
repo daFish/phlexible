@@ -9,10 +9,10 @@
 namespace Phlexible\Component\Elementtype;
 
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Model\ElementtypeManagerInterface;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Model\ViabilityManagerInterface;
 use Phlexible\Component\Elementtype\Usage\UsageManager;
 
@@ -58,7 +58,7 @@ class ElementtypeService
      *
      * @param int $elementtypeId
      *
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     public function findElementtype($elementtypeId)
     {
@@ -70,7 +70,7 @@ class ElementtypeService
      *
      * @param string $type
      *
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype[]
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
      */
     public function findElementtypeByType($type)
     {
@@ -87,7 +87,7 @@ class ElementtypeService
     /**
      * Find all element types
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
      */
     public function findAllElementtypes()
     {
@@ -95,9 +95,9 @@ class ElementtypeService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
-     * @return Elementtype[]
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
      * @deprecated
      */
     public function findAllowedParents(Elementtype $elementtype)
@@ -106,9 +106,9 @@ class ElementtypeService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $referenceElementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $referenceElementtype
      *
-     * @return \Phlexible\Component\Elementtype\Model\Elementtype[]
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
      */
     public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
@@ -119,7 +119,7 @@ class ElementtypeService
             }
             $rii = new \RecursiveIteratorIterator($elementtype->getStructure()->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
             foreach ($rii as $node) {
-                /* @var $node ElementtypeStructureNode */
+                /* @var $node \Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode */
                 if ($node->getReferenceElementtypeId() === $referenceElementtype->getId()) {
                     $elementtypes[] = $elementtype;
                     break;
@@ -143,7 +143,7 @@ class ElementtypeService
      * @param string               $user
      * @param bool                 $flush
      *
-     * @return Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     public function createElementtype(
         $type,
@@ -189,7 +189,7 @@ class ElementtypeService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      */
     public function updateElementtype(Elementtype $elementtype)
     {
@@ -197,7 +197,7 @@ class ElementtypeService
     }
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      * @param array       $parentIds
      */
     public function updateViability(Elementtype $elementtype, array $parentIds)
@@ -208,7 +208,7 @@ class ElementtypeService
     /**
      * Delete an Element Type
      *
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      */
     public function deleteElementtype(Elementtype $elementtype)
     {
@@ -218,10 +218,10 @@ class ElementtypeService
     /**
      * Duplicate an elementtype
      *
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $sourceElementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $sourceElementtype
      * @param string      $user
      *
-     * @return Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     public function duplicateElementtype(Elementtype $sourceElementtype, $user)
     {
@@ -246,7 +246,7 @@ class ElementtypeService
 
         $dsIdMap = array();
         foreach ($rii as $sourceNode) {
-            /* @var $sourceNode ElementtypeStructureNode */
+            /* @var $sourceNode \Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode */
             if ($sourceNode->isReferenced()) {
                 continue;
             }

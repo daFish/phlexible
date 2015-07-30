@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
+use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;

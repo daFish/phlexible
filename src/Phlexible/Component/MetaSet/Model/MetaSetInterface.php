@@ -8,6 +8,8 @@
 
 namespace Phlexible\Component\MetaSet\Model;
 
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
+
 /**
  * Meta set interface
  *

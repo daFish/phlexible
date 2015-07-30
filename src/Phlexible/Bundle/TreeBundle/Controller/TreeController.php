@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;

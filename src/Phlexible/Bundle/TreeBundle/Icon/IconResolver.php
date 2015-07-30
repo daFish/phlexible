@@ -13,7 +13,7 @@ use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -62,7 +62,7 @@ class IconResolver
     /**
      * Resolve element type to icon
      *
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
      * @return string
      */

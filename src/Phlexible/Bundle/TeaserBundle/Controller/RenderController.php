@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
-use Phlexible\Bundle\TeaserBundle\Teaser\TeaserContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,25 +32,14 @@ class RenderController extends Controller
      */
     public function htmlAction(Request $request, $teaserId)
     {
-        $teaserManager = $this->get('phlexible_teaser.teaser_manager');
+        return new Response($teaserId);
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $teaser = $teaserManager->find($teaserId);
-        $node = $treeManager->getByNodeId($teaser->getNodeId())->get($teaser->getNodeId());
-        $teaserContext = new TeaserContext($teaserManager, $teaser, $node, $request->getLocale());
 
-        $request->attributes->set('contentDocument', $teaserContext);
+        $tree = $treeManager->getByNodeId($teaserId);
+        $teaser = $tree->get($teaserId);
 
-        $renderConfigurator = $this->get('phlexible_cms.configurator');
-        $renderConfig = $renderConfigurator->configure($request);
+        $request->attributes->set('teaser', $teaser);
 
-        if ($request->get('template')) {
-            $template = $request->get('template');
-        } else {
-            $template = $teaserContext->template();
-        }
-
-        //$data = $renderConfig->getVariables();
-
-        return $this->render($template, array('teaser' => $teaserContext));
+        return $this->render($teaser->getTemplate(), array('teaser' => $teaser));
     }
 }

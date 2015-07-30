@@ -13,7 +13,7 @@ Ext.require('Phlexible.tree.window.SetTreeNodeOfflineWindow');
  */
 Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
     strings: Phlexible.elements.Strings,
-    cls: 'p-elements-main-panel',
+    //cls: 'p-elements-main-panel',
 
     initComponent: function () {
         this.element.on({
@@ -22,8 +22,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             getlock: this.onGetLock,
             islocked: this.onIsLocked,
             removelock: this.onRemoveLock,
-            enableSave: this.onEnableSave,
-            disableSave: this.onDisableSave,
             scope: this
         });
 
@@ -36,18 +34,9 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
     populateTbar: function () {
         var langBtns = this.element.getLanguages();
 
-        var saveBtn = {
-            text: this.strings.save,
-            iconCls: 'p-element-save-icon',
-            xtype: 'button',
-            handler: this.onSave,
-            disabled: true,
-            scope: this
-        };
-
         var publishBtn = {
             xtype: 'button',
-            text: this.strings.publish_element,
+            //text: this.strings.publish_element,
             iconCls: 'p-element-publish-icon',
             disabled: true,
             handler: this.onExtendedPublish,
@@ -56,7 +45,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
 
         var setOfflineBtn = {
             xtype: 'button',
-            text: this.strings.set_element_offline,
+            //text: this.strings.set_element_offline,
             iconCls: 'p-element-set_offline-icon',
             disabled: true,
             handler: this.onExtendedSetOffline,
@@ -66,7 +55,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.populateExtendedMenu();
         var extendedMenuBtn = {
             xtype: 'button',
-            text: this.strings.more,
+            //text: this.strings.more,
             //iconCls: 'p-element-more-icon',
             disabled: false,
             menu: this.extendedMenuIndex.getRange()
@@ -77,19 +66,19 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             publishBtn.handler = this.onQuickPublish;
             publishBtn.menu = [
                 {
-                    text: this.strings.publish_element,
+                    //text: this.strings.publish_element,
                     iconCls: 'p-element-publish-icon',
                     handler: this.onQuickPublish,
                     scope: this
                 },
                 {
-                    text: this.strings.publish_element_with_notification,
+                    //text: this.strings.publish_element_with_notification,
                     iconCls: 'p-element-publish-icon',
                     handler: this.onPublishWithNotification,
                     scope: this
                 },
                 {
-                    text: this.strings.publish_element_advanced,
+                    //text: this.strings.publish_element_advanced,
                     iconCls: 'p-element-publish-icon',
                     handler: this.onExtendedPublish,
                     scope: this
@@ -100,13 +89,13 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             setOfflineBtn.handler = this.onQuickSetOffline;
             setOfflineBtn.menu = [
                 {
-                    text: this.strings.set_element_offline,
+                    //text: this.strings.set_element_offline,
                     iconCls: 'p-element-set_offline-icon',
                     handler: this.onQuickSetOffline,
                     scope: this
                 },
                 {
-                    text: this.strings.set_element_offline_advanced,
+                    //text: this.strings.set_element_offline_advanced,
                     iconCls: 'p-element-set_offline-icon',
                     handler: this.onExtendedSetOffline,
                     scope: this
@@ -118,7 +107,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('lang', {
             // items[0]
             xtype: 'cycle',
-            showText: true,
+            //showText: true,
             items: langBtns,
             listeners: {
                 change: function (cycle, btn) {
@@ -146,7 +135,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('add_sep', '-');
         this.tbarIndex.add('add', {
             // items[2]
-            text: this.strings.add_element,
+            //text: this.strings.add_element,
             iconCls: 'p-element-add-icon',
             disabled: true,
             handler: function () {
@@ -157,7 +146,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         this.tbarIndex.add('edit_sep', '-');
         this.tbarIndex.add('edit', {
             // items[4]
-            text: this.strings.edit_element,
+            //text: this.strings.edit_element,
             iconCls: 'p-element-edit-icon',
             disabled: true,
             handler: function (btn) {
@@ -174,13 +163,12 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         });
 
         this.tbarIndex.add('publish_sep', '-');
-        this.tbarIndex.add('save', saveBtn);
 
         this.tbarIndex.add('publish', publishBtn);
         this.tbarIndex.add('setOffline', setOfflineBtn);
         this.tbarIndex.add('delete', {
             // items[10]
-            text: this.strings.delete_element,
+            //text: this.strings.delete_element,
             iconCls: 'p-element-delete-icon',
             handler: function () {
                 Ext.MessageBox.alert('Oh, wait...', 'To be done!');
@@ -196,7 +184,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             this.tbarIndex.add('debug_sep', '-');
             this.tbarIndex.add('debug', {
-                text: 'Debug',
+                //text: 'Debug',
                 iconCls: 'p-element-debug-icon',
                 menu: [
                     {
@@ -562,12 +550,10 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             this.items.items[this.tbarIndex.indexOfKey('edit')].enable();
             this.items.items[this.tbarIndex.indexOfKey('locks')].enable();
             this.items.items[this.tbarIndex.indexOfKey('lock')].enable();
-            this.items.items[this.tbarIndex.indexOfKey('save')].enable();
         } else {
             this.items.items[this.tbarIndex.indexOfKey('edit')].disable();
             this.items.items[this.tbarIndex.indexOfKey('locks')].disable();
             this.items.items[this.tbarIndex.indexOfKey('lock')].disable();
-            this.items.items[this.tbarIndex.indexOfKey('save')].disable();
         }
 
         // publish/set offline button
@@ -611,7 +597,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
 
         this.items.items[this.tbarIndex.indexOfKey('edit')].disable();
         this.items.items[this.tbarIndex.indexOfKey('edit')].toggle(true);
-        this.items.items[this.tbarIndex.indexOfKey('save')].disable();
         this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
         this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
@@ -638,7 +623,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             this.items.items[this.tbarIndex.indexOfKey('lock')].disable();
             this.items.items[this.tbarIndex.indexOfKey('locks')].disable();
         }
-        this.items.items[this.tbarIndex.indexOfKey('save')].disable();
         this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
         this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
@@ -663,26 +647,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
 
     onPublishWithNotification: function () {
         this.onUpdatePublish();
-    },
-
-    onSave: function () {
-        this.element.save();
-    },
-
-    onSaveMinor: function () {
-        alert('To be implemented!');
-    },
-
-    onSavePublish: function () {
-        alert('To be implemented!');
-    },
-
-    onEnableSave: function () {
-        this.items.items[this.tbarIndex.indexOfKey('save')].enable();
-    },
-
-    onDisableSave: function () {
-        this.items.items[this.tbarIndex.indexOfKey('save')].disable();
     },
 
     onExtendedPublish: function () {

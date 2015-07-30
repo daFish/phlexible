@@ -8,9 +8,9 @@
 
 namespace Phlexible\Component\Elementtype\ElementtypeStructure\Serializer;
 
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Exception\InvalidArgumentException;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 
 /**
  * Serializer interface

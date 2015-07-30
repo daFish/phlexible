@@ -16,7 +16,7 @@ use Imagine\Image\Palette\Grayscale;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
-use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
 use Psr\Log\LoggerInterface;
 
 /**

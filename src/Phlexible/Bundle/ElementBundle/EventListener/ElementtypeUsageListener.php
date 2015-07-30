@@ -8,9 +8,11 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
-use Doctrine\DBAL\Connection;
+use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
+use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Elementtype\Event\ElementtypeUsageEvent;
 use Phlexible\Component\Elementtype\Usage\Usage;
+use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -21,9 +23,19 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ElementtypeUsageListener
 {
     /**
-     * @var Connection
+     * @var ElementManagerInterface
      */
-    private $connection;
+    private $elementManager;
+
+    /**
+     * @var NodeManagerInterface
+     */
+    private $nodeManager;
+
+    /**
+     * @var TreeManagerInterface
+     */
+    private $treeManager;
 
     /**
      * @var TokenStorageInterface
@@ -31,12 +43,16 @@ class ElementtypeUsageListener
     private $tokenStorage;
 
     /**
-     * @param Connection            $connection
-     * @param TokenStorageInterface $tokenStorage
+     * @param ElementManagerInterface $elementManager
+     * @param NodeManagerInterface    $nodeManager
+     * @param TreeManagerInterface    $treeManager
+     * @param TokenStorageInterface   $tokenStorage
      */
-    public function __construct(Connection $connection, TokenStorageInterface $tokenStorage)
+    public function __construct(ElementManagerInterface $elementManager, NodeManagerInterface $nodeManager, TreeManagerInterface $treeManager, TokenStorageInterface $tokenStorage)
     {
-        $this->connection = $connection;
+        $this->elementManager = $elementManager;
+        $this->nodeManager = $nodeManager;
+        $this->treeManager = $treeManager;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -48,26 +64,26 @@ class ElementtypeUsageListener
         $elementtypeId = $event->getElementtype()->getId();
         $language = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('de') : 'en';
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('ev.eid', 'ev.version AS latest_version', 'evmf.backend AS title', 'ev.id')
-            ->from('element', 'e')
-            ->join('e', 'element_source', 'es', 'es.elementtype_id = e.elementtype_id')
-            ->join('es', 'element_version', 'ev', 'ev.element_source_id = es.id')
-            ->leftJoin('ev', 'element_version_mapped_field', 'evmf', 'ev.id = evmf.element_version_id AND evmf.language = ' . $qb->expr()->literal($language))
-            ->where($qb->expr()->eq('e.elementtype_id', $qb->expr()->literal($elementtypeId)))
-            ->groupBy('ev.eid');
+        $contentIds = array();
+        foreach ($this->elementManager->findBy(array('elementtypeId' => $elementtypeId)) as $element) {
+            $contentIds[] = $element->getEid();
+        }
 
-        $rows = $qb->execute()->fetchAll();
+        $nodeIds = array();
+        foreach ($this->nodeManager->findBy(array('contentType' => 'element', 'contentId' => $contentIds)) as $node) {
+            $nodeIds[$node->getId()] = $node->getContentId();
+        }
 
-        foreach ($rows as $row) {
+        foreach ($nodeIds as $nodeId => $contentId) {
+            $node = $this->treeManager->getByNodeId($nodeId)->get($nodeId);
+
             $event->addUsage(
                 new Usage(
                     $event->getElementtype()->getType() . ' element',
                     'element',
-                    $row['eid'],
-                    $row['title'],
-                    $row['latest_version']
+                    $node->getId(),
+                    $node->getField('backend', $language),
+                    $node->getId()
                 )
             );
         }

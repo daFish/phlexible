@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
+use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;

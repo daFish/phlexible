@@ -10,9 +10,9 @@ namespace Phlexible\Component\MediaManager\Meta;
 
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MetaSet\Doctrine\MetaDataManager;
-use Phlexible\Component\MetaSet\Model\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaData;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
-use Phlexible\Component\MetaSet\Model\MetaSet;
 
 /**
  * File meta data manager
@@ -22,10 +22,10 @@ use Phlexible\Component\MetaSet\Model\MetaSet;
 class FileMetaDataManager extends MetaDataManager
 {
     /**
-     * @param MetaSet               $metaSet
+     * @param \Phlexible\Component\MetaSet\Domain\MetaSet               $metaSet
      * @param ExtendedFileInterface $file
      *
-     * @return MetaData|MetaDataInterface
+     * @return \Phlexible\Component\MetaSet\Domain\MetaData|MetaDataInterface
      */
     public function createFileMetaData(MetaSet $metaSet, ExtendedFileInterface $file)
     {
@@ -37,7 +37,7 @@ class FileMetaDataManager extends MetaDataManager
     }
 
     /**
-     * @param MetaSet               $metaSet
+     * @param \Phlexible\Component\MetaSet\Domain\MetaSet               $metaSet
      * @param ExtendedFileInterface $file
      *
      * @return null|MetaDataInterface

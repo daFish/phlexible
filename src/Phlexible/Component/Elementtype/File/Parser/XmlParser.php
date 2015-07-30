@@ -10,9 +10,9 @@ namespace Phlexible\Component\Elementtype\File\Parser;
 
 use FluentDOM\Document;
 use FluentDOM\Element;
-use Phlexible\Component\Elementtype\Model\Elementtype;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
  * XML parser
@@ -147,7 +147,7 @@ class XmlParser implements ParserInterface
     /**
      * @param Document $dom
      *
-     * @return ElementtypeStructure
+     * @return \Phlexible\Component\Elementtype\Domain\ElementtypeStructure
      */
     private function loadStructure(Document $dom)
     {
@@ -165,7 +165,7 @@ class XmlParser implements ParserInterface
 
     /**
      * @param Element                  $node
-     * @param ElementtypeStructure     $elementtypeStructure
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure     $elementtypeStructure
      * @param ElementtypeStructureNode $parentNode
      * @param bool                     $isReferenced
      */

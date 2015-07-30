@@ -23,23 +23,15 @@ class ElementVersionRepository extends EntityRepository
      *
      * @return array
      */
-    public function getVersions(Element $element)
+    public function getVersions(Element $element, $dir = 'asc')
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $qb = $this->createQueryBuilder('ev');
 
-        $qb = $conn->createQueryBuilder();
         $qb
-            ->select('ev.version')
-            ->from('element_version', 'ev')
-            ->where($qb->expr()->eq('ev.eid', $element->getEid()));
+            ->select(array('ev.id', 'ev.version', 'ev.createdAt', 'ev.format'))
+            ->where($qb->expr()->eq('ev.element', $element->getEid()))
+            ->orderBy('ev.version', strtolower($dir) === 'desc' ? 'ASC' : 'DESC');
 
-        $statement = $qb->execute();
-
-        $versions = array();
-        while ($version = $statement->fetchColumn()) {
-            $versions[] = (int) $version;
-        }
-
-        return $versions;
+        return $qb->getQuery()->getScalarResult();
     }
 }

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Change;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
@@ -30,7 +30,7 @@ class UpdateChange extends Change
     private $outdatedElementSources = array();
 
     /**
-     * @param Elementtype     $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype     $elementtype
      * @param Usage[]         $usage
      * @param bool            $needImport
      * @param ElementSource[] $outdatedElementSources

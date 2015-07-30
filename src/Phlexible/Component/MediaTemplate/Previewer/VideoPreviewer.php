@@ -10,7 +10,7 @@ namespace Phlexible\Component\MediaTemplate\Previewer;
 
 use FFMpeg\FFProbe;
 use Phlexible\Component\MediaCache\Specifier\VideoSpecifier;
-use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
+use Phlexible\Component\MediaTemplate\Domain\VideoTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;

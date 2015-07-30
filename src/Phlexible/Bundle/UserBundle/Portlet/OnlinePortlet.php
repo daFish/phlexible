@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\UserBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -17,7 +16,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class OnlinePortlet extends Portlet
+class OnlinePortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
 {
     /**
      * @var UserManagerInterface

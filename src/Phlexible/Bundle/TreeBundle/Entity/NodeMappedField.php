@@ -336,7 +336,11 @@ class NodeMappedField
      */
     public function getPage()
     {
-        return $this->page;
+        if ($this->page) {
+            return $this->page;
+        }
+
+        return $this->getBackend();
     }
 
     /**
@@ -356,7 +360,11 @@ class NodeMappedField
      */
     public function getNavigation()
     {
-        return $this->navigation;
+        if ($this->navigation) {
+            return $this->navigation;
+        }
+
+        return $this->backend;
     }
 
     /**
@@ -396,7 +404,11 @@ class NodeMappedField
      */
     public function getForward()
     {
-        return $this->forward;
+        if (!$this->forward) {
+            return null;
+        }
+
+        return json_decode($this->forward);
     }
 
     /**

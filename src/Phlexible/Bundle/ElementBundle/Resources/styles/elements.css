@@ -236,15 +236,15 @@
 
 /* Data Tabs */
 
-.p-elements-content-panel .x-tab-panel-header {
+.xp-elements-content-panel .x-tab-panel-header {
     padding-bottom: 0;
 }
 
-.p-elements-content-panel .x-tab-strip-wrap {
+.xp-elements-content-panel .x-tab-strip-wrap {
     margin-bottom: 3px;
 }
 
-.p-elements-content-panel .x-tab-strip-top {
+.xp-elements-content-panel .x-tab-strip-top {
     border-bottom: 0;
     xpadding-bottom: 2px;
     padding-top: 3px;
@@ -252,41 +252,41 @@
     background-color: transparent !important;
 }
 
-.p-elements-content-panel .x-tab-right {
+.xp-elements-content-panel .x-tab-right {
     background-image: none;
     padding-left: 3px !important;
 }
 
-.p-elements-content-panel .x-tab-left {
+.xp-elements-content-panel .x-tab-left {
     background-image: none;
     padding-right: 3px !important;
 }
 
-.p-elements-content-panel .x-tab-strip-inner {
+.xp-elements-content-panel .x-tab-strip-inner {
     background-image: none;
     padding-left: 2px;
     padding-right: 2px;
 }
 
-.p-elements-content-panel .x-tab-strip span.x-tab-strip-text,
-.p-elements-content-panel .x-tab-strip-top .x-tab-strip-active .x-tab-right span.x-tab-strip-text {
+.xp-elements-content-panel .x-tab-strip span.x-tab-strip-text,
+.xp-elements-content-panel .x-tab-strip-top .x-tab-strip-active .x-tab-right span.x-tab-strip-text {
     padding-bottom: 2px;
 }
 
-.p-elements-content-panel .x-tab-strip-active .x-tab-right,
-.p-elements-content-panel .x-tab-strip-over .x-tab-right {
+.xp-elements-content-panel .x-tab-strip-active .x-tab-right,
+.xp-elements-content-panel .x-tab-strip-over .x-tab-right {
     background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll 0 0 !important;
     padding-left: 3px;
 }
 
-.p-elements-content-panel .x-tab-strip-active .x-tab-left,
-.p-elements-content-panel .x-tab-strip-over .x-tab-left {
+.xp-elements-content-panel .x-tab-strip-active .x-tab-left,
+.xp-elements-content-panel .x-tab-strip-over .x-tab-left {
     background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) no-repeat scroll right -21px !important;
     padding-right: 3px;
 }
 
-.p-elements-content-panel .x-tab-strip-active .x-tab-strip-inner,
-.p-elements-content-panel .x-tab-strip-over .x-tab-strip-inner {
+.xp-elements-content-panel .x-tab-strip-active .x-tab-strip-inner,
+.xp-elements-content-panel .x-tab-strip-over .x-tab-strip-inner {
     background: transparent url(/BUNDLES_PATH/phlexiblegui/scripts/ext-2.3.0/resources/images/default/toolbar/tb-btn-sprite.gif) repeat-x scroll 0 -42px !important;
 }
 

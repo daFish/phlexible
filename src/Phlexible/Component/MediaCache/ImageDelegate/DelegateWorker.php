@@ -8,11 +8,10 @@
 
 namespace Phlexible\Component\MediaCache\ImageDelegate;
 
-use Phlexible\Bundle\MediaManagerBundle\Entity\File;
 use Phlexible\Bundle\MediaTypeBundle\Icon\IconResolver;
 use Phlexible\Component\MediaCache\Exception\CreateDelegateFailedException;
 use Phlexible\Component\MediaCache\Specifier\ImageSpecifier;
-use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -116,7 +115,7 @@ class DelegateWorker
     }
 
     /**
-     * @param ImageTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
      *
      * @return string
      */
@@ -126,7 +125,7 @@ class DelegateWorker
     }
 
     /**
-     * @param ImageTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
      *
      * @return string
      */
@@ -136,7 +135,7 @@ class DelegateWorker
     }
 
     /**
-     * @param ImageTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
      * @param MediaType     $mediaType
      *
      * @return string
@@ -147,7 +146,7 @@ class DelegateWorker
     }
 
     /**
-     * @param ImageTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
      * @param MediaType     $mediaType
      *
      * @return string
@@ -169,7 +168,7 @@ class DelegateWorker
 
     /**
      * @param MediaType     $mediaType
-     * @param ImageTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
      * @param bool          $force
      *
      * @throws CreateDelegateFailedException

@@ -8,8 +8,8 @@
 
 namespace Phlexible\Component\MetaSet\File\Parser;
 
-use Phlexible\Component\MetaSet\Model\MetaSet;
-use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 
 /**
  * XML parser

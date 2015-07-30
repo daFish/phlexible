@@ -9,12 +9,12 @@
 namespace Phlexible\Component\Elementtype\File;
 
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\ElementtypeEvents;
 use Phlexible\Component\Elementtype\Event\ElementtypeEvent;
 use Phlexible\Component\Elementtype\Exception\CreateCancelledException;
 use Phlexible\Component\Elementtype\Exception\DeleteCancelledException;
 use Phlexible\Component\Elementtype\Exception\UpdateCancelledException;
-use Phlexible\Component\Elementtype\Model\Elementtype;
 use Phlexible\Component\Elementtype\Model\ElementtypeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;

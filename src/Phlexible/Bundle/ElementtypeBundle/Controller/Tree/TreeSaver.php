@@ -9,11 +9,11 @@
 namespace Phlexible\Bundle\ElementtypeBundle\Controller\Tree;
 
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\ElementtypeService;
 use Phlexible\Component\Elementtype\Exception\InvalidArgumentException;
-use Phlexible\Component\Elementtype\Model\Elementtype;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -123,7 +123,7 @@ class TreeSaver
      * @param UserInterface $user
      * @param array         $data
      *
-     * @return ElementtypeStructure
+     * @return \Phlexible\Component\Elementtype\Domain\ElementtypeStructure
      */
     private function buildElementtypeStructure($rootType, $rootDsId, UserInterface $user, array $data)
     {
@@ -147,8 +147,8 @@ class TreeSaver
     }
 
     /**
-     * @param ElementtypeStructure     $elementtypeStructure
-     * @param ElementtypeStructureNode $rootNode
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure     $elementtypeStructure
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode $rootNode
      * @param UserInterface            $user
      * @param int                      $sort
      * @param array                    $data

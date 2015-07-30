@@ -8,8 +8,8 @@
 
 namespace Phlexible\Component\MetaSet\File;
 
-use Phlexible\Component\MetaSet\Model\MetaSet;
-use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 

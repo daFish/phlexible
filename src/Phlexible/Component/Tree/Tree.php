@@ -305,7 +305,7 @@ class Tree implements TreeInterface
      */
     public function isPublished(NodeContext $node, $language = null)
     {
-        return $this->nodeStateManager->findOneBy(array('node' => $node->getNode(), 'language' => $language ?: $this->defaultLanguage)) ? true : false;
+        return $this->nodeStateManager->findOneBy(array('node' => $node->getNode()->getId(), 'language' => $language ?: $this->defaultLanguage)) ? true : false;
     }
 
     /**
@@ -314,7 +314,7 @@ class Tree implements TreeInterface
     public function getPublishedLanguages(NodeContext $node)
     {
         $languages = array();
-        foreach ($this->nodeStateManager->findBy(array('node' => $node->getNode())) as $state) {
+        foreach ($this->nodeStateManager->findBy(array('node' => $node->getNode()->getId())) as $state) {
             $languages[] = $state->getLanguage();
         }
 

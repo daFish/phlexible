@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\GuiBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
+use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

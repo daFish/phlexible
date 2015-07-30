@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\Twig\Extension;
 
-use Phlexible\Bundle\ElementBundle\Model\ElementStructureValue;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Node\Model\NodeInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -58,21 +57,6 @@ class UrlExtension extends \Twig_Extension
             return $this->router->generate($name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
         } elseif ($name instanceof NodeContext) {
             return $this->router->generate($name->getNode(), $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
-        } elseif ($name instanceof ElementStructureValue) {
-            if ($name->getType() === 'link') {
-                $link = $name->getValue();
-                if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
-                    return $this->router->generate(
-                        (int) $link['tid'],
-                        $parameters,
-                        $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH
-                    );
-                } elseif ($link['type'] === 'external') {
-                    return $link['url'];
-                } elseif ($link['type'] === 'mailto') {
-                    return 'mailto:' . $link['recipient'];
-                }
-            }
         } elseif (is_array($name) && isset($name['type']) && in_array($name['type'], array('internal', 'intrasiteroot', 'external', 'mailto'))) {
             $link = $name;
             if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
@@ -86,7 +70,7 @@ class UrlExtension extends \Twig_Extension
             } elseif ($link['type'] === 'mailto') {
                 return 'mailto:' . $link['recipient'];
             }
-        } elseif (strlen($name) && (is_int($name) || (int) $name)) {
+        } elseif (is_scalar($name) && strlen($name) && (is_int($name) || (int) $name)) {
             return $this->router->generate((int) $name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
         } elseif (is_string($name)) {
             return $this->router->generate($name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
@@ -108,17 +92,6 @@ class UrlExtension extends \Twig_Extension
             return $this->router->generate($name, $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);
         } elseif ($name instanceof NodeContext) {
             return $this->router->generate($name->getNode(), $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);
-        } elseif ($name instanceof ElementStructureValue) {
-            if ($name->getType() === 'link') {
-                $link = $name->getValue();
-                if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
-                    return $this->router->generate((int) $link['tid'], $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);
-                } elseif ($link['type'] === 'external') {
-                    return $link['url'];
-                } elseif ($link['type'] === 'mailto') {
-                    return 'mailto:' . $link['recipient'];
-                }
-            }
         } elseif (is_array($name) && isset($name['type']) && in_array($name['type'], array('internal', 'intrasiteroot', 'external', 'mailto'))) {
             $link = $name;
             if ($link['type'] === 'internal' || $link['type'] === 'intrasiteroot') {
@@ -128,7 +101,7 @@ class UrlExtension extends \Twig_Extension
             } elseif ($link['type'] === 'mailto') {
                 return 'mailto:' . $link['recipient'];
             }
-        } elseif (strlen($name) && (is_int($name) || (int) $name)) {
+        } elseif (is_scalar($name) && strlen($name) && (is_int($name) || (int) $name)) {
             return $this->router->generate((int) $name, $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);
         } elseif (is_string($name)) {
             return $this->router->generate($name, $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);

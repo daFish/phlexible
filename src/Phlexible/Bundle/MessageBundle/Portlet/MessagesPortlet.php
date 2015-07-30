@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\MessageBundle\Portlet;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\Portlet;
+use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

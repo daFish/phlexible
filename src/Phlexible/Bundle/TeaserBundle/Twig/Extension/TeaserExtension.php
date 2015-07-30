@@ -95,7 +95,7 @@ class TeaserExtension extends \Twig_Extension
 
             $node = $request->attributes->get('node');
 
-            $element = $this->elementService->findElement($node->getTypeId());
+            $element = $this->elementService->findElement($node->getContentId());
             $elementtypeId = $element->getElementtypeId();
             $elementtype = $this->elementSourceManager->findElementtype($elementtypeId);
 

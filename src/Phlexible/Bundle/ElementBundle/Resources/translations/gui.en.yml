@@ -6,7 +6,6 @@ elements:
     latest_version: 'Latest Version'
     online_version: 'Online Version'
     tree_node: Treenode
-    catch: Catch
     content: Content
     field: Field
     sites: Sites
@@ -15,6 +14,7 @@ elements:
     versions: Versions
     instance: Instance
     instances: Instances
+    no_instances: 'No instances'
     actions: Actions
     list: List
     type: Type

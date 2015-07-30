@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\SearchBundle\Search;
 
-use Phlexible\Bundle\GuiBundle\Menu\Item;
-
 /**
  * Search result
  *

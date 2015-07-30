@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MediaCache\Specifier;
 
-use Phlexible\Component\MediaTemplate\Model\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Temp\MediaConverter\Format\Image;
 
@@ -29,7 +29,7 @@ class ImageSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param ImageTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
      */
     public function getExtension(TemplateInterface $template)
     {
@@ -44,7 +44,7 @@ class ImageSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param ImageTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
      */
     public function specify(TemplateInterface $template)
     {

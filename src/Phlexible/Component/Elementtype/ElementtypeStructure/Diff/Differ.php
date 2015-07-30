@@ -8,8 +8,8 @@
 
 namespace Phlexible\Component\Elementtype\ElementtypeStructure\Diff;
 
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
  * Differ
@@ -19,7 +19,7 @@ use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 class Differ
 {
     /**
-     * @param ElementtypeStructure $fromStructure
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $fromStructure
      * @param ElementtypeStructure $toStructure
      *
      * @return Diff
@@ -35,8 +35,8 @@ class Differ
 
     /**
      * @param Diff                 $diff
-     * @param ElementtypeStructure $fromStructure
-     * @param ElementtypeStructure $toStructure
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $fromStructure
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $toStructure
      *
      * @return Diff
      */
@@ -57,7 +57,7 @@ class Differ
 
         $rii = new \RecursiveIteratorIterator($toStructure->getIterator(), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($rii as $toNode) {
-            /* @var $toNode \Phlexible\Component\Elementtype\Model\ElementtypeStructureNode */
+            /* @var $toNode \Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode */
 
             if (!$fromStructure->getNode($toNode->getDsId())) {
                 $diff->addAdded($toNode);

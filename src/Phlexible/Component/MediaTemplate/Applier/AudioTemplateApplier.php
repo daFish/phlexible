@@ -11,7 +11,7 @@ namespace Phlexible\Component\MediaTemplate\Applier;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use FFMpeg\Media\Audio;
-use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
+use Phlexible\Component\MediaTemplate\Domain\AudioTemplate;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -53,7 +53,7 @@ class AudioTemplateApplier
     }
 
     /**
-     * @param AudioTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\AudioTemplate $template
      *
      * @return string
      */
@@ -73,7 +73,7 @@ class AudioTemplateApplier
     }
 
     /**
-     * @param AudioTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\AudioTemplate $template
      *
      * @return string
      */
@@ -93,7 +93,7 @@ class AudioTemplateApplier
     }
 
     /**
-     * @param AudioTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\AudioTemplate $template
      * @param string        $inFilename
      * @param string        $outFilename
      *

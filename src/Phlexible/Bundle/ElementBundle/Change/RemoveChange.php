@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Change;
 
 use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**

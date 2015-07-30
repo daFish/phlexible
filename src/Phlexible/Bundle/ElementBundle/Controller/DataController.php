@@ -15,8 +15,8 @@ use Phlexible\Bundle\ElementBundle\Event\LoadDataEvent;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
-use Phlexible\Component\Elementtype\Model\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -49,9 +49,7 @@ class DataController extends Controller
         $doLock = (bool) $request->get('lock', false);
 
         $diff = $request->get('diff');
-        $diffVersionFrom = (int) $request->get('diff_version_from');
-        $diffVersionTo = (int) $request->get('diff_version_to');
-        $diffLanguage = $request->get('diff_language');
+        $compareVersion = (int) $request->get('compareVersion');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $nodeManager = $this->get('phlexible_tree.node_manager');
@@ -93,15 +91,19 @@ class DataController extends Controller
                 'action' => 'publishNode'
             )
         );
+        $recentOnlineVersions = array();
+        foreach ($publishActions as $publishAction) {
+            $recentOnlineVersions[$publishAction->getVersion()] = true;
+        }
 
         $versions = array();
-        foreach (array_reverse($elementService->getVersions($element)) as $version) {
-            $versions[$version] = array(
-                'version'      => $version,
-                'format'       => 2,
-                'createdAt'    => date('Y-m-d H:i:s'),
-                'isPublished'  => false,
-                'wasPublished' => false,
+        foreach ($elementService->getVersions($element, 'desc') as $versionRow) {
+            $versions[] = array(
+                'version'      => (int) $versionRow['version'],
+                'format'       => (int) $versionRow['format'],
+                'createdAt'    => $versionRow['createdAt'],
+                'isPublished'  => $versionRow['version'] === $onlineVersion,
+                'wasPublished' => isset($recentOnlineVersions[$versionRow['version']]),
             );
         }
 
@@ -154,39 +156,6 @@ class DataController extends Controller
                 $childElementtype->getId(),
                 $childElementtype->getTitle(),
                 $iconResolver->resolveElementtype($childElementtype),
-            );
-        }
-
-        // diff
-
-        if ($diff && $diffVersionFrom) {
-            $elementStructure = $elementService->findElementStructure($elementVersion, $language);
-
-            $fromElementVersion = $elementService->findElementVersion($element, $diffVersionFrom);
-            $fromElementStructure = $elementService->findElementStructure($fromElementVersion);
-
-            if ($diffVersionTo) {
-                $toElementVersion = $elementService->findElementVersion($element, $diffVersionTo);
-                $toElementStructure = $elementService->findElementStructure($toElementVersion);
-            } else {
-                $toElementStructure = $elementStructure;
-            }
-
-            if ($fromElementStructure !== $toElementStructure) {
-                $differ = new Differ();
-                $differ->diff($fromElementStructure, $toElementStructure);
-            }
-
-            $elementStructure = $fromElementStructure;
-        }
-
-        $diffInfo = null;
-        if ($diff) {
-            $diffInfo = array(
-                'enabled'     => $diff,
-                'versionFrom' => $diffVersionFrom,
-                'versionTo'   => $diffVersionTo,
-                'language'    => $diffLanguage,
             );
         }
 
@@ -307,7 +276,7 @@ class DataController extends Controller
 
         if (in_array($elementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE, Elementtype::TYPE_PART))) {
             if ($type == Elementtype::TYPE_FULL) {
-                $urls['preview'] = $this->generateUrl('cms_preview', array('treeId' => $node->getId(), '_locale' => $language));
+                $urls['preview'] = $this->generateUrl('cms_preview', array('nodeId' => $node->getId(), '_locale' => $language));
 
                 if ($isPublished) {
                     //$contentNode = $this->get('phlexible_tree.node_manager')->getByTreeId($node->getId())->get($node->getId());
@@ -397,6 +366,26 @@ class DataController extends Controller
         $elementSerializer = new ElementVersionArraySerializer();
         $serializedValues = $elementSerializer->serialize($elementVersion, $language);
 
+        // diff
+
+        $diffInfo = null;
+        if ($diff) {
+            $diffResult = null;
+            if ($compareVersion && $version !== $compareVersion) {
+                $compareElementVersion = $elementService->findElementVersion($element, $compareVersion);
+                $serializedCompareValues = $elementSerializer->serialize($compareElementVersion, $language);
+
+                $differ = new Differ();
+                $serializedValues = $differ->diff($serializedValues, $serializedCompareValues);
+            }
+
+            $diffInfo = array(
+                'enabled'        => true,
+                'version'        => $version,
+                'compareVersion' => $compareVersion,
+            );
+        }
+
         $data = array(
             'success' => true,
 
@@ -451,7 +440,6 @@ class DataController extends Controller
      */
     public function saveAction(Request $request)
     {
-        $teaserId = $request->get('teaser_id');
         $language = $request->get('language');
 
         $iconResolver = $this->get('phlexible_tree.icon_resolver');
@@ -731,7 +719,7 @@ class DataController extends Controller
         );
 
         if ($node) {
-            $urls['preview'] = $this->generateUrl('cms_preview', array('treeId' => $nodeId, '_locale' => $language));
+            $urls['preview'] = $this->generateUrl('cms_preview', array('nodeId' => $nodeId, '_locale' => $language));
 
             if ($node->getTree()->isPublished($node, $language)) {
                 try {

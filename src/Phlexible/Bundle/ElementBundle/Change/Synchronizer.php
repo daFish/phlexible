@@ -12,8 +12,8 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementSource;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
-use Phlexible\Component\Elementtype\Model\Elementtype;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -132,7 +132,7 @@ class Synchronizer
     }
 
     /**
-     * @param Elementtype   $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype   $elementtype
      * @param ElementSource $elementSource
      */
     private function applyElementtypeToElementSource(Elementtype $elementtype, ElementSource $elementSource)

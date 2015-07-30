@@ -9,7 +9,7 @@
 namespace Phlexible\Component\Elementtype\File\Dumper;
 
 use FluentDOM\Document;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
  * Dumper interface
@@ -19,7 +19,7 @@ use Phlexible\Component\Elementtype\Model\Elementtype;
 interface DumperInterface
 {
     /**
-     * @param \Phlexible\Component\Elementtype\Model\Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
      * @return Document
      */

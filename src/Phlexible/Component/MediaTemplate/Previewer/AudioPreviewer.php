@@ -9,7 +9,7 @@
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
 use Phlexible\Component\MediaCache\Specifier\AudioSpecifier;
-use Phlexible\Component\MediaTemplate\Model\AudioTemplate;
+use Phlexible\Component\MediaTemplate\Domain\AudioTemplate;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;

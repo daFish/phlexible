@@ -9,9 +9,9 @@
 namespace Phlexible\Component\Elementtype\File;
 
 use FluentDOM\Document;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
 use Phlexible\Component\Elementtype\File\Parser\XmlParser;
-use Phlexible\Component\Elementtype\Model\Elementtype;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\EditableRepository;
 use Puli\Repository\Resource\FileResource;
@@ -188,7 +188,7 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
     /**
      * @param Document $dom
      *
-     * @return Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     private function parse(Document $dom)
     {

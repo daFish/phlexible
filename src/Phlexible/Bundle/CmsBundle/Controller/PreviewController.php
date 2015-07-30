@@ -23,47 +23,37 @@ class PreviewController extends Controller
 {
     /**
      * @param Request $request
-     * @param int     $treeId
+     * @param int     $nodeId
      *
      * @return Response
-     * @Route("/{_locale}/{treeId}", name="cms_preview")
+     * @Route("/{_locale}/{nodeId}", name="cms_preview")
      */
-    public function previewAction(Request $request, $treeId)
+    public function previewAction(Request $request, $nodeId)
     {
         $language = $request->get('_locale');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $tree = $treeManager->getByTreeId($treeId);
-        $tree->setLanguage($language);
-        $node = $tree->get($treeId);
+        $tree = $treeManager->getByNodeId($nodeId);
+        $tree->setDefaultLanguage($language);
+        $node = $tree->get($nodeId);
 
         $siteroot = $siterootManager->find($node->getTree()->getSiterootId());
-        $siterootUrl = $siteroot->getDefaultUrl();
 
         $request->setLocale($language);
-        $request->attributes->set('routeDocument', $node);
-        $request->attributes->set('contentDocument', $node);
-        $request->attributes->set('siterootUrl', $siterootUrl);
+        $request->attributes->set('node', $node);
+        $request->attributes->set('siteroot', $siteroot);
         $request->attributes->set('preview', true);
 
         $this->get('router.request_context')->setParameter('preview', true);
-        $node->getTree()->setPreview(true);
+        $elementMediator = $this->get('phlexible_tree.mediator.element');
         $versionStrategy = $this->get('phlexible_tree.mediator.preview_version_strategy');
         if ($request->query->has('version')) {
             $versionStrategy->setVersion($request->query->get('version'));
         }
-        $node->getTree()->getMediator()->setVersionStrategy($versionStrategy);
+        $elementMediator->setVersionStrategy($versionStrategy);
 
-        $configurator = $this->get('phlexible_cms.configurator');
-        $configuration = $configurator->configure($request);
-        if ($configuration->hasResponse()) {
-            return $configuration->getResponse();
-        }
-
-        $data = $configuration->getVariables();
-
-        return $this->render($data['template'], (array) $data);
+        return $this->render($node->getTemplate(), array('node' => $node, 'siteroot' => $siteroot));
     }
 }

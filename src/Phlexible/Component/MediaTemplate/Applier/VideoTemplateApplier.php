@@ -11,7 +11,7 @@ namespace Phlexible\Component\MediaTemplate\Applier;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use FFMpeg\Media\Video;
-use Phlexible\Component\MediaTemplate\Model\VideoTemplate;
+use Phlexible\Component\MediaTemplate\Domain\VideoTemplate;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -84,7 +84,7 @@ class VideoTemplateApplier
     }
 
     /**
-     * @param VideoTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\VideoTemplate $template
      *
      * @return string
      */
@@ -115,7 +115,7 @@ class VideoTemplateApplier
     }
 
     /**
-     * @param VideoTemplate $template
+     * @param \Phlexible\Component\MediaTemplate\Domain\VideoTemplate $template
      * @param string        $inFilename
      * @param string        $outFilename
      *

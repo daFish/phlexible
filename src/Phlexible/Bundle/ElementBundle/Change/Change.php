@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\ElementBundle\Change;
 
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
@@ -19,7 +19,7 @@ use Phlexible\Component\Elementtype\Usage\Usage;
 abstract class Change implements ChangeInterface
 {
     /**
-     * @var Elementtype
+     * @var \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     private $elementtype;
 
@@ -29,7 +29,7 @@ abstract class Change implements ChangeInterface
     private $usage;
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      * @param Usage[]     $usage
      */
     public function __construct(Elementtype $elementtype, array $usage = array())

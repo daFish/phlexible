@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\ElementBundle\Proxy;
 
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Field\FieldRegistry;
-use Phlexible\Component\Elementtype\Model\Elementtype;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 
 /**
  * Distiller

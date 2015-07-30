@@ -13,9 +13,9 @@ use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\ElementtypeService;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Model\ElementtypeStructureNode;
 
 /**
  * Siteroot listener

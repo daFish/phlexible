@@ -1,6 +1,6 @@
 services:
     phlexible_problem.problem_checkers:
-        class: Phlexible\Bundle\ProblemBundle\ProblemChecker\ProblemCheckerCollection
+        class: Phlexible\Bundle\ProblemBundle\Domain\ProblemCheckerCollection
         arguments: [[]]
 
     phlexible_problem.problem_fetcher:

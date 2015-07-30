@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
-use Phlexible\Component\Volume\Model\File as BaseFile;
+use Phlexible\Component\Volume\Domain\File as BaseFile;
 
 /**
  * File

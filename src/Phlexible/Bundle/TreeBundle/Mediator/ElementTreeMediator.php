@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\Entity\PartNode;
 use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy\VersionStrategyInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
  * Element tree mediator
@@ -149,7 +149,7 @@ class ElementTreeMediator implements TreeMediatorInterface
             return null;
         }
 
-        return $this->elementService->getVersions($element);
+        return array_column($this->elementService->getVersions($element), 'version');
     }
 
     /**

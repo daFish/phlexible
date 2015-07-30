@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\Elementtype\File;
 
-use Phlexible\Component\Elementtype\Model\Elementtype;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
  * Elementtype repository interface
@@ -18,19 +18,19 @@ use Phlexible\Component\Elementtype\Model\Elementtype;
 interface ElementtypeRepositoryInterface
 {
     /**
-     * @return Elementtype[]
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
      */
     public function loadAll();
 
     /**
      * @param string $elementtypeId
      *
-     * @return Elementtype
+     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
      */
     public function load($elementtypeId);
 
     /**
-     * @param Elementtype $elementtype
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      */
     public function write(Elementtype $elementtype);
 }

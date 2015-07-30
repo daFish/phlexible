@@ -8,7 +8,7 @@
 
 namespace Phlexible\Component\MetaSet\OptionResolver;
 
-use Phlexible\Component\MetaSet\Model\MetaSetField;
+use Phlexible\Component\MetaSet\Domain\MetaSetField;
 
 /**
  * Option resolver
@@ -42,7 +42,7 @@ class OptionResolver implements OptionResolverInterface
     }
 
     /**
-     * @param MetaSetField $field
+     * @param \Phlexible\Component\MetaSet\Domain\MetaSetField $field
      *
      * @return null|array
      */

@@ -32,7 +32,7 @@ class NodeState
     /**
      * @var Node
      * @ORM\ManyToOne(targetEntity="Phlexible\Component\Node\Domain\Node")
-     * @ORM\JoinColumn(name="tree_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $node;
 

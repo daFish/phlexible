@@ -23,9 +23,9 @@ use Phlexible\Component\Volume\Event\ReplaceFileEvent;
 use Phlexible\Component\Volume\Exception\IOException;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\FileSource\FilesystemFileSource;
+use Phlexible\Component\Volume\Folder\FolderIterator;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
-use Phlexible\Component\Volume\Model\FolderIterator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

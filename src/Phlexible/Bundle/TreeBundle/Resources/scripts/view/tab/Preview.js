@@ -90,7 +90,7 @@ Phlexible.tree.view.tab.Preview = Ext.extend(Ext.Panel, {
                         Ext.Ajax.request({
                             url: Phlexible.Router.generate('elements_data_urls'),
                             params: {
-                                tid: this.activeTid,
+                                tid: this.activeNodeId,
                                 language: this.activeLanguage
                             },
                             success: function (response) {
@@ -191,9 +191,9 @@ Phlexible.tree.view.tab.Preview = Ext.extend(Ext.Panel, {
     },
 
     onLoadElement: function (element) {
-        if (element.getElementtypeType() == Phlexible.elementtypes.TYPE_FULL ||
-            element.getElementtypeType() == Phlexible.elementtypes.TYPE_PART) {
-            this.activeTid = this.element.getNodeId();
+        if (element.getElementtypeType() === Phlexible.elementtypes.TYPE_FULL ||
+            element.getElementtypeType() === Phlexible.elementtypes.TYPE_PART) {
+            this.activeNodeId = this.element.getNodeId();
             this.activeLanguage = this.element.getLanguage();
 
             this.setPreviewUrl(this.element.getUrls().preview);
@@ -219,7 +219,7 @@ Phlexible.tree.view.tab.Preview = Ext.extend(Ext.Panel, {
 
     updateIframe: function () {
         if (this.isActive &&
-            (this.activeTid != this.element.getNodeId() || this.activeLanguage != this.element.getLanguage())) {
+            (this.activeNodeId != this.element.getNodeId() || this.activeLanguage != this.element.getLanguage())) {
 
             var tb = this.getTopToolbar();
             var newMode = false;

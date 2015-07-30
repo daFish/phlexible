@@ -130,10 +130,8 @@ class TreeExtension extends \Twig_Extension
                 $node = $currentNode->getTree()->get($startTid);
             }
 
-            $this->navigations[$name] = new ReferenceNodeContext(
-                $node->getNode(),
-                $node->getTree(),
-                $node->getTree()->getDefaultLanguage(),
+            $this->navigations[$name] = ReferenceNodeContext::fromNodeContext(
+                $node,
                 $currentNode,
                 $siterootNavigation->getMaxDepth()
             );

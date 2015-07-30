@@ -8,9 +8,9 @@
 
 namespace Phlexible\Component\MediaTemplate\File;
 
+use Phlexible\Component\MediaTemplate\Domain\TemplateCollection;
 use Phlexible\Component\MediaTemplate\File\Dumper\DumperInterface;
 use Phlexible\Component\MediaTemplate\File\Parser\ParserInterface;
-use Phlexible\Component\MediaTemplate\Model\TemplateCollection;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\EditableRepository;
@@ -60,7 +60,7 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     private $dumpers = array();
 
     /**
-     * @var TemplateCollection
+     * @var \Phlexible\Component\MediaTemplate\Domain\TemplateCollection
      */
     private $templates;
 
