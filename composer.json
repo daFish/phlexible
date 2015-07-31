@@ -46,7 +46,8 @@
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
         "alchemy/zippy": "~0.2.1",
-        "memio/memio": "~1.1.0"
+        "jms/cg": "^1.1@dev",
+        "memio/memio": "~1.0"
     },
      "replace": {
         "phlexible/dashboard-bundle": "self.version",
