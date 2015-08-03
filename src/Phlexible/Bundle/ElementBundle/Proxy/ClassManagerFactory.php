@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Proxy;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
+use Phlexible\Bundle\ElementBundle\Proxy\Generator\ProxyGenerator;
 
 /**
  * Class manager factory
@@ -18,7 +19,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 class ClassManagerFactory
 {
     /**
-     * @var PhpClassGenerator
+     * @var ProxyGenerator
      */
     private $generator;
 
@@ -28,10 +29,10 @@ class ClassManagerFactory
     private $elementSourceManager;
 
     /**
-     * @param PhpClassGenerator             $generator
+     * @param ProxyGenerator             $generator
      * @param ElementSourceManagerInterface $elementSourceManager
      */
-    public function __construct(PhpClassGenerator $generator, ElementSourceManagerInterface $elementSourceManager)
+    public function __construct(ProxyGenerator $generator, ElementSourceManagerInterface $elementSourceManager)
     {
         $this->generator = $generator;
         $this->elementSourceManager = $elementSourceManager;

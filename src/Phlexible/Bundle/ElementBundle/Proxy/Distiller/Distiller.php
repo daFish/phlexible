@@ -6,7 +6,7 @@
  * @license   proprietary
  */
 
-namespace Phlexible\Bundle\ElementBundle\Proxy;
+namespace Phlexible\Bundle\ElementBundle\Proxy\Distiller;
 
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
@@ -34,49 +34,47 @@ class Distiller
     }
 
     /**
-     * {@inheritdoc}
+     * @param Elementtype $elementtype
+     *
+     * @return DistilledNodeCollection
      */
     public function distill(Elementtype $elementtype)
     {
         $elementtypeStructure = $elementtype->getStructure();
-
         $rootNode = $elementtypeStructure->getRootNode();
-        $data = $this->iterate($elementtypeStructure, $rootNode);
 
-        return $data;
+        return $this->iterate($elementtypeStructure, $rootNode);
     }
 
+    /**
+     * @param ElementtypeStructure     $structure
+     * @param ElementtypeStructureNode $node
+     * @param int                      $depth
+     *
+     * @return DistilledNodeCollection
+     */
     private function iterate(ElementtypeStructure $structure, ElementtypeStructureNode $node, $depth = 0)
     {
-        $data = array();
+        $nodes = array();
 
         foreach ($structure->getChildNodes($node->getDsId()) as $childNode) {
             $field = $this->fieldRegistry->getField($childNode->getType());
 
             if ($field->isField()) {
-                $data[] = array(
-                    'name'  => $childNode->getName(),
-                    'node'  => $childNode,
-                    'field' => $field,
-                );
+                $nodes[] = new DistilledFieldNode($childNode, $field);
             }
 
             if ($structure->hasChildNodes($childNode->getDsId())) {
-                $childData = $this->iterate($structure, $childNode, $depth + 1);
+                $childNodes = $this->iterate($structure, $childNode, $depth + 1);
 
                 if ($childNode->isRepeatable() || $childNode->isOptional()) {
-                    $data[] = array(
-                        'name'     => $childNode->getName(),
-                        'node'     => $childNode,
-                        'field'    => $field,
-                        'children' => $childData
-                    );
+                    $nodes[] = new DistilledContainerNode($childNode, $childNodes);
                 } else {
-                    $data = array_merge($data, $childData);
+                    $nodes = array_merge($nodes, $childNodes->all());
                 }
             }
         }
 
-        return $data;
+        return new DistilledNodeCollection($nodes);
     }
 }

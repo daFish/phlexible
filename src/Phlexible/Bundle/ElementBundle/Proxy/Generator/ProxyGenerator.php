@@ -1,0 +1,275 @@
+<?php
+/**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
+ */
+
+namespace Phlexible\Bundle\ElementBundle\Proxy\Generator;
+
+use Phlexible\Bundle\ElementBundle\Proxy\Distiller\DistilledFieldNode;
+use Phlexible\Bundle\ElementBundle\Proxy\Distiller\DistilledNodeCollection;
+use Phlexible\Bundle\ElementBundle\Proxy\Distiller\Distiller;
+use Phlexible\Bundle\ElementBundle\Proxy\Distiller\HasChildNodesInterface;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+
+/**
+ * Php class generator
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
+class ProxyGenerator
+{
+    /**
+     * @var Distiller
+     */
+    private $distiller;
+
+    /**
+     * @var DefinitionWriter
+     */
+    private $writer;
+
+    /**
+     * @var string
+     */
+    private $namespacePrefix;
+
+    /**
+     * @var string
+     */
+    private $referenceNamespacePrefix;
+
+    /**
+     * @param Distiller        $distiller
+     * @param DefinitionWriter $writer
+     * @param string           $namespacePrefix
+     */
+    public function __construct(Distiller $distiller, DefinitionWriter $writer, $namespacePrefix = 'Phlexible\\Element\\__CG__\\')
+    {
+        $this->distiller = $distiller;
+        $this->writer = $writer;
+        $this->namespacePrefix = $namespacePrefix;
+        $this->referenceNamespacePrefix = $namespacePrefix . 'Reference';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getManagerFile()
+    {
+        return $this->writer->getManagerFile();
+    }
+
+    /**
+     * @param Elementtype[] $elementtypes
+     *
+     * @return string
+     */
+    public function generate(array $elementtypes)
+    {
+        $definitions = array();
+        foreach ($elementtypes as $elementtype) {
+            if ($elementtype->getType() !== 'full' && $elementtype->getType() !== 'part' && $elementtype->getType() !== 'structure') {
+                continue;
+            }
+
+            $nodes = $this->distiller->distill($elementtype);
+
+            $classname = $this->normalizeName($elementtype->getTitle());
+            $namespace = $this->namespacePrefix . $classname;
+
+            $definitions[] = $this->makeMainClass(
+                $namespace,
+                $classname,
+                $nodes,
+                $elementtype,
+                $this->generateSubClasses($namespace, $nodes)
+            );
+        }
+
+        $this->writer->write($definitions, $this->namespacePrefix);
+        die;
+    }
+
+    /**
+     * @param string                  $namespace
+     * @param string                  $classname
+     * @param DistilledNodeCollection $nodes
+     * @param Elementtype             $elementtype
+     * @param array                   $children
+     *
+     * @return MainClassDefinition
+     */
+    private function makeMainClass($namespace, $classname, DistilledNodeCollection $nodes, Elementtype $elementtype, array $children)
+    {
+        $values = $this->extractValues($nodes);
+        $class = new MainClassDefinition($classname, $namespace, $values, $children['classes'], $children['collections'], $elementtype->getId(), $elementtype->getRevision(), $elementtype->getUniqueId());
+
+        return $class;
+    }
+
+    /**
+     * @param string                   $namespace
+     * @param string                   $classname
+     * @param DistilledNodeCollection  $nodes
+     * @param string                   $nodeName
+     * @param string                   $dsId
+     * @param array                    $children
+     *
+     * @return StructureClassDefinition
+     */
+    private function makeStructureClass($namespace, $classname, DistilledNodeCollection $nodes, $nodeName, $dsId, array $children)
+    {
+        $values = $this->extractValues($nodes);
+        $class = new StructureClassDefinition($classname, $namespace, $values, $children['classes'], $children['collections'], $nodeName, $dsId);
+
+        return $class;
+    }
+
+    /**
+     * @param string                   $namespace
+     * @param string                   $classname
+     * @param DistilledNodeCollection  $nodes
+     * @param string                   $nodeName
+     * @param string                   $dsId
+     * @param array                    $children
+     *
+     * @return CollectionStructureClassDefinition
+     */
+    private function makeCollectionStructureClass($namespace, $classname, DistilledNodeCollection $nodes, $nodeName, $dsId, array $children)
+    {
+        $values = $this->extractValues($nodes);
+        $class = new CollectionStructureClassDefinition($classname, $namespace, $values, $children, $nodeName, $dsId);
+
+        return $class;
+    }
+
+    /**
+     * @param DistilledNodeCollection $nodes
+     *
+     * @return array
+     */
+    private function extractValues(DistilledNodeCollection $nodes)
+    {
+        $nodes = $nodes->filter(
+            function($node) {
+                return !$node instanceof HasChildNodesInterface;
+            }
+        );
+
+        $values = array();
+        foreach ($nodes->all() as $node) {
+            /* @var $node DistilledFieldNode */
+
+            $values[] = new ValueDefinition(
+                lcfirst($this->toCamelCase($node->getName())),
+                $node->getName(),
+                $node->getDsId(),
+                $node->getType(),
+                $node->getDataType()
+            );
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param string                  $namespace
+     * @param DistilledNodeCollection $nodes
+     *
+     * @return array
+     */
+    private function generateSubClasses($namespace, DistilledNodeCollection $nodes)
+    {
+        $nodes = $nodes->filter(
+            function($node) {
+                return $node instanceof HasChildNodesInterface;
+            }
+        );
+
+        $data = array('classes' => array(), 'collections' => array());
+        $collectionClasses = array();
+
+        foreach ($nodes->all() as $node) {
+            $parent = $node->getParentNode();
+            if ($parent->getType() === 'referenceroot') {
+                $parent = $parent->getParentNode();
+                if ($parent->getType() === 'reference') {
+                    $parent = $parent->getParentNode();
+                }
+            }
+            $collectionName = $parent->getName();
+            $normalizedCollectionName = $this->normalizeName($collectionName);
+
+            $nodeName = $this->normalizeName($node->getName());
+
+            if ($node->isRepeatable()) {
+                $collectionClasses[$collectionName][] = $this->makeCollectionStructureClass(
+                    !$node->isReferenced() ? $namespace : $this->referenceNamespacePrefix,
+                    !$node->isReferenced() ? $normalizedCollectionName . $nodeName . 'Structure' : $nodeName . 'Structure',
+                    $node->getChildNodes(),
+                    $node->getName(),
+                    $node->getDsId(),
+                    $this->generateSubClasses($namespace, $node->getChildNodes())
+                );
+            } else {
+                $data['classes'][] = $this->makeStructureClass(
+                    !$node->isReferenced() ? $namespace : $this->referenceNamespacePrefix,
+                    !$node->isReferenced() ? $nodeName : $nodeName,
+                    $node->getChildNodes(),
+                    $node->getName(),
+                    $node->getDsId(),
+                    $this->generateSubClasses($namespace, $node->getChildNodes())
+                );
+            }
+        }
+
+        foreach ($collectionClasses as $collectionName => $classes) {
+            if (!count($classes)) {
+                continue;
+            }
+            $data['collections'][$collectionName] = new CollectionDefinition(
+                ucfirst($this->normalizeName($collectionName)) . 'Collection',
+                $namespace,
+                lcfirst($this->normalizeName($collectionName)),
+                $collectionName,
+                $classes
+            );
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    private function normalizeName($name)
+    {
+        //$name = strtolower($name);
+        $name = str_replace(' ', '_', $name);
+        $name = str_replace('-', '_', $name);
+
+        return $this->toCamelCase($name);
+    }
+
+    /**
+     * @param string $str
+     * @param bool   $capitaliseFirstChar
+     *
+     * @return string
+     */
+    private function toCamelCase($str, $capitaliseFirstChar = true)
+    {
+        if ($capitaliseFirstChar) {
+            $str = ucfirst($str);
+        }
+        $func = create_function('$c', 'return strtoupper($c[1]);');
+
+        $str = preg_replace_callback('/_([a-zA-Z])/', $func, $str);
+        return $str;
+    }
+}

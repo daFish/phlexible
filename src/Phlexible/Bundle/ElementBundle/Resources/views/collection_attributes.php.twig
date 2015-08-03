@@ -1,0 +1,23 @@
+{% for collection in class.collections %}
+    /**
+     * @var \{{ collection.namespace }}\{{ collection.classname }}
+     */
+    private ${{ collection.name }};
+
+    /**
+    * @param ChildStructureInterface $structure
+    */
+    public function add{{ collection.upperName }}(ChildStructureInterface $structure)
+    {
+        $this->{{ collection.name }}->add($structure);
+    }
+
+    /**
+    * @return ChildStructureInterface[]
+    */
+    public function get{{ collection.upperName }}()
+    {
+        return $this->{{ collection.name }}->all();
+    }
+
+{% endfor %}

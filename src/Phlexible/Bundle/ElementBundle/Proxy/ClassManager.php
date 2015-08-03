@@ -20,12 +20,7 @@ class ClassManager
     /**
      * @var string
      */
-    private $dir;
-
-    /**
-     * @var array
-     */
-    private $fileMap;
+    private $baseDir;
 
     /**
      * @var array
@@ -38,22 +33,15 @@ class ClassManager
     private $dsIdMap;
 
     /**
-     * @param string $dir
-     * @param array  $interfaceMap
-     * @param array  $fileMap
+     * @param string $baseDir
      * @param array  $elementtypeIdMap
      * @param array  $dsIdMap
      */
-    public function __construct($dir, array $interfaceMap, array $fileMap, array $elementtypeIdMap, array $dsIdMap)
+    public function __construct($baseDir, array $elementtypeIdMap, array $dsIdMap)
     {
-        $this->dir = $dir;
-        $this->fileMap = $fileMap;
+        $this->baseDir = $baseDir;
         $this->elementtypeIdMap = $elementtypeIdMap;
         $this->dsIdMap = $dsIdMap;
-
-        foreach ($interfaceMap as $interfaceName => $filename) {
-            include_once $dir . '/' . $filename;
-        }
     }
 
     /**
@@ -88,11 +76,16 @@ class ClassManager
         }
         $item->__setValues($values);
 
-        if ($content['children']) {
+        if ($content['collections']) {
             $children = array();
-            foreach ($content['children'] as $childContent) {
-                $children[$childContent['parent']][] = $childItem = $this->createByDsId($childContent['dsId'], !empty($childContent['id']) ? $childContent['id'] : null);
-                $this->fill($childContent, $childItem);
+            foreach ($content['collections'] as $name => $collection) {
+                foreach ($collection as $child) {
+                    $children[$name][] = $childItem = $this->createByDsId(
+                        $child['dsId'],
+                        !empty($child['id']) ? $child['id'] : null
+                    );
+                    $this->fill($child, $childItem);
+                }
             }
             $item->__setChildren($children);
         }
@@ -106,7 +99,7 @@ class ClassManager
      * @return MainStructureInterface
      * @throws \Exception
      */
-    public function createByElementVersion(ElementVersion $elementVersion)
+    private function createByElementVersion(ElementVersion $elementVersion)
     {
         $elementtypeId = $elementVersion->getElement()->getElementtypeId();
 
@@ -114,9 +107,10 @@ class ClassManager
             throw new \Exception("Elementtype ID $elementtypeId not found in map.");
         }
 
-        $className = $this->elementtypeIdMap[$elementtypeId];
-        $filename = $this->fileMap[$className];
-        include_once $this->dir . '/' . $filename;
+        $className = $this->elementtypeIdMap[$elementtypeId]['classname'];
+        $filename = $this->elementtypeIdMap[$elementtypeId]['filename'];
+
+        require_once $this->baseDir . '/' . $filename;
 
         return new $className($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
     }
@@ -128,15 +122,16 @@ class ClassManager
      * @return ChildStructureInterface
      * @throws \Exception
      */
-    public function createByDsId($dsId, $id = null)
+    private function createByDsId($dsId, $id = null)
     {
         if (!isset($this->dsIdMap[$dsId])) {
             throw new \Exception("dsId $dsId not found in map.");
         }
 
-        $className = $this->dsIdMap[$dsId];
-        $filename = $this->fileMap[$className];
-        include_once $this->dir . '/' . $filename;
+        $className = $this->dsIdMap[$dsId]['classname'];
+        $filename = $this->dsIdMap[$dsId]['filename'];
+
+        require_once $this->baseDir . '/' . $filename;
 
         return new $className($id);
     }

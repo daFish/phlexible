@@ -1,0 +1,3 @@
+{% for structure in class.children %}
+            '{{ structure.name }}' => $this->get{{ structure.upperName }}(),
+{% endfor %}

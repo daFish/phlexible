@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\ElementBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,7 +27,9 @@ class TestCheckCommand extends ContainerAwareCommand
     {
         $this
             ->setName('element:test-check')
-            ->setDescription('test.');
+            ->setDescription('test.')
+            ->addArgument('eid')
+            ->addArgument('version', InputArgument::OPTIONAL);
     }
 
     /**
@@ -36,8 +39,11 @@ class TestCheckCommand extends ContainerAwareCommand
     {
         $elementService = $this->getContainer()->get('phlexible_element.element_service');
 
-        $element = $elementService->findElement(288);
-        $elementVersion = $elementService->findElementVersion($element, 2);
+        $element = $elementService->findElement($input->getArgument('eid'));
+        if (!($version = $input->getArgument('version'))) {
+            $version = $element->getLatestVersion();
+        }
+        $elementVersion = $elementService->findElementVersion($element, $version);
 
         $classManager = $this->getContainer()->get('phlexible_element.proxy.class_manager');
 

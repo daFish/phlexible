@@ -142,9 +142,6 @@ class ElementVersionManager implements ElementVersionManagerInterface
             }
 
             $this->entityManager->persist($elementVersion);
-            foreach ($elementVersion->getMappedFields() as $mappedField) {
-                $this->entityManager->persist($mappedField);
-            }
 
             if ($flush) {
                 $this->entityManager->flush();
@@ -160,10 +157,6 @@ class ElementVersionManager implements ElementVersionManagerInterface
             $event = new ElementVersionEvent($elementVersion);
             if ($this->dispatcher->dispatch(ElementEvents::BEFORE_UPDATE_ELEMENT_VERSION, $event)->isPropagationStopped()) {
                 throw new UpdateCancelledException('Update canceled by listener.');
-            }
-
-            foreach ($elementVersion->getMappedFields() as $mappedField) {
-                $this->entityManager->persist($mappedField);
             }
 
             if ($flush) {

@@ -11,14 +11,16 @@ namespace Phlexible\Bundle\CmsBundle\EventListener;
 use Phlexible\Bundle\CmsBundle\Usage\UsageUpdater;
 use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
+use Phlexible\Bundle\TreeBundle\TreeEvents;
+use Phlexible\Component\Node\Event\NodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Element listener
+ * Node listener
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ElementListener implements EventSubscriberInterface
+class NodeListener implements EventSubscriberInterface
 {
     /**
      * @var UsageUpdater
@@ -39,24 +41,24 @@ class ElementListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ElementEvents::CREATE_ELEMENT_VERSION => 'onCreateElementVersion',
-            ElementEvents::UPDATE_ELEMENT_VERSION => 'onUpdateElementVersion',
+            TreeEvents::CREATE_NODE_CONTEXT => 'onCreateNode',
+            TreeEvents::UPDATE_NODE_CONTEXT => 'onUpdateNode',
         );
     }
 
     /**
-     * @param ElementVersionEvent $event
+     * @param NodeEvent $event
      */
-    public function onCreateElementVersion(ElementVersionEvent $event)
+    public function onCreateNode(NodeEvent $event)
     {
-        $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+        $this->usageUpdater->updateUsage($event->getNode());
     }
 
     /**
-     * @param ElementVersionEvent $event
+     * @param NodeEvent $event
      */
-    public function onUpdateElementVersion(ElementVersionEvent $event)
+    public function onUpdateNode(NodeEvent $event)
     {
-        $this->usageUpdater->updateUsage($event->getElementVersion()->getElement());
+        $this->usageUpdater->updateUsage($event->getNode());
     }
 }

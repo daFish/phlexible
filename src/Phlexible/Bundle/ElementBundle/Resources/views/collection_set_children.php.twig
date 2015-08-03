@@ -1,0 +1,8 @@
+{% for collection in class.collections %}
+{% for class in collection.classes %}
+                if ($structure instanceof \{{ class.namespace }}\{{ class.classname }}) {
+                    $this->add{{ collection.upperName }}($structure);
+                    return;
+                }
+{% endfor %}
+{% endfor %}

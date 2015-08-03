@@ -1,0 +1,44 @@
+    /**
+     * @param array $values
+     */
+    public function __setValues(array $values)
+    {
+        foreach ($values as $dsId => $value) {
+{% for value in class.values %}
+            if ($dsId === '{{ value.dsId }}') {
+                $this->set{{ value.upperName }}($value);
+                continue;
+            }
+{% endfor %}
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function __getValues()
+    {
+        return array(
+{% for value in class.values %}
+            '{{ value.dsId }}' => $this->get{{ value.upperName }}(),
+{% endfor %}
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function __getValueDescriptors()
+    {
+        return array(
+{% for value in class.values %}
+            '{{ value.dsId }}' => array(
+                'name' => '{{ value.rawName }}',
+                'type' => '{{ value.type }}',
+                'dataType' => '{{ value.dataType }}',
+                'value' => $this->get{{ value.upperName }}(),
+            ),
+{% endfor %}
+        );
+    }
+

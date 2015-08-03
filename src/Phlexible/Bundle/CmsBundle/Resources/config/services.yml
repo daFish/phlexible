@@ -20,7 +20,7 @@ services:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
     phlexible_cms.listener.element:
-        class: Phlexible\Bundle\CmsBundle\EventListener\ElementListener
+        class: Phlexible\Bundle\CmsBundle\EventListener\NodeListener
         arguments: [@phlexible_cms.usage_updater]
         tags:
             - {name: kernel.event_subscriber}

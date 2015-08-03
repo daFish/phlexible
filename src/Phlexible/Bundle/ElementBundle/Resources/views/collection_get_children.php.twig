@@ -1,0 +1,3 @@
+{% for collection in class.collections %}
+            '{{ collection.name }}' => $this->get{{ collection.upperName }}(),
+{% endfor %}

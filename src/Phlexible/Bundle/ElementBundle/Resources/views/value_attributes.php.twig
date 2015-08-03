@@ -1,0 +1,23 @@
+{% for value in class.values %}
+    /**
+     * @var {{ value.dataType }}
+     */
+    private ${{ value.name }};
+
+    /**
+     * @return {{ value.dataType }}
+     */
+    public function get{{ value.upperName }}()
+    {
+        return $this->{{ value.name }};
+    }
+
+    /**
+     * @param {{ value.dataType }} ${{ value.name }}
+     */
+    public function set{{ value.upperName }}(${{ value.name }})
+    {
+        $this->{{ value.name }} = ${{ value.name }};
+    }
+
+{% endfor %}

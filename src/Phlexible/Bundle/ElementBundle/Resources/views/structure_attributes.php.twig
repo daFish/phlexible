@@ -1,0 +1,23 @@
+{% for structure in class.children %}
+    /**
+     * @var \{{ structure.namespace }}\{{ structure.classname }}
+     */
+    private ${{ structure.name }};
+
+    /**
+    * @param \{{ structure.namespace }}\{{ structure.classname }} ${{ structure.name }}
+    */
+    public function set{{ structure.upperName }}(\{{ structure.namespace }}\{{ structure.classname }} ${{ structure.name }})
+    {
+        $this->{{ structure.name }} = ${{ structure.name }};
+    }
+
+    /**
+    * @return \{{ structure.namespace }}\{{ structure.classname }}
+    */
+    public function get{{ structure.upperName }}()
+    {
+        return $this->{{ structure.name }};
+    }
+
+{% endfor %}

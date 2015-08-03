@@ -1,0 +1,6 @@
+{% for structure in class.children %}
+                if ($structure instanceof \{{ structure.namespace }}\{{ structure.classname }}) {
+                    $this->{{ structure.name }} = $structure;
+                    return;
+                }
+{% endfor %}

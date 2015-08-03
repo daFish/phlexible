@@ -1,0 +1,3 @@
+{% for collection in class.collections %}
+    $this->{{ collection.name }} = new \{{ collection.namespace }}\{{ collection.classname }}();
+{% endfor %}
