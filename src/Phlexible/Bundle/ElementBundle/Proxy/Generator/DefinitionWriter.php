@@ -43,6 +43,8 @@ class DefinitionWriter
     /**
      * @param array  $classes
      * @param string $namespacePrefix
+     *
+     * @return string
      */
     public function write(array $classes, $namespacePrefix)
     {
@@ -56,7 +58,7 @@ class DefinitionWriter
             $this->writeMainClass($class, $manager, $twig, $namespacePrefix);
         }
 
-        $this->writeManager($manager);
+        return $this->writeManager($manager);
     }
 
     /**
@@ -133,7 +135,6 @@ class DefinitionWriter
     {
         $filesystem = new Filesystem();
 
-        echo $relativeFilename.PHP_EOL;
         $filesystem->dumpFile($this->outputDir . '/' . $relativeFilename, $content);
 
         return $this->outputDir . '/' . $relativeFilename;
@@ -142,6 +143,11 @@ class DefinitionWriter
     private function clear()
     {
         $filesystem = new Filesystem();
+
+        if (!$filesystem->exists($this->outputDir)) {
+            return;
+        }
+
         $finder = new Finder();
 
         foreach ($finder->in($this->outputDir)->directories()->depth(0) as $dir) {

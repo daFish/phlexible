@@ -89,8 +89,7 @@ class ProxyGenerator
             );
         }
 
-        $this->writer->write($definitions, $this->namespacePrefix);
-        die;
+        return $this->writer->write($definitions, $this->namespacePrefix);
     }
 
     /**
