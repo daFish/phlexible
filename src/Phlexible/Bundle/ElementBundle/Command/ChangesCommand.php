@@ -98,7 +98,7 @@ class ChangesCommand extends ContainerAwareCommand
                     } elseif ($change instanceof AddChange) {
                         $color = 'green';
                     }
-                    $name = $change->getElementtype()->getUniqueId();
+                    $name = $change->getElementtype()->getName();
                     $type = $change->getElementtype()->getType();
                     $revision = $change->getElementtype()->getRevision();
 

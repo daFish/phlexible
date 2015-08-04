@@ -10,7 +10,6 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
         forceFit: true,
         emptyText: Phlexible.elementtypes.Strings.no_viability
     },
-//    autoExpandColumn: 'title',
 
     initComponent: function () {
         // Create RowActions Plugin
@@ -34,8 +33,8 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
             url: '',//Phlexible.Router.generate('elementtypes_list_viability'),
             id: 'id',
             root: 'viability',
-            fields: ['id', 'title', 'icon'],
-            sortInfo: {field: 'title', direction: 'ASC'}
+            fields: ['id', 'name', 'icon'],
+            sortInfo: {field: 'name', direction: 'ASC'}
         });
 
         this.columns = [
@@ -47,13 +46,12 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
                 sortable: true
             },
             {
-                id: 'title',
                 header: this.strings.elementtype,
-                dataIndex: 'title',
+                dataIndex: 'name',
                 width: 250,
                 sortable: true,
                 renderer: function (value, meta, r) {
-                    return '<img src="' + Phlexible.bundleAsset('/phlexibleelementtype/elementtypes/' + r.get('icon')) + '" width="18" height="18" style="vertical-align: middle;" /> ' + value;
+                    return '<img src="' + Phlexible.bundleAsset('/phlexibletree/node-icons/' + r.get('icon')) + '" width="18" height="18" style="vertical-align: middle;" /> ' + value;
                 }
             },
             this.actions
@@ -95,15 +93,15 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
                 triggerAction: 'all',
                 listClass: 'x-combo-list-big',
                 editable: false,
-                tpl: '<tpl for="."><div class="x-combo-list-item"><img src="{[Phlexible.bundleAsset(\"/phlexibleelementtype/elementtypes/\" + values.icon)]}" width="18" height="18" style="vertical-align: middle;" /> {title}</div></tpl>',
+                tpl: '<tpl for="."><div class="x-combo-list-item"><img src="{[Phlexible.bundleAsset(\"/phlexibletree/node-icons/\" + values.icon)]}" width="18" height="18" style="vertical-align: middle;" /> {name}</div></tpl>',
                 width: 250,
                 listWidth: 250,
                 store: new Ext.data.JsonStore({
                     url: '',//Phlexible.Router.generate('elementtypes_list_for_type'),
                     root: 'elementtypes',
                     id: 'id',
-                    fields: ['id', 'title', 'icon'],
-                    sortInfo: {field: 'title', direction: 'ASC'},
+                    fields: ['id', 'name', 'icon'],
+                    sortInfo: {field: 'name', direction: 'ASC'},
                     listeners: {
                         load: function (comboStore) {
                             var r = this.store.getRange();
@@ -117,7 +115,7 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
                         scope: this
                     }
                 }),
-                displayField: 'title',
+                displayField: 'name',
                 valueField: 'id',
                 listeners: {
                     select: this.onAdd,
@@ -137,10 +135,10 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
         if (!this.store.getById(record.id)) {
             this.store.add(new Ext.data.Record({
                 id: record.id,
-                title: record.data.title,
+                name: record.data.name,
                 icon: record.data.icon
             }, record.id));
-            this.store.sort('title', 'ASC');
+            this.store.sort('name', 'ASC');
             combo.store.remove(record);
         }
 
@@ -152,7 +150,7 @@ Phlexible.elementtypes.ElementtypeViability = Ext.extend(Ext.grid.GridPanel, {
         this.store.removeAll();
     },
 
-    load: function (id, title, version, type) {
+    load: function (id, name, version, type) {
         this.elementtypeId = id;
         this.getCombo().lastQuery = null;
         this.store.proxy.conn.url = Phlexible.Router.generate('elementtypes_viability_list', {id: id});

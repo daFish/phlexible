@@ -186,7 +186,7 @@ class ElementConfigurator implements ConfiguratorInterface
             $element->getEid(),
             $element->getUniqueId(),
             $elementtype->getId(),
-            $elementtype->getUniqueId(),
+            $elementtype->getName(),
             $elementtype->getType(),
             $elementVersion->getVersion(),
             $elementLanguage,

@@ -93,9 +93,7 @@ class TestCommand extends ContainerAwareCommand
             $elementtype = new Elementtype();
             $elementtype
                 ->setId($map[$row['id']]['id'])
-                ->setUniqueId($map[$row['id']]['uniqueId'])
-                ->setTitle('de', $row['title'])
-                ->setTitle('en', $row['title'])
+                ->setName($map[$row['id']]['name'])
                 ->setType($row['type'])
                 ->setRevision($versionRow['version'])
                 ->setIcon($row['icon'])
@@ -112,7 +110,7 @@ class TestCommand extends ContainerAwareCommand
                 ->setModifiedAt(new \DateTime($versionRow['created_at']))
                 ->setModifyUser($versionRow['create_user']);
 
-            $output->writeln($row['id'] . " => " . $elementtype->getId() . " " . $elementtype->getUniqueId());
+            $output->writeln($row['id'] . " => " . $elementtype->getId() . " " . $elementtype->getName());
 
             $elementtypeManager->validateElementtype($elementtype);
 

@@ -135,7 +135,6 @@ class ElementtypeService
      * Create a new empty Element Type
      *
      * @param string               $type
-     * @param string               $uniqueId
      * @param string               $name
      * @param string               $icon
      * @param ElementtypeStructure $elementtypeStructure
@@ -143,11 +142,10 @@ class ElementtypeService
      * @param string               $user
      * @param bool                 $flush
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
+     * @return Elementtype
      */
     public function createElementtype(
         $type,
-        $uniqueId,
         $name,
         $icon,
         ElementtypeStructure $elementtypeStructure = null,
@@ -170,10 +168,8 @@ class ElementtypeService
 
         $elementtype = new Elementtype();
         $elementtype
-            ->setUniqueId($uniqueId)
+            ->setName($name)
             ->setType($type)
-            ->setTitle('de', $name)
-            ->setTitle('en', $name)
             ->setIcon($icon)
             ->setRevision(1)
             ->setStructure($elementtypeStructure)
@@ -228,15 +224,11 @@ class ElementtypeService
         $elementtype = clone $sourceElementtype;
         $uniqId = uniqid();
 
-        foreach ($elementtype->getTitles() as $language => $title) {
-          $elementtype->setTitle($language, $title . ' - copy - ' . $uniqId);
-        }
-
         $elementtypeStructure = new ElementtypeStructure();
 
         $elementtype
             ->setId(null)
-            ->setUniqueId($elementtype->getUniqueId() . '-' . $uniqId)
+            ->setName($elementtype->getName() . '-' . $uniqId)
             ->setRevision(1)
             ->setStructure($elementtypeStructure)
             ->setCreatedAt(new \DateTime())

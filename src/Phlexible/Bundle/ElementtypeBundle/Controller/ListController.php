@@ -49,9 +49,9 @@ class ListController extends Controller
                 continue;
             }
 
-            $elementtypes[$elementtype->getTitle() . $elementtype->getId()] = array(
+            $elementtypes[$elementtype->getName() . $elementtype->getId()] = array(
                 'id'      => $elementtype->getId(),
-                'title'   => $elementtype->getTitle(),
+                'name'    => $elementtype->getName(),
                 'icon'    => $elementtype->getIcon(),
                 'version' => $elementtype->getRevision(),
                 'type'    => $elementtype->getType(),
@@ -81,16 +81,11 @@ class ListController extends Controller
      */
     public function createAction(Request $request)
     {
-        $title = $request->get('title');
         $type = $request->get('type');
-        $uniqueId = $request->get('unique_id');
-
-        if (!$uniqueId) {
-            $uniqueId = preg_replace('/[^a-z0-9_]/', '_', strtolower($title));
-        }
+        $name = $request->get('name');
 
         $elementtypeService = $this->get('phlexible_elementtype.elementtype_service');
-        $elementtypeService->createElementtype($type, $uniqueId, $title, null, null, array(), $this->getUser()->getId());
+        $elementtypeService->createElementtype($type, $name, null, null, array(), $this->getUser()->getId());
 
         return new ResultResponse(true, 'Element Type created.');
     }

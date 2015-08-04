@@ -103,7 +103,7 @@ class TeaserExtension extends \Twig_Extension
                 $this->areas = array();
                 foreach ($this->elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
                     if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {
-                        $this->areas[$layoutarea->getUniqueId()] = $layoutarea;
+                        $this->areas[$layoutarea->getName()] = $layoutarea;
                     }
                 }
             }

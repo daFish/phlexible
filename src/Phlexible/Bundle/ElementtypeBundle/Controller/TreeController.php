@@ -65,14 +65,14 @@ class TreeController extends Controller
 
         $data = array(
             array(
-                'text'                 => $elementtype->getTitle($language)
+                'text'                 => $elementtype->getName()
                     . ' [v' . $elementtype->getRevision() . ', '
                     . $elementtype->getType() . ']',
                 'id'                   => md5(serialize($rootNode)),
                 'ds_id'                => $rootDsId,
                 'element_type_id'      => $elementtype->getId(),
                 'element_type_version' => $elementtype->getRevision(),
-                'icon'                 => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
+                'icon'                 => '/bundles/phlexibletree/node-icons/' . $elementtype->getIcon(),
                 'cls'                  => 'p-elementtypes-type-' . $type,
                 'leaf'                 => false,
                 'expanded'             => true,
@@ -82,10 +82,9 @@ class TreeController extends Controller
                 'editable'             => $mode == 'edit',
                 'properties'           => array(
                     'root' => array(
-                        'title'               => $elementtype->getTitle($language),
-                        'reference_title'     => $elementtype->getTitle($language)
+                        'name'               => $elementtype->getName(),
+                        'reference_title'     => $elementtype->getName()
                             . ' [v' . $elementtype->getRevision() . ']',
-                        'unique_id'           => $elementtype->getUniqueId(),
                         'icon'                => $elementtype->getIcon(),
                         'hide_children'       => $elementtype->getHideChildren() ? 'on' : '',
                         'default_tab'         => $elementtype->getDefaultTab(),
@@ -185,7 +184,7 @@ class TreeController extends Controller
                 $children = $structure->getChildNodes($node->getDsId());
                 $referenceRoot = $children[0];
 
-                $tmp['text'] = $referenceElementtype->getTitle($language) . ' [v' . $referenceElementtype->getRevision() . ']';
+                $tmp['text'] = $referenceElementtype->getName() . ' [v' . $referenceElementtype->getRevision() . ']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
                 $tmp['reference'] = array('refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision());
@@ -224,7 +223,7 @@ class TreeController extends Controller
 
         return new ResultResponse(
             true,
-            "Element Type {$elementtype->getTitle()} saved as version {$elementtype->getRevision()}."
+            "Element Type {$elementtype->getName()} saved as version {$elementtype->getRevision()}."
         );
     }
 }

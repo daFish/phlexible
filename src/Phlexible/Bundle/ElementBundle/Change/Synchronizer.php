@@ -79,16 +79,16 @@ class Synchronizer
     {
         $elementtype = $change->getElementtype();
         if ($change instanceof AddChange) {
-            $this->logger->notice("Adding element source from elementtype {$change->getElementtype()->getUniqueId()}");
+            $this->logger->notice("Adding element source from elementtype {$change->getElementtype()->getName()}");
             $elementSource = new ElementSource();
             $this->applyElementtypeToElementSource($elementtype, $elementSource);
         } elseif ($change instanceof UpdateChange) {
-            $this->logger->notice("Updating element source from elementtype {$change->getElementtype()->getUniqueId()}");
+            $this->logger->notice("Updating element source from elementtype {$change->getElementtype()->getName()}");
             $elementSource = new ElementSource();
             $this->applyElementtypeToElementSource($elementtype, $elementSource);
             $this->handleOutdatedElementSource($change, $elementSource);
         } elseif ($change instanceof RemoveChange) {
-            $this->logger->notice("Removing obsolete element source {$change->getElementtype()->getUniqueId()}");
+            $this->logger->notice("Removing obsolete element source {$change->getElementtype()->getName()}");
             $this->handleRemovedElementSource($change);
         } else {
             //$elementSource = $this->elementSourceManager->findOneByElementtypeAndRevision($elementtype);
@@ -138,7 +138,7 @@ class Synchronizer
     private function applyElementtypeToElementSource(Elementtype $elementtype, ElementSource $elementSource)
     {
         $elementSource
-            ->setName($elementtype->getUniqueId())
+            ->setName($elementtype->getName())
             ->setElementtypeId($elementtype->getId())
             ->setElementtypeRevision($elementtype->getRevision())
             ->setType($elementtype->getType())

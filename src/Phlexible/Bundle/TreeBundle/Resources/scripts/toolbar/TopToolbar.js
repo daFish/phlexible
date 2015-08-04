@@ -143,29 +143,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             },
             scope: this
         });
-        this.tbarIndex.add('edit_sep', '-');
-        this.tbarIndex.add('edit', {
-            // items[4]
-            //text: this.strings.edit_element,
-            iconCls: 'p-element-edit-icon',
-            disabled: true,
-            handler: function (btn) {
-                var lockStatus = this.element.getLockStatus();
 
-                if (lockStatus == 'idle') {
-                    this.element.lock();
-                }
-                else if (lockStatus == 'edit') {
-                    this.element.unlock();
-                }
-            },
-            scope: this
-        });
-
-        this.tbarIndex.add('publish_sep', '-');
-
-        this.tbarIndex.add('publish', publishBtn);
-        this.tbarIndex.add('setOffline', setOfflineBtn);
         this.tbarIndex.add('delete', {
             // items[10]
             //text: this.strings.delete_element,
@@ -173,57 +151,22 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             handler: function () {
                 Ext.MessageBox.alert('Oh, wait...', 'To be done!');
             },
-            scope: this,
-            disabled: true,
-            hidden: true
+            scope: this
+        });
+
+        this.tbarIndex.add('history_sep', '-');
+        this.tbarIndex.add('history', {
+            // items[13]
+            iconCls: 'p-element-tab_history-icon',
+            handler: function () {
+                var w = new Phlexible.tree.window.ChangesWindow();
+                w.show();
+            },
+            scope: this
         });
 
         this.tbarIndex.add('extended_sep', '-');
         this.tbarIndex.add('extended', extendedMenuBtn);
-
-        if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
-            this.tbarIndex.add('debug_sep', '-');
-            this.tbarIndex.add('debug', {
-                //text: 'Debug',
-                iconCls: 'p-element-debug-icon',
-                menu: [
-                    {
-                        text: 'Dump element',
-                        handler: function () {
-                            Phlexible.console.debug(this.element);
-                            var dump = Phlexible.dumpHtml(this.element, true, ['events', 'scope', 'treeNode', 'teaserNode', 'structure']);
-                            var w = new Ext.Window({
-                                title: 'Element Debug',
-                                width: 800,
-                                height: 500,
-                                layout: 'fit',
-                                maximizable: true,
-                                items: {
-                                    border: false,
-                                    layout: 'fit',
-                                    bodyStyle: 'padding: 5px;',
-                                    autoScroll: true,
-                                    html: '<pre>' + dump + '</pre>'
-                                }
-                            });
-                            w.show();
-                        },
-                        scope: this
-                    },
-                    {
-                        text: 'Link to this element',
-                        handler: function () {
-                            var link = document.location.href;
-                            link += '?&e=elements';
-                            link += '&p[id]=' + this.element.getNodeId();
-                            link += '&p[siteroot_id]=' + this.element.getSiterootId();
-                            Ext.MessageBox.prompt('Link', 'Link to this element', null, null, true, link);
-                        },
-                        scope: this
-                    }
-                ]
-            });
-        }
 
         this.tbarIndex.add('fill_lock', '->');
         this.tbarIndex.add('locks', {
@@ -233,49 +176,9 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
                     return;
                 }
 
-                Phlexible.LoadHandler.handleDialog('Phlexible.elements.LocksWindow');
+                var w = new Phlexible.tree.window.LocksWindow();
+                w.show();
             }
-        });
-        this.tbarIndex.add('lock', {
-            text: ' ',
-            hidden: true,
-            handler: function () {
-                if (this.element.getLockStatus() !== 'locked') {
-                    return;
-                }
-
-                if (Phlexible.User.isGranted('ROLE_ELEMENT_LOCKS')) {
-                    return;
-                }
-
-                Ext.MessageBox.confirm('Warning', String.format(this.strings.unlock_warning, Phlexible.Format.age(this.element.getLockInfo().age)), function (btn) {
-                    if (btn != 'yes') {
-                        return;
-                    }
-
-                    Ext.Ajax.request({
-                        url: Phlexible.Router.generate('elements_locks_forceunlock'),
-                        params: {
-                            eid: this.element.getEid(),
-                            force: 1,
-                            language: this.element.getLanguage()
-                        },
-                        success: function (response) {
-                            var data = Ext.decode(response.responseText);
-
-                            if (data.success) {
-                                this.element.reload({
-                                    lock: 1
-                                });
-                            } else {
-                                Ext.MessageBox.alert('Failure', data.msg);
-                            }
-                        },
-                        scope: this
-                    });
-                }, this);
-            },
-            scope: this
         });
 
         this.tbarIndex.add('pager_separator', '-');
@@ -373,18 +276,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             ]
         });
 
-        this.extendedMenuIndex.add('history_sep', '-');
-        this.extendedMenuIndex.add('history', {
-            // items[13]
-            text: this.strings.history,
-            iconCls: 'p-element-tab_history-icon',
-            handler: function () {
-                var w = new Phlexible.elements.HistoryWindow();
-                w.show();
-            },
-            scope: this
-        });
-
         if (Phlexible.tasks !== undefined && Phlexible.User.isGranted('ROLE_ELEMENT_TASKS')) {
             this.extendedMenuIndex.add('task_sep', '-');
             this.extendedMenuIndex.add('task', {
@@ -418,35 +309,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
                 },
                 scope: this
             });
-        }
-    },
-
-    updateLockInfo: function () {
-        var targetItem1 = this.items.items[this.tbarIndex.indexOfKey('lock')];
-
-        var lockStatus = this.element.getLockStatus();
-
-        switch (lockStatus) {
-            case 'edit':
-                targetItem1.setText('<span style="font-weight: bold; color: green;">' + this.strings.locked_by_me + '</span>');
-                targetItem1.show();
-                break;
-
-            case 'locked':
-                targetItem1.setText('<span style="font-weight: bold; color: red;">' + String.format(this.strings.locked_by_user, this.element.getLockInfo().username) + '</span>');
-                targetItem1.show();
-                break;
-
-            case 'locked_permanently':
-                targetItem1.setText('<span style="font-weight: bold; color: red;">'
-                    + String.format(this.strings.locked_by_user_permanently, this.element.getLockInfo().username)
-                    + '</span>');
-                targetItem1.show();
-                break;
-
-            default:
-                targetItem1.setText('');
-                targetItem1.hide();
         }
     },
 
@@ -521,8 +383,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
         else {
             previewItem.disable();
         }
-
-        this.updateLockInfo();
     },
 
     onBeforeLoadElement: function (params) {
@@ -540,34 +400,11 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
     onGetLock: function () {
         //Phlexible.console.debug('TopToolbar: GET LOCK');
 
-        this.updateLockInfo();
-
-        this.items.items[this.tbarIndex.indexOfKey('edit')].enable();
-        this.items.items[this.tbarIndex.indexOfKey('edit')].toggle(true);
-
-        // edit button
+        // locks button
         if (this.element.isGranted('EDIT')) {
-            this.items.items[this.tbarIndex.indexOfKey('edit')].enable();
             this.items.items[this.tbarIndex.indexOfKey('locks')].enable();
-            this.items.items[this.tbarIndex.indexOfKey('lock')].enable();
         } else {
-            this.items.items[this.tbarIndex.indexOfKey('edit')].disable();
             this.items.items[this.tbarIndex.indexOfKey('locks')].disable();
-            this.items.items[this.tbarIndex.indexOfKey('lock')].disable();
-        }
-
-        // publish/set offline button
-        if (Phlexible.User.isGranted('ROLE_ELEMENT_PUBLISH') && this.element.isGranted('PUBLISH')) {
-            this.items.items[this.tbarIndex.indexOfKey('publish')].enable();
-            if (this.element.getTreeNode().attributes.isPublished) {
-                this.items.items[this.tbarIndex.indexOfKey('setOffline')].enable();
-            }
-            else {
-                this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
-            }
-        } else {
-            this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
-            this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         }
 
         // delete button
@@ -593,12 +430,6 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
     onIsLocked: function () {
         //Phlexible.console.debug('TopToolbar: IS LOCKED');
 
-        this.updateLockInfo();
-
-        this.items.items[this.tbarIndex.indexOfKey('edit')].disable();
-        this.items.items[this.tbarIndex.indexOfKey('edit')].toggle(true);
-        this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
-        this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
         // task button
         var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
@@ -610,21 +441,11 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
     onRemoveLock: function () {
         //Phlexible.console.debug('TopToolbar: REMOVE LOCKED');
 
-        this.updateLockInfo();
-
         if (this.element.isGranted('EDIT')) {
-            this.items.items[this.tbarIndex.indexOfKey('edit')].enable();
-            this.items.items[this.tbarIndex.indexOfKey('edit')].toggle(false);
-            this.items.items[this.tbarIndex.indexOfKey('lock')].enable();
             this.items.items[this.tbarIndex.indexOfKey('locks')].enable();
         } else {
-            this.items.items[this.tbarIndex.indexOfKey('edit')].disable();
-            this.items.items[this.tbarIndex.indexOfKey('edit')].toggle(false);
-            this.items.items[this.tbarIndex.indexOfKey('lock')].disable();
             this.items.items[this.tbarIndex.indexOfKey('locks')].disable();
         }
-        this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
-        this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
         this.items.items[this.tbarIndex.indexOfKey('delete')].disable();
         // task button
         var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];

@@ -66,12 +66,11 @@ class TreeSaver
             throw new InvalidArgumentException('Invalid root node.');
         }
 
-        if (!isset($rootConfig['unique_id']) || !trim($rootConfig['unique_id'])) {
-            throw new InvalidArgumentException('No unique ID.');
+        if (!isset($rootConfig['name']) || !trim($rootConfig['name'])) {
+            throw new InvalidArgumentException('No name.');
         }
 
-        $uniqueId = trim($rootConfig['unique_id']);
-        $title = trim($rootConfig['title']);
+        $name = trim($rootConfig['name']);
         $icon = trim($rootConfig['icon']);
         $hideChildren = !empty($rootConfig['hide_children']);
         $defaultTab = strlen($rootConfig['default_tab']) ? $rootConfig['default_tab'] : null;
@@ -83,9 +82,7 @@ class TreeSaver
         $elementtype = $this->elementtypeService->findElementtype($elementtypeId);
         $elementtype
             ->setRevision($elementtype->getRevision() + 1)
-            ->setUniqueId($uniqueId)
-            ->setTitle('de', $title)
-            ->setTitle('en', $title)
+            ->setName($name)
             ->setIcon($icon)
             ->setHideChildren($hideChildren)
             ->setDefaultTab($defaultTab)
@@ -193,7 +190,6 @@ class TreeSaver
                 $referenceElementtype = $this->elementtypeService->createElementtype(
                     'reference',
                     'reference_' . $firstChild['properties']['field']['working_title'] . '_' . uniqid(),
-                    'Reference ' . $firstChild['properties']['field']['working_title'],
                     '_fallback.gif',
                     $referenceElementtypeStructure,
                     array(),
@@ -203,7 +199,7 @@ class TreeSaver
 
                 $node
                     ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getUniqueId())
+                    ->setName('reference_' . $referenceElementtype->getName())
                     ->setReferenceElementtypeId($referenceElementtype->getId())
                     //->setReferenceVersion($referenceElementtypeVersion->getVersion())
                 ;
@@ -214,7 +210,7 @@ class TreeSaver
 
                 $node
                     ->setType('reference')
-                    ->setName('reference_' . $referenceElementtype->getUniqueId())
+                    ->setName('reference_' . $referenceElementtype->getName())
                     ->setReferenceElementtypeId($referenceElementtype->getId())
                 //    ->setReferenceVersion($row['reference']['refVersion'])
                 ;

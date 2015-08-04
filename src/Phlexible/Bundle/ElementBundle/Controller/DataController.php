@@ -154,7 +154,7 @@ class DataController extends Controller
 
             $allowedChildren[] = array(
                 $childElementtype->getId(),
-                $childElementtype->getTitle(),
+                $childElementtype->getName(),
                 $iconResolver->resolveElementtype($childElementtype),
             );
         }
@@ -407,7 +407,7 @@ class DataController extends Controller
             'structure'           => $serializedStructure,
             'elementtypeId'       => $elementtype->getId(),
             'elementtypeRevision' => $elementVersion->getElementTypeVersion() . ' [' . $elementtype->getRevision() . ']',
-            'elementtypeName'     => $elementtype->getUniqueId(),
+            'elementtypeName'     => $elementtype->getName(),
             'elementtypeType'     => $elementtype->getType(),
             'meta'                => $meta,
             'diff'                => $diffInfo,

@@ -38,7 +38,7 @@ class XmlParser implements ParserInterface
     public function parse(Document $dom)
     {
         $id = $dom->documentElement->getAttribute('id');
-        $uniqueId = $dom->documentElement->getAttribute('uniqueId');
+        $name = $dom->documentElement->getAttribute('name');
         $revision = (int) $dom->documentElement->getAttribute('revision');
         $type = $dom->documentElement->getAttribute('type');
         $icon = $dom->documentElement->getAttribute('icon');
@@ -106,24 +106,13 @@ class XmlParser implements ParserInterface
             }
         }
 
-        $titles = array();
-        $titleNodes = $dom->documentElement->evaluate('titles/title');
-        if ($titleNodes->length) {
-            foreach ($titleNodes as $titleNode) {
-                /* @var $titleNode Element */
-                $language = $titleNode->getAttribute('language');
-                $titles[$language] = $titleNode->textContent;
-            }
-        }
-
         $elementtypeStructure = $this->loadStructure($dom);
 
         $elementtype = new Elementtype();
         $elementtype
             ->setId($id)
-            ->setUniqueId($uniqueId)
+            ->setName($name)
             ->setType($type)
-            ->setTitles($titles)
             ->setIcon($icon)
             ->setMetaSetId($metasetId)
             ->setTemplate($template)

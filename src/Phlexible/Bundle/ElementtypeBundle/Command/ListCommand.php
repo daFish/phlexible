@@ -38,11 +38,11 @@ class ListCommand extends ContainerAwareCommand
         $container = $this->getContainer();
 
         $table = new Table($output);
-        $table->setHeaders(array('ID', 'Unique ID', 'Title'));
+        $table->setHeaders(array('ID', 'Name'));
 
         $elementtypeService = $container->get('phlexible_elementtype.elementtype_service');
         foreach ($elementtypeService->findAllElementtypes() as $elementtype) {
-            $table->addRow(array($elementtype->getId(), $elementtype->getUniqueId(), $elementtype->getTitle()));
+            $table->addRow(array($elementtype->getId(), $elementtype->getName()));
         }
 
         $table->render();

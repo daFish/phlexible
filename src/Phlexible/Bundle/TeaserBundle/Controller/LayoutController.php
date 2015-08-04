@@ -183,7 +183,7 @@ class LayoutController extends Controller
             'tid'             => 0,
             'title'           => $node->getId(), //$teaserData->text,
             'element_type_id' => (int) $layoutarea->getId(),
-            'element_type'    => $layoutarea->getTitle(),
+            'element_type'    => $layoutarea->getName(),
             'icon'            => $iconResolver->resolveElementtype($layoutarea),
             'author'          => 'author',
             'version'         => $layoutarea->getRevision(),
@@ -198,7 +198,7 @@ class LayoutController extends Controller
             'version_online'  => (int) $layoutarea->getRevision(),
             'status'          => ' o_O ',
             'qtip'            =>
-                $layoutarea->getTitle() . ', Version ' . $layoutarea->getRevision() . '<br>' .
+                $layoutarea->getName() . ', Version ' . $layoutarea->getRevision() . '<br>' .
                 37 . ' Versions<br>'
         );
 
@@ -271,7 +271,7 @@ class LayoutController extends Controller
                     'eid'             => $teaser->getTypeId(),
                     'title'           => $teaserElementVersion->getBackendTitle($language),
                     'element_type_id' => (int) $teaserElement->getElementtypeId(),
-                    'element_type'    => $teaserElementtype->getTitle(),
+                    'element_type'    => $teaserElementtype->getName(),
                     'navigation'      => 0,
                     'restricted'      => 0,
                     'icon'            => $iconResolver->resolveTeaser($teaser, $language),
@@ -348,10 +348,10 @@ class LayoutController extends Controller
 
         $data = array();
         foreach ($childElementtypes as $childElementtype) {
-            $data[$childElementtype->getTitle() . $childElementtype->getId()] = array(
-                'id'    => $childElementtype->getId(),
-                'title' => $childElementtype->getTitle(),
-                'icon'  => $iconResolver->resolveElementtype($childElementtype),
+            $data[$childElementtype->getName() . $childElementtype->getId()] = array(
+                'id'   => $childElementtype->getId(),
+                'name' => $childElementtype->getName(),
+                'icon' => $iconResolver->resolveElementtype($childElementtype),
             );
         }
         ksort($data);

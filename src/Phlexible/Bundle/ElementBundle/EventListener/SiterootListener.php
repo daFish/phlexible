@@ -126,7 +126,6 @@ class SiterootListener
         $elementtype = $this->elementtypeService->createElementtype(
             'structure',
             'site_root_' . $siteroot->getId(),
-            'Site root ' . $siteroot->getTitle(),
             'www_root.gif',
             $elementtypeStructure,
             $mappings,

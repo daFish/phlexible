@@ -17,18 +17,14 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
             {
                 // 0
                 xtype: 'textfield',
-                fieldLabel: this.strings.title,
-                name: 'title',
+                fieldLabel: this.strings.name,
+                name: 'name',
                 width: 200,
                 allowBlank: false
             },
             {
                 // 1
-                fieldLabel: this.strings.uniqueid,
-                name: 'unique_id',
-                width: 200,
-                allowBlank: false,
-                regex: /^[a-z0-9-_]+$/
+                hidden: true
             },
             {
                 // 2
@@ -38,7 +34,7 @@ Phlexible.elementtypes.RootPropertyPanel = Ext.extend(Ext.form.FormPanel, {
                 width: 200,
                 onTriggerClick: function () {
                     var www = new Phlexible.gui.util.ImageSelectWindow({
-                        storeUrl: Phlexible.Router.generate('elementtypes_data_images'),
+                        storeUrl: Phlexible.Router.generate('tree_icons'),
                         value: this.getComponent(2).getValue(),
                         listeners: {
                             imageSelect: function (image) {

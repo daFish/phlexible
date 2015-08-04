@@ -3,10 +3,10 @@ Ext.provide('Phlexible.gui.util.ImageSelectWindow');
 
 Phlexible.gui.util.ImageSelectWindowTemplate = new Ext.XTemplate(
     '<tpl for=".">',
-    '<div class="thumb-wrap" id="image_select_{title}">',
+    '<div class="thumb-wrap" id="image_select_{name}">',
     '<div class="thumb">',
     '<img src="{url}" width="18" height="18">',
-    '<span>{title}</span>',
+    '<span>{name}</span>',
     '</div>',
     '</div>',
     '</tpl>',
@@ -26,7 +26,7 @@ Phlexible.gui.util.ImageSelectWindow = Ext.extend(Ext.Window, {
     bodyStyle: 'padding: 3px',
 
     storeUrl: '',
-    storeRoot: 'images',
+    storeRoot: 'icons',
 
     value: '',
 
@@ -45,8 +45,8 @@ Phlexible.gui.util.ImageSelectWindow = Ext.extend(Ext.Window, {
                 store: new Ext.data.JsonStore({
                     url: this.storeUrl,
                     root: this.storeRoot,
-                    id: 'title',
-                    fields: ['title', 'url'],
+                    id: 'name',
+                    fields: ['name', 'url'],
                     autoLoad: true,
                     listeners: {
                         load: {
@@ -55,7 +55,7 @@ Phlexible.gui.util.ImageSelectWindow = Ext.extend(Ext.Window, {
                                     var r = store.getById(this.value);
 
                                     if (r) {
-                                        this.getComponent(0).select('image_select_' + r.get('title'));
+                                        this.getComponent(0).select('image_select_' + r.get('name'));
                                     }
                                 }
                             },
@@ -68,7 +68,7 @@ Phlexible.gui.util.ImageSelectWindow = Ext.extend(Ext.Window, {
                         fn: function (view, index) {
                             var r = view.store.getAt(index);
 
-                            this.fireEvent('imageSelect', r.get('title'));
+                            this.fireEvent('imageSelect', r.get('name'));
 
                             this.close();
                         },
@@ -77,7 +77,7 @@ Phlexible.gui.util.ImageSelectWindow = Ext.extend(Ext.Window, {
                     mouseenter: {
                         fn: function (view, index, node) {
                             var r = view.store.getAt(index);
-                            Ext.get(this.getTopToolbar().items.items[2].id).update(r.data.title);
+                            Ext.get(this.getTopToolbar().items.items[2].id).update(r.data.name);
                         },
                         scope: this
                     },
@@ -104,7 +104,7 @@ Phlexible.gui.util.ImageSelectWindow = Ext.extend(Ext.Window, {
 
                             this.getComponent(0).store.filterBy(function (record, id) {
                                 var regex = new RegExp('.*' + val + '.*');
-                                if (record.data.title.match(regex) !== null) {
+                                if (record.data.name.match(regex) !== null) {
                                     return(true);
                                 }
                                 else {
@@ -135,7 +135,7 @@ Phlexible.gui.util.ImageSelectWindow = Ext.extend(Ext.Window, {
                     if (sel.length) {
                         var r = sel[0];
 
-                        this.fireEvent('imageSelect', r.get('title'));
+                        this.fireEvent('imageSelect', r.get('name'));
                     }
 
                     this.close();

@@ -77,7 +77,7 @@ class ProxyGenerator
 
             $nodes = $this->distiller->distill($elementtype);
 
-            $classname = $this->normalizeName($elementtype->getTitle());
+            $classname = $this->normalizeName($elementtype->getName());
             $namespace = $this->namespacePrefix . $classname;
 
             $definitions[] = $this->makeMainClass(
@@ -104,7 +104,7 @@ class ProxyGenerator
     private function makeMainClass($namespace, $classname, DistilledNodeCollection $nodes, Elementtype $elementtype, array $children)
     {
         $values = $this->extractValues($nodes);
-        $class = new MainClassDefinition($classname, $namespace, $values, $children['classes'], $children['collections'], $elementtype->getId(), $elementtype->getRevision(), $elementtype->getUniqueId());
+        $class = new MainClassDefinition($classname, $namespace, $values, $children['classes'], $children['collections'], $elementtype->getId(), $elementtype->getRevision(), $elementtype->getName());
 
         return $class;
     }
@@ -204,23 +204,29 @@ class ProxyGenerator
 
             $nodeName = $this->normalizeName($node->getName());
 
+            $collectionNamespace = !$node->isReferenced() ? $namespace : $this->referenceNamespacePrefix;
+
             if ($node->isRepeatable()) {
+                $collectionClassname = !$node->isReferenced() ? $normalizedCollectionName . $nodeName . 'Structure' : $nodeName . 'Structure';
+
                 $collectionClasses[$collectionName][] = $this->makeCollectionStructureClass(
-                    !$node->isReferenced() ? $namespace : $this->referenceNamespacePrefix,
-                    !$node->isReferenced() ? $normalizedCollectionName . $nodeName . 'Structure' : $nodeName . 'Structure',
+                    $collectionNamespace,
+                    $collectionClassname,
                     $node->getChildNodes(),
                     $node->getName(),
                     $node->getDsId(),
-                    $this->generateSubClasses($namespace, $node->getChildNodes())
+                    $this->generateSubClasses($collectionNamespace, $node->getChildNodes())
                 );
             } else {
+                $collectionClassname = !$node->isReferenced() ? $nodeName : $nodeName;
+
                 $data['classes'][] = $this->makeStructureClass(
-                    !$node->isReferenced() ? $namespace : $this->referenceNamespacePrefix,
-                    !$node->isReferenced() ? $nodeName : $nodeName,
+                    $collectionNamespace,
+                    $collectionClassname,
                     $node->getChildNodes(),
                     $node->getName(),
                     $node->getDsId(),
-                    $this->generateSubClasses($namespace, $node->getChildNodes())
+                    $this->generateSubClasses($collectionNamespace, $node->getChildNodes())
                 );
             }
         }

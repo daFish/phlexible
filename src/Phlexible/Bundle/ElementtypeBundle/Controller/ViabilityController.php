@@ -71,7 +71,7 @@ class ViabilityController extends Controller
             $list[] = array(
                 'id'      => $elementtype->getId(),
                 'type'    => $elementtype->getType(),
-                'title'   => $elementtype->getTitle(),
+                'name'    => $elementtype->getName(),
                 'icon'    => $elementtype->getIcon(),
                 'version' => $elementtype->getRevision()
             );
@@ -99,9 +99,9 @@ class ViabilityController extends Controller
         foreach ($viabilityManager->findAllowedParents($elementtype) as $viability) {
             $viabilityElementtype = $elementtypeService->findElementtype($viability->getUnderElementtypeId());
             $viabilities[] = array(
-                'id'    => $viabilityElementtype->getId(),
-                'title' => $viabilityElementtype->getTitle(),
-                'icon'  => $viabilityElementtype->getIcon()
+                'id'   => $viabilityElementtype->getId(),
+                'name' => $viabilityElementtype->getName(),
+                'icon' => $viabilityElementtype->getIcon()
             );
         }
 

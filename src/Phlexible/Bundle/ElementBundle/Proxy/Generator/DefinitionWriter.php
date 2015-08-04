@@ -75,7 +75,7 @@ class DefinitionWriter
 
         $manager->addElementtypeId($class->getElementtypeId(), $class->getNamespace() . '\\' . $class->getClassname(), $relativeFilename);
 
-        $this->writeCollections($class, $manager, $twig, $namespacePrefix);
+        $this->writeSubClasses($class, $manager, $twig, $namespacePrefix);
     }
 
     /**
@@ -84,18 +84,17 @@ class DefinitionWriter
      * @param \Twig_Environment $twig
      * @param string            $namespacePrefix
      */
-    private function writeCollections(ClassDefinition $class, ManagerDefinition $manager, \Twig_Environment $twig, $namespacePrefix)
+    private function writeSubClasses(ClassDefinition $class, ManagerDefinition $manager, \Twig_Environment $twig, $namespacePrefix)
     {
         foreach ($class->getCollections() as $collection) {
-            #$content = $twig->render('Collection.php.twig', array('collection' => $collection));
-            #$this->dumpFile(str_replace('\\', '/', str_replace($namespacePrefix, '', $collection->getNamespace())) . '/' . $collection->getClassname() . '.php', $content);
-
-            foreach ($collection->getClasses() as $class) {
-                $content = $twig->render('Structure.php.twig', array('class' => $class));
-                $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $class->getNamespace())) . '/' . $class->getClassname() . '.php';
+            foreach ($collection->getClasses() as $structure) {
+                $content = $twig->render('Structure.php.twig', array('class' => $structure));
+                $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $structure->getNamespace())) . '/' . $structure->getClassname() . '.php';
                 $this->dumpFile($relativeFilename, $content);
 
-                $manager->addDsId($class->getDsId(), $class->getNamespace() . '\\' . $class->getClassname(), $relativeFilename);
+                $manager->addDsId($structure->getDsId(), $structure->getNamespace() . '\\' . $structure->getClassname(), $relativeFilename);
+
+                $this->writeSubClasses($structure, $manager, $twig, $namespacePrefix);
             }
         }
 
@@ -105,6 +104,8 @@ class DefinitionWriter
             $this->dumpFile($relativeFilename, $content);
 
             $manager->addDsId($structure->getDsId(), $structure->getNamespace() . '\\' . $structure->getClassname(), $relativeFilename);
+
+            $this->writeSubClasses($structure, $manager, $twig, $namespacePrefix);
         }
     }
 

@@ -13,7 +13,7 @@ services:
         - @puli.discovery
         - @puli.repository
         - "xml"
-        - "app/Resources/elementtypes"
+        - "%kernel.root_dir%/Resources/elementtypes"
         - "/tipfinder/elementtypes"
 
     phlexible_elementtype.file.xml_dumper:

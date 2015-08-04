@@ -16,7 +16,7 @@ Phlexible.tree.window.ChangesWindow = Ext.extend(Ext.Window, {
     initComponent: function () {
         this.items = [
             {
-                xtype: 'tree-changes',
+                xtype: 'tree-changes-filter',
                 region: 'west',
                 width: 150,
                 header: false,
@@ -39,7 +39,7 @@ Phlexible.tree.window.ChangesWindow = Ext.extend(Ext.Window, {
                 }
             },
             {
-                xtype: 'tree-changes-filter',
+                xtype: 'tree-changes',
                 region: 'center',
                 header: false,
                 listeners: {
@@ -52,6 +52,6 @@ Phlexible.tree.window.ChangesWindow = Ext.extend(Ext.Window, {
             }
         ];
 
-        Phlexible.tree.view.ChangesWindow.superclass.initComponent.call(this);
+        Phlexible.tree.window.ChangesWindow.superclass.initComponent.call(this);
     }
 });

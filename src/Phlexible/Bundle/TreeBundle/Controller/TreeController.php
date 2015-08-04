@@ -100,11 +100,11 @@ class TreeController extends Controller
                 continue;
             }
 
-            $data[$childElementtype->getTitle().'_'.$childElementtype->getId()] = array(
-                'id'    => $childElementtype->getId(),
-                'title' => $childElementtype->getTitle(),
-                'icon'  => $iconResolver->resolveElementtype($childElementtype),
-                'type'  => $childElementtype->getType(),
+            $data[$childElementtype->getName().'_'.$childElementtype->getId()] = array(
+                'id'   => $childElementtype->getId(),
+                'name' => $childElementtype->getName(),
+                'icon' => $iconResolver->resolveElementtype($childElementtype),
+                'type' => $childElementtype->getType(),
             );
         }
         ksort($data);

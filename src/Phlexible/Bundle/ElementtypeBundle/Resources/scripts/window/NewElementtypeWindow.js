@@ -32,8 +32,8 @@ Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dial
         return [
             {
                 anchor: '-70',
-                fieldLabel: Phlexible.elementtypes.Strings.title,
-                name: 'title',
+                fieldLabel: Phlexible.elementtypes.Strings.name,
+                name: 'name',
                 msgTarget: 'under'
             },
             {

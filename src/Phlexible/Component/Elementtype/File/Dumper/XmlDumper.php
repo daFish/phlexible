@@ -35,7 +35,7 @@ class XmlDumper implements DumperInterface
             '',
             array(
                 'id'           => $elementtype->getId(),
-                'uniqueId'     => $elementtype->getUniqueId(),
+                'name'         => $elementtype->getName(),
                 'revision'     => $elementtype->getRevision(),
                 'type'         => $elementtype->getType(),
                 'icon'         => $elementtype->getIcon(),
@@ -45,11 +45,6 @@ class XmlDumper implements DumperInterface
                 'deleted'      => $elementtype->getDeleted() ? '1' : '0',
             )
         );
-
-        $titlesElement = $rootElement->appendElement('titles');
-        foreach ($elementtype->getTitles() as $language => $title) {
-            $titlesElement->appendElement('title', $title, array('language' => $language));
-        }
 
         $rootElement->appendElement('template', $elementtype->getTemplate());
         $rootElement->appendElement('metasetId', $elementtype->getMetaSetId());

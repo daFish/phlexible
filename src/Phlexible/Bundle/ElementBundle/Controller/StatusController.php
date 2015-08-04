@@ -161,7 +161,7 @@ class StatusController extends Controller
                 break;
             }
             $elementtype = $elementtypeService->findElementtype($etId);
-            $out .= '  ' . str_pad($elementtype->getTitle() . ' [' . $etId . ']', 40, ' ')
+            $out .= '  ' . str_pad($elementtype->getName() . ' [' . $etId . ']', 40, ' ')
                 . ' => ' . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' versions' . PHP_EOL;
             $i++;
         }
@@ -173,7 +173,7 @@ class StatusController extends Controller
                 break;
             }
             $elementtype = $elementtypeService->findElementtype($etId);
-            $out .= '  ' . str_pad($elementtype->getTitle() . ' [' . $etId . ']', 40, ' ') . ' => '
+            $out .= '  ' . str_pad($elementtype->getName() . ' [' . $etId . ']', 40, ' ') . ' => '
                 . str_pad($count, 4, ' ', STR_PAD_LEFT) . ' elements' . PHP_EOL;
             $i++;
         }

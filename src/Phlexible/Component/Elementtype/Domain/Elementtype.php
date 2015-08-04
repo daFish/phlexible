@@ -35,7 +35,7 @@ class Elementtype
      * @var string
      * @Assert\NotNull
      */
-    private $uniqueId;
+    private $name;
 
     /**
      * @var int
@@ -49,12 +49,6 @@ class Elementtype
      * @Assert\Choice(choices={"full", "part", "reference", "layout", "structure"})
      */
     private $type;
-
-    /**
-     * @var array
-     * @Assert\Count(min=1)
-     */
-    private $titles;
 
     /**
      * @var string
@@ -158,19 +152,19 @@ class Elementtype
     /**
      * @return string
      */
-    public function getUniqueId()
+    public function getName()
     {
-        return $this->uniqueId;
+        return $this->name;
     }
 
     /**
-     * @param string $uniqueId
+     * @param string $name
      *
      * @return $this
      */
-    public function setUniqueId($uniqueId)
+    public function setName($name)
     {
-        $this->uniqueId = $uniqueId;
+        $this->name = $name;
 
         return $this;
     }
@@ -211,53 +205,6 @@ class Elementtype
     public function setType($type)
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTitles()
-    {
-        return $this->titles;
-    }
-
-    /**
-     * @param array $titles
-     *
-     * @return $this
-     */
-    public function setTitles(array $titles)
-    {
-        $this->titles = $titles;
-
-        return $this;
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return string
-     */
-    public function getTitle($language = null)
-    {
-        if (!isset($this->titles[$language])) {
-            return current($this->titles);
-        }
-
-        return $this->titles[$language];
-    }
-
-    /**
-     * @param string $language
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function setTitle($language, $title)
-    {
-        $this->titles[$language] = $title;
 
         return $this;
     }

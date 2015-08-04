@@ -61,7 +61,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
             fields: Phlexible.elementtypes.model.Elementtype,
             autoLoad: true,
             sortInfo: {
-                field: 'title',
+                field: 'name',
                 direction: 'ASC'
             },
             listeners: {
@@ -97,7 +97,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
             {
                 header: this.strings.name,
                 width: 120,
-                dataIndex: 'title',
+                dataIndex: 'name',
 //            fixed: true,
                 resizable: false,
                 renderer: Phlexible.elementtypes.Format.title
@@ -132,6 +132,23 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         };
 
         this.tbar = [
+            {
+                text: this.strings.create,
+                iconCls: 'p-elementtype-elementtype_add-icon',
+                handler: function () {
+                    //Phlexible.console.log('new');
+                    var w = new Phlexible.elementtypes.NewElementtypeWindow({
+                        type: this.mode,
+                        listeners: {
+                            success: this.onElementtypeCreate,
+                            scope: this
+                        }
+                    });
+                    w.show();
+                },
+                scope: this
+            },
+            '->',
             {
                 xtype: 'cycle',
                 showText: true,
@@ -178,23 +195,6 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                         scope: this
                     }
                 ]
-            },
-            '-',
-            {
-                text: this.strings.create,
-                iconCls: 'p-elementtype-elementtype_add-icon',
-                handler: function () {
-                    //Phlexible.console.log('new');
-                    var w = new Phlexible.elementtypes.NewElementtypeWindow({
-                        type: this.mode,
-                        listeners: {
-                            success: this.onElementtypeCreate,
-                            scope: this
-                        }
-                    });
-                    w.show();
-                },
-                scope: this
             }
         ];
 
@@ -251,7 +251,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
                 this.contextMenu.index = index;
                 this.contextMenu.record = r;
 
-                this.contextMenu.items.items[0].setText(this.contextMenu.record.get('title'));
+                this.contextMenu.items.items[2].setText(this.contextMenu.record.get('title'));
 
                 var coords = event.getXY();
                 this.contextMenu.showAt([coords[0], coords[1]]);
@@ -264,7 +264,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
     },
 
     load: function (type, elementtype_id, version) {
-        var cycle = this.getTopToolbar().items.items[0];
+        var cycle = this.getTopToolbar().items.items[2];
         //Phlexible.console.log(cycle);
         var foundBtn = false;
         cycle.menu.items.each(function (btn) {

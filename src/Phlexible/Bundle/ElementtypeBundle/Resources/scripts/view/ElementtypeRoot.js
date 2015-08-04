@@ -94,8 +94,7 @@ Phlexible.elementtypes.ElementtypeRoot = Ext.extend(Ext.TabPanel, {
 
         var properties = {
             root: {
-                title: '',
-                unique_id: '',
+                name: '',
                 icon: '',
                 type: '',
                 default_tab: '',

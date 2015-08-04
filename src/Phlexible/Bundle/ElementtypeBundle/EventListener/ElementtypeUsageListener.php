@@ -55,7 +55,7 @@ class ElementtypeUsageListener
                         $elementtype->getType() . ' elementtype',
                         'reference',
                         $elementtype->getId(),
-                        $elementtype->getTitle(),
+                        $elementtype->getName(),
                         $elementtype->getRevision()
                     )
                 );
@@ -70,7 +70,7 @@ class ElementtypeUsageListener
                         $viabilityElementtype->getType() . ' elementtype',
                         'layout area',
                         $viabilityElementtype->getId(),
-                        $viabilityElementtype->getTitle(),
+                        $viabilityElementtype->getName(),
                         $viabilityElementtype->getRevision()
                     )
                 );

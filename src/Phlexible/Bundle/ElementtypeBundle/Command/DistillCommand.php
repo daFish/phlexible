@@ -85,7 +85,7 @@ class DistillCommand extends ContainerAwareCommand
 
         $rootData = $this->iterateStructure($classMap, $elementtypeStructure, $rootNode);
 
-        $classMap->add($this->toCamelCase($elementtype->getUniqueId()), $rootData);
+        $classMap->add($this->toCamelCase($elementtype->getName()), $rootData);
     }
 
     /**

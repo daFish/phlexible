@@ -37,15 +37,17 @@ class ArraySerializer implements SerializerInterface
     private function walk(array $structure, $language, $parentId = null, $parentDsId = null, $parentName = null)
     {
         $valueDatas = array();
-        foreach ($structure['values'] as $dsId => $value) {
-            $valueDatas[] = array(
-                'id'         => $structure['id'] . '_' . $dsId,
-                'dsId'       => $dsId,
-                'name'       => $structure['id'] . '_' . $dsId,
-                'type'       => gettype($value[$language]),
-                'content'    => $value[$language],
-                'attributes' => array(),
-            );
+        if (isset($structure['values'])) {
+            foreach ($structure['values'] as $dsId => $value) {
+                $valueDatas[] = array(
+                    'id'         => $structure['id'] . '_' . $dsId,
+                    'dsId'       => $dsId,
+                    'name'       => $structure['id'] . '_' . $dsId,
+                    'type'       => gettype($value[$language]),
+                    'content'    => $value[$language],
+                    'attributes' => array(),
+                );
+            }
         }
 
         $id = isset($structure['id']) ? $structure['id'] : null;
@@ -53,8 +55,10 @@ class ArraySerializer implements SerializerInterface
         $name = $parentDsId . '_' . $dsId;
 
         $children = array();
-        foreach ($structure['children'] as $childStructure) {
-            $children[] = $this->walk($childStructure, $language, $id, $dsId, $name);
+        if (isset($structure['collections'])) {
+            foreach ($structure['collections'] as $childStructure) {
+                $children[] = $this->walk($childStructure, $language, $id, $dsId, $name);
+            }
         }
 
         return array(

@@ -82,29 +82,45 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
         this.tbar = [
             {
                 // 0
+                text: this.strings.edit_element,
+                iconCls: 'p-element-edit-icon',
+                handler: this.onSave,
+                scope: this
+            },
+            '-',
+            {
+                // 2
                 text: this.strings.save,
                 iconCls: 'p-element-save-icon',
                 handler: this.onSave,
                 scope: this
             },
             {
-                // 1
+                // 3
                 text: this.strings.publish_element,
                 iconCls: 'p-element-publish-icon',
                 disabled: true,
                 handler: this.onPublish,
                 scope: this
             },
+            {
+                // 4
+                text: this.strings.set_element_offline,
+                iconCls: 'p-element-set_offline-icon',
+                disabled: true,
+                handler: this.onPublish,
+                scope: this
+            },
             '->',
             {
-                // 3
+                // 6
                 xtype: 'tbtext',
                 text: this.strings.diff.show,
                 hidden: true
             },
             ' ',
             {
-                // 5
+                // 8
                 xtype: 'iconcombo',
                 hidden: true,
                 width: 140,
@@ -126,7 +142,7 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
             },
             ' ',
             {
-                // 7
+                // 10
                 xtype: 'combo',
                 hidden: true,
                 width: 80,
@@ -158,7 +174,7 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
                 selectOnFocus: true
             },
             {
-                // 8
+                // 12
                 text: this.strings.diff.compare_to,
                 enableToggle: true,
                 hidden: true,
@@ -168,7 +184,7 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
                 scope: this
             },
             {
-                // 9
+                // 13
                 xtype: 'combo',
                 width: 80,
                 hidden: true,
@@ -202,7 +218,7 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
             },
             ' ',
             {
-                // 11
+                // 14
                 text: this.strings.diff.load,
                 hidden: true,
                 handler: this.loadDiff,
@@ -210,7 +226,7 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
             },
             '-',
             {
-                // 13
+                // 16
                 text: this.strings.diff.compare,
                 iconCls: 'p-element-diff-icon',
                 enableToggle: true,
@@ -238,16 +254,18 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
         ];
 
         this.btnIndex = {
-            save: 0,
-            publish: 1,
-            show: 3,
-            language: 5,
-            version: 7,
-            compare: 8,
-            compareVersion: 9,
-            load: 11,
-            sep: 12,
-            enable: 13
+            edit: 0,
+            save: 2,
+            publish: 3,
+            setOffline: 4,
+            show: 6,
+            language: 8,
+            version: 10,
+            compare: 11,
+            compareVersion: 12,
+            load: 14,
+            sep: 15,
+            enable: 16
         };
 
         this.keys = [
@@ -477,16 +495,30 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
 
         var tb = this.getTopToolbar();
 
-        /*
-         var x = function() {
-         this.getTopToolbar().items.items[this.btnIndex.save].enable();
-         };
-         x.defer(5000, this);
+        // edit button
+        tb.items.items[this.btnIndex.edit].toggle(true);
+        tb.items.items[this.btnIndex.edit].setText(this.strings.edit_element);
+        if (this.element.isGranted('EDIT')) {
+            tb.items.items[this.btnIndex.edit].enable();
+        } else {
+            tb.items.items[this.btnIndex.edit].disable();
+        }
 
-         tb.items.items[this.btnIndex.save].disable();
-         tb.items.items[this.btnIndex.minor].enable();
-         tb.items.items[this.btnIndex.reset].enable();
-         */
+        // publish / set offline button
+        if (Phlexible.User.isGranted('ROLE_ELEMENT_PUBLISH') && this.element.isGranted('PUBLISH')) {
+            tb.items.items[this.btnIndex.publish].enable();
+            if (this.element.getTreeNode().attributes.isPublished) {
+                tb.items.items[this.btnIndex.setOffline].enable();
+            }
+            else {
+                tb.items.items[this.btnIndex.setOffline].disable();
+            }
+        } else {
+            tb.items.items[this.btnIndex.publish].disable();
+            tb.items.items[this.btnIndex.setOffline].disable();
+        }
+
+        // compare button
         tb.items.items[this.btnIndex.enable].enable();
     },
 
@@ -495,12 +527,18 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
 
         var tb = this.getTopToolbar();
 
-        /*
-         tb.items.items[this.btnIndex.save].disable();
-         tb.items.items[this.btnIndex.minor].disable();
-         tb.items.items[this.btnIndex.reset].disable();
-         */
+        // edit button
+        tb.items.items[this.btnIndex.edit].disable();
+        tb.items.items[this.btnIndex.edit].toggle(true);
+        tb.items.items[this.btnIndex.edit].setText(String.format(this.strings.locked_by_user, this.element.getLockInfo().username));
+
+        // publish / set offline button
+        tb.items.items[this.btnIndex.publish].disable();
+        tb.items.items[this.btnIndex.setOffline].disable();
+
+        // compare button
         tb.items.items[this.btnIndex.enable].disable();
+
         this.hideDiff();
     },
 
@@ -509,12 +547,23 @@ Phlexible.element.view.tab.Data = Ext.extend(Ext.Panel, {
 
         var tb = this.getTopToolbar();
 
-        /*
-         tb.items.items[this.btnIndex.save].disable();
-         tb.items.items[this.btnIndex.minor].disable();
-         tb.items.items[this.btnIndex.reset].disable();
-         */
+        // edit button
+        tb.items.items[this.btnIndex.edit].setText(this.strings.edit_element);
+        if (this.element.isGranted('EDIT')) {
+            tb.items.items[this.btnIndex.edit].enable();
+            tb.items.items[this.btnIndex.edit].toggle(false);
+        } else {
+            tb.items.items[this.btnIndex.edit].disable();
+            tb.items.items[this.btnIndex.edit].toggle(false);
+        }
+
+        // publish / set offline button
+        this.items.items[this.tbarIndex.indexOfKey('publish')].disable();
+        this.items.items[this.tbarIndex.indexOfKey('setOffline')].disable();
+
+        // compare button
         tb.items.items[this.btnIndex.enable].disable();
+
         this.hideDiff();
     }
 });
