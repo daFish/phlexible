@@ -9,25 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\AccessControl\Provider;
+namespace Phlexible\Component\AccessControl\SecurityProvider;
 
 /**
- * Provider interface
+ * Security provider interface
  *
  * @author Marco Fischer <mf@brainbits.net>
  */
-interface ProviderInterface
+interface SecurityProviderInterface
 {
-    /**
-     * Return object name
-     *
-     * @param string $objectType
-     * @param string $objectId
-     *
-     * @return string
-     */
-    public function getName($objectType, $objectId);
-
     /**
      * Return users
      *

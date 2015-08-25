@@ -264,7 +264,7 @@ class User extends BaseUser
      */
     public function addGroup(GroupInterface $group)
     {
-        if ($this->hasGroup($group)) {
+        if (!$this->hasGroup($group)) {
             $this->groups->set($group->getName(), $group);
             $group->addUser($this);
         }

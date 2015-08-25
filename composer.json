@@ -46,7 +46,8 @@
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
         "jms/serializer-bundle": "~0.13",
-        "webmozart/expression": "~1.0"
+        "webmozart/expression": "~1.0",
+        "alchemy/zippy": "~0.2.1"
     },
      "replace": {
         "phlexible/dashboard-bundle": "self.version",

@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatypes/asset")
- * @Security("is_granted('ROLE_MEDIA_TYPES')")
+ * @Security("is_granted('ROLE_BACKEND')")
  */
 class AssetController extends Controller
 {

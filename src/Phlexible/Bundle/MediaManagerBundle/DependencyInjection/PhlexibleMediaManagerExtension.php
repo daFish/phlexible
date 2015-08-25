@@ -39,6 +39,24 @@ class PhlexibleMediaManagerExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         $container->setParameter('phlexible_media_manager.volume_configs', $config['volumes']);
+        /*
+        $ids = [];
+        foreach ($config['volumes'] as $name => $volumeConfig) {
+            $driverId = $volumeConfig['driver'];
+
+            $volumeDefinition = new Definition('Phlexible\Component\MediaManager\Volume\ExtendedVolume', [
+                $volumeConfig['id'],
+                rtrim($volumeConfig['root_dir'], '/') . '/',
+                $volumeConfig['quota'],
+                new Reference($driverId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
+                new Reference('event_dispatcher'),
+            ]);
+            $id = 'phlexible_media_manager.volume.' . strtolower($name);
+            $container->setDefinition($id, $volumeDefinition);
+
+            $ids[$name] = new Reference($id);
+        }
+        */
 
         $container->setAlias('phlexible_media_manager.volume_manager', 'phlexible_media_manager.doctrine.volume_manager');
 

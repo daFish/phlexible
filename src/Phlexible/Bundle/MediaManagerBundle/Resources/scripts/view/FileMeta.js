@@ -217,8 +217,7 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
                 } else {
                     items.push({
                         border: false,
-                        ctCls: 'x-grid-empty',
-                        html: this.noValuesText
+                        html: '<div class="x-grid-empty">' + this.strings.no_meta_values + '</div>'
                     });
                 }
 

@@ -66,8 +66,7 @@ class FoldersController extends FOSRestController
         $slots = new Slots();
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $dispatcher = $this->get('event_dispatcher');
-        $authorizationChecker = $this->get('security.authorization_checker');
-        $permissions = $this->get('phlexible_access_control.permissions');
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         $folderSerializer = $this->get('phlexible_media_manager.folder_serializer');
 
         if (!$folderId || $folderId === 'root') {
@@ -75,22 +74,17 @@ class FoldersController extends FOSRestController
                 $rootFolder = $volume->findRootFolder();
 
                 if (
-                    !$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
-                    !$authorizationChecker->isGranted('FOLDER_READ', $rootFolder)
+                    !$this->isGranted('ROLE_SUPER_ADMIN') &&
+                    !$this->isGranted('FOLDER_READ', $rootFolder)
                 ) {
                     continue;
                 }
 
-                // TODO: rights
-                /*
-                $userRights = $rootFolder->getRights(MWF_Env::getUser());
-                if (null === $userRights)
-                {
-                    continue;
+                // TODO: fix
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($rootFolder))->all() as $permission) {
+                    $userRights[] = $permission->getName();
                 }
-                $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
-                */
-                $userRights = array_keys($permissions->getByContentClass(get_class($rootFolder)));
 
                 $data = $folderSerializer->serialize($rootFolder);
                 $data['rights'] = $userRights;
@@ -117,27 +111,23 @@ class FoldersController extends FOSRestController
                 $volume = $volumeManager->getByFolderId($folderId);
                 $folder = $volume->findFolder($folderId);
 
-                if (!$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$authorizationChecker->isGranted('FOLDER_READ', $rootFolder)) {
+                if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $folder)) {
                     return new JsonResponse(array());
                 }
 
                 foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
                     if (
-                        !$authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&
-                        !$authorizationChecker->isGranted('FOLDER_READ', $rootFolder)
+                        !$this->isGranted('ROLE_SUPER_ADMIN') &&
+                        !$this->isGranted('FOLDER_READ', $subFolder)
                     ) {
                         continue;
                     }
 
-                    /*
-                    $userRights = $subFolder->getRights(MWF_Env::getUser());
-                    if (null === $userRights)
-                    {
-                        continue;
-                    }
+                    // TODO: fix
                     $userRights = array();
-                    */
-                    $userRights = array_keys($permissions->getByContentClass(get_class($subFolder)));;
+                    foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
+                        $userRights[] = $permission->getName();
+                    }
 
                     $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
                     $usage = $folderUsageService->getStatus($folder);
@@ -472,8 +462,7 @@ class FoldersController extends FOSRestController
         $volume = $folder->getVolume();
         $subFolders = $volume->findFoldersByParentFolder($folder);
 
-        $securityContext = $this->get('security.context');
-        $permissions = $this->get('phlexible_access_control.permissions');
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $user = $this->getUser();
 
@@ -481,19 +470,15 @@ class FoldersController extends FOSRestController
         foreach ($subFolders as $subFolder) {
             /* @var $subFolder ExtendedFolderInterface */
 
-            if (!$securityContext->isGranted('FOLDER_READ', $folder)) {
+            if (!$this->isGranted('FOLDER_READ', $folder)) {
                 continue;
             }
 
-            // TODO: rights
-            /*
-            $userRights = $subFolder->getRights(MWF_Env::getUser());
-            if (null === $userRights) {
-                continue;
+            // TODO: fox
+            $userRights = array();
+            foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
+                $userRights[] = $permission->getName();
             }
-            $userRights = array('FOLDER_READ', 'FOLDER_CREATE', 'FOLDER_MODIFY', 'FOLDER_DELETE', 'FOLDER_RIGHTS', 'FILE_READ', 'FILE_CREATE', 'FILE_MODIFY', 'FILE_DELETE', 'FILE_DOWNLOAD');
-            */
-            $userRights = array_keys($permissions->get(get_class($subFolder), get_class($user)));
 
             $tmp = array(
                 'id'        => $subFolder->getId(),

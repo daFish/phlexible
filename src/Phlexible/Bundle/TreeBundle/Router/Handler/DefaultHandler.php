@@ -12,6 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
+use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator;
 use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeManagerInterface;
@@ -49,6 +50,11 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $siterootRequestMatcher;
 
     /**
+     * @var SiterootHostnameGenerator
+     */
+    private $siterootHostnameGenerator;
+
+    /**
      * @var array
      */
     private $languages;
@@ -67,6 +73,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      * @param LoggerInterface             $logger
      * @param ContentTreeManagerInterface $treeManager
      * @param SiterootRequestMatcher      $siterootRequestMatcher
+     * @param SiterootHostnameGenerator   $siterootHostnameGenerator
      * @param string                      $languages
      * @param string                      $defaultLanguage
      */
@@ -74,12 +81,14 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         LoggerInterface $logger,
         ContentTreeManagerInterface $treeManager,
         SiterootRequestMatcher $siterootRequestMatcher,
+        SiterootHostnameGenerator $siterootHostnameGenerator,
         $languages,
         $defaultLanguage)
     {
         $this->logger = $logger;
         $this->contentTreeManager = $treeManager;
         $this->siterootRequestMatcher = $siterootRequestMatcher;
+        $this->siterootHostnameGenerator = $siterootHostnameGenerator;
         $this->languages = explode(',', $languages);
         $this->defaultLanguage = $defaultLanguage;
     }
@@ -109,7 +118,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     {
         /* @var $treeNode TreeNodeInterface */
         $treeNode = $name;
-        $language = 'de';//$parameters['language'];
+        $language = isset($parameters['language']) ? $parameters['language'] : 'de';
         $encode = false;
         /*
         TreeNode $treeNode,
@@ -120,13 +129,15 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
         $url = '';
 
-        if (0 && $referenceType === self::ABSOLUTE_URL) {
+        if ($referenceType === self::ABSOLUTE_URL) {
             $scheme = $this->requestContext->getScheme();
             if (!$scheme || $scheme === 'http') {
                 $scheme = $treeNode->getAttribute('https', 'http');
             }
 
-            $hostname = $this->generateHostname($treeNode, $language);
+            $siteroot = $this->contentTreeManager->findByTreeId($treeNode->getId())->getSiteroot();
+
+            $hostname = $this->siterootHostnameGenerator->generate($siteroot, $language);
 
             $port = '';
             if ($scheme === 'http' && $this->requestContext->getHttpPort() !== 80) {
@@ -258,14 +269,15 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     {
         $match = array();
         $path = $request->getPathInfo();
+        $language = null;
+        $tid = null;
 
         /* @var $siterootUrl Url */
         $siterootUrl = $request->attributes->get('siterootUrl');
 
         $attributes = array();
 
-        if (!strlen($path)) {
-            // no path, use siteroot defaults
+        if (!strlen($path) || $path === '/') {
             $language = $siterootUrl->getLanguage();
             $tid = $siterootUrl->getTarget();
 
@@ -273,30 +285,15 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         } elseif (preg_match('#^/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
             // match found
             $language = $match[1];
-            //$path     = $match[2];
             $tid = $match[3];
         } elseif (preg_match('#^/preview/(\w\w)/(.+)\.(\d+)\.html#', $path, $match)) {
             // match found
             $language = $match[1];
-            //$path     = $match[2];
-            $tid = $match[3];
-        } else {
-            $language = null;
-            $tid = null;
-            $language = $siterootUrl->getLanguage();
-            $tid = $siterootUrl->getTarget();
+            $tid      = $match[3];
         }
 
         if ($language === null) {
-            if (function_exists('http_negotiate_language')) {
-                array_unshift($this->languages, $this->defaultLanguage);
-
-                $language = http_negotiate_language($this->languages);
-                $this->logger->debug('Using negotiated language: ' . $language);
-            } else {
-                $language = $this->defaultLanguage;
-                $this->logger->debug('Using default language: ' . $language);
-            }
+            $language = $this->findLanguage();
         }
 
         if ($language) {
@@ -304,28 +301,48 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
             $request->attributes->set('_locale', $language);
         }
 
-        if ($tid) {
-            $request->attributes->set('tid', $tid);
-
-            $tree->setLanguage($language);
-            $treeNode = $tree->get($tid);
-            if (!$treeNode) {
-                return null;
-            }
-            /*
-            if ($siterootUrl->getSiteroot()->getId() === $tree->getSiteRootId()) {
-                // only set on valid siteroot
-                $treeNode = $tree->get($tid);
-            }
-            */
-
-            $attributes['_route'] = $path;
-            $attributes['_route_object'] = $treeNode;
-            $attributes['_content'] = $treeNode;
-            $attributes['_controller'] = 'PhlexibleFrontendBundle:Online:index';
+        if (!$tid) {
+            return null;
         }
 
+        $request->attributes->set('tid', $tid);
+
+        $tree->setLanguage($language);
+        $treeNode = $tree->get($tid);
+        if (!$treeNode) {
+            return null;
+        }
+        /*
+        if ($siterootUrl->getSiteroot()->getId() === $tree->getSiteRootId()) {
+            // only set on valid siteroot
+            $treeNode = $tree->get($tid);
+        }
+        */
+
+        $attributes['_route'] = $path;
+        $attributes['_route_object'] = $treeNode;
+        $attributes['_content'] = $treeNode;
+        $attributes['_controller'] = 'PhlexibleFrontendBundle:Online:index';
+
         return $attributes;
+    }
+
+    /**
+     * @return string
+     */
+    private function findLanguage()
+    {
+        if (function_exists('http_negotiate_language')) {
+            array_unshift($this->languages, $this->defaultLanguage);
+
+            $language = http_negotiate_language($this->languages);
+            $this->logger->debug('Using negotiated language: ' . $language);
+        } else {
+            $language = $this->defaultLanguage;
+            $this->logger->debug('Using default language: ' . $language);
+        }
+
+        return $language;
     }
 
     /**
@@ -338,21 +355,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     protected function matchParameters(Request $request)
     {
         return $request->query->all();
-    }
-
-    /**
-     * Generate hostname
-     *
-     * @param TreeNodeInterface $node
-     *
-     * @return string
-     */
-    protected function generateHostname(TreeNodeInterface $node)
-    {
-        $siteroot = $this->siterootRepository->find($node->getSiteRootId());
-        $siterootUrl = $siteroot->getDefaultUrl();
-
-        return $siterootUrl->getHostname();
     }
 
     /**

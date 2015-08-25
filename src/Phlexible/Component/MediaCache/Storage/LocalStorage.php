@@ -47,7 +47,7 @@ class LocalStorage extends AbstractStorage
             throw new InvalidArgumentException('No storage_dir.');
         }
 
-        $this->storageDir = $options['storage_dir'];
+        $this->storageDir = rtrim($options['storage_dir'], '/') . '/';
         $this->cacheManager = $cacheManager;
     }
 

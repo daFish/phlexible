@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Controller;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
+use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,8 +55,8 @@ class ListController extends Controller
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $elementService = $this->get('phlexible_element.element_service');
-        $securityContext = $this->get('security.context');
         $iconResolver = $this->get('phlexible_element.icon_resolver');
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
 
         $tree = $treeManager->getByNodeID($tid);
         $node = $tree->get($tid);
@@ -73,20 +73,28 @@ class ListController extends Controller
 
         $userRights = array();
         $userAdminRights = null;
-        if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($node instanceof DomainObjectInterface) {
+            if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
-                    return null;
+                if (!$this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
+                    return new JsonResponse([
+                        'parent' => null,
+                        'list'   => array(),
+                        'total'  => 0
+                    ]);
                 }
 
-                $userRights = array(); //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
+                // TODO: fix
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             } else {
-                $userRights = $userAdminRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
-                );
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             }
         }
 
@@ -140,14 +148,20 @@ class ListController extends Controller
             if (!$userAdminRights) {
                 //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
 
-                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
-                    return null;
+                if (!$this->isGranted(['permission' => 'VIEW', 'language' => $language], $node)) {
+                    continue;
                 }
 
-                $userRights = array(); //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
+                // TODO: fix
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             } else {
-                $userRights = $userAdminRights;
+                $userRights = array();
+                foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                    $userRights[] = $permission->getName();
+                }
             }
 
             $childElement = $elementService->findElement($childNode->getTypeId());

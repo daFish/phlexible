@@ -1,25 +1,23 @@
 <?php
-
-/*
- * This file is part of the phlexible package.
+/**
+ * phlexible
  *
- * (c) Stephan Wentz <sw@brainbits.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
  */
 
-namespace Phlexible\Bundle\AccessControlBundle\Provider;
+namespace Phlexible\Bundle\AccessControlBundle\SecurityProvider;
 
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Phlexible\Component\AccessControl\Provider\ProviderInterface;
+use Phlexible\Component\AccessControl\SecurityProvider\SecurityProviderInterface;
+use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface;
 
 /**
- * User provider
+ * User security provider
  *
- * @author Marco Fischer <mf@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
-class UserProvider implements ProviderInterface
+class UserSecurityProvider implements SecurityProviderInterface, SecurityResolverInterface
 {
     /**
      * @var UserManagerInterface
@@ -35,18 +33,20 @@ class UserProvider implements ProviderInterface
     }
 
     /**
-     * Return object name
+     * Return security name
      *
-     * @param string $objectType
-     * @param string $objectId
+     * @param string $securityType
+     * @param string $securityId
      *
      * @return string
      */
-    public function getName($objectType, $objectId)
+    public function resolveName($securityType, $securityId)
     {
-        $user = $this->userManager->find($objectId);
+        if ($securityType !== 'Phlexible\Bundle\UserBundle\Entity\User') {
+            return null;
+        }
 
-        return $user->getDisplayName();
+        return $this->userManager->find($securityId)->getDisplayName();
     }
 
     /**
@@ -65,13 +65,10 @@ class UserProvider implements ProviderInterface
 
         $data = array();
         foreach ($users as $user) {
-            $name = $user->getDisplayName();
-
             $data[] = array(
-                'type'       => 'user',
-                'objectType' => 'uid',
-                'objectId'   => $user->getId(),
-                'label'      => $name
+                'securityType' => get_class($user),
+                'securityId'   => $user->getId(),
+                'securityName' => $user->getDisplayName(),
             );
         }
 

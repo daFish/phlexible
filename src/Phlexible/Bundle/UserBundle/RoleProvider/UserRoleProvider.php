@@ -27,7 +27,6 @@ class UserRoleProvider extends RoleProvider
     {
         return array(
             'ROLE_USERS',
-            'ROLE_SWITCH_USER',
             'ROLE_GROUPS',
             'ROLE_USER_ADMIN_READ',
             'ROLE_USER_ADMIN_CREATE',

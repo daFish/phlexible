@@ -47,7 +47,7 @@ class MediaController extends Controller
 
         $filePath = $this->container->getParameter('app.web_dir') . '/media/thumbnail/' . $fileId . '/' . $templateKey . '_' . $template->getRevision() . '.jpg';
         $mimeType = 'image/jpeg';
-        if (!file_exists($filePath)) {
+        if (!file_exists($filePath) || filemtime($filePath) < $file->getModifiedAt()->format('U')) {
             if (file_exists($file->getPhysicalPath())) {
                 if (!file_exists(dirname($filePath))) {
                     mkdir(dirname($filePath), 0777, true);
@@ -66,6 +66,10 @@ class MediaController extends Controller
                 $filePath = $delegateService->getClean($template, $mediaType, true);
                 $mimeType = 'image/gif';
             }
+        }
+
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
         }
 
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
@@ -96,6 +100,11 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
+
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')
@@ -125,6 +134,11 @@ class MediaController extends Controller
         $file = $volume->findFile($fileId);
 
         $filePath = $file->getPhysicalPath();
+
+        if (!file_exists($filePath)) {
+            return $this->createNotFoundException("File not found.");
+        }
+
         $mimeType = $file->getMimeType();
 
         return $this->get('igorw_file_serve.response_factory')

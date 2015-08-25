@@ -9,26 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\AccessControl\ContentObject;
+namespace Phlexible\Component\AccessControl\Model;
 
 /**
- * Content object interface
+ * Hierarchical domain object interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ContentObjectInterface
+interface HierarchicalDomainObjectInterface extends DomainObjectInterface
 {
     /**
-     * Return content object identifier
+     * Return hierarchical domain identifier path
      *
      * @return array
      */
-    public function getContentObjectIdentifiers();
-
-    /**
-     * Return content object path
-     *
-     * @return array
-     */
-    public function getContentObjectPath();
+    public function getHierarchicalObjectIdentifiers();
 }

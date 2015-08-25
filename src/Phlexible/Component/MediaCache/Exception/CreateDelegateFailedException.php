@@ -16,7 +16,7 @@ namespace Phlexible\Component\MediaCache\Exception;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CreateDelegateFailed extends RuntimeException
+class CreateDelegateFailedException extends RuntimeException
 {
 
 }

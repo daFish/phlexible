@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Component\AccessControl\ContentObject;
+namespace Phlexible\Component\AccessControl\Model;
 
 /**
  * Domain object interface
@@ -23,5 +23,12 @@ interface DomainObjectInterface
      *
      * @return array
      */
-    public function getDomainObjectIdentifier();
+    public function getObjectIdentifier();
+
+    /**
+     * Return domain object type
+     *
+     * @return array
+     */
+    public function getObjectType();
 }

@@ -21,6 +21,11 @@ use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 class PermissionCollection
 {
     /**
+     * @var string
+     */
+    private $objectType;
+
+    /**
      * @var array
      */
     private $permissions = array();
@@ -28,33 +33,27 @@ class PermissionCollection
     /**
      * @var array
      */
-    private $classMaps = array();
+    private $bitMap = 0;
 
     /**
-     * @var array
+     * @param string $objectType
+     * @param array  $permissions
      */
-    private $bitMaps = array();
-
-    /**
-     * @param array $permissions
-     */
-    public function __construct(array $permissions = array())
+    public function __construct($objectType, array $permissions = array())
     {
+        $this->objectType = $objectType;
+
         foreach ($permissions as $permission) {
             $this->add($permission);
         }
     }
 
     /**
-     * @param PermissionProviderInterface $provider
-     *
-     * @return $this
+     * @return string
      */
-    public function addProvider(PermissionProviderInterface $provider)
+    public function getObjectType()
     {
-        $this->addCollection($provider->getPermissions());
-
-        return $this;
+        return $this->objectType;
     }
 
     /**
@@ -64,7 +63,11 @@ class PermissionCollection
      */
     public function addCollection(PermissionCollection $permissions)
     {
-        foreach ($permissions->getAll() as $permission) {
+        if ($permissions->getObjectType() !== $this->getObjectType()) {
+            throw new InvalidArgumentException("Mismating object types.");
+        }
+
+        foreach ($permissions->all() as $permission) {
             $this->add($permission);
         }
 
@@ -74,30 +77,25 @@ class PermissionCollection
     /**
      * @param Permission $permission
      *
-     * @throws \Phlexible\Component\AccessControl\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return $this
      */
     public function add(Permission $permission)
     {
-        $contentClass = $permission->getContentClass();
         $name = $permission->getName();
+
+        if (isset($this->permissions[$name])) {
+            throw new InvalidArgumentException("Permission name $name is already set.");
+        }
+
         $bit = $permission->getBit();
 
-        if (isset($this->bitMaps[$contentClass]) && ($this->bitMaps[$contentClass] & $bit)) {
-            throw new InvalidArgumentException("Permission bit $bit is already set for $contentClass.");
+        if ($this->bitMap & $bit) {
+            throw new InvalidArgumentException("Permission bit $bit is already set.");
         }
 
-        if (isset($this->classMaps[$contentClass][$name])) {
-            throw new InvalidArgumentException("Permission name $name is already set for $contentClass.");
-        }
-
-        if (!isset($this->bitMaps[$contentClass])) {
-            $this->bitMaps[$contentClass] = 0;
-        }
-
-        $this->classMaps[$contentClass][$name] = $permission;
-        $this->bitMaps[$contentClass] |= $bit;
-        $this->permissions[] = $permission;
+        $this->bitMap |= $bit;
+        $this->permissions[$name] = $permission;
 
         return $this;
     }
@@ -105,56 +103,37 @@ class PermissionCollection
     /**
      * Return all permissions
      *
-     * @return array
+     * @return Permission[]
      */
-    public function getAll()
+    public function all()
     {
         return $this->permissions;
     }
 
     /**
-     * Return permissions for content class
-     *
-     * @param string $contentClass
-     *
-     * @throws \Phlexible\Component\AccessControl\Exception\InvalidArgumentException
-     * @return Permission[]
-     */
-    public function getByContentClass($contentClass)
-    {
-        if (!isset($this->classMaps[$contentClass])) {
-            throw new InvalidArgumentException("No permissions for type $contentClass found.");
-        }
-
-        return $this->classMaps[$contentClass];
-    }
-
-    /**
      * Return permissions
      *
-     * @param string $contentClass
      * @param string $name
      *
-     * @throws \Phlexible\Component\AccessControl\Exception\InvalidArgumentException
-     * @return Permission[]
+     * @throws InvalidArgumentException
+     * @return Permission
      */
-    public function get($contentClass, $name)
+    public function get($name)
     {
-        if (!isset($this->classMaps[$contentClass][$name])) {
-            throw new InvalidArgumentException("Permissions $name for content class $contentClass not found.");
+        if (!isset($this->permissions[$name])) {
+            throw new InvalidArgumentException("Permissions $name for type $objectType not found.");
         }
 
-        return $this->classMaps[$contentClass][$name];
+        return $this->permissions[$name];
     }
 
     /**
-     * @param string $contentClass
      * @param string $name
      *
      * @return bool
      */
-    public function has($contentClass, $name)
+    public function has($name)
     {
-        return !empty($this->classMaps[$contentClass][$name]);
+        return !empty($this->permissions[$name]);
     }
 }

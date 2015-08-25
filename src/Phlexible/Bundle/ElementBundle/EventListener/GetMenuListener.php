@@ -14,6 +14,9 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\GuiBundle\Event\GetMenuEvent;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
+use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Bundle\TreeBundle\Tree\TreeManager;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Get menu listener
@@ -23,16 +26,41 @@ use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
 class GetMenuListener
 {
     /**
-     * @var EntityManager
+     * @var SiterootManagerInterface
      */
-    private $entityManager;
+    private $siterootManager;
 
     /**
-     * @param EntityManager $entityManager
+     * @var TreeManager
      */
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    private $treeManager;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
+     * @var array
+     */
+    private $availableLanguages;
+
+    /**
+     * @param SiterootManagerInterface      $siterootManager
+     * @param TreeManager                   $treeManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param string                        $availableLanguages
+     */
+    public function __construct(
+        SiterootManagerInterface $siterootManager,
+        TreeManager $treeManager,
+        AuthorizationCheckerInterface $authorizationChecker,
+        $availableLanguages
+    ) {
+        $this->siterootManager = $siterootManager;
+        $this->treeManager = $treeManager;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->availableLanguages = explode(',', $availableLanguages);
     }
 
     /**
@@ -42,9 +70,23 @@ class GetMenuListener
     {
         $items = $event->getItems();
 
-        $siteroots = $this->entityManager->getRepository('PhlexibleSiterootBundle:Siteroot')->findAll();
+        foreach ($this->siterootManager->findAll() as $siteroot) {
+            $tree = $this->treeManager->getBySiterootId($siteroot->getId());
+            $root = $tree->getRoot();
 
-        foreach ($siteroots as $siteroot) {
+            $siterootLanguages = array();
+            foreach ($this->availableLanguages as $language) {
+                if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted(['permission' => 'VIEW', 'language' => $language], $root)) {
+                    continue;
+                }
+
+                $siterootLanguages[$siteroot->getId()][] = $language;
+            }
+
+            if (!count($siterootLanguages)) {
+                continue;
+            }
+
             $menuItem = new MenuItem('element', 'elements');
             $menuItem->setParameters(
                 array(
@@ -54,7 +96,6 @@ class GetMenuListener
             );
 
             $items->set('siteroot_' . $siteroot->getId(), $menuItem);
-
         }
     }
 }

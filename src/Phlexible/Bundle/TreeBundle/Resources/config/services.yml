@@ -13,7 +13,7 @@ services:
             - @phlexible_element.element_service
             - @phlexible_element.icon_resolver
             - @phlexible_tree.state_manager
-            - @phlexible_access_control.permissions
+            - @phlexible_access_control.permission_registry
             - @security.authorization_checker
 
     phlexible_tree.router.handler.default:
@@ -22,6 +22,7 @@ services:
             - @logger
             - @phlexible_tree.content_tree_manager
             - @phlexible_siteroot.siteroot_request_matcher
+            - @phlexible_siteroot.siteroot_hostname_generator
             - %phlexible_cms.languages.available%
             - %phlexible_cms.languages.default%
         tags:

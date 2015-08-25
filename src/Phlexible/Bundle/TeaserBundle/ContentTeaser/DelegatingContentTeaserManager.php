@@ -15,7 +15,6 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Mediator\Mediator;
 use Phlexible\Bundle\TeaserBundle\Model\TeaserManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeNodeInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 // TODO: interface
 
@@ -89,7 +88,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function isInstance(Teaser $teaser)
+    public function isInstance(ContentTeaser $teaser)
     {
         return $this->teaserManager->isInstance($teaser);
     }
@@ -97,7 +96,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function isInstanceMaster(Teaser $teaser)
+    public function isInstanceMaster(ContentTeaser $teaser)
     {
         return $this->teaserManager->isInstanceMaster($teaser);
     }
@@ -105,7 +104,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function getInstances(Teaser $teaser)
+    public function getInstances(ContentTeaser $teaser)
     {
         return $this->teaserManager->getInstances($teaser);
     }
@@ -113,7 +112,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function isPublished(Teaser $teaser, $language)
+    public function isPublished(ContentTeaser $teaser, $language)
     {
         return $this->teaserManager->isPublished($teaser, $language);
     }
@@ -121,7 +120,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function getPublishedLanguages(Teaser $teaser)
+    public function getPublishedLanguages(ContentTeaser $teaser)
     {
         return $this->teaserManager->getPublishedLanguages($teaser);
     }
@@ -129,7 +128,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersion(Teaser $teaser, $language)
+    public function getPublishedVersion(ContentTeaser $teaser, $language)
     {
         return $this->teaserManager->getPublishedVersion($teaser, $language);
     }
@@ -137,7 +136,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersions(Teaser $teaser)
+    public function getPublishedVersions(ContentTeaser $teaser)
     {
         return $this->teaserManager->getPublishedVersions($teaser);
     }
@@ -153,7 +152,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function findOnlineByTeaser(Teaser $teaser)
+    public function findOnlineByTeaser(ContentTeaser $teaser)
     {
         return $this->teaserManager->findOnlineByTeaser($teaser);
     }
@@ -161,7 +160,7 @@ class DelegatingContentTeaserManager
     /**
      * {@inheritdoc}
      */
-    public function findOneOnlineByTeaserAndLanguage(Teaser $teaser, $language)
+    public function findOneOnlineByTeaserAndLanguage(ContentTeaser $teaser, $language)
     {
         return $this->teaserManager->findOneOnlineByTeaserAndLanguage($teaser, $language);
     }

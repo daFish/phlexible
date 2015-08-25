@@ -96,7 +96,7 @@ class StateManager implements StateManagerInterface
      */
     public function findByTeaser(Teaser $teaser)
     {
-        return $this->getTeaserOnlineRepository()->findBy(array('teaser' => $teaser));
+        return $this->getTeaserOnlineRepository()->findBy(['teaser' => $teaser->getId()]);
     }
 
     /**
@@ -104,7 +104,7 @@ class StateManager implements StateManagerInterface
      */
     public function findOneByTeaserAndLanguage(Teaser $teaser, $language)
     {
-        return $this->getTeaserOnlineRepository()->findOneBy(array('teaser' => $teaser, 'language' => $language));
+        return $this->getTeaserOnlineRepository()->findOneBy(['teaser' => $teaser->getId(), 'language' => $language]);
     }
 
     /**

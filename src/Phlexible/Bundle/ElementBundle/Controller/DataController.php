@@ -21,9 +21,8 @@ use Phlexible\Bundle\ElementBundle\Model\ElementHistoryManagerInterface;
 use Phlexible\Bundle\ElementtypeBundle\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\SecurityBundle\Acl\Acl;
 use Phlexible\Bundle\TreeBundle\Doctrine\TreeFilter;
-use Phlexible\Component\AccessControl\ContentObject\ContentObjectInterface;
+use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -253,9 +252,9 @@ class DataController extends Controller
             }
         }
 
-        if ($node instanceof ContentObjectInterface) {
+        if ($node instanceof DomainObjectInterface) {
             if (!$securityContext->isGranted('ROLE_SUPER_ADMIN') &&
-                !$securityContext->isGranted(array('right' => 'EDIT', 'language' => $language), $node)
+                !$securityContext->isGranted(['permission' => 'EDIT', 'language' => $language], $node)
             ) {
                 $doLock = false;
             }
@@ -462,20 +461,19 @@ class DataController extends Controller
         // rights
 
         $userRights = array();
-        if ($node instanceof ContentObjectInterface) {
-            if (!$securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-                //$contentRightsManager->calculateRights('internal', $rightsNode, $rightsIdentifiers);
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            if (!$this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
+                return new JsonResponse(array('success' => false, 'message' => 'no permission'));
+            }
 
-                if ($securityContext->isGranted(array('right' => 'VIEW', 'language' => $language), $node)) {
-                    return null;
-                }
-
-                $userRights = array(); //$contentRightsManager->getRights($language);
-                $userRights = array_keys($userRights);
-            } else {
-                $userRights = array_keys(
-                    $this->get('phlexible_access_control.permissions')->getByContentClass(get_class($node))
-                );
+            // TODO: fix
+            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                $userRights[] = $permission->getName();
+            }
+        } else {
+            foreach ($permissionRegistry->get(get_class($node))->all() as $permission) {
+                $userRights[] = $permission->getName();
             }
         }
 

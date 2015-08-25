@@ -11,8 +11,10 @@
 
 namespace Phlexible\Bundle\TreeBundle\Controller;
 
+use Phlexible\Bundle\ElementBundle\Model\ElementStructureIterator;
 use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -233,14 +235,19 @@ class TreeController extends Controller
     public function createInstanceAction(Request $request)
     {
         $parentId = $request->get('id');
-        $afterId = $request->get('prev_id');
+        $prevId = $request->get('prev_id');
         $sourceId = $request->get('for_tree_id');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
-        $tree = $treeManager->getByNodeId($parentId);
+        $sourceTree = $treeManager->getByNodeId($sourceId);
+        $sourceNode = $sourceTree->get($sourceId);
 
-        $tree->createInstance($parentId, $afterId, $sourceId, $this->getUser()->getId());
+        $targetTree = $treeManager->getByNodeId($parentId);
+        $parentNode = $targetTree->get($parentId);
+        $prevNode = $targetTree->get($prevId);
+
+        $targetTree->createInstance($parentNode, $prevNode, $sourceNode, $this->getUser()->getId());
 
         return new ResultResponse(true, 'Instance created.');
     }
@@ -262,40 +269,54 @@ class TreeController extends Controller
         $elementService = $this->get('phlexible_element.element_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
-        $tree = $treeManager->getByNodeId($sourceId);
-        $sourceNode = $tree->get($sourceId);
-        $sourceEid = $sourceNode->getTypeId();
+        $sourceTree = $treeManager->getByNodeId($sourceId);
+        $sourceNode = $sourceTree->get($sourceId);
 
-        $select = $db->select()
-            ->from($db->prefix . 'element', array('element_type_id', 'masterlanguage'))
-            ->where('eid = ?', $sourceEid);
+        $targetTree = $treeManager->getByNodeId($parentId);
+        $parentNode = $targetTree->get($parentId);
+        $prevNode = $targetTree->get($prevId);
 
-        $sourceElementRow = $db->fetchRow($select);
+        $sourceElement = $elementService->findElement($sourceNode->getTypeId());
+        $sourceElementVersion = $elementService->findLatestElementVersion($sourceElement);
+        $sourceStructure = $elementService->findElementStructure($sourceElementVersion);
 
-        $targetElement = $elementManager->create(
-            $sourceElementRow['element_type_id'],
-            false,
-            $sourceElementRow['masterlanguage']
+        $targetElement = $elementService->createElement(
+            $sourceElementVersion->getElementSource(),
+            $sourceElement->getMasterLanguage(),
+            $this->getUser()->getId()
         );
-        $targetEid = $targetElement->getEid();
 
         // place new element in element_tree
-        $targetId = $tree->add($parentId, $targetEid, $prevId);
-
-        // copy element version data
-        $sourceElement = $elementManager->getByEid($sourceEid);
-        $sourceElementVersion = $sourceElement->getLatestVersion();
-        $targetElementVersion = $sourceElementVersion->copy($targetEid);
-
-        // copy tree node settings
-        $tree->copyPage(
-            $sourceId,
-            $targetElementVersion->getVersion(),
-            $sourceElementVersion->getVersion(),
-            $targetId
+        $targetNode = $targetTree->create(
+            $parentNode,
+            $prevNode,
+            $sourceNode->getType(),
+            $targetElement->getEid(),
+            $sourceNode->getAttributes(),
+            $this->getUser()->getId(),
+            $sourceNode->getSortMode(),
+            $sourceNode->getSortDir(),
+            $sourceNode->getInNavigation()
         );
 
-        return new ResultResponse(true, 'Element copied.', array('id' => $targetId));
+        $targetStructure = clone $sourceStructure;
+        $targetStructure->setId(null);
+        $targetStructure->setDataId(Uuid::generate());
+
+        $rii = new \RecursiveIteratorIterator(new ElementStructureIterator($targetStructure->getStructures()), \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($rii as $structure) {
+            $structure->setId(null);
+            $structure->setDataId(Uuid::generate());
+        }
+
+        $targetElementVersion = $elementService->createElementVersion(
+            $targetElement,
+            $targetStructure,
+            null,
+            $this->getUser()->getId()
+        );
+
+        return new ResultResponse(true, 'Element copied.', ['id' => $targetNode->getId()]);
     }
 
     /**
@@ -394,9 +415,10 @@ class TreeController extends Controller
         foreach ($treeIds as $treeId) {
             $tree = $treeManager->getByNodeId($treeId);
             $node = $tree->get($treeId);
-            $element = $elementService->findElement($node->getTypeId());
-
-            $elementService->deleteElement($element);
+            if (!$tree->isInstance($node)) {
+                $element = $elementService->findElement($node->getTypeId());
+                $elementService->deleteElement($element);
+            }
             $tree->delete($node, $this->getUser()->getId());
         }
 

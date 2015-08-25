@@ -132,6 +132,14 @@ Ext.define('Phlexible.elementtype.configuration.Field', {
             }
         });
 
+        if (!valid) {
+            this.node.ui.removeClass('valid');
+            this.node.ui.addClass('invalid');
+            this.node.attributes.invalid = true;
+            Ext.MessageBox.alert('Error', this.strings.check_input);
+            return;
+        }
+
         var properties = {
             field: {},
             configuration: {},

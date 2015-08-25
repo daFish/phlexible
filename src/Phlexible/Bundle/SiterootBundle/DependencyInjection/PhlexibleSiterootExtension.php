@@ -39,15 +39,18 @@ class PhlexibleSiterootExtension extends Extension
             $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
         }
 
+        $mappings = [];
         if (!empty($config['mappings'])) {
-            $mappings = array();
             foreach ($config['mappings'] as $mappedUrl => $siterootUrl) {
                 $mappings[$mappedUrl] = $siterootUrl;
             }
-            $container->setParameter('phlexible_siteroot.mappings', $mappings);
         }
 
         $container->setParameter('phlexible_siteroot.model_manager_name', $config['model_manager_name']);
         $container->setAlias('phlexible_siteroot.siteroot_manager', $config['service']['siteroot_manager']);
+        $container->setParameter('phlexible_siteroot.mappings', $mappings);
+
+        $loader->load('doctrine.yml');
+        $container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.doctrine.siteroot_manager');
     }
 }

@@ -223,4 +223,3 @@ Ext.define('Phlexible.mediamanager.toolbar.UploadStatus', {
 
     }
 });
-
