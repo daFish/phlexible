@@ -49,8 +49,5 @@ class PhlexibleSiterootExtension extends Extension
         $container->setParameter('phlexible_siteroot.model_manager_name', $config['model_manager_name']);
         $container->setAlias('phlexible_siteroot.siteroot_manager', $config['service']['siteroot_manager']);
         $container->setParameter('phlexible_siteroot.mappings', $mappings);
-
-        $loader->load('doctrine.yml');
-        $container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.doctrine.siteroot_manager');
     }
 }

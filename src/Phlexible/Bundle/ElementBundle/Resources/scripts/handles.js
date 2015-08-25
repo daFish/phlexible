@@ -1,4 +1,3 @@
-Ext.require('Phlexible.Handles');
 Ext.require('Phlexible.gui.menuhandle.handle.XtypeHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.BubbleMenu');
 Ext.require('Phlexible.elements.MainPanel');
