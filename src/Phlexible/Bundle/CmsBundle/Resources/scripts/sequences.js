@@ -1,4 +1,4 @@
-Ext.require('Phlexible.elementtype.configuration.FieldConfiguration');
+Ext.require('Phlexible.elementtype.configuration.field.Configurations');
 Ext.require('Phlexible.cms.configuration.FieldConfigurationFile');
 
 Phlexible.elementtype.configuration.field.Configurations.prototype.initMyItems = Ext.Function.createSequence(

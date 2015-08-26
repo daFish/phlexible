@@ -316,7 +316,7 @@ Ext.define('Phlexible.metaset.view.Main', {
         var win;
 
         if (field.get('type') === 'suggest') {
-            win = Ext.create('Phlexible.metaset.window.SuggestConfigurationWindow', {
+            win = Ext.create('Phlexible.datasource.window.SuggestConfigurationWindow', {
                 options: field.get('options'),
                 listeners: {
                     select: function(options) {

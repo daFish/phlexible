@@ -1,4 +1,4 @@
-Phlexible.fields.Registry.register('numberfield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.PluginManager.set('field', 'numberfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -22,7 +22,7 @@ Phlexible.fields.Registry.register('numberfield', function (parentConfig, item, 
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'numberfield', {
     type: 'numberfield',
     titles: {
         de: 'Zahlenfeld',

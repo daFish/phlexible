@@ -2,20 +2,10 @@ Ext.define('Phlexible.elementtype.util.Types', {
     types: {},
 
     /**
-     * @param {Object} fieldConfig
+     * @deprecated
      */
-    register: function (fieldConfig) {
-        if (!fieldConfig.type) {
-            throw new Error("Missing type in field type: " + JSON.stringify(fieldConfig));
-        }
-
-        if (this.has(fieldConfig.type)) {
-            throw new Error("Field type " + fieldConfig.type + ' aleady registered.');
-        }
-
-        this.types[fieldConfig.type] = fieldConfig;
-
-        Phlexible.Logger.debug('Registered field type ' + fieldConfig.type);
+    register: function () {
+        throw new Error("Phlexible.elementtype.util.Types.register() called.");
     },
 
     /**
@@ -27,7 +17,7 @@ Ext.define('Phlexible.elementtype.util.Types', {
             throw new Error("Field type " + type + " not registered.");
         }
 
-        return this.types[type];
+        return Phlexible.PluginManager.get('type', type);
     },
 
     /**
@@ -35,7 +25,7 @@ Ext.define('Phlexible.elementtype.util.Types', {
      * @returns {Boolean}
      */
     has: function (type) {
-        return !!this.types[type];
+        return Phlexible.PluginManager.contains('type', type);
     },
 
     /**

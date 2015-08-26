@@ -1,4 +1,4 @@
-Ext.define('Phlexible.frontendmedia.configuration.FieldConfigurationFile', {
+Ext.define('Phlexible.cms.configuration.FieldConfigurationFile', {
     extend: 'Ext.form.FieldSet',
     xtype: 'cms-configuration-field-configuration-file',
 

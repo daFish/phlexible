@@ -1,4 +1,4 @@
-Phlexible.fields.Registry.register('label', function (parentConfig, item, valueStructure, element) {
+Phlexible.PluginManager.set('field', 'label', function (parentConfig, item, valueStructure, element) {
     var contextHelp = item.labels.contextHelp || {},
         fieldLabel = item.labels.fieldLabel || {},
         config = {
@@ -18,7 +18,7 @@ Phlexible.fields.Registry.register('label', function (parentConfig, item, valueS
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'label', {
     type: 'label',
     titles: {
         de: 'Label',

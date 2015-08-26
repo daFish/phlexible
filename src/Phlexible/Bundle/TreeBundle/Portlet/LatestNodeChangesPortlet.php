@@ -43,26 +43,17 @@ class LatestNodeChangesPortlet extends Portlet
     private $numItems;
 
     /**
-     * @param TranslatorInterface  $translator
      * @param TreeManagerInterface $treeManager
      * @param NodeManagerInterface $nodeManager
      * @param IconResolver         $iconResolver
      * @param int                  $numItems
      */
     public function __construct(
-        TranslatorInterface $translator,
         TreeManagerInterface $treeManager,
         NodeManagerInterface $nodeManager,
         IconResolver $iconResolver,
         $numItems)
     {
-        $this
-            ->setId('tree-latest-node-changes-portlet')
-            ->setTitle($translator->trans('elements.latest_element_changes', array(), 'gui'))
-            ->setClass('Phlexible.tree.portlet.LatestNodeChanges')
-            ->setIconClass('p-tree-component-icon')
-            ->setRole('ROLE_ELEMENTS');
-
         $this->treeManager = $treeManager;
         $this->nodeManager = $nodeManager;
         $this->iconResolver = $iconResolver;

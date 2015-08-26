@@ -1,5 +1,8 @@
-Ext.define('Phlexible.frontendmedia.field.FolderField', {
-    extend: 'Ext.ux.TreeSelector',
+Ext.define('Phlexible.cms.field.FolderField', {
+    extend: 'Ext.ux.TreePicker',
+    requires: [
+        'Ext.ux.TreePicker'
+    ],
     xtype: 'field.folder',
 
     maxHeight: 300,
@@ -17,7 +20,7 @@ Ext.define('Phlexible.frontendmedia.field.FolderField', {
             selModel: new Ext.tree.ActivationModel(),
             rootVisible: false,
             loader: new Phlexible.elements.EidLoader({
-                url: Phlexible.Router.generate('cms_folder')
+                url: Phlexible.Router.generate('frontendmedia_folder')
             })
         });
 

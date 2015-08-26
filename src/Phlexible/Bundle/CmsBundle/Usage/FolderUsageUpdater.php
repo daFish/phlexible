@@ -11,7 +11,7 @@ namespace Phlexible\Bundle\CmsBundle\Usage;
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\MediaManagerBundle\Entity\FolderUsage;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
  * File usage
@@ -26,15 +26,15 @@ class FolderUsageUpdater
     private $entityManager;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
     /**
-     * @param EntityManager $entityManager
-     * @param VolumeManager $volumeManager
+     * @param EntityManager          $entityManager
+     * @param VolumeManagerInterface $volumeManager
      */
-    public function __construct(EntityManager $entityManager, VolumeManager $volumeManager)
+    public function __construct(EntityManager $entityManager, VolumeManagerInterface $volumeManager)
     {
         $this->entityManager = $entityManager;
         $this->volumeManager = $volumeManager;

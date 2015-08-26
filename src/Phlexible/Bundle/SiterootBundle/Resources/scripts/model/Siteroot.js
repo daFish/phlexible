@@ -1,7 +1,6 @@
 Ext.define('Phlexible.siteroot.model.Siteroot', {
     extend: 'Ext.data.Model',
     requires: [
-        'Phlexible.siteroot.model.Url',
         'Phlexible.siteroot.model.Navigation',
         'Phlexible.siteroot.model.SpecialTid'
     ],

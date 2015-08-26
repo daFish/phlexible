@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\DashboardBundle\EventListener;
 
-use Phlexible\Bundle\DashboardBundle\Portlet\PortletCollection;
+use Phlexible\Bundle\DashboardBundle\Domain\PortletCollection;
 use Phlexible\Bundle\GuiBundle\Event\PollEvent;
 use Phlexible\Bundle\GuiBundle\Poller\Message;
 

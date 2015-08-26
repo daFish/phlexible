@@ -1,6 +1,4 @@
-Ext.provide('Phlexible.mediatype.util.MediaTypes');
-
-Phlexible.mediatype.util.MediaTypes = Ext.extend(Ext.util.Observable, {
+Ext.define('Phlexible.mediatype.util.MediaTypes', {
     mediatypes: {},
 
     has: function(mediaType) {

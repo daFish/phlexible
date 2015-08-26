@@ -1,4 +1,4 @@
-datasources:
+datasource:
     select: Select
     cancel: Cancel
     failure: Failure

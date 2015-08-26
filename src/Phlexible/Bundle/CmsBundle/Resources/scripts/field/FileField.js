@@ -7,7 +7,7 @@
  * Creates a new TextField
  * @param {Object} config Configuration options
  */
-Ext.define('Phlexible.frontendmedia.field.FileField', {
+Ext.define('Phlexible.cms.field.FileField', {
     extend: 'Ext.form.Field',
     requires: [
         'Phlexible.mediamanager.window.MediamanagerWindow'

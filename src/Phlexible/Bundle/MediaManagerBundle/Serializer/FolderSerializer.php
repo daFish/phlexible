@@ -11,10 +11,8 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Serializer;
 
-use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\MediaManager\Usage\FolderUsageManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Folder serializer
@@ -40,7 +38,6 @@ class FolderSerializer
      * Serialize file
      *
      * @param ExtendedFolderInterface $folder
-     * @param string                  $language
      *
      * @return array
      */

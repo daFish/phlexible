@@ -28,13 +28,24 @@ class AssetController extends Controller
     /**
      * Output scripts
      *
+     * @param Request $request
+     *
      * @return Response
+     * @throws \Exception
      * @Route("/scripts", name="phlexible_gui_asset_scripts")
      */
-    public function scriptsAction()
+    public function scriptsAction(Request $request)
     {
         $scriptsBuilder = $this->get('phlexible_gui.asset.builder.scripts');
-        $file = $scriptsBuilder->build();
+        try {
+            $file = $scriptsBuilder->build();
+        } catch (\Exception $e) {
+            if (!in_array('text/html', $request->getAcceptableContentTypes())) {
+                return new Response("alert('" . str_replace("'", "\'", $e->getMessage()) . "');");
+            } else {
+                throw $e;
+            }
+        }
 
         return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/javascript'));
     }

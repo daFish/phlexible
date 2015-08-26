@@ -1,4 +1,4 @@
-Phlexible.fields.Registry.register('multiselect', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.PluginManager.set('field', 'multiselect', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeData, storeMode = 'remote', displayField = 'value';
     if (item.configuration.select_source === 'function' && item.configuration.select_function) {
         store = Ext.create('Ext.data.Store', {
@@ -86,7 +86,7 @@ Phlexible.fields.Registry.register('multiselect', function (parentConfig, item, 
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'multiselect', {
     type: 'multiselect',
     titles: {
         de: 'Multiselect',

@@ -1,4 +1,4 @@
-Ext.define('Phlexible.metaset.window.MetaSuggestWindow', {
+Ext.define('Phlexible.datasource.window.MetaSuggestWindow', {
     extend: 'Ext.window.Window',
 
     width: 400,

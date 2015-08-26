@@ -1,18 +1,21 @@
-Ext.require('Phlexible.datasources.configuration.FieldConfigurationSuggest');
-Ext.require('Phlexible.datasources.window.MetaSuggestWindow');
-Ext.require('Phlexible.datasources.window.SuggestConfigurationWindow');
-Ext.require('Phlexible.metasets.util.Fields');
+Ext.require('Phlexible.datasource.configuration.FieldConfigurationSuggest');
+Ext.require('Phlexible.datasource.window.MetaSuggestWindow');
+Ext.require('Phlexible.datasource.window.SuggestConfigurationWindow');
+Ext.require('Phlexible.metaset.util.Fields');
 
-Phlexible.elementtypes.configuration.FieldConfiguration.prototype.initMyItems =
-    Phlexible.elementtypes.configuration.FieldConfiguration.prototype.initMyItems.createSequence(function() {
+Phlexible.elementtype.configuration.field.Configurations.prototype.initMyItems = Ext.Function.createSequence(
+    Phlexible.elementtype.configuration.field.Configurations.prototype.initMyItems,
+    function() {
         this.items.push({
-            xtype: 'datasources-configuration-field-configuration-suggest',
+            xtype: 'datasource.configuration.field.suggest',
             additional: true
         });
-    });
+    }
+);
 
-Phlexible.metasets.util.Fields.prototype.initFields =
-    Phlexible.metasets.util.Fields.prototype.initFields.createSequence(function() {
+Phlexible.metaset.util.Fields.prototype.initFields = Ext.Function.createSequence(
+    Phlexible.metaset.util.Fields.prototype.initFields,
+    function() {
         this.set('suggest', {
             title: 'Suggest',
             beforeEditCallback: function (grid, field, record) {
@@ -61,4 +64,5 @@ Phlexible.metasets.util.Fields.prototype.initFields =
                 return true;
             }
         });
-    });
+    }
+);

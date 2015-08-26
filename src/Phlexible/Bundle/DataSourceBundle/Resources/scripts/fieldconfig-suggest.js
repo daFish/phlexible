@@ -1,6 +1,4 @@
-Ext.require('Phlexible.elementtype.field.SuggestField');
-
-Phlexible.fields.Registry.register('suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.PluginManager.set('field', 'suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeMode = 'local';
 
     if (item.configuration.suggest_source) {
@@ -40,7 +38,7 @@ Phlexible.fields.Registry.register('suggest', function (parentConfig, item, valu
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
-        xtype: 'datasources-field-suggest',
+        xtype: 'tag',
         name: config.name + '[]',
         width: (parseInt(item.configuration.width, 10) || 200),
 
@@ -84,7 +82,7 @@ Phlexible.fields.Registry.register('suggest', function (parentConfig, item, valu
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'suggest', {
     type: 'suggest',
     titles: {
         de: 'Suggest',

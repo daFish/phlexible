@@ -1,4 +1,4 @@
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'root', {
     type: 'root',
     titles: {
         de: 'Root',

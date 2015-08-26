@@ -30,7 +30,7 @@ class AddPortletsPass implements CompilerPassInterface
         $portlets = array();
         foreach ($container->findTaggedServiceIds('phlexible_dashboard.portlet') as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
-                throw new \Exception("Missing alias on phlexible_dashboard.portlet tag");
+                throw new \Exception("Missing alias on phlexible_dashboard.portlet tag $id");
             }
             $portlets[$attributes[0]['alias']] = new Reference($id);
         }

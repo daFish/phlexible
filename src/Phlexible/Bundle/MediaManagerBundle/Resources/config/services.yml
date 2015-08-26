@@ -9,10 +9,14 @@ parameters:
     phlexible_media_manager.delete_policy: hide_old
 
 services:
+    phlexible_media_manager.volume_manager:
+        class: Phlexible\Component\Volume\VolumeManager
+        arguments: [[]]
+
     phlexible_media_manager.file_serializer:
         class: Phlexible\Bundle\MediaManagerBundle\Serializer\FileSerializer
         arguments:
-            - @phlexible_media_type.media_type_manager
+            - @phlexible_media.media_classifier
             - @phlexible_media_cache.cache_manager
             - @phlexible_media_manager.file_usage_manager
             - @router

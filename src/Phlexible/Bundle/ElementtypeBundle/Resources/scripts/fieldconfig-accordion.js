@@ -1,7 +1,7 @@
 Ext.require('Phlexible.elementtype.field.Accordion');
 Ext.require('Phlexible.element.ElementDataTabHelper');
 
-Phlexible.fields.Registry.register('accordion', function (parentConfig, item, valueStructure, element) {
+Phlexible.PluginManager.set('field', 'accordion', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'accordion',
         title: item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')],
@@ -50,7 +50,7 @@ Phlexible.fields.Registry.register('accordion', function (parentConfig, item, va
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'accordion', {
     type: 'accordion',
     titles: {
         de: 'Akkordion',

@@ -1,4 +1,4 @@
-Phlexible.fields.Registry.register('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.PluginManager.set('field', 'displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     // labels
     var hideLabel,
         label,
@@ -58,7 +58,7 @@ Phlexible.fields.Registry.register('displayfield', function (parentConfig, item,
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'displayfield', {
     type: 'displayfield',
     titles: {
         de: 'Anzeigefeld',

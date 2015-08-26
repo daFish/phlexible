@@ -1,5 +1,5 @@
 services:
-    phlexible_siteroot.file.puli_repository:
+    phlexible_siteroot.puli_repository:
         class: Phlexible\Component\Site\File\PuliSiteRepository
         arguments:
             - @puli.discovery
@@ -8,10 +8,10 @@ services:
             - "%kernel.root_dir%/Resources/sites"
             - "/tipfinder/sites"
 
-    phlexible_siteroot.file.siteroot_manager:
+    phlexible_siteroot.siteroot_manager.default:
         class: Phlexible\Component\Site\File\SiteManager
         arguments:
-            - @phlexible_siteroot.file.puli_repository
+            - @phlexible_siteroot.puli_repository
             - @validator
             - @event_dispatcher
         public: false

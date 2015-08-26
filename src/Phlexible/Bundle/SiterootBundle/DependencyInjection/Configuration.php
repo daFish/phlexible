@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
                         ->ifNotInArray($supportedDrivers)
                         ->thenInvalid('The driver %s is not supported. Please choose one of '.json_encode($supportedDrivers))
                     ->end()
-                    ->defaultValue('orm')
+                    ->defaultValue('file')
                     ->cannotBeOverwritten()
                     ->cannotBeEmpty()
                 ->end()

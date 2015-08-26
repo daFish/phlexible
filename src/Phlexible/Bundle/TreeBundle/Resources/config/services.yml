@@ -123,13 +123,12 @@ services:
         class: Phlexible\Bundle\TreeBundle\Portlet\LatestNodeChangesPortlet
         public: false
         arguments:
-            - @translator
             - @phlexible_tree.tree_manager
             - @phlexible_tree.node_manager
             - @phlexible_tree.icon_resolver
             - %phlexible_tree.portlet.num_items%
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: latest_node_changes}
 
     # searches
     phlexible_tree.search.node_id:

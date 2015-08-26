@@ -1,4 +1,4 @@
-Phlexible.fields.Registry.register('checkbox', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.PluginManager.set('field', 'checkbox', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId),
         boxLabel = item.labels.boxLabel || {};
 
@@ -22,7 +22,7 @@ Phlexible.fields.Registry.register('checkbox', function (parentConfig, item, val
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'checkbox', {
     type: 'checkbox',
     titles: {
         de: 'Checkbox',

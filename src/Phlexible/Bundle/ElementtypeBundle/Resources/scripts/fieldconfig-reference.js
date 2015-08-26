@@ -1,4 +1,4 @@
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'reference', {
     type: 'reference',
     titles: {
         de: 'Referenz',

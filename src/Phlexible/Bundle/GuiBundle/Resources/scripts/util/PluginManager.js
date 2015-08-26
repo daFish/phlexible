@@ -3,47 +3,60 @@
  */
 Ext.define('Phlexible.gui.util.PluginManager', {
     constructor: function() {
-        this.plugins = {};
+        this.sections = {};
     },
 
-    addObject: function(plugin, key, value) {
-        if (!this.plugins[plugin]) {
-            this.plugins[plugin] = {};
+    /**
+     * @deprecated
+     */
+    addObject: function(section, key, value) {
+        this.set(section, key, value);
+    },
+
+    set: function(section, key, value) {
+        if (!this.sections[section]) {
+            this.sections[section] = {};
         }
-        this.plugins[plugin][key] = value;
+        this.sections[section][key] = value;
+
+        Phlexible.Logger.notice("PluginManager " + section + "/" + key + ": " + typeof value);
     },
 
-    append: function(plugin, value) {
-        if (!this.plugins[plugin]) {
-            this.plugins[plugin] = [];
+    append: function(section, value) {
+        if (!this.sections[section]) {
+            this.sections[section] = [];
         }
-        this.plugins[plugin].push(value);
+        this.sections[section].push(value);
     },
 
-    prepend: function(plugin, value) {
-        if (!this.plugins[plugin]) {
-            this.plugins[plugin] = [];
+    prepend: function(section, value) {
+        if (!this.sections[section]) {
+            this.sections[section] = [];
         }
-        this.plugins[plugin].unshift(value);
+        this.sections[section].unshift(value);
     },
 
-    get: function(plugin) {
-        return this.plugins[plugin];
+    get: function(section) {
+        return this.sections[section];
     },
 
-    remove: function(plugin, value) {
-        if (!this.plugins[plugin]) {
+    contains: function(section, key) {
+        return this.sections[section] !== undefined && this.sections[section][key] !== undefined;
+    },
+
+    remove: function(section, value) {
+        if (!this.sections[section]) {
             return;
         }
 
-        var index = Ext.Array.indexOf(this.plugins[plugin], value);
+        var index = Ext.Array.indexOf(this.sections[section], value);
 
         if (index >= 0) {
-            this.plugins[plugin].splice(index, 1);
+            this.sections[section].splice(index, 1);
         }
     },
 
-    each: function(plugin, callback) {
-        Ext.each(this.plugins[plugin], callback);
+    each: function(section, callback) {
+        Ext.each(this.sections[section], callback);
     }
 });

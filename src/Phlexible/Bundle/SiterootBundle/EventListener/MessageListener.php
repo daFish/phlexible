@@ -13,9 +13,9 @@ namespace Phlexible\Bundle\SiterootBundle\EventListener;
 
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
-use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
-use Phlexible\Bundle\SiterootBundle\SiterootEvents;
 use Phlexible\Bundle\SiterootBundle\SiterootMessage;
+use Phlexible\Component\Site\Event\SiteEvent;
+use Phlexible\Component\Site\SiteEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -44,49 +44,49 @@ class MessageListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            SiterootEvents::CREATE_SITEROOT => 'onCreateSiteroot',
-            SiterootEvents::UPDATE_SITEROOT => 'onUpdateSiteroot',
-            SiterootEvents::DELETE_SITEROOT => 'onDeleteSiteroot',
+            SiteEvents::CREATE_SITE => 'onCreateSite',
+            SiteEvents::UPDATE_SITE => 'onUpdateSite',
+            SiteEvents::DELETE_SITE => 'onDeleteSite',
         );
     }
 
     /**
-     * @param SiterootEvent $event
+     * @param SiteEvent $event
      */
-    public function onCreateSiteroot(SiterootEvent $event)
+    public function onCreateSite(SiteEvent $event)
     {
-        $siteroot = $event->getSiteroot();
+        $site = $event->getSite();
 
         $message = SiterootMessage::create(
-            "Siteroot {$siteroot->getTitle()} created."
-        );
-
-        $this->postMessage($message);
-    }
-
-    /**
-     * @param SiterootEvent $event
-     */
-    public function onUpdateSiteroot(SiterootEvent $event)
-    {
-        $siteroot = $event->getSiteroot();
-
-        $message = SiterootMessage::create(
-            "Siteroot {$siteroot->getTitle()} updated."
+            "Site {$site->getTitle()} created."
         );
 
         $this->postMessage($message);
     }
 
     /**
-     * @param SiterootEvent $event
+     * @param SiteEvent $event
      */
-    public function onDeleteSiteroot(SiterootEvent $event)
+    public function onUpdateSite(SiteEvent $event)
     {
-        $siteroot = $event->getSiteroot();
+        $site = $event->getSite();
 
         $message = SiterootMessage::create(
-            "Siteroot {$siteroot->getTitle()} deleted."
+            "Site {$site->getTitle()} updated."
+        );
+
+        $this->postMessage($message);
+    }
+
+    /**
+     * @param SiteEvent $event
+     */
+    public function onDeleteSite(SiteEvent $event)
+    {
+        $site = $event->getSite();
+
+        $message = SiterootMessage::create(
+            "Site {$site->getTitle()} deleted."
         );
 
         $this->postMessage($message);

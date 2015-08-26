@@ -2,17 +2,10 @@ Ext.define('Phlexible.elementtype.util.Registry', {
     factories: {},
 
     /**
-     * @param {String}   key
-     * @param {Function} fn
+     * @deprecated
      */
-    register: function (key, fn) {
-        if (this.has(key)) {
-            throw new Error("Field factory " + key + ' already registered.');
-        }
-
-        this.factories[key] = fn;
-
-        Phlexible.Logger.debug('Registered field factory ' + key);
+    register: function () {
+        throw new Error("Phlexible.elementtype.util.Registry.register() called.");
     },
 
     /**
@@ -20,7 +13,7 @@ Ext.define('Phlexible.elementtype.util.Registry', {
      * @returns {Boolean}
      */
     has: function (key) {
-        return !!this.factories[key];
+        return Phlexible.PluginManager.contains('field', key);
     },
 
     /**
@@ -32,7 +25,7 @@ Ext.define('Phlexible.elementtype.util.Registry', {
             throw new Error("Field factory " + key + ' not registered.');
         }
 
-        return this.factories[key];
+        return Phlexible.PluginManager.get('field', key);
     },
 
     /**

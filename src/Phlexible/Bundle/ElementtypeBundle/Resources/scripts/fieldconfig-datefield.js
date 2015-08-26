@@ -1,4 +1,4 @@
-Phlexible.fields.Registry.register('date', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.PluginManager.set('field', 'date', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -21,7 +21,7 @@ Phlexible.fields.Registry.register('date', function (parentConfig, item, valueSt
     return config;
 });
 
-Phlexible.fields.FieldTypes.register({
+Phlexible.PluginManager.set('type', 'date', {
     type: 'date',
     titles: {
         de: 'Datum',

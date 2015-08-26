@@ -12,14 +12,13 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Serializer;
 
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaManager\Usage\FileUsageManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
-use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\VolumeInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Temp\MediaClassifier\MediaClassifier;
 
 /**
  * File serializer
@@ -29,9 +28,9 @@ use Symfony\Component\Routing\RouterInterface;
 class FileSerializer
 {
     /**
-     * @var MediaTypeManagerInterface
+     * @var MediaClassifier
      */
-    private $mediaTypeManager;
+    private $mediaClassifier;
 
     /**
      * @var CacheManagerInterface
@@ -49,19 +48,19 @@ class FileSerializer
     private $router;
 
     /**
-     * @param MediaTypeManagerInterface $mediaTypeManager
-     * @param CacheManagerInterface     $cacheManager
-     * @param FileUsageManager          $fileUsageManager
-     * @param RouterInterface           $router
+     * @param MediaClassifier       $mediaClassifier
+     * @param CacheManagerInterface $cacheManager
+     * @param FileUsageManager      $fileUsageManager
+     * @param RouterInterface       $router
      */
     public function __construct(
-        MediaTypeManagerInterface $mediaTypeManager,
+        MediaClassifier $mediaClassifier,
         CacheManagerInterface $cacheManager,
         FileUsageManager $fileUsageManager,
         RouterInterface $router
     )
     {
-        $this->mediaTypeManager = $mediaTypeManager;
+        $this->mediaClassifier = $mediaClassifier;
         $this->cacheManager = $cacheManager;
         $this->fileUsageManager = $fileUsageManager;
         $this->router = $router;
@@ -208,16 +207,7 @@ class FileSerializer
         );
 
         if ($file instanceof ExtendedFileInterface) {
-            $mediaType = $this->mediaTypeManager->find(strtolower($file->getMediaType()));
-            if (!$mediaType) {
-                $mediaType = $this->mediaTypeManager->create();
-                $mediaType->setName('unknown');
-            }
-            $mediaTypeTitle = $mediaType->getTitle($language);
-
             $data['mediaType'] = $file->getMediaType();
-            $data['mediaTypeTitle'] = $mediaTypeTitle;
-            $data['mediaCategory'] = $file->getMediaCategory();
         }
 
         return $data;

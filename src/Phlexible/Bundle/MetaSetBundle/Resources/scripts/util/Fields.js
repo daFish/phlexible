@@ -145,7 +145,7 @@ Ext.define('Phlexible.metaset.util.Fields', {
                     }
                 }
 
-                var w = Ext.create('Phlexible.metaset.window.MetaSuggestWindow', {
+                var w = Ext.create('Phlexible.datasource.window.MetaSuggestWindow', {
                     record: record,
                     valueField: field,
                     metaLanguage: grid.language,

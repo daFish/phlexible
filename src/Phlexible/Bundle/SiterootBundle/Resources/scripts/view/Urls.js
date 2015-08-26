@@ -173,7 +173,7 @@ Ext.define('Phlexible.siteroot.view.Urls', {
      * Add url
      */
     onAddUrl: function () {
-        var url = Ext.create('Phlexible.siteroot.model.Url', {
+        var url = Ext.create('Phlexible.siteroot.model.EntryPoint', {
             id: '',
             hostname: '',
             language: '',
