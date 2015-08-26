@@ -237,7 +237,7 @@ Ext.define('Phlexible.user.view.users.Filter', {
             render: function(){
                 var keyMap = this.getKeyMap();
                 keyMap.addBinding({
-                    key: Ext.EventObject.ENTER,
+                    key: Ext.EventObjectImpl.ENTER,
                     fn: this.updateFilter,
                     scope: this
                 });
