@@ -18,9 +18,10 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 interface TreeFactoryInterface
 {
     /**
-     * @param string $siteRootId
+     * @param TreeContextInterface $treeContext
+     * @param string               $siteRootId
      *
      * @return TreeInterface
      */
-    public function factory($siteRootId);
+    public function factory(TreeContextInterface $treeContext, $siteRootId);
 }

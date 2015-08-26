@@ -527,7 +527,7 @@ Phlexible.tree.view.tab.List = Ext.extend(Ext.Panel, {
     },
 
     onLoadElement: function (element) {
-        if (element.getElementtypeType() == 'part') {
+        if (element.getTreeNode().attributes.type == 'part') {
             this.disable();
             this.store.removeAll();
             return;
@@ -541,7 +541,7 @@ Phlexible.tree.view.tab.List = Ext.extend(Ext.Panel, {
     },
 
     doLoad: function (element) {
-        if (element.getElementtypeType() == 'area') {
+        if (element.getTreeNode().attributes.type == 'area') {
             this.store.baseParams.tid = element.getNodeId();
             this.store.baseParams.language = element.getLanguage();
             this.store.baseParams.area_id = element.getAreaId();
@@ -570,7 +570,7 @@ Phlexible.tree.view.tab.List = Ext.extend(Ext.Panel, {
 
         var cols = this.getComponent(1).getView().mainHd.select('.x-grid3-cell-inner', true);
         cols.elements[0].update(element.getNodeId());
-        cols.elements[1].update(element.getElementtypeName());
+        cols.elements[1].update(element.getType());
         cols.elements[2].update('<img src="' + element.getTreeNode().attributes.icon + '" width="18" height="18" style="vertical-align: middle;" /> ' + element.getTreeNode().attributes.backendTitle);
         cols.elements[3].update(Phlexible.Format.date(Date.parseDate(element.getCreatedAt(), 'Y-m-d H:i:s')));
         cols.elements[4].update(Phlexible.Format.date(Date.parseDate(element.getTreeNode().attributes.publishedAt, 'Y-m-d H:i:s')));
@@ -731,7 +731,7 @@ Phlexible.tree.view.tab.List = Ext.extend(Ext.Panel, {
 
         var url = Phlexible.Router.generate('tree_list_sort');
         var id_field = 'tid';
-        if (this.element.getElementtypeType() === 'area') {
+        if (this.element.getTreeNode().attributes.type === 'area') {
             url = Phlexible.Router.generate('teasers_layout_sort');
             id_field = 'teaser_id';
         }
@@ -759,7 +759,7 @@ Phlexible.tree.view.tab.List = Ext.extend(Ext.Panel, {
                     tb.items.items[2].disable();
                     this.store.reload();
 
-                    if (this.element.getElementtypeType() === 'area') {
+                    if (this.element.getTreeNode().attributes.type === 'area') {
                         this.fireEvent('sortArea');
                     }
                     else {

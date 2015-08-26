@@ -8,7 +8,7 @@
 
 namespace Phlexible\Bundle\TreeBundle\Node;
 
-use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
+use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 
@@ -35,18 +35,18 @@ class ReferenceNodeContext extends NodeContext
     private $depth;
 
     /**
-     * @param NodeInterface         $node
-     * @param TreeInterface         $tree
-     * @param TreeMediatorInterface $mediator
-     * @param string                $language
-     * @param NodeContext           $referenceNode
-     * @param int                   $maxDepth
-     * @param int                   $depth
+     * @param NodeInterface     $node
+     * @param TreeInterface     $tree
+     * @param MediatorInterface $mediator
+     * @param string            $language
+     * @param NodeContext       $referenceNode
+     * @param int               $maxDepth
+     * @param int               $depth
      */
     public function __construct(
         NodeInterface $node,
         TreeInterface $tree,
-        TreeMediatorInterface $mediator,
+        MediatorInterface $mediator,
         $language,
         NodeContext $referenceNode = null,
         $maxDepth = null,

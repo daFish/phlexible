@@ -9,10 +9,10 @@
 namespace Phlexible\Bundle\TeaserBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TeaserBundle\Event\TeaserEvent;
 use Phlexible\Bundle\TeaserBundle\Exception\RuntimeException;
 use Phlexible\Bundle\TeaserBundle\TeaserEvents;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -51,9 +51,8 @@ class LayoutController extends Controller
         $elementSourceManager = $this->get('phlexible_element.element_source_manager');
         $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
-        $this->get('phlexible_tree.mediator.element')->setVersionStrategy($this->get('phlexible_tree.mediator.preview_version_strategy'));
-
-        $tree = $treeManager->getByNodeId($nodeId);
+        $treeContext = new WorkingTreeContext($language);
+        $tree = $treeManager->getByNodeId($treeContext, $nodeId);
         $node = $tree->get($nodeId);
         $element = $elementService->findElement($node->getContentId());
         $elementMasterLanguage = $element->getMasterLanguage();
@@ -63,9 +62,9 @@ class LayoutController extends Controller
         $layoutareas = array();
         // TODO: repair
         foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
-            if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
-                $layoutareas[] = $layoutarea;
-            }
+            #if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
+            #    $layoutareas[] = $layoutarea;
+            #}
         }
 
         foreach ($layoutareas as $layoutarea) {
@@ -85,7 +84,7 @@ class LayoutController extends Controller
                 'id'        => 'area_' . $layoutarea->getId(),
                 'areaId'    => $layoutarea->getId(),
                 'parentId'  => $nodeId,
-                'text'      => $layoutarea->getTitle(),
+                'text'      => $layoutarea->getName(),
                 'icon'      => $iconResolver->resolveElementtype($layoutarea),
                 'type'      => $layoutarea->getType(),
                 'inherited' => null, //true,
@@ -124,7 +123,7 @@ class LayoutController extends Controller
                     'allowDrag' => false,
                     'allowDrop' => false,
                     'text'      => $teaser->getField('backend', $language),
-                    'icon'      => $iconResolver->resolveNode($teaser, $language),
+                    'icon'      => $iconResolver->resolveNode($teaser),
                     'leaf'      => true,
                     'inherited' => $teaser->getParent()->getId() !== $nodeId,
                     'inherit'   => !$teaser->isStopped($node),
@@ -344,7 +343,8 @@ class LayoutController extends Controller
         $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         $elementtype = $elementSourceManager->findElementtype($id);
-        $childElementtypes = $elementService->findAllowedChildren($elementtype);
+        // TODO: switch to type manager
+        $childElementtypes = array();//$elementService->findAllowedChildren($elementtype);
 
         $data = array();
         foreach ($childElementtypes as $childElementtype) {
@@ -789,9 +789,9 @@ class LayoutController extends Controller
         $layoutareas = array();
         // TODO: repair
         foreach ($elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
-            if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
-                $layoutareas[] = $layoutarea;
-            }
+            #if (in_array($elementtype, $elementService->findAllowedParents($layoutarea))) {
+            #    $layoutareas[] = $layoutarea;
+            #}
         }
 
         foreach ($layoutareas as $layoutarea) {

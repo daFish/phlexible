@@ -1,0 +1,46 @@
+<?php
+/**
+ * phlexible
+ *
+ * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
+ * @license   proprietary
+ */
+
+namespace Phlexible\Component\Tree;
+
+/**
+ * Live tree context
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
+class LiveTreeContext implements TreeContextInterface
+{
+    /**
+     * @var string
+     */
+    private $locale;
+
+    /**
+     * @param string $locale
+     */
+    public function __construct($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWorkspace()
+    {
+        return 'live';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+}

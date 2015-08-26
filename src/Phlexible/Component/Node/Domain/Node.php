@@ -8,91 +8,141 @@
 
 namespace Phlexible\Component\Node\Domain;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
  * Node
  *
  * @author Stephan Wentz <sw@brainbits.net>
- *
- * @ORM\Entity
- * @ORM\Table(name="node")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="node_type", type="string")
  */
 abstract class Node implements NodeInterface
 {
     /**
      * @var int
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
+     */
+    private $persistanceId;
+
+    /**
+     * @var int
      */
     private $id;
 
     /**
-     * @var int
-     * ORM\Column(name="parent_id", type="integer", nullable=true)
-     * @ORM\ManyToOne(targetEntity="Node")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @var string
      */
-    private $parentNode;
+    private $workspace;
+
+    /**
+     * @var int
+     */
+    private $parentId;
 
     /**
      * @var string
-     * @ORM\Column(name="siteroot_id", type="string", length=36, options={"fixed"=true})
      */
     private $siterootId;
 
     /**
      * @var string
-     * @ORM\Column(name="content_type", type="string")
+     */
+    private $path;
+
+    /**
+     * @var string
+     */
+    private $parentPath;
+
+    /**
+     * @var string
+     */
+    private $locale;
+
+    /**
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @var string
+     */
+    private $navigationTitle;
+
+    /**
+     * @var string
+     */
+    private $backendTitle;
+
+    /**
+     * @var string
+     */
+    private $slug;
+
+    /**
+     * @var string
      */
     private $contentType;
 
     /**
      * @var int
-     * @ORM\Column(name="content_id", type="integer", nullable=true)
      */
     private $contentId;
 
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     */
+    private $contentVersion;
+
+    /**
+     * @var int
      */
     private $sort = 0;
 
     /**
      * @var string
-     * @ORM\Column(name="sort_mode", type="string", length=255)
      */
     private $sortMode = 'free';
 
     /**
      * @var string
-     * @ORM\Column(name="sort_dir", type="string", length=255)
      */
     private $sortDir = 'asc';
 
     /**
      * @var string
-     * @ORM\Column(type="json_array", nullable=true)
      */
     private $attributes;
 
     /**
      * @var string
-     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
      */
     private $createUserId;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="created_at", type="datetime")
+     * @var DateTime
      */
     private $createdAt;
+
+    /**
+     * @var string
+     */
+    private $modifyUserId;
+
+    /**
+     * @var DateTime
+     */
+    private $modifiedAt;
+
+    /**
+     * @var string
+     */
+    private $publishUserId;
+
+    /**
+     * @var DateTime
+     */
+    private $publishedAt;
 
     /**
      * Constructor.
@@ -107,7 +157,7 @@ abstract class Node implements NodeInterface
      */
     public function isRoot()
     {
-        return $this->getParentNode() === null;
+        return $this->getParentId() === null;
     }
 
     /**
@@ -131,17 +181,35 @@ abstract class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function getParentNode()
+    public function getWorkspace()
     {
-        return $this->parentNode;
+        return $this->workspace;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setParentNode($parentNode)
+    public function setWorkspace($workspace)
     {
-        $this->parentNode = $parentNode;
+        $this->workspace = $workspace;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
 
         return $this;
     }
@@ -160,6 +228,114 @@ abstract class Node implements NodeInterface
     public function setSiterootId($siterootId)
     {
         $this->siterootId = $siterootId;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNavigationTitle()
+    {
+        return $this->navigationTitle;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNavigationTitle($navigationTitle)
+    {
+        $this->navigationTitle = $navigationTitle;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBackendTitle()
+    {
+        return $this->backendTitle;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setBackendTitle($backendTitle)
+    {
+        $this->backendTitle = $backendTitle;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
 
         return $this;
     }
@@ -196,6 +372,24 @@ abstract class Node implements NodeInterface
     public function setContentId($contentId)
     {
         $this->contentId = $contentId;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentVersion()
+    {
+        return $this->contentVersion;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContentVersion($contentVersion)
+    {
+        $this->contentVersion = $contentVersion;
 
         return $this;
     }
@@ -335,9 +529,117 @@ abstract class Node implements NodeInterface
     /**
      * {@inheritdoc}
      */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setCreatedAt(DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPersistanceId()
+    {
+        return $this->persistanceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModifyUserId()
+    {
+        return $this->modifyUserId;
+    }
+
+    /**
+     * @param string $modifyUserId
+     *
+     * @return $this
+     */
+    public function setModifyUserId($modifyUserId)
+    {
+        $this->modifyUserId = $modifyUserId;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @param DateTime $modifiedAt
+     *
+     * @return $this
+     */
+    public function setModifiedAt($modifiedAt)
+    {
+        $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublishUserId()
+    {
+        return $this->publishUserId;
+    }
+
+    /**
+     * @param string $publishUserId
+     *
+     * @return $this
+     */
+    public function setPublishUserId($publishUserId)
+    {
+        $this->publishUserId = $publishUserId;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * @param DateTime $publishedAt
+     *
+     * @return $this
+     */
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentPath()
+    {
+        return $this->parentPath;
+    }
+
+    /**
+     * @param string $parentPath
+     *
+     * @return $this
+     */
+    public function setParentPath($parentPath)
+    {
+        $this->parentPath = $parentPath;
 
         return $this;
     }

@@ -8,9 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Pattern;
 
-use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Site\Domain\Site;
 
 /**
  * Pattern resolver
@@ -38,13 +37,13 @@ class PatternResolver
      * Resolved page title by configured pattern
      *
      * @param string      $patternName
-     * @param Siteroot    $siteroot
+     * @param Site    $siteroot
      * @param NodeContext $node
      * @param string      $language
      *
      * @return string
      */
-    public function replace($patternName, Siteroot $siteroot, NodeContext $node, $language)
+    public function replace($patternName, Site $siteroot, NodeContext $node, $language)
     {
         if (!isset($this->patterns[$patternName])) {
             $pattern = '%p';
@@ -59,13 +58,13 @@ class PatternResolver
      * Resolve page title by pattern
      *
      * @param string      $pattern
-     * @param Siteroot    $siteroot
+     * @param Site    $siteroot
      * @param NodeContext $node
      * @param string      $language
      *
      * @return string
      */
-    public function replacePattern($pattern, Siteroot $siteroot, NodeContext $node, $language)
+    public function replacePattern($pattern, Site $siteroot, NodeContext $node, $language)
     {
         if (strpos($pattern, '%s') !== false) {
             $pattern = str_replace('%s', $siteroot->getTitle($language), $pattern);

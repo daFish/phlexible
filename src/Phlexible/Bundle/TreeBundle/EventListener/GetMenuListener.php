@@ -10,8 +10,9 @@ namespace Phlexible\Bundle\TreeBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetMenuEvent;
 use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class GetMenuListener
 {
     /**
-     * @var SiterootManagerInterface
+     * @var SiteManagerInterface
      */
     private $siterootManager;
 
@@ -37,12 +38,12 @@ class GetMenuListener
     private $authorizationChecker;
 
     /**
-     * @param SiterootManagerInterface      $siterootManager
+     * @param SiteManagerInterface      $siterootManager
      * @param TreeManagerInterface          $treeManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
-        SiterootManagerInterface $siterootManager,
+        SiteManagerInterface $siterootManager,
         TreeManagerInterface $treeManager,
         AuthorizationCheckerInterface $authorizationChecker
     )
@@ -59,8 +60,10 @@ class GetMenuListener
     {
         $items = $event->getItems();
 
+        $treeContext = new WorkingTreeContext('de');
+
         foreach ($this->siterootManager->findAll() as $siteroot) {
-            $tree = $this->treeManager->getBySiteRootId($siteroot->getId());
+            $tree = $this->treeManager->getBySiteRootId($treeContext, $siteroot->getId());
             $root = $tree->getRoot();
 
             if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') &&

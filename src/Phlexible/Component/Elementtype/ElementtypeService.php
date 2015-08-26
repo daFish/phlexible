@@ -11,9 +11,7 @@ namespace Phlexible\Component\Elementtype;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
-use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Model\ElementtypeManagerInterface;
-use Phlexible\Component\Elementtype\Model\ViabilityManagerInterface;
 use Phlexible\Component\Elementtype\Usage\UsageManager;
 
 /**
@@ -29,27 +27,19 @@ class ElementtypeService
     private $elementtypeManager;
 
     /**
-     * @var ViabilityManagerInterface
-     */
-    private $viabilityManager;
-
-    /**
-     * @var \Phlexible\Component\Elementtype\Usage\UsageManager
+     * @var UsageManager
      */
     private $usageManager;
 
     /**
      * @param ElementtypeManagerInterface $elementtypeManager
-     * @param ViabilityManagerInterface   $viabilityManager
-     * @param \Phlexible\Component\Elementtype\Usage\UsageManager                $usageManager
+     * @param UsageManager                $usageManager
      */
     public function __construct(
         ElementtypeManagerInterface $elementtypeManager,
-        ViabilityManagerInterface $viabilityManager,
-        UsageManager $usageManager)
-    {
+        UsageManager $usageManager
+    ) {
         $this->elementtypeManager = $elementtypeManager;
-        $this->viabilityManager = $viabilityManager;
         $this->usageManager = $usageManager;
     }
 
@@ -58,7 +48,7 @@ class ElementtypeService
      *
      * @param int $elementtypeId
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
+     * @return Elementtype
      */
     public function findElementtype($elementtypeId)
     {
@@ -70,7 +60,7 @@ class ElementtypeService
      *
      * @param string $type
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
+     * @return Elementtype[]
      */
     public function findElementtypeByType($type)
     {
@@ -87,7 +77,7 @@ class ElementtypeService
     /**
      * Find all element types
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
+     * @return Elementtype[]
      */
     public function findAllElementtypes()
     {
@@ -95,9 +85,9 @@ class ElementtypeService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
+     * @return Elementtype[]
      * @deprecated
      */
     public function findAllowedParents(Elementtype $elementtype)
@@ -106,9 +96,9 @@ class ElementtypeService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $referenceElementtype
+     * @param Elementtype $referenceElementtype
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
+     * @return Elementtype[]
      */
     public function findElementtypesUsingReferenceElementtype(Elementtype $referenceElementtype)
     {
@@ -185,7 +175,7 @@ class ElementtypeService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
+     * @param Elementtype $elementtype
      */
     public function updateElementtype(Elementtype $elementtype)
     {
@@ -193,18 +183,9 @@ class ElementtypeService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
-     * @param array       $parentIds
-     */
-    public function updateViability(Elementtype $elementtype, array $parentIds)
-    {
-        $this->viabilityManager->updateViability($elementtype, $parentIds);
-    }
-
-    /**
      * Delete an Element Type
      *
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
+     * @param Elementtype $elementtype
      */
     public function deleteElementtype(Elementtype $elementtype)
     {
@@ -214,10 +195,10 @@ class ElementtypeService
     /**
      * Duplicate an elementtype
      *
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $sourceElementtype
+     * @param Elementtype $sourceElementtype
      * @param string      $user
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
+     * @return Elementtype
      */
     public function duplicateElementtype(Elementtype $sourceElementtype, $user)
     {

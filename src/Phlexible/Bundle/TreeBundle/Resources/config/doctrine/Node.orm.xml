@@ -7,13 +7,23 @@
     <entity name="Phlexible\Component\Node\Domain\Node" table="node" inheritance-type="SINGLE_TABLE">
         <discriminator-column name="node_type" type="string" />
 
-        <id name="id" type="integer">
+        <id name="persistanceId" column="persistance_id" type="integer">
             <generator strategy="AUTO" />
         </id>
 
+        <field name="id" column="id" type="integer" />
+        <field name="workspace" column="workspace" type="string" />
         <field name="siterootId" column="siteroot_id" type="string" />
+        <field name="path" column="path" type="string"/>
+        <field name="parentPath" column="parent_path" type="string"/>
+        <field name="locale" column="locale" type="string"/>
+        <field name="title" column="title" type="string"/>
+        <field name="navigationTitle" column="navigation_title" type="string" nullable="true"/>
+        <field name="backendTitle" column="backend_title" type="string" nullable="true"/>
+        <field name="slug" column="slug" type="string"/>
         <field name="contentType" column="content_type" type="string"/>
         <field name="contentId" column="content_id" type="integer" nullable="true" />
+        <field name="contentVersion" column="content_version" type="integer" nullable="true" />
         <field name="sort" type="integer" />
         <field name="sortMode" column="sort_mode" type="string" nullable="true" />
         <field name="sortDir" column="sort_dir" type="string" nullable="true" />
@@ -24,10 +34,19 @@
             </options>
         </field>
         <field name="createdAt" column="created_at" type="datetime" />
-
-        <many-to-one target-entity="Node" field="parentNode">
-            <join-column name="parent_id" referenced-column-name="id" />
-        </many-to-one>
+        <field name="modifyUserId" column="modify_user_id" type="string" length="36">
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </field>
+        <field name="modifiedAt" column="modified_at" type="datetime" />
+        <field name="publishUserId" column="publish_user_id" type="string" length="36">
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </field>
+        <field name="publishedAt" column="published_at" type="datetime" />
+        <field name="parentId" column="parent_id" type="integer" nullable="true"/>
     </entity>
 
 </doctrine-mapping>

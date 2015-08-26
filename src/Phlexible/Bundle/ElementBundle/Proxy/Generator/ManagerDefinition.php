@@ -18,7 +18,12 @@ class ManagerDefinition
     /**
      * @var array
      */
-    private $elementtypeIds = array();
+    private $names = array();
+
+    /**
+     * @var array
+     */
+    private $ids = array();
 
     /**
      * @var array
@@ -26,31 +31,44 @@ class ManagerDefinition
     private $dsIds = array();
 
     /**
-     * @param string $elementtypeId
-     * @param string $classname
-     * @param string $filename
+     * @param MainClassDefinition $class
+     * @param string              $filename
      */
-    public function addElementtypeId($elementtypeId, $classname, $filename)
+    public function addMainClass(MainClassDefinition $class, $filename)
     {
-        $this->elementtypeIds[$elementtypeId] = array('classname' => $classname, 'filename' => $filename);
+        $this->ids[$class->getElementtypeId()] = array(
+            'classname' => $class->getNamespace() . '\\' . $class->getClassname(),
+            'filename'  => $filename
+        );
+        $this->names[] = $class->getElementtypeName();
     }
 
     /**
      * @return array
      */
-    public function getElementtypeIds()
+    public function getIds()
     {
-        return $this->elementtypeIds;
+        return $this->ids;
     }
 
     /**
-     * @param string $dsId
-     * @param string $classname
-     * @param string $filename
+     * @return array
      */
-    public function addDsId($dsId, $classname, $filename)
+    public function getNames()
     {
-        $this->dsIds[$dsId] = array('classname' => $classname, 'filename' => $filename);
+        return $this->names;
+    }
+
+    /**
+     * @param StructureClassDefinition $class
+     * @param string                   $filename
+     */
+    public function addStructureClass(StructureClassDefinition $class, $filename)
+    {
+        $this->dsIds[$class->getDsId()] = array(
+            'classname' => $class->getNamespace() . '\\' . $class->getClassname(),
+            'filename'  => $filename
+        );
     }
 
     /**

@@ -1,0 +1,16 @@
+services:
+    phlexible_tree.element_node_type_provider:
+        class: Phlexible\Component\NodeType\ElementNodeTypeProvider
+        arguments:
+            - @phlexible_element.element_source_manager
+
+    phlexible_tree.node_type_constraint_resolver:
+        class: Phlexible\Component\NodeType\NodeTypeConstraintsResolver
+        arguments:
+            - @phlexible_siteroot.siteroot_manager
+
+    phlexible_tree.node_type_manager:
+        class: Phlexible\Component\NodeType\NodeTypeManager
+        arguments:
+            - @phlexible_tree.element_node_type_provider
+            - @phlexible_tree.node_type_constraint_resolver

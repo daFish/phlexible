@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\TreeBundle\Search;
 
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -26,7 +26,7 @@ class NodeIdSearch extends AbstractNodeSearch
     private $treeManager;
 
     /**
-     * @var SiterootManagerInterface
+     * @var \Phlexible\Component\Site\Model\SiteManagerInterface
      */
     private $siterootManager;
 
@@ -47,14 +47,14 @@ class NodeIdSearch extends AbstractNodeSearch
 
     /**
      * @param TreeManagerInterface          $treeManager
-     * @param SiterootManagerInterface      $siterootManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface      $siterootManager
      * @param \Phlexible\Bundle\TreeBundle\Icon\IconResolver                  $iconResolver
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param string                        $defaultLanguage
      */
     public function __construct(
         TreeManagerInterface $treeManager,
-        SiterootManagerInterface $siterootManager,
+        SiteManagerInterface $siterootManager,
         IconResolver $iconResolver,
         AuthorizationCheckerInterface $authorizationChecker,
         $defaultLanguage)
@@ -100,7 +100,7 @@ class NodeIdSearch extends AbstractNodeSearch
         }
 
         $siteroot = $this->siterootManager->find($node->getSiterootId());
-        $icon = $this->iconResolver->resolveNode($node, $this->defaultLanguage);
+        $icon = $this->iconResolver->resolveNode($node);
 
         return array($this->nodeToResult($node, $siteroot, 'Node ID Search', $icon, $this->defaultLanguage));
     }

@@ -15,7 +15,6 @@ use Phlexible\Bundle\ElementBundle\Proxy\ClassManager;
 use Phlexible\Bundle\TreeBundle\Entity\PageNode;
 use Phlexible\Bundle\TreeBundle\Entity\PartNode;
 use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
-use Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy\VersionStrategyInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 
@@ -24,17 +23,12 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ElementTreeMediator implements TreeMediatorInterface
+class ElementTreeMediator implements ContentProviderInterface
 {
     /**
      * @var ElementService
      */
     private $elementService;
-
-    /**
-     * @var VersionStrategyInterface
-     */
-    private $versionStrategy;
 
     /**
      * @var ClassManager
@@ -47,19 +41,16 @@ class ElementTreeMediator implements TreeMediatorInterface
     private $entityManager;
 
     /**
-     * @param ElementService           $elementService
-     * @param VersionStrategyInterface $versionStrategy
-     * @param ClassManager             $classManager
-     * @param EntityManagerInterface   $entityManager
+     * @param ElementService         $elementService
+     * @param ClassManager           $classManager
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         ElementService $elementService,
-        VersionStrategyInterface $versionStrategy,
         ClassManager $classManager,
         EntityManagerInterface $entityManager
     ) {
         $this->elementService = $elementService;
-        $this->versionStrategy = $versionStrategy;
         $this->classManager = $classManager;
         $this->entityManager = $entityManager;
     }
@@ -69,15 +60,7 @@ class ElementTreeMediator implements TreeMediatorInterface
      */
     public function accept(NodeContext $node)
     {
-        return $node->getNode()->getContentType() === 'element' || $node->getNode()->getContentType() === 'element';
-    }
-
-    /**
-     * @param VersionStrategyInterface $versionStrategy
-     */
-    public function setVersionStrategy(VersionStrategyInterface $versionStrategy)
-    {
-        $this->versionStrategy = $versionStrategy;
+        return $this->classManager->containsName($node->getNode()->getContentType());
     }
 
     /**
@@ -85,7 +68,8 @@ class ElementTreeMediator implements TreeMediatorInterface
      */
     public function getField(NodeContext $node, $field, $language)
     {
-        $elementVersion = $this->versionStrategy->findElementVersion($node, $language);
+        $element = $this->elementService->findElement($node->getContentId());
+        $elementVersion = $this->elementService->findElementVersion($element, $node->getContentVersion());
 
         if (!$elementVersion) {
             return null;
@@ -124,12 +108,8 @@ class ElementTreeMediator implements TreeMediatorInterface
      */
     public function getContent(NodeContext $node, $language, $version = null)
     {
-        if ($version) {
-            $element = $this->elementService->findElement($node->getContentId());
-            $elementVersion = $this->elementService->findElementVersion($element, $version);
-        } else {
-            $elementVersion = $this->versionStrategy->findElementVersion($node, $language);
-        }
+        $element = $this->elementService->findElement($node->getContentId());
+        $elementVersion = $this->elementService->findElementVersion($element, $node->getContentVersion());
 
         if (!$elementVersion) {
             return null;
@@ -166,15 +146,7 @@ class ElementTreeMediator implements TreeMediatorInterface
             return $template;
         }
 
-        return '::' . $elementSource->getName() . '.html.twig';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isViewable(NodeContext $node)
-    {
-        return $node->getNode()->getContentType() === 'element';
+        return null;
     }
 
     /**

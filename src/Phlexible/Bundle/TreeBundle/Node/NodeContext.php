@@ -8,7 +8,9 @@
 
 namespace Phlexible\Bundle\TreeBundle\Node;
 
-use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
+use DateTime;
+use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
+use Phlexible\Bundle\TreeBundle\Model\PageInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
@@ -31,7 +33,7 @@ class NodeContext implements DomainObjectInterface
     protected $tree;
 
     /**
-     * @var TreeMediatorInterface
+     * @var MediatorInterface
      */
     protected $mediator;
 
@@ -41,12 +43,17 @@ class NodeContext implements DomainObjectInterface
     protected $language;
 
     /**
-     * @param NodeInterface         $node
-     * @param TreeInterface         $tree
-     * @param TreeMediatorInterface $mediator
-     * @param string                $language
+     * @var mixed
      */
-    public function __construct(NodeInterface $node, TreeInterface $tree, TreeMediatorInterface $mediator, $language)
+    private $content;
+
+    /**
+     * @param NodeInterface     $node
+     * @param TreeInterface     $tree
+     * @param MediatorInterface $mediator
+     * @param string            $language
+     */
+    public function __construct(NodeInterface $node, TreeInterface $tree, MediatorInterface$mediator, $language)
     {
         $this->node = $node;
         $this->tree = $tree;
@@ -87,7 +94,7 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
-     * @return TreeMediatorInterface
+     * @return MediatorInterface
      */
     public function getMediator()
     {
@@ -111,11 +118,75 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
+     * @return string
+     */
+    public function getWorkspace()
+    {
+        return $this->node->getWorkspace();
+    }
+
+    /**
      * @return int
      */
     public function getSiterootId()
     {
         return $this->node->getSiterootId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->node->getPath();
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentPath()
+    {
+        return $this->node->getParentPath();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->node->getLocale();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->node->getTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNavigationTitle()
+    {
+        return $this->node->getNavigationTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackendTitle()
+    {
+        return $this->node->getBackendTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->node->getSlug();
     }
 
     /**
@@ -132,6 +203,14 @@ class NodeContext implements DomainObjectInterface
     public function getContentId()
     {
         return $this->node->getContentId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentVersion()
+    {
+        return $this->node->getContentVersion();
     }
 
     /**
@@ -186,7 +265,7 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -194,13 +273,35 @@ class NodeContext implements DomainObjectInterface
     }
 
     /**
-     * @param string $language
-     *
-     * @return bool
+     * @return string|null
      */
-    public function getTitle($language = null)
+    public function getModifyUserId()
     {
-        return $this->getField("page", $language ?: $this->language);
+        return $this->node->getModifyUserId();
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getModifiedAt()
+    {
+        return $this->node->getModifiedAt();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPublishUserId()
+    {
+        return $this->node->getPublishUserId();
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getPublishedAt()
+    {
+        return $this->node->getPublishedAt();
     }
 
     /**
@@ -218,57 +319,19 @@ class NodeContext implements DomainObjectInterface
      */
     public function getInNavigation()
     {
-        return $this->node->getInNavigation();
+        return ($this->node instanceof PageInterface) ? $this->node->getInNavigation() : false;
+    }
+
+    public function isPublished()
+    {
     }
 
     /**
-     * @param string $language
-     *
      * @return bool
      */
-    public function isPublished($language = null)
+    public function isAsync()
     {
-        return $this->tree->isPublished($this, $language ?: $this->language);
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return string
-     */
-    public function getPublishUserId($language = null)
-    {
-        return $this->tree->getPublishUserId($this, $language ?: $this->language);
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return \DateTime|null
-     */
-    public function getPublishedAt($language = null)
-    {
-        return $this->tree->getPublishedAt($this, $language ?: $this->language);
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return int
-     */
-    public function getPublishedVersion($language = null)
-    {
-        return $this->tree->getPublishedVersion($this, $language ?: $this->language);
-    }
-
-    /**
-     * @param string $language
-     *
-     * @return bool
-     */
-    public function isAsync($language = null)
-    {
-        return $this->tree->isAsync($this, $language ?: $this->language);
+        return $this->tree->isAsync($this);
     }
 
     /**
@@ -375,7 +438,7 @@ class NodeContext implements DomainObjectInterface
     /**
      * @return NodeContext[]
      */
-    public function getPath()
+    public function getNodePath()
     {
         $path = array();
         $current = $this;
@@ -411,9 +474,9 @@ class NodeContext implements DomainObjectInterface
      */
     public function isViewable($language = null)
     {
-        return $this->isPublished($language ?: $this->language) &&
-            $this->getNode()->getInNavigation() &&
-            $this->mediator->isViewable($this, $language ?: $this->language);
+        return $this->node instanceof PageInterface &&
+            $this->isPublished($language ?: $this->language) &&
+            $this->getNode()->getInNavigation();
     }
 
     /**
@@ -440,7 +503,11 @@ class NodeContext implements DomainObjectInterface
      */
     public function getContent($language = null, $version = null)
     {
-        return $this->mediator->getContent($this, $language ?: $this->language, $version);
+        if (null === $this->content) {
+            $this->content = $this->mediator->getContent($this, $language ?: $this->language, $version);
+        }
+
+        return $this->content;
     }
 
     /**
@@ -475,6 +542,16 @@ class NodeContext implements DomainObjectInterface
      */
     public function getTemplate()
     {
-        return $this->mediator->getTemplate($this);
+        $template = $this->mediator->getTemplate($this);
+
+        if (!$template) {
+            $template = $this->node->getTemplate();
+
+            if (!$template) {
+                $template = '::' . $this->node->getContentType() . '.html.twig';
+            }
+        }
+
+        return $template;
     }
 }

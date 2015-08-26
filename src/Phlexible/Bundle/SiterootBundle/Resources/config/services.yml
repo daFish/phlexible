@@ -4,19 +4,19 @@ services:
         arguments: [@phlexible_siteroot.siteroot_manager]
 
     phlexible_siteroot.siteroot_request_matcher:
-        class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher
+        class: Phlexible\Component\Site\Site\SiteRequestMatcher
         arguments: [@phlexible_siteroot.siteroot_manager, %phlexible_siteroot.mappings%]
 
     phlexible_siteroot.siteroot_hostname_mapper:
-        class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameMapper
+        class: Phlexible\Component\Site\Site\SiteHostnameMapper
         arguments: [%phlexible_siteroot.mappings%]
 
     phlexible_siteroot.siteroot_hostname_generator:
-        class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator
+        class: Phlexible\Component\Site\Site\SiteHostnameGenerator
         arguments: [@phlexible_siteroot.siteroot_hostname_mapper]
 
     phlexible_siteroot.siteroots_accessor:
-        class: Phlexible\Bundle\SiterootBundle\Siteroot\SiterootsAccessor
+        class: Phlexible\Component\Site\Site\SitesAccessor
         arguments: [@phlexible_siteroot.siteroot_manager]
 
     # event listeners

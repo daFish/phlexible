@@ -8,9 +8,10 @@
 
 namespace Phlexible\Bundle\TreeBundle\Routing;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameMapper;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
+use Phlexible\Component\Site\Site\SiteHostnameMapper;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,7 @@ class RouteProvider implements RouteProviderInterface
     private $entityManager;
 
     /**
-     * @var SiterootHostnameMapper
+     * @var SiteHostnameMapper
      */
     private $mapper;
 
@@ -52,10 +53,10 @@ class RouteProvider implements RouteProviderInterface
      * Constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param SiterootHostnameMapper $mapper
+     * @param SiteHostnameMapper $mapper
      * @param CandidatesInterface    $candidatesStrategy
      */
-    public function __construct(EntityManagerInterface $entityManager, SiterootHostnameMapper $mapper, CandidatesInterface $candidatesStrategy)
+    public function __construct(EntityManagerInterface $entityManager, SiteHostnameMapper $mapper, CandidatesInterface $candidatesStrategy)
     {
         $this->entityManager = $entityManager;
         $this->mapper = $mapper;
@@ -115,6 +116,9 @@ class RouteProvider implements RouteProviderInterface
         return $route;
     }
 
+    /**
+     * @return ObjectRepository
+     */
     private function getRouteRepository()
     {
         return $this->entityManager->getRepository('PhlexibleTreeBundle:Route');

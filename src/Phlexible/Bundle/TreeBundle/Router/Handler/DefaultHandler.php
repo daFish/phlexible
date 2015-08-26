@@ -10,12 +10,12 @@ namespace Phlexible\Bundle\TreeBundle\Router\Handler;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
-use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootHostnameGenerator;
-use Phlexible\Bundle\SiterootBundle\Siteroot\SiterootRequestMatcher;
 use Phlexible\Bundle\TreeBundle\ContentTree\ContentTreeInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NoSiterootUrlFoundException;
 use Phlexible\Component\Node\Model\NodeInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\Site\Site\SiteHostnameGenerator;
+use Phlexible\Component\Site\Site\SiteRequestMatcher;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -48,12 +48,12 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
     private $treeManager;
 
     /**
-     * @var SiterootRequestMatcher
+     * @var \Phlexible\Component\Site\Site\SiteRequestMatcher
      */
     private $siterootRequestMatcher;
 
     /**
-     * @var SiterootHostnameGenerator
+     * @var SiteHostnameGenerator
      */
     private $siterootHostnameGenerator;
 
@@ -76,8 +76,8 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
      * @param LoggerInterface           $logger
      * @param EntityManagerInterface    $em
      * @param \Phlexible\Component\Node\Model\NodeManagerInterface      $treeManager
-     * @param SiterootRequestMatcher    $siterootRequestMatcher
-     * @param SiterootHostnameGenerator $siterootHostnameGenerator
+     * @param \Phlexible\Component\Site\Site\SiteRequestMatcher    $siterootRequestMatcher
+     * @param SiteHostnameGenerator $siterootHostnameGenerator
      * @param string                    $languages
      * @param string                    $defaultLanguage
      */
@@ -85,8 +85,8 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         LoggerInterface $logger,
         EntityManagerInterface $em,
         NodeManagerInterface $treeManager,
-        SiterootRequestMatcher $siterootRequestMatcher,
-        SiterootHostnameGenerator $siterootHostnameGenerator,
+        SiteRequestMatcher $siterootRequestMatcher,
+        SiteHostnameGenerator $siterootHostnameGenerator,
         $languages,
         $defaultLanguage)
     {
@@ -262,8 +262,6 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
         if (!$siteroot) {
             return null;
         }
-        $siterootUrl = $siteroot->getDefaultUrl();
-        $request->attributes->set('siterootUrl', $siterootUrl);
 
         return $this->treeManager->find($siteroot->getId());
     }

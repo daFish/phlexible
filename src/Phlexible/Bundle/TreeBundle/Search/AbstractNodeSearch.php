@@ -10,8 +10,8 @@ namespace Phlexible\Bundle\TreeBundle\Search;
 
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Site\Domain\Site;
 
 /**
  * Abstract node search
@@ -34,7 +34,7 @@ abstract class AbstractNodeSearch implements SearchProviderInterface
      *
      * @return SearchResult
      */
-    protected function nodeToResult(NodeContext $node, Siteroot $siteroot, $title, $icon, $language)
+    protected function nodeToResult(NodeContext $node, Site $siteroot, $title, $icon, $language)
     {
         $handlerData = array(
             'handler' => 'element',

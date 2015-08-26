@@ -16,7 +16,6 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
-use Phlexible\Component\Elementtype\Model\ViabilityManagerInterface;
 
 /**
  * Element service
@@ -41,26 +40,18 @@ class ElementService
     private $elementSourceManager;
 
     /**
-     * @var ViabilityManagerInterface
-     */
-    private $viabilityManager;
-
-    /**
      * @param ElementManagerInterface        $elementManager
      * @param ElementVersionManagerInterface $elementVersionManager
      * @param ElementSourceManagerInterface  $elementSourceManager
-     * @param ViabilityManagerInterface      $viabilityManager
      */
     public function __construct(
         ElementManagerInterface $elementManager,
         ElementVersionManagerInterface $elementVersionManager,
-        ElementSourceManagerInterface $elementSourceManager,
-        ViabilityManagerInterface $viabilityManager
+        ElementSourceManagerInterface $elementSourceManager
     ) {
         $this->elementManager = $elementManager;
         $this->elementVersionManager = $elementVersionManager;
         $this->elementSourceManager = $elementSourceManager;
-        $this->viabilityManager = $viabilityManager;
     }
 
     /**
@@ -101,7 +92,7 @@ class ElementService
     /**
      * @param Element $element
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
+     * @return Elementtype
      */
     public function findElementtype(Element $element)
     {
@@ -119,46 +110,13 @@ class ElementService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
      * @return ElementVersion[]
      */
     public function findOutdatedElementSources(Elementtype $elementtype)
     {
         return $this->elementSourceManager->findOutdatedElementSources($elementtype);
-    }
-
-    /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
-     *
-     * @return Elementtype[]
-     */
-    public function findAllowedParents(Elementtype $elementtype)
-    {
-        $elementtypes = array();
-        foreach ($this->viabilityManager->findAllowedParents($elementtype) as $viability) {
-            $elementtypes[] = $this->elementSourceManager->findElementtype($viability->getUnderElementtypeId());
-        }
-
-        return $elementtypes;
-    }
-
-    /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
-     *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype[]
-     */
-    public function findAllowedChildren(Elementtype $elementtype)
-    {
-        $elementtypes = array();
-        foreach ($this->viabilityManager->findAllowedChildren($elementtype) as $viability) {
-            $viabilityElementtype = $this->elementSourceManager->findElementtype($viability->getElementtypeId());
-            if ($viabilityElementtype) {
-                $elementtypes[] = $viabilityElementtype;
-            }
-        }
-
-        return $elementtypes;
     }
 
     /**
@@ -236,7 +194,7 @@ class ElementService
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
+     * @param Elementtype $elementtype
      *
      * @return ElementSource
      */

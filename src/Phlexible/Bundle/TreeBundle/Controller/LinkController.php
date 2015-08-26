@@ -87,7 +87,7 @@ class LinkController extends Controller
                     'id'       => $rootNode->getId(),
                     'eid'      => (int) $rootNode->getContentId(),
                     'text'     => $siteroot->getTitle(),
-                    'icon'     => $iconResolver->resolveNode($rootNode, $language),
+                    'icon'     => $iconResolver->resolveNode($rootNode),
                     // 'cls'      => 'siteroot-node',
                     // 'children' => $startNode->hasChildren() ? $this->_recurseNodes($startNode->getChildren(), $language) : array(),
                     'leaf'     => !$tree->hasChildren($rootNode),
@@ -262,7 +262,7 @@ class LinkController extends Controller
                     'id'       => $rootNode->getID(),
                     'eid'      => $rootNode->getTypeId(),
                     'text'     => $siteroot->getTitle(),
-                    'icon'     => $iconResolver->resolveNode($rootNode, $language),
+                    'icon'     => $iconResolver->resolveNode($rootNode),
                     'children' => $children,
                     'leaf'     => !$tree->hasChildren($rootNode),
                     'expanded' => false
@@ -358,7 +358,7 @@ class LinkController extends Controller
                         'id'       => $parentNode->getId(),
                         'eid'      => $parentNode->getTypeId(),
                         'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $parentNode->getId() . ']',
-                        'icon'     => $iconResolver->resolveNode($parentNode, $language),
+                        'icon'     => $iconResolver->resolveNode($parentNode),
                         'children' => array(),
                         'leaf'     => false,
                         'expanded' => false,
@@ -446,7 +446,7 @@ class LinkController extends Controller
                 'id'       => $node->getId(),
                 'eid'      => $node->getContentId(),
                 'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $tid . ']',
-                'icon'     => $iconResolver->resolveNode($node, $language),
+                'icon'     => $iconResolver->resolveNode($node),
                 'children' => !$tree->hasChildren($node)
                         ? array()
                         : $mode == self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)

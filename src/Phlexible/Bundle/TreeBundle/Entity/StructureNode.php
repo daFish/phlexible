@@ -9,6 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Phlexible\Bundle\TreeBundle\Model\StructureInterface;
 use Phlexible\Component\Node\Domain\Node;
 
 /**
@@ -18,7 +19,7 @@ use Phlexible\Component\Node\Domain\Node;
  *
  * @ORM\Entity
  */
-class StructureNode extends Node
+class StructureNode extends Node implements StructureInterface
 {
     /**
      * {@inheritdoc}

@@ -230,9 +230,6 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
                         ]
                     },
                     {
-                        xtype: 'elementtypes-viability'
-                    },
-                    {
                         xtype: 'elementtypes-usage'
                     },
                     {
@@ -289,12 +286,8 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         return this.getMainTabPanel().getComponent(0);
     },
 
-    getViabilityTab: function () {
-        return this.getMainTabPanel().getComponent(1);
-    },
-
     getUsageTab: function () {
-        return this.getMainTabPanel().getComponent(2);
+        return this.getMainTabPanel().getComponent(1);
     },
 
     getPropertyCards: function () {
@@ -318,7 +311,7 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
     },
 
     getPreviewWrap: function () {
-        return this.getMainTabPanel().getComponent(3);
+        return this.getMainTabPanel().getComponent(2);
     },
 
     getPreviewPanel: function () {
@@ -330,7 +323,6 @@ Phlexible.elementtypes.MainPanel = Ext.extend(Ext.Panel, {
         this.getFieldTabs().clear();
         this.getEditTreePanel().load(id, title, version, type);
         //this.getVersionsTab().load(id, title, version, type);
-        this.getViabilityTab().load(id, title, version, type);
         this.getUsageTab().load(id, title, version, type);
     },
 

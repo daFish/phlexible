@@ -191,8 +191,8 @@ Phlexible.tree.view.tab.Preview = Ext.extend(Ext.Panel, {
     },
 
     onLoadElement: function (element) {
-        if (element.getElementtypeType() === Phlexible.elementtypes.TYPE_FULL ||
-            element.getElementtypeType() === Phlexible.elementtypes.TYPE_PART) {
+        if (element.getTreeNode().attributes.type === 'page' ||
+            element.getTreeNode().attributes.type === 'part') {
             this.activeNodeId = this.element.getNodeId();
             this.activeLanguage = this.element.getLanguage();
 

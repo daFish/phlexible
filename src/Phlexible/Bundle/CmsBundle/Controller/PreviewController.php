@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\CmsBundle\Controller;
 
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,29 +31,23 @@ class PreviewController extends Controller
      */
     public function previewAction(Request $request, $nodeId)
     {
-        $language = $request->get('_locale');
+        $locale = $request->get('_locale');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $tree = $treeManager->getByNodeId($nodeId);
-        $tree->setDefaultLanguage($language);
+        $context = new WorkingTreeContext($locale);
+        $tree = $treeManager->getByNodeId($context, $nodeId);
         $node = $tree->get($nodeId);
 
         $siteroot = $siterootManager->find($node->getTree()->getSiterootId());
 
-        $request->setLocale($language);
+        $request->setLocale($locale);
         $request->attributes->set('node', $node);
         $request->attributes->set('siteroot', $siteroot);
         $request->attributes->set('preview', true);
 
         $this->get('router.request_context')->setParameter('preview', true);
-        $elementMediator = $this->get('phlexible_tree.mediator.element');
-        $versionStrategy = $this->get('phlexible_tree.mediator.preview_version_strategy');
-        if ($request->query->has('version')) {
-            $versionStrategy->setVersion($request->query->get('version'));
-        }
-        $elementMediator->setVersionStrategy($versionStrategy);
 
         return $this->render($node->getTemplate(), array('node' => $node, 'siteroot' => $siteroot));
     }

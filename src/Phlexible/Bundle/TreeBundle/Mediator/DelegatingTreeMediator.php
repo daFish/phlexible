@@ -15,15 +15,15 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class DelegatingTreeMediator implements TreeMediatorInterface
+class DelegatingTreeMediator implements MediatorInterface
 {
     /**
-     * @var TreeMediatorInterface[]
+     * @var MediatorInterface[]
      */
     private $mediators = array();
 
     /**
-     * @param TreeMediatorInterface[] $mediators
+     * @param MediatorInterface[] $mediators
      */
     public function __construct(array $mediators = array())
     {
@@ -33,11 +33,11 @@ class DelegatingTreeMediator implements TreeMediatorInterface
     }
 
     /**
-     * @param TreeMediatorInterface $mediator
+     * @param MediatorInterface $mediator
      *
      * @return $this
      */
-    public function addMediator(TreeMediatorInterface $mediator)
+    public function addMediator(MediatorInterface $mediator)
     {
         $this->mediators[] = $mediator;
 
@@ -56,7 +56,9 @@ class DelegatingTreeMediator implements TreeMediatorInterface
      */
     public function getField(NodeContext $node, $field, $language)
     {
-        if ($mediator = $this->findMediator($node)) {
+        $mediator = $this->findMediator($node);
+
+        if ($mediator instanceof ContentProviderInterface) {
             return $mediator->getField($node, $field, $language);
         }
 
@@ -68,7 +70,9 @@ class DelegatingTreeMediator implements TreeMediatorInterface
      */
     public function getFieldMappings(NodeContext $node)
     {
-        if ($mediator = $this->findMediator($node)) {
+        $mediator = $this->findMediator($node);
+
+        if ($mediator instanceof ContentProviderInterface) {
             return $mediator->getFieldMappings($node);
         }
 
@@ -80,7 +84,9 @@ class DelegatingTreeMediator implements TreeMediatorInterface
      */
     public function getContent(NodeContext $node, $language, $version = null)
     {
-        if ($mediator = $this->findMediator($node)) {
+        $mediator = $this->findMediator($node);
+
+        if ($mediator instanceof ContentProviderInterface) {
             return $mediator->getContent($node, $language, $version);
         }
 
@@ -92,7 +98,9 @@ class DelegatingTreeMediator implements TreeMediatorInterface
      */
     public function getContentVersions(NodeContext $node)
     {
-        if ($mediator = $this->findMediator($node)) {
+        $mediator = $this->findMediator($node);
+
+        if ($mediator instanceof ContentProviderInterface) {
             return $mediator->getContentVersions($node);
         }
 
@@ -104,23 +112,13 @@ class DelegatingTreeMediator implements TreeMediatorInterface
      */
     public function getTemplate(NodeContext $node)
     {
-        if ($mediator = $this->findMediator($node)) {
+        $mediator = $this->findMediator($node);
+
+        if ($mediator instanceof ContentProviderInterface) {
             return $mediator->getTemplate($node);
         }
 
         return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isViewable(NodeContext $node)
-    {
-        if ($mediator = $this->findMediator($node)) {
-            return $mediator->isViewable($node);
-        }
-
-        return false;
     }
 
     /**
@@ -141,7 +139,7 @@ class DelegatingTreeMediator implements TreeMediatorInterface
     /**
      * @param NodeContext $node
      *
-     * @return TreeMediatorInterface|null
+     * @return MediatorInterface|null
      */
     private function findMediator(NodeContext $node)
     {

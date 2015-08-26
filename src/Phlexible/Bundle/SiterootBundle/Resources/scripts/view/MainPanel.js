@@ -5,7 +5,7 @@ Ext.require('Phlexible.siteroots.NavigationGrid');
 Ext.require('Phlexible.siteroots.PropertyGrid');
 Ext.require('Phlexible.siteroots.SpecialTidGrid');
 Ext.require('Phlexible.siteroots.TitleForm');
-Ext.require('Phlexible.siteroots.UrlGrid');
+Ext.require('Phlexible.siteroots.TypesGrid');
 
 Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
     strings: Phlexible.siteroots.Strings,
@@ -55,10 +55,10 @@ Phlexible.siteroots.MainPanel = Ext.extend(Ext.Panel, {
             ],
             items: [
                 {
-                    xtype: 'siteroots-urls'
+                    xtype: 'siteroots-titles'
                 },
                 {
-                    xtype: 'siteroots-titles'
+                    xtype: 'siteroots-types'
                 },
                 {
                     xtype: 'siteroots-properties'

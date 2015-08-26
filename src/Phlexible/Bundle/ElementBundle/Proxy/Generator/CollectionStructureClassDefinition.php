@@ -13,18 +13,8 @@ namespace Phlexible\Bundle\ElementBundle\Proxy\Generator;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CollectionStructureClassDefinition extends ClassDefinition
+class CollectionStructureClassDefinition extends StructureClassDefinition
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $dsId;
-
     /**
      * @param string            $classname
      * @param string            $namespace
@@ -35,25 +25,14 @@ class CollectionStructureClassDefinition extends ClassDefinition
      */
     public function __construct($classname, $namespace, array $values, array $children, $name, $dsId)
     {
-        parent::__construct($classname, $namespace, $values, $children['classes'], $children['collections']);
-
-        $this->name = $name;
-        $this->dsId = $dsId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDsId()
-    {
-        return $this->dsId;
+        parent::__construct(
+            $classname,
+            $namespace,
+            $values,
+            $children['classes'],
+            $children['collections'],
+            $name,
+            $dsId
+        );
     }
 }

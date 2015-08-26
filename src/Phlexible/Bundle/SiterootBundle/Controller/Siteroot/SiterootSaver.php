@@ -9,9 +9,9 @@
 namespace Phlexible\Bundle\SiterootBundle\Controller\Siteroot;
 
 use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Component\Site\Domain\Site;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,14 +22,14 @@ use Symfony\Component\HttpFoundation\Request;
 class SiterootSaver
 {
     /**
-     * @var SiterootManagerInterface
+     * @var \Phlexible\Component\Site\Model\SiteManagerInterface
      */
     private $siterootManager;
 
     /**
-     * @param SiterootManagerInterface $siterootManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface $siterootManager
      */
-    public function __construct(SiterootManagerInterface $siterootManager)
+    public function __construct(SiteManagerInterface $siterootManager)
     {
         $this->siterootManager = $siterootManager;
     }
@@ -39,7 +39,7 @@ class SiterootSaver
      *
      * @param Request $request
      *
-     * @return Siteroot
+     * @return Site
      */
     public function saveAction(Request $request)
     {
@@ -55,18 +55,18 @@ class SiterootSaver
             ->applyNavigations($siteroot, $data)
             ->applyUrls($siteroot, $data);
 
-        $this->siterootManager->updateSiteroot($siteroot);
+        $this->siterootManager->updateSite($siteroot);
 
         return $siteroot;
     }
 
     /**
-     * @param Siteroot $siteroot
+     * @param Site $siteroot
      * @param array    $data
      *
      * @return $this
      */
-    private function applyTitles(Siteroot $siteroot, array $data)
+    private function applyTitles(Site $siteroot, array $data)
     {
         if (!array_key_exists('titles', $data)) {
             // noting to save
@@ -79,12 +79,12 @@ class SiterootSaver
     }
 
     /**
-     * @param Siteroot $siteroot
+     * @param \Phlexible\Component\Site\Domain\Site $siteroot
      * @param array    $data
      *
      * @return $this
      */
-    private function applyProperties(Siteroot $siteroot, array $data)
+    private function applyProperties(Site $siteroot, array $data)
     {
         if (!array_key_exists('properties', $data)) {
             // noting to save
@@ -99,12 +99,12 @@ class SiterootSaver
     }
 
     /**
-     * @param Siteroot $siteroot
+     * @param Site $siteroot
      * @param array    $data
      *
      * @return $this
      */
-    private function applyNamedTids(Siteroot $siteroot, array $data)
+    private function applyNamedTids(Site $siteroot, array $data)
     {
         if (!array_key_exists('specialtids', $data)) {
             // noting to save
@@ -120,7 +120,7 @@ class SiterootSaver
             $specialTids[$row['key'] . '__' . $row['language']] = array(
                 'name'     => $row['key'],
                 'language' => $row['language'] ?: null,
-                'treeId'   => $row['tid'],
+                'nodeId'   => $row['nodeId'],
             );
         }
         $siteroot->setSpecialTids(array_values($specialTids));
@@ -129,12 +129,12 @@ class SiterootSaver
     }
 
     /**
-     * @param Siteroot $siteroot
+     * @param Site $siteroot
      * @param array    $data
      *
      * @return $this
      */
-    private function applyNavigations(Siteroot $siteroot, array $data)
+    private function applyNavigations(Site $siteroot, array $data)
     {
         if (!array_key_exists('navigations', $data)) {
             // noting to save
@@ -185,12 +185,12 @@ class SiterootSaver
     }
 
     /**
-     * @param Siteroot $siteroot
+     * @param Site $siteroot
      * @param array    $data
      *
      * @return $this
      */
-    private function applyUrls(Siteroot $siteroot, array $data)
+    private function applyUrls(Site $siteroot, array $data)
     {
         if (!array_key_exists('mappings', $data)) {
             // noting to save

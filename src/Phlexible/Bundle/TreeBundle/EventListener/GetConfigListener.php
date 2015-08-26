@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class GetConfigListener
 {
     /**
-     * @var SiterootManagerInterface
+     * @var SiteManagerInterface
      */
     private $siterootManager;
 
@@ -61,7 +61,7 @@ class GetConfigListener
     private $availableLanguages;
 
     /**
-     * @param SiterootManagerInterface      $siterootManager
+     * @param SiteManagerInterface      $siterootManager
      * @param TreeManagerInterface          $treeManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param bool                          $publishCommentRequired
@@ -71,7 +71,7 @@ class GetConfigListener
      * @param string                        $availableLanguages
      */
     public function __construct(
-        SiterootManagerInterface $siterootManager,
+        SiteManagerInterface $siterootManager,
         TreeManagerInterface $treeManager,
         AuthorizationCheckerInterface $authorizationChecker,
         $publishCommentRequired,

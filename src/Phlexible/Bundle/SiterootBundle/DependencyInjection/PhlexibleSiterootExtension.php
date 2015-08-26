@@ -39,7 +39,9 @@ class PhlexibleSiterootExtension extends Extension
             $container->setParameter('phlexible_siteroot.mappings', $mappings);
         }
 
-        $loader->load('doctrine.yml');
-        $container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.doctrine.siteroot_manager');
+        //$loader->load('doctrine.yml');
+        $loader->load('file.yml');
+        //$container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.doctrine.siteroot_manager');
+        $container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.file.siteroot_manager');
     }
 }

@@ -16,7 +16,6 @@ services:
         class: Phlexible\Component\Tree\TreeFactory
         arguments:
             - @phlexible_tree.node_manager
-            - @phlexible_tree.node_state_manager
             - @phlexible_tree.node_context_factory
             - @phlexible_tree.node_hasher
             - @event_dispatcher
@@ -45,6 +44,7 @@ services:
         arguments:
             - @phlexible_tree.icon_resolver
             - @phlexible_tree.node_manager
+            - @phlexible_tree.node_type_manager
             - @phlexible_access_control.permission_registry
             - @security.authorization_checker
 
@@ -74,7 +74,6 @@ services:
         class: Phlexible\Bundle\TreeBundle\EventListener\ExceptionListener
         arguments:
             - @twig
-            - @phlexible_cms.configurator
             - @phlexible_tree.tree_manager
             - @logger
             - %kernel.debug%

@@ -85,7 +85,7 @@ Phlexible.element.view.ElementContentPanel = Ext.extend(Ext.Panel, {
                 };
                 lazy = true;
                 noTitle = false;
-                if (this.lastTab && this.lastEtId === this.element.getElementtypeId()) {
+                if (this.lastTab && this.lastType === this.element.getType()) {
                     targetPanel.activeTab = this.lastTab;
                 }
                 else if (!Ext.isEmpty(this.element.getDefaultContentTab())) {
@@ -94,7 +94,7 @@ Phlexible.element.view.ElementContentPanel = Ext.extend(Ext.Panel, {
                 }
             }
 
-            this.lastEtId = this.element.getElementtypeId();
+            this.lastType = this.element.getType();
 
             items = Phlexible.element.ElementDataTabHelper.loadItems(structureNodes, valueStructure, this, this.element);
 

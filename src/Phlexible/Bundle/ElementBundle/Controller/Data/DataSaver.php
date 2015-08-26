@@ -14,8 +14,6 @@ use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
 use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
-use Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager;
-use Phlexible\Bundle\ElementBundle\Meta\ElementMetaSetResolver;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
@@ -48,16 +46,6 @@ class DataSaver
     private $treeManager;
 
     /**
-     * @var ElementMetaSetResolver
-     */
-    private $elementMetaSetResolver;
-
-    /**
-     * @var ElementMetaDataManager
-     */
-    private $elementMetaDataManager;
-
-    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -71,8 +59,6 @@ class DataSaver
      * @param ElementService           $elementService
      * @param FieldRegistry            $fieldRegistry
      * @param TreeManagerInterface     $treeManager
-     * @param ElementMetaSetResolver   $elementMetaSetResolver
-     * @param ElementMetaDataManager   $elementMetaDataManager
      * @param EventDispatcherInterface $eventDispatcher
      * @param string                   $availableLanguages
      */
@@ -80,16 +66,12 @@ class DataSaver
         ElementService $elementService,
         FieldRegistry $fieldRegistry,
         TreeManagerInterface $treeManager,
-        ElementMetaSetResolver $elementMetaSetResolver,
-        ElementMetaDataManager $elementMetaDataManager,
         EventDispatcherInterface $eventDispatcher,
         $availableLanguages)
     {
         $this->elementService = $elementService;
         $this->fieldRegistry = $fieldRegistry;
         $this->treeManager = $treeManager;
-        $this->elementMetaSetResolver = $elementMetaSetResolver;
-        $this->elementMetaDataManager = $elementMetaDataManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->availableLanguages = explode(',', $availableLanguages);
     }
@@ -156,11 +138,6 @@ class DataSaver
 
         $elementVersion = $this->elementService->createElementVersion($element, $elementStructure, $language, $user->getId(), $comment);
 
-        $this->saveNodeData($node, $language, $request);
-
-        // TODO: available languages
-        $this->saveMeta($elementVersion, $language, $isMaster, array('de'), $request);
-
         $event = new SaveElementEvent($element, $language, $oldVersion);
         $this->eventDispatcher->dispatch(ElementEvents::SAVE_ELEMENT, $event);
 
@@ -171,240 +148,6 @@ class DataSaver
         }
 
         return array($elementVersion, $node, $publishSlaves);
-    }
-
-    /**
-     * @param NodeContext $nodeContext
-     * @param string      $language
-     * @param Request     $request
-     */
-    private function saveNodeData(NodeContext $nodeContext, $language, Request $request)
-    {
-        // save configuration
-
-        $node = $nodeContext->getNode();
-
-        if ($request->get('configuration')) {
-            $configuration = json_decode($request->get('configuration'), true);
-
-            if (!empty($configuration['navigation'])) {
-                $node->setInNavigation(true);
-            } else {
-                $node->setInNavigation(false);
-            }
-            if (!empty($configuration['template'])) {
-                $node->setTemplate($configuration['template']);
-            } else {
-                $node->setTemplate(null);
-            }
-            if (!empty($configuration['robotsNoIndex'])) {
-                $node->setAttribute('robotsNoIndex', true);
-            } else {
-                $node->removeAttribute('robotsNoIndex');
-            }
-            if (!empty($configuration['robotsNoFollow'])) {
-                $node->setAttribute('robotsNoFollow', true);
-            } else {
-                $node->removeAttribute('robotsNoFollow');
-            }
-            if (!empty($configuration['searchNoIndex'])) {
-                $node->setAttribute('searchNoIndex', true);
-            } else {
-                $node->removeAttribute('searchNoIndex');
-            }
-        }
-
-        if ($request->get('security')) {
-            $security = json_decode($request->get('security'), true);
-
-            $node->setAttribute('security', $security);
-
-            if (!empty($security['authentication_required'])) {
-                $node->setAttribute('authenticationRequired', true);
-            } else {
-                $node->removeAttribute('authenticationRequired');
-            }
-            if (!empty($security['roles'])) {
-                $node->setAttribute('roles', $security['roles']);
-            } else {
-                $node->removeAttribute('roles');
-            }
-            if (!empty($security['check_acl'])) {
-                $node->setAttribute('checkAcl', true);
-            } else {
-                $node->removeAttribute('checkAcl');
-            }
-            if (!empty($security['expression'])) {
-                $node->setAttribute('expression', $security['expression']);
-            } else {
-                $node->removeAttribute('expression');
-            }
-        } else {
-            $node->removeAttribute('security');
-        }
-
-        if ($request->get('cache')) {
-            $cache = json_decode($request->get('cache'), true);
-
-            $node->setAttribute('cache', $cache);
-
-            if (!empty($cache['expires'])) {
-                $node->setAttribute('expires', $cache['expires']);
-            } else {
-                $node->removeAttribute('expires');
-            }
-            if (!empty($cache['public'])) {
-                $node->setAttribute('public', true);
-            } else {
-                $node->removeAttribute('public');
-            }
-            if (!empty($cache['maxage'])) {
-                $node->setAttribute('maxage', $cache['maxage']);
-            } else {
-                $node->removeAttribute('maxage');
-            }
-            if (!empty($cache['smaxage'])) {
-                $node->setAttribute('smaxage', $cache['smaxage']);
-            } else {
-                $node->removeAttribute('smaxage');
-            }
-            if (!empty($cache['vary'])) {
-                $node->setAttribute('vary', $cache['vary']);
-            } else {
-                $node->removeAttribute('vary');
-            }
-        } else {
-            $node->removeAttribute('cache');
-        }
-
-        if ($request->get('routing')) {
-            $routing = json_decode($request->get('routing'), true);
-
-            $node->setAttribute('routing', $routing);
-
-            /*
-            if (!empty($routing['name'])) {
-                $node->setAttribute('name', $routing['name']);
-            } else {
-                $node->removeAttribute('name');
-            }
-            if (!empty($routing['path'])) {
-                $node->setAttribute('path', $routing['path']);
-            } else {
-                $node->removeAttribute('path');
-            }
-            if (!empty($routing['defaults'])) {
-                $node->setAttribute('defaults', $routing['defaults']);
-            } else {
-                $node->removeAttribute('defaults');
-            }
-            if (!empty($routing['methods'])) {
-                $node->setAttribute('methods', $routing['methods']);
-            } else {
-                $node->removeAttribute('methods');
-            }
-            if (!empty($routing['schemes'])) {
-                $node->setAttribute('schemes', $routing['schemes']);
-            } else {
-                $node->removeAttribute('schemes');
-            }
-            if (!empty($routing['controller'])) {
-                $node->setAttribute('controller', $routing['controller']);
-            } else {
-                $node->removeAttribute('controller');
-            }
-            */
-        } else {
-            $node->removeAttribute('routing');
-        }
-
-        $event = new SaveNodeDataEvent($nodeContext, $language, $request);
-        $this->eventDispatcher->dispatch(ElementEvents::SAVE_NODE_DATA, $event);
-
-        $nodeContext->getTree()->updateNode($nodeContext);
-    }
-
-    /**
-     * @param ElementVersion $elementVersion
-     * @param string         $language
-     * @param bool           $isMaster
-     * @param array          $availableLanguages
-     * @param Request        $request
-     */
-    private function saveMeta(ElementVersion $elementVersion, $language, $isMaster, array $availableLanguages, Request $request)
-    {
-        // save meta
-        // TODO: repair save meta
-
-        if (!$request->get('meta')) {
-            return;
-        }
-
-        $metaSet = $this->elementMetaSetResolver->resolve($elementVersion);
-
-        if (!$metaSet) {
-            return;
-        }
-
-        $metaData = $this->elementMetaDataManager->findByMetaSetAndElementVersion($metaSet, $elementVersion);
-
-        if (!$metaData) {
-            $metaData = $this->elementMetaDataManager->createElementMetaData($metaSet, $elementVersion);
-        }
-
-        /*
-        $slaveLanguages = array();
-        if ($isMaster) {
-            $slaveLanguages = $availableLanguages;
-            unset($slaveLanguages[array_search($language, $slaveLanguages)]);
-        }
-        */
-
-        // TODO: copy old values
-
-        $meta = $request->get('meta');
-
-        if ($meta) {
-            $meta = json_decode($meta);
-        }
-
-        foreach ($meta as $field => $value) {
-            if (!$metaSet->hasField($field)) {
-                unset($meta[$field]);
-                continue;
-            }
-
-            // TODO: repair suggest
-            /*
-            if ('suggest' === $metaSetItem->getType($key)) {
-                $dataSourceId = $metaSetItem->getOptions($key);
-                $dataSourcesRepository = $container->get('datasources.repository');
-                $dataSource = $dataSourcesRepository->getDataSourceById($dataSourceId, $language);
-                $dataSourceKeys = $dataSource->getKeys();
-                $dataSourceModified = false;
-                foreach (explode(',', $value) as $singleValue) {
-                    if (!in_array($singleValue, $dataSourceKeys)) {
-                        $dataSource->addKey($singleValue, true);
-                        $dataSourceModified = true;
-                    }
-                }
-                if ($dataSourceModified) {
-                    $dataSourcesRepository->save($dataSource, $this->getUser()->getId());
-                }
-            }
-            */
-
-            // TODO: master check?
-            if ($metaSet->getField($field)->isSynchronized()) {
-                foreach ($availableLanguages as $currentLanguage) {
-                    $metaData->set($field, $value, $currentLanguage);
-                }
-            } else {
-                $metaData->set($field, $value, $language);
-            }
-        }
-
-        $this->elementMetaDataManager->updateMetaData($metaData);
     }
 
     /**

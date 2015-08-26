@@ -2,12 +2,15 @@ Ext.provide('Phlexible.tree.model.Node');
 
 Phlexible.tree.model.Node = Ext.data.Record.create([
     {name: 'id', type: 'int'},
+    {name: 'workspace', type: 'string'},
+    {name: 'locale', type: 'string'},
     {name: 'siterootId', type: 'string'},
     {name: 'type', type: 'string'},
     {name: 'typeId', type: 'string'},
-    {name: 'backendTitle', type: 'string'},
-    {name: 'pageTitle', type: 'string'},
+    {name: 'title', type: 'string'},
     {name: 'navigationTitle', type: 'string'},
+    {name: 'backendTitle', type: 'string'},
+    {name: 'slug', type: 'string'},
     {name: 'customDate', type: 'date', dateFormat: 'Y-m-d H:i:s'},
     {name: 'forward', type: 'string'},
     {name: 'sortMode', type: 'string'},

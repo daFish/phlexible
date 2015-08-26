@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\TreeBundle\Twig\Extension;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Bundle\TreeBundle\Node\ReferenceNodeContext;
 use Phlexible\Bundle\TreeBundle\Pattern\PatternResolver;
+use Phlexible\Component\Site\Domain\Site;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -112,28 +112,23 @@ class TreeExtension extends \Twig_Extension
             $currentNode = $request->attributes->get('node');
 
             $navigations = $siteroot->getNavigations();
-            $siterootNavigation = null;
-            foreach ($navigations as $navigation) {
-                if ($navigation->getTitle() === $name) {
-                    $siterootNavigation = $navigation;
-                    break;
-                }
-            }
 
-            if (!$siterootNavigation) {
+            if (!isset($navigations[$name])) {
                 return $this->navigations[$name] = null;
             }
 
-            $startTid = $siterootNavigation->getStartTreeId();
-            $node = null;
-            if ($startTid) {
-                $node = $currentNode->getTree()->get($startTid);
+            if (empty($navigations[$name]['nodeId'])) {
+                throw new \Exception("No start node ID");
             }
+
+            $navigation = $navigations[$name];
+
+            $node = $currentNode->getTree()->get($navigation['nodeId']);
 
             $this->navigations[$name] = ReferenceNodeContext::fromNodeContext(
                 $node,
                 $currentNode,
-                $siterootNavigation->getMaxDepth()
+                $navigation['maxDepth']
             );
         }
 
@@ -193,11 +188,11 @@ class TreeExtension extends \Twig_Extension
      * @param string      $name
      * @param string      $language
      * @param NodeContext $node
-     * @param Siteroot    $siteroot
+     * @param Site    $siteroot
      *
      * @return string
      */
-    public function pageTitle($name = 'default', $language = null, NodeContext $node = null, Siteroot $siteroot = null)
+    public function pageTitle($name = 'default', $language = null, NodeContext $node = null, Site $siteroot = null)
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -222,11 +217,11 @@ class TreeExtension extends \Twig_Extension
      * @param string      $pattern
      * @param string      $language
      * @param NodeContext $node
-     * @param Siteroot    $siteroot
+     * @param Site    $siteroot
      *
      * @return string
      */
-    public function pageTitlePattern($pattern, $language = null, NodeContext $node = null, Siteroot $siteroot = null)
+    public function pageTitlePattern($pattern, $language = null, NodeContext $node = null, Site $siteroot = null)
     {
         $request = $this->requestStack->getCurrentRequest();
 

@@ -536,7 +536,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     onSetLanguage: function (element, language) {
-        if (element.getElementtypeType() != 'part') {
+        if (element.getTreeNode().attributes.type != 'part') {
             return;
         }
 
@@ -544,7 +544,7 @@ Phlexible.teasers.view.Tree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     onLoadElement: function (element) {
-        if (element.getElementtypeType() != 'full' && element.getElementtypeType() != 'structure') {
+        if (element.getTreeNode().attributes.type != 'page' && element.getTreeNode().attributes.type != 'structure') {
             return;
         }
 

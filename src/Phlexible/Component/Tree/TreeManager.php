@@ -8,12 +8,12 @@
 
 namespace Phlexible\Component\Tree;
 
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
  * Tree manager
@@ -23,12 +23,12 @@ use Phlexible\Component\Node\Model\NodeManagerInterface;
 class TreeManager implements TreeManagerInterface
 {
     /**
-     * @var SiterootManagerInterface
+     * @var SiteManagerInterface
      */
     private $siterootManager;
 
     /**
-     * @var \Phlexible\Component\Node\Model\NodeManagerInterface
+     * @var NodeManagerInterface
      */
     private $nodeManager;
 
@@ -43,12 +43,12 @@ class TreeManager implements TreeManagerInterface
     private $trees = array();
 
     /**
-     * @param SiterootManagerInterface $siterootManager
-     * @param \Phlexible\Component\Node\Model\NodeManagerInterface     $nodeManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface $siterootManager
+     * @param NodeManagerInterface     $nodeManager
      * @param TreeFactoryInterface     $treeFactory
      */
     public function __construct(
-        SiterootManagerInterface $siterootManager,
+        SiteManagerInterface $siterootManager,
         NodeManagerInterface $nodeManager,
         TreeFactoryInterface $treeFactory
     ) {
@@ -60,23 +60,25 @@ class TreeManager implements TreeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getBySiteRootId($siteRootId)
+    public function getBySiteRootId(TreeContextInterface $treeContext, $siterootId)
     {
-        if (!isset($this->trees[$siteRootId])) {
-            $tree = $this->treeFactory->factory($siteRootId);
-            $this->trees[$siteRootId] = $tree;
+        $identifier = $treeContext->getWorkspace() . '_' . $treeContext->getLocale() . '_' . $siterootId;
+
+        if (!isset($this->trees[$identifier])) {
+            $tree = $this->treeFactory->factory($treeContext, $siterootId);
+            $this->trees[$identifier] = $tree;
         }
 
-        return $this->trees[$siteRootId];
+        return $this->trees[$identifier];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getByNodeId($nodeId)
+    public function getByNodeId(TreeContextInterface $treeContext, $nodeId)
     {
         foreach ($this->siterootManager->findAll() as $siteroot) {
-            $tree = $this->getBySiteRootId($siteroot->getId());
+            $tree = $this->getBySiteRootId($treeContext, $siteroot->getId());
 
             if ($tree->has($nodeId)) {
                 return $tree;
@@ -89,27 +91,10 @@ class TreeManager implements TreeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getByTypeId($typeId, $type = null)
-    {
-        $trees = array();
-        foreach ($this->siterootManager->findAll() as $siteroot) {
-            $tree = $this->getBySiteRootId($siteroot->getId());
-
-            if ($tree->hasByTypeId($typeId, $type)) {
-                $trees[] = $tree;
-            }
-        }
-
-        return $trees;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAll()
+    public function getAll(TreeContextInterface $treeContext)
     {
         foreach ($this->siterootManager->findAll() as $siteroot) {
-            $this->getBySiteRootId($siteroot->getId());
+            $this->getBySiteRootId($treeContext, $siteroot->getId());
         }
 
         return $this->trees;
@@ -118,10 +103,12 @@ class TreeManager implements TreeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function createTree($siterootId, $type, $typeId, $userId)
+    public function createTree(TreeContextInterface $treeContext, $siterootId, $type, $typeId, $userId)
     {
         $node = new StructureNode();
         $node
+            ->setWorkspace('live')
+            ->setLocale($treeContext->getLocale())
             ->setSiterootId($siterootId)
             ->setParentNode(null)
             ->setContentType($type)
@@ -131,6 +118,6 @@ class TreeManager implements TreeManagerInterface
 
         $this->nodeManager->updateNode($node);
 
-        return $this->getBySiteRootId($siterootId);
+        return $this->getBySiteRootId($treeContext, $siterootId);
     }
 }

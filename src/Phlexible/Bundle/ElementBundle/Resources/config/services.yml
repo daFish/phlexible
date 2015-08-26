@@ -9,7 +9,6 @@ services:
             - @phlexible_element.element_manager
             - @phlexible_element.element_version_manager
             - @phlexible_element.element_source_manager
-            - @phlexible_elementtype.viability_manager
 
     phlexible_element.checker:
         class: Phlexible\Bundle\ElementBundle\Change\Checker

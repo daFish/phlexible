@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\CmsBundle\Controller;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Site\Domain\Site;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,12 +25,12 @@ class OnlineController extends Controller
     /**
      * @param Request     $request
      * @param NodeContext $node
-     * @param Siteroot    $siteroot
+     * @param Site    $siteroot
      *
      * @return Response
      * @Route("/", name="cms_online")
      */
-    public function indexAction(Request $request, NodeContext $node, Siteroot $siteroot)
+    public function indexAction(Request $request, NodeContext $node, Site $siteroot)
     {
         return $this->render($node->getTemplate(), array('node' => $node, 'siteroot' => $siteroot));
     }

@@ -84,3 +84,9 @@ siteroots:
     flag_include_type_layout: 'Include layout element types'
     flag_include_type_teaser: 'Include teaser element types'
     flag_include_unique_id: 'Use unique IDs'
+    types:
+        types: Types
+        no_types: No typen
+        type: Type
+        allowed: Allowed
+        restrictions: Restrictions

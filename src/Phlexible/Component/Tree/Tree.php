@@ -8,20 +8,17 @@
 
 namespace Phlexible\Component\Tree;
 
-use Phlexible\Bundle\TreeBundle\Entity\NodeState;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeContextEvent;
-use Phlexible\Bundle\TreeBundle\Event\PublishNodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\ReorderChildNodesContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\ReorderNodeContextEvent;
-use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineContextEvent;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
-use Phlexible\Bundle\TreeBundle\Model\NodeStateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Bundle\TreeBundle\Node\NodeContextFactoryInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeHasherInterface;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
+use Phlexible\Component\Node\Event\NodeEvent;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -33,19 +30,19 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class Tree implements TreeInterface
 {
     /**
+     * @var TreeContextInterface
+     */
+    private $treeContext;
+
+    /**
      * @var string
      */
     private $siterootId;
 
     /**
-     * @var \Phlexible\Component\Node\Model\NodeManagerInterface
+     * @var NodeManagerInterface
      */
     private $nodeManager;
-
-    /**
-     * @var NodeStateManagerInterface
-     */
-    private $nodeStateManager;
 
     /**
      * @var NodeContextFactoryInterface
@@ -63,27 +60,43 @@ class Tree implements TreeInterface
     private $eventDispatcher;
 
     /**
+     * @var self
+     */
+    private $liveTree;
+
+    /**
+     * @param TreeContextInterface        $treeContext
      * @param string                      $siterootId
      * @param NodeManagerInterface        $nodeManager
-     * @param NodeStateManagerInterface   $nodeStateManager
      * @param NodeContextFactoryInterface $nodeContextFactory
      * @param NodeHasherInterface         $nodeHasher
      * @param EventDispatcherInterface    $eventDispatcher
      */
     public function __construct(
+        TreeContextInterface $treeContext,
         $siterootId,
         NodeManagerInterface $nodeManager,
-        NodeStateManagerInterface $nodeStateManager,
         NodeContextFactoryInterface $nodeContextFactory,
         NodeHasherInterface $nodeHasher,
         EventDispatcherInterface $eventDispatcher
     ) {
+        $this->treeContext = $treeContext;
         $this->siterootId = $siterootId;
         $this->nodeManager = $nodeManager;
-        $this->nodeStateManager = $nodeStateManager;
         $this->nodeContextFactory = $nodeContextFactory;
         $this->nodeHasher = $nodeHasher;
         $this->eventDispatcher = $eventDispatcher;
+
+        if ($treeContext->getWorkspace() !== 'live') {
+            $this->liveTree = new self(
+                new LiveTreeContext($treeContext->getLocale()),
+                $siterootId,
+                $nodeManager,
+                $nodeContextFactory,
+                $nodeHasher,
+                $eventDispatcher
+            );
+        }
     }
 
     /**
@@ -97,26 +110,11 @@ class Tree implements TreeInterface
     }
 
     /**
-     * @var string
-     */
-    private $defaultLanguage;
-
-    /**
      * {@inheritdoc}
      */
-    public function setDefaultLanguage($defaultLanguage)
+    public function getTreeContext()
     {
-        $this->defaultLanguage = $defaultLanguage;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultLanguage()
-    {
-        return $this->defaultLanguage;
+        return $this->treeContext;
     }
 
     /**
@@ -135,9 +133,22 @@ class Tree implements TreeInterface
         if (!isset($this->nodes['root'])) {
             $node = $this->nodeManager->findOneByNodeType(
                 array('PhlexibleTreeBundle:PageNode', 'PhlexibleTreeBundle:StructureNode'),
-                array('siterootId' => $this->siterootId, 'parentNode' => null)
+                array(
+                    'workspace' => $this->treeContext->getWorkspace(),
+                    'siterootId' => $this->siterootId,
+                    'parentId' => null
+                )
             );
-            $this->nodes['root'] = $this->nodeContextFactory->factory($this, $node, $this->defaultLanguage);
+
+            if ($node) {
+                $this->nodes['root'] = $this->nodeContextFactory->factory($this, $node, $this->treeContext->getLocale());
+            } else {
+                $this->nodes['root'] = null;
+            }
+        }
+
+        if ($this->nodes['root'] === null && $this->liveTree) {
+            return $this->liveTree->getRoot();
         }
 
         return $this->nodes['root'];
@@ -153,18 +164,51 @@ class Tree implements TreeInterface
      */
     public function get($id)
     {
-        if (!isset($this->nodes[$id]) || $this->nodes[$id] === null) {
-            $node = $this->nodeManager->findOneBy(
-                array('siterootId' => $this->siterootId, 'id' => $id)
-            );
+        if (!isset($this->nodes[$id])) {
+            $node = $this->nodeManager->findOneBy(array(
+                'siterootId' => $this->siterootId,
+                'id'         => $id,
+                'locale'     => $this->treeContext->getLocale(),
+                'workspace'  => $this->treeContext->getWorkspace()
+            ));
+
             if ($node) {
-                $this->nodes[$id] = $this->nodeContextFactory->factory($this, $node, $this->defaultLanguage);
+                $this->nodes[$id] = $this->nodeContextFactory->factory($this, $node, $this->treeContext->getLocale());
             } else {
                 $this->nodes[$id] = null;
             }
         }
 
+        if ($this->nodes[$id] === null && $this->liveTree) {
+            return $this->liveTree->get($id);
+        }
+
         return $this->nodes[$id];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWorking($id)
+    {
+        $node = $this->get('id');
+
+        if (!$node) {
+            return null;
+        }
+
+        if ($this->treeContext->getWorkspace() === 'live') {
+            throw new \Exception("Not capable of fetching work node");
+        }
+
+        if ($node->getWorkspace() === 'live') {
+            $workingNode = clone $node->getNode();
+            $workingNode->setWorkspace('working');
+            $this->nodes[$id] = $this->nodeContextFactory->factory($this, $workingNode, $this->treeContext->getLocale());
+        }
+
+        return $this->nodes[$id];
+
     }
 
     /**
@@ -180,21 +224,38 @@ class Tree implements TreeInterface
      */
     public function getChildren(NodeContext $node, $types = array('PhlexibleTreeBundle:PageNode', 'PhlexibleTreeBundle:StructureNode'))
     {
-        $rawNodes = $this->nodeManager->findByNodeType(
+        if ($this->liveTree) {
+            $children = $this->liveTree->getChildren($node, $types);
+
+            foreach ($children as $index => $liveNode) {
+                $node = $this->get($liveNode->getId());
+                if ($node) {
+                    $children[$index] = $node;
+                }
+            }
+
+            return $children;
+        }
+
+        $nodes = $this->nodeManager->findByNodeType(
             $types,
-            array('siterootId' => $this->siterootId, 'parentNode' => $node->getId()),
+            array(
+                'siterootId' => $this->siterootId,
+                'parentId'   => $node->getId(),
+                'locale'     => $this->treeContext->getLocale(),
+                'workspace'  => $this->treeContext->getWorkspace()
+            ),
             array('sort' => 'ASC')
         );
 
-        $nodes = array();
-        foreach ($rawNodes as $node) {
+        $children = array();
+        foreach ($nodes as $node) {
             if (!isset($this->nodes[$node->getId()])) {
-                $this->nodes[$node->getId()] = $this->nodeContextFactory->factory($this, $node, $this->defaultLanguage);
+                $this->nodes[$node->getId()] = $children[] = $this->nodeContextFactory->factory($this, $node, $this->treeContext->getLocale());
             }
-            $nodes[] = $this->nodes[$node->getId()];
         }
 
-        return $nodes;
+        return $children;
     }
 
     /**
@@ -210,17 +271,11 @@ class Tree implements TreeInterface
      */
     public function getParent(NodeContext $node)
     {
-        $parentNode = $node->getNode()->getParentNode();
-        if (!$parentNode) {
+        if ($node->getNode()->getParentId() === null) {
             return null;
         }
-        $parentId = $parentNode->getId();
-        if (!isset($this->nodes[$parentId]) || $this->nodes[$parentId] === null) {
-            $node = $this->nodeManager->find($parentId);
-            $this->nodes[$parentId] = $this->nodeContextFactory->factory($this, $node, $this->defaultLanguage);
-        }
 
-        return $this->nodes[$parentId];
+        return $this->get($node->getNode()->getParentId());
     }
 
     /**
@@ -265,15 +320,8 @@ class Tree implements TreeInterface
      */
     public function isChildOf(NodeContext $childNode, NodeContext $parentNode)
     {
-        $path = $this->getIdPath($childNode);
-
-        foreach ($path as $id) {
-            if ($parentNode->getId() === $id) {
-                return true;
-            }
-        }
-
-        return false;
+        return $childNode->getPath() !== $parentNode->getPath() &&
+            strpos($childNode->getPath(), $parentNode->getPath()) === 0;
     }
 
     /**
@@ -289,7 +337,8 @@ class Tree implements TreeInterface
      */
     public function isInstance(NodeContext $node)
     {
-        return $this->nodeManager->isInstance($node->getNode());
+        // TODO: check for instance node, interface?
+        return false; //$this->nodeManager->isInstance($node->getNode());
     }
 
     /**
@@ -297,15 +346,8 @@ class Tree implements TreeInterface
      */
     public function isInstanceMaster(NodeContext $node)
     {
-        return $node->getAttribute('instanceMaster', false);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPublished(NodeContext $node, $language = null)
-    {
-        return $this->nodeStateManager->findOneBy(array('node' => $node->getNode()->getId(), 'language' => $language ?: $this->defaultLanguage)) ? true : false;
+        // TODO: check for instance master, interface?
+        return false; //$node->getAttribute('instanceMaster', false);
     }
 
     /**
@@ -313,88 +355,30 @@ class Tree implements TreeInterface
      */
     public function getPublishedLanguages(NodeContext $node)
     {
-        $languages = array();
-        foreach ($this->nodeStateManager->findBy(array('node' => $node->getNode()->getId())) as $state) {
-            $languages[] = $state->getLanguage();
+        $locales = array();
+        foreach ($this->nodeManager->findBy(array('workspace' => 'live', 'id' => $node->getNode()->getId())) as $node) {
+            $locales[] = $node->getLocale();
         }
 
-        return $languages;
+        return $locales;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPublishedVersion(NodeContext $node, $language = null)
+    public function isAsync(NodeContext $node)
     {
-        $state = $this->nodeStateManager->findOneBy(array('node' => $node->getNode(), 'language' => $language ?: $this->defaultLanguage));
-        if (!$state) {
-            return null;
+        if ($node->getWorkspace() === 'working') {
+            return true;
         }
 
-        return $state->getVersion();
-    }
+        if ($this->liveTree) {
+            $liveNode = $this->liveTree->get($node->getId());
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPublishedVersions(NodeContext $node)
-    {
-        $versions = array();
-        foreach ($this->nodeStateManager->findBy(array('node' => $node->getNode())) as $state) {
-            $versions[$state->getLanguage()] = $state->getVersion();
+            return $node->getContentVersion() !== $liveNode->getContentVersion();
         }
 
-        return $versions;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPublishedAt(NodeContext $node, $language = null)
-    {
-        $state = $this->nodeStateManager->findOneBy(array('node' => $node->getNode(), 'language' => $language ?: $this->defaultLanguage));
-        if (!$state) {
-            return null;
-        }
-
-        return $state->getPublishedAt();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPublishUserId(NodeContext $node, $language = null)
-    {
-        $state = $this->nodeStateManager->findOneBy(array('node' => $node->getNode(), 'language' => $language ?: $this->defaultLanguage));
-        if (!$state) {
-            return null;
-        }
-
-        return $state->getPublishUserId();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isAsync(NodeContext $node, $language = null)
-    {
-        $state = $this->nodeStateManager->findOneBy(array('node' => $node->getNode(), 'language' => $language ?: $this->defaultLanguage));
-        if (!$state) {
-            return false;
-        }
-
-        $versions = $node->getContentVersions();
-        sort($versions);
-        $version = end($versions);
-
-        if ($version === $state->getVersion()) {
-            return false;
-        }
-
-        $publishedHash = $state->getHash();
-        $currentHash = $this->nodeHasher->hashNode($node, $version, $language ?: $this->defaultLanguage);
-
-        return $publishedHash === $currentHash;
+        return false;
     }
 
     /**
@@ -402,6 +386,10 @@ class Tree implements TreeInterface
      */
     public function updateNode(NodeContext $node)
     {
+        if ($node->getWorkspace() !== 'working') {
+            throw new \Exception("Can only update working node");
+        }
+
         $this->nodeManager->updateNode($node->getNode());
     }
 
@@ -437,7 +425,9 @@ class Tree implements TreeInterface
         $node = $this->mediator->createNodeForContentDocument($contentDocument);
         $node
             ->setSiterootId($this->siterootId)
-            ->setParentNode($parentNode->getNode())
+            ->setPath($parentNode->getPath() . '/' . 'xxx')
+            ->setParentPath($parentNode->getPath())
+            ->setParentId($parentNode->getId())
             ->setAttributes($attributes)
             ->setSort($sort)
             ->setSortMode($sortMode)
@@ -637,31 +627,29 @@ class Tree implements TreeInterface
     /**
      * {@inheritdoc}
      */
-    public function publish(NodeContext $node, $version, $language, $userId, $comment = null)
+    public function publish(NodeContext $node, $version, $userId, $comment = null)
     {
-        $event = new PublishNodeContextEvent($node, $language, $version);
+        $liveNode = $this->nodeManager->findOneBy(array('workspace' => 'live', 'id' => $node->getNode()->getId(), 'locale' => $this->treeContext->getLocale()));
+        if (!$liveNode) {
+            $classname = get_class($node->getNode());
+            $liveNode = new $classname();
+        }
+
+        $liveNode
+            ->setContentVersion($version)
+            ->setLocale($this->treeContext->getLocale())
+            ->setHash($this->nodeHasher->hashNode($node, $version, $this->treeContext->getLocale()))
+            ->setCreatedAt(new \DateTime())
+            ->setCreateUserId($userId);
+
+        $event = new NodeEvent($liveNode);
         if ($this->eventDispatcher->dispatch(TreeEvents::BEFORE_PUBLISH_NODE_CONTEXT, $event)->isPropagationStopped()) {
             return;
         }
 
+        $this->nodeManager->updateState($liveNode);
 
-        $state = $this->nodeStateManager->findOneBy(array('node' => $node->getNode(), 'language' => $language));
-        if (!$state) {
-            $state = new NodeState();
-            $state
-                ->setNode($node->getNode());
-        }
-
-        $state
-            ->setVersion($version)
-            ->setLanguage($language)
-            ->setHash($this->nodeHasher->hashNode($node, $version, $language))
-            ->setPublishedAt(new \DateTime())
-            ->setPublishUserId($userId);
-
-        $this->nodeStateManager->updateState($state);
-
-        $event = new PublishNodeContextEvent($node, $language, $version);
+        $event = new NodeEvent($liveNode);
         if ($this->eventDispatcher->dispatch(TreeEvents::PUBLISH_NODE_CONTEXT, $event)->isPropagationStopped()) {
             return;
         }
@@ -670,19 +658,19 @@ class Tree implements TreeInterface
     /**
      * {@inheritdoc}
      */
-    public function setOffline(NodeContext $node, $language, $userId, $comment = null)
+    public function setOffline(NodeContext $node, $userId, $comment = null)
     {
-        $event = new SetNodeOfflineContextEvent($node, $language);
-        if ($this->eventDispatcher->dispatch(TreeEvents::BEFORE_SET_NODE_OFFLINE_CONTEXT, $event)->isPropagationStopped()) {
-            return;
+        $liveNode = $this->nodeManager->findOneBy(array('workspace' => 'live', 'id' => $node->getNode()->getId(), 'locale' => $this->treeContext->getLocale()));
+        if ($liveNode) {
+            $event = new NodeEvent($liveNode);
+            if ($this->eventDispatcher->dispatch(TreeEvents::BEFORE_SET_NODE_OFFLINE_CONTEXT, $event)->isPropagationStopped()) {
+                return;
+            }
+
+            $this->nodeManager->deleteNode($liveNode);
         }
 
-        $state = $this->nodeStateManager->findOneBy(array('node' => $node->getNode(), 'language' => $language));
-        if ($state) {
-            $this->nodeStateManager->deleteState($state);
-        }
-
-        $event = new SetNodeOfflineContextEvent($node, $language);
+        $event = new NodeEvent($liveNode);
         if ($this->eventDispatcher->dispatch(TreeEvents::SET_NODE_OFFLINE_CONTEXT, $event)->isPropagationStopped()) {
             return;
         }
@@ -742,7 +730,9 @@ class Tree implements TreeInterface
             return;
         }
 
-        $this->nodeManager->deleteNode($node->getNode());
+        foreach ($this->nodeManager->findBy(array('id' => $node->getId())) as $deleteNode) {
+            $this->nodeManager->deleteNode($deleteNode);
+        }
 
         $event = new NodeContextEvent($node);
         $this->eventDispatcher->dispatch(TreeEvents::DELETE_NODE_CONTEXT, $event);

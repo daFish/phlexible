@@ -91,7 +91,7 @@ Phlexible.tree.view.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
 
     onLoadElement: function (element) {
         // Only show for full and part elements
-        if (element.getElementtypeType() != 'full' && element.getElementtypeType() != 'part') {
+        if (element.getTreeNode().attributes.type != 'page' && element.getTreeNode().attributes.type != 'part') {
             this.hide();
             return;
         }
@@ -102,7 +102,7 @@ Phlexible.tree.view.accordion.Instances = Ext.extend(Ext.grid.GridPanel, {
             return;
         }
 
-        if (element.getElementtypeType() == 'part') {
+        if (element.getTreeNode().attributes.type == 'part') {
             this.setIconClass('p-teasers-teaser_reference-icon');
         }
         else {

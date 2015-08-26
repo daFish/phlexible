@@ -8,10 +8,10 @@
 
 namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Site\Domain\Site;
 
 /**
  * Route generator interface
@@ -22,19 +22,21 @@ interface RouteGeneratorInterface
 {
     /**
      * @param NodeContext $node
-     * @param Siteroot    $siteroot
+     * @param \Phlexible\Component\Site\Domain\Site    $siteroot
      * @param string      $language
      *
      * @return Route
      */
-    public function generateNodeRoute(NodeContext $node, Siteroot $siteroot, $language);
+    public function generateNodeRoute(NodeContext $node, Site $siteroot, $language);
 
     /**
      * @param NodeContext $node
-     * @param Url         $url
+     * @param string      $siterootId
+     * @param string      $hostname
+     * @param string      $name
      * @param string      $language
      *
      * @return Route
      */
-    public function generateEntryPointRoute(NodeContext $node, Url $url, $language);
+    public function generateEntryPointRoute(NodeContext $node, $siterootId, $hostname, $name, $language);
 }

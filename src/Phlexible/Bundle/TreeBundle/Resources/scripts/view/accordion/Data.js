@@ -73,12 +73,6 @@ Phlexible.tree.view.accordion.Data = Ext.extend(Ext.Panel, {
             version: element.getVersion(),
             language: element.getLanguage(),
             masterLanguage: element.getMasterLanguage(),
-            createdBy: element.getCreatedBy(),
-            createdAt: element.getCreatedAt(),
-            isPublished: element.getTreeNode().attributes.isPublished,
-            publishedVersion: element.getTreeNode().attributes.publishedVersion,
-            publishedAt: element.getTreeNode().attributes.publishedAt,
-            publishedBy: element.getTreeNode().attributes.publishedBy
         });
         store.add(r);
     }

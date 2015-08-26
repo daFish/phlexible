@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Phlexible\Bundle\TreeBundle\Entity\PartNode;
-use Phlexible\Bundle\TreeBundle\Mediator\TreeMediatorInterface;
+use Phlexible\Bundle\TreeBundle\Mediator\MediatorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 
@@ -21,14 +21,14 @@ use Phlexible\Component\Node\Model\NodeInterface;
 class NodeContextFactory implements NodeContextFactoryInterface
 {
     /**
-     * @var \Phlexible\Component\Node\Model\NodeInterface
+     * @var NodeInterface
      */
     protected $node;
 
     /**
-     * @param TreeMediatorInterface $mediator
+     * @param MediatorInterface $mediator
      */
-    public function __construct(TreeMediatorInterface $mediator)
+    public function __construct(MediatorInterface $mediator)
     {
         $this->mediator = $mediator;
     }

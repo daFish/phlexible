@@ -8,12 +8,12 @@
 
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
-use Phlexible\Bundle\CmsBundle\Configurator\ConfiguratorInterface;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Twig_Environment;
 
 /**
  * Exception listener
@@ -23,14 +23,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class ExceptionListener
 {
     /**
-     * @var \Twig_Environment
+     * @var Twig_Environment
      */
     private $twig;
-
-    /**
-     * @var ConfiguratorInterface
-     */
-    private $configurator;
 
     /**
      * @var TreeManagerInterface
@@ -48,21 +43,18 @@ class ExceptionListener
     private $debug;
 
     /**
-     * @param \Twig_Environment     $twig
-     * @param ConfiguratorInterface $configurator
-     * @param TreeManagerInterface  $treeManager
-     * @param LoggerInterface       $logger
-     * @param boolean               $debug
+     * @param Twig_Environment     $twig
+     * @param TreeManagerInterface $treeManager
+     * @param LoggerInterface      $logger
+     * @param boolean              $debug
      */
     public function __construct(
-        \Twig_Environment $twig,
-        ConfiguratorInterface $configurator,
+        Twig_Environment $twig,
         TreeManagerInterface $treeManager,
         LoggerInterface $logger = null,
         $debug = false)
     {
         $this->twig = $twig;
-        $this->configurator = $configurator;
         $this->treeManager = $treeManager;
         $this->logger = $logger;
         $this->debug = $debug;

@@ -8,6 +8,7 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Command;
 
+use Phlexible\Component\Site\File\Dumper\XmlDumper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,29 +37,35 @@ class ShowCommand extends ContainerAwareCommand
     {
         $siterootManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
-        foreach ($siterootManager->findAll() as $siteroot) {
-            $output->write('<info>' . $siteroot->getTitle('en') . '</info>');
+        foreach ($siterootManager->findAll() as $site) {
+            $output->write('<info>' . $site->getTitle('en') . '</info>');
+            $output->writeln(': ' . $site->getId() . ($site->isDefault() ? '<info> (default)</info> ' : ''));
 
             if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                $output->writeln('');
-                $output->writeln('  ID: ' . $siteroot->getId());
-                if ($siteroot->getUrls()) {
-                    $output->writeln('  Urls:');
-                    foreach ($siteroot->getUrls() as $url) {
-                        $output->writeln('    ' . $url->getHostname() . ' => ' . $url->getTarget());
+                $output->writeln('  ID: ' . $site->getId());
+                $output->writeln('  Hostname: ' . $site->getHostname());
+                if ($site->getEntryPoints()) {
+                    $output->writeln('  Entry Points:');
+                    foreach ($site->getEntryPoints() as $entryPoint) {
+                        $output->writeln('    ' . $entryPoint['hostname'] . ' => ' . $entryPoint['nodeId'] . ' (' . $entryPoint['language'] . ')');
                     }
                 }
 
-                if ($siteroot->getSpecialTids()) {
+                if ($site->getNavigations()) {
+                    $output->writeln('  Navigations:');
+                    foreach ($site->getNavigations() as $name => $navigation) {
+                        $output->writeln('    ' . $name . ' => ' . $navigation['nodeId']);
+                    }
+                }
+
+                if ($site->getSpecialTids()) {
                     $output->writeln('  Special TIDs:');
-                    foreach ($siteroot->getSpecialTids() as $specialTid) {
+                    foreach ($site->getSpecialTids() as $specialTid) {
                         $name = $specialTid['name'];
-                        $value = ($specialTid['language'] ? $specialTid['language'] . ':' : '') . $specialTid['treeId'];
+                        $value = ($specialTid['language'] ? $specialTid['language'] . ':' : '') . $specialTid['nodeId'];
                         $output->writeln("    $name => $value");
                     }
                 }
-            } else {
-                $output->writeln(': ' . $siteroot->getId());
             }
         }
 

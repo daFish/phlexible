@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
 use Phlexible\Bundle\TreeBundle\Event\MoveNodeContextEvent;
 use Phlexible\Bundle\TreeBundle\Event\NodeContextEvent;
@@ -23,6 +22,7 @@ use Phlexible\Bundle\TreeBundle\RouteGenerator\PathGenerator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\SuffixPathDecorator;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -38,7 +38,7 @@ class NodeListener implements EventSubscriberInterface
     private $routeManager;
 
     /**
-     * @var SiterootManagerInterface
+     * @var \Phlexible\Component\Site\Model\SiteManagerInterface
      */
     private $siterootManager;
 
@@ -49,12 +49,12 @@ class NodeListener implements EventSubscriberInterface
 
     /**
      * @param RouteManagerInterface      $routeManager
-     * @param SiterootManagerInterface   $siterootManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface   $siterootManager
      * @param NodeChangeManagerInterface $historyManager
      */
     public function __construct(
         RouteManagerInterface $routeManager,
-        SiterootManagerInterface $siterootManager,
+        SiteManagerInterface $siterootManager,
         NodeChangeManagerInterface $historyManager
     ) {
         $this->routeManager = $routeManager;

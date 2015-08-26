@@ -19,7 +19,7 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
 {
     public function testReplaceWithUnknownPatternWillFallbackToElementVersionPageTitle()
     {
-        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot = $this->prophesize('Phlexible\Component\Site\Domain\Siteroot');
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
         $node->getField('page', 'de')->willReturn('pageTitle');
 
@@ -31,7 +31,7 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testReplaceWithKnownPattern()
     {
-        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot = $this->prophesize('Phlexible\Component\Site\Domain\Siteroot');
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
 
         $patternResolver = new PatternResolver(array('test' => '%t'), 'title');
@@ -42,7 +42,7 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testReplacePattern()
     {
-        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot = $this->prophesize('Phlexible\Component\Site\Domain\Siteroot');
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
 
         $patternResolver = new PatternResolver(array(), 'title');
@@ -53,7 +53,7 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testReplacePatterWithoutPlaceholders()
     {
-        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot = $this->prophesize('Phlexible\Component\Site\Domain\Siteroot');
         $siteroot->getTitle('de')->shouldNotBeCalled();
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
         $node->getField('backend', 'de')->shouldNotBeCalled();
@@ -68,7 +68,7 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testReplacePatterWithSiterootPlaceholder()
     {
-        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot = $this->prophesize('Phlexible\Component\Site\Domain\Siteroot');
         $siteroot->getTitle('de')->willReturn('foo');
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
         $node->getField('backend', 'de')->shouldNotBeCalled();
@@ -83,7 +83,7 @@ class PatternResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testReplacePatterWithElementVersionPlaceholder()
     {
-        $siteroot = $this->prophesize('Phlexible\Bundle\SiterootBundle\Entity\Siteroot');
+        $siteroot = $this->prophesize('Phlexible\Component\Site\Domain\Siteroot');
         $siteroot->getTitle('de')->shouldNotBeCalled();
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
         $node->getField('backend', 'de')->willReturn('foo');

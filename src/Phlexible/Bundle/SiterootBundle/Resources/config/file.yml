@@ -1,0 +1,17 @@
+services:
+    phlexible_siteroot.file.puli_repository:
+        class: Phlexible\Component\Site\File\PuliSiteRepository
+        arguments:
+            - @puli.discovery
+            - @puli.repository
+            - "xml"
+            - "%kernel.root_dir%/Resources/sites"
+            - "/tipfinder/sites"
+
+    phlexible_siteroot.file.siteroot_manager:
+        class: Phlexible\Component\Site\File\SiteManager
+        arguments:
+            - @phlexible_siteroot.file.puli_repository
+            - @validator
+            - @event_dispatcher
+        public: false

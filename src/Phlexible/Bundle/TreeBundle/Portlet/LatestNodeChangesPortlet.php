@@ -12,6 +12,7 @@ use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -27,7 +28,7 @@ class LatestNodeChangesPortlet extends Portlet
     private $treeManager;
 
     /**
-     * @var \Phlexible\Component\Node\Model\NodeManagerInterface
+     * @var NodeManagerInterface
      */
     private $nodeManager;
 
@@ -78,14 +79,15 @@ class LatestNodeChangesPortlet extends Portlet
         // TODO: modifiedAt
         $rawNodes = $this->nodeManager->findBy(array(), array('createdAt' => 'DESC'), $this->numItems);
 
-        $language = 'de';
+        $locale = 'de';
+        $treeContext = new WorkingTreeContext($locale);
 
         $data = array();
         foreach ($rawNodes as $rawNode) {
-            $tree = $this->treeManager->getByNodeId($rawNode->getId());
+            $tree = $this->treeManager->getByNodeId($treeContext, $rawNode->getId());
             $node = $tree->get($rawNode->getId());
 
-            $baseTitle = $node->getField('backend', $language);
+            $baseTitle = $node->getField('backend', $locale);
             $baseTitleArr = str_split($baseTitle, 16);
             $title = '';
 
@@ -125,10 +127,10 @@ class LatestNodeChangesPortlet extends Portlet
             // TODO: modifiedAt
             $data[] = array(
                 'nodeId'       => $node->getId(),
-                'language'     => $language,
+                'language'     => $locale,
                 'version'      => 1,
                 'title'        => strip_tags($title),
-                'icon'         => $this->iconResolver->resolveNode($node, $language),
+                'icon'         => $this->iconResolver->resolveNode($node),
                 'modifiedAt'   => $node->getCreatedAt()->format('Y-m-d H:i:s'),
                 'modifyUserId' => $node->getCreateUserId(),
                 'menu'         => $menu

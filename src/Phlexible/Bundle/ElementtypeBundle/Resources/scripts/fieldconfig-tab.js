@@ -28,7 +28,7 @@ Phlexible.fields.Registry.addFactory('tab', function (parentConfig, item, valueS
         listeners: {
             activate: function (c) {
                 if (c.items && c.element) {
-                    c.currentETID = c.element.getElementtypeId();
+                    c.currentType = c.element.getType();
                     c.currentActive = c.items.indexOf(this.layout.activeItem);
                 }
             }

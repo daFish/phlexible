@@ -119,7 +119,7 @@ class ChangesCommand extends ContainerAwareCommand
             } else {
                 foreach ($changes as $change) {
                     $ts = microtime(true);
-                    $output->writeln("Synchronizing change for {$change->getElementtype()->getUniqueId()}... ");
+                    $output->writeln("Synchronizing change for {$change->getElementtype()->getName()}... ");
                     $synchronizer->synchronize($change, $input->getOption('force'));
                     $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
                     $ts = number_format(microtime(true) - $ts, 2);

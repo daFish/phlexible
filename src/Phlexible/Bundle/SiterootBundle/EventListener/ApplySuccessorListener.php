@@ -8,8 +8,8 @@
 
 namespace Phlexible\Bundle\SiterootBundle\EventListener;
 
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
  * Siteroots callbacks
@@ -19,14 +19,14 @@ use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
 class ApplySuccessorListener
 {
     /**
-     * @var SiterootManagerInterface
+     * @var \Phlexible\Component\Site\Model\SiteManagerInterface
      */
     private $siterootManager;
 
     /**
-     * @param SiterootManagerInterface $siterootManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface $siterootManager
      */
-    public function __construct(SiterootManagerInterface $siterootManager)
+    public function __construct(SiteManagerInterface $siterootManager)
     {
         $this->siterootManager = $siterootManager;
     }
@@ -53,7 +53,7 @@ class ApplySuccessorListener
                 $siteroot->setModifyUserId($toUid);
             }
             if ($changed) {
-                $this->siterootManager->updateSiteroot($siteroot);
+                $this->siterootManager->updateSite($siteroot);
             }
         }
     }

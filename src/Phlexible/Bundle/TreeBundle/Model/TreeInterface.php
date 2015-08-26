@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 use Phlexible\Bundle\TreeBundle\Exception\InvalidNodeMoveException;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Node\Model\NodeInterface;
+use Phlexible\Component\Tree\TreeContextInterface;
 
 /**
  * Tree interface
@@ -27,6 +28,11 @@ interface TreeInterface
 
     const SORT_DIR_ASC  = 'asc';
     const SORT_DIR_DESC = 'desc';
+
+    /**
+     * @return TreeContextInterface
+     */
+    public function getTreeContext();
 
     /**
      * @return string
@@ -48,6 +54,15 @@ interface TreeInterface
      * @return NodeContext
      */
     public function get($id);
+
+    /**
+     * Return a node
+     *
+     * @param int $id
+     *
+     * @return NodeContext
+     */
+    public function getWorking($id);
 
     /**
      * Has this tree the given Tree ID?
@@ -133,6 +148,11 @@ interface TreeInterface
     public function isParentOf(NodeContext $parentNode, NodeContext $childNode);
 
     /**
+     * @param NodeContext $node
+     */
+    public function updateNode(NodeContext $node);
+
+    /**
      * Create a node
      *
      * @param NodeContext $parentNode
@@ -211,4 +231,15 @@ interface TreeInterface
      * @param string      $comment
      */
     public function delete(NodeContext $node, $userId, $comment = null);
+
+
+
+
+
+
+
+    public function isInstance(NodeContext $node);
+    public function isInstanceMaster(NodeContext $node);
+    public function getPublishedLanguages(NodeContext $node);
+    public function isAsync(NodeContext $node);
 }

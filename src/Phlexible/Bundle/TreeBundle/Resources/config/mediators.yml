@@ -1,17 +1,8 @@
 services:
-    phlexible_tree.mediator.online_version_strategy:
-        class: Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy\OnlineVersionStrategy
-        arguments: [@phlexible_element.element_service]
-
-    phlexible_tree.mediator.preview_version_strategy:
-        class: Phlexible\Bundle\TreeBundle\Mediator\VersionStrategy\PreviewVersionStrategy
-        arguments: [@phlexible_element.element_service]
-
     phlexible_tree.mediator.element:
         class: Phlexible\Bundle\TreeBundle\Mediator\ElementTreeMediator
         arguments:
             - @phlexible_element.element_service
-            - @phlexible_tree.mediator.online_version_strategy
             - @phlexible_element.proxy.class_manager
             - @doctrine.orm.entity_manager
 

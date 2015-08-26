@@ -10,7 +10,7 @@ namespace Phlexible\Bundle\SiterootBundle\ProblemChecker;
 
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Model\ProblemCheckerInterface;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
  * Siteroot problem checker
@@ -20,14 +20,14 @@ use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 class SiterootProblemChecker implements ProblemCheckerInterface
 {
     /**
-     * @var SiterootManagerInterface
+     * @var SiteManagerInterface
      */
     private $siterootManager;
 
     /**
-     * @param SiterootManagerInterface $siterootManager
+     * @param SiteManagerInterface $siterootManager
      */
-    public function __construct(SiterootManagerInterface $siterootManager)
+    public function __construct(SiteManagerInterface $siterootManager)
     {
         $this->siterootManager = $siterootManager;
     }
@@ -129,14 +129,14 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                 $problems[] = $problem;
             }
 
-            if (!$siteRoot->getUrls()) {
+            if (!$siteRoot->getHostname()) {
                 $problem = new Problem();
                 $problem
-                    ->setId("siteroots_no_urls_{$siteRoot->getId()}")
+                    ->setId("siteroots_no_hostname_{$siteRoot->getId()}")
                     ->setCheckClass(__CLASS__)
                     ->setSeverity(Problem::SEVERITY_WARNING)
-                    ->setMessage("No Urls defined for Siteroot {$siteRoot->getTitle('en')}.")
-                    ->setHint('Set Urls for the Siteroot')
+                    ->setMessage("No hostname defined for Siteroot {$siteRoot->getTitle('en')}.")
+                    ->setHint('Set hostname for the Siteroot')
                     ->setIconClass('p-siteroot-component-icon');
                 $problems[] = $problem;
             }

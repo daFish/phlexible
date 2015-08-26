@@ -9,8 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\File\Parser;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Phlexible\Bundle\TreeBundle\Entity\NodeState;
 use Phlexible\Component\Node\Model\NodeInterface;
+use SimpleXMLElement;
 
 /**
  * XML tree parser
@@ -22,28 +22,26 @@ class XmlTreeParser
     /**
      * @param string          $content
      * @param ArrayCollection $nodes
-     * @param ArrayCollection $states
      */
-    public function parse($content, ArrayCollection $nodes, ArrayCollection $states)
+    public function parse($content, ArrayCollection $nodes)
     {
         $xml = simplexml_load_string($content);
 
         $siterootId = (string) $xml->attributes()['siterootId'];
 
-        $this->parseNode($nodes, $states, $siterootId, $xml->node);
+        $this->parseNode($nodes, $siterootId, $xml->node);
     }
 
     /**
-     * @param ArrayCollection        $nodes
-     * @param ArrayCollection        $states
-     * @param string                 $siterootId
-     * @param \SimpleXMLElement      $nodeNode
-     * @param \Phlexible\Component\Node\Model\NodeInterface|null $parentNode
+     * @param ArrayCollection    $nodes
+     * @param string             $siterootId
+     * @param SimpleXMLElement   $nodeNode
+     * @param NodeInterface|null $parentNode
      *
-     * @return \Phlexible\Component\Node\Model\NodeInterface
+     * @return NodeInterface
      * @throws \Exception
      */
-    private function parseNode(ArrayCollection $nodes, ArrayCollection $states, $siterootId, \SimpleXMLElement $nodeNode, NodeInterface $parentNode = null)
+    private function parseNode(ArrayCollection $nodes, $siterootId, SimpleXMLElement $nodeNode, NodeInterface $parentNode = null)
     {
         $attr = $nodeNode->attributes();
         $id = (int) $attr['id'];
@@ -70,7 +68,7 @@ class XmlTreeParser
         }
 
         $node = new $nodeType();
-        /* @var $node \Phlexible\Component\Node\Model\NodeInterface */
+        /* @var $node NodeInterface */
         $node->setId($id);
         $node->setSiterootId($siterootId);
         $node->setParentNode($parentNode);
@@ -85,25 +83,6 @@ class XmlTreeParser
 
         $nodes->set($node->getId(), $node);
 
-        foreach ($nodeNode->states->state as $stateNode) {
-            $attr = $stateNode->attributes();
-            $version = (string) $attr['version'];
-            $language = (string) $attr['language'];
-            $hash = (string) $attr['hash'];
-            $publishUser = (string) $attr['publishUser'];
-            $publishedAt = new \DateTime((string) $attr['publishedAt']);
-
-            $state = new NodeState();
-            $state->setHash($hash);
-            $state->setVersion($version);
-            $state->setLanguage($language);
-            $state->setPublishedAt($publishedAt);
-            $state->setPublishUserId($publishUser);
-            $state->setNode($node);
-
-            $states->set($id . '_' . $language, $state);
-        }
-
         if ($parentId) {
             $parentNode = $nodes->get($parentId);
             if (!$parentNode) {
@@ -114,7 +93,7 @@ class XmlTreeParser
 
         if (count($nodeNode->node)) {
             foreach ($nodeNode->node as $childNodeNode) {
-                $this->parseNode($nodes, $states, $siterootId, $childNodeNode, $node);
+                $this->parseNode($nodes, $siterootId, $childNodeNode, $node);
             }
         }
     }

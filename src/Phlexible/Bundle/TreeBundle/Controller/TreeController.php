@@ -9,7 +9,8 @@
 namespace Phlexible\Bundle\TreeBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Bundle\TreeBundle\Controller\Tree\NodeSaver;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Marcus Stöhr <mstoehr@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>
- * @Route("/tree")
+ * @Route("/tree/tree")
  */
 class TreeController extends Controller
 {
@@ -51,7 +52,8 @@ class TreeController extends Controller
         // TODO: switch to master language of element
         $defaultLanguage = $this->container->getParameter('phlexible_cms.languages.default');
 
-        $tree = $treeManager->getBySiteRootId($siterootId);
+        $treeContext = new WorkingTreeContext($language);
+        $tree = $treeManager->getBySiteRootId($treeContext, $siterootId);
         $rootNode = $tree->getRoot();
 
         $data = array();
@@ -76,88 +78,38 @@ class TreeController extends Controller
     }
 
     /**
-     * List all element types
+     * List all types
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("/childelementtypes", name="tree_childelementtypes")
+     * @Route("/types", name="tree_node_types")
      */
-    public function childelementtypesAction(Request $request)
+    public function typesAction(Request $request)
     {
-        $eid = $request->get('eid');
-
-        $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_tree.icon_resolver');
-
-        $element = $elementService->findElement($eid);
-        $elementtype = $elementService->findElementtype($element);
-        $childElementtypes = $elementService->findAllowedChildren($elementtype);
-
-        $data = array();
-        foreach ($childElementtypes as $childElementtype) {
-            if (!in_array($childElementtype->getType(), array(Elementtype::TYPE_FULL, Elementtype::TYPE_STRUCTURE))) {
-                continue;
-            }
-
-            $data[$childElementtype->getName().'_'.$childElementtype->getId()] = array(
-                'id'   => $childElementtype->getId(),
-                'name' => $childElementtype->getName(),
-                'icon' => $iconResolver->resolveElementtype($childElementtype),
-                'type' => $childElementtype->getType(),
-            );
-        }
-        ksort($data);
-        $data = array_values($data);
-
-        return new JsonResponse(array('elementtypes' => $data));
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @Route("/childelements", name="tree_childelements")
-     */
-    public function childelementsAction(Request $request)
-    {
-        $id = $request->get('id');
+        $nodeId = $request->get('node');
         $language = $request->get('language');
 
+        $nodeTypeManager = $this->get('phlexible_tree.node_type_manager');
         $treeManager = $this->get('phlexible_tree.tree_manager');
-        $elementService = $this->get('phlexible_element.element_service');
-        $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
-        $tree = $treeManager->getByNodeID($id);
-        $node = $tree->get($id);
-        $eid = $node->getContentId();
-        $element = $elementService->findElement($eid);
+        $treeContext = new WorkingTreeContext($language);
+        $tree = $treeManager->getByNodeId($treeContext, $nodeId);
+        $node = $tree->get($nodeId);
 
-        if (!$language) {
-            $language = $element->getMasterLanguage();
-        }
-
-        $firstString = $this->get('translator')->trans('elements.first', array(), 'gui');
-
-        $data = array();
-        $data[] = array(
-            'id'    => '0',
-            'title' => $firstString,
-            'icon'  => $iconResolver->resolveIcon('_top.gif'),
-        );
-
-        foreach ($tree->getChildren($node) as $childNode) {
-            $childElement = $elementService->findElement($childNode->getContentId());
-            $childElementVersion = $elementService->findElementVersion($childElement, $childElement->getLatestVersion());
-
-            $data[] = array(
-                'id'    => $childNode->getId(),
-                'title' => $childElementVersion->getBackendTitle($language, $childElementVersion->getElement()->getMasterLanguage()) . ' [' . $childNode->getId() . ']',
-                'icon'  => $iconResolver->resolveNode($childNode, $language),
+        $types = array();
+        foreach ($nodeTypeManager->getTypesForNode($node) as $name => $type) {
+            $types[$name] = array(
+                'name' => $name,
+                'icon' => '',
+                'type' => $type,
             );
         }
 
-        return new JsonResponse(array('elements' => $data));
+        ksort($types);
+        $types = array_values($types);
+
+        return new JsonResponse($types);
     }
 
     /**
@@ -171,19 +123,20 @@ class TreeController extends Controller
     public function createAction(Request $request)
     {
         $parentId = $request->get('id');
-        $siterootId = $request->get('siteroot_id');
-        $elementtypeId = $request->get('element_type_id');
-        $afterId = $request->get('prev_id');
+        $siterootId = $request->get('siterootId');
+        $type = $request->get('type');
+        $afterId = $request->get('prevId');
         $sortMode = $request->get('sort', 'title');
-        $sortDir = $request->get('sort_dir', 'asc');
+        $sortDir = $request->get('sortDir', 'asc');
         $navigation = $request->get('navigation') ? true : false;
         $restricted = $request->get('restricted') ? true : false;
+        $language = $request->get('language');
         $masterLanguage = $request->get('masterlanguage');
 
-        $elementService = $this->get('phlexible_element.element_service');
         $treeManager = $this->get('phlexible_tree.tree_manager');
 
-        $tree = $treeManager->getBySiteRootId($siterootId);
+        $treeContext = new WorkingTreeContext($language);
+        $tree = $treeManager->getBySiteRootId($treeContext, $siterootId);
         $parentNode = $tree->get($parentId);
         $afterNode = $tree->get($afterId);
 
@@ -398,5 +351,45 @@ class TreeController extends Controller
         }
 
         return new ResultResponse(true, 'Item(s) deleted');
+    }
+
+    /**
+     * Save node
+     *
+     * @param Request $request
+     *
+     * @return ResultResponse
+     * @Route("/save", name="tree_save")
+     */
+    public function saveAction(Request $request)
+    {
+        $language = $request->get('language');
+
+        $iconResolver = $this->get('phlexible_tree.icon_resolver');
+        $dataSaver = new NodeSaver(
+            $this->get('event_dispatcher'),
+            $this->container->getParameter('phlexible_cms.languages.available')
+        );
+
+        $nodeId = $request->get('id');
+        $treeManager = $this->get('phlexible_tree.tree_manager');
+        $treeContext = new WorkingTreeContext($language);
+        $tree = $treeManager->getByNodeId($treeContext, $nodeId);
+        $node = $tree->getWorking($nodeId);
+
+        $dataSaver->save($node, $request, $this->getUser());
+
+        $icon = $iconResolver->resolveNode($node);
+
+        $msg = "Node {$node->getId()} updated.";
+
+        $data = array(
+            'title'         => $node->getField('backend', $language),
+            'icon'          => $icon,
+            'navigation'    => $node->getInNavigation(),
+            'restricted'    => $node->getAttribute('needAuthentication'),
+        );
+
+        return new ResultResponse(true, $msg, $data);
     }
 }

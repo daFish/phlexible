@@ -8,9 +8,9 @@
 
 namespace Phlexible\Bundle\TreeBundle\File\Dumper;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Site\Domain\Site;
 
 /**
  * XML tree dumper
@@ -21,11 +21,11 @@ class XmlTreeDumper
 {
     /**
      * @param TreeInterface $tree
-     * @param Siteroot      $siteroot
+     * @param Site      $siteroot
      *
      * @return string
      */
-    public function dump(TreeInterface $tree, Siteroot $siteroot)
+    public function dump(TreeInterface $tree, Site $siteroot)
     {
         $dom = new \DOMDocument();
         $dom->formatOutput = true;

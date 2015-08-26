@@ -129,7 +129,7 @@ Phlexible.tree.view.tab.Links = Ext.extend(Ext.grid.GridPanel, {
     onLoadElement: function (element) {
         this.store.removeAll();
 
-        if (element.getElementtypeType() === Phlexible.elementtypes.TYPE_FULL) {
+        if (element.getTreeNode().attributes.type === 'page') {
             this.enable();
 
             if (!this.hidden) {

@@ -2,6 +2,9 @@ elements:
     elements: Elemente
     element: Element
     websites: Webseiten
+    workspace: Workspace
+    locale: Locale
+    slug: Path segment
     element_version: 'Element Version'
     latest_version: 'Letzte Version'
     online_version: 'Online Version'
@@ -106,7 +109,6 @@ elements:
     caching: Caching
     expires_after: 'Läuft ab nach (h)'
     allowed: erlaubt
-    meta: Meta
     key: Schlüssel
     value: Wert
     links: Links
@@ -143,8 +145,6 @@ elements:
     disable_caching: 'Caching deaktivieren'
     cache_lifetime: 'Cache-Lebensdauer (Sekunden)'
     http_response_code: 'HTTP Response Code'
-    in_navigation: 'in Navigation'
-    is_restricted: 'Zugriff beschränkt'
     use_default: 'Standard benutzen'
     free: Frei
     first: Zuerst
@@ -297,11 +297,9 @@ elements:
         path: Pfad
         defaults: Defaults
         methods: Methods
-        scheme: Scheme
-        https: HTTPS
+        schemes: Schemes
         controller: Controller
         template: Template
-        old_urls: Alte URLs
 
     security:
         security: Security
@@ -322,13 +320,10 @@ elements:
 
     configuration:
         configuration: Konfiguration
-        in_navigation: 'In Navigation'
+        hidden: 'Ausblenden'
+        hidden_in_navigation: 'In Navigation verbergen'
         template: Template
-        robots: Robots
-        robots_no_follow: No Follow
-        robots_no_index: No Index
-        internal_search: Interne Suche
-        search_no_index: Nicht indizieren
+        search_no_index: Nicht in Suche aufnehmen
 
     preview:
         preview: Vorschau
@@ -349,3 +344,10 @@ elements:
         object_type: Objekttyp
         object_id: Objekt-ID
         date: Datum
+
+    meta:
+        meta: Meta-Tags
+        description: Beschreibung
+        keywords: Keywords
+        robots_no_index: Vor Suchmaschinen verstecken (noindex)
+        robots_no_follow: Links nicht folgen (nofollow)

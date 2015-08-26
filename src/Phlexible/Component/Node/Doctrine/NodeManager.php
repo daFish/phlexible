@@ -10,11 +10,11 @@ namespace Phlexible\Component\Node\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Phlexible\Component\Node\Event\NodeEvent;
 use Phlexible\Component\Node\Model\NodeInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -40,18 +40,13 @@ class NodeManager implements NodeManagerInterface
     private $nodeRepository;
 
     /**
-     * @var EntityRepository
-     */
-    private $nodeOnlineRepository;
-
-    /**
      * @param EntityManagerInterface   $entityManager
-     * @param SiterootManagerInterface $siterootManager
+     * @param SiteManagerInterface $siterootManager
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        SiterootManagerInterface $siterootManager,
+        SiteManagerInterface $siterootManager,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->entityManager = $entityManager;
@@ -150,6 +145,8 @@ class NodeManager implements NodeManagerInterface
         foreach ($criteria as $field => $value) {
             if ($value === null) {
                 $qb->andWhere($qb->expr()->isNull("n.$field"));
+            } elseif (is_array($value)) {
+                $qb->andWhere($qb->expr()->in("n.$field", $value));
             } else {
                 $qb->andWhere($qb->expr()->eq("n.$field", $qb->expr()->literal($value)));
             }

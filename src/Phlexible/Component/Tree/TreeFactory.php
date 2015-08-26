@@ -27,11 +27,6 @@ class TreeFactory implements TreeFactoryInterface
     private $nodeManager;
 
     /**
-     * @var NodeStateManagerInterface
-     */
-    private $nodeStateManager;
-
-    /**
      * @var NodeContextFactoryInterface
      */
     private $nodeContextFactory;
@@ -48,20 +43,17 @@ class TreeFactory implements TreeFactoryInterface
 
     /**
      * @param NodeManagerInterface        $nodeManager
-     * @param NodeStateManagerInterface   $nodeStateManager
      * @param NodeContextFactoryInterface $nodeContextFactory
      * @param NodeHasherInterface         $nodeHasher
      * @param EventDispatcherInterface    $eventDispatcher
      */
     public function __construct(
         NodeManagerInterface $nodeManager,
-        NodeStateManagerInterface $nodeStateManager,
         NodeContextFactoryInterface $nodeContextFactory,
         NodeHasherInterface $nodeHasher,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->nodeManager = $nodeManager;
-        $this->nodeStateManager = $nodeStateManager;
         $this->nodeContextFactory = $nodeContextFactory;
         $this->nodeHasher = $nodeHasher;
         $this->eventDispatcher = $eventDispatcher;
@@ -70,12 +62,12 @@ class TreeFactory implements TreeFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function factory($siteRootId)
+    public function factory(TreeContextInterface $treeContext, $siteRootId)
     {
         return new Tree(
+            $treeContext,
             $siteRootId,
             $this->nodeManager,
-            $this->nodeStateManager,
             $this->nodeContextFactory,
             $this->nodeHasher,
             $this->eventDispatcher

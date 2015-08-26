@@ -8,13 +8,13 @@
 
 namespace Phlexible\Bundle\TreeBundle\Command;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\TreeBundle\Entity\PageNode;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\LanguagePathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\NodeIdPathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\PathGenerator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\SuffixPathDecorator;
+use Phlexible\Component\Site\Domain\Site;
 use Phlexible\Component\Tree\TreeIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -63,7 +63,7 @@ class GenerateRoutesCommand extends ContainerAwareCommand
         }
 
         foreach ($siteManager->findAll() as $siteroot) {
-            /* @var $siteroot Siteroot */
+            /* @var $siteroot Site */
 
             $treeId = $siteroot->getId();
             $tree = $treeManager->getBySiteRootId($treeId);
@@ -98,9 +98,9 @@ class GenerateRoutesCommand extends ContainerAwareCommand
                 }
             }
 
-            foreach ($siteroot->getUrls() as $url) {
-                $node = $treeManager->getByNodeId($url->getTarget())->get($url->getTarget());
-                $route = $routeGenerator->generateEntryPointRoute($node, $url, $language);
+            foreach ($siteroot->getEntryPoints() as $name => $entryPoint) {
+                $node = $treeManager->getByNodeId($entryPoint['nodeId'])->get($entryPoint['nodeId']);
+                $route = $routeGenerator->generateEntryPointRoute($node, $siteroot->getId(), $entryPoint['hostname'], $name, $language);
                 if (isset($all[$route->getName()])) {
                     $routeManager->deleteRoute($routes[$route->getName()]);
                     unset($routes[$route->getName()]);

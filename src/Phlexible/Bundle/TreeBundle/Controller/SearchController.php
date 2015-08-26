@@ -55,7 +55,7 @@ class SearchController extends Controller
 
         foreach ($result as $key => $row) {
             $node = $nodeManager->find($row['nodeId']);
-            $result[$key]['icon'] = $iconResolver->resolveNode($node, $language);
+            $result[$key]['icon'] = $iconResolver->resolveNode($node);
         }
 
         return new JsonResponse(array('results' => $result));

@@ -36,7 +36,7 @@ interface NodeManagerInterface
      * @param int   $limit
      * @param int   $offset
      *
-     * @return NodeInterface
+     * @return NodeInterface[]
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 

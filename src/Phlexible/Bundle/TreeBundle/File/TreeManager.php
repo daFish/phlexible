@@ -9,18 +9,18 @@
 namespace Phlexible\Bundle\TreeBundle\File;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
 use Phlexible\Bundle\TreeBundle\File\Parser\XmlTreeParser;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Phlexible\Component\Tree\Tree;
 
 class NodeManager implements NodeManagerInterface
 {
     /**
-     * @var SiterootManagerInterface
+     * @var SiteManagerInterface
      */
     private $siterootManager;
 
@@ -30,9 +30,9 @@ class NodeManager implements NodeManagerInterface
     private $trees = array();
 
     /**
-     * @param SiterootManagerInterface $siterootManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface $siterootManager
      */
-    public function __construct(SiterootManagerInterface $siterootManager)
+    public function __construct(SiteManagerInterface $siterootManager)
     {
         $this->siterootManager = $siterootManager;
     }

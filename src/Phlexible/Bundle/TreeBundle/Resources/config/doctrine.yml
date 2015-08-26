@@ -6,12 +6,6 @@ services:
             - @phlexible_siteroot.siteroot_manager
             - @event_dispatcher
 
-    phlexible_tree.doctrine.node_state_manager:
-        class: Phlexible\Bundle\TreeBundle\Doctrine\NodeStateManager
-        arguments:
-            - @doctrine.orm.entity_manager
-            - @event_dispatcher
-
     phlexible_tree.doctrine.route_manager:
         class: Phlexible\Bundle\TreeBundle\Doctrine\RouteManager
         arguments:

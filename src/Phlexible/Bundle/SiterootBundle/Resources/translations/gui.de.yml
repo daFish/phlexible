@@ -84,3 +84,10 @@ siteroots:
     flag_include_type_layout: 'Layoutelementtypen einbeziehen'
     flag_include_type_teaser: 'Teaserelementtypen einbeziehen'
     flag_include_unique_id: 'Unique IDs benutzen'
+    types:
+        types: Typen
+        no_types: Keine Typen
+        type: Typ
+        allowed: Erlaubt
+        restrictions: Einschränkungen
+

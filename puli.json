@@ -410,6 +410,9 @@
         "phlexible/scripts": {
             "description": "phlexible gui scripts"
         },
+        "phlexible/sites": {
+            "description": "phlexible sites"
+        },
         "phlexible/styles": {
             "description": "phlexible gui styles"
         }

@@ -28,16 +28,28 @@ interface NodeInterface
     public function setId($id);
 
     /**
-     * @return NodeInterface
+     * @return string
      */
-    public function getParentNode();
+    public function getWorkspace();
 
     /**
-     * @param NodeInterface $parentNode
+     * @param string $workspace
      *
      * @return $this
      */
-    public function setParentNode($parentNode);
+    public function setWorkspace($workspace);
+
+    /**
+     * @return int
+     */
+    public function getParentId();
+
+    /**
+     * @param int $parentId
+     *
+     * @return $this
+     */
+    public function setParentId($parentId);
 
     /**
      * @return bool
@@ -59,14 +71,91 @@ interface NodeInterface
     /**
      * @return string
      */
-    public function getContentType();
+    public function getPath();
 
     /**
-     * @param string $type
+     * @return string
+     */
+    public function getParentPath();
+
+    /**
+     * @param string $path
      *
      * @return $this
      */
-    public function setContentType($type);
+    public function setPath($path);
+
+    /**
+     * @return string
+     */
+    public function getLocale();
+
+    /**
+     * @param string $locale
+     *
+     * @return $this
+     */
+    public function setLocale($locale);
+
+    /**
+     * @return string
+     */
+    public function getTitle();
+
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
+    public function setTitle($title);
+
+    /**
+     * @return string
+     */
+    public function getNavigationTitle();
+
+    /**
+     * @param string $navigationTitle
+     *
+     * @return $this
+     */
+    public function setNavigationTitle($navigationTitle);
+
+    /**
+     * @return string
+     */
+    public function getBackendTitle();
+
+    /**
+     * @param string $backendTitle
+     *
+     * @return $this
+     */
+    public function setBackendTitle($backendTitle);
+
+    /**
+     * @return string
+     */
+    public function getSlug();
+
+    /**
+     * @param string $slug
+     *
+     * @return $this
+     */
+    public function setSlug($slug);
+
+    /**
+     * @return string
+     */
+    public function getContentType();
+
+    /**
+     * @param string $contentType
+     *
+     * @return $this
+     */
+    public function setContentType($contentType);
 
     /**
      * @return string
@@ -74,11 +163,23 @@ interface NodeInterface
     public function getContentId();
 
     /**
-     * @param string $typeId
+     * @param string $contentId
      *
      * @return $this
      */
-    public function setContentId($typeId);
+    public function setContentId($contentId);
+
+    /**
+     * @return string
+     */
+    public function getContentVersion();
+
+    /**
+     * @param int $contentVersion
+     *
+     * @return $this
+     */
+    public function setContentVersion($contentVersion);
 
     /**
      * @return array

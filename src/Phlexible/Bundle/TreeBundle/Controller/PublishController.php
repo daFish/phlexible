@@ -142,10 +142,10 @@ class PublishController extends Controller
         foreach ($selection->all() as $selectionItem) {
             if ($selectionItem->getTarget() instanceof NodeInterface) {
                 $id = $selectionItem->getTarget()->getId();
-                $icon = $iconResolver->resolveNode($selectionItem->getTarget(), $selectionItem->getLanguage());
+                $icon = $iconResolver->resolveNode($selectionItem->getTarget());
             } else {
                 $id = $selectionItem->getTarget()->getId();
-                $icon = $iconResolver->resolveTeaser($selectionItem->getTarget(), $selectionItem->getLanguage());
+                $icon = $iconResolver->resolveTeaser($selectionItem->getTarget());
             }
 
             $result[] = array(
@@ -222,7 +222,7 @@ class PublishController extends Controller
         $data = array(
             'tid' => $tid,
             'language' => $language,
-            'icon' => $iconResolver->resolveNode($node, $language),
+            'icon' => $iconResolver->resolveNode($node),
         );
 
         $lock->release();

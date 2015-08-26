@@ -38,7 +38,8 @@ class XmlParser implements ParserInterface
     public function parse(Document $dom)
     {
         $id = $dom->documentElement->getAttribute('id');
-        $name = $dom->documentElement->getAttribute('name');
+
+        $name = (string) $dom->documentElement->getAttribute('name');
         $revision = (int) $dom->documentElement->getAttribute('revision');
         $type = $dom->documentElement->getAttribute('type');
         $icon = $dom->documentElement->getAttribute('icon');

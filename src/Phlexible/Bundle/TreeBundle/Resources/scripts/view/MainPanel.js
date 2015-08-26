@@ -138,7 +138,7 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
                     listeners: {
                         nodeSelect: this.onNodeSelect,
                         newElement: function (node) {
-                            this.element.showNewElementWindow(node);
+                            this.element.showCreateNodeWindow(node);
                         },
                         newAlias: function (node) {
                             this.element.showNewAliasWindow(node);
@@ -404,12 +404,12 @@ Phlexible.tree.view.MainPanel = Ext.extend(Ext.Panel, {
         //var properties = element.properties;
 
         // update element panel title
-        switch (element.getElementtypeType()) {
+        switch (element.getTreeNode().attributes.type) {
             case 'part':
                 //this.setTitle(this.baseTitle + ' :: ' + this.strings['part_element'] + ' "' + element.title + '" (Teaser ID: ' + element.properties.teaser_id + ' - ' + this.strings.language + ': ' + element.language + ' - ' + this.strings.version + ': ' + element.version + ')');
                 break;
 
-            case 'full':
+            case 'page':
             default:
                 //this.setTitle(this.baseTitle + ' :: ' + this.strings[element.properties.et_type + '_element'] + ' "' + element.title + '" (' + this.strings.tid + ': ' + element.tid + ' - ' + this.strings.language + ': ' + element.language + ' - ' + this.strings.version + ': ' + element.version + ')');
                 break;

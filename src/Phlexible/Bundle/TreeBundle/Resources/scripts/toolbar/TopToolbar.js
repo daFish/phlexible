@@ -139,7 +139,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
             iconCls: 'p-element-add-icon',
             disabled: true,
             handler: function () {
-                this.element.showNewElementWindow();
+                this.element.showCreateNodeWindow();
             },
             scope: this
         });
@@ -371,7 +371,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
 
         var extendedItem = this.items.items[this.tbarIndex.indexOfKey('extended')];
         var previewItem = extendedItem.menu.items.items[this.extendedMenuIndex.indexOfKey('preview')];
-        if (this.element.getElementtypeType == Phlexible.elementtypes.TYPE_FULL) {
+        if (this.element.getTreeNode().attributes.type == 'page') {
             previewItem.enable();
             if (this.element.getTreeNode().attributes.isPublished) {
                 previewItem.menu.items.items[1].enable();

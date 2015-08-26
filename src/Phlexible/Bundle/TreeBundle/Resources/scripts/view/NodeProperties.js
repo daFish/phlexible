@@ -2,14 +2,13 @@ Ext.provide('Phlexible.tree.view.NodeProperties');
 
 Ext.require('Phlexible.tree.view.accordion.Comment');
 Ext.require('Phlexible.tree.view.accordion.Configuration');
-Ext.require('Phlexible.tree.view.accordion.Data');
 Ext.require('Phlexible.tree.view.accordion.Diff');
 Ext.require('Phlexible.tree.view.accordion.Instances');
-Ext.require('Phlexible.tree.view.accordion.Meta');
 Ext.require('Phlexible.tree.view.accordion.Versions');
 
 Phlexible.tree.view.NodeProperties = Ext.extend(Ext.Panel, {
     title: Phlexible.elements.Strings.properties,
+    strings: Phlexible.elements.Strings,
     cls: 'p-tree-node-properties',
 
     //autoScroll: true,
@@ -28,7 +27,7 @@ Phlexible.tree.view.NodeProperties = Ext.extend(Ext.Panel, {
         this.items = [{
             xtype: 'tree-accordion-quickinfo',
             region: 'north',
-            height: 90,
+            height: 120,
             element: this.element
         },{
             xtype: 'tabpanel',
@@ -42,7 +41,7 @@ Phlexible.tree.view.NodeProperties = Ext.extend(Ext.Panel, {
         delete this.tabItems;
 
         this.buttons = [{
-            text: '_save',
+            text: this.strings.save,
             iconCls: 'p-element-save-icon',
             handler: this.onSave,
             scope: this
@@ -53,21 +52,10 @@ Phlexible.tree.view.NodeProperties = Ext.extend(Ext.Panel, {
 
     populateTabItems: function () {
         this.tabItems = [{
-            xtype: 'tree-accordion-data',
-            element: this.element
-        },{
             xtype: 'tree-accordion-configuration',
             saveKey: 'configuration',
             element: this.element
         }];
-
-        if (Phlexible.User.isGranted('ROLE_ELEMENT_META')) {
-            this.tabItems.push({
-                xtype: 'tree-accordion-meta',
-                saveKey: 'meta',
-                element: this.element
-            });
-        }
 
         if (Phlexible.User.isGranted('ROLE_ELEMENT_VERSIONS')) {
             this.tabItems.push({
@@ -125,7 +113,17 @@ Phlexible.tree.view.NodeProperties = Ext.extend(Ext.Panel, {
     },
 
     onSave: function() {
-        console.log(this.getData());
+        var data = this.getData();
+
+        Ext.Ajax.request({
+            url: Phlexible.Router.generate('tree_save'),
+            params: {
+                id: this.element.getNodeId(),
+                language: this.element.getLanguage(),
+                comment: data.comment,
+                configuration: Ext.encode(data.configuration),
+            }
+        })
     },
 
     getData: function () {

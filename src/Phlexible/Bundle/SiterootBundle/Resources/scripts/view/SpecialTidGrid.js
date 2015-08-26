@@ -149,7 +149,7 @@ Phlexible.siteroots.SpecialTidGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         // remember current siteroot id
         this.siterootId = id;
 
-        this.store.loadData(data.specialtids);
+        this.store.loadData(data.nodeAliases);
     },
 
     renderLanguage: function (v, md, r, ri, ci, store) {

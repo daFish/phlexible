@@ -73,7 +73,7 @@ class DefinitionWriter
         $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $class->getNamespace())) . '/' . $class->getClassname() . '.php';
         $this->dumpFile($relativeFilename, $content);
 
-        $manager->addElementtypeId($class->getElementtypeId(), $class->getNamespace() . '\\' . $class->getClassname(), $relativeFilename);
+        $manager->addMainClass($class, $relativeFilename);
 
         $this->writeSubClasses($class, $manager, $twig, $namespacePrefix);
     }
@@ -92,7 +92,7 @@ class DefinitionWriter
                 $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $structure->getNamespace())) . '/' . $structure->getClassname() . '.php';
                 $this->dumpFile($relativeFilename, $content);
 
-                $manager->addDsId($structure->getDsId(), $structure->getNamespace() . '\\' . $structure->getClassname(), $relativeFilename);
+                $manager->addStructureClass($structure, $relativeFilename);
 
                 $this->writeSubClasses($structure, $manager, $twig, $namespacePrefix);
             }
@@ -103,7 +103,7 @@ class DefinitionWriter
             $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $structure->getNamespace())) . '/' . $structure->getClassname() . '.php';
             $this->dumpFile($relativeFilename, $content);
 
-            $manager->addDsId($structure->getDsId(), $structure->getNamespace() . '\\' . $structure->getClassname(), $relativeFilename);
+            $manager->addStructureClass($structure, $relativeFilename);
 
             $this->writeSubClasses($structure, $manager, $twig, $namespacePrefix);
         }
@@ -118,7 +118,8 @@ class DefinitionWriter
     {
         $content = "<?php return new \\Phlexible\\Bundle\\ElementBundle\\Proxy\\ClassManager(
     '{$this->outputDir}',
-    " . var_export($manager->getElementtypeIds(), true) . ",
+    " . var_export($manager->getNames(), true) . ",
+    " . var_export($manager->getIds(), true) . ",
     " . var_export($manager->getDsIds(), true) . "
 );";
         $relativeFilename = 'ClassManager.php';

@@ -8,11 +8,11 @@
 
 namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
 use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Entity\RedirectRoute;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\Site\Domain\Site;
 
 /**
  * URL generator
@@ -37,18 +37,18 @@ class RouteGenerator implements RouteGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generateNodeRoute(NodeContext $node, Siteroot $siteroot, $language)
+    public function generateNodeRoute(NodeContext $node, Site $siteroot, $language)
     {
         $route = new Route(
             $this->pathGenerator->generatePath($node, $language),
             array(
                 'nodeId' => $node->getId(),
                 'siterootId' => $siteroot->getId(),
-                'locale' => $language
+                '_locale' => $language
             ),
             array(),
             array(),
-            $siteroot->getDefaultUrl($language)->getHostname(),
+            $siteroot->getHostname(),
             array('HTTP'),
             array('GET', 'POST')
         );
@@ -62,23 +62,23 @@ class RouteGenerator implements RouteGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generateEntryPointRoute(NodeContext $node, Url $url, $language)
+    public function generateEntryPointRoute(NodeContext $node, $siterootId, $hostname, $name, $language)
     {
         $route = new RedirectRoute(
             '/',
             array(
                 'nodeId' => $node->getId(),
-                'siterootId' => $url->getSiteroot()->getId(),
-                'locale' => $language
+                'siterootId' => $siterootId,
+                '_locale' => $language
             ),
             array(),
             array(),
-            $url->getHostname(),
+            $hostname,
             array('HTTP'),
             array('GET', 'POST')
         );
 
-        $route->setName("entrypoint_{$url->getId()}");
+        $route->setName("entrypoint_$name");
         $route->setRouteName($node->getId());
         $route->setLanguage($language);
 

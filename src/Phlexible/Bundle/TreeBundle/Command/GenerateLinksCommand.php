@@ -8,6 +8,8 @@
 
 namespace Phlexible\Bundle\TreeBundle\Command;
 
+use Phlexible\Component\Tree\LiveTreeContext;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Phlexible\Component\Tree\TreeIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,34 +44,34 @@ class GenerateLinksCommand extends ContainerAwareCommand
         $elementMediator->setVersionStrategy($versionStrategy);
 
         $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
-        $repo = $em->getRepository('PhlexibleTreeBundle:NodeLink');
+        $nodeLinkRepository = $em->getRepository('PhlexibleTreeBundle:NodeLink');
 
-        $languages = array('de');
+        $locales = array('de');
 
-        foreach ($treeManager->getAll() as $tree) {
-            $tree->setDefaultLanguage('de');
+        foreach ($locales as $locale) {
+            $treeContext = new LiveTreeContext($locale);
 
-            $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
-            foreach ($rii as $node) {
-                $versions = $node->getContentVersions();
-                if (!$versions) {
-                    $output->writeln("Skipping {$node->getId()}, no versions");
-                    continue;
-                }
+            foreach ($treeManager->getAll($treeContext) as $tree) {
+                $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
+                foreach ($rii as $node) {
+                    $versions = $node->getContentVersions();
+                    if (!$versions) {
+                        $output->writeln("Skipping {$node->getId()}, no versions");
+                        continue;
+                    }
 
-                foreach ($versions as $version) {
-                    foreach ($languages as $language) {
-                        foreach ($repo->findBy(array('nodeId' => $node->getId(), 'language' => $language, 'version' => $version)) as $link) {
+                    foreach ($versions as $version) {
+                        foreach ($nodeLinkRepository->findBy(array('nodeId' => $node->getId(), 'language' => $locale, 'version' => $version)) as $link) {
                             $em->remove($link);
                         }
 
-                        foreach ($linkExtractor->extract($node, $language, $version) as $extractedLink) {
+                        foreach ($linkExtractor->extract($node, $locale, $version) as $extractedLink) {
                             $em->persist($extractedLink);
                         }
                     }
-                }
 
-                $em->flush();
+                    $em->flush();
+                }
             }
         }
 

@@ -9,7 +9,7 @@
 namespace Phlexible\Bundle\SiterootBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
+use Phlexible\Component\Site\Domain\Site;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -63,7 +63,7 @@ class SiterootController extends Controller
 
         $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroot = new Siteroot();
+        $siteroot = new Site();
         foreach (explode(',', $this->container->getParameter('phlexible_gui.languages.available')) as $language) {
             $siteroot->setTitle($language, $title);
         }
@@ -108,57 +108,52 @@ class SiterootController extends Controller
     {
         $siterootId = $request->get('id');
 
-        $siterootRepository = $this->getDoctrine()->getRepository('PhlexibleSiterootBundle:Siteroot');
+        $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroot = $siterootRepository->find($siterootId);
+        $siteroot = $siterootManager->find($siterootId);
 
         $data = array(
             'titles'          => $siteroot->getTitles(),
+            'hostname'        => $siteroot->getHostname(),
             'navigations'     => array(),
             'properties'      => array(),
             'specialtids'     => array(),
-            'urls'            => array(),
         );
 
-        // get all siteroot navigations
         foreach ($siteroot->getNavigations() as $navigation) {
             $data['navigations'][] = array(
-                'id'         => $navigation->getId(),
-                'title'      => $navigation->getTitle(),
-                'handler'    => $navigation->getHandler(),
-                'start_tid'  => $navigation->getStartTreeId(),
-                'max_depth'  => $navigation->getMaxDepth(),
-                'supports'   => '', //call_user_func(array($navigation->getHandler(), 'getSupportedFlags')),
-                'flags'      => $navigation->getFlags(),
-                'additional' => $navigation->getAdditional()
+                'name'     => $navigation->getName(),
+                'nodeId'   => $navigation->getNodeId(),
+                'maxDepth' => $navigation->getMaxDepth(),
             );
         }
 
-        // TODO: siteroot properties from bundles
-        /*
-        foreach ($componentCallback->getSiterootProperties() as $key) {
-            $property = $siteroot->getProperty($key);
-            $data['properties'][$key] = strlen($property) ? $property : '';
+        foreach ($siteroot->getProperties() as $key => $value) {
+            $data['properties'][$key] = strlen($value) ? $value : '';
         }
-        */
 
-        foreach ($siteroot->getSpecialTids() as $specialTid) {
-            $data['specialtids'][] = array(
-                'siteroot_id' => $siterootId,
-                'key'         => $specialTid['name'],
-                'language'    => !empty($specialTid['language']) ? $specialTid['language'] : null,
-                'tid'         => $specialTid['treeId'],
+        foreach ($siteroot->getNodeAliases() as $nodeAlias) {
+            $data['nodeAliases'][] = array(
+                'key'      => $nodeAlias->getName(),
+                'language' => $nodeAlias->getLanguage(),
+                'nodeId'   => $nodeAlias->getNodeId(),
             );
         }
 
-        foreach ($siteroot->getUrls() as $url) {
-            $data['urls'][] = array(
-                'id'             => $url->getId(),
-                'global_default' => $url->isGlobalDefault(),
-                'default'        => $url->isDefault(),
-                'hostname'       => $url->getHostname(),
-                'language'       => $url->getLanguage(),
-                'target'         => $url->getTarget(),
+        foreach ($siteroot->getEntryPoints() as $entryPoint) {
+            $data['entryPoints'][] = array(
+                'name'     => $entryPoint->getName(),
+                'hostname' => $entryPoint->getHostname(),
+                'language' => $entryPoint->getLanguage(),
+                'nodeId'   => $entryPoint->getNodeId(),
+            );
+        }
+
+        foreach ($siteroot->getNodeConstraints() as $nodeConstraint) {
+            $data['nodeConstraints'][$nodeConstraint->getName()] = array(
+                'name'      => $nodeConstraint->getName(),
+                'allowed'   => $nodeConstraint->isAllowed(),
+                'nodeTypes' => $nodeConstraint->getNodeTypes(),
             );
         }
 

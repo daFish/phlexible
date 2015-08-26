@@ -3,7 +3,7 @@ Ext.provide('Phlexible.element.Teaser');
 
 Ext.require('Phlexible.fields.Prototypes');
 Ext.require('Phlexible.tree.window.NewElementInstanceWindow');
-Ext.require('Phlexible.tree.window.NewElementWindow');
+Ext.require('Phlexible.tree.window.CreateNodeWindow');
 
 Phlexible.element.Element = function (config) {
     this.addEvents(
@@ -99,11 +99,6 @@ Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
     defaultContentTab: null,
     valueStructure: null,
     structure: null,
-    elementtypeId: null,
-    elementtypeName: null,
-    elementtypeRevision: null,
-    elementtypeType: null,
-    meta: null,
     diff: null,
     pager: null,
     urls: null,
@@ -211,7 +206,7 @@ Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('elements_data_load'),
+            url: Phlexible.Router.generate('elements_content'),
             params: params,
             success: this.onLoadSuccess,
             failure: this.onLoadFailure,
@@ -239,11 +234,6 @@ Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
             this.defaultContentTab = elementData.defaultContentTab;
             this.valueStructure = elementData.valueStructure;
             this.structure = elementData.structure;
-            this.elementtypeId = elementData.elementtypeId;
-            this.elementtypeRevision = elementData.elementtypeRevision;
-            this.elementtypeName = elementData.elementtypeName;
-            this.elementtypeType = elementData.elementtypeType;
-            this.meta = elementData.meta;
             this.diff = elementData.diff;
             this.pager = elementData.pager;
             this.urls = elementData.urls;
@@ -438,26 +428,6 @@ Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
         return this.structure;
     },
 
-    getElementtypeId: function() {
-        return this.elementtypeId;
-    },
-
-    getElementtypeName: function() {
-        return this.elementtypeName;
-    },
-
-    getElementtypeRevision: function() {
-        return this.elementtypeRevision;
-    },
-
-    getElementtypeType: function() {
-        return this.elementtypeType;
-    },
-
-    getMeta: function() {
-        return this.meta || [];
-    },
-
     getDiff: function() {
         return this.diff || null;
     },
@@ -534,34 +504,26 @@ Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
         return this.teaserNode;
     },
 
-    showNewElementWindow: function (node, element_type_id) {
-        if (!node) {
-            node = this.getTreeNode();
+    showCreateNodeWindow: function (treeNode) {
+        if (!treeNode) {
+            treeNode = this.getTreeNode();
         }
 
-        if (node) {
-            sort_mode = node.attributes.sort_mode;
-        } else {
-            sort_mode = null;
-        }
-
-        var w = new Phlexible.element.NewElementWindow({
-            element_type_id: element_type_id,
-            sort_mode: sort_mode,
+        new Phlexible.tree.window.CreateNodeWindow({
+            sortMode: treeNode.attributes.sortMode,
             language: this.language,
             submitParams: {
                 siterootId: this.siterootId,
-                eid: node ? node.attributes.eid : this.eid,
-                id: node ? node.id : this.tid
+                node: treeNode.id,
+                language: this.getLanguage()
             },
             listeners: {
-                success: function (dialog, result, node) {
-                    this.fireEvent('createElement', this, result.data, node);
-                    this.load(result.data.tid, null, result.data.master_language, true);
-                }.createDelegate(this, [node], true)
+                success: function (dialog, result, treeNode) {
+                    this.fireEvent('createElement', this, result.data, treeNode);
+                    this.load(result.data.nodeId, null, result.data.masterLanguage, true);
+                }.createDelegate(this, [treeNode], true)
             }
-        });
-        w.show();
+        }).show();
     },
 
     showNewAliasWindow: function (node, element_type_id) {
@@ -809,7 +771,7 @@ Ext.extend(Phlexible.element.Teaser, Ext.util.Observable, {
         }
 
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('elements_data_load'),
+            url: Phlexible.Router.generate('elements_content'),
             params: params,
             success: this.onLoadSuccess,
             failure: function () {

@@ -46,7 +46,7 @@ class AreaManager
         $teasers = array();
         $forNodeId = $forNode->getId();
 
-        foreach ($forNode->getPath() as $node) {
+        foreach ($forNode->getNodePath() as $node) {
             foreach ($this->findByAreaAndNode($area, $node) as $teaser) {
                 if ($node->getId() !== $forNodeId && $teaser->hasStopId($node->getId())) {
                     continue;

@@ -2,22 +2,22 @@
 
 namespace Phlexible\Bundle\TreeBundle\Routing\Enhancer;
 
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class SiterootEnhancer implements RouteEnhancerInterface
 {
     /**
-     * @var SiterootManagerInterface
+     * @var SiteManagerInterface
      */
     private $siteManager;
 
     /**
-     * @param SiterootManagerInterface $siteManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface $siteManager
      */
-    public function __construct(SiterootManagerInterface $siteManager)
+    public function __construct(SiteManagerInterface $siteManager)
     {
         $this->siteManager = $siteManager;
     }

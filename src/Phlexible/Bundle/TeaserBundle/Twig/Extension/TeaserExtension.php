@@ -101,10 +101,11 @@ class TeaserExtension extends \Twig_Extension
 
             if ($this->areas === null) {
                 $this->areas = array();
+                // TODO: switch to type manager
                 foreach ($this->elementSourceManager->findElementtypesByType('layout') as $layoutarea) {
-                    if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {
-                        $this->areas[$layoutarea->getName()] = $layoutarea;
-                    }
+                    #if (in_array($elementtype, $this->elementService->findAllowedParents($layoutarea))) {
+                    #    $this->areas[$layoutarea->getName()] = $layoutarea;
+                    #}
                 }
             }
 
@@ -120,9 +121,8 @@ class TeaserExtension extends \Twig_Extension
             }
 
             $this->teasers[$name] = array(
-                'title'    => $area->getTitle(),
-                'uniqueId' => $area->getUniqueId(),
-                'teasers'  => $teasers
+                'name'    => $area->getName(),
+                'teasers' => $teasers
             );
         }
 

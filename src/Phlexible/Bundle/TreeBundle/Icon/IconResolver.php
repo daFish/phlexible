@@ -101,26 +101,21 @@ class IconResolver
      * Resolve tree node to icon
      *
      * @param NodeContext $node
-     * @param string      $language
      *
      * @return string
      */
-    public function resolveNode(NodeContext $node, $language)
+    public function resolveNode(NodeContext $node)
     {
         $parameters = array();
 
-        if (!$node->getTree()->isRoot($node)) {
-            if ($node->isPublished($language)) {
-                $parameters['status'] = $node->isAsync($language) ? 'async': 'online';
-            }
+        $parameters['status'] = $node->isAsync() ? 'async': 'online';
 
-            if ($node->getTree()->isInstance($node)) {
-                $parameters['instance'] = $node->getTree()->isInstanceMaster($node) ? 'master' : 'slave';
-            }
+        if ($node->getTree()->isInstance($node)) {
+            $parameters['instance'] = $node->getTree()->isInstanceMaster($node) ? 'master' : 'slave';
+        }
 
-            if ($node->getSortMode() !== TreeInterface::SORT_MODE_FREE) {
-                $parameters['sort'] = $node->getSortMode() . '_' . $node->getSortDir();
-            }
+        if ($node->getSortMode() !== TreeInterface::SORT_MODE_FREE) {
+            $parameters['sort'] = $node->getSortMode() . '_' . $node->getSortDir();
         }
 
         $element = $this->elementService->findElement($node->getContentId());

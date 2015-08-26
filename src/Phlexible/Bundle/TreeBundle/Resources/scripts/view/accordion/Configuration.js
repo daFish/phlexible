@@ -33,29 +33,73 @@ Phlexible.tree.view.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
             autoHeight: true,
             bodyStyle: 'padding: 5px',
             items: [{
+                xtype: 'textfield',
+                name: 'title',
+                fieldLabel: this.strings.title,
+                width: 300
+            },{
+                xtype: 'textfield',
+                name: 'navigation_title',
+                fieldLabel: this.strings.navigation_title,
+                width: 300
+            },{
+                xtype: 'textfield',
+                name: 'backend_title',
+                fieldLabel: this.strings.backend_title,
+                width: 300
+            },{
+                xtype: 'textfield',
+                name: 'slug',
+                fieldLabel: this.strings.slug,
+                width: 300
+            },{
                 xtype: 'checkbox',
-                name: 'navigation',
+                name: 'hidden',
                 hideLabel: true,
-                boxLabel: this.strings.configuration.in_navigation
+                boxLabel: this.strings.configuration.hidden
+            },{
+                xtype: 'checkbox',
+                name: 'hiddenInNavigation',
+                hideLabel: true,
+                boxLabel: this.strings.configuration.hidden_in_navigation
+            },{
+                xtype: 'checkbox',
+                name: 'searchNoIndex',
+                hideLabel: true,
+                boxLabel: this.strings.configuration.search_no_index
             },{
                 xtype: 'textfield',
                 name: 'template',
-                fieldLabel: this.strings.configuration.template
+                fieldLabel: this.strings.configuration.template,
+                width: 300
+            }]
+        },{
+            xtype: 'panel',
+            layout: 'form',
+            title: this.strings.meta.meta,
+            iconCls: 'p-metaset-component-icon',
+            autoHeight: true,
+            bodyStyle: 'padding: 5px',
+            items: [{
+                xtype: 'textarea',
+                name: 'description',
+                fieldLabel: this.strings.meta.description,
+                width: 300
             },{
-                xtype: 'checkbox',
-                name: 'robotsNoIndex',
-                fieldLabel: this.strings.configuration.robots,
-                boxLabel: this.strings.configuration.robots_no_index
+                xtype: 'textfield',
+                name: 'keywords',
+                fieldLabel: this.strings.meta.keywords,
+                width: 300
             },{
                 xtype: 'checkbox',
                 name: 'robotsNoFollow',
                 hideLabel: true,
-                boxLabel: this.strings.configuration.robots_no_follow
+                boxLabel: this.strings.meta.robots_no_follow
             },{
                 xtype: 'checkbox',
-                name: 'searchNoIndex',
-                fieldLabel: this.strings.configuration.internal_search,
-                boxLabel: this.strings.configuration.search_no_index
+                name: 'robotsNoIndex',
+                hideLabel: true,
+                boxLabel: this.strings.meta.robots_no_index
             }]
         },{
             xtype: 'panel',
@@ -80,15 +124,37 @@ Phlexible.tree.view.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
                 fieldLabel: this.strings.routing.defaults,
                 width: 300
             },{
-                xtype: 'textfield',
+                xtype: 'lovcombo',
                 name: 'methods',
                 fieldLabel: this.strings.routing.methods,
-                width: 300
+                store: new Ext.data.SimpleStore({
+                    fields: ['key', 'name'],
+                    data: [['GET', 'GET'], ['HEAD', 'HEAD'], ['POST', 'POST'], ['PUT', 'PUT'], ['DELETE', 'DELETE']]
+                }),
+                mode: 'local',
+                hideOnSelect: false,
+                displayField: 'name',
+                valueField: 'key',
+                triggerAction: 'all',
+                editable: false,
+                selectOnFocus: true,
+                width: 280
             },{
-                xtype: 'checkbox',
-                name: 'https',
-                labelSeparator: this.strings.routing.scheme,
-                boxLabel: this.strings.routing.https
+                xtype: 'lovcombo',
+                name: 'schemes',
+                fieldLabel: this.strings.routing.schemes,
+                store: new Ext.data.SimpleStore({
+                    fields: ['key', 'name'],
+                    data: [['http', 'http'], ['https', 'https']]
+                }),
+                mode: 'local',
+                hideOnSelect: false,
+                displayField: 'name',
+                valueField: 'key',
+                triggerAction: 'all',
+                editable: false,
+                selectOnFocus: true,
+                width: 280
             }, {
                 xtype: 'textfield',
                 name: 'controller',
@@ -189,7 +255,7 @@ Phlexible.tree.view.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
     },
 
     onLoadElement: function (element) {
-        if (element.getElementtypeType() !== 'full' && element.getElementtypeType() !== 'part') {
+        if (element.getTreeNode().attributes.type !== 'page' && element.getTreeNode().attributes.type !== 'part') {
             this.disable();
             //this.hide();
 
@@ -204,12 +270,13 @@ Phlexible.tree.view.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
         this.getForm().reset();
 
         var configuration = element.getConfiguration(),
-            routing = configuration.routing,
-            cache = configuration.cache,
-            security = configuration.security;
+            routing = configuration.routing || {},
+            cache = configuration.cache || {},
+            security = configuration.security || {},
+            meta = configuration.meta || {};
 
         if (security && security.roles) {
-            var store = this.getComponent(3).getComponent(1).getStore(),
+            var store = this.getComponent(4).getComponent(1).getStore(),
                 roles = [];
             Ext.each (security.roles, function(role) {
                 roles.push({role: role, name: role});
@@ -218,34 +285,41 @@ Phlexible.tree.view.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
         }
 
         this.getForm().setValues({
-            navigation: configuration.navigation || false,
+            title: configuration.title || '',
+            navigation_title: configuration.navigation_title || '',
+            backend_title: configuration.backend_title || '',
+            slug: configuration.slug || '',
+            hiddenInNavigation: !configuration.navigation,
             template: configuration.template || '',
-            robotsNoIndex: configuration.robotsNoIndex || false,
-            robotsNoFollow: configuration.robotsNoFollow || false,
             searchNoIndex: configuration.searchNoIndex || false,
 
-            name: routing.name || false,
-            path: routing.path || false,
-            defaults: routing.defaults || false,
-            methods: routing.methods || false,
-            https: routing.https || false,
-            controller: routing.controller || false,
+            name: routing.name || '',
+            path: routing.path || '',
+            defaults: routing.defaults || '',
+            methods: routing.methods || '',
+            schemes: routing.schemes || '',
+            controller: routing.controller || '',
 
-            expires: cache.authenticationRequired || false,
+            expires: cache.authenticationRequired || '',
             public: cache.public || false,
-            maxage: cache.maxage || false,
-            smaxage: cache.smaxage || false,
-            lastModified: cache.lastModified || false,
-            ETag: cache.ETag || false,
-            vary: cache.vary || false,
+            maxage: cache.maxage || '',
+            smaxage: cache.smaxage || '',
+            lastModified: cache.lastModified || '',
+            ETag: cache.ETag || '',
+            vary: cache.vary || '',
 
             authenticationRequired: security.authenticationRequired || false,
-            roles: security.roles || false,
+            roles: security.roles || '',
             checkAcl: security.checkAcl || false,
-            expression: security.expression || false,
+            expression: security.expression || '',
+
+            description: meta.description || '',
+            keywords: meta.keywords || '',
+            robotsNoIndex: meta.robotsNoIndex || false,
+            robotsNoFollow: meta.robotsNoFollow || false
         });
 
-        if (element.getElementtypeType() === 'part') {
+        if (element.getTreeNode().attributes.type === 'part') {
             this.getComponent(0).getComponent(0).hide();
             this.getComponent(0).getComponent(1).show();
             this.getComponent(0).getComponent(2).hide();
@@ -273,38 +347,109 @@ Phlexible.tree.view.accordion.Configuration = Ext.extend(Ext.form.FormPanel, {
         }
 
         var values = this.getForm().getValues(),
-            parameters = {};
+            parameters = {},
+            routing = {},
+            cache = {},
+            security = {},
+            meta = {};
 
         parameters.template = values.template;
-        if (this.element.getElementtypeType() !== 'part') {
-            parameters.navigation = values.navigation;
-            parameters.robotsNoIndex = values.robotsNoIndex;
-            parameters.robotsNoFollow = values.robotsNoFollow;
-            parameters.searchNoIndex = values.searchNoIndex;
+        if (this.element.getTreeNode().attributes.type !== 'part') {
+            parameters.title = values.title;
+            if (values.navigation_title) {
+                parameters.navigation_title = values.navigation_title;
+            }
+            if (values.backend_title) {
+                parameters.backend_title = values.backend_title;
+            }
+            if (values.slug) {
+                parameters.slug = values.slug;
+            }
+            if (values.hidden) {
+                parameters.hidden = values.hidden;
+            }
+            if (!values.hiddenInNavigation) {
+                parameters.navigation = !values.hiddenInNavigation;
+            }
+            if (values.searchNoIndex) {
+                parameters.searchNoIndex = values.searchNoIndex;
+            }
 
-            parameters.routing = {
-                name: values.name,
-                path: values.path,
-                defaults: values.defaults,
-                methods: values.methods,
-                https: values.https,
-                controller: values.controller
-            };
-            parameters.cache = {
-                expires: values.expires,
-                public: values.public,
-                maxage: values.maxage,
-                smaxage: values.smaxage,
-                lastModified: values.lastModified,
-                ETag: values.ETag,
-                vary: values.vary
-            };
-            parameters.security = {
-                authenticationRequired: values.authenticationRequired,
-                roles: values.roles,
-                checkAcl: values.checkAcl,
-                expression: values.expression
-            };
+            // meta
+            if (values.description) {
+                meta.description = values.description;
+            }
+            if (values.keywords) {
+                meta.keywords = values.keywords;
+            }
+            if (values.robotsNoIndex) {
+                meta.robotsNoIndex = values.robotsNoIndex;
+            }
+            if (values.robotsNoFollow) {
+                meta.robotsNoFollow = values.robotsNoFollow;
+            }
+
+            // routing
+            if (values.name) {
+                routing.name = values.name;
+            }
+            if (values.path) {
+                routing.path = values.path;
+            }
+            if (values.defaults) {
+                routing.defaults = values.defaults;
+            }
+            if (values.methods) {
+                routing.methods = values.methods;
+            }
+            if (values.schemes) {
+                routing.schemes = values.schemes;
+            }
+            if (values.controller) {
+                routing.controller = values.controller;
+            }
+
+            // cache
+            if (values.expires) {
+                cache.expires = values.expires;
+            }
+            if (values.public) {
+                cache.public = values.public;
+            }
+            if (values.maxage) {
+                cache.maxage = values.maxage;
+            }
+            if (values.smaxage) {
+                cache.smaxage = values.smaxage;
+            }
+            if (values.lastModified) {
+                cache.lastModified = values.lastModified;
+            }
+            if (values.ETag) {
+                cache.ETag = values.ETag;
+            }
+            if (values.vary) {
+                cache.vary = values.vary;
+            }
+
+            // security
+            if (values.authenticationRequired) {
+                security.authenticationRequired = values.authenticationRequired;
+            }
+            if (values.roles) {
+                security.roles = values.roles;
+            }
+            if (values.checkAcl) {
+                security.checkAcl = values.checkAcl;
+            }
+            if (values.expression) {
+                security.expression = values.expression;
+            }
+
+            parameters.meta = meta;
+            parameters.routing = routing;
+            parameters.cache = cache;
+            parameters.security = security;
         }
 
         return parameters;

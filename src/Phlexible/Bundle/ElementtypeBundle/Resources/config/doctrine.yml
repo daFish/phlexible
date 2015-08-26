@@ -1,6 +1,0 @@
-services:
-    phlexible_elementtype.doctrine.viability_manager:
-        class: Phlexible\Component\Elementtype\Doctrine\ViabilityManager
-        arguments: [@doctrine.orm.entity_manager]
-        public: false
-

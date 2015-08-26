@@ -33,6 +33,7 @@ class PhlexibleTreeExtension extends Extension
         $loader->load('routing.yml');
         $loader->load('field_mappers.yml');
         $loader->load('link_extractors.yml');
+        $loader->load('node_types.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
@@ -49,8 +50,6 @@ class PhlexibleTreeExtension extends Extension
         );
 
         $container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.doctrine.node_manager');
-        $container->setAlias('phlexible_tree.node_state_manager', 'phlexible_tree.doctrine.node_state_manager');
-        //$container->setAlias('phlexible_tree.node_manager', 'phlexible_tree.file.node_manager');
         $container->setAlias('phlexible_tree.route_manager', 'phlexible_tree.doctrine.route_manager');
         $container->setAlias('phlexible_tree.node_lock_manager', 'phlexible_tree.doctrine.node_lock_manager');
         $container->setAlias('phlexible_tree.node_change_manager', 'phlexible_tree.doctrine.node_change_manager');

@@ -30,18 +30,55 @@ class ClassManager
     /**
      * @var array
      */
+    private $names;
+
+    /**
+     * @var array
+     */
     private $dsIdMap;
 
     /**
      * @param string $baseDir
+     * @param array  $names
      * @param array  $elementtypeIdMap
      * @param array  $dsIdMap
      */
-    public function __construct($baseDir, array $elementtypeIdMap, array $dsIdMap)
+    public function __construct($baseDir, array $names, array $elementtypeIdMap, array $dsIdMap)
     {
         $this->baseDir = $baseDir;
+        $this->names = $names;
         $this->elementtypeIdMap = $elementtypeIdMap;
         $this->dsIdMap = $dsIdMap;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function containsName($name)
+    {
+        return in_array($name, $this->names);
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function containsId($id)
+    {
+        return isset($this->elementtypeIdMap[$id]);
+    }
+
+    /**
+     * @param string $dsId
+     *
+     * @return bool
+     */
+    public function containsDsId($dsId)
+    {
+        return isset($this->dsIdMap[$dsId]);
     }
 
     /**
@@ -103,7 +140,7 @@ class ClassManager
     {
         $elementtypeId = $elementVersion->getElement()->getElementtypeId();
 
-        if (!isset($this->elementtypeIdMap[$elementtypeId])) {
+        if (!isset($this->names[$elementtypeId])) {
             throw new \Exception("Elementtype ID $elementtypeId not found in map.");
         }
 

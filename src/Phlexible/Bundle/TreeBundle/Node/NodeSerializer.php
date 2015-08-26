@@ -9,8 +9,12 @@
 namespace Phlexible\Bundle\TreeBundle\Node;
 
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
+use Phlexible\Bundle\TreeBundle\Model\PageInterface;
+use Phlexible\Bundle\TreeBundle\Model\PartInterface;
+use Phlexible\Bundle\TreeBundle\Model\StructureInterface;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\NodeType\Model\NodeTypeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -21,14 +25,19 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class NodeSerializer
 {
     /**
-     * @var \Phlexible\Bundle\TreeBundle\Icon\IconResolver
+     * @var IconResolver
      */
     private $iconResolver;
 
     /**
-     * @var \Phlexible\Component\Node\Model\NodeManagerInterface
+     * @var NodeManagerInterface
      */
     private $nodeManager;
+
+    /**
+     * @var NodeTypeManagerInterface
+     */
+    private $nodeTypeManager;
 
     /**
      * @var PermissionRegistry
@@ -41,19 +50,22 @@ class NodeSerializer
     private $authorizationChecker;
 
     /**
-     * @param \Phlexible\Bundle\TreeBundle\Icon\IconResolver                  $iconResolver
-     * @param \Phlexible\Component\Node\Model\NodeManagerInterface          $nodeManager
+     * @param IconResolver                  $iconResolver
+     * @param NodeManagerInterface          $nodeManager
+     * @param NodeTypeManagerInterface      $nodeTypeManager
      * @param PermissionRegistry            $permissionRegistry
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
         IconResolver $iconResolver,
         NodeManagerInterface $nodeManager,
+        NodeTypeManagerInterface $nodeTypeManager,
         PermissionRegistry $permissionRegistry,
         AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->iconResolver = $iconResolver;
         $this->nodeManager = $nodeManager;
+        $this->nodeTypeManager = $nodeTypeManager;
         $this->permissionRegistry = $permissionRegistry;
         $this->authorizationChecker = $authorizationChecker;
     }
@@ -108,50 +120,63 @@ class NodeSerializer
         }
 
         // TODO: both from mediator?
-        $allowedElementtypeIds = array();
+        $allowedTypes = array_keys($this->nodeTypeManager->getTypesForNode($node));
         $hideChildren = false;
 
         $qtip = "ID: {$node->getId()}<br />Type: {$node->getContentType()}<br />Type ID: {$node->getContentId()}";
 
+        $type = 'unknown';
+        if ($node->getNode() instanceof PageInterface) {
+            $type = 'page';
+        } elseif ($node->getNode() instanceof StructureInterface) {
+            $type = 'structure';
+        } elseif ($node->getNode() instanceof PartInterface) {
+            $type = 'part';
+        }
+
         $data = array(
-            'id'              => $node->getId(),
-            'text'            => $node->getField('backend', $language),
+            'id'               => $node->getId(),
+            'text'             => $node->getTitle(),
+            'allow_drag'       => true,
+            'areas'            => array(),
+            'qtip'             => $qtip,
 
-            'siterootId'      => $node->getSiterootId(),
-            'type'            => $node->getContentType(),
-            'typeId'          => $node->getContentId(),
-            'backendTitle'    => $node->getField('backend', $language),
-            'pageTitle'       => $node->getField('page', $language),
-            'navigationTitle' => $node->getField('navigation', $language),
-            'customDate'      => $node->getField('date', $language),
-            'forward'         => $node->getField('forward', $language),
-            'sortMode'        => $node->getSortMode(),
-            'sortDir'         => $node->getSortDir(),
-            'sort'            => $node->getSort(),
-            'icon'            => $this->iconResolver->resolveNode($node, $language),
-            'inNavigation'    => $node->getInNavigation(),
-            'isRestricted'    => $node->getAttribute('security'),
-            'isInstance'      => $node->getTree()->isInstance($node),
-            'createdAt'       => $node->getCreatedAt()->format('Y-m-d H:i:s'),
-            'createdBy'       => $node->getCreateUserId(),
-            'isPublished'      => $node->isPublished($language),
-            'publishedAt'      => $node->getPublishedAt($language) ? $node->getPublishedAt($language)->format('Y-m-d H:i:s') : null,
-            'publishedBy'      => $node->getPublishUserId($language),
-            'isAsync'          => $node->isAsync($language),
-            'publishedVersion' => $node->getPublishedVersion($language),
+            'workspace'        => $node->getWorkspace(),
+            'locale'           => $node->getLocale(),
+            'siterootId'       => $node->getSiterootId(),
+            'path'             => $node->getPath(),
+            'parentPath'       => $node->getParentPath(),
+            'type'             => $type,
+            'contentType'      => $node->getContentType(),
+            'contentId'        => $node->getContentId(),
+            'contentVersion'   => $node->getContentVersion(),
+            'title'            => $node->getTitle(),
+            'pageTitle'        => $node->getTitle(), // @deprecated
+            'navigationTitle'  => $node->getNavigationTitle(),
+            'backendTitle'     => $node->getBackendTitle(),
+            'slug'             => $node->getSlug(),
+            'customDate'       => $node->getField('date', $language),
+            'forward'          => $node->getField('forward', $language),
+            'sortMode'         => $node->getSortMode(),
+            'sortDir'          => $node->getSortDir(),
+            'sort'             => $node->getSort(),
+            'icon'             => $this->iconResolver->resolveNode($node),
+            'inNavigation'     => $node->getInNavigation(),
+            'isRestricted'     => $node->getAttribute('security'),
+            'isInstance'       => $node->getTree()->isInstance($node),
+            'createdAt'        => $node->getCreatedAt()->format('Y-m-d H:i:s'),
+            'createdBy'        => $node->getCreateUserId(),
+            'modifiedAt'       => $node->getModifiedAt() ? $node->getModifiedAt()->format('Y-m-d H:i:s') : null,
+            'modifiedBy'       => $node->getModifyUserId(),
+            'publishedAt'      => $node->getPublishedAt() ? $node->getPublishedAt()->format('Y-m-d H:i:s') : null,
+            'publishedBy'      => $node->getPublishUserId(),
+            'isPublished'      => $node->getWorkspace() === 'live',
+            'isAsync'          => $node->isAsync(),
+            'publishedVersion' => $node->getContentVersion(),
 
-            'allowedChildren' => $allowedElementtypeIds,
-            'permissions'     => $permissions,
-            'hideChildren'    => $hideChildren,
-
-            // TODO: fix
-            'elementtypeId'     => null,//$elementtype->getId(),
-            'elementtypeName'   => null,//$elementtype->getTitle(),
-            'elementtypeType'   => null,//$elementtype->getType(),
-
-            'allow_drag'          => true,
-            'areas'               => array(),
-            'qtip'                => $qtip,
+            'allowedTypes' => $allowedTypes,
+            'permissions'  => $permissions,
+            'hideChildren' => $hideChildren,
         );
 
         if (count($node->getTree()->getChildren($node)) && !$hideChildren) {

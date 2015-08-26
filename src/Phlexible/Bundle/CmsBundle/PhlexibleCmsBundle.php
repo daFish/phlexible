@@ -8,8 +8,6 @@
 
 namespace Phlexible\Bundle\CmsBundle;
 
-use Phlexible\Bundle\CmsBundle\DependencyInjection\Compiler\AddConfiguratorsPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -30,13 +28,5 @@ class PhlexibleCmsBundle extends Bundle
         if (extension_loaded('suhosin')) {
             throw new \LogicException("Please deactivate the suhosin extension.");
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new AddConfiguratorsPass());
     }
 }

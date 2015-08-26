@@ -13,6 +13,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Elementtype\Event\ElementtypeUsageEvent;
 use Phlexible\Component\Elementtype\Usage\Usage;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -75,7 +76,8 @@ class ElementtypeUsageListener
         }
 
         foreach ($nodeIds as $nodeId => $contentId) {
-            $node = $this->treeManager->getByNodeId($nodeId)->get($nodeId);
+            $tree = $this->treeManager->getByNodeId(new WorkingTreeContext('de'), $nodeId);
+            $node = $tree->get($nodeId);
 
             $event->addUsage(
                 new Usage(
