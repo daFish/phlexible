@@ -1,11 +1,8 @@
-/*
-xt.provide('Phlexible.gui.PropertiesPanel');
+Ext.define('Phlexible.gui.view.PropertiesPanel', {
+    extend: 'Ext.grid.property.Grid',
+    alias: 'widget.gui-properties',
 
-xt.require('Phlexible.tableviews.TableView');
-
-Phlexible.gui.PropertiesPanel = Ext.extend(Phlexible.tableviews.TableView, {
-    title: 'Properties',
+    title: '_PropertiesPanel',
     iconCls: 'p-gui-properties-icon',
     tableKey: 'properties'
 });
-*/

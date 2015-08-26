@@ -1,8 +1,4 @@
 Phlexible.dashboard.Message = function () {
-    this.addEvents(
-        'start'
-    );
-
     // listen for system messages
 
 

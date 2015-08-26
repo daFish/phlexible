@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Controller;
@@ -42,6 +45,8 @@ class ResourcesController extends Controller
      */
     public function stylesAction()
     {
+        $locator = $this->get('file_locator');
+
         $content = file_get_contents($locator->locate('@PhlexibleUserBundle/Resources/styles/users.css'));
 
         return new Response($content, 200, array('Content-Type' => 'text/css'));
@@ -76,4 +81,3 @@ class ResourcesController extends Controller
         return new Response($content, 200, array('Content-Type' => 'text/javascript'));
     }
 }
-

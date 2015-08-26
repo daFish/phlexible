@@ -1,64 +1,94 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\UserBundle\UsersMessage;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Phlexible\Bundle\UserBundle\Entity\Group;
+use Phlexible\Bundle\UserBundle\Form\Type\GroupType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Groups controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/users/groups")
- * @Security("is_granted('ROLE_USERS')")
+ * @Security("is_granted('ROLE_GROUPS')")
+ * @Rest\NamePrefix("phlexible_api_user_")
  */
-class GroupsController extends Controller
+class GroupsController extends FOSRestController
 {
     /**
-     * List groups
+     * Get groups
      *
-     * @return JsonResponse
-     * @Route("", name="users_groups_list")
-     * @Method("GET")
+     * @return Response
+     *
+     * @Security("is_granted('ROLE_GROUP_ADMIN_READ')")
+     * @Rest\View
      * @ApiDoc(
-     *   description="Returns a list of groups"
+     *   description="Returns a collection of Group",
+     *   section="user",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
      * )
      */
-    public function listAction()
+    public function getGroupsAction()
     {
         $groupManager = $this->get('phlexible_user.group_manager');
+        $groups = $groupManager->findAll();
 
-        $groups = array();
-        foreach ($groupManager->findAll() as $group) {
-            $members = array();
-            foreach ($group->getUsers() as $user) {
-                $members[] = $user->getDisplayName();
-            }
-            sort($members);
+        return array(
+            'groups' => $groups,
+            'count'  => count($groups)
+        );
+    }
 
-            $groups[] = array(
-                'gid'       => $group->getId(),
-                'name'      => $group->getName(),
-                'readonly'  => false,
-                'memberCnt' => count($members),
-                'members'   => $members
-            );
+    /**
+     * Get group
+     *
+     * @param string $groupId
+     *
+     * @return Response
+     *
+     * @Security("is_granted('ROLE_GROUP_ADMIN_READ')")
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Group",
+     *   section="user",
+     *   output="Phlexible\Bundle\UserBundle\Entity\Group",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when group was not found"
+     *   }
+     * )
+     */
+    public function getGroupAction($groupId)
+    {
+        $groupManager = $this->get('phlexible_user.group_manager');
+        $group = $groupManager->find($groupId);
+
+        if (!$group instanceof Group) {
+            throw new NotFoundHttpException('Group not found');
         }
 
-        return new JsonResponse($groups);
+        return array(
+            'group' => $group
+        );
     }
 
     /**
@@ -66,72 +96,89 @@ class GroupsController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("", name="users_groups_create")
-     * @Method("POST")
+     * @return Response
+     *
+     * @Security("is_granted('ROLE_GROUP_ADMIN_CREATE')")
      * @ApiDoc(
-     *   description="Create new group",
-     *   requirements={
-     *     {"name"="name", "dataType"="string", "required"=true, "description"="New group name"}
+     *   description="Create a Group",
+     *   section="user",
+     *   input="Phlexible\Bundle\UserBundle\Form\Type\GroupType",
+     *   statusCodes={
+     *     201="Returned when group was created",
+     *     204="Returned when group was updated",
+     *     404="Returned when group was not found"
      *   }
      * )
      */
-    public function createAction(Request $request)
+    public function postGroupsAction(Request $request)
     {
-        $name = $request->get('name');
-
-        $groupManager = $this->get('phlexible_user.group_manager');
-
-        $group = $groupManager->create()
-            ->setName($name)
-            ->setCreateUserId($this->getUser()->getId())
-            ->setCreatedAt(new \DateTime())
-            ->setModifyUserId($this->getUser()->getId())
-            ->setModifiedAt(new \DateTime());
-
-        $groupManager->updateGroup($group);
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" created.'));
-
-        return new ResultResponse(true, "Group $name created.");
+        return $this->processForm($request, new Group());
     }
 
     /**
-     * Rename group
+     * Create new group
      *
      * @param Request $request
      * @param string  $groupId
      *
-     * @return JsonResponse
-     * @Route("/{groupId}", name="users_groups_rename")
-     * @Method("PATCH")
+     * @return Response
+     *
+     * @Security("is_granted('ROLE_GROUP_ADMIN_UPDATE')")
      * @ApiDoc(
-     *   description="Rename group",
-     *   requirements={
-     *     {"name"="name", "dataType"="string", "required"=true, "description"="Rename name"}
+     *   description="Update a Group",
+     *   section="user",
+     *   input="Phlexible\Bundle\UserBundle\Form\Type\GroupType",
+     *   statusCodes={
+     *     201="Returned when group was created",
+     *     204="Returned when group was updated",
+     *     404="Returned when group was not found"
      *   }
      * )
      */
-    public function renameAction(Request $request, $groupId)
+    public function putGroupAction(Request $request, $groupId)
     {
-        $name = $request->get('name');
-
         $groupManager = $this->get('phlexible_user.group_manager');
-
         $group = $groupManager->find($groupId);
-        $oldName = $group->getName();
-        $group
-            ->setName($name)
-            ->setModifyUserId($this->getUser()->getId())
-            ->setModifiedAt(new \DateTime());
 
-        $groupManager->updateGroup($group);
+        if (!$group instanceof Group) {
+            throw new NotFoundHttpException('Group not found');
+        }
 
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" updated.'));
+        return $this->processForm($request, $group);
+    }
 
-        return new ResultResponse(true, "Group $oldName renamed to $name.");
+    /**
+     * @param Request $request
+     * @param Group   $group
+     *
+     * @return View|Response
+     */
+    private function processForm(Request $request, Group $group)
+    {
+        $statusCode = !$group->getId() ? 201 : 204;
+
+        $form = $this->createForm(new GroupType(), $group);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $groupManager = $this->get('phlexible_user.group_manager');
+            $groupManager->updateGroup($group);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set(
+                    'Location',
+                    $this->generateUrl('phlexible_api_user_get_group', array('groupId' => $group->getId()), true)
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
     }
 
     /**
@@ -139,25 +186,27 @@ class GroupsController extends Controller
      *
      * @param string $groupId
      *
-     * @return JsonResponse
-     * @Route("/{groupId}", name="users_groups_delete")
-     * @Method("DELETE")
+     * @return Response
+     *
+     * @Security("is_granted('ROLE_GROUP_ADMIN_DELETE')")
      * @ApiDoc(
-     *   description="Delete group"
+     *   description="Delete a Group",
+     *   section="user",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when the group was not found"
+     *   }
      * )
      */
-    public function deleteAction($groupId)
+    public function deleteGroupAction($groupId)
     {
         $groupManager = $this->get('phlexible_user.group_manager');
-
         $group = $groupManager->find($groupId);
-        $name = $group->getName();
+
+        if (!$group instanceof Group) {
+            throw new NotFoundHttpException('Group not found');
+        }
 
         $groupManager->deleteGroup($group);
-
-        $this->get('phlexible_message.message_poster')
-            ->post(UsersMessage::create('Group "' . $group->getName() . '" deleted.'));
-
-        return new ResultResponse(true, "Group $name deleted.");
     }
 }

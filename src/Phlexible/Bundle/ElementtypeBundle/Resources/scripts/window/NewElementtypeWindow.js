@@ -1,19 +1,16 @@
-Ext.provide('Phlexible.elementtypes.NewElementtypeWindow');
+Ext.define('Phlexible.elementtypes.window.NewElementtypeWindow', {
+    extend: 'Phlexible.gui.util.Dialog',
 
-Ext.require('Phlexible.gui.util.Dialog');
-
-Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dialog, {
-    title: Phlexible.elementtypes.Strings.create_element_type,
     width: 400,
     height: 230,
     minWidth: 400,
     minHeight: 230,
-    iconCls: 'p-elementtype-elementtype_add-icon',
+    iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
 
-    textHeader: Phlexible.elementtypes.Strings.new_elementtype_header,
-    textDescription: Phlexible.elementtypes.Strings.new_elementtype_description,
-    textOk: Phlexible.elementtypes.Strings.save,
-    textCancel: Phlexible.elementtypes.Strings.cancel,
+    textHeader: '_textHeader',
+    textDescription: '_textDescription',
+    textOk: '_textOk',
+    textCancel: '_textCancel',
 
     extraCls: 'p-elementtypes-newelementtype',
     iconClsOk: 'p-elementtype-elementtype_save-icon',
@@ -22,23 +19,31 @@ Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dial
         return Phlexible.Router.generate('elementtypes_list_create');
     },
 
-    type: Phlexible.elementtypes.TYPE_FULL,
+    type: Phlexible.elementtype.TYPE_FULL,
+
+
+    nameText: '_titleText',
+    typeText: '_typeText',
+    fullText: '_fullText',
+    structureText: '_structureText',
+    layoutText: '_layoutText',
+    partText: '_partText',
 
     getFormItems: function () {
-        if (this.type == Phlexible.elementtypes.TYPE_REFERENCE) {
-            this.type = Phlexible.elementtypes.TYPE_FULL;
+        if (this.type == Phlexible.elementtype.TYPE_REFERENCE) {
+            this.type = Phlexible.elementtype.TYPE_FULL;
         }
 
         return [
             {
                 anchor: '-70',
-                fieldLabel: Phlexible.elementtypes.Strings.name,
+                fieldLabel: this.nameText,
                 name: 'name',
                 msgTarget: 'under'
             },
             {
                 xtype: 'iconcombo',
-                fieldLabel: Phlexible.elementtypes.Strings.type,
+                fieldLabel: this.typeText,
                 hiddenName: 'type',
                 anchor: '-70',
                 //                width: 183,
@@ -46,10 +51,10 @@ Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dial
                 store: new Ext.data.SimpleStore({
                     fields: ['key', 'value', 'icon'],
                     data: [
-                        [Phlexible.elementtypes.TYPE_FULL, Phlexible.elementtypes.Strings.full_element, 'p-elementtype-type_full-icon'],
-                        [Phlexible.elementtypes.TYPE_STRUCTURE, Phlexible.elementtypes.Strings.structure_element, 'p-elementtype-type_structure-icon'],
-                        [Phlexible.elementtypes.TYPE_LAYOUTAREA, Phlexible.elementtypes.Strings.layout_element, 'p-elementtype-type_layoutarea-icon'],
-                        [Phlexible.elementtypes.TYPE_PART, Phlexible.elementtypes.Strings.part_element, 'p-elementtype-type_part-icon']
+                        [Phlexible.elementtype.TYPE_FULL, this.fullText, 'p-elementtype-type_full-icon'],
+                        [Phlexible.elementtype.TYPE_STRUCTURE, this.structureText, 'p-elementtype-type_structure-icon'],
+                        [Phlexible.elementtype.TYPE_LAYOUTAREA, this.layoutText, 'p-elementtype-type_layoutarea-icon'],
+                        [Phlexible.elementtype.TYPE_PART, this.partText, 'p-elementtype-type_part-icon']
                     ]
                 }),
                 value: this.type,
@@ -60,10 +65,8 @@ Phlexible.elementtypes.NewElementtypeWindow = Ext.extend(Phlexible.gui.util.Dial
                 mode: 'local',
                 typeAhead: false,
                 triggerAction: 'all',
-                selectOnFocus: true,
                 allowEmpty: false
             }
         ];
     }
-
 });

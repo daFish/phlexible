@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Tests\Compressor;
@@ -31,10 +34,21 @@ class SimpleJavascriptCompressorTest extends \PHPUnit_Framework_TestCase
     private function createJs()
     {
         return <<<EOF
+// remove me
+/* remove me */
+/*
+remove me
+*/
+/*
+ * remove me
+ */
+/**
+ * remove me
+ */
 var x = {
-    test: 1,
-    bla: 2,
-    blubb: 3
+    allowed1: 'keep me',
+    allowed2: '/* keep me */',
+    allowed3: '// keep me'
 };
 EOF;
     }
@@ -63,6 +77,10 @@ EOF;
 
     public function testCompressFile()
     {
+        if (!class_exists('org\bovigo\vfs\vfsStream')) {
+            $this->markTestSkipped('vfsStream not available');
+        }
+
         $js = $this->createJs();
 
         vfsStream::setup('root', null, array('test.js' => $js));

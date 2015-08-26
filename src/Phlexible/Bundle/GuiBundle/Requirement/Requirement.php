@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the phlexible package.
+ *
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Phlexible\Bundle\GuiBundle\Requirement;
 
 /**
@@ -7,7 +16,7 @@ namespace Phlexible\Bundle\GuiBundle\Requirement;
  * It can be a mandatory requirement or an optional recommendation.
  * There is a special subclass, named PhpIniRequirement, to check a php.ini configuration.
  *
- * @author Tobias Schultze <http://tobion.de>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class Requirement
 {

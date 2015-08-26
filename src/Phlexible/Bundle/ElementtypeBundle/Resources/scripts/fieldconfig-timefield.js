@@ -1,8 +1,4 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-
-Phlexible.fields.Registry.addFactory('time', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('time', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -20,12 +16,13 @@ Phlexible.fields.Registry.addFactory('time', function (parentConfig, item, value
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('time', {
+Phlexible.fields.FieldTypes.register({
+    type: 'time',
     titles: {
         de: 'Uhrzeit',
         en: 'Time'
     },
-    iconCls: 'p-elementtype-field_time-icon',
+    iconCls: Phlexible.Icon.get('clock'),
     allowedIn: [
         'tab',
         'accordion',

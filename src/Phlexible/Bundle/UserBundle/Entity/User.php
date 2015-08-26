@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Entity;
@@ -12,13 +15,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Entity\User as BaseUser;
 use FOS\UserBundle\Model\GroupInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Phlexible\Bundle\UserBundle\Entity\Repository\UserRepository")
  * @ORM\Table(name="user")
  */
 class User extends BaseUser
@@ -56,6 +60,12 @@ class User extends BaseUser
     private $comment;
 
     /**
+     * @var string
+     * @ORM\Column(name="api_key", type="string", nullable=true)
+     */
+    private $apiKey;
+
+    /**
      * @var array
      * @ORM\Column(type="json_array")
      */
@@ -64,6 +74,7 @@ class User extends BaseUser
     /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
+     * @Assert\NotNull
      */
     private $createdAt;
 
@@ -383,25 +394,4 @@ class User extends BaseUser
     {
         return $this->setProperty('interfaceLanguage', $interfaceLanguage);
     }
-
-    /**
-     * @param string $defaultLanguage
-     *
-     * @return string
-     */
-    public function getContentLanguage($defaultLanguage = null)
-    {
-        return $this->getProperty('contentLanguage', $defaultLanguage);
-    }
-
-    /**
-     * @param string $contentLanguage
-     *
-     * @return $this
-     */
-    public function setContentLanguage($contentLanguage)
-    {
-        return $this->setProperty('contentLanguage', $contentLanguage);
-    }
 }
-

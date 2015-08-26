@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\EventListener;
@@ -11,6 +14,7 @@ namespace Phlexible\Bundle\UserBundle\EventListener;
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 /**
  * Get config listener
@@ -49,8 +53,8 @@ class GetConfigListener
         TokenStorageInterface $tokenStorage,
         RoleHierarchyInterface $roleHierarchy,
         array $defaults,
-        $passwordMinLength)
-    {
+        $passwordMinLength
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->roleHierarchy = $roleHierarchy;
         $this->defaults = $defaults;
@@ -64,9 +68,18 @@ class GetConfigListener
     {
         $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
+
         $roles = array();
         foreach ($this->roleHierarchy->getReachableRoles($token->getRoles()) as $role) {
             $roles[] = $role->getRole();
+        }
+
+        $previousUsername = '';
+        foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
+            if ($role instanceof SwitchUserRole) {
+                $adminUser = $role->getSource()->getUser();
+                $previousUsername = $adminUser->getUsername();
+            }
         }
 
         $event->getConfig()
@@ -76,12 +89,10 @@ class GetConfigListener
             ->set('user.email', $user->getEmail())
             ->set('user.firstname', $user->getFirstname() ?: '')
             ->set('user.lastname', $user->getLastname() ?: '')
+            ->set('user.displayName', $user->getDisplayName() ?: '')
             ->set('user.properties', $user->getProperties())
             ->set('user.roles', $roles)
+            ->set('user.previousUsername', $previousUsername)
             ->set('defaults', $this->defaults);
-
-        foreach ($user->getProperties() as $key => $value) {
-            $event->getConfig()->set('user.property.' . $key, $value);
-        }
     }
 }

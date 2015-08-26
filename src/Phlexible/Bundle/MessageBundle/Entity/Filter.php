@@ -1,15 +1,18 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
+use Webmozart\Expression\Expression;
 
 /**
  * Filter
@@ -60,17 +63,18 @@ class Filter
     private $modifiedAt;
 
     /**
-     * @var Criteria
+     * @var Expression
      * @ORM\Column(type="object", nullable=true)
      */
-    private $criteria;
+    private $expression;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->criteria = new Criteria();
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
     }
 
     /**
@@ -166,7 +170,7 @@ class Filter
      *
      * @return $this
      */
-    public function setCreatedAt(\DateTime $createTime)
+    public function setCreatedAt(\DateTime $createTime = null)
     {
         $this->createdAt = $createTime;
 
@@ -186,7 +190,7 @@ class Filter
      *
      * @return $this
      */
-    public function setModifiedAt(\DateTime $modifyTime)
+    public function setModifiedAt(\DateTime $modifyTime = null)
     {
         $this->modifiedAt = $modifyTime;
 
@@ -194,21 +198,21 @@ class Filter
     }
 
     /**
-     * @return Criteria
+     * @return Expression
      */
-    public function getCriteria()
+    public function getExpression()
     {
-        return $this->criteria;
+        return $this->expression;
     }
 
     /**
-     * @param Criteria $criteria
+     * @param Expression $expression
      *
      * @return $this
      */
-    public function setCriteria(Criteria $criteria)
+    public function setExpression(Expression $expression)
     {
-        $this->criteria = $criteria;
+        $this->expression = $expression;
 
         return $this;
     }

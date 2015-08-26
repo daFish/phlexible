@@ -1,7 +1,3 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-
 /*
  if (this.growHeight) {
  this.setHeight(1);
@@ -16,7 +12,7 @@ Ext.require('Phlexible.fields.FieldHelper');
  }
  */
 
-Phlexible.fields.Registry.addFactory('textarea', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('textarea', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -45,12 +41,13 @@ Phlexible.fields.Registry.addFactory('textarea', function (parentConfig, item, v
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('textarea', {
+Phlexible.fields.FieldTypes.register({
+    type: 'textarea',
     titles: {
         de: 'Textarea',
         en: 'Textarea'
     },
-    iconCls: 'p-elementtype-field_textarea-icon',
+    iconCls: Phlexible.Icon.get('ui-text-area'),
     allowedIn: [
         'tab',
         'accordion',

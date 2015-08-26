@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Handler;
@@ -27,13 +30,13 @@ class DebugHandler implements HandlerInterface
      */
     public function handle(Message $message)
     {
+        $typeNames = array(0 => 'info', 1 => 'error');
+
         $this->messages[] = array(
             'subject'      => $message->getSubject(),
             'body'         => $message->getBody(),
             'type'         => $message->getType(),
-            'typeName'     => $message->getType(),
-            'priority'     => $message->getPriority(),
-            'priorityName' => $message->getPriority(),
+            'typeName'     => $typeNames[$message->getType()],
             'channel'      => $message->getChannel(),
             'role'         => $message->getRole(),
             'user'         => $message->getUser(),

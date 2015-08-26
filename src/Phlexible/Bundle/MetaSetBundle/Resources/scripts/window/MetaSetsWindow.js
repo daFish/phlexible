@@ -1,36 +1,34 @@
-Ext.provide('Phlexible.metasets.MetaSetsWindow');
+Ext.define('Phlexible.metaset.window.MetaSetsWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.metasets.Strings.metasets,
-    strings: Phlexible.metasets.Strings,
     iconCls: 'p-metaset-component-icon',
     width: 400,
     height: 300,
     layout: 'fit',
 
     baseParams: {},
-
     urls: {},
+
+    metasetText: '_metasetText',
+    actionsText: '_actionsText',
+    removeText: '_removeText',
+    selectText: '_selectText',
+    addText: '_addText',
+    cancelText: '_cancelText',
+    saveText: '_saveText',
 
     initComponent: function () {
         if (!this.urls.list || !this.urls.available || !this.urls.save) {
             throw 'Missing url config';
         }
 
-        // Create RowActions Plugin
-        var actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
-            width: 40,
-            actions: [
-                {
-                    iconCls: 'p-metaset-delete-icon',
-                    tooltip: this.strings.remove_metaset,
-                    callback: this.removeMetaSet.createDelegate(this),
-                    scope: this
-                }
-            ]
-        });
+        this.initMyItems();
+        this.initMyDockedItems();
 
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'grid',
@@ -38,31 +36,50 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
                 viewConfig: {
                     forceFit: true
                 },
-                store: new Ext.data.JsonStore({
-                    url: this.urls.list,
+                store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'name'],
-                    root: 'sets',
-                    id: 'id',
-                    baseParams: this.baseParams,
-                    autoLoad: true,
-                    sortInfo: {field: "name", direction: "ASC"}
+                    proxy: {
+                        type: 'ajax',
+                        url: this.urls.list,
+                        simpleSortMode: true,
+                        sorters: [{property: 'name', direction: 'ASC'}],
+                        reader: {
+                            type: 'json',
+                            rootProperty: 'sets',
+                            idProperty: 'id',
+                            totalProperty: 'count'
+                        },
+                        extraParams: this.baseParams
+                    },
+                    autoLoad: true
                 }),
                 columns: [
                     {
-                        header: this.strings.metaset,
+                        header: this.metasetText,
                         dataIndex: 'name'
                     },
-                    actions
-                ],
-                sm: new Ext.grid.RowSelectionModel({
-                    singleSelect: true
-                }),
-                plugins: [actions]
+                    {
+                        header: this.actionsText,
+                        width: 40,
+                        actions: [
+                            {
+                                iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                                tooltip: this.removeText,
+                                handler: this.removeMetaSet,
+                                scope: this
+                            }
+                        ]
+                    }
+                ]
             }
         ];
+    },
 
-        this.tbar = [
-            {
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
                 xtype: 'combo',
                 store: new Ext.data.JsonStore({
                     url: this.urls.available,
@@ -72,8 +89,8 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
                     baseParams: this.baseParams,
                     sortInfo: {field: "name", direction: "ASC"},
                     listeners: {
-                        load: function(store, records) {
-                            Ext.each(records, function(record) {
+                        load: function (store, records) {
+                            Ext.each(records, function (record) {
                                 if (this.getComponent(0).getStore().find('id', record.get('id')) !== -1) {
                                     store.remove(record);
                                 }
@@ -82,7 +99,7 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
                         scope: this
                     }
                 }),
-                emptyText: this.strings.select_metaset,
+                emptyText: this.selectText,
                 valueField: 'id',
                 displayField: 'name',
                 mode: 'remote',
@@ -90,25 +107,26 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
                 editable: false
             },
             {
-                text: this.strings.add,
+                text: this.addText,
                 iconCls: 'p-metaset-add-icon',
                 handler: this.addMetaSet,
                 scope: this
-            }
-        ];
-
-        this.buttons = [{
-            text: this.strings.cancel,
-            handler: this.close,
-            scope: this
+            }]
         },{
-            text: this.strings.save,
-            iconCls: 'p-metaset-save-icon',
-            handler: this.save,
-            scope: this
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                text: this.cancelText,
+                handler: this.close,
+                scope: this
+            },{
+                text: this.saveText,
+                iconCls: 'p-metaset-save-icon',
+                handler: this.save,
+                scope: this
+            }]
         }];
-
-        Phlexible.metasets.MetaSetsWindow.superclass.initComponent.call(this);
     },
 
     addMetaSet: function () {
@@ -196,7 +214,7 @@ Phlexible.metasets.MetaSetsWindow = Ext.extend(Ext.Window, {
             ids.push(record.get('id'));
         });
 
-        var params = Phlexible.clone(this.baseParams);
+        var params = Ext.clone(this.baseParams);
         params.ids = ids.join(',');
 
         Ext.Ajax.request({

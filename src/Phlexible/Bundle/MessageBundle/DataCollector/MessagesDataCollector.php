@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\DataCollector;
@@ -77,14 +80,6 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
     /**
      * @return array
      */
-    public function getPriorities()
-    {
-        return isset($this->data['priorities']) ? $this->data['priorities'] : array();
-    }
-
-    /**
-     * @return array
-     */
     public function getTypes()
     {
         return isset($this->data['types']) ? $this->data['types'] : array();
@@ -109,20 +104,10 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
     {
         $count = array(
             'error_count' => 0,
-            'priorities'  => array(),
             'types'       => array(),
         );
 
         foreach ($this->debugHandler->getMessages() as $message) {
-            if (isset($count['priorities'][$message['priority']])) {
-                ++$count['priorities'][$message['priority']]['count'];
-            } else {
-                $count['priorities'][$message['priority']] = array(
-                    'count' => 1,
-                    'name'  => $message['priorityName'],
-                );
-            }
-
             if (isset($count['types'][$message['type']])) {
                 ++$count['types'][$message['type']]['count'];
             } else {
@@ -136,7 +121,6 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
             }
         }
 
-        ksort($count['priorities']);
         ksort($count['types']);
 
         return $count;

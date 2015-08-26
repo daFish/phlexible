@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\ProblemBundle\EventListener;
@@ -40,25 +43,21 @@ class CollectProblemsListener
         $lastRun = $this->properties->get('problems', 'last_run');
 
         if (!$lastRun) {
-            $problem = new Problem();
-            $problem
-                ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage('Cached problems check was never run.')
-                ->setHint('Run cached problem check command')
-                ->setIconClass('p-problem-component-icon')
-                ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime());
+            $problem = new Problem(
+                'problem_check_no_run',
+                Problem::SEVERITY_WARNING,
+                'Cached problems check was never run.',
+                'Run cached problem check command'
+            );
 
             $event->addProblem($problem);
         } elseif (time() - strtotime($lastRun) > 86400) {
-            $problem = new Problem();
-            $problem
-                ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage('Cached problems last check run was on "' . $lastRun . '", more than 24h ago.')
-                ->setHint('Install a cronjob for running the cached problem check command')
-                ->setIconClass('p-problem-component-icon')
-                ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime());
+            $problem = new Problem(
+                'problem_check_last_run',
+                Problem::SEVERITY_WARNING,
+                "Cached problems last check run was on {$lastRun}, more than 24h ago.",
+                'Install a cronjob for running the cached problem check command'
+            );
 
             $event->addProblem($problem);
         }

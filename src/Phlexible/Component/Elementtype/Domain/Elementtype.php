@@ -1,14 +1,19 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\Elementtype\Domain;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -34,19 +39,22 @@ class Elementtype
     /**
      * @var string
      * @Assert\NotNull
+     * @Type("string")
      */
     private $name;
 
     /**
      * @var int
      * @Assert\NotNull
+     * @Type("integer")
      */
-    private $revision;
+    private $revision = 1;
 
     /**
      * @var string
      * @Assert\NotNull
      * @Assert\Choice(choices={"full", "part", "reference", "layout", "structure"})
+     * @Type("string")
      */
     private $type;
 
@@ -102,32 +110,46 @@ class Elementtype
 
     /**
      * @var ElementtypeStructure
+     * @Exclude)
      */
     private $structure;
 
     /**
      * @var \DateTime
      * @Assert\NotNull()
+     * @Type("DateTime")
      */
     private $createdAt;
 
     /**
      * @var string
      * @Assert\NotNull()
+     * @Type("string")
      */
     private $createUser;
 
     /**
      * @var \DateTime
      * @Assert\NotNull()
+     * @Type("DateTime")
      */
     private $modifiedAt;
 
     /**
      * @var string
      * @Assert\NotNull()
+     * @Type("string")
      */
     private $modifyUser;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
+    }
 
     /**
      * @return string

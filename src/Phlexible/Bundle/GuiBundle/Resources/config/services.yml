@@ -57,7 +57,12 @@ services:
         tags:
             - {name: phlexible_gui.compressor.css, priority: -100}
 
-    # eventlisteners
+    # event listeners
+    phlexible_gui.listener.exception:
+        class: Phlexible\Bundle\GuiBundle\EventListener\ExceptionListener
+        tags:
+            - {name: kernel.event_listener, event: kernel.exception, method: onKernelException}
+
     phlexible_gui.listener.get_config:
         class: Phlexible\Bundle\GuiBundle\EventListener\GetConfigListener
         arguments:
@@ -67,14 +72,12 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
-
     # portlets
     phlexible_gui.portlet.load:
         class: Phlexible\Bundle\GuiBundle\Portlet\LoadPortlet
         public: false
-        arguments: [@translator]
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: load-portlet}
 
     # role providers
     phlexible_gui.role_provider:

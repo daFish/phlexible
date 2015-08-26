@@ -1,15 +1,19 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Model;
 
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface as BaseUserManagerInterface;
+use Webmozart\Expression\Expression;
 
 /**
  * User manager interface
@@ -74,21 +78,34 @@ interface UserManagerInterface extends BaseUserManagerInterface
     public function findOneBy(array $criteria, $order = array());
 
     /**
-     * @param array $criteria
-     * @param array $orderBy
-     * @param int   $limit
-     * @param int   $offset
+     * @return Expression
+     */
+    public function expr();
+
+    /**
+     * @param Expression $expression
+     * @param array|null $sort
+     * @param int|null   $limit
+     * @param int|null   $offset
      *
      * @return UserInterface[]
      */
-    public function search(array $criteria, array $orderBy = null, $limit = null, $offset = null);
+    public function findByExpression(Expression $expression, array $sort = null, $limit = null, $offset = null);
 
     /**
-     * @param array $criteria
+     * @param Expression $expression
      *
      * @return int
      */
-    public function countSearch(array $criteria);
+    public function countByExpression(Expression $expression);
+
+    /**
+     * @param Expression $expression
+     * @param array|null $sort
+     *
+     * @return UserInterface
+     */
+    public function findOneByExpression(Expression $expression, array $sort = null);
 
     /**
      * @return string
@@ -109,10 +126,4 @@ interface UserManagerInterface extends BaseUserManagerInterface
      * @return UserInterface[]
      */
     public function findLoggedInUsers();
-
-    /**
-     * @param UserInterface $user
-     * @param UserInterface $successorUser
-     */
-    public function deleteUserWithSuccessor(UserInterface $user, UserInterface $successorUser);
 }

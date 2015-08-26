@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\DependencyInjection;
@@ -29,6 +32,7 @@ class PhlexibleGuiExtension extends Extension
         $loader->load('services.yml');
         $loader->load('assets.yml');
         $loader->load('twig.yml');
+        $loader->load('apikey.yml');
 
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);

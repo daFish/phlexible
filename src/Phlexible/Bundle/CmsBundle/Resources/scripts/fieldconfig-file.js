@@ -2,7 +2,7 @@ Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
 Ext.require('Phlexible.cms.field.FileField');
 
-Phlexible.fields.Registry.addFactory('file', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('file', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
@@ -11,10 +11,10 @@ Phlexible.fields.Registry.addFactory('file', function (parentConfig, item, value
     item.media = item.media || {};
 
     Ext.apply(config, {
-        xtype: 'filefield',
+        xtype: 'field.file',
         data_id: item.data_id,
 
-        file_id: item.media.file_id || false,
+        fileId: item.media.fileId || false,
         folder_id: item.media.folder_id || false,
         folder_path: item.media.folder_path || false,
         fileTitle: item.media.name,
@@ -35,7 +35,8 @@ Phlexible.fields.Registry.addFactory('file', function (parentConfig, item, value
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('file', {
+Phlexible.fields.FieldTypes.register({
+    type: 'file',
     titles: {
         de: 'Datei',
         en: 'File'

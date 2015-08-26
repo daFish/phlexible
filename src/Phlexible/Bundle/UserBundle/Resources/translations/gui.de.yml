@@ -1,3 +1,197 @@
+Phlexible:
+    user:
+        handler:
+            Users:
+                text: Benutzer
+
+            Options:
+                text: Optionen
+
+            Logout:
+                text: Logout
+
+        view:
+            Main:
+                title: Benutzer
+
+            groups:
+                Main:
+                    title: Gruppen
+
+            users:
+                Main:
+                    title: Benutzer
+
+                Filter:
+                    title: Filter
+                    searchText: Suchen
+                    accountText: Konto
+                    isDisabledText: Ist gesperrt
+                    hasExpireDateText: Hat Ablaufdatum
+                    isExpiredText: Ist abgelaufen
+                    resetText: Zurücksetzen
+                    rolesText: Rollen
+                    groupsText: Gruppen
+
+                Details:
+                    title: Details
+                    noUserSelectedText: No user selected
+                    usernameText: Username
+                    emailText: Email
+                    isDisabledText: Ist gesperrt
+                    expiresOnText: Wird gesperrt an
+                    commentsText: Bemerkungen
+                    rolesText: Rollen
+                    groupsText: Gruppen
+                    propertiesText: Eigenschaften
+
+                List:
+                    title: Benutzer
+                    idText: ID
+                    usernameText: Benutzername
+                    emailText: Email
+                    firstnameText: Vorname
+                    lastnameText: Nachname
+                    commentText: Bemerkungen
+                    isExpiredDateText: Ist abgelaufen
+                    expireDateText: Ablaufdatum
+                    createDateText: Erstellt am
+                    createUserText: Erstellt durch
+                    modifyDateText: Geändert am
+                    modifyUserText: Geändert durch
+                    flagsText: Flags
+                    hasCommentsText: Hat Kommentare
+                    hasExpireDateText: Hat Ablaufdatum
+                    isDisabledText: Ist gesperrt
+                    addUserText: Benutzer anlegen
+                    deleteUserText: Benutzer löschen
+                    impersonateText: Imitieren
+                    totalUsersText: "{0} Benutzer"
+                    filteredUsersText: "{0} gefilterte Benutzer"
+                    emptyMsgText: Keine Benutzer
+                    deleteUsersWarningText: Ausgewählte Benutzer wirklich löschen?
+                    deleteUserWarningText: Benutzer "{0}" wirklich löschen?
+
+        window:
+            OptionsWindow:
+                title: Optionen
+                closeText: Schliessen
+
+            UserWindow:
+                isDisabledText: Ist deaktiviert
+                isExpiredText: Ist abgelaufen
+                isLockedText: Ist gesperrt
+                addUserText: Neuer Benutzer
+                editUserText: "{0}"
+                saveText: Speichern
+                cancelText: Abbrechen
+                saveAndNotifyText: Speichern und benachrichtigen
+                userText: Benutzer
+
+        edit:
+            Details:
+                title: Persönliche Daten
+                usernameText: Benutzername
+                firstnameText: Vorname
+                lastnameText: Nachname
+                emailText: Email
+                imageText: Bild
+
+            Password:
+                title: Passwort
+                passwordText: Passwort
+                passwordRepeatText: Passwort (wiederholt)
+                passwordsDontMatchText: Passwöter stimmen nicht überein
+                notifyUserText: Benutzer nach Speichern benachrichten
+                generatePasswordText: Password erzeugen
+                generatedPasswordText: Erzeugtes Passwort
+                generateText: Erzeugen
+                copyText: Kopieren
+                addOptinText: 'E-Mail schicken, die einen Link auf eine Seite enthält, auf der der Benutzer ein Passwort setzen kann.'
+                editOptinText: 'E-Mail schicken, die einen Link auf eine Seite enthält, auf der der Benutzer ein neues Passwort setzen kann.'
+
+            Comment:
+                title: Bemerkungen
+                commentText: Bemerkungen
+
+            Preferences:
+                title: Einstellungen
+                themeText: Theme
+                dateFormatText: Datumsformat
+                systemDefaultText: Systemstandard
+
+            Account:
+                title: Konto
+                enabledText: Ist aktiviert
+                lockedText: Ist gesperrt
+                expiredText: Ist abgelaufen
+                expiresAtText: Läuft ab an
+                credentialsExpiredText: Anmeldedaten abgelaufen
+                credentialsExpireAtText: Anmeldedaten laufen ab an
+
+            Roles:
+                title: Rollen
+                emptyText: Keine Rollen
+                memberText: Member
+                roleText: Rolle
+
+            Groups:
+                title: Gruppen
+                emptyText: Keine Gruppen
+                memberText: Member
+                groupText: Gruppe
+
+            Properties:
+                title: Eigenschaften
+                emptyText: Keine Eigenschaften
+                addPropertyText: Eigenschaft hinzufügen
+                removePropertyText: Eigenschaft entfernen
+                newPropertyText: Neue Eigenschaft
+                enterPropertyNameText: Name der neuen Eigenschaft
+
+        options:
+            Details:
+                title: Details
+                descriptionText: Details Beschreibung
+                firstnameText: Vorname
+                lastnameText: Nachname
+                emailText: Email
+                imageText: Bild
+                saveText: Speichern
+                cancelText: Abbrechen
+
+            Password:
+                title: Passwort
+                descriptionText: Passwort Beschreibung
+                passwordText: Passwort
+                passwordRepeatText: Passwort wiederholen
+                passwordsDontMatchText: Passwörter stimmen nicht überein
+                saveText: Speichern
+                cancelText: Abbrechen
+
+            Preferences:
+                title: Einstellungen
+                descriptionText: Einstellungen Beschreibung
+                dateFormatText: Datumsformat
+                systemDefaultText: Systemstandard
+                themeText: Theme
+                saveText: Speichern
+                cancelText: Abbrechen
+
+            Properties:
+                title: Eigenschaften
+                descriptionText: Eigenschaften Beschreibung
+                saveText: Speichern
+                cancelText: Abbrechen
+
+        portlet:
+            LastLogins:
+                title: Wer ist online?
+                noLastLoginsText: Keine Logins in letzter Zeit
+                userText: Benutzer
+                loggedInText: Hat sich eingeloggt
+                loggedOutText: Hat sich ausgeloggt
+
 users:
     login:
         enter_username_and_password: bla

@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Tests\Compressor;
@@ -60,9 +63,13 @@ EOF;
 
     public function testCompressFile()
     {
+        if (!class_exists('org\bovigo\vfs\vfsStream')) {
+            $this->markTestSkipped('vfsStream not available');
+        }
+
         $css = $this->createCss();
 
-        $vfs = vfsStream::setup('root', null, array('test.css' => $css));
+        vfsStream::setup('root', null, array('test.css' => $css));
 
         $compressed = file_get_contents($this->compressor->compressFile(vfsStream::url('root/test.css')));
 

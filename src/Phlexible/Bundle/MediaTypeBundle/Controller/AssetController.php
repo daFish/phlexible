@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaTypeBundle\Controller;
@@ -28,10 +31,10 @@ class AssetController extends Controller
     /**
      * @param Request $request
      *
-     * @return JsonResponse
-     * @Route("/mediatypes", name="mediatypes_asset_mediatypes")
+     * @return Response
+     * @Route("/scripts", name="phlexible_mediatype_asset_scripts")
      */
-    public function mediatypesAction(Request $request)
+    public function scriptsAction(Request $request)
     {
         $mediaClassifier = $this->get('phlexible_media.media_classifier');
         $translator = $this->get('translator');
@@ -57,7 +60,7 @@ class AssetController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/css", name="mediatypes_asset_css")
+     * @Route("/css", name="phlexible_mediatype_asset_css")
      */
     public function cssAction(Request $request)
     {

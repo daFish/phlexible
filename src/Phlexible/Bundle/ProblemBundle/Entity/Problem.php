@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\ProblemBundle\Entity;
@@ -34,18 +37,6 @@ class Problem
 
     /**
      * @var string
-     * @ORM\Column(name="check_class", type="string", length=255)
-     */
-    private $checkClass;
-
-    /**
-     * @var string
-     * @ORM\Column(name="icon_class", type="string", length=255, nullable=true)
-     */
-    private $iconClass;
-
-    /**
-     * @var string
      * @ORM\Column(type="string", length=255)
      */
     private $severity;
@@ -54,19 +45,13 @@ class Problem
      * @var string
      * @ORM\Column(type="string", length=255)
      */
-    private $msg;
+    private $message;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $hint;
-
-    /**
-     * @var array
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $link;
 
     /**
      * @var \DateTime
@@ -81,45 +66,33 @@ class Problem
     private $lastCheckedAt;
 
     /**
+     * @var array
+     * @ORM\Column(type="json_array")
+     */
+    private $attributes = array();
+
+    /**
      * @var bool
      */
     private $isLive = false;
 
     /**
-     * @param string $severity
-     * @param string $msg
-     * @param string $hint
-     * @param array  $link
-     */
-    public function __construct($severity = null, $msg = null, $hint = null, array $link = null)
-    {
-        if ($severity !== null) {
-            $this->severity = $severity;
-        }
-
-        if ($msg !== null) {
-            $this->msg = $msg;
-        }
-
-        if ($hint !== null) {
-            $this->hint = $hint;
-        }
-
-        if ($link !== null) {
-            $this->link = $link;
-        }
-    }
-
-    /**
      * @param string $id
-     *
-     * @return $this
+     * @param string $severity
+     * @param string $message
+     * @param string $hint
+     * @param array  $attributes
      */
-    public function setId($id)
+    public function __construct($id, $severity, $message, $hint = null, array $attributes = array())
     {
         $this->id = $id;
+        $this->severity = $severity;
+        $this->message = $message;
+        $this->hint = $hint;
+        $this->attributes = $attributes;
 
-        return $this;
+        $this->createdAt = new \DateTime();
+        $this->lastCheckedAt = new \DateTime();
     }
 
     /**
@@ -131,46 +104,6 @@ class Problem
     }
 
     /**
-     * @param string $checkClass
-     *
-     * @return $this
-     */
-    public function setCheckClass($checkClass)
-    {
-        $this->checkClass = $checkClass;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCheckClass()
-    {
-        return $this->checkClass;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIconClass()
-    {
-        return $this->iconClass;
-    }
-
-    /**
-     * @param string $iconClass
-     *
-     * @return $this
-     */
-    public function setIconClass($iconClass)
-    {
-        $this->iconClass = $iconClass;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getSeverity()
@@ -179,35 +112,11 @@ class Problem
     }
 
     /**
-     * @param string $severity
-     *
-     * @return $this
-     */
-    public function setSeverity($severity)
-    {
-        $this->severity = $severity;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getMessage()
     {
-        return $this->msg;
-    }
-
-    /**
-     * @param string $message
-     *
-     * @return $this
-     */
-    public function setMessage($message)
-    {
-        $this->msg = $message;
-
-        return $this;
+        return $this->message;
     }
 
     /**
@@ -219,33 +128,71 @@ class Problem
     }
 
     /**
-     * @param string $hint
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @param array $attributes
      *
      * @return $this
      */
-    public function setHint($hint)
+    public function setAttributes(array $attributes = null)
     {
-        $this->hint = $hint;
+        $this->attributes = $attributes;
 
         return $this;
     }
 
     /**
-     * @return array
+     * @param string $key
+     *
+     * @return bool
      */
-    public function getLink()
+    public function hasAttribute($key)
     {
-        return $this->link;
+        return isset($this->attributes[$key]);
     }
 
     /**
-     * @param array $link
+     * @param string $key
+     * @param mixed  $defaultValue
+     *
+     * @return mixed
+     */
+    public function getAttribute($key, $defaultValue = null)
+    {
+        if (!$this->hasAttribute($key)) {
+            return $defaultValue;
+        }
+
+        return $this->attributes[$key];
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $value
      *
      * @return $this
      */
-    public function setLink(array $link)
+    public function setAttribute($key, $value)
     {
-        $this->link = $link;
+        $this->attributes[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function removeAttribute($key)
+    {
+        unset($this->attributes[$key]);
 
         return $this;
     }
@@ -259,35 +206,11 @@ class Problem
     }
 
     /**
-     * @param \DateTime $createdAt
-     *
-     * @return $this
-     */
-    public function setCreatedAt(\DateTime $createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getLastCheckedAt()
     {
         return $this->lastCheckedAt;
-    }
-
-    /**
-     * @param \DateTime $lastCheckedAt
-     *
-     * @return $this
-     */
-    public function setLastCheckedAt(\DateTime $lastCheckedAt)
-    {
-        $this->lastCheckedAt = $lastCheckedAt;
-
-        return $this;
     }
 
     /**
@@ -308,21 +231,5 @@ class Problem
     public function isLive()
     {
         return $this->isLive;
-    }
-
-    /**
-     * Return array represantation of this problem
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return array(
-            'severity' => $this->severity,
-            'msg'      => $this->msg,
-            'hint'     => $this->hint,
-            'link'     => !empty($this->link) ? $this->link : null,
-            'iconCls'  => $this->iconClass,
-        );
     }
 }

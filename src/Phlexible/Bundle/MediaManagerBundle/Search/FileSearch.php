@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaManagerBundle\Search;
@@ -12,7 +15,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -23,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class FileSearch implements SearchProviderInterface
 {
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -38,12 +41,12 @@ class FileSearch implements SearchProviderInterface
     private $authorizationChecker;
 
     /**
-     * @param VolumeManager                 $volumeManager
+     * @param VolumeManagerInterface        $volumeManager
      * @param UserManagerInterface          $userManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
-        VolumeManager $volumeManager,
+        VolumeManagerInterface $volumeManager,
         UserManagerInterface $userManager,
         AuthorizationCheckerInterface $authorizationChecker)
     {
@@ -97,24 +100,18 @@ class FileSearch implements SearchProviderInterface
 
             $folderPath = $folders[$file->getFolderId()]->getIdPath();
 
-            try {
-                $createUser = $this->userManager->find($file->getCreateUserId());
-            } catch (\Exception $e) {
-                $createUser = $this->userManager->getSystemUser();
-            }
-
             $results[] = new SearchResult(
                 $file->getId(),
                 $file->getName(),
-                $createUser->getDisplayname(),
+                $file->getCreateUser(),
                 $file->getCreatedAt(),
                 '/media/' . $file->getId() . '/_mm_small',
                 'Mediamanager File Search',
                 array(
                     'handler'    => 'media',
                     'parameters' => array(
-                        'start_file_id'     => $file->getId(),
-                        'start_folder_path' => '/' . implode('/', $folderPath)
+                        'startFileId'     => $file->getId(),
+                        'startFolderPath' => '/' . implode('/', $folderPath)
                     ),
                 )
             );

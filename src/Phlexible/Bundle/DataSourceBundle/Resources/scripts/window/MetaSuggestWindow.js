@@ -1,6 +1,6 @@
-Ext.provide('Phlexible.datasources.window.MetaSuggestWindow');
+Ext.define('Phlexible.metaset.window.MetaSuggestWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.datasources.window.MetaSuggestWindow = Ext.extend(Ext.Window, {
     width: 400,
     height: 350,
     layout: 'fit',
@@ -19,7 +19,7 @@ Phlexible.datasources.window.MetaSuggestWindow = Ext.extend(Ext.Window, {
             this.metaKey = this.record.data.key;
         }
         if (this.record && !this.metaSourceId) {
-            this.metaSourceId = this.record.data.options.source_id;
+            this.metaSourceId = this.record.data.options.sourceId;
         }
         if (this.record && !this.metaValue) {
             this.metaValue = this.record.data[this.valueField];
@@ -40,6 +40,13 @@ Phlexible.datasources.window.MetaSuggestWindow = Ext.extend(Ext.Window, {
 
         this.title = 'Edit ' + this.metaKey;
 
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -50,23 +57,30 @@ Phlexible.datasources.window.MetaSuggestWindow = Ext.extend(Ext.Window, {
                 disabled: true,
                 items: [
                     {
-                        xtype: 'superboxselect',
+                        xtype: 'tagfield',
                         hideLabel: true,
-                        source_id: this.metaSourceId,
+                        sourceId: this.metaSourceId,
                         emptyText: 'No tag selected',
                         anchor: '-20',
                         value: this.metaValue,
                         suggestLanguage: this.metaLanguage,
-                        store: new Ext.data.JsonStore({
+                        store: Ext.create('Ext.data.Store', {
                             fields: ['key', 'value'],
-                            url: Phlexible.Router.generate('metasets_values'),
-                            root: 'values',
-                            autoLoad: true,
-                            id: 'key',
-                            baseParams: {
-                                source_id: this.metaSourceId,
-                                language: this.metaLanguage
+                            proxy: {
+                                type: 'ajax',
+                                url: Phlexible.Router.generate('metaset_values'),
+                                simpleSortMode: true,
+                                reader: {
+                                    type: 'json',
+                                    rootProperty: 'values',
+                                    idProperty: 'key'
+                                },
+                                extraParams: {
+                                    sourceId: this.metaSourceId,
+                                    language: this.metaLanguage
+                                }
                             },
+                            autoLoad: true,
                             listeners: {
                                 load: function (store) {
                                     if (this.metaValue !== undefined) {
@@ -109,29 +123,34 @@ Phlexible.datasources.window.MetaSuggestWindow = Ext.extend(Ext.Window, {
                     }
                 ]
             }];
+    },
 
-        this.buttons = [
-            {
-                text: 'Store',
-                handler: function () {
-                    var value = this.getComponent(0).getComponent(0).getValue();
-                    if (this.record) {
-                        this.record.set(this.valueField, value);
-                    }
-                    this.fireEvent('store', this, value);
-                    this.close();
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                {
+                    text: 'Store',
+                    handler: function () {
+                        var value = this.getComponent(0).getComponent(0).getValue();
+                        if (this.record) {
+                            this.record.set(this.valueField, value);
+                        }
+                        this.fireEvent('store', this, value);
+                        this.close();
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            {
-                text: 'Cancel',
-                handler: function () {
-                    this.close();
-                },
-                scope: this
-            }
-        ];
-
-        Phlexible.datasources.window.MetaSuggestWindow.superclass.initComponent.call(this);
+                {
+                    text: 'Cancel',
+                    handler: function () {
+                        this.close();
+                    },
+                    scope: this
+                }
+            ]
+        }];
     }
 });

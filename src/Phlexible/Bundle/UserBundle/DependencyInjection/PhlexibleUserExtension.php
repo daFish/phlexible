@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietery
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\DependencyInjection;
@@ -37,9 +40,18 @@ class PhlexibleUserExtension extends Extension
         $container->setParameter('phlexible_user.password.expire_after_days', $config['password']['expire_after_days']);
         $container->setParameter('phlexible_user.defaults.language', $config['defaults']['language']);
         $container->setParameter('phlexible_user.defaults.theme', $config['defaults']['theme']);
-        $container->setParameter('phlexible_user.defaults.force_password_change', $config['defaults']['force_password_change']);
-        $container->setParameter('phlexible_user.defaults.cant_change_password', $config['defaults']['cant_change_password']);
-        $container->setParameter('phlexible_user.defaults.password_doesnt_expire', $config['defaults']['password_doesnt_expire']);
+        $container->setParameter(
+            'phlexible_user.defaults.force_password_change',
+            $config['defaults']['force_password_change']
+        );
+        $container->setParameter(
+            'phlexible_user.defaults.cant_change_password',
+            $config['defaults']['cant_change_password']
+        );
+        $container->setParameter(
+            'phlexible_user.defaults.password_doesnt_expire',
+            $config['defaults']['password_doesnt_expire']
+        );
 
         $loader->load('doctrine.yml');
         $container->setAlias('phlexible_user.group_manager', 'phlexible_user.doctrine.group_manager');

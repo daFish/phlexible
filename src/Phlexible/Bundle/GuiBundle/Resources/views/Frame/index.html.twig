@@ -5,13 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
     <link rel="icon" type="image/png" href="{{ asset("bundles/phlexiblegui/images/phlexible.png") }}">
-    <link href="{{ asset("resources/css/ext-all.css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
-    {% set theme = app.user.property("theme", "default") %}
-    {% if  theme != "default" %}
-    <link id="theme" href="{{ asset("/resources/css/xtheme-" ~ theme ~ ".css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
-    {% endif %}
-    <link href="{{ path("asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
-    <link href="{{ path("asset_icons") }}" media="screen" rel="stylesheet" type="text/css"/>
+    {% set theme = "theme-" ~ app.user.property("theme", "classic") %}
+    {% set debug = app.debug ? "-debug" : "" %}
+    <link rel="stylesheet" type="text/css" href="{{ asset("classic/" ~ theme ~ "/resources/" ~ theme ~ "-all" ~ debug ~ ".css", "ext") }}">
+    <script type="text/javascript" src="{{ asset("ext-all" ~ debug ~ ".js", "ext") }}"></script>
+    <script type="text/javascript" src="{{ asset("classic/" ~ theme ~ "/" ~ theme ~ debug ~ ".js", "ext") }}"></script>
+    <link href="{{ path("phlexible_gui_asset_css") }}" media="screen" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         #loading {
             position: absolute;
@@ -50,28 +49,14 @@
 </div>
 <noscript>{{ noScript }}</noscript>
 </body>
-<script type="text/javascript" src="{{ asset("adapter/ext/ext-base.js", "extjs") }}"></script>
-{% if app.debug %}
-<script type="text/javascript" src="{{ asset("ext-all-debug.js", "extjs") }}"></script>
-{% else %}
-<script type="text/javascript" src="{{ asset("ext-all.js", "extjs") }}"></script>
-{% endif %}
 {% set language = app.user.getProperty("interfaceLanguage", "en") %}
+{#
 <script type="text/javascript" src="{{ asset("locale/ext-lang-" ~ language ~ ".js", "extjs") }}"></script>
+#}
 <script type="text/javascript">
     //<![CDATA[
     Ext.BLANK_IMAGE_URL = "{{ asset("bundles/phlexiblegui/images/blank.gif") }}";
     Ext.QuickTips.init();
-    Ext.require = function(require) {};
-    Ext.provide = function(provide) {
-        var provides = provide.split('.');
-        if (provides.length < 2) {
-            return;
-        }
-        provides.pop();
-        provide = provides.join('.');
-        Ext.namespace(provide);
-    };
 
     var Phlexible = {
         title: "{{ project.title }}",
@@ -79,18 +64,26 @@
         project: "{{ project.title }}",
         baseUrl: "{{ app.request.baseUrl }}/admin",
         basePath: "{{ app.request.basePath }}/admin",
+        apikey: "swentz",
         bundlePath: "{{ app.request.basePath }}/bundles",
-        config: {{ render(path("gui_config"))|raw }}
+        config: {{ render(path("phlexible_gui_config"))|raw }},
+        menu: {{ render(path("phlexible_gui_menu"))|raw }}
     };
     //]]>
 </script>
 {{ scripts|raw }}
-<script type="text/javascript" src="{{ path("asset_translations", {language: language}) }}"></script>
-<script type="text/javascript" src="{{ path("asset_scripts") }}"></script>
-<script type="text/javascript" src="{{ path("gui_routes") }}"></script>
+<script type="text/javascript" src="{{ path("phlexible_gui_routes") }}"></script>
+<script type="text/javascript" src="{{ path("phlexible_gui_asset_scripts") }}"></script>
+<script type="text/javascript" src="{{ path("phlexible_gui_asset_translations", {language: language}) }}"></script>
 <script type="text/javascript">
     //<![CDATA[
-    Ext.onReady(function () {
+    Ext.application({
+        name: 'Phlexible',
+        namespace: 'Phlexible',
+        appFolder: 'gui/load/Phlexible',
+        appProperty: 'App',
+        extend: 'Phlexible.gui.app.Application',
+        autoCreateViewport: 'Phlexible.gui.view.Main'
     });
     //]]>
 </script>

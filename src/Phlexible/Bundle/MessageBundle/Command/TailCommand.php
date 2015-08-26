@@ -1,14 +1,16 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Command;
 
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,9 +34,10 @@ class TailCommand extends ContainerAwareCommand
             ->setDescription('Show latest messages')
             ->setDefinition(
                 array(
-                    new InputOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Show latest <limit> messages.', 20),
+                    new InputOption('limit', 'l', InputOption::VALUE_REQUIRED, 'Show latest <number> messages.', 20),
                     new InputOption('follow', 'f', InputOption::VALUE_NONE, 'Follow output'),
                     new InputOption('body', 'b', InputOption::VALUE_NONE, 'Show body'),
+                    new InputOption('sleep', null, InputOption::VALUE_REQUIRED, 'Sleep time', 5),
                 )
             );
     }
@@ -47,9 +50,9 @@ class TailCommand extends ContainerAwareCommand
         $limit = $input->getOption('limit');
         $follow = $input->getOption('follow');
         $showBody = $input->getOption('body');
+        $sleepTime = $input->getOption('sleep');
 
         $messageManager = $this->getContainer()->get('phlexible_message.message_manager');
-        $priorities = $messageManager->getPriorityNames();
         $types = $messageManager->getTypeNames();
 
         if ($limit) {
@@ -58,9 +61,8 @@ class TailCommand extends ContainerAwareCommand
             foreach ($messages as $message) {
                 $output->writeln(
                     sprintf(
-                        "[%s] %s.%s: %s [%s, %s]",
+                        "[%s] %s: %s [%s, %s]",
                         $message->getCreatedAt()->format('Y-m-d H:i:s'),
-                        $priorities[$message->getPriority()],
                         $types[$message->getType()],
                         $message->getSubject(),
                         $message->getChannel() ? : '-',
@@ -77,15 +79,14 @@ class TailCommand extends ContainerAwareCommand
             return 0;
         }
 
-        $message = $messageManager->findOneBy(array(), array('createdAt' => 'ASC'));
+        $message = $messageManager->findOneBy(array(), array('createdAt' => 'DESC'));
         $minTime = $message->getCreatedAt();
 
         while (1) {
-            $criteria = new Criteria();
-            $criteria->dateFrom($minTime);
+            $expr = $messageManager->expr()
+                ->andGreaterThan($minTime->format('Y-m-d H:i:s'), 'createdAt');
 
-            $messages = $messageManager->findByCriteria($criteria, array('createdAt' => 'ASC'), null, null);
-            //$output->writeln($minTime->format('Y-m-d H:i:s').' '.count($messages));
+            $messages = $messageManager->findByExpression($expr, array('createdAt' => 'ASC'), 5);
 
             foreach ($messages as $message) {
                 /* @var $message Message */
@@ -100,9 +101,8 @@ class TailCommand extends ContainerAwareCommand
 
                 $output->writeln(
                     sprintf(
-                        "[%s] %s.%s: %s [%s] [%s]",
+                        "[%s] %s: %s [%s] [%s]",
                         $message->getCreatedAt()->format('Y-m-d H:i:s'),
-                        $priorities[$message->getPriority()],
                         $types[$message->getType()],
                         $message->getSubject(),
                         $message->getChannel() ? : '-',
@@ -110,16 +110,14 @@ class TailCommand extends ContainerAwareCommand
                     )
                 );
 
-                if ($showBody || $message->getPriority() >= Message::PRIORITY_URGENT
-                        || $message->getType() === Message::TYPE_ERROR) {
+                if ($showBody || $message->getType() >= Message::TYPE_ERROR) {
                     $output->writeln(' > ' . $message->getBody());
                 }
             }
 
-            sleep(1);
+            sleep($sleepTime);
         }
 
         return 0;
     }
-
 }

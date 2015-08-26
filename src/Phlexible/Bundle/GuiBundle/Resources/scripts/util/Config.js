@@ -1,21 +1,92 @@
-Ext.provide('Phlexible.gui.util.Config');
+/**
+ * Config
+ */
+Ext.define('Phlexible.gui.util.Config', {
+    extend: 'Ext.util.Observable',
 
-Phlexible.gui.util.Config = function (values) {
-    this.values = values;
-};
-Phlexible.gui.util.Config.prototype.get = function (key, defaultValue) {
-    if (!this.has(key)) {
-        if (defaultValue !== undefined) {
+    /**
+     * @cfg {Object} values Config values
+     */
+    values: {},
+
+    /**
+     * Fired when a value is set
+     *
+     * @event set
+     * @param {String} key
+     * @param {String} value
+     * @param {Phlexible.gui.util.Config} config
+     */
+
+    /**
+     * Fired when config is initialized
+     *
+     * @event init
+     * @param {Phlexible.gui.util.Config} config
+     */
+
+    /**
+     * @constructor
+     * @param {Object} values
+     */
+    constructor: function(values) {
+        this.callParent();
+
+        this.values = values;
+        this.fireEvent('init', this);
+    },
+
+    /**
+     * Return CSS rule for the given icon
+     *
+     * @param {String} key
+     * @param {String} defaultValue
+     * @return {String}
+     */
+    get: function(key, defaultValue) {
+        if (this.has(key)) {
+            return this.values[key];
+        }
+
+        if (defaultValue) {
             return defaultValue;
         }
-        throw new Error(key + ' not set.');
+
+        return null;
+    },
+
+    /**
+     * Set value
+     *
+     * @param {String} key
+     * @param {String} value
+     * @return {Phlexible.gui.util.Config}
+     */
+    set: function(key, value) {
+        this.values[key] = value;
+
+        this.fireEvent('set', key, value, this);
+    },
+
+    /**
+     * Is a rule for the given icon defined?
+     *
+     * @param {String} key
+     * @return {Boolean}
+     */
+    has: function(key) {
+        return !!this.values[key];
+    },
+
+    /**
+     * Unset value
+     *
+     * @param {String} key
+     */
+    unset: function(key) {
+        if (this.has(key)) {
+            delete (this.values[key]);
+        }
     }
-    return this.values[key];
-};
-Phlexible.gui.util.Config.prototype.has = function (key) {
-    return this.values[key] !== undefined;
-};
-Phlexible.gui.util.Config.prototype.set = function (key, value) {
-    this.values[key] = value;
-    ;
-};
+});
+

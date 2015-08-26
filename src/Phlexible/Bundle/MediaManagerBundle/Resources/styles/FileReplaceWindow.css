@@ -1,0 +1,42 @@
+.p-mediamanager-file-replace-win-header {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.p-mediamanager-file-replace-win-desc {
+}
+
+.p-mediamanager-file-replace-view {
+    overflow: auto;
+}
+
+.p-mediamanager-file-replace-wrap {
+    padding: 5px 10px 20px 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.p-mediamanager-file-replace-wrap-over {
+    background-color: #EAF8FF;
+    border: 1px solid lightblue;
+}
+
+.p-mediamanager-file-replace-header {
+    font-size: 13px;
+    font-weight: bolder;
+}
+
+.p-mediamanager-file-replace-img {
+    float: left;
+    display: block;
+    margin: 5px;
+    border: 1px solid lightgray;
+}
+
+.p-mediamanager-file-replace-desc {
+    padding: 5px 5px 5px 50px;
+}
+
+.p-mediamanager-file-replace-name {
+    font-weight: bold;
+}

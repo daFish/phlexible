@@ -2,84 +2,63 @@
     "version": "1.0",
     "name": "phlexible/phlexible",
     "path-mappings": {
-        "/phlexible/phlexibleaccesscontrol/icons": "src/Phlexible/Bundle/AccessControlBundle/Resources/public/icons",
         "/phlexible/phlexibleaccesscontrol/scripts": "src/Phlexible/Bundle/AccessControlBundle/Resources/scripts",
         "/phlexible/phlexibleaccesscontrol/styles": "src/Phlexible/Bundle/AccessControlBundle/Resources/styles",
-        "/phlexible/phlexiblecms/icons": "src/Phlexible/Bundle/CmsBundle/Resources/public/icons",
         "/phlexible/phlexiblecms/menu": "src/Phlexible/Bundle/CmsBundle/Resources/menu",
         "/phlexible/phlexiblecms/scripts": "src/Phlexible/Bundle/CmsBundle/Resources/scripts",
         "/phlexible/phlexiblecms/styles": "src/Phlexible/Bundle/CmsBundle/Resources/styles",
-        "/phlexible/phlexibledashboard/icons": "src/Phlexible/Bundle/DashboardBundle/Resources/public/icons",
+        "/phlexible/phlexiblecontentchannel/menu": "src/Phlexible/Bundle/ContentchannelBundle/Resources/menu",
+        "/phlexible/phlexiblecontentchannel/scripts": "src/Phlexible/Bundle/ContentchannelBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/scripts": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/styles": "src/Phlexible/Bundle/DashboardBundle/Resources/styles",
-        "/phlexible/phlexibledatasource/icons": "src/Phlexible/Bundle/DataSourceBundle/Resources/public/icons",
         "/phlexible/phlexibledatasource/scripts": "src/Phlexible/Bundle/DataSourceBundle/Resources/scripts",
-        "/phlexible/phlexibleelement/icons": "src/Phlexible/Bundle/ElementBundle/Resources/public/icons",
         "/phlexible/phlexibleelement/menu": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
         "/phlexible/phlexibleelement/scripts": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
         "/phlexible/phlexibleelement/styles": "src/Phlexible/Bundle/ElementBundle/Resources/styles",
-        "/phlexible/phlexibleelementtype/icons": "src/Phlexible/Bundle/ElementtypeBundle/Resources/public/icons",
         "/phlexible/phlexibleelementtype/menu": "src/Phlexible/Bundle/ElementtypeBundle/Resources/menu",
         "/phlexible/phlexibleelementtype/scripts": "src/Phlexible/Bundle/ElementtypeBundle/Resources/scripts",
         "/phlexible/phlexibleelementtype/styles": "src/Phlexible/Bundle/ElementtypeBundle/Resources/styles",
-        "/phlexible/phlexiblegui/icons": "src/Phlexible/Bundle/GuiBundle/Resources/public/icons",
         "/phlexible/phlexiblegui/menu": "src/Phlexible/Bundle/GuiBundle/Resources/menu",
         "/phlexible/phlexiblegui/scripts": "src/Phlexible/Bundle/GuiBundle/Resources/scripts",
         "/phlexible/phlexiblegui/styles": "src/Phlexible/Bundle/GuiBundle/Resources/styles",
-        "/phlexible/phlexiblemediacache/icons": "src/Phlexible/Bundle/MediaCacheBundle/Resources/public/icons",
         "/phlexible/phlexiblemediacache/scripts": "src/Phlexible/Bundle/MediaCacheBundle/Resources/scripts",
-        "/phlexible/phlexiblemediamanager/icons": "src/Phlexible/Bundle/MediaManagerBundle/Resources/public/icons",
         "/phlexible/phlexiblemediamanager/mediatemplates": "src/Phlexible/Bundle/MediaManagerBundle/Resources/mediatemplates",
         "/phlexible/phlexiblemediamanager/menu": "src/Phlexible/Bundle/MediaManagerBundle/Resources/menu",
         "/phlexible/phlexiblemediamanager/scripts": "src/Phlexible/Bundle/MediaManagerBundle/Resources/scripts",
         "/phlexible/phlexiblemediamanager/styles": "src/Phlexible/Bundle/MediaManagerBundle/Resources/styles",
-        "/phlexible/phlexiblemediatemplate/icons": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/public/icons",
         "/phlexible/phlexiblemediatemplate/menu": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/menu",
         "/phlexible/phlexiblemediatemplate/scripts": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/scripts",
         "/phlexible/phlexiblemediatemplate/styles": "src/Phlexible/Bundle/MediaTemplateBundle/Resources/styles",
-        "/phlexible/phlexiblemediatype/icons": "src/Phlexible/Bundle/MediaTypeBundle/Resources/public/icons",
         "/phlexible/phlexiblemediatype/mediatypes": "src/Phlexible/Bundle/MediaTypeBundle/Resources/mediatypes",
         "/phlexible/phlexiblemediatype/menu": "src/Phlexible/Bundle/MediaTypeBundle/Resources/menu",
         "/phlexible/phlexiblemediatype/scripts": "src/Phlexible/Bundle/MediaTypeBundle/Resources/scripts",
-        "/phlexible/phlexiblemessage/icons": "src/Phlexible/Bundle/MessageBundle/Resources/public/icons",
         "/phlexible/phlexiblemessage/menu": "src/Phlexible/Bundle/MessageBundle/Resources/menu",
         "/phlexible/phlexiblemessage/scripts": "src/Phlexible/Bundle/MessageBundle/Resources/scripts",
         "/phlexible/phlexiblemessage/styles": "src/Phlexible/Bundle/MessageBundle/Resources/styles",
-        "/phlexible/phlexiblemetaset/icons": "src/Phlexible/Bundle/MetaSetBundle/Resources/public/icons",
         "/phlexible/phlexiblemetaset/menu": "src/Phlexible/Bundle/MetaSetBundle/Resources/menu",
         "/phlexible/phlexiblemetaset/scripts": "src/Phlexible/Bundle/MetaSetBundle/Resources/scripts",
-        "/phlexible/phlexibleproblem/icons": "src/Phlexible/Bundle/ProblemBundle/Resources/public/icons",
         "/phlexible/phlexibleproblem/menu": "src/Phlexible/Bundle/ProblemBundle/Resources/menu",
         "/phlexible/phlexibleproblem/scripts": "src/Phlexible/Bundle/ProblemBundle/Resources/scripts",
         "/phlexible/phlexibleproblem/styles": "src/Phlexible/Bundle/ProblemBundle/Resources/styles",
-        "/phlexible/phlexiblequeue/icons": "src/Phlexible/Bundle/QueueBundle/Resources/public/icons",
         "/phlexible/phlexiblequeue/menu": "src/Phlexible/Bundle/QueueBundle/Resources/menu",
         "/phlexible/phlexiblequeue/scripts": "src/Phlexible/Bundle/QueueBundle/Resources/scripts",
-        "/phlexible/phlexiblesearch/icons": "src/Phlexible/Bundle/SearchBundle/Resources/public/icons",
+        "/phlexible/phlexiblequeue/styles": "src/Phlexible/Bundle/QueueBundle/Resources/styles",
         "/phlexible/phlexiblesearch/menu": "src/Phlexible/Bundle/SearchBundle/Resources/menu",
         "/phlexible/phlexiblesearch/scripts": "src/Phlexible/Bundle/SearchBundle/Resources/scripts",
         "/phlexible/phlexiblesearch/styles": "src/Phlexible/Bundle/SearchBundle/Resources/styles",
-        "/phlexible/phlexiblesiteroot/icons": "src/Phlexible/Bundle/SiterootBundle/Resources/public/icons",
         "/phlexible/phlexiblesiteroot/menu": "src/Phlexible/Bundle/SiterootBundle/Resources/menu",
         "/phlexible/phlexiblesiteroot/scripts": "src/Phlexible/Bundle/SiterootBundle/Resources/scripts",
         "/phlexible/phlexiblesiteroot/styles": "src/Phlexible/Bundle/SiterootBundle/Resources/styles",
-        "/phlexible/phlexibleteaser/icons": "src/Phlexible/Bundle/TeaserBundle/Resources/public/icons",
         "/phlexible/phlexibleteaser/scripts": "src/Phlexible/Bundle/TeaserBundle/Resources/scripts",
-        "/phlexible/phlexibletree/icons": "src/Phlexible/Bundle/TreeBundle/Resources/public/icons",
         "/phlexible/phlexibletree/menu": "src/Phlexible/Bundle/TreeBundle/Resources/menu",
         "/phlexible/phlexibletree/node-icons": "src/Phlexible/Bundle/TreeBundle/Resources/public/node-icons",
         "/phlexible/phlexibletree/scripts": "src/Phlexible/Bundle/TreeBundle/Resources/scripts",
         "/phlexible/phlexibletree/styles": "src/Phlexible/Bundle/TreeBundle/Resources/styles",
-        "/phlexible/phlexibleuser/icons": "src/Phlexible/Bundle/UserBundle/Resources/public/icons",
         "/phlexible/phlexibleuser/menu": "src/Phlexible/Bundle/UserBundle/Resources/menu",
         "/phlexible/phlexibleuser/scripts": "src/Phlexible/Bundle/UserBundle/Resources/scripts",
         "/phlexible/phlexibleuser/styles": "src/Phlexible/Bundle/UserBundle/Resources/styles"
     },
     "bindings": {
-        "7ca6b7f3-2afe-560b-8d50-593ed57592df": {
-            "query": "/phlexible/phlexibleaccesscontrol/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "d8f515b6-d461-5835-852a-6b3e350e539c": {
             "query": "/phlexible/phlexibleaccesscontrol/scripts/**/*.js",
             "type": "phlexible/scripts"
@@ -87,10 +66,6 @@
         "85d31772-1be8-52a9-9c78-c973e5e058e8": {
             "query": "/phlexible/phlexibleaccesscontrol/styles/**/*.css",
             "type": "phlexible/styles"
-        },
-        "93c75aed-535f-51a2-9cbc-e65bb30def84": {
-            "query": "/phlexible/phlexiblecms/icons/*.png",
-            "type": "phlexible/icons"
         },
         "8516f780-b085-5682-9a83-a5858d170eb2": {
             "query": "/phlexible/phlexiblecms/menu/*.yml",
@@ -104,10 +79,6 @@
             "query": "/phlexible/phlexiblecms/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "935e8365-ba99-51d4-b705-5b2bf925ee5b": {
-            "query": "/phlexible/phlexibledashboard/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "18aa998c-6dc3-5367-ac0b-2823440d623d": {
             "query": "/phlexible/phlexibledashboard/scripts/**/*.js",
             "type": "phlexible/scripts"
@@ -116,21 +87,9 @@
             "query": "/phlexible/phlexibledashboard/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "9f12b4e8-fe37-560b-b969-4fc54c0b41b7": {
-            "query": "/phlexible/phlexibledatasource/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "4893b4e8-fe37-560b-b969-4fc54c0b41b7": {
             "query": "/phlexible/phlexibledatasource/scripts/**/*.js",
             "type": "phlexible/scripts"
-        },
-        "ea1eef6c-591f-53c6-9327-1a4eaa87b70b": {
-            "query": "/phlexible/phlexibleelement/icons/*.gif",
-            "type": "phlexible/icons"
-        },
-        "7a6132c7-9d95-5bbd-8a2e-91d32ba0cfee": {
-            "query": "/phlexible/phlexibleelement/icons/*.png",
-            "type": "phlexible/icons"
         },
         "f5ee43fe-44b1-593e-8c79-1cc51b4dd5dc": {
             "query": "/phlexible/phlexibleelement/menu/*.yml",
@@ -144,14 +103,6 @@
             "query": "/phlexible/phlexibleelement/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "287e862e-6a6a-541f-aab4-bc4d5498b4c0": {
-            "query": "/phlexible/phlexibleelementtype/icons/*.gif",
-            "type": "phlexible/icons"
-        },
-        "3e23bcd0-2bc4-5c24-942a-7d640be08c40": {
-            "query": "/phlexible/phlexibleelementtype/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "f5544b71-d3fb-5c0e-b5c5-cd89c074a24c": {
             "query": "/phlexible/phlexibleelementtype/menu/*.yml",
             "type": "phlexible/menu"
@@ -163,14 +114,6 @@
         "43a612f4-1059-5375-bace-94816dc79db8": {
             "query": "/phlexible/phlexibleelementtype/styles/**/*.css",
             "type": "phlexible/styles"
-        },
-        "f4f815d8-eb5c-5b2a-90ef-ef53de03e382": {
-            "query": "/phlexible/phlexiblegui/icons/*.gif",
-            "type": "phlexible/icons"
-        },
-        "70d2fbfa-b862-5481-8d7c-2e6c023e1299": {
-            "query": "/phlexible/phlexiblegui/icons/*.png",
-            "type": "phlexible/icons"
         },
         "f8dedc99-e83b-5926-8eed-0aa7f0673429": {
             "query": "/phlexible/phlexiblegui/menu/*.yml",
@@ -184,17 +127,9 @@
             "query": "/phlexible/phlexiblegui/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "f4b8fd3d-ad59-5f2c-91a5-e91daf73725f": {
-            "query": "/phlexible/phlexiblemediacache/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "1a26dab5-9ab4-56a9-8e48-f308b305c88c": {
             "query": "/phlexible/phlexiblemediacache/scripts/**/*.js",
             "type": "phlexible/scripts"
-        },
-        "6dea1ab9-8838-5ba0-ba87-c0e2aef42f2e": {
-            "query": "/phlexible/phlexiblemediamanager/icons/*.png",
-            "type": "phlexible/icons"
         },
         "56555c52-a360-57e8-892a-6ee99ad0b94c": {
             "query": "/phlexible/phlexiblemediamanager/mediatemplates/*.xml",
@@ -212,10 +147,6 @@
             "query": "/phlexible/phlexiblemediamanager/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "f71c9bfa-27ad-5341-a8f9-cf8f8dbab7fe": {
-            "query": "/phlexible/phlexiblemediatemplate/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "31c65700-6b94-5257-ad16-7fa0841d2357": {
             "query": "/phlexible/phlexiblemediatemplate/menu/*.yml",
             "type": "phlexible/menu"
@@ -227,10 +158,6 @@
         "926ce685-3ecf-52d0-9b95-1898371c41e0": {
             "query": "/phlexible/phlexiblemediatemplate/styles/**/*.css",
             "type": "phlexible/styles"
-        },
-        "ae19343e-1e69-5b49-80e1-1c524e852d26": {
-            "query": "/phlexible/phlexiblemediatype/icons/*.png",
-            "type": "phlexible/icons"
         },
         "a9a07bc5-8d14-577a-9d2d-9dec96229d5e": {
             "query": "/phlexible/phlexiblemediatype/mediatypes/*.xml",
@@ -244,10 +171,6 @@
             "query": "/phlexible/phlexiblemediatype/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
-        "a0ec4b1d-a33a-5451-9692-f040cb083ef1": {
-            "query": "/phlexible/phlexiblemessage/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "8f166b00-fb9d-5dd5-8fba-619658dbdca2": {
             "query": "/phlexible/phlexiblemessage/menu/*.yml",
             "type": "phlexible/menu"
@@ -260,10 +183,6 @@
             "query": "/phlexible/phlexiblemessage/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "5f8c2227-cb46-561c-8735-e9f38e2743c5": {
-            "query": "/phlexible/phlexiblemetaset/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "2edd03a2-a5a3-5d16-b13c-43e72841e082": {
             "query": "/phlexible/phlexiblemetaset/menu/*.yml",
             "type": "phlexible/menu"
@@ -271,10 +190,6 @@
         "1655bba3-d229-5537-868d-663148150ab7": {
             "query": "/phlexible/phlexiblemetaset/scripts/**/*.js",
             "type": "phlexible/scripts"
-        },
-        "f0d6111a-791e-506e-930d-12b875e9a3c3": {
-            "query": "/phlexible/phlexibleproblem/icons/*.png",
-            "type": "phlexible/icons"
         },
         "55fdf06c-4a18-5764-952b-5386bca000f9": {
             "query": "/phlexible/phlexibleproblem/menu/*.yml",
@@ -288,10 +203,6 @@
             "query": "/phlexible/phlexibleproblem/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "53f8a617-37a1-5ea0-894c-cc5df42d7490": {
-            "query": "/phlexible/phlexiblequeue/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "12dca705-3701-5b44-8d03-81c7ebaf29b5": {
             "query": "/phlexible/phlexiblequeue/menu/*.yml",
             "type": "phlexible/menu"
@@ -300,9 +211,9 @@
             "query": "/phlexible/phlexiblequeue/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
-        "425f8f59-d98a-5917-9a98-84e8da326ad3": {
-            "query": "/phlexible/phlexiblesearch/icons/*.png",
-            "type": "phlexible/icons"
+        "db47c1f0-77b3-50b1-8f25-f76dd788e356": {
+            "query": "/phlexible/phlexiblequeue/styles/**/*.css",
+            "type": "phlexible/styles"
         },
         "a040e763-9ed1-582c-8185-d89ff8122ee2": {
             "query": "/phlexible/phlexiblesearch/menu/*.yml",
@@ -316,14 +227,6 @@
             "query": "/phlexible/phlexiblesearch/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "1294986c-12df-5ac9-9e40-bd14845ba7a9": {
-            "query": "/phlexible/phlexiblesiteroot/icons/*.gif",
-            "type": "phlexible/icons"
-        },
-        "2616b770-65f7-582d-b3b9-fedbf804a0a1": {
-            "query": "/phlexible/phlexiblesiteroot/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "00f8801e-75dd-5eab-b938-c9431bb16b94": {
             "query": "/phlexible/phlexiblesiteroot/menu/*.yml",
             "type": "phlexible/menu"
@@ -336,17 +239,9 @@
             "query": "/phlexible/phlexiblesiteroot/styles/**/*.css",
             "type": "phlexible/styles"
         },
-        "ddd7eb5a-5e9d-583a-aa29-44cb040150d6": {
-            "query": "/phlexible/phlexibleteaser/icons/*.png",
-            "type": "phlexible/icons"
-        },
         "12016c15-1fab-5ec7-bdc4-4551f2fcaea6": {
             "query": "/phlexible/phlexibleteaser/scripts/**/*.js",
             "type": "phlexible/scripts"
-        },
-        "97bfe98b-d3ec-5655-a57d-cfef98ba3d11": {
-            "query": "/phlexible/phlexibletree/icons/*.png",
-            "type": "phlexible/icons"
         },
         "ff349132-be9f-519a-87be-bcb003bfc1e9": {
             "query": "/phlexible/phlexibletree/menu/*.yml",
@@ -389,9 +284,6 @@
         "phlexible/elementtypes": {
             "description": "phlexible element types"
         },
-        "phlexible/icons": {
-            "description": "phlexible gui icons"
-        },
         "phlexible/mediatemplates": {
             "description": "phlexible media templates"
         },
@@ -420,6 +312,10 @@
     "packages": {
         "alchemy/binary-driver": {
             "install-path": "vendor/alchemy/binary-driver",
+            "installer": "composer"
+        },
+        "brainbits/fugue-icons-bundle": {
+            "install-path": "vendor/brainbits/fugue-icons-bundle",
             "installer": "composer"
         },
         "brainbits/image-analyzer": {
@@ -482,6 +378,10 @@
             "install-path": "vendor/fluentdom/fluentdom",
             "installer": "composer"
         },
+        "friendsofsymfony/rest-bundle": {
+            "install-path": "vendor/friendsofsymfony/rest-bundle/FOS/RestBundle",
+            "installer": "composer"
+        },
         "friendsofsymfony/user-bundle": {
             "install-path": "vendor/friendsofsymfony/user-bundle/FOS/UserBundle",
             "installer": "composer"
@@ -492,6 +392,22 @@
         },
         "imagine/imagine": {
             "install-path": "vendor/imagine/imagine",
+            "installer": "composer"
+        },
+        "jms/metadata": {
+            "install-path": "vendor/jms/metadata",
+            "installer": "composer"
+        },
+        "jms/parser-lib": {
+            "install-path": "vendor/jms/parser-lib",
+            "installer": "composer"
+        },
+        "jms/serializer": {
+            "install-path": "vendor/jms/serializer",
+            "installer": "composer"
+        },
+        "jms/serializer-bundle": {
+            "install-path": "vendor/jms/serializer-bundle/JMS/SerializerBundle",
             "installer": "composer"
         },
         "justinrainbow/json-schema": {
@@ -538,6 +454,10 @@
             "install-path": "vendor/php-poppler/php-poppler",
             "installer": "composer"
         },
+        "phpcollection/phpcollection": {
+            "install-path": "vendor/phpcollection/phpcollection",
+            "installer": "composer"
+        },
         "phpdocumentor/reflection-docblock": {
             "install-path": "vendor/phpdocumentor/reflection-docblock",
             "installer": "composer"
@@ -548,6 +468,10 @@
         },
         "phpexiftool/phpexiftool": {
             "install-path": "vendor/phpexiftool/phpexiftool",
+            "installer": "composer"
+        },
+        "phpoption/phpoption": {
+            "install-path": "vendor/phpoption/phpoption",
             "installer": "composer"
         },
         "phpspec/prophecy": {
@@ -700,6 +624,14 @@
         },
         "webmozart/path-util": {
             "install-path": "vendor/webmozart/path-util",
+            "installer": "composer"
+        },
+        "willdurand/jsonp-callback-validator": {
+            "install-path": "vendor/willdurand/jsonp-callback-validator",
+            "installer": "composer"
+        },
+        "willdurand/negotiation": {
+            "install-path": "vendor/willdurand/negotiation",
             "installer": "composer"
         },
         "zf1/zend-exception": {

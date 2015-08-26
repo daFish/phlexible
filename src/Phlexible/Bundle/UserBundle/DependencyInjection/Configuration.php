@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietery
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\DependencyInjection;
@@ -34,7 +37,10 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->integerNode('min_length')->defaultValue(8)->info('Minimal password length.')->end()
-                        ->integerNode('expire_after_days')->defaultValue(0)->info('Passwords expire and have to be reset after this number of day.')->end()
+                        ->integerNode('expire_after_days')
+                            ->defaultValue(0)
+                            ->info('Passwords expire and have to be reset after this number of day.')
+                        ->end()
                     ->end()
                 ->end()
                 ->arrayNode('defaults')
@@ -42,9 +48,18 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('language')->defaultValue('de')->info('Default language for new users.')->end()
                         ->scalarNode('theme')->defaultValue('default')->info('Default theme for new users.')->end()
-                        ->booleanNode('force_password_change')->defaultValue(false)->info('Default value of force password change flag for new users.')->end()
-                        ->booleanNode('cant_change_password')->defaultValue(false)->info('Default value of cant change password flag for new users.')->end()
-                        ->booleanNode('password_doesnt_expire')->defaultValue(false)->info('Default value of password doesnt expire flag for new users.')->end()
+                        ->booleanNode('force_password_change')
+                            ->defaultValue(false)
+                            ->info('Default value of force password change flag for new users.')
+                        ->end()
+                        ->booleanNode('cant_change_password')
+                            ->defaultValue(false)
+                            ->info('Default value of cant change password flag for new users.')
+                        ->end()
+                        ->booleanNode('password_doesnt_expire')
+                            ->defaultValue(false)
+                            ->info('Default value of password doesnt expire flag for new users.')
+                        ->end()
                     ->end()
                 ->end()
             ->end();

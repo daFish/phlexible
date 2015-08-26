@@ -1,10 +1,12 @@
-Ext.require('Phlexible.elementtypes.configuration.FieldConfiguration');
+Ext.require('Phlexible.elementtype.configuration.FieldConfiguration');
 Ext.require('Phlexible.cms.configuration.FieldConfigurationFile');
 
-Phlexible.elementtypes.configuration.FieldConfiguration.prototype.initMyItems =
-    Phlexible.elementtypes.configuration.FieldConfiguration.prototype.initMyItems.createSequence(function() {
+Phlexible.elementtype.configuration.field.Configurations.prototype.initMyItems = Ext.Function.createSequence(
+    Phlexible.elementtype.configuration.field.Configurations.prototype.initMyItems,
+    function() {
         this.items.push({
             xtype: 'cms-configuration-field-configuration-file',
             additional: true
         });
-    });
+    }
+);

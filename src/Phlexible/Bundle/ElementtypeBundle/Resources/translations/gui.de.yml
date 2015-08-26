@@ -1,3 +1,219 @@
+Phlexible:
+    elementtype:
+        configuration:
+            Field:
+                storeText: Aktualisieren
+                resetText: Zurücksetzen
+                propertiesText: Eigenschaften
+                checkInputText: 'Bitte überprüfen Sie Ihre Eingaben.'
+
+            Root:
+                storeText: Aktualisieren
+                resetText: Zurücksetzen
+                propertiesText: Eigenschaften
+                propertiesOfText: 'Eigenschaften von'
+                checkInputText: 'Bitte überprüfen Sie Ihre Eingaben.'
+
+            field:
+                Configurations:
+                    title: Konfiguration
+                    requiredText: Pflicht
+                    notRequiredText: 'Nicht pflichtig'
+                    onPublishText: 'Bei Veröffentlichung'
+                    alwaysText: Immer
+                    languageText: Sprache
+                    notSynchronizedText: 'Nicht Synchronisiert'
+                    synchronizedText: 'Synchronisiert'
+                    synchronizedWithUnlinkText: 'Synchronisiert mit Loslösen'
+                    widthText: Breite
+                    heightText: Höhe
+                    readonlyText: 'Nur-lesen'
+                    hideLabelText: 'Label nicht anzeigen'
+                    childItemsText: Kinder
+                    sortableText: 'Können sortiert werden'
+
+                ConfigurationAccordion:
+                    title: Akkordeon
+                    defaultCollapsedText: 'Standard eingeklappt'
+
+                ConfigurationDefaultValue:
+                    title: Standardwert
+                    defaultValueText: Standardwert
+
+                ConfigurationGroup:
+                    title: Gruppe
+                    minRepeatText: Mindestvorkommen
+                    maxRepeatText: 'Maximales Vorkommen'
+                    defaultRepeatText: 'Standard-Vorkommen'
+                    showBorderText: 'Rahmen anzeigen'
+                    singleRowText: 'Einzeilig'
+                    labelWidthText: 'Label-Breite'
+
+                ConfigurationLabel:
+                    title: Label
+                    germanText: Deutsch
+                    englishText: Englisch
+
+                ConfigurationLink:
+                    title: Verknüpfung
+                    linkTypesText: Verknüpfungstypen
+                    internalText: Siteroot-Intern
+                    intraText: Siterootübergreifend
+                    externalText: Extern
+                    emailText: Email
+                    elementtypesText: Elementtypen
+
+                ConfigurationSelect:
+                    title: Select
+                    sourceText: Quelle
+                    editableListText: 'Editierbare Liste'
+                    callbackText: Callback
+
+                Labels:
+                    title: Label
+                    fieldLabelText: 'Feld-Label'
+                    germanText: Deutsch
+                    englishText: Englisch
+                    boxLabelText: 'Box-Label'
+                    prefixText: Prefix
+                    suffixText: Suffix
+                    contextHelpText: 'Kontext-Hilfe'
+
+                Properties:
+                    title: Eigenschaften
+                    typeText: Typ
+                    titleText: Name
+                    titleHelpText: 'Erlaubt sind die Zeichen "a-z", "0-9", "-" und "_".'
+                    imageText: Bild
+                    commentText: Kommentar
+
+                Validations:
+                    title: Validierungen
+                    textValidationText: Textvalidierung
+                    minLengthText: 'Minimale Länge'
+                    maxLengthText: 'Maximale Länge'
+                    regularExpressionText: 'Regulärer Ausdruck'
+                    modifiersText: Modifikatoren
+                    globalText: Global
+                    ignoreCaseText: 'Gross-/Kleinschreibung ignorieren'
+                    multilineText: Mehrzeilig
+                    contentValidationText: Inhaltsvalidierung
+                    validatorText: Validator
+                    numberValidationText: Nummernvalidierung
+                    valueText: Wert
+                    allowNegativeText: 'Negative Werte erlauben'
+                    allowDecimalsText: 'Nachkommastellen erlauben'
+                    minValueText: 'Minimaler Wert'
+                    maxValueText: 'Maximaler Wert'
+
+            root:
+                Properties:
+                    title: Eigenschaften
+                    titleText: Titel
+                    uniqueIdText: 'Eindeutiger Identifikator'
+                    iconText: Icon
+                    defaultTabText: 'Standard-Tab'
+                    noDefaultTabText: 'Kein Standard-Tab'
+                    defaultContentTabText: 'Standard-Inhalts-Tab'
+                    noDefaultContentTabText: 'Kein Standard-Inhalts-Tab'
+                    metasetText: 'Meta Set'
+                    noMetasetText: 'Kein Meta Set'
+                    templateText: Template
+                    hideChildrenText: 'Kinder nicht anzeigen'
+                    commentText: Kommentar
+
+                Mappings:
+                    title: Feldzuordnungen
+                    actionsText: Aktionen
+                    removeText: Entfernen
+                    fieldText: Feld
+                    chooseFieldText: 'Feld auswählen'
+                    patternText: Muster
+                    previewText: Vorschau
+
+                DateMapping:
+                    actionsText: Aktionen
+                    removeText: Entfernen
+                    dsIdText: DS ID
+                    fieldText: Feld
+                    clearText: 'Alle entfernen'
+
+                LinkMapping:
+                    actionsText: Aktionen
+                    removeText: Entfernen
+                    dsIdText: DS ID
+                    fieldText: Feld
+                    clearText: 'Alle entfernen'
+
+                TitleMapping:
+                    actionsText: Aktionen
+                    removeText: Entfernen
+                    indexText: Index
+                    dsIdText: DS ID
+                    fieldText: Feld
+                    clearText: 'Alle entfernen'
+
+        handler:
+            Elementtypes:
+                text: Elementtypen
+
+        view:
+            List:
+                title: Elementtypen
+                idText: ID
+                nameText: Name
+                versionText: Version
+                fullText: Voll
+                structureText: Struktur
+                referenceText: Referenz
+                layoutText: Layout
+                partText: Teil
+                createText: Anlegen
+                deleteText: Löschen
+                duplicateText: Duplizieren
+                loadInTemplateTreeText: 'Vorlage laden'
+                confirmDeleteText: 'Möchten Sie diesen Elementtypen wirklich löschen?'
+
+            Main:
+                title: Elementtypen
+                structureText: Struktur
+                templateText: Vorlage
+
+            Tree:
+                saveText: Speichern
+                resetText: Zurücksetzen
+                reloadText: 'Neu laden'
+                addBeforeText: 'Feld davor hinzufügen'
+                addAfterText: 'Feld danach hinzufügen'
+                addChildText: 'Feld als Kind hinzufügen'
+                copyText: Kopieren
+                cutText: Ausschneiden
+                pasteText: Einfügen
+                transformText: 'In Referenz umwandeln'
+                removeText: Entfernen
+                removeReferenceText: 'Referenz entfernen'
+                elementtypeText: Elementtyp
+                templateElementtypeText: Elementtypvorlage
+
+            Usage:
+                title: Benutzung
+                emptyText: Nicht in Benutzung
+                typeText: Typ
+                asText: Von
+                idText: ID
+                titleText: Titel
+                latestVersionText: 'Letzte Version'
+
+            Viability:
+                title: Anlegbarkeit
+                emptyText: 'Keine Anlegbarkeiten definiert'
+                idText: ID
+                elementtypeText: Elementtyp
+                actionsText: Aktionen
+                saveText: Speichern
+                addElementtypeText: 'Elementtyp hinzufügen'
+                removeText: Entfernen
+
 elementtypes:
     elementtypes: Elementtypen
     elementtype: Elementtyp

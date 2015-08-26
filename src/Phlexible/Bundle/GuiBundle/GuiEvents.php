@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle;
@@ -24,6 +27,11 @@ class GuiEvents
      * Get menu event
      */
     const GET_MENU = 'phlexible_gui.get_menu';
+
+    /**
+     * Poll event
+     */
+    const POLL = 'phlexible_gui.poll';
 
     /**
      * View frame event

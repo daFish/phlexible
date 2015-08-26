@@ -1,8 +1,4 @@
-Ext.provide('Phlexible.fields.Prototypes');
-
-Phlexible.fields.Prototypes = function () {
-};
-Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
+Ext.define('Phlexible.elementtype.util.Prototypes', {
     ids: {},
     prototypes: {},
 
@@ -92,8 +88,8 @@ Ext.extend(Phlexible.fields.Prototypes, Ext.util.Observable, {
             templates: item.templates
         };
 
-        if (Phlexible.fields.FieldTypes[item.type].copyFields) {
-            Ext.each(Phlexible.fields.FieldTypes[item.type].copyFields, function (field) {
+        if (Phlexible.fields.FieldTypes.get(item.type).copyFields) {
+            Ext.each(Phlexible.fields.FieldTypes.get(item.type).copyFields, function (field) {
                 pt[field] = item[field];
             });
         }

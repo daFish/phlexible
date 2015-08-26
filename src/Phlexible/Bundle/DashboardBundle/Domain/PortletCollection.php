@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\DashboardBundle\Domain;
@@ -25,19 +28,20 @@ class PortletCollection
      */
     public function __construct(array $portlets)
     {
-        foreach ($portlets as $portlet) {
-            $this->add($portlet);
+        foreach ($portlets as $portletId => $portlet) {
+            $this->set($portletId, $portlet);
         }
     }
 
     /**
+     * @param string  $portletId
      * @param Portlet $portlet
      *
      * @return $this
      */
-    public function add(Portlet $portlet)
+    public function set($portletId, Portlet $portlet)
     {
-        $this->portlets[] = $portlet;
+        $this->portlets[$portletId] = $portlet;
 
         return $this;
     }

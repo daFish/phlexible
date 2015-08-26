@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\Volume\Model;
@@ -95,18 +98,6 @@ interface FileInterface
     public function setMimeType($mimeType);
 
     /**
-     * @return string
-     */
-    public function getPhysicalPath();
-
-    /**
-     * @param string $physicalPath
-     *
-     * @return $this
-     */
-    public function setPhysicalPath($physicalPath);
-
-    /**
      * @return int
      */
     public function getSize();
@@ -192,14 +183,14 @@ interface FileInterface
     /**
      * @return string
      */
-    public function getCreateUserId();
+    public function getCreateUser();
 
     /**
-     * @param string $createUserId
+     * @param string $createUser
      *
      * @return $this
      */
-    public function setCreateUserId($createUserId);
+    public function setCreateUser($createUser);
 
     /**
      * @return \DateTime
@@ -216,12 +207,12 @@ interface FileInterface
     /**
      * @return string
      */
-    public function getModifyUserId();
+    public function getModifyUser();
 
     /**
-     * @param string $modifyUserId
+     * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUserId($modifyUserId);
+    public function setModifyUser($modifyUser);
 }

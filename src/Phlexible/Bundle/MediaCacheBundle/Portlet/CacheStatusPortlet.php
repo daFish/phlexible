@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaCacheBundle\Portlet;
@@ -11,7 +14,6 @@ namespace Phlexible\Bundle\MediaCacheBundle\Portlet;
 use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Cache status portlet
@@ -26,18 +28,10 @@ class CacheStatusPortlet extends Portlet
     private $cacheManager;
 
     /**
-     * @param TranslatorInterface   $translator
      * @param CacheManagerInterface $cacheManager
      */
-    public function __construct(TranslatorInterface $translator, CacheManagerInterface $cacheManager)
+    public function __construct(CacheManagerInterface $cacheManager)
     {
-        $this
-            ->setId('cachestatus-portlet')
-            ->setTitle($translator->trans('mediacache.cache_status', array(), 'gui'))
-            ->setClass('Phlexible.mediacache.portlet.CacheStatus')
-            ->setIconClass('p-mediacache-component-icon')
-            ->setRole('ROLE_MEDIA_CACHE');
-
         $this->cacheManager = $cacheManager;
     }
 

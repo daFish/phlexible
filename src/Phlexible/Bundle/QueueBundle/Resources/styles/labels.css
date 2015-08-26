@@ -1,0 +1,9 @@
+.p-label-queue-pending {
+    background-color: #777;
+}
+.p-label-queue-finished {
+    background-color: #5cb85c;
+}
+.p-label-queue-failed {
+    background-color: #d9534f;
+}

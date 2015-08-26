@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaManagerBundle\DependencyInjection;
@@ -38,13 +41,13 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('volumes')
-                    ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('id')->end()
-                            ->scalarNode('driver')->defaultValue('phlexible_media_manager.driver.doctrine')->end()
-                            ->scalarNode('root_dir')->end()
-                            ->integerNode('quota')->end()
+                            ->scalarNode('id')->isRequired()->end()
+                            ->scalarNode('name')->isRequired()->end()
+                            ->scalarNode('class')->defaultValue('Phlexible\Component\MediaManager\Volume\ExtendedVolume')->end()
+                            ->scalarNode('root_dir')->isRequired()->end()
+                            ->integerNode('quota')->isRequired()->end()
                         ->end()
                     ->end()
                 ->end()
@@ -59,7 +62,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('view')->defaultValue('tile')->end()
-                        ->integerNode('num_files')->defaultValue(10)->end()
+                        ->integerNode('num_files')->defaultValue(30)->end()
                     ->end()
                 ->end()
                 ->arrayNode('upload')

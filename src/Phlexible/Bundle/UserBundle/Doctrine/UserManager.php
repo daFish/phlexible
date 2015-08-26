@@ -1,25 +1,28 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Doctrine;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use FOS\UserBundle\Doctrine\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
+use Phlexible\Bundle\UserBundle\Entity\Repository\UserRepository;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Phlexible\Bundle\UserBundle\Successor\SuccessorService;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Webmozart\Expression\Expr;
+use Webmozart\Expression\Expression;
 
 /**
  * User manager
@@ -29,14 +32,9 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 class UserManager extends BaseUserManager implements UserManagerInterface
 {
     /**
-     * @var EntityRepository
+     * @var UserRepository
      */
     private $userRepository;
-
-    /**
-     * @var SuccessorService
-     */
-    private $successorService;
 
     /**
      * @var EventDispatcherInterface
@@ -54,17 +52,11 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     private $everyoneGroupId;
 
     /**
-     * @var string
-     */
-    private $userClass;
-
-    /**
      * @param EncoderFactoryInterface  $encoderFactory
      * @param CanonicalizerInterface   $usernameCanonicalizer
      * @param CanonicalizerInterface   $emailCanonicalizer
      * @param ObjectManager            $om
      * @param string                   $class
-     * @param SuccessorService         $successorService
      * @param EventDispatcherInterface $dispatcher
      * @param string                   $systemUserId
      * @param string                   $everyoneGroupId
@@ -75,21 +67,19 @@ class UserManager extends BaseUserManager implements UserManagerInterface
         CanonicalizerInterface $emailCanonicalizer,
         ObjectManager $om,
         $class,
-        SuccessorService $successorService,
         EventDispatcherInterface $dispatcher,
         $systemUserId,
-        $everyoneGroupId)
-    {
+        $everyoneGroupId
+    ) {
         parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
 
-        $this->successorService = $successorService;
         $this->dispatcher = $dispatcher;
         $this->systemUserId = $systemUserId;
         $this->everyoneGroupId = $everyoneGroupId;
     }
 
     /**
-     * @return EntityRepository
+     * @return UserRepository
      */
     private function getUserRepository()
     {
@@ -171,82 +161,33 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function search(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    public function expr()
     {
-        $qb = $this->getUserRepository()->createQueryBuilder('u');
-
-        if ($orderBy) {
-            foreach ($orderBy as $field => $order) {
-                $qb->addOrderBy("u.$field", $order);
-            }
-        }
-
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-
-        if ($offset) {
-            $qb->setFirstResult($offset);
-        }
-
-        $this->applySearch($criteria, $qb);
-
-        return $qb->getQuery()->getResult();
+        return Expr::true();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function countSearch(array $criteria)
+    public function findByExpression(Expression $expr, array $sort = null, $limit = null, $offset = null)
     {
-        $qb = $this->getUserRepository()->createQueryBuilder('u');
-        $qb->select($qb->expr()->count('u.id'));
-
-        $this->applySearch($criteria, $qb);
-
-        return $qb->getQuery()->getSingleScalarResult();
+        return $this->getUserRepository()->findByExpression($expr, $sort, $limit, $offset);
     }
 
     /**
-     * @param array        $criteria
-     * @param QueryBuilder $qb
+     * {@inheritdoc}
      */
-    private function applySearch(array $criteria, QueryBuilder $qb)
+    public function countByExpression(Expression $expr)
     {
-        if (isset($criteria['term'])) {
-            $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->like('u.username', $qb->expr()->literal("%{$criteria['term']}%")),
-                $qb->expr()->like('u.email', $qb->expr()->literal("%{$criteria['term']}%")),
-                $qb->expr()->like('u.firstname', $qb->expr()->literal("%{$criteria['term']}%")),
-                $qb->expr()->like('u.lastname', $qb->expr()->literal("%{$criteria['term']}%"))
-            ));
-        }
+        return $this->getUserRepository()->countByExpression($expr);
+    }
 
-        if (isset($criteria['isExpired'])) {
-            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
-            $qb->andWhere($qb->expr()->lte('u.expiresAt', $qb->expr()->literal(date('Y-m-d H:i:s'))));
-        }
-
-        if (isset($criteria['hasExpireDate'])) {
-            $qb->andWhere($qb->expr()->isNotNull('u.expiresAt'));
-        }
-
-        if (isset($criteria['roles']) and is_array($criteria['roles'])) {
-            $or = $qb->expr()->orX();
-            foreach ($criteria['roles'] as $role) {
-                $or->add($qb->expr()->like('u.roles', $qb->expr()->literal("%$role%")));
-            }
-            $qb->andWhere($or);
-        }
-
-        if (isset($criteria['groups']) and is_array($criteria['groups'])) {
-            $groups = array();
-            foreach ($criteria['groups'] as $group) {
-                $groups[] = $qb->expr()->literal($group);
-            }
-            $qb->join('u.groups', 'g');
-            $qb->andWhere($qb->expr()->in('g.id', $groups));
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneByExpression(Expression $expr, array $sort = null)
+    {
+        return $this->getUserRepository()->findOneByExpression($expr, $sort);
     }
 
     /**
@@ -337,19 +278,16 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     }
 
     /**
-     * @param UserInterface $user
-     * @param UserInterface $successorUser
+     * {@inheritdoc}
      */
-    public function deleteUserWithSuccessor(UserInterface $user, UserInterface $successorUser)
+    public function deleteUser(UserInterface $user)
     {
-        $this->successorService->set($user, $successorUser);
-
         $event = new UserEvent($user);
         if ($this->dispatcher->dispatch(UserEvents::BEFORE_DELETE_USER, $event)->isPropagationStopped()) {
             return;
         }
 
-        $this->deleteUser($user);
+        parent::deleteUser($user);
 
         $event = new UserEvent($user);
         $this->dispatcher->dispatch(UserEvents::DELETE_USER, $event);

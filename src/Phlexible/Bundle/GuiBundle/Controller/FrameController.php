@@ -1,14 +1,16 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,7 +32,7 @@ class FrameController extends Controller
      * @param Request $request
      *
      * @return array
-     * @Route("", name="gui_index")
+     * @Route("", name="phlexible_gui")
      * @Method("GET")
      * @Template
      */
@@ -45,14 +47,33 @@ class FrameController extends Controller
     }
 
     /**
+     * Return file
+     *
+     * @param string $path
+     *
+     * @return Response
+     * @Route("/gui/load/{path}.js", name="phlexible_gui_load", requirements={"path": ".*"})
+     * @Method("GET")
+     */
+    public function loadAction($path)
+    {
+        $x = explode('/', $path);
+        array_shift($x);
+        $a = array_shift($x);
+        $b = implode('/', $x);
+        $y = "/phlexible/phlexible$a/scripts/$b.js";
+        $puli = $this->get('puli.repository');
+        $z = $puli->get($y);
+
+        return new Response($z->getBody(), 200, array('Content-type' => 'text/javascript'));
+    }
+
+    /**
      * Return configuration
      *
      * @return JsonResponse
-     * @Route("/gui/config", name="gui_config")
+     * @Route("/gui/config", name="phlexible_gui_config")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns config values"
-     * )
      */
     public function configAction()
     {
@@ -66,11 +87,8 @@ class FrameController extends Controller
      * Return menu
      *
      * @return JsonResponse
-     * @Route("/gui/menu", name="gui_menu")
+     * @Route("/gui/menu", name="phlexible_gui_menu")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns menu structure"
-     * )
      */
     public function menuAction()
     {
@@ -87,18 +105,19 @@ class FrameController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/gui/routes", name="gui_routes")
+     * @Route("/gui/routes", name="phlexible_gui_routes")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns routes"
-     * )
      */
     public function routesAction(Request $request)
     {
         $routeExtractor = $this->get('phlexible_gui.route_extractor');
         $extractedRoutes = $routeExtractor->extract($request);
+        $puliRepository = $this->get('puli.repository');
 
-        $content = sprintf('Phlexible.Router.setData(%s);', json_encode(array(
+        $routerFile = $puliRepository->get('/phlexible/phlexiblegui/scripts/util/Router.js');
+
+        $content = $routerFile->getBody();
+        $content .= sprintf('Phlexible.Router = Ext.create("Phlexible.gui.util.Router", %s);', json_encode(array(
             'baseUrl' => $extractedRoutes->getBaseUrl(),
             'basePath' => $extractedRoutes->getBasePath(),
             'routes' => $extractedRoutes->getRoutes(),

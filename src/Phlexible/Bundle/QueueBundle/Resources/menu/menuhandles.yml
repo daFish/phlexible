@@ -1,4 +1,4 @@
 queuestats:
-    parent: debug
+    parent: admin
     handle: queue
     roles: [ROLE_DEBUG]

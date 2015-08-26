@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\MediaCache\ImageDelegate;
@@ -234,7 +237,7 @@ class DelegateWorker
             imagefilledrectangle($target, 0, 0, $sx, $sy, $transparent);
             imagecopy($target, $source, 0, 0, 0, 0, $sx, $sy);
             $waiting = imagecreatefrompng(
-                $this->locator->locate('@PhlexibleMediaCacheBundle/Resources/public/icons/waiting.png')
+                $this->locator->locate('@PhlexibleMediaCacheBundle/Resources/public/images/waiting.png')
             );
             $sx -= 16;
             $sy -= 16;

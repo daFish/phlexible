@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
@@ -26,7 +29,7 @@ class AssetController extends Controller
      * Output scripts
      *
      * @return Response
-     * @Route("/scripts", name="asset_scripts")
+     * @Route("/scripts", name="phlexible_gui_asset_scripts")
      */
     public function scriptsAction()
     {
@@ -42,28 +45,12 @@ class AssetController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("/css", name="asset_css")
+     * @Route("/css", name="phlexible_gui_asset_css")
      */
     public function cssAction(Request $request)
     {
         $cssBuilder = $this->get('phlexible_gui.asset.builder.css');
         $file = $cssBuilder->build($request->getBaseUrl(), $request->getBasePath());
-
-        return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
-    }
-
-    /**
-     * Output icon styles
-     *
-     * @param Request $request
-     *
-     * @return Response
-     * @Route("/icons", name="asset_icons")
-     */
-    public function iconsAction(Request $request)
-    {
-        $iconsBuilder = $this->get('phlexible_gui.asset.builder.icons');
-        $file = $iconsBuilder->build($request->getBaseUrl(), $request->getBasePath());
 
         return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/css;charset=UTF-8'));
     }
@@ -75,7 +62,7 @@ class AssetController extends Controller
      * @param string  $language
      *
      * @return Response
-     * @Route("/translations/{language}", name="asset_translations")
+     * @Route("/translations/{language}", name="phlexible_gui_asset_translations")
      */
     public function translationsAction(Request $request, $language)
     {
@@ -85,4 +72,3 @@ class AssetController extends Controller
         return new BinaryFileResponse($file, 200, array('Content-Type' => 'text/javascript;charset=UTF-8'));
     }
 }
-

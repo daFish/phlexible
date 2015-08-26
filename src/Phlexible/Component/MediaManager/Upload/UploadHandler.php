@@ -1,16 +1,19 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\MediaManager\Upload;
 
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\FileSource\UploadedFileSource;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -22,7 +25,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class UploadHandler
 {
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -32,10 +35,10 @@ class UploadHandler
     private $tempStorage;
 
     /**
-     * @param VolumeManager $volumeManager
-     * @param TempStorage   $tempStorage
+     * @param VolumeManagerInterface $volumeManager
+     * @param TempStorage            $tempStorage
      */
-    public function __construct(VolumeManager $volumeManager, TempStorage $tempStorage)
+    public function __construct(VolumeManagerInterface $volumeManager, TempStorage $tempStorage)
     {
         $this->volumeManager = $volumeManager;
         $this->tempStorage = $tempStorage;
@@ -66,7 +69,7 @@ class UploadHandler
 
         $volume = $this->volumeManager->getByFolderId($folderId);
         $folder = $volume->findFolder($folderId);
-        $file = $volume->findFileByPath($folder->getPath() . '/' . $uploadFileSource->getName());
+        $file = $volume->findFileByFolderAndName($folder, $uploadFileSource->getName());
         $originalFileId = null;
 
         if ($file) {

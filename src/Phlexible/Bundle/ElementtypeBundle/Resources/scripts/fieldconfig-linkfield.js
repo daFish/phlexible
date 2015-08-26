@@ -1,9 +1,6 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.LinkField');
-Ext.require('Phlexible.fields.FieldHelper');
+Ext.require('Phlexible.elementtype.field.LinkField');
 
-Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('link', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -47,12 +44,13 @@ Phlexible.fields.Registry.addFactory('link', function (parentConfig, item, value
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('link', {
+Phlexible.fields.FieldTypes.register({
+    type: 'link',
     titles: {
         de: 'Link',
         en: 'Link'
     },
-    iconCls: 'p-elementtype-field_link-icon',
+    iconCls: Phlexible.Icon.get('globe'),
     allowedIn: [
         'tab',
         'accordion',

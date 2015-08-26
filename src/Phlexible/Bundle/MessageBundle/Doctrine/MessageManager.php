@@ -1,19 +1,23 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Entity\Repository\MessageRepository;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
+use Webmozart\Expression\Expr;
+use Webmozart\Expression\Expression;
 
 /**
  * Doctrine message manager
@@ -55,6 +59,14 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function find($id)
+    {
+        return $this->getMessageRepository()->find($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
     {
         return $this->getMessageRepository()->findBy($criteria, $orderBy, $limit, $offset);
@@ -71,17 +83,33 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByCriteria(Criteria $criteria, $order = null, $limit = null, $offset = null)
+    public function expr()
     {
-        return $this->getMessageRepository()->findByCriteria($criteria, $order, $limit, $offset);
+        return Expr::true();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function countByCriteria(Criteria $criteria)
+    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->getMessageRepository()->countByCriteria($criteria);
+        return $this->getMessageRepository()->findByExpression($expression, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countByExpression(Expression $expression)
+    {
+        return $this->getMessageRepository()->countByExpression($expression);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findOneByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    {
+        return $this->getMessageRepository()->findOneByExpression($expression, $orderBy);
     }
 
     /**
@@ -95,22 +123,9 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFacetsByCriteria(Criteria $criteria)
+    public function getFacetsByExpression(Expression $expression)
     {
-        return $this->getMessageRepository()->getFacetsByCriteria($criteria);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPriorityNames()
-    {
-        return array(
-            0 => 'low',
-            1 => 'normal',
-            2 => 'high',
-            3 => 'urgent',
-        );
+        return $this->getMessageRepository()->getFacetsByExpression($expression);
     }
 
     /**

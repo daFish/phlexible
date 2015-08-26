@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\ElementBundle\Change;
@@ -19,7 +22,7 @@ use Phlexible\Component\Elementtype\Usage\Usage;
 abstract class Change implements ChangeInterface
 {
     /**
-     * @var \Phlexible\Component\Elementtype\Domain\Elementtype
+     * @var Elementtype
      */
     private $elementtype;
 
@@ -29,7 +32,7 @@ abstract class Change implements ChangeInterface
     private $usage;
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
+     * @param Elementtype $elementtype
      * @param Usage[]     $usage
      */
     public function __construct(Elementtype $elementtype, array $usage = array())

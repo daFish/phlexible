@@ -1,10 +1,5 @@
-Ext.provide('Phlexible.cms.field.FileField');
-
-Ext.require('Phlexible.cms.FieldHelper');
-Ext.require('Phlexible.mediamanager.MediamanagerWindow');
-
 /**
- * @class Ext.ux.form.FileField
+ * @class Phlexible.frontendmedia.field.FileField
  * @extends Ext.form.Field
  * Basic text field.  Can be used as a direct replacement for traditional text inputs, or as the base
  * class for more sophisticated input controls (like {@link Ext.form.TextArea} and {@link Ext.form.ComboBox}).
@@ -12,7 +7,13 @@ Ext.require('Phlexible.mediamanager.MediamanagerWindow');
  * Creates a new TextField
  * @param {Object} config Configuration options
  */
-Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
+Ext.define('Phlexible.frontendmedia.field.FileField', {
+    extend: 'Ext.form.Field',
+    requires: [
+        'Phlexible.mediamanager.window.MediamanagerWindow'
+    ],
+    xtype: 'field.file',
+
     /**
      * @cfg {String} vtypeText A custom error message to display in place of the default message provided
      * for the {@link #vtype} currently set for this field (defaults to '').  Only applies if vtype is set, else ignored.
@@ -59,7 +60,7 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
     addIconCls: 'p-mediamanager-download_add-icon',
     removeIconCls: 'p-mediamanager-download_delete-icon',
 
-    emptyAddText: Phlexible.mediamanager.Strings.click_to_add_file,
+    emptyAddText: '_emptyAddText',
 
     getPlaceholder: function () {
         return Phlexible.bundleAsset('/phlexiblecms/images/form-file.gif');
@@ -134,7 +135,7 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
 
     // private
     onRender: function (ct, position) {
-        Ext.form.Field.superclass.onRender.call(this, ct, position);
+        this.callParent(arguments);
         if (!this.el) {
             this.el = ct.createChild({
                     tag: "div",
@@ -274,7 +275,7 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
         if (this.rendered) {
             this.el.mask();
         }
-        Ext.ux.form.FileField.superclass.onDisable.call(this);
+        this.callParent(arguments);
     },
 
     // private
@@ -282,27 +283,24 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
         if (this.rendered) {
             this.el.unmask();
         }
-        Ext.ux.form.FileField.superclass.onEnable.call(this);
+        this.callParent(arguments);
     },
 
-    initComponent: function () {
-        Ext.ux.form.FileField.superclass.initComponent.call(this);
-        this.addEvents(
-            /**
-             * @event autosize
-             * Fires when the autosize function is triggered.  The field may or may not have actually changed size
-             * according to the default logic, but this event provides a hook for the developer to apply additional
-             * logic at runtime to resize the field if needed.
-             * @param {Ext.form.Field} this This text field
-             * @param {Number} width The new field width
-             */
-            'autosize'
-        );
-    },
+    /**
+     * @event autosize
+     * Fires when the autosize function is triggered.  The field may or may not have actually changed size
+     * according to the default logic, but this event provides a hook for the developer to apply additional
+     * logic at runtime to resize the field if needed.
+     * @param {Ext.form.Field} this This text field
+     * @param {Number} width The new field width
+     */
 
-    // private
+    /**
+     * @private
+     */
     initEvents: function () {
-        Ext.ux.form.FileField.superclass.initEvents.call(this);
+        this.callParent(arguments);
+
         if (this.validationEvent !== false) {
             this.el.on(this.validationEvent, this.validate, this, {buffer: this.validationDelay});
         }
@@ -330,7 +328,8 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
      * Also adds emptyText and emptyClass if the original value was blank.
      */
     reset: function () {
-        Ext.ux.form.FileField.superclass.reset.call(this);
+        this.callParent(arguments);
+
         this.applyEmptyText();
     },
 
@@ -411,7 +410,9 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
          this.fileBoxImage.dom.src = this.getPlaceholder();
          }
          */
-        return this.hiddenEl.dom.value = (v === null || v === undefined ? '' : v);
+        this.hiddenEl.dom.value = (v === null || v === undefined ? '' : v);
+
+        return this.hiddenEl.dom.value;
     },
 
     /**
@@ -484,4 +485,3 @@ Ext.ux.form.FileField = Ext.extend(Ext.form.Field, {
     }
 });
 
-Ext.reg('filefield', Ext.ux.form.FileField);

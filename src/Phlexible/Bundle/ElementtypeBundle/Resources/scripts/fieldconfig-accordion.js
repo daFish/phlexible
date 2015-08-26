@@ -1,12 +1,10 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.Accordion');
+Ext.require('Phlexible.elementtype.field.Accordion');
 Ext.require('Phlexible.element.ElementDataTabHelper');
 
-Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, valueStructure, element) {
+Phlexible.fields.Registry.register('accordion', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'accordion',
-        title: item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')],
+        title: item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')],
         layout: 'form',
         frame: false,
         border: false,
@@ -38,7 +36,7 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
                 if (isRepeatable || isOptional) {
                     allowedItems[child.dsId] = {
                         max: maxRepeat,
-                        title: child.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')]
+                        title: child.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')]
                     };
                     has = true;
                 }
@@ -52,12 +50,13 @@ Phlexible.fields.Registry.addFactory('accordion', function (parentConfig, item, 
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('accordion', {
+Phlexible.fields.FieldTypes.register({
+    type: 'accordion',
     titles: {
         de: 'Akkordion',
         en: 'Accordeon'
     },
-    iconCls: 'p-elementtype-container_accordion-icon',
+    iconCls: Phlexible.Icon.get('ui-accordion'),
     allowedIn: [
         'tab',
         'referenceroot'

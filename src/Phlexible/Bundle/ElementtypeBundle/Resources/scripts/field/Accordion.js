@@ -1,15 +1,14 @@
-Ext.provide('Phlexible.elementtypes.field.Accordion');
+Ext.define('Phlexible.elementtype.field.Accordion', {
+    extend: 'Ext.panel.Panel',
+    xtype: 'field.accordion',
 
-Ext.require('Ext.ux.Sortable');
-
-Phlexible.elementtypes.field.Accordion = Ext.extend(Ext.Panel, {
     autoHeight: true,
     collapsible: true,
     hideMode: 'offsets',
 
     // private
     initComponent: function () {
-        Phlexible.elementtypes.field.Accordion.superclass.initComponent.call(this);
+        this.callParent(arguments);
 
         this.on('add', function (me, comp) {
             if (this.isMaster && this.isSortable && !this.isDiff) {
@@ -42,7 +41,7 @@ Phlexible.elementtypes.field.Accordion = Ext.extend(Ext.Panel, {
                             }
                             menuConfig.push({
                                 text: item.title,
-                                iconCls: 'p-elementtype-container_group-icon',
+                                iconCls: Phlexible.Icon.get('ui-group-box'),
                                 disabled: disabled,
                                 handler: function (dsId) {
                                     this.expand();
@@ -95,12 +94,13 @@ Phlexible.elementtypes.field.Accordion = Ext.extend(Ext.Panel, {
                 }
             });
             this.xsortable.on('endsort', function (dz, s, dd, e, data) {
-                var cmp = Ext.getCmp(data.ddel.id);
-                var parentCmp = cmp.ownerCt;
-                var oldPos = parentCmp.items.items.indexOf(cmp);
-                var parentNode = data.ddel.parentNode;
-                var newPos = false;
-                for (var i = 0; i < parentNode.childNodes.length; i++) {
+                var cmp = Ext.getCmp(data.ddel.id),
+                    parentCmp = cmp.ownerCt,
+                    oldPos = parentCmp.items.items.indexOf(cmp),
+                    parentNode = data.ddel.parentNode,
+                    newPos = false,
+                    i;
+                for (i = 0; i < parentNode.childNodes.length; i++) {
                     if (parentNode.childNodes[i] === data.ddel) {
                         newPos = i;
                     }
@@ -115,7 +115,7 @@ Phlexible.elementtypes.field.Accordion = Ext.extend(Ext.Panel, {
                 }
 
                 if (s.htmleditors && s.htmleditors.length) {
-                    for (var i = 0; i < s.htmleditors.length; i++) {
+                    for (i = 0; i < s.htmleditors.length; i++) {
                         s.htmleditors[i].restoreControl();
                     }
                 }
@@ -123,4 +123,3 @@ Phlexible.elementtypes.field.Accordion = Ext.extend(Ext.Panel, {
         }
     }
 });
-Ext.reg('accordion', Phlexible.elementtypes.field.Accordion);

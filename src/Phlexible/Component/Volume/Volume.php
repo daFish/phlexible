@@ -1,15 +1,17 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\Volume;
 
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
-use Phlexible\Component\Volume\Driver\DriverInterface;
 use Phlexible\Component\Volume\Event\CopyFileEvent;
 use Phlexible\Component\Volume\Event\CopyFolderEvent;
 use Phlexible\Component\Volume\Event\CreateFileEvent;
@@ -26,7 +28,9 @@ use Phlexible\Component\Volume\FileSource\FilesystemFileSource;
 use Phlexible\Component\Volume\Folder\FolderIterator;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webmozart\Expression\Expression;
 
 /**
  * Volume
@@ -43,6 +47,11 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $rootDir;
 
     /**
@@ -51,9 +60,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
     private $quota;
 
     /**
-     * @var DriverInterface
+     * @var VolumeManagerInterface
      */
-    private $driver;
+    private $volumeManager;
 
     /**
      * @var EventDispatcherInterface
@@ -62,20 +71,24 @@ class Volume implements VolumeInterface, \IteratorAggregate
 
     /**
      * @param string                   $id
+     * @param string                   $name
      * @param string                   $rootDir
      * @param int                      $quota
-     * @param DriverInterface          $driver
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct($id, $rootDir, $quota, DriverInterface $driver, EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        $id,
+        $name,
+        $rootDir,
+        $quota,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->id = $id;
+        $this->name = $name;
         $this->rootDir = $rootDir;
         $this->quota = $quota;
-        $this->driver = $driver;
         $this->eventDispatcher = $eventDispatcher;
-
-        $driver->setVolume($this);
     }
 
     /**
@@ -97,6 +110,14 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRootDir()
     {
         return $this->rootDir;
@@ -113,9 +134,17 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getDriver()
+    public function getVolumeManager()
     {
-        return $this->driver;
+        return $this->volumeManager;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setVolumeManager(VolumeManagerInterface $volumeManager)
+    {
+        $this->volumeManager = $volumeManager;
     }
 
     /**
@@ -131,7 +160,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function hasFeature($feature)
     {
-        return in_array($feature, $this->driver->getFeatures());
+        return $this->volumeManager->hasFeature($feature);
     }
 
     /**
@@ -139,7 +168,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findRootFolder()
     {
-        return $this->driver->findRootFolder();
+        $folder = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'parentId' => null));
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -147,7 +182,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFolder($id)
     {
-        return $this->driver->findFolder($id);
+        $folder = $this->volumeManager->findFolder($id);
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -155,7 +196,15 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFolderByFileId($fileId)
     {
-        return $this->driver->findFolderByFileId($fileId);
+        $file = $this->findFile($fileId);
+
+        $folder = $this->findFolder($file->getFolderId());
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -163,7 +212,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFolderByPath($path)
     {
-        return $this->driver->findFolderByPath($path);
+        $folder = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $path));
+
+        if ($folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folder;
     }
 
     /**
@@ -171,7 +226,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFoldersByParentFolder(FolderInterface $parentFolder)
     {
-        return $this->driver->findFoldersByParentFolder($parentFolder);
+        $folders = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $parentFolder->getId()));
+
+        foreach ($folders as $folder) {
+            $folder->setVolume($this);
+        }
+
+        return $folders;
     }
 
     /**
@@ -179,7 +240,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function countFoldersByParentFolder(FolderInterface $parentFolder)
     {
-        return $this->driver->countFoldersByParentFolder($parentFolder);
+        return $this->volumeManager->countFoldersBy(array('volumeId' => $this->id, 'parentId' => $parentFolder->getId()));
     }
 
     /**
@@ -187,7 +248,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFile($id, $version = 1)
     {
-        return $this->driver->findFile($id, $version);
+        $file = $this->volumeManager->findFileBy(array('id' => $id, 'version' => $version));
+
+        if ($file) {
+            $file->setVolume($this);
+        }
+
+        return $file;
     }
 
     /**
@@ -195,7 +262,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFiles(array $criteria, $order = null, $limit = null, $start = null)
     {
-        return $this->driver->findFiles($criteria, $order, $limit, $start);
+        $files = $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
@@ -203,15 +276,21 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function countFiles(array $criteria)
     {
-        return $this->driver->countFiles($criteria);
+        return $this->volumeManager->countFilesBy($criteria);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findFileByPath($path, $version = 1)
+    public function findFileByFolderAndName(FolderInterface $folder, $name)
     {
-        return $this->driver->findFileByPath($path, $version);
+        $file = $this->volumeManager->findFileBy(array('folder' => $folder->getId(), 'name' => $name));
+
+        if ($file) {
+            $file->setVolume($this);
+        }
+
+        return $file;
     }
 
     /**
@@ -219,7 +298,13 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFileVersions($id)
     {
-        return $this->driver->findFileVersions($id);
+        $files = $this->volumeManager->findFileBy(array('id' => $id));
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
@@ -232,15 +317,35 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $start = null,
         $includeHidden = false)
     {
-        return $this->driver->findFilesByFolder($folder, $order, $limit, $start, $includeHidden);
+        $criteria = array(
+            'folder' => $folder->getId(),
+        );
+        if (!$includeHidden) {
+            $criteria['hidden'] = false;
+        }
+
+        $files = $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function countFilesByFolder(FolderInterface $folder)
+    public function countFilesByFolder(FolderInterface $folder, $includeHidden = false)
     {
-        return $this->driver->countFilesByFolder($folder);
+        $criteria = array(
+            'folder' => $folder->getId(),
+        );
+        if (!$includeHidden) {
+            $criteria['hidden'] = false;
+        }
+
+        return $this->volumeManager->countFilesBy($criteria);
     }
 
     /**
@@ -248,15 +353,46 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findLatestFiles($limit = 20)
     {
-        return $this->driver->findLatestFiles($limit);
+        $files = $this->volumeManager->findFilesBy(array(), array('createdAt' => 'DESC', $limit));
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function search($query)
+    public function findFilesByExpression(Expression $expression, $order = null, $limit = null, $start = null)
     {
-        return $this->driver->search($query);
+        $files = $this->volumeManager->findFilesByExpression($expression, $order, $limit, $start);
+
+        foreach ($files as $file) {
+            $file->setVolume($this);
+        }
+
+        return $files;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countFilesByExpression(Expression $expression)
+    {
+        return $this->volumeManager->countFilesByExpression($expression);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPhysicalPath(FileInterface $file)
+    {
+        $rootDir = rtrim($this->getRootDir(), '/');
+        $physicalPath = $rootDir . '/' . $file->getHash();
+
+        return $physicalPath;
     }
 
     /**
@@ -267,12 +403,12 @@ class Volume implements VolumeInterface, \IteratorAggregate
         FolderInterface $targetFolder,
         FileSourceInterface $fileSource,
         array $attributes,
-        $userId)
+        $user)
     {
-        $hash = $this->driver->getHashCalculator()->fromFileSource($fileSource);
+        $hash = $this->volumeManager->getHashCalculator()->fromFileSource($fileSource);
 
         // prepare folder's name and id
-        $fileClass = $this->driver->getFileClass();
+        $fileClass = $this->volumeManager->getFileClass();
         $file = new $fileClass();
         /* @var $file FileInterface */
         $file
@@ -281,9 +417,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setFolder($targetFolder)
             ->setName($fileSource->getName())
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
+            ->setCreateUser($user)
             ->setModifiedAt($file->getCreatedAt())
-            ->setModifyUserid($file->getCreateUserId())
+            ->setModifyUser($file->getCreateUser())
             ->setMimeType($fileSource->getMimeType())
             ->setSize($fileSource->getSize())
             ->setHash($hash)
@@ -294,7 +430,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             throw new IOException("Create file {$file->getName()} failed.");
         }
 
-        $this->driver->createFile($file, $fileSource);
+        $this->volumeManager->createFile($file, $fileSource);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FILE, $event);
@@ -309,9 +445,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
         FileInterface $file,
         FileSourceInterface $fileSource,
         array $attributes,
-        $userId)
+        $user)
     {
-        $hash = $this->driver->getHashCalculator()->fromFileSource($fileSource);
+        $hash = $this->volumeManager->getHashCalculator()->fromFileSource($fileSource);
 
         $file
             ->setName($fileSource->getName())
@@ -319,14 +455,14 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setHash($hash)
             ->setAttributes($attributes)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserid($userId);
+            ->setModifyUser($user);
 
         $event = new ReplaceFileEvent($file, $fileSource);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_REPLACE_FILE, $event)->isPropagationStopped()) {
             throw new IOException("Create file {$file->getName()} failed.");
         }
 
-        $this->driver->replaceFile($file, $fileSource);
+        $this->volumeManager->replaceFile($file, $fileSource);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::REPLACE_FILE, $event);
@@ -337,7 +473,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function renameFile(FileInterface $file, $name, $userId)
+    public function renameFile(FileInterface $file, $name, $user)
     {
         if ($file->getName() === $name) {
             return $file;
@@ -347,16 +483,16 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $file
             ->setName($name)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
-        $this->driver->validateRenameFile($file, $file->getFolder());
+        $this->volumeManager->validateRenameFile($file, $file->getFolder());
 
         $event = new RenameFileEvent($file, $oldName);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_RENAME_FILE, $event)->isPropagationStopped()) {
             throw new IOException("Rename file {$file->getName()} cancelled.");
         }
 
-        $this->driver->updateFile($file);
+        $this->volumeManager->updateFile($file);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::RENAME_FILE, $event);
@@ -367,7 +503,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $userId)
+    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $user)
     {
         if ($file->getFolder()->getId() === $targetFolder->getId()) {
             return $file;
@@ -376,16 +512,16 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $file
             ->setFolder($targetFolder)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
-        $this->driver->validateMoveFile($file, $targetFolder);
+        $this->volumeManager->validateMoveFile($file, $targetFolder);
 
         $event = new MoveFileEvent($file, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_MOVE_FILE, $event)->isPropagationStopped()) {
             throw new IOException("Move file {$file->getName()} cancelled.");
         }
 
-        $this->driver->updateFile($file);
+        $this->volumeManager->updateFile($file);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::MOVE_FILE, $event);
@@ -396,25 +532,25 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function copyFile(FileInterface $originalFile, FolderInterface $targetFolder, $userId)
+    public function copyFile(FileInterface $originalFile, FolderInterface $targetFolder, $user)
     {
         $file = clone $originalFile;
         $file
             ->setId(Uuid::generate())
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserId($userId)
+            ->setCreateUser($user)
             ->setModifiedAt($file->getCreatedAt())
-            ->setModifyUserId($file->getCreateUserId())
+            ->setModifyUser($file->getCreateUser())
             ->setFolder($targetFolder);
 
-        $this->driver->validateCopyFile($originalFile, $targetFolder);
+        $this->volumeManager->validateCopyFile($file, $targetFolder);
 
         $event = new CopyFileEvent($file, $originalFile, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_COPY_FILE, $event)->isPropagationStopped()) {
             throw new IOException("Copy file {$file->getName()} cancelled.");
         }
 
-        $this->driver->updateFile($file);
+        $this->volumeManager->updateFile($file);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::COPY_FILE, $event);
@@ -434,14 +570,14 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function deleteFile(FileInterface $file, $userId)
+    public function deleteFile(FileInterface $file, $user)
     {
         $event = new FileEvent($file);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_DELETE_FILE, $event)->isPropagationStopped()) {
             throw new IOException("Delete file {$file->getName()} cancelled.");
         }
 
-        $this->driver->deleteFile($file);
+        $this->volumeManager->deleteFile($file);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::DELETE_FILE, $event);
@@ -450,40 +586,18 @@ class Volume implements VolumeInterface, \IteratorAggregate
     }
 
     /**
-     * @param FileInterface $file
-     * @param string        $userId
-     *
-     * @return FileInterface
+     * {@inheritdoc}
      */
-    public function hideFile(FileInterface $file, $userId)
+    public function showFile(FileInterface $file, $user)
     {
-        $event = new FileEvent($file);
-        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_HIDE_FILE, $event)->isPropagationStopped()) {
-            throw new IOException("Hide file {$file->getName()} cancelled.");
-        }
+        $file->setHidden(false);
 
-        $this->driver->hideFile($file);
-
-        $event = new FileEvent($file);
-        $this->eventDispatcher->dispatch(VolumeEvents::HIDE_FILE, $event);
-
-        return $file;
-    }
-
-    /**
-     * @param FileInterface $file
-     * @param string        $userId
-     *
-     * @return FileInterface
-     */
-    public function showFile(FileInterface $file, $userId)
-    {
         $event = new FileEvent($file);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SHOW_FILE, $event)->isPropagationStopped()) {
             throw new IOException("Show file {$file->getName()} cancelled.");
         }
 
-        $this->driver->showFile($file);
+        $this->volumeManager->updateFile($file);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::SHOW_FILE, $event);
@@ -494,11 +608,31 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function setFileAttributes(FileInterface $file, array $attributes, $userId)
+    public function hideFile(FileInterface $file, $user)
+    {
+        $file->setHidden(true);
+
+        $event = new FileEvent($file);
+        if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_HIDE_FILE, $event)->isPropagationStopped()) {
+            throw new IOException("Hide file {$file->getName()} cancelled.");
+        }
+
+        $this->volumeManager->updateFile($file);
+
+        $event = new FileEvent($file);
+        $this->eventDispatcher->dispatch(VolumeEvents::HIDE_FILE, $event);
+
+        return $file;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFileAttributes(FileInterface $file, array $attributes, $user)
     {
         $file
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId)
+            ->setModifyUser($user)
             ->setAttributes($attributes);
 
         $event = new FileEvent($file);
@@ -506,7 +640,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             throw new IOException("Delete file {$file->getName()} cancelled.");
         }
 
-        $this->driver->updateFile($file);
+        $this->volumeManager->updateFile($file);
 
         $event = new FileEvent($file);
         $this->eventDispatcher->dispatch(VolumeEvents::SET_FILE_ATTRIBUTES, $event);
@@ -517,7 +651,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function createFolder(FolderInterface $targetFolder = null, $name, array $attributes, $userId)
+    public function createFolder(FolderInterface $targetFolder = null, $name, array $attributes, $user)
     {
         $folderPath = '';
         if ($targetFolder) {
@@ -528,7 +662,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         }
 
         // prepare folder's name and id
-        $folderClass = $this->driver->getFolderClass();
+        $folderClass = $this->volumeManager->getFolderClass();
         $folder = new $folderClass();
         /* @var $folder FolderInterface */
         $folder
@@ -539,18 +673,18 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setPath($folderPath)
             ->setAttributes($attributes)
             ->setCreatedAt(new \DateTime())
-            ->setCreateUserid($userId)
+            ->setCreateUser($folder->getCreateUser())
             ->setModifiedAt($folder->getCreatedAt())
-            ->setModifyUserid($folder->getCreateUserId());
+            ->setModifyUser($folder->getCreateUser());
 
-        $this->driver->validateCreateFolder($folder);
+        $this->volumeManager->validateCreateFolder($folder);
 
         $event = new FolderEvent($folder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_CREATE_FOLDER, $event)->isPropagationStopped()) {
             throw new IOException("Create folder {$folder->getName()} cancelled.");
         }
 
-        $this->driver->updateFolder($folder);
+        $this->volumeManager->updateFolder($folder);
 
         $event = new FolderEvent($folder);
         $this->eventDispatcher->dispatch(VolumeEvents::CREATE_FOLDER, $event);
@@ -561,7 +695,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function renameFolder(FolderInterface $folder, $name, $userId)
+    public function renameFolder(FolderInterface $folder, $name, $user)
     {
         $oldPath = $folder->getPath();
         $parentFolder = $this->findFolder($folder->getParentId());
@@ -574,16 +708,16 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setName($name)
             ->setPath($newPath)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
-        $this->driver->validateRenameFolder($folder);
+        $this->volumeManager->validateRenameFolder($folder);
 
         $event = new RenameFolderEvent($folder, $oldPath);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_RENAME_FOLDER, $event)->isPropagationStopped()) {
             throw new IOException("Rename folder {$folder->getName()} cancelled.");
         }
 
-        $this->driver->renameFolder($folder, $oldPath);
+        $this->volumeManager->renameFolder($folder, $oldPath);
 
         $event = new FolderEvent($folder);
         $this->eventDispatcher->dispatch(VolumeEvents::RENAME_FOLDER, $event);
@@ -594,7 +728,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
+    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $user)
     {
         if ($folder->getParentId() === $targetFolder->getId()) {
             return null;
@@ -614,16 +748,16 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setParentId($targetFolder->getId())
             ->setPath($newPath)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
-        $this->driver->validateMoveFolder($folder);
+        $this->volumeManager->validateMoveFolder($folder);
 
         $event = new MoveFolderEvent($folder, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_MOVE_FOLDER, $event)->isPropagationStopped()) {
             throw new IOException("Move folder {$folder->getName()} cancelled.");
         }
 
-        $this->driver->moveFolder($folder, $oldPath);
+        $this->volumeManager->moveFolder($folder, $oldPath);
 
         $event = new FolderEvent($folder);
         $this->eventDispatcher->dispatch(VolumeEvents::MOVE_FOLDER, $event);
@@ -634,24 +768,24 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId)
+    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $user)
     {
-        $this->driver->validateCopyFolder($folder, $targetFolder);
+        $this->volumeManager->validateCopyFolder($folder, $targetFolder);
 
         $event = new CopyFolderEvent($folder, $targetFolder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_COPY_FOLDER, $event)->isPropagationStopped()) {
             throw new IOException("Move folder {$folder->getName()} cancelled.");
         }
 
-        $copiedFolder = $this->createFolder($targetFolder, $folder->getName() . '_copy_' . uniqid(), $folder->getAttributes(), $userId);
+        $copiedFolder = $this->createFolder($targetFolder, $folder->getName() . '_copy_' . uniqid(), $folder->getAttributes(), $user);
 
         foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
-            $this->copyFolder($subFolder, $copiedFolder, $userId);
+            $this->copyFolder($subFolder, $copiedFolder, $user);
         }
 
         foreach ($this->findFilesByFolder($folder) as $file) {
             $fileSource = new FilesystemFileSource($file->getPhysicalPath(), $file->getMimeType(), $file->getSize());
-            $this->createFile($copiedFolder, $fileSource, $file->getAttributes(), $userId);
+            $this->createFile($copiedFolder, $fileSource, $file->getAttributes(), $user);
         }
 
         $event = new FolderEvent($copiedFolder);
@@ -680,27 +814,27 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function deleteFolder(FolderInterface $folder, $userId)
+    public function deleteFolder(FolderInterface $folder, $user)
     {
         $this->checkDeleteFolder($folder);
 
-        return $this->doDeleteFolder($folder, $userId);
+        return $this->doDeleteFolder($folder, $user);
     }
 
     /**
      * @param FolderInterface $folder
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FolderInterface
      */
-    private function doDeleteFolder(FolderInterface $folder, $userId)
+    private function doDeleteFolder(FolderInterface $folder, $user)
     {
         foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
-            $this->deleteFolder($subFolder, $userId);
+            $this->deleteFolder($subFolder, $user);
         }
 
         foreach ($this->findFilesByFolder($folder) as $file) {
-            $this->deleteFile($file, $userId);
+            $this->deleteFile($file, $user);
         }
 
         $event = new FolderEvent($folder);
@@ -708,7 +842,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             throw new IOException("Delete folder {$folder->getName()} cancelled.");
         }
 
-        $this->driver->deleteFolder($folder, $userId);
+        $this->volumeManager->deleteFolder($folder, $user);
 
         $event = new FolderEvent($folder);
         $this->eventDispatcher->dispatch(VolumeEvents::DELETE_FOLDER, $event);
@@ -719,19 +853,19 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function setFolderAttributes(FolderInterface $folder, array $attributes, $userId)
+    public function setFolderAttributes(FolderInterface $folder, array $attributes, $user)
     {
         $folder
             ->setAttributes($attributes)
             ->setModifiedAt(new \DateTime())
-            ->setModifyUserId($userId);
+            ->setModifyUser($user);
 
         $event = new FolderEvent($folder);
         if ($this->eventDispatcher->dispatch(VolumeEvents::BEFORE_SET_FOLDER_ATTRIBUTES, $event)->isPropagationStopped()) {
             throw new IOException("Move folder {$folder->getName()} cancelled.");
         }
 
-        $this->driver->updateFolder($folder);
+        $this->volumeManager->updateFolder($folder);
 
         $event = new FolderEvent($folder);
         $this->eventDispatcher->dispatch(VolumeEvents::SET_FOLDER_ATTRIBUTES, $event);

@@ -1,45 +1,63 @@
-metasets:
-    metasets: 'Meta Sets'
-    metaset: 'Meta Set'
-    no_metasets: 'Keine Meta Sets definiert.'
-    meta: Meta
-    no_meta_values: 'Keine Metadaten'
-    key: Schlüssel
-    value: Wert
-    save: Speichern
-    error: Fehler
-    fill_required_fields: 'Bitte füllen Sie alle Pflichtfelder aus.'
+Phlexible:
+    metaset:
+        handler:
+            MetaSets:
+                text: Meta Sets
 
-    add: Hinzufügen
-    add_set: Meta Set hinzufügen
-    add_set_desc: Bitte geben Sie den Titel ein.
-    rename: Umbenennen
-    rename_set: Meta Set umbenennen
-    rename_set_desc: Bitte geben Sie einen neuen Titel ein.
-    remove: Entfernen
-    id: ID
-    no_fields: Keine Felder definiert.
-    add_field: Feld hinzufügen
-    remove_field: Feld entfernen
-    save: Speichern
-    name: Name
-    type: Typ
-    required: Pflicht
-    synchronized: Synchronisiert
-    readonly: Schreibgeschützt
-    options: Optionen
-    actions: Aktionen
-    configure: Konfigurieren
-    failure: Fehler
-    select_needs_options: Bitte konfigurieren Sie das Select-Feld.
-    select: Auswählen
-    configure_select: Select-Feld konfigurieren
-    remove_value: Wert entfernen
-    use_add: Klicken Sie auf "Hinzufügen" um einen neuen Wert hinzuzufügen
-    value: Wert
-    add_value: Wert hinzufügen
-    cancel: Abbrechen
-    store: Übernehmen
-    add_at_least_one_value: Bitte fügen Sie mindestens einen Wert hinzu.
-    select_metaset: Meta Set auswählen...
-    remove_metaset: Meta Set entfernen
+        view:
+            Main:
+                title: 'Meta Sets'
+                metaSetText: 'Meta Set'
+                metaSetsText: 'Meta Sets'
+                idText: ID
+                nameText: Name
+                actionsText: Aktionen
+                renameText: Umbenennen
+                addText: Hinzufügen
+                noFieldsText: 'Keine Felder'
+                typeText: Typ
+                requiredText: Benötigt
+                synchronizedText: Synchronisiert
+                readonlyText: 'Nur-lesen'
+                optionsText: Optionen
+                configureText: Konfigurieren
+                removeFieldText: Entfernen
+                addFieldText: Hinzufügen
+                saveText: Speichern
+                addSetText: 'Meta Set hinzufügen'
+                addSetDescriptionText: 'Bitte geben Sie den Titel ein.'
+                renameSetText: 'Meta Set umbenennen'
+                renameSetDescriptionText: 'Bitte geben Sie einen neuen Titel ein.'
+                selectNeedsOptionsText: 'Bitte konfigurieren Sie das Select-Feld.'
+                suggestNeedsOptionsText: 'Bitte konfigurieren Sie das Suggest-Feld.'
+
+        window:
+            MetaSetsWindow:
+                title: 'Meta Sets'
+                metasetText: 'Meta Set'
+                actionsText: Aktionen
+                removeText: 'Entfernen'
+                selectText: 'Meta Set auswählen'
+                addText: Hinzufügen
+                cancelText: Abbrechen
+                saveText: Speichern
+
+            SelectConfigurationWindow:
+                title: 'Select-Feld konfigurieren'
+                useAddText: 'Keine Werte. Klicken Sie auf "Wert hinzufügen" um einen neuen Wert hinzuzufügen.'
+                valueText: Wert
+                actionsText: Aktionen
+                removeValueText: 'Wert entfernen'
+                addValueText: 'Wert hinzufügen'
+                cancelText: Abbrechen
+                storeText: Übernehmen
+                addAtLeastOneValueText: 'Bitte fügen Sie mindestens einen Wert hinzu.'
+
+            SuggestConfigurationWindow:
+                title: 'Suggest-Feld konfigurieren'
+                useCreateText: 'Keine Datenquellen. Klicken Sie auf "Neue Datenquelle anlegen", um eine neue Datenquelle anzulegen.'
+                datasourceText: Datenquellen
+                createDatasourceText: 'Neue Datenquelle anlegen'
+                createDatasourceDescriptionText: 'Bitte geben Sie den Titel der neuen Datenquelle ein.'
+                cancelText: Abbrechen
+                selectText: Auswählen

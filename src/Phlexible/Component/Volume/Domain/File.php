@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\Volume\Domain;
@@ -80,9 +83,9 @@ class File implements FileInterface
 
     /**
      * @var string
-     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="create_user", type="string")
      */
-    protected $createUserId;
+    protected $createUser;
 
     /**
      * @var \DateTime
@@ -92,9 +95,9 @@ class File implements FileInterface
 
     /**
      * @var string
-     * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="modify_user", type="string")
      */
-    protected $modifyUserId;
+    protected $modifyUser;
 
     /**
      * @var \DateTime
@@ -113,6 +116,16 @@ class File implements FileInterface
      * @var VolumeInterface
      */
     protected $volume;
+
+    protected $volumeId;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getVolumeId()
+    {
+        return $this->getFolder()->getVolumeId();
+    }
 
     /**
      * {@inheritdoc}
@@ -230,25 +243,6 @@ class File implements FileInterface
     {
         $this->mimeType = $mimeType;
 
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPhysicalPath()
-    {
-        $rootDir = rtrim($this->getVolume()->getRootDir(), '/');
-        $physicalPath = $rootDir . '/' . $this->hash;
-
-        return $physicalPath;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPhysicalPath($physicalPath)
-    {
         return $this;
     }
 
@@ -379,17 +373,17 @@ class File implements FileInterface
     /**
      * {@inheritdoc}
      */
-    public function getCreateUserId()
+    public function getCreateUser()
     {
-        return $this->createUserId;
+        return $this->createUser;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setCreateUserId($createUserId)
+    public function setCreateUser($createUser)
     {
-        $this->createUserId = $createUserId;
+        $this->createUser = $createUser;
 
         return $this;
     }
@@ -415,17 +409,17 @@ class File implements FileInterface
     /**
      * {@inheritdoc}
      */
-    public function getModifyUserId()
+    public function getModifyUser()
     {
-        return $this->modifyUserId;
+        return $this->modifyUser;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setModifyUserId($modifyUserId)
+    public function setModifyUser($modifyUser)
     {
-        $this->modifyUserId = $modifyUserId;
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }

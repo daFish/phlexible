@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaCacheBundle\Change;
@@ -14,7 +17,7 @@ use Phlexible\Component\MediaCache\Queue\BatchResolver;
 use Phlexible\Component\MediaCache\Queue\Queue;
 use Phlexible\Component\MediaCache\Queue\QueueProcessor;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
  * Template changes
@@ -34,7 +37,7 @@ class TemplateChanges
     private $cacheManager;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -56,17 +59,19 @@ class TemplateChanges
     /**
      * @param TemplateManagerInterface $templateManager
      * @param CacheManagerInterface    $cacheManager
-     * @param VolumeManager            $volumeManager
+     * @param VolumeManagerInterface   $volumeManager
      * @param BatchBuilder             $batchBuilder
      * @param BatchResolver            $batchResolver
      * @param QueueProcessor           $queueProcessor
      */
-    public function __construct(TemplateManagerInterface $templateManager,
-                                CacheManagerInterface $cacheManager,
-                                VolumeManager $volumeManager,
-                                BatchBuilder $batchBuilder,
-                                BatchResolver $batchResolver,
-                                QueueProcessor $queueProcessor)
+    public function __construct(
+        TemplateManagerInterface $templateManager,
+        CacheManagerInterface $cacheManager,
+        VolumeManagerInterface $volumeManager,
+        BatchBuilder $batchBuilder,
+        BatchResolver $batchResolver,
+        QueueProcessor $queueProcessor
+    )
     {
         $this->templateManager = $templateManager;
         $this->cacheManager = $cacheManager;

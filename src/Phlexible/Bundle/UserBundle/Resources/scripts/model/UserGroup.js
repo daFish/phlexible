@@ -1,7 +1,12 @@
-Ext.provide('Phlexible.users.model.UserGroup');
-
-Phlexible.users.model.UserGroup = Ext.data.Record.create([
-    {name: 'gid'},
-    {name: 'name'},
-    {name: 'member'}
-]);
+/**
+ * User group model
+ */
+Ext.define('Phlexible.user.model.UserGroup', {
+    extend: 'Ext.data.Model',
+    idProperty: 'id',
+    fields: [
+        {name: 'id'},
+        {name: 'group'},
+        {name: 'member'}
+    ]
+});

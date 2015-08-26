@@ -1,13 +1,27 @@
-Ext.provide('Phlexible.mediatype.model.MediaType');
+Ext.define('Phlexible.mediatype.model.MediaType', {
+    extend: 'Ext.data.Model',
+    requires: [
+        'Phlexible.mediatype.model.MimeType'
+    ],
 
-Phlexible.mediatype.model.MediaType = Ext.data.Record.create([
-    {name: 'id', type: 'string'},
-    {name: 'key', type: 'string'},
-    {name: 'de', type: 'string'},
-    {name: 'en', type: 'string'},
-    {name: 'mimetypes'},
-    {name: 'icon16', type: 'boolean'},
-    {name: 'icon32', type: 'boolean'},
-    {name: 'icon48', type: 'boolean'},
-    {name: 'icon256', type: 'boolean'}
-]);
+    entityName: 'MediaType',
+    idProperty: 'id',
+    fields: [
+        {name: 'name', type: 'string'},
+        {name: 'category', type: 'string'},
+        {name: 'svg', type: 'string'},
+        {name: 'titles'},
+        {name: 'mimetypes'},
+        {name: 'icons'}
+    ],
+    proxy: {
+        type: 'rest',
+        url: Phlexible.Router.generate('phlexible_api_mediatype_get_mediatypes'),
+        simpleSortMode: true,
+        reader: {
+            type: 'json',
+            rootProperty: 'mediatypes',
+            totalProperty: 'count'
+        }
+    }
+});

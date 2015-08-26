@@ -1,3 +1,9 @@
-search:
-    search: Suche
-    searching: Suche...
+Phlexible:
+    search:
+        view:
+            SearchPanel:
+                title: Suche
+
+        form:
+            SearchBox:
+                loadingText: Suche...

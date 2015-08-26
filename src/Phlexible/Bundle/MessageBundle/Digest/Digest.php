@@ -1,21 +1,21 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Digest;
 
-use Doctrine\ORM\EntityManager;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
+use DateTime;
+use Phlexible\Bundle\MessageBundle\Entity\Filter;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
-use Phlexible\Bundle\MessageBundle\Mailer\Mailer;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
-use Phlexible\Bundle\MessageBundle\Model\FilterManagerInterface;
-use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
-use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Phlexible\Bundle\MessageBundle\Entity\Subscription;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Digest
@@ -25,116 +25,98 @@ use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 class Digest
 {
     /**
-     * @var EntityManager
+     * @var UserInterface
      */
-    private $entityManager;
+    private $user;
 
     /**
-     * @var FilterManagerInterface
+     * @var Filter
      */
-    private $filterManager;
+    private $filter;
 
     /**
-     * @var MessageManagerInterface
+     * @var Subscription
      */
-    private $messageManager;
+    private $subscription;
 
     /**
-     * @var MessagePoster
+     * @var DateTime
      */
-    private $messageService;
+    private $lastSend;
 
     /**
-     * @param UserManagerInterface
+     * @var Message[]
      */
-    private $userManager;
+    private $messages;
 
     /**
-     * @var Mailer
+     * @param UserInterface $user
+     * @param Filter        $filter
+     * @param Subscription  $subscription
+     * @param DateTime      $lastSend
+     * @param Message[]     $messages
      */
-    private $mailer;
-
-    /**
-     * @param EntityManager           $entityManager
-     * @param FilterManagerInterface  $filterManager
-     * @param MessageManagerInterface $messageManager
-     * @param MessagePoster           $messageService
-     * @param UserManagerInterface    $userManager
-     * @param Mailer                  $mailer
-     */
-    public function __construct(EntityManager $entityManager,
-                                FilterManagerInterface $filterManager,
-                                MessageManagerInterface $messageManager,
-                                MessagePoster $messageService,
-                                UserManagerInterface $userManager,
-                                Mailer $mailer)
-    {
-        $this->entityManager = $entityManager;
-        $this->filterManager = $filterManager;
-        $this->messageManager = $messageManager;
-        $this->messageService = $messageService;
-        $this->userManager = $userManager;
-        $this->mailer = $mailer;
+    public function __construct(
+        UserInterface $user,
+        Filter $filter,
+        Subscription $subscription,
+        DateTime $lastSend,
+        array $messages
+    ) {
+        $this->user = $user;
+        $this->filter = $filter;
+        $this->subscription = $subscription;
+        $this->lastSend = $lastSend;
+        foreach ($messages as $message) {
+            $this->addMessage($message);
+        }
     }
 
     /**
-     * Static send function for use with events
-     *
-     * @return array
+     * @return UserInterface
      */
-    public function sendDigestMails()
+    public function getUser()
     {
-        $subscriptionRepository = $this->entityManager->getRepository('PhlexibleMessageBundle:Subscription');
-        $subscriptions = $subscriptionRepository->findByHandler('digest');
+        return $this->user;
+    }
 
-        $digests = array();
-        foreach ($subscriptions as $subscription) {
-            $filter = $this->filterManager->find($subscription->getFilterId());
-            if (!$filter) {
-                continue;
-            }
+    /**
+     * @return Filter
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
 
-            $user = $this->userManager->find($subscription->getUserId());
-            if (!$user || !$user->getEmail()) {
-                continue;
-            }
+    /**
+     * @return Subscription
+     */
+    public function getSubscription()
+    {
+        return $this->subscription;
+    }
 
-            $lastSend = $subscription->getAttribute('lastSend', null);
-            if (!$lastSend) {
-                $lastSend = new \DateTime();
-                $lastSend = $lastSend->sub(new \DateInterval('P30D'));
-            } else {
-                $lastSend = new \DateTime($lastSend);
-            }
+    /**
+     * @return Subscription
+     */
+    public function getLastSend()
+    {
+        return $this->lastSend;
+    }
 
-            $criteria = new Criteria(array($filter->getCriteria()), Criteria::MODE_AND);
-            $criteria->dateFrom($lastSend);
-            $messages = $this->messageRepository->findByCriteria($criteria);
-            if (!count($messages)) {
-                continue;
-            }
+    /**
+     * @return Message[]
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 
-            if ($this->mailer->sendDigestMail($user, $messages)) {
-                $digests[] = array('filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'ok');
-                $subscription->setAttribute('lastSend', date('Y-m-d H:i:s'));
-                $this->subscriptionRepository->save($subscription);
-            } else {
-                $digests[] = array('filter' => $filter->getTitle(), 'to' => $user->getEmail(), 'status' => 'failed');
-            }
-        }
-
-        if (count($digests)) {
-            $message = Message::create(
-                count($digests) . ' digest mail(s) sent.',
-                'Status: ' . PHP_EOL . print_r($digests, true),
-                Message::PRIORITY_NORMAL,
-                null,
-                'ROLE_MESSAGES',
-                'cli'
-            );
-            $this->messageService->post($message);
-        }
-
-        return $digests;
+    /**
+     * @param Message $message
+     */
+    private function addMessage(Message $message)
+    {
+        $this->messages[] = $message;
     }
 }

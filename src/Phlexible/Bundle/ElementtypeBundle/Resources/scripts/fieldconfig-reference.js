@@ -1,10 +1,9 @@
-Ext.require('Phlexible.fields.FieldTypes');
-
-Phlexible.fields.FieldTypes.addField('reference', {
+Phlexible.fields.FieldTypes.register({
+    type: 'reference',
     titles: {
         de: 'Referenz',
         en: 'Reference'
     },
-    iconCls: 'p-elementtype-container_reference-icon',
+    iconCls: Phlexible.Icon.get('chain'),
     allowedIn: []
 });

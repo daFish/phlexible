@@ -1,0 +1,8 @@
+services:
+    api_key_user_provider:
+        class: Phlexible\Bundle\GuiBundle\Security\ApiKeyUserProvider
+        arguments: [@phlexible_user.user_manager]
+
+    api_key_authenticator:
+        class:     Phlexible\Bundle\GuiBundle\Security\ApiKeyAuthenticator
+        arguments: [@api_key_user_provider]

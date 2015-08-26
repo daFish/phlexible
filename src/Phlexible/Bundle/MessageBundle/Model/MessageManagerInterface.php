@@ -1,16 +1,19 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Model;
 
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Exception\LogicException;
+use Webmozart\Expression\Expression;
 
 /**
  * Message manager
@@ -19,6 +22,15 @@ use Phlexible\Bundle\MessageBundle\Exception\LogicException;
  */
 interface MessageManagerInterface
 {
+    /**
+     * Find message
+     *
+     * @param string $id
+     *
+     * @return Message
+     */
+    public function find($id);
+
     /**
      * Find messages
      *
@@ -37,35 +49,39 @@ interface MessageManagerInterface
      * @param array $criteria
      * @param null  $orderBy
      *
-     * @return Message[]
+     * @return Message
      */
     public function findOneBy(array $criteria, $orderBy = null);
 
     /**
-     * Find messages by criteria
-     *
-     * @param Criteria $criteria
-     * @param string   $order
-     * @param int      $limit
-     * @param int      $offset
+     * @return Expression
+     */
+    public function expr();
+
+    /**
+     * @param Expression $expression
+     * @param array      $orderBy
+     * @param int        $limit
+     * @param int        $offset
      *
      * @return Message[]
      */
-    public function findByCriteria(Criteria $criteria, $order = null, $limit = null, $offset = null);
+    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param Criteria $criteria
+     * @param Expression $expression
      *
      * @return int
      */
-    public function countByCriteria(Criteria $criteria);
+    public function countByExpression(Expression $expression);
 
     /**
-     * Get priority map
+     * @param Expression $expression
+     * @param array      $orderBy
      *
-     * @return array
+     * @return Message
      */
-    public function getPriorityNames();
+    public function findOneByExpression(Expression $expression, $orderBy = null);
 
     /**
      * Return type map
@@ -82,13 +98,13 @@ interface MessageManagerInterface
     public function getFacets();
 
     /**
-     * Return facets
+     * Return facets by expression
      *
-     * @param Criteria $criteria
+     * @param Expression $expression
      *
      * @return array
      */
-    public function getFacetsByCriteria(Criteria $criteria);
+    public function getFacetsByExpression(Expression $expression);
 
     /**
      * Update message
@@ -105,5 +121,4 @@ interface MessageManagerInterface
      * @param Message $message
      */
     public function deleteMessage(Message $message);
-
 }

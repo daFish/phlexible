@@ -49,7 +49,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeNodeUI = Ext.extend(Ext.tree.Tree
         }
         else {
             if (n.attributes.properties && n.attributes.properties.configuration) {
-                var isSynchronized = (n.attributes.properties.configuration['synchronized'] == 'synchronized' || n.attributes.properties.configuration['synchronized'] == 'synchronized_unlink' ? true : false);
+                var isSynchronized = (n.attributes.properties.configuration.synchronized == 'synchronized' || n.attributes.properties.configuration.synchronized == 'synchronized_unlink' ? true : false);
 
                 if (isSynchronized) {
                     text += ' ';

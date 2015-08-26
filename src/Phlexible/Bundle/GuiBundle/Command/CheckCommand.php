@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Command;
@@ -40,7 +43,11 @@ class CheckCommand extends ContainerAwareCommand
         $lineSize = 70;
         $formatter = $this->getHelper('formatter');
 
-        $formattedBlock = $formatter->formatBlock(array('phlexible Requirements Checker', '~~~~~~~~~~~~~~~~~~~~~~~~~~~'), 'fg=blue', true);
+        $formattedBlock = $formatter->formatBlock(
+            array('phlexible Requirements Checker', '~~~~~~~~~~~~~~~~~~~~~~~~~~~'),
+            'fg=blue',
+            true
+        );
         $output->writeln($formattedBlock);
 
         $output->write('> Checking phlexible requirements:'.PHP_EOL.'  ');
@@ -72,10 +79,18 @@ class CheckCommand extends ContainerAwareCommand
         $output->writeln('');
 
         if ($checkPassed) {
-            $formattedBlock = $formatter->formatBlock(array('[OK]', 'Your system is ready to run phlexible projects'), 'bg=green', true);
+            $formattedBlock = $formatter->formatBlock(
+                array('[OK]', 'Your system is ready to run phlexible projects'),
+                'bg=green',
+                true
+            );
             $output->writeln($formattedBlock);
         } else {
-            $formattedBlock = $formatter->formatBlock(array('[ERROR]', 'Your system is not ready to run phlexible projects'), 'bg=red', true);
+            $formattedBlock = $formatter->formatBlock(
+                array('[ERROR]', 'Your system is not ready to run phlexible projects'),
+                'bg=red',
+                true
+            );
             $output->writeln($formattedBlock);
 
             $output->writeln('');
@@ -103,7 +118,7 @@ class CheckCommand extends ContainerAwareCommand
     private function getErrorMessage(Requirement $requirement, $lineSize)
     {
         if ($requirement->isFulfilled()) {
-            return;
+            return null;
         }
 
         $errorMessage  = wordwrap($requirement->getTestMessage(), $lineSize - 3, PHP_EOL.'   ').PHP_EOL;
@@ -111,5 +126,4 @@ class CheckCommand extends ContainerAwareCommand
 
         return $errorMessage;
     }
-
 }

@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\MediaCache\Queue;
@@ -11,7 +14,7 @@ namespace Phlexible\Component\MediaCache\Queue;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
  * Queue batch
@@ -21,7 +24,7 @@ use Phlexible\Component\Volume\VolumeManager;
 class BatchBuilder
 {
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -31,10 +34,10 @@ class BatchBuilder
     private $templateManager;
 
     /**
-     * @param VolumeManager            $volumeManager
+     * @param VolumeManagerInterface   $volumeManager
      * @param TemplateManagerInterface $templateManager
      */
-    public function __construct(VolumeManager $volumeManager, TemplateManagerInterface $templateManager)
+    public function __construct(VolumeManagerInterface $volumeManager, TemplateManagerInterface $templateManager)
     {
         $this->volumeManager = $volumeManager;
         $this->templateManager = $templateManager;

@@ -1,14 +1,10 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-
-Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('checkbox', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId),
         boxLabel = item.labels.boxLabel || {};
 
     Ext.apply(config, {
         xtype: 'xcheckbox',
-        boxLabel: (boxLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || ''),
+        boxLabel: (boxLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')] || ''),
         checked: config.value,
 
         submitOffValue: '',
@@ -26,12 +22,13 @@ Phlexible.fields.Registry.addFactory('checkbox', function (parentConfig, item, v
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('checkbox', {
+Phlexible.fields.FieldTypes.register({
+    type: 'checkbox',
     titles: {
         de: 'Checkbox',
         en: 'Checkbox'
     },
-    iconCls: 'p-elementtype-field_checkbox-icon',
+    iconCls: Phlexible.Icon.get('ui-check-box'),
     allowedIn: [
         'tab',
         'accordion',

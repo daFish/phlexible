@@ -1,8 +1,4 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-
-Phlexible.fields.Registry.addFactory('numberfield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('numberfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -26,12 +22,13 @@ Phlexible.fields.Registry.addFactory('numberfield', function (parentConfig, item
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('numberfield', {
+Phlexible.fields.FieldTypes.register({
+    type: 'numberfield',
     titles: {
         de: 'Zahlenfeld',
         en: 'Numberfield'
     },
-    iconCls: 'p-elementtype-field_number-icon',
+    iconCls: Phlexible.Icon.get('ui-text-field-format'),
     allowedIn: ['tab', 'accordion', 'group', 'referenceroot'],
     defaultValueField: 'default_value_numberfield',
     config: {

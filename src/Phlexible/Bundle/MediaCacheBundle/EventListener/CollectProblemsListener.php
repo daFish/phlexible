@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaCacheBundle\EventListener;
@@ -40,25 +43,21 @@ class CollectProblemsListener
         $lastRun = $this->properties->get('mediacache', 'last_run');
 
         if (!$lastRun) {
-            $problem = new Problem();
-            $problem
-                ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage('Media cache write was never run.')
-                ->setHint('Run media cache write command')
-                ->setIconClass('p-mediacache-component-icon')
-                ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime());
+            $problem = new Problem(
+                'mediacache_no_run',
+                Problem::SEVERITY_WARNING,
+                'Media cache write was never run.',
+                'Run media cache write command'
+            );
 
             $event->addProblem($problem);
         } elseif (time() - strtotime($lastRun) > 86400) {
-            $problem = new Problem();
-            $problem
-                ->setSeverity(Problem::SEVERITY_WARNING)
-                ->setMessage('Media cache write last run was on "'.$lastRun.'", more than 24h ago.')
-                ->setHint('Install a cronjob for running media cache write command')
-                ->setIconClass('p-mediacache-component-icon')
-                ->setCreatedAt(new \DateTime())
-                ->setLastCheckedAt(new \DateTime());
+            $problem = new Problem(
+                'mediacache_last_run',
+                Problem::SEVERITY_WARNING,
+                "Media cache write last run was on $lastRun, more than 24h ago.",
+                'Install a cronjob for running media cache write command'
+            );
 
             $event->addProblem($problem);
         }

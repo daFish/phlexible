@@ -1,15 +1,23 @@
 <?php
 
+/*
+ * This file is part of the phlexible package.
+ *
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Phlexible\Bundle\GuiBundle\Requirement;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This class specifies all requirements and optional recommendations that
- * are necessary to run the Symfony Standard Edition.
+ * are necessary to run phlexible.
  *
- * @author Tobias Schultze <http://tobion.de>
- * @author Fabien Potencier <fabien@symfony.com>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class PhlexibleRequirements extends RequirementCollection
 {

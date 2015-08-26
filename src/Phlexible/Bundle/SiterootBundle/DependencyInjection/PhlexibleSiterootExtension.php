@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SiterootBundle\DependencyInjection;
@@ -31,6 +34,11 @@ class PhlexibleSiterootExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
+        if ('custom' !== $config['db_driver']) {
+            $loader->load(sprintf('%s.yml', $config['db_driver']));
+            $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
+        }
+
         $mappings = [];
         if (!empty($config['mappings'])) {
             foreach ($config['mappings'] as $mappedUrl => $siterootUrl) {
@@ -38,9 +46,8 @@ class PhlexibleSiterootExtension extends Extension
             }
         }
 
+        $container->setParameter('phlexible_siteroot.model_manager_name', $config['model_manager_name']);
+        $container->setAlias('phlexible_siteroot.siteroot_manager', $config['service']['siteroot_manager']);
         $container->setParameter('phlexible_siteroot.mappings', $mappings);
-
-        $loader->load('file.yml');
-        $container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.file.siteroot_manager');
     }
 }

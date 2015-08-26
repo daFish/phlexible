@@ -1,0 +1,27 @@
+.p-mediamanager-file-versions {
+    padding: 3px;
+}
+
+.p-mediamanager-file-versions .version-wrap {
+    padding: 2px;
+    margin: 2px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    height: 54px;
+}
+
+.p-mediamanager-file-versions .x-view-over {
+    border: 1px solid #bbb;
+}
+
+.p-mediamanager-file-versions .x-view-selected {
+    border: 1px solid #888;
+}
+
+.p-mediamanager-file-versions .version-wrap .thumb {
+    float: left;
+}
+
+.p-mediamanager-file-versions .version-wrap .text {
+    padding: 5px 5px 5px 60px;
+}

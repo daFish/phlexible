@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Portlet;
@@ -12,7 +15,6 @@ use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Messages portlet
@@ -37,24 +39,15 @@ class MessagesPortlet extends Portlet
     private $tokenStorage;
 
     /**
-     * @param TranslatorInterface          $translator
      * @param SubscriptionManagerInterface $subscriptionManager
      * @param MessageManagerInterface      $messageManager
      * @param TokenStorageInterface        $tokenStorage
      */
     public function __construct(
-        TranslatorInterface $translator,
         SubscriptionManagerInterface $subscriptionManager,
         MessageManagerInterface $messageManager,
-        TokenStorageInterface $tokenStorage)
-    {
-        $this
-            ->setId('messages-portlet')
-            ->setTitle($translator->trans('messages.messages', array(), 'gui'))
-            ->setClass('Phlexible.messages.portlet.Messages')
-            ->setIconClass('p-message-component-icon')
-            ->setRole('ROLE_MESSAGE_SUBSCRIPTIONS');
-
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->subscriptionManager = $subscriptionManager;
         $this->messageManager = $messageManager;
         $this->tokenStorage = $tokenStorage;
@@ -67,6 +60,7 @@ class MessagesPortlet extends Portlet
      */
     public function getData()
     {
+        /*
         $subscription = $this->subscriptionManager
             ->findOneBy(
                 array('userId' => $this->tokenStorage->getToken()->getUser()->getId(), 'handler' => 'portlet')
@@ -82,28 +76,21 @@ class MessagesPortlet extends Portlet
             return array();
         }
 
-        $messages = $this->messageManager->findByCriteria($filter->getCriteria(), array('createdAt' => 'DESC'), 20);
-
-        $priorityList = $this->messageManager->getPriorityNames();
-        $typeList = $this->messageManager->getTypeNames();
+        $messages = $this->messageManager->findByExpression($filter->getExpression(), ['createdAt' => 'DESC'], 20);
+        */
+        $messages = $this->messageManager->findBy(array(), array('createdAt' => 'DESC'), 20);
 
         $data = array();
         foreach ($messages as $message) {
-            $subject = '';
-
-            $i = 0;
-            do {
-                $subject .= ($i ? '<wbr />' : '') . mb_substr($message->getSubject(), $i, $i + 30, 'UTF-8');
-                $i += 30;
-            } while ($i <= strlen($message->getSubject()));
-
             $data[] = array(
-                'id'       => $message->getId(),
-                'subject'  => $subject,
-                'time'     => $message->getCreatedAt()->format('U'),
-                'priority' => $priorityList[$message->getPriority()],
-                'type'     => $typeList[$message->getType()],
-                'channel'  => $message->getChannel(),
+                'id'        => $message->getId(),
+                'subject'   => $message->getSubject(),
+                'body'      => $message->getBody(),
+                'type'      => $message->getType(),
+                'channel'   => $message->getChannel(),
+                'role'      => $message->getRole(),
+                'user'      => $message->getUser(),
+                'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
             );
         }
 

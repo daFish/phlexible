@@ -1,30 +1,26 @@
-Ext.provide('Phlexible.element.util.Clipboard');
+Ext.define('Phlexible.elements.util.Clipboard', {
+    constructor: function() {
+        this.text = null;
+        this.item = null;
+        this.type = null;
+        this.active = false;
 
-Ext.require('Phlexible.gui.util.Frame');
+        Phlexible.gui.util.Frame.prototype.removeSplash = Phlexible.gui.util.Frame.prototype.removeSplash.createSequence(function () {
+            Phlexible.Frame.menu.addTrayItem({
+                trayId: 'clipboard',
+                cls: 'x-btn-icon',
+                iconCls: 'p-element-clipboard_inactive-icon',
+                handler: this.copy,
+                scope: this
+            });
+        }, this);
 
-Phlexible.element.util.Clipboard = function () {
-    this.text = null;
-    this.item = null;
-    this.type = null;
-    this.active = false;
-
-    Phlexible.gui.util.Frame.prototype.removeSplash = Phlexible.gui.util.Frame.prototype.removeSplash.createSequence(function () {
-        Phlexible.Frame.menu.addTrayItem({
-            trayId: 'clipboard',
-            cls: 'x-btn-icon',
-            iconCls: 'p-element-clipboard_inactive-icon',
-            handler: this.copy,
-            scope: this
+        this.addEvents({
+            "set": true,
+            "clear": true
         });
-    }, this);
+    },
 
-    this.addEvents({
-        "set": true,
-        "clear": true
-    });
-};
-
-Ext.extend(Phlexible.element.util.Clipboard, Ext.util.Observable, {
     strings: Phlexible.elements.Strings,
 
     set: function (text, item, type) {

@@ -1,9 +1,6 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-Ext.require('Ext.ux.netbox.InputTextMask');
+//xt.require('Ext.ux.netbox.InputTextMask');
 
-Phlexible.fields.Registry.addFactory('timecodefield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('timecodefield', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -27,12 +24,13 @@ Phlexible.fields.Registry.addFactory('timecodefield', function (parentConfig, it
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('timecodefield', {
+Phlexible.fields.FieldTypes.register({
+    type: 'timecodefield',
     titles: {
         de: 'Timecodefield',
         en: 'Timecodefield'
     },
-    iconCls: 'p-elementtype-field_timecode-icon',
+    iconCls: Phlexible.Icon.get('clock'),
     allowedIn: [
         'tab',
         'accordion',

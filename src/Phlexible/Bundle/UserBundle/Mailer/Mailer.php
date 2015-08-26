@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Mailer;
@@ -43,8 +46,8 @@ class Mailer
     public function __construct(
         Twig_Environment $templating,
         Swift_Mailer $mailer,
-        array $parameters)
-    {
+        array $parameters
+    ) {
         $this->templating = $templating;
         $this->mailer = $mailer;
         $this->parameters = $parameters;

@@ -1,7 +1,7 @@
 {
     "name": "phlexible/phlexible",
     "description": "phlexible",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "symfony-bundle",
     "keywords": ["phlexible"],
     "autoload": {
@@ -21,12 +21,14 @@
         "ext-session": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
+        "brainbits/fugue-icons-bundle": "~3.0",
         "puli/cli": "~1.0",
         "puli/twig-extension": "~1.0",
         "puli/symfony-bundle": "~1.0",
         "zf1/zend-search-lucene": "~1.12",
         "doctrine/orm": "~2.4",
         "fluentdom/fluentdom": "~5.1",
+        "friendsofsymfony/rest-bundle": "~1.5",
         "friendsofsymfony/user-bundle": "~1.3",
         "symfony/symfony": "~2.4",
         "symfony-cmf/routing-bundle": "~1.1",
@@ -45,6 +47,8 @@
         "phpexiftool/phpexiftool": "~0.4",
         "cogpowered/finediff": "~0.3",
         "nelmio/api-doc-bundle": "~2.5",
+        "jms/serializer-bundle": "~0.13",
+        "webmozart/expression": "~1.0",
         "alchemy/zippy": "~0.2.1"
     },
      "replace": {

@@ -1,6 +1,7 @@
-Ext.provide('Phlexible.elementtypes.field.Group');
+Ext.define('Phlexible.elementtype.field.Group', {
+    extend: 'Ext.panel.Panel',
+    xtype: 'field.group',
 
-Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
     autoHeight: true,
     collapsible: false,
     hideMode: 'offsets',
@@ -10,7 +11,7 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
 
     // private
     initComponent: function () {
-        Phlexible.elementtypes.field.Group.superclass.initComponent.call(this);
+        this.callParent(arguments);
 
         this.on({
             xadd: function (me, comp) {
@@ -242,19 +243,19 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
                         items: [
                             {
                                 text: Phlexible.elementtypes.Strings.add_above,
-                                iconCls: 'p-elementtype-drop_over-icon',
+                                iconCls: Phlexible.Icon.get('node-insert-previous'),
                                 hidden: true,
                                 menu: []
                             },
                             {
                                 text: Phlexible.elementtypes.Strings.add_below,
-                                iconCls: 'p-elementtype-drop_under-icon',
+                                iconCls: Phlexible.Icon.get('node-insert-next'),
                                 hidden: true,
                                 menu: []
                             },
                             {
                                 text: Phlexible.elementtypes.Strings.add_child,
-                                iconCls: 'p-elementtype-drop_add-icon',
+                                iconCls: Phlexible.Icon.get('node-insert-child'),
                                 hidden: true,
                                 menu: []
                             }
@@ -278,7 +279,7 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
                         }
                         menuConfig.items[2].menu.push({
                             text: item.title,
-                            iconCls: 'p-elementtype-container_group-icon',
+                            iconCls: Phlexible.Icon.get('ui-group-box'),
                             disabled: disabled,
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
@@ -308,7 +309,7 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
                         }
                         menuConfig.items[0].menu.push({
                             text: item.title,
-                            iconCls: 'p-elementtype-container_group-icon',
+                            iconCls: Phlexible.Icon.get('ui-group-box'),
                             disabled: disabled,
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
@@ -320,7 +321,7 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
                         });
                         menuConfig.items[1].menu.push({
                             text: item.title,
-                            iconCls: 'p-elementtype-container_group-icon',
+                            iconCls: Phlexible.Icon.get('ui-group-box'),
                             disabled: disabled,
                             handler: function (dsId) {
                                 var pt = this.element.prototypes.getPrototype(dsId);
@@ -375,4 +376,3 @@ Phlexible.elementtypes.field.Group = Ext.extend(Ext.Panel, {
         }
     }
 });
-Ext.reg('group', Phlexible.elementtypes.field.Group);

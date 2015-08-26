@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Search;
@@ -54,7 +57,16 @@ class UserSearch implements SearchProviderInterface
      */
     public function search($query)
     {
-        $users = $this->userManager->search(array('term' => $query));
+        $criteria = $this->userManager->createCriteria();
+        $criteria->where(
+            $criteria->expr()->orX(
+                $criteria->expr()->contains('firstname', $query),
+                $criteria->expr()->contains('lastname', $query),
+                $criteria->expr()->contains('username', $query),
+                $criteria->expr()->contains('email', $query)
+            )
+        );
+        $users = $this->userManager->query($criteria);
 
         $createUser = new User();
         $createUser->setUsername('(unknown)');

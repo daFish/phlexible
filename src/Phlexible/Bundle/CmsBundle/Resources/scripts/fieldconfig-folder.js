@@ -2,7 +2,7 @@ Ext.require('Phlexible.fields.Registry');
 Ext.require('Phlexible.fields.FieldTypes');
 Ext.require('Phlexible.cms.field.FolderField');
 
-Phlexible.fields.Registry.addFactory('folder', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('folder', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
@@ -11,7 +11,7 @@ Phlexible.fields.Registry.addFactory('folder', function (parentConfig, item, val
     item.media = item.media || {};
 
     Ext.apply(config, {
-        xtype: 'folderfield',
+        xtype: 'field.folder',
         hiddenName: config.name,
         data_id: item.data_id,
 
@@ -36,12 +36,13 @@ Phlexible.fields.Registry.addFactory('folder', function (parentConfig, item, val
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('folder', {
+Phlexible.fields.FieldTypes.register({
+    type: 'folder',
     titles: {
         de: 'Ordner',
         en: 'Folder'
     },
-    iconCls: 'p-cms-field_folder-icon',
+    iconCls: Phlexible.Icon.get('folder'),
     allowedIn: [
         'tab',
         'accordion',

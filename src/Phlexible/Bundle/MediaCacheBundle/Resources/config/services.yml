@@ -92,9 +92,9 @@ services:
     phlexible_media_cache.portlet.cache_status:
         class: Phlexible\Bundle\MediaCacheBundle\Portlet\CacheStatusPortlet
         public: false
-        arguments: [@translator, @phlexible_media_cache.cache_manager]
+        arguments: [@phlexible_media_cache.cache_manager]
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: cachestatus-portlet}
 
     # role providers
     phlexible_media_cache.role_provider:

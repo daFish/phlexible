@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Elastica;
@@ -15,9 +18,9 @@ use Elastica\Filter;
 use Elastica\Query;
 use Elastica\ResultSet;
 use Elastica\Type;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
 use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
+use Webmozart\Expression\Expression;
 
 /**
  * Elastica message manager
@@ -61,10 +64,6 @@ class MessageManager implements MessageManagerInterface
         $query = new Query();
         $query->setSize(0);
 
-        $priorityFacet = new Facet\Terms('priorities');
-        $priorityFacet->setField('priority');
-        $query->addFacet($priorityFacet);
-
         $typeFacet = new Facet\Terms('types');
         $typeFacet->setField('type');
         $query->addFacet($typeFacet);
@@ -80,7 +79,6 @@ class MessageManager implements MessageManagerInterface
         $resultSet = $this->getType()->search($query);
         $facets = $resultSet->getFacets();
         $filterSets = array(
-            'priorities' => array_column($facets['priorities']['terms'], 'term'),
             'types'      => array_column($facets['types']['terms'], 'term'),
             'channels'   => array_column($facets['channels']['terms'], 'term'),
             'roles'      => array_column($facets['roles']['terms'], 'term'),
@@ -92,24 +90,16 @@ class MessageManager implements MessageManagerInterface
     /**
      * Return facets
      *
-     * @param Criteria $criteria
+     * @param Expression $expression
      *
      * @return array
      */
-    public function getFacetsByCriteria(Criteria $criteria)
+    public function getFacetsByExpression(Expression $expression)
     {
-
         $query = new Query();
         $query->setSize(0);
 
-        $filter = $this->createFilterFromCriteria($criteria);
-
-        $priorityFacet = new Facet\Terms('priorities');
-        $priorityFacet->setField('priority');
-        if ($filter->getFilters()) {
-            $priorityFacet->setFilter($filter);
-        }
-        $query->addFacet($priorityFacet);
+        $filter = $this->createFilterFromExpression($expression);
 
         $typeFacet = new Facet\Terms('types');
         $typeFacet->setField('type');
@@ -136,7 +126,6 @@ class MessageManager implements MessageManagerInterface
         $facets = $resultSet->getFacets();
 
         $filterSets = array(
-            'priorities' => array_column($facets['priorities']['terms'], 'term'),
             'types'      => array_column($facets['types']['terms'], 'term'),
             'channels'   => array_column($facets['channels']['terms'], 'term'),
             'roles'      => array_column($facets['roles']['terms'], 'term'),
@@ -177,7 +166,7 @@ class MessageManager implements MessageManagerInterface
         $handlerFilter = new Filter\Term();
         $handlerFilter->setTerm('handler', $handler);
 
-        $query = new Filter\Query();
+        $query = new Query();
         $query->setPostFilter($handlerFilter);
 
         $documents = $this->getType()->search($query);
@@ -189,10 +178,10 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByCriteria(Criteria $criteria, $order = null, $limit = null, $offset = null)
+    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
     {
         $query = new Query();
-        $this->applyCriteriaToQuery($criteria, $query);
+        $this->applyExpressionToQuery($expression, $query);
 
 
         if ($limit !== null && $offset !== null) {
@@ -201,9 +190,9 @@ class MessageManager implements MessageManagerInterface
                 ->setFrom($offset);
         }
 
-        if ($order !== null) {
+        if ($orderBy !== null) {
             $sort = array();
-            foreach ($order as $field => $dir) {
+            foreach ($orderBy as $field => $dir) {
                 $sort[] = array($field => strtolower($dir));
             }
             $query->setSort($sort);
@@ -218,10 +207,10 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function countByCriteria(Criteria $criteria)
+    public function countByExpression(Expression $expression)
     {
         $query = new Query();
-        $this->applyCriteriaToQuery($criteria, $query);
+        $this->applyExpressionToQuery($expression, $query);
 
         return $this->getType()->count($query);
     }
@@ -229,7 +218,14 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findBy(array $criteria = array(), $order = null, $limit = null, $offset = 0)
+    public function findOneByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = 0)
     {
         $query = new Query();
 
@@ -247,9 +243,9 @@ class MessageManager implements MessageManagerInterface
                 ->setFrom($offset);
         }
 
-        if ($order !== null) {
+        if ($orderBy !== null) {
             $sort = array();
-            foreach ($order as $field => $dir) {
+            foreach ($orderBy as $field => $dir) {
                 $sort[] = array($field => strtolower($dir));
             }
             $query->setSort($sort);
@@ -271,20 +267,13 @@ class MessageManager implements MessageManagerInterface
      */
     public function findOneBy(array $criteria, $orderBy = null)
     {
-        // TODO: Implement findOneBy() method.
-    }
+        $result = $this->findBy($criteria, $orderBy, 1);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPriorityNames()
-    {
-        return array(
-            0 => 'low',
-            1 => 'normal',
-            2 => 'high',
-            3 => 'urgent',
-        );
+        if (!count($result)) {
+            return null;
+        }
+
+        return current($result);
     }
 
     /**
@@ -309,7 +298,6 @@ class MessageManager implements MessageManagerInterface
                 'id'        => $message->getId(),
                 'subject'   => $message->getSubject(),
                 'body'      => $message->getBody(),
-                'priority'  => $message->getPriority(),
                 'type'      => $message->getType(),
                 'channel'   => $message->getChannel(),
                 'role'      => $message->getRole(),
@@ -356,7 +344,6 @@ class MessageManager implements MessageManagerInterface
         $message = Message::create(
             $row['subject'],
             $row['body'],
-            $row['priority'],
             $row['type'],
             $row['channel'],
             $row['role'],
@@ -370,36 +357,37 @@ class MessageManager implements MessageManagerInterface
     /**
      * Apply criteria to query
      *
-     * @param Criteria $criteria
-     * @param Query    $query
-     * @param string   $prefix
+     * @param Expression $expression
+     * @param Query      $query
+     * @param string     $prefix
      */
-    private function applyCriteriaToQuery(Criteria $criteria, Query $query, $prefix = '')
+    private function applyExpressionToQuery(Expression $expression, Query $query, $prefix = '')
     {
-        if (!count($criteria)) {
+        if (!count($expression)) {
             return;
         }
 
-        $query->setPostFilter($this->createFilterFromCriteria($criteria));
+        $query->setPostFilter($this->createFilterFromExpression($expression));
     }
 
-    private function createFilterFromCriteria(Criteria $criteria)
+    private function createFilterFromExpression(Expression $expression)
     {
         $andFilter = new Filter\BoolAnd();
 
-        $this->loopCriteria($criteria, $andFilter);
+        $this->loopExpression($expression, $andFilter);
 
         return $andFilter;
     }
 
-    private function loopCriteria(Criteria $criteria, Filter\BoolAnd $andFilter)
+    private function loopExpression(Expression $expression, Filter\BoolAnd $andFilter)
     {
-        foreach ($criteria as $criterium) {
-            if ($criterium instanceof Criteria) {
-                $this->loopCriteria($criterium, $andFilter);
+        foreach ($expression as $criterium) {
+            if ($criterium instanceof Expression) {
+                $this->loopExpression($criterium, $andFilter);
                 continue;
             }
 
+            $key = $criterium->getType();
             $type = $criterium->getType();
             $value = $criterium->getValue();
 
@@ -408,105 +396,50 @@ class MessageManager implements MessageManagerInterface
             }
 
             switch ($type) {
-                case Criteria::CRITERIUM_SUBJECT_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('subject', '*' . $value . '*')));
+                case 'like':
+                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard($key, '*' . $value . '*')));
                     break;
 
-                case Criteria::CRITERIUM_SUBJECT_NOT_LIKE:
+                case 'notLike':
                     $andFilter->addFilter(
-                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('subject', '*' . $value . '*')))
+                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard($key, '*' . $value . '*')))
                     );
                     break;
 
-                case Criteria::CRITERIUM_BODY_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('body', '*' . $value . '*')));
+                case 'eq':
+                    $andFilter->addFilter(new Filter\Term(array($key => $value)));
                     break;
 
-                case Criteria::CRITERIUM_BODY_NOT_LIKE:
-                    $andFilter->addFilter(
-                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard('body', '*' . $value . '*')))
-                    );
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_IS:
-                    $andFilter->addFilter(new Filter\Term(array('priority', $value)));
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_MIN:
-                    $andFilter->addFilter(new Filter\Range('priority', array('gte' => $value)));
-                    break;
-
-                case Criteria::CRITERIUM_PRIORITY_IN:
-                    $orFilter = new Filter\BoolOr();
-                    foreach (explode(',', $value) as $priority) {
-                        $orFilter->addFilter(new Filter\Term(array('priority' => $priority)));
-                    }
-                    $andFilter->addFilter($orFilter);
-                    break;
-
-                case Criteria::CRITERIUM_TYPE_IS:
-                    $andFilter->addFilter(new Filter\Term(array('type' => $value)));
-                    break;
-
-                case Criteria::CRITERIUM_TYPE_IN:
+                case 'neq':
                     $orFilter = new Filter\BoolOr();
                     foreach (explode(',', $value) as $type) {
-                        $orFilter->addFilter(new Filter\Term(array('type' => $type)));
+                        $orFilter->addFilter(new Filter\Term(array($key => $type)));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
-                case Criteria::CRITERIUM_CHANNEL_IS:
-                    $andFilter->addFilter(new Filter\Term(array('channel' => $value)));
-                    break;
-
-                case Criteria::CRITERIUM_CHANNEL_LIKE:
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard('channel', '*' . $value . '*')));
-                    break;
-
-                case Criteria::CRITERIUM_CHANNEL_IN:
+                case 'in':
                     $orFilter = new Filter\BoolOr();
                     foreach (explode(',', $value) as $channel) {
-                        $orFilter->addFilter(new Filter\Term(array('channel' => $channel)));
+                        $orFilter->addFilter(new Filter\Term(array($key => $channel)));
                     }
                     $andFilter->addFilter($orFilter);
                     break;
 
-                case Criteria::CRITERIUM_ROLE_IS:
-                    $andFilter->addFilter(new Filter\Term(array('role' => $value)));
+                case 'greaterThan':
+                    $andFilter->addFilter(new Filter\Range($key, array('gt' => $value)));
                     break;
 
-                case Criteria::CRITERIUM_ROLE_IN:
-                    $orFilter = new Filter\BoolOr();
-                    foreach (explode(',', $value) as $role) {
-                        $orFilter->addFilter(new Filter\Term(array('role' => $role)));
-                    }
-                    $andFilter->addFilter($orFilter);
+                case 'greaterThanEquals':
+                    $andFilter->addFilter(new Filter\Range($key, array('gte' => $value)));
                     break;
 
-                case Criteria::CRITERIUM_MAX_AGE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', array('gt' => time() - ($value * 24 * 60 * 60))));
+                case 'lessThan':
+                    $andFilter->addFilter(new Filter\Range($key, array('lt' => $value)));
                     break;
 
-                case Criteria::CRITERIUM_MIN_AGE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', array('lt' => time() - ($value * 24 * 60 * 60))));
-                    break;
-
-                case Criteria::CRITERIUM_START_DATE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', array('gt' => $value->format('U'))));
-                    break;
-
-                case Criteria::CRITERIUM_END_DATE:
-                    $andFilter->addFilter(new Filter\Range('createdAt', array('lt' => $value->format('U'))));
-                    break;
-
-                case Criteria::CRITERIUM_DATE_IS:
-                    $andFilter->addFilter(
-                        new Filter\Range('createdAt', array(
-                            'gte' => $value->format('U'),
-                            'lt'  => $value->format('U'),
-                        ))
-                    );
+                case 'lessThanEquals':
+                    $andFilter->addFilter(new Filter\Range($key, array('lte' => $value)));
                     break;
             }
         }

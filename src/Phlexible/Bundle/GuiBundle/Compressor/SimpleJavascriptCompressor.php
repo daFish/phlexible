@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Compressor;
@@ -20,10 +23,6 @@ class SimpleJavascriptCompressor extends AbstractStringCompressor
      */
     public function compressString($buffer)
     {
-        //$buffer = preg_replace("/((?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:\/\/.*))/", "", $buffer);
-        //$buffer = str_replace(["\r\n","\r","\t","\n",'  ','    ','     '], '', $buffer);
-        //$buffer = preg_replace(['(( )+\))','(\)( )+)'], ')', $buffer);
-
         return $buffer;
     }
 }

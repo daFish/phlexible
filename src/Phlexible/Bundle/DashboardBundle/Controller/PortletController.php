@@ -1,20 +1,20 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\DashboardBundle\Controller;
 
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Portlet controller
@@ -30,53 +30,51 @@ class PortletController extends Controller
      * @return JsonResponse
      * @Route("", name="dashboard_portlets")
      * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns a list of user portlets"
-     * )
      */
     public function portletsAction()
     {
-        $data = array();
-        foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
-            if ($portlet->hasRole() && !$this->isGranted($portlet->getRole())) {
-                continue;
-            }
+        $authorizationChecker = $this->get('security.authorization_checker');
 
-            $data[] = $portlet->toArray();
+        $infobars = array();
+        $portlets = array();
+
+        foreach ($this->get('phlexible_dashboard.infobars')->all() as $infobar) {
+            $infobars[] = $infobar->toArray();
         }
 
-        return new JsonResponse($data);
+        foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
+            if (!$portlet->hasRole() || $authorizationChecker->isGranted($portlet->getRole())) {
+                $portlets[] = $portlet->toArray();
+            }
+        }
+
+        return new JsonResponse(array('infobars' => $infobars, 'portlets' => $portlets));
     }
 
     /**
-     * Save portlets
+     * Return portlets
      *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/save", name="dashboard_portlets_save")
-     * @Method("POST")
-     * @ApiDoc(
-     *   description="Save user portlets",
-     *   parameters={
-     *     {"name"="portlets", "dataType"="array", "required"=true, "description"="Portlet data"}
-     *   }
-     * )
+     * @return JsonResponse
+     * @Route("", name="dashboard_portlets_data")
+     * @Method("GET")
      */
-    public function saveAction(Request $request)
+    public function dataAction()
     {
-        $portlets = $request->request->get('portlets');
-        $portlets = json_decode($portlets, true);
+        $authorizationChecker = $this->get('security.authorization_checker');
 
-        if (!is_array($portlets)) {
-            return new ResultResponse(false, 'Portlets data invalid.');
+        $infobars = array();
+        $portlets = array();
+
+        foreach ($this->get('phlexible_dashboard.infobars')->all() as $infobar) {
+            $infobars[$infobar->getId()] = $infobar->getData();
         }
 
-        $user = $this->getUser();
-        $user->setProperty('portlets', json_encode($portlets));
+        foreach ($this->get('phlexible_dashboard.portlets')->all() as $portlet) {
+            if (!$portlet->hasRole() || $authorizationChecker->isGranted($portlet->getRole())) {
+                $portlets[$portlet->getId()] = $portlet->getData();
+            }
+        }
 
-        $this->get('phlexible_user.user_manager')->updateUser($user);
-
-        return new ResultResponse(true, 'Portlets saved.');
+        return new JsonResponse(array('infobars' => $infobars, 'portlets' => $portlets));
     }
 }

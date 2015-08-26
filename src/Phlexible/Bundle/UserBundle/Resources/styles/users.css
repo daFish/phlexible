@@ -4,6 +4,7 @@
     background-position: center;
 }
 
+/*
 .p-users-options-window .x-panel-header {
     background: none;
     background-color: white;
@@ -80,15 +81,7 @@
 .p-users-options-window .x-view-selected .thumb {
     background: transparent;
 }
-
-.p-users-options-quickstart-tree li {
-    margin: 0;
-}
-
-.p-users-options-quickstart-tree li span {
-    margin: 0;
-    padding: 1px 3px 1px 2px;
-}
+*/
 
 .p-users-expired {
     background-image: url(/BUNDLES_PATH/phlexibleuser/images/toolbar-bg.gif) !IMPORTANT;

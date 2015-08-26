@@ -1,41 +1,27 @@
-Ext.provide('Phlexible.search.SearchPanel');
+Ext.define('Phlexible.search.view.SearchPanel', {
+    extend: 'Ext.panel.Panel',
+    requires: ['Phlexible.search.model.Result'],
 
-Ext.require('Phlexible.search.model.Result');
+    xtype: 'searchpanel',
 
-Phlexible.search.SearchPanel = Ext.extend(Ext.Panel, {
-    title: 'Search',
+    title: '_SearchPanel',
     cls: 'p-searchpanel',
     iconCls: 'p-search-search-icon',
     layout: 'fit',
 
     initComponent: function () {
+        this.initMyTasks();
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyTasks: function() {
         this.task = new Ext.util.DelayedTask(this.doSearch, this);
+    },
 
-        this.tbar = [
-            {
-                xtype: 'trigger',
-                triggerClass: 'x-form-clear-trigger',
-                enableKeyEvents: true,
-                onTriggerClick: function () {
-                    this.getTopToolbar().items.items[0].setValue('');
-                    this.getComponent(0).store.baseParams.query = '';
-                    this.getComponent(0).store.removeAll();
-                }.createDelegate(this),
-                listeners: {
-                    keyup: function (field, event) {
-                        if (event.getKey() == event.ENTER) {
-                            this.task.cancel();
-                            this.doSearch();
-                            return;
-                        }
-
-                        this.task.delay(500);
-                    },
-                    scope: this
-                }
-            }
-        ];
-
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'dataview',
@@ -57,17 +43,9 @@ Phlexible.search.SearchPanel = Ext.extend(Ext.Panel, {
                 store: new Ext.data.JsonStore({
                     url: Phlexible.Router.generate('search_search'),
                     root: 'results',
-                    totalProperty: 'totalCount',
+                    totalProperty: 'count',
                     //                id: 'id'
-                    fields: Phlexible.search.model.Result,
-                    listeners: {
-                        xload: {
-                            fn: function () {
-                                this.doLayout();
-                            },
-                            scope: this
-                        }
-                    }
+                    model: 'Phlexible.search.model.Result'
                 }),
                 autoHeight: true,
                 multiSelect: false,
@@ -94,8 +72,35 @@ Phlexible.search.SearchPanel = Ext.extend(Ext.Panel, {
                 }
             }
         ];
+    },
 
-        Phlexible.search.SearchPanel.superclass.initComponent.call(this);
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                xtype: 'trigger',
+                triggerClass: 'x-form-clear-trigger',
+                enableKeyEvents: true,
+                onTriggerClick: function () {
+                    this.getTopToolbar().items.items[0].setValue('');
+                    this.getComponent(0).store.baseParams.query = '';
+                    this.getComponent(0).store.removeAll();
+                }.createDelegate(this),
+                listeners: {
+                    keyup: function (field, event) {
+                        if (event.getKey() == event.ENTER) {
+                            this.task.cancel();
+                            this.doSearch();
+                            return;
+                        }
+
+                        this.task.delay(500);
+                    },
+                    scope: this
+                }
+            }]
+        }];
     },
 
     doSearch: function () {
@@ -105,5 +110,3 @@ Phlexible.search.SearchPanel = Ext.extend(Ext.Panel, {
         this.getComponent(0).store.load();
     }
 });
-
-Ext.reg('searchpanel', Phlexible.search.SearchPanel);

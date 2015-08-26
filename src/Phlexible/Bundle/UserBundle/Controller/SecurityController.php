@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Controller;
@@ -65,7 +68,10 @@ class SecurityController extends BaseSecurityController
      */
     public function checkAction()
     {
-        throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
+        throw new \RuntimeException(
+            'You must configure the check path to be handled by the firewall using form_login in your security ' .
+            'firewall configuration.'
+        );
     }
 
     /**
@@ -82,7 +88,10 @@ class SecurityController extends BaseSecurityController
      */
     protected function renderLogin(array $data)
     {
-        $template = sprintf('PhlexibleUserBundle:Security:login.html.%s', $this->container->getParameter('fos_user.template.engine'));
+        $template = sprintf(
+            'PhlexibleUserBundle:Security:login.html.%s',
+            $this->container->getParameter('fos_user.template.engine')
+        );
 
         return $this->container->get('templating')->renderResponse($template, $data);
     }

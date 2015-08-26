@@ -1,0 +1,23 @@
+{
+    "version": "1.0",
+    "name": "phlexible/problem-bundle",
+    "path-mappings": {
+        "/phlexible/problem-bundle/menu": "Resources/menu",
+        "/phlexible/problem-bundle/scripts": "Resources/scripts",
+        "/phlexible/problem-bundle/styles": "Resources/styles"
+    },
+    "bindings": {
+        "31c8a69f-0b6f-42c4-b8bc-8dc1f922777f": {
+            "query": "/phlexible/problem-bundle/menu/*.yml",
+            "type": "phlexible/menu"
+        },
+        "552b2ee7-6408-4163-9ba7-4f3456f56d2b": {
+            "query": "/phlexible/problem-bundle/scripts/**/*.js",
+            "type": "phlexible/scripts"
+        },
+        "303135c4-a82e-460d-91fb-3887e698197d": {
+            "query": "/phlexible/problem-bundle/styles/**/*.css",
+            "type": "phlexible/styles"
+        }
+    }
+}

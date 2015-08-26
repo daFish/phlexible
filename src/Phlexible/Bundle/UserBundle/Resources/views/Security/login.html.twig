@@ -4,7 +4,7 @@
     <script type="text/javascript">
         //<![CDATA[
         Ext.onReady(function () {
-            win = new Phlexible.users.security.LoginWindow({
+            win = Ext.create('Phlexible.user.security.LoginWindow', {
                 title: "{{ project.title }}",
                 resetUrl: "{{ path("fos_user_resetting_request") }}",
                 csrfToken: "{{ csrf_token }}",

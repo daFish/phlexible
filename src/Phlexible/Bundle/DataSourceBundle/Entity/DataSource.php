@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\DataSourceBundle\Entity;
@@ -37,9 +40,9 @@ class DataSource
 
     /**
      * @var string
-     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="create_user", type="string")
      */
-    private $createUserId;
+    private $createUser;
 
     /**
      * @var \DateTime
@@ -49,9 +52,9 @@ class DataSource
 
     /**
      * @var string
-     * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="modify_user", type="string")
      */
-    private $modifyUserId;
+    private $modifyUser;
 
     /**
      * @var \DateTime
@@ -116,19 +119,19 @@ class DataSource
     /**
      * @return string
      */
-    public function getCreateUserId()
+    public function getCreateUser()
     {
-        return $this->createUserId;
+        return $this->createUser;
     }
 
     /**
-     * @param string $createUserId
+     * @param string $createUser
      *
      * @return $this
      */
-    public function setCreateUserId($createUserId)
+    public function setCreateUser($createUser)
     {
-        $this->createUserId = $createUserId;
+        $this->createUser = $createUser;
 
         return $this;
     }
@@ -154,21 +157,21 @@ class DataSource
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
-    public function getModifyUserId()
+    public function getModifyUser()
     {
-        return $this->modifyUserId;
+        return $this->modifyUser;
     }
 
     /**
-     * @param string $modifyUserId
+     * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUserId($modifyUserId)
+    public function setModifyUser($modifyUser)
     {
-        $this->modifyUserId = $modifyUserId;
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }

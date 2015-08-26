@@ -1,11 +1,25 @@
-queue:
-    queue: Queue
-    no_jobs: 'No jobs'
-    reload: Reload
-    id: ID
-    command: Command
-    priority: Priority
-    status: Status
-    create_time: 'Create time'
-    start_time: 'Start time'
-    end_time: 'End time'
+Phlexible:
+    queue:
+        handler:
+            Queue:
+                text: Queue
+
+        view:
+            Main:
+                title: Queue
+                queueText: Queue
+                noJobsText: 'No jobs'
+                idText: ID
+                commandText: Command
+                priorityText: Priority
+                stateText: State
+                createdAtText: 'Created at'
+                startedAtText: 'Started at'
+                finishedAtText: 'Finished at'
+                runTimeText: Runtime
+                memoryUsageText: 'Memory usage'
+                maxRuntimeText: 'Max. runtime'
+                executeAfterText: 'Execute after'
+                outputText: 'Output'
+                errorOutputText: 'Error output'
+                reloadText: Reload

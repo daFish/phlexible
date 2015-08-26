@@ -1,7 +1,6 @@
-Ext.require('Phlexible.Handles');
 Ext.require('Phlexible.gui.menuhandle.handle.XtypeHandle');
 Ext.require('Phlexible.gui.menuhandle.handle.BubbleMenu');
-Ext.require('Phlexible.tree.view.MainPanel');
+Ext.require('Phlexible.elements.MainPanel');
 
 Phlexible.Handles.add('tree', function() {
     return new Phlexible.gui.menuhandle.handle.XtypeHandle({
@@ -9,7 +8,7 @@ Phlexible.Handles.add('tree', function() {
         component: 'tree-main',
 
         getIdentifier: function () {
-            return this.getComponent() + '_' + this.parameters.siterootId;
+            return this.getComponent() + '_' + this.parameters.siteroot_id;
         },
 
         getText: function() {

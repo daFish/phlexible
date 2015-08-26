@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaManagerBundle\Controller;
@@ -31,13 +34,13 @@ class MediaController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("", name="mediamanager_media")
+     * @Route("", name="phlexible_mediamanager_media")
      */
     public function mediaAction(Request $request)
     {
-        $fileId = $request->get('file_id');
-        $fileVersion = $request->get('file_version', 1);
-        $templateKey = $request->get('template_key');
+        $fileId = $request->get('fileId');
+        $fileVersion = $request->get('fileVersion', 1);
+        $templateKey = $request->get('templateKey');
 
         $cacheManager = $this->get('phlexible_media_cache.cache_manager');
         $storageManager = $this->get('phlexible_media_cache.storage_manager');
@@ -126,7 +129,7 @@ class MediaController extends Controller
      * @param string $mediaType
      *
      * @return Response
-     * @Route("/delegate/{templateKey}/{mediaType}", name="mediamanager_media_delegate")
+     * @Route("/delegate/{templateKey}/{mediaTypeName}", name="phlexible_mediamanager_media_delegate")
      */
     public function delegateAction($templateKey, $mediaType)
     {

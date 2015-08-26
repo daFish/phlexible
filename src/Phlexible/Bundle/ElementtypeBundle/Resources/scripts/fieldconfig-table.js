@@ -1,14 +1,11 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-Ext.require('Phlexible.elementtypes.field.TableField');
+Ext.require('Phlexible.elementtype.field.TableField');
 
 Ext.Editor.prototype.beforeDestroy = function () {
     if (this.field) this.field.destroy();
     this.field = null;
 };
 
-Phlexible.fields.Registry.addFactory('table', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('table', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -33,12 +30,13 @@ Phlexible.fields.Registry.addFactory('table', function (parentConfig, item, valu
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('table', {
+Phlexible.fields.FieldTypes.register({
+    type: 'table',
     titles: {
         de: 'Tabelle',
         en: 'Table'
     },
-    iconCls: 'p-elementtype-field_table-icon',
+    iconCls: Phlexible.Icon.get('table'),
     allowedIn: [
         'tab',
         'accordion',

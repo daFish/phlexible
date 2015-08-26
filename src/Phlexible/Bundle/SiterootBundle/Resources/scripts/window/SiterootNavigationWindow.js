@@ -1,16 +1,29 @@
-Ext.provide('Phlexible.siteroots.SiterootNavigationWindow');
+Ext.define('Phlexible.siteroot.window.SiterootNavigationWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.siteroots.SiterootNavigationWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.siteroots.Strings.siteroot_navigation,
-    strings: Phlexible.siteroots.Strings,
+    title: '_SiterootNavigationWindow',
     width: 400,
     height: 300,
     modal: true,
     layout: 'fit',
 
+    idText: '_id',
+    titleText: '_title',
+    selectSiterootText: '_selectSiterootText',
+    storeText: '_storeText',
+    cancelText: '_cancelText',
+
     initComponent: function () {
         this.values = this.record.get('additional').split(',');
 
+        this.initMyItems();
+        this.initMyDockedItems();
+        this.loadSiteroots();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'grid',
@@ -19,35 +32,33 @@ Phlexible.siteroots.SiterootNavigationWindow = Ext.extend(Ext.Window, {
                 viewConfig: {
                     forceFit: true
                 },
-                store: new Ext.data.SimpleStore({
+                store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'title']
                 }),
                 sm: new Ext.grid.RowSelectionModel({
                     singleSelect: true,
                     listeners: {
-                        selectionchange: {
-                            fn: function (sm) {
-                                var sel = sm.getSelected();
+                        selectionchange: function (sm) {
+                            var sel = sm.getSelected();
 
-                                if (sel) {
-                                    this.getComponent(0).getTopToolbar().items.items[4].enable();
-                                } else {
-                                    this.getComponent(0).getTopToolbar().items.items[4].disable();
-                                }
-                            },
-                            scope: this
-                        }
+                            if (sel) {
+                                this.getComponent(0).getTopToolbar().items.items[4].enable();
+                            } else {
+                                this.getComponent(0).getTopToolbar().items.items[4].disable();
+                            }
+                        },
+                        scope: this
                     }
                 }),
                 columns: [
                     {
-                        header: this.strings.id,
+                        header: this.idText,
                         dataIndex: 'id',
                         width: 150,
                         hidden: true
                     },
                     {
-                        header: this.strings.title,
+                        header: this.titleText,
                         width: 150,
                         dataIndex: 'title'
                     }
@@ -61,23 +72,21 @@ Phlexible.siteroots.SiterootNavigationWindow = Ext.extend(Ext.Window, {
                         store: new Ext.data.SimpleStore({
                             fields: ['id', 'title']
                         }),
-                        emptyText: this.strings.select_siteroot,
+                        emptyText: this.selectSiterootText,
                         editable: false,
                         mode: 'local',
                         displayField: 'title',
                         valueField: 'id',
                         listeners: {
-                            select: {
-                                fn: function (combo, r) {
-                                    combo.store.remove(r);
+                            select: function (combo, r) {
+                                combo.store.remove(r);
 
-                                    var c = this.getComponent(0);
-                                    c.store.add(r);
+                                var c = this.getComponent(0);
+                                c.store.add(r);
 
-                                    combo.setValue('');
-                                },
-                                scope: this
-                            }
+                                combo.setValue('');
+                            },
+                            scope: this
                         }
                     }, '-', {
                         text: 'Remove',
@@ -94,49 +103,53 @@ Phlexible.siteroots.SiterootNavigationWindow = Ext.extend(Ext.Window, {
                         scope: this
                     }],
                 listeners: {
-                    render: {
-                        fn: function (grid) {
-                            this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
-                                copy: false
-                            });
-                        },
-                        scope: this
-                    }
+                    render: function (grid) {
+                        this.ddrow = new Ext.ux.dd.GridReorderDropTarget(grid, {
+                            copy: false
+                        });
+                    },
+                    scope: this
                 }
             }
         ];
+    },
 
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [
+                {
+                    text: this.storeText,
+                    handler: function () {
+                        var records = this.getComponent(0).store.getRange();
 
-        this.buttons = [
-            {
-                text: this.strings.cancel,
-                handler: function () {
-                    var records = this.getComponent(0).store.getRange();
+                        var data = '';
+                        for (var i = 0; i < records.length; i++) {
+                            data += (data ? ',' : '') + records[i].get('id');
+                        }
 
-                    var data = '';
-                    for (var i = 0; i < records.length; i++) {
-                        data += (data ? ',' : '') + records[i].get('id');
-                    }
+                        this.record.set('additional', data);
 
-                    this.record.set('additional', data);
-
-                    this.close();
+                        this.close();
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            {
-                text: this.strings.cancel,
-                handler: function () {
-                    this.close();
-                },
-                scope: this
-            }
-        ];
+                {
+                    text: this.cancelText,
+                    handler: function () {
+                        this.close();
+                    },
+                    scope: this
+                }
+            ]
+        }];
+    },
 
-        Phlexible.siteroots.SiterootNavigationWindow.superclass.initComponent.call(this);
-
+    loadSiteroots: function() {
         Ext.Ajax.request({
-            url: Phlexible.Router.generate('siteroots_siteroots_list'),
+            url: Phlexible.Router.generate('siteroot_list'),
             baseParams: {
                 key: this.navigationKey,
                 id: this.siterootId

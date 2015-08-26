@@ -1,18 +1,22 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\Volume;
 
-use Phlexible\Component\Volume\Driver\DriverInterface;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Webmozart\Expression\Expression;
 
 /**
  * Volume interface
@@ -30,6 +34,11 @@ interface VolumeInterface
     /**
      * @return string
      */
+    public function getName();
+
+    /**
+     * @return string
+     */
     public function getRootDir();
 
     /**
@@ -38,9 +47,14 @@ interface VolumeInterface
     public function getQuota();
 
     /**
-     * @return DriverInterface
+     * @return VolumeManagerInterface
      */
-    public function getDriver();
+    public function getVolumeManager();
+
+    /**
+     * @param VolumeManagerInterface $volumeManager
+     */
+    public function setVolumeManager(VolumeManagerInterface $volumeManager);
 
     /**
      * @return EventDispatcherInterface
@@ -113,12 +127,12 @@ interface VolumeInterface
     public function countFiles(array $criteria);
 
     /**
-     * @param string $path
-     * @param int    $version
+     * @param FolderInterface $folder
+     * @param string          $name
      *
      * @return FileInterface
      */
-    public function findFileByPath($path, $version = 1);
+    public function findFileByFolderAndName(FolderInterface $folder, $name);
 
     /**
      * @param int $id
@@ -145,10 +159,11 @@ interface VolumeInterface
 
     /**
      * @param FolderInterface $folder
+     * @param bool            $includeHidden
      *
      * @return int
      */
-    public function countFilesByFolder(FolderInterface $folder);
+    public function countFilesByFolder(FolderInterface $folder, $includeHidden = false);
 
     /**
      * @param int $limit
@@ -158,48 +173,62 @@ interface VolumeInterface
     public function findLatestFiles($limit = 20);
 
     /**
-     * @param string $query
+     * @param Expression $expression
      *
      * @return FileInterface[]
      */
-    public function search($query);
+    public function findFilesByExpression(Expression $expression);
+
+    /**
+     * @param Expression $expression
+     *
+     * @return int
+     */
+    public function countFilesByExpression(Expression $expression);
+
+    /**
+     * @param FileInterface $file
+     *
+     * @return string
+     */
+    public function getPhysicalPath(FileInterface $file);
 
     /**
      * @param FolderInterface $targetFolder
      * @param string          $name
      * @param array           $attributes
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FolderInterface
      */
-    public function createFolder(FolderInterface $targetFolder, $name, array $attributes, $userId);
+    public function createFolder(FolderInterface $targetFolder, $name, array $attributes, $user);
 
     /**
      * @param FolderInterface $folder
      * @param string          $name
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FolderInterface
      */
-    public function renameFolder(FolderInterface $folder, $name, $userId);
+    public function renameFolder(FolderInterface $folder, $name, $user);
 
     /**
      * @param FolderInterface $folder
      * @param FolderInterface $targetFolder
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FolderInterface
      */
-    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
+    public function moveFolder(FolderInterface $folder, FolderInterface $targetFolder, $user);
 
     /**
      * @param FolderInterface $folder
      * @param FolderInterface $targetFolder
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FolderInterface
      */
-    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $userId);
+    public function copyFolder(FolderInterface $folder, FolderInterface $targetFolder, $user);
 
     /**
      * @param FolderInterface $folder
@@ -208,26 +237,26 @@ interface VolumeInterface
 
     /**
      * @param FolderInterface $folder
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FolderInterface
      */
-    public function deleteFolder(FolderInterface $folder, $userId);
+    public function deleteFolder(FolderInterface $folder, $user);
 
     /**
      * @param FolderInterface $folder
      * @param array           $attributes
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FolderInterface
      */
-    public function setFolderAttributes(FolderInterface $folder, array $attributes, $userId);
+    public function setFolderAttributes(FolderInterface $folder, array $attributes, $user);
 
     /**
      * @param FolderInterface     $targetFolder
      * @param FileSourceInterface $fileSource
      * @param array               $attributes
-     * @param string              $userId
+     * @param string              $user
      *
      * @return FileInterface
      */
@@ -235,13 +264,13 @@ interface VolumeInterface
         FolderInterface $targetFolder,
         FileSourceInterface $fileSource,
         array $attributes,
-        $userId);
+        $user);
 
     /**
      * @param FileInterface       $file
      * @param FileSourceInterface $fileSource
      * @param array               $attributes
-     * @param string              $userId
+     * @param string              $user
      *
      * @return FileInterface
      */
@@ -249,34 +278,34 @@ interface VolumeInterface
         FileInterface $file,
         FileSourceInterface $fileSource,
         array $attributes,
-        $userId);
+        $user);
 
     /**
      * @param FileInterface $file
      * @param string        $name
-     * @param string        $userId
+     * @param string        $user
      *
      * @return FileInterface
      */
-    public function renameFile(FileInterface $file, $name, $userId);
+    public function renameFile(FileInterface $file, $name, $user);
 
     /**
      * @param FileInterface   $file
      * @param FolderInterface $targetFolder
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FileInterface
      */
-    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $userId);
+    public function moveFile(FileInterface $file, FolderInterface $targetFolder, $user);
 
     /**
      * @param FileInterface   $file
      * @param FolderInterface $targetFolder
-     * @param string          $userId
+     * @param string          $user
      *
      * @return FileInterface
      */
-    public function copyFile(FileInterface $file, FolderInterface $targetFolder, $userId);
+    public function copyFile(FileInterface $file, FolderInterface $targetFolder, $user);
 
     /**
      * @param FileInterface $file
@@ -285,33 +314,34 @@ interface VolumeInterface
 
     /**
      * @param FileInterface $file
-     * @param string        $userId
+     * @param string        $user
      *
      * @return FileInterface
      */
-    public function deleteFile(FileInterface $file, $userId);
+    public function deleteFile(FileInterface $file, $user);
 
     /**
      * @param FileInterface $file
-     * @param string        $userId
+     * @param string        $user
      *
      * @return FileInterface
      */
-    public function hideFile(FileInterface $file, $userId);
+    public function showFile(FileInterface $file, $user);
+
     /**
      * @param FileInterface $file
-     * @param string        $userId
+     * @param string        $user
      *
      * @return FileInterface
      */
-    public function showFile(FileInterface $file, $userId);
+    public function hideFile(FileInterface $file, $user);
 
     /**
      * @param FileInterface $file
      * @param array         $attributes
-     * @param string        $userId
+     * @param string        $user
      *
      * @return FileInterface
      */
-    public function setFileAttributes(FileInterface $file, array $attributes, $userId);
+    public function setFileAttributes(FileInterface $file, array $attributes, $user);
 }

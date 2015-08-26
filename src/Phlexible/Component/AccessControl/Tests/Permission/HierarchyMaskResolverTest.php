@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\AccessControl\Tests\Permission;
@@ -51,7 +54,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace2->getNoInheritMask()->willReturn(0);
         $ace2->getStopMask()->willReturn(0);
 
-        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal()));
+        $mask = $this->resolver->resolve(array($ace1, $ace2));
 
         $this->assertEquals(1 | 2 | 4, $mask);
     }

@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\DashboardBundle\DependencyInjection\Compiler;
@@ -26,7 +29,10 @@ class AddPortletsPass implements CompilerPassInterface
     {
         $portlets = array();
         foreach ($container->findTaggedServiceIds('phlexible_dashboard.portlet') as $id => $attributes) {
-            $portlets[] = new Reference($id);
+            if (!isset($attributes[0]['alias'])) {
+                throw new \Exception("Missing alias on phlexible_dashboard.portlet tag");
+            }
+            $portlets[$attributes[0]['alias']] = new Reference($id);
         }
         $container->getDefinition('phlexible_dashboard.portlets')->replaceArgument(0, $portlets);
     }

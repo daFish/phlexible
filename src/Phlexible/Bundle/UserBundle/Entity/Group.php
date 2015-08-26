@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Entity;
@@ -11,6 +14,7 @@ namespace Phlexible\Bundle\UserBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\GroupInterface;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * Group
@@ -45,14 +49,15 @@ class Group implements GroupInterface
     /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
+     * @Type("DateTime")
      */
     private $createdAt;
 
     /**
      * @var string
-     * @ORM\Column(name="create_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="create_user", type="string")
      */
-    private $createUserId;
+    private $createUser;
 
     /**
      * @var \DateTime
@@ -62,9 +67,9 @@ class Group implements GroupInterface
 
     /**
      * @var string
-     * @ORM\Column(name="modify_user_id", type="string", length=36, options={"fixed"=true})
+     * @ORM\Column(name="modify_user", type="string")
      */
-    private $modifyUserId;
+    private $modifyUser;
 
     /**
      * @var User[]|ArrayCollection
@@ -196,19 +201,19 @@ class Group implements GroupInterface
     /**
      * @return string
      */
-    public function getCreateUserId()
+    public function getCreateUser()
     {
-        return $this->createUserId;
+        return $this->createUser;
     }
 
     /**
-     * @param string $createUid
+     * @param string $createUser
      *
      * @return $this
      */
-    public function setCreateUserId($createUid)
+    public function setCreateUser($createUser)
     {
-        $this->createUserId = $createUid;
+        $this->createUser = $createUser;
 
         return $this;
     }
@@ -236,19 +241,19 @@ class Group implements GroupInterface
     /**
      * @return string
      */
-    public function getModifyUserId()
+    public function getModifyUser()
     {
-        return $this->modifyUserId;
+        return $this->modifyUser;
     }
 
     /**
-     * @param string $modifyUid
+     * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUserId($modifyUid)
+    public function setModifyUser($modifyUser)
     {
-        $this->modifyUserId = $modifyUid;
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }
@@ -293,4 +298,3 @@ class Group implements GroupInterface
         return $this;
     }
 }
-

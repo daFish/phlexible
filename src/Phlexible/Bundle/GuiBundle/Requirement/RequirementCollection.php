@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the phlexible package.
+ *
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Phlexible\Bundle\GuiBundle\Requirement;
 
 /**
  * A RequirementCollection represents a set of Requirement instances.
  *
- * @author Tobias Schultze <http://tobion.de>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class RequirementCollection implements \IteratorAggregate
 {

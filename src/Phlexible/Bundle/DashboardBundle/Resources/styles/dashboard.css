@@ -1,32 +1,54 @@
-.p-dashboard-main-panel .x-layout-collapsed-west {
-    background-image: url(/BUNDLES_PATH/phlexibledashboard/images/panel_portlets.png);
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
 .p-dashboard-watermark {
     position: absolute;
-    right: 30px;
-    bottom: 20px;
-    filter: alpha(opacity=25);
-    -moz-opacity: .25;
-    opacity: .25;
+    right: 40px;
+    bottom: 30px;
+    filter: alpha(opacity=40);
+    opacity: .40;
+    z-index: 5;
+    width: 168px;
+    height: 45px;
 }
 
 .p-dashboard-info {
     position: absolute;
     left: 20px;
-    bottom: 20px;
-    filter: alpha(opacity=35);
-    -moz-opacity: .35;
+    bottom: 30px;
+    filter: alpha(opacity=40);
     opacity: .35;
+    z-index: 5;
+}
+.p-dashboard-info pre {
+    margin: 0;
 }
 
-.p-dashboard-portal-panel .x-column {
+.xxp-dashboard-portal-panel .x-column {
     position: relative;
-    z-index: 10
+    z-index:10
 }
 
-.p-dashboard-watermark, .p-dashboard-info {
-    z-index: 5
+
+
+
+.x-panel-ghost {
+    z-index: 1;
+}
+.x-border-layout-ct {
+    background: #DFE8F6;
+}
+.x-portal-body {
+    padding: 0 0 0 8px;
+}
+.x-portal .x-panel-dd-spacer {
+    border: 2px dashed #99bbe8;
+    background: #f6f6f6;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    margin-bottom: 10px;
+}
+.x-portlet {
+    margin-bottom:10px;
+    padding: 1px;
+}
+.x-portlet .x-panel-body {
+    background: #fff;
 }

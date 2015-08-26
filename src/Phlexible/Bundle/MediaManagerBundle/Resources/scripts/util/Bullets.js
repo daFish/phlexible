@@ -1,10 +1,8 @@
-Ext.provide('Phlexible.mediamanager.util.Bullets');
-Ext.provide('Phlexible.mediamanager.Bullets');
+Ext.define('Phlexible.mediamanager.util.Bullets', {
+    extend: 'Ext.util.Observable',
 
-Phlexible.mediamanager.util.Bullets = function () {
-    bullets = '';
-}
-Ext.extend(Phlexible.mediamanager.util.Bullets, Ext.util.Observable, {
+    bullets: '',
+
     presentBullet: function (values) {
         if (!values.present) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_cross.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
@@ -12,16 +10,16 @@ Ext.extend(Phlexible.mediamanager.util.Bullets, Ext.util.Observable, {
         return '';
     },
     usageBullet: function (values) {
-        if (!values.used) {
+        if (!values.usageStatus) {
             return '';
         }
-        if (values.used && 8) {
+        if (values.usageStatus && 8) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_green.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-        } else if (values.used && 4) {
+        } else if (values.usageStatus && 4) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_yellow.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-        } else if (values.used && 2) {
+        } else if (values.usageStatus && 2) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_gray.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
-        } else if (values.used && 1) {
+        } else if (values.usageStatus && 1) {
             return '<img src="' + Phlexible.bundleAsset('/phlexiblemediamanager/images/bullet_black.gif') + '" width="8" height="12" style="vertical-align: middle;" />';
         }
         return '';
@@ -30,12 +28,10 @@ Ext.extend(Phlexible.mediamanager.util.Bullets, Ext.util.Observable, {
         var bullets = '';
         bullets += this.presentBullet(values);
         bullets += this.usageBullet(values);
-        this.bullets = bullets;
+        return bullets;
     },
-    getWithTrailingSpace: function (value) {
-        this.buildBullets(value);
-        var bullets = this.bullets;
-        this.bullets = '';
+    getWithTrailingSpace: function (values) {
+        var bullets = this.buildBullets(values);
         if (bullets) {
             bullets += ' ';
         }

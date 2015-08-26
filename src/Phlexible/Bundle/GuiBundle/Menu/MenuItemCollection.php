@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Menu;
@@ -89,7 +92,7 @@ class MenuItemCollection implements \Countable
             );
 
             if (count($item->getItems())) {
-                $itemData['menu'] = $item->getItems()->toArray();
+                $itemData['children'] = $item->getItems()->toArray();
             }
 
             if (count($item->getParameters())) {

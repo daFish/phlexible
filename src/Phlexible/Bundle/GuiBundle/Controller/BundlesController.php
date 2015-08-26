@@ -1,47 +1,54 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Bundles controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
- * @Route("/gui/bundles")
  * @Security("is_granted('ROLE_BUNDLES')")
+ * @Rest\NamePrefix("phlexible_api_gui_")
  */
-class BundlesController extends Controller
+class BundlesController extends FOSRestController
 {
     /**
-     * List all Components
+     * Get bundles
      *
-     * @return JsonResponse
-     * @Route("", name="gui_bundles")
-     * @Method({"GET", "POST"})
+     * @return Response
+     *
+     * @Rest\View
      * @ApiDoc(
-     *   description="Returns a list of installed bundles"
+     *   description="Returns a collection of Bundle",
+     *   section="gui",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
      * )
      */
-    public function listAction()
+    public function getBundlesAction()
     {
-        $modules = array();
+        $bundles = $this->container->getParameter('kernel.bundles');
 
-        $components = $this->container->getParameter('kernel.bundles');
+        $bundlesData = array();
 
-        foreach ($components as $id => $class) {
+        foreach ($bundles as $name => $class) {
             $className = $class;
             $package = $class;
             if (strstr($class, '\\')) {
@@ -52,55 +59,23 @@ class BundlesController extends Controller
                 $package = current($namespaceParts);
             }
 
-            $icon = 'p-' . str_replace(array('bundle', 'phlexible'), array('', ''), strtolower($id)) . '-component-icon';
-
             $reflection = new \ReflectionClass($class);
             $path = $reflection->getFileName();
 
-            $modules[$id] = array(
-                'id'          => $id,
+            $bundlesData[$name] = array(
+                'name'        => $name,
                 'classname'   => $className,
                 'package'     => $package,
-                'icon'        => $icon,
                 'path'        => $path,
             );
         }
 
-        ksort($modules);
-        $modules = array_values($modules);
+        ksort($bundlesData);
+        $bundlesData = array_values($bundlesData);
 
-        return new JsonResponse($modules);
-    }
-
-    /**
-     * Filter values
-     *
-     * @return JsonResponse
-     * @Route("/filtervalues", name="gui_bundles_filtervalues")
-     * @Method("GET")
-     * @ApiDoc(
-     *   description="Returns a list of bundle filter values"
-     * )
-     */
-    public function filtervaluesAction()
-    {
-        $bundles = $this->container->getParameter('kernel.bundles');
-
-        $packageList = array();
-        foreach ($bundles as $id => $class) {
-            $reflection = new \ReflectionClass($class);
-            $namespace = $reflection->getNamespaceName();
-            $package = current(explode('\\', $namespace));
-            $packageList[$package] = 1;
-        }
-
-        $packages = array();
-        foreach (array_keys($packageList) as $package) {
-            $packages[] = array('id' => $package, 'title' => ucfirst($package), 'checked' => true);
-        }
-
-        return new JsonResponse(array(
-            'packages' => $packages,
-        ));
+        return array(
+            'bundles'  => $bundlesData,
+            'count'    => count($bundlesData),
+        );
     }
 }

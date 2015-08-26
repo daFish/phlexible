@@ -1,17 +1,14 @@
-Ext.provide('Phlexible.metasets.util.Fields');
+Ext.define('Phlexible.metaset.util.Fields', {
+    constructor: function () {
+        this.initFields();
+        this.initEditors();
+        this.initSelectEditorCallbacks();
+        this.initBeforeEditCallbacks();
+        this.initAfterEditCallbacks();
 
-Phlexible.metasets.util.Fields = function (config) {
-    this.fields = {};
-    this.editors = {};
-    this.selectEditorCallbacks = {};
-    this.beforeEditCallbacks = {};
-    this.afterEditCallbacks = {};
+        this.callParent(arguments);
+    },
 
-    this.initFields();
-
-    Phlexible.metasets.util.Fields.superclass.constructor.call(this, config);
-};
-Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
     getFields: function () {
         return this.fields;
     },
@@ -83,41 +80,21 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
         return this.fields[key];
     },
 
-    set: function(key, field) {
-        if (!field.title) {
-            throw new Error('Title is required.');
-        }
-
-        if (!field.editor) {
-            field.editor = null;
-        }
-        if (!field.configure) {
-            field.configure = Ext.emptyFn;
-        }
-        if (!field.validate) {
-            field.validate = Ext.emptyFn;
-        }
-
-        this.fields[key] = field;
-    },
-
-    initFields: function () {
-        this.set('textfield', {
-            title: 'Textfield',
-            editor: new Ext.form.TextField()
-        });
-        this.set('textarea', {
-            title: 'Textarea',
-            editor: new Ext.form.TextArea()
-        });
-        this.set('date', {
-            title: 'Date',
-            editor: new Ext.form.DateField({format: 'd.m.Y'})
-        });
-        this.set('boolean', {
-            title: 'Boolean',
-            editor: new Ext.form.ComboBox({
-                store: new Ext.data.SimpleStore({
+    initEditors: function () {
+        this.editors = {
+            textfield: {
+                xtype: 'textfield'
+            },
+            textarea: {
+                xtype: 'textarea'
+            },
+            date: {
+                xtype: 'datefield',
+                format: 'd.m.Y'
+            },
+            'boolean': {
+                xtype: 'combo',
+                store: Ext.create('Ext.data.Store', {
                     fields: ['value'],
                     data: [
                         ['true'],
@@ -129,12 +106,9 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
                 triggerAction: 'all',
                 editable: false,
                 typeAhead: false
-            })
-        });
-        this.set('select', {
-            title: 'Select',
-            editor: new Ext.form.ComboBox({
-                store: new Ext.data.SimpleStore({
+            },
+            select: {
+                store: Ext.create('Ext.data.Store', {
                     fields: ['key', 'value']
                 }),
                 valueField: 'key',
@@ -143,17 +117,38 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
                 triggerAction: 'all',
                 editable: false,
                 typeAhead: false
-            }),
-            selectEditorCallback: function (editor, record) {
+            }
+        };
+    },
+
+    initSelectEditorCallbacks: function () {
+        this.selectEditorCallbacks = {
+            select: function (editor, record) {
                 var options = Phlexible.clone(record.data.options);
                 if (!record.data.required) {
                     options.unshift(['', '(' + Phlexible.elements.Strings.empty + ')']);
                 }
                 editor.field.store.loadData(options);
-            },
-            configure: function (record) {
-                var w = new Phlexible.metasets.SelectConfigurationWindow({
-                    options: record.get('options'),
+            }
+        };
+    },
+
+    initBeforeEditCallbacks: function () {
+        this.beforeEditCallbacks = {
+            suggest: function (grid, field, record) {
+                if (grid.master !== undefined) {
+                    var isSynchronized = (1 == record.get('synchronized'));
+
+                    // skip editing english values if language is synchronized
+                    if (!grid.master && isSynchronized) {
+                        return false;
+                    }
+                }
+
+                var w = Ext.create('Phlexible.metaset.window.MetaSuggestWindow', {
+                    record: record,
+                    valueField: field,
+                    metaLanguage: grid.language,
                     listeners: {
                         store: function (options) {
                             record.set('options', options);
@@ -171,6 +166,6 @@ Ext.extend(Phlexible.metasets.util.Fields, Ext.util.Observable, {
 
                 return true;
             }
-        });
+        };
     }
 });

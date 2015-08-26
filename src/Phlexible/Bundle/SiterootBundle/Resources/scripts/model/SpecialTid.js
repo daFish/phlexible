@@ -1,7 +1,14 @@
-Ext.provide('Phlexible.siteroots.model.SpecialTid');
+Ext.define('Phlexible.siteroot.model.SpecialTid', {
+    extend: 'Ext.data.Model',
 
-Phlexible.siteroots.model.SpecialTid = Ext.data.Record.create([
-    {name: 'key'},
-    {name: 'language'},
-    {name: 'tid'}
-]);
+    entityName: 'SiterootSpecialTid',
+    fields: [
+        {name: 'name', type: 'string'},
+        {name: 'language', type: 'string'},
+        {name: 'treeId', type: 'int'},
+        {name: 'siterootId', reference: {
+            type: 'Siteroot',
+            inverse: 'specialTids'
+        }}
+    ]
+});

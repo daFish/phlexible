@@ -1,49 +1,94 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\MessageBundle\Entity\Subscription;
+use Phlexible\Bundle\MessageBundle\Form\Type\SubscriptionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Subscriptions controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/messages/subscriptions")
+ *
+ * @Security("is_granted('ROLE_MESSAGE_SUBSCRIPTIONS')")
+ * @Rest\NamePrefix("phlexible_api_message_")
  */
-class SubscriptionsController extends Controller
+class SubscriptionsController extends FOSRestController
 {
     /**
-     * List subscriptions
+     * Get subscriptions
      *
-     * @return JsonResponse
-     * @Route("", name="messages_subscriptions")
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Subscription",
+     *   section="message",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
-    public function listAction()
+    public function getSubscriptionsAction()
     {
         $subscriptionManager = $this->get('phlexible_message.subscription_manager');
+        $subscriptions = $subscriptionManager->findAll();
 
-        $subscriptions = array();
+        return array(
+            'subscriptions' => $subscriptions,
+            'count'         => count($subscriptions),
+        );
+    }
 
-        foreach ($subscriptionManager->findAll() as $subscription) {
-            $subscriptions[] = array(
-                'id'       => $subscription->getId(),
-                'filterId' => $subscription->getFilter()->getId(),
-                'filter'   => $subscription->getFilter()->getTitle(),
-                'handler'  => $subscription->getHandler(),
-            );
+    /**
+     * Get subscription
+     *
+     * @param string $subscriptionId
+     *
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Subscription",
+     *   section="message",
+     *   output="Phlexible\Bundle\MessageBundle\Entity\Subscription",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when subscription was not found"
+     *   }
+     * )
+     */
+    public function getSubscriptionAction($subscriptionId)
+    {
+        $subscriptionManager = $this->get('phlexible_message.subscription_manager');
+        $subscription = $subscriptionManager->find($subscriptionId);
+
+        if (!$subscription instanceof Subscription) {
+            throw new NotFoundHttpException('Subscription not found');
         }
 
-        return new JsonResponse($subscriptions);
+        return array(
+            'subscription' => $subscription
+        );
     }
 
     /**
@@ -51,44 +96,121 @@ class SubscriptionsController extends Controller
      *
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("/create", name="messages_subscription_create")
+     * @return Response
+     *
+     * @ApiDoc(
+     *   description="Create a Subscription",
+     *   section="message",
+     *   input="Phlexible\Bundle\MessageBundle\Form\Type\SubscriptionType",
+     *   statusCodes={
+     *     201="Returned when subscription was created",
+     *     204="Returned when subscription was updated",
+     *     404="Returned when subscription was not found"
+     *   }
+     * )
      */
-    public function createAction(Request $request)
+    public function postSubscriptionsAction(Request $request)
     {
-        $filterId = $request->get('filter');
-        $handler = $request->get('handler');
+        return $this->processForm($request, new Subscription());
+    }
 
+    /**
+     * Update subscription
+     *
+     * @param Request $request
+     * @param string  $subscriptionId
+     *
+     * @return Response
+     *
+     * @ApiDoc(
+     *   description="Update a Subscription",
+     *   section="message",
+     *   input="Phlexible\Bundle\MessageBundle\Form\Type\SubscriptionType",
+     *   statusCodes={
+     *     201="Returned when subscription was created",
+     *     204="Returned when subscription was updated",
+     *     404="Returned when subscription was not found"
+     *   }
+     * )
+     */
+    public function putSubscriptionAction(Request $request, $subscriptionId)
+    {
         $subscriptionManager = $this->get('phlexible_message.subscription_manager');
-        $filterManager = $this->get('phlexible_message.filter_manager');
+        $subscription = $subscriptionManager->find($subscriptionId);
 
-        $filter = $filterManager->find($filterId);
+        if (!$subscription instanceof Subscription) {
+            throw new NotFoundHttpException('Subscription not found');
+        }
 
-        $subscription = $subscriptionManager->create()
-            ->setUserId($this->getUser()->getId())
-            ->setFilter($filter)
-            ->setHandler($handler);
+        return $this->processForm($request, $subscription);
+    }
 
-        $subscriptionManager->updateSubscription($subscription);
+    /**
+     * @param Request      $request
+     * @param Subscription $subscription
+     *
+     * @return Rest\View|Response
+     */
+    private function processForm(Request $request, Subscription $subscription)
+    {
+        $statusCode = !$subscription->getId() ? 201 : 204;
 
-        return new ResultResponse(true, 'Subscription created.');
+        $form = $this->createForm(new SubscriptionType(), $subscription);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $subscriptionManager = $this->get('phlexible_message.subscription_manager');
+            $subscriptionManager->updateSiteroot($subscription);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set(
+                    'Location',
+                    $this->generateUrl(
+                        'phlexible_api_message_get_subscription',
+                        array('siterootId' => $subscription->getId()),
+                        true
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
     }
 
     /**
      * Delete subscription
      *
-     * @param string $id
+     * @param string $subscriptionId
      *
-     * @return ResultResponse
-     * @Route("/delete/{id}", name="messages_subscription_delete")
+     * @return Response
+     *
+     * @Route("/delete/{subscriptionId}", name="messages_subscription_delete")
+     * @ApiDoc(
+     *   description="Delete a Subscription",
+     *   section="message",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when the subscription is not found"
+     *   }
+     * )
      */
-    public function deleteAction($id)
+    public function deleteSubscriptionAction($subscriptionId)
     {
         $subscriptionManager = $this->get('phlexible_message.subscription_manager');
 
-        $subscription = $subscriptionManager->find($id);
+        $subscription = $subscriptionManager->find($subscriptionId);
         $subscriptionManager->deleteSubscription($subscription);
 
-        return new ResultResponse(true, 'Subscription deleted.');
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
+        ));
     }
 }

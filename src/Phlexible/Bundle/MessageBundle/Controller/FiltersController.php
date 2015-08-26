@@ -1,107 +1,104 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Controller;
 
-use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MessageBundle\Criteria\Criteria;
-use Phlexible\Bundle\MessageBundle\Criteria\Criterium;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
+use FOS\RestBundle\View\View;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\MessageBundle\Entity\Filter;
+use Phlexible\Bundle\MessageBundle\Form\Type\FilterType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Filter controller
+ * Filters controller
  *
- * @author Caspar Baratella <cb@brainbits.net>
- * @Route("/messages/filters")
+ * @author Stephan Wentz <sw@brainbits.net>
+ *
+ * @Security("is_granted('ROLE_MESSAGE_FILTERS')")
+ * @Rest\NamePrefix("phlexible_api_message_")
  */
-class FiltersController extends Controller
+class FiltersController extends FOSRestController
 {
     /**
-     * List filters
+     * Get filters
      *
-     * @return JsonResponse
-     * @Route("", name="messages_filters")
+     * @param ParamFetcher $paramFetcher
+     *
+     * @return Response
+     *
+     * @Rest\QueryParam(name="userId", requirements=".+", description="User ID")
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a collection of Filter",
+     *   section="message",
+     *   resource=true,
+     *   statusCodes={
+     *     200="Returned when successful",
+     *   }
+     * )
      */
-    public function listAction()
+    public function getFiltersAction(ParamFetcher $paramFetcher)
     {
         $filterManager = $this->get('phlexible_message.filter_manager');
 
-        $filters = array();
-
-        foreach ($filterManager->findBy(array('userId' => $this->getUser()->getId())) as $filter) {
-            $criteria = array();
-            foreach ($filter->getCriteria() as $groupIndex => $group) {
-                foreach ($group as $criterium) {
-                    $criteria[] = array(
-                        'criteria' => $criterium->getType(),
-                        'value'    => $criterium->getValue(),
-                        'group'    => $groupIndex + 1,
-                    );
-                }
-            }
-
-            $filters[] = array(
-                'id'       => $filter->getId(),
-                'title'    => $filter->getTitle(),
-                'criteria' => $criteria,
-            );
+        $criteria = array();
+        if ($userId = $paramFetcher->get('userId')) {
+            $criteria['userId'] = $userId;
         }
 
-        return new JsonResponse($filters);
+        $filters = $filterManager->findBy($criteria);
+
+        return array(
+            'filters' => $filters,
+            'count'   => count($filters)
+        );
     }
 
     /**
-     * List filter values
+     * Get filter
      *
-     * @return JsonResponse
-     * @Route("/filtervalues", name="messages_filter_filtervalues")
+     * @param string $filterId
+     *
+     * @return Response
+     *
+     * @Rest\View
+     * @ApiDoc(
+     *   description="Returns a Filter",
+     *   section="message",
+     *   output="Phlexible\Bundle\MessageBundle\Entity\Filter",
+     *   statusCodes={
+     *     200="Returned when successful",
+     *     404="Returned when filter was not found"
+     *   }
+     * )
      */
-    public function filtervalueAction()
+    public function getFilterAction($filterId)
     {
-        $data = array('roles' => array());
+        $filterManager = $this->get('phlexible_message.filter_manager');
+        $filter = $filterManager->find($filterId);
 
-        /*
-        foreach ($acl->getResources() as $role) {
-            $data['roles'][] = array($role, ucfirst($role));
-        }
-        */
-
-        $bundles = $this->container->getParameter('kernel.bundles');
-        foreach ($bundles as $id => $class) {
-            $data['bundles'][] = array($id, $id);
+        if (!$filter instanceof Filter) {
+            throw new NotFoundHttpException('Filter not found');
         }
 
-        $data['criteria'] = array(
-            array('key' => 'subject_like', 'value' => 'Subject like'),
-            array('key' => 'subject_not_like', 'value' => 'Subject not like'),
-            array('key' => 'body_like', 'value' => 'Body Like'),
-            array('key' => 'body_not_like', 'value' => 'Body not like'),
-            array('key' => 'priority_is', 'value' => 'Priority is'),
-            array('key' => 'priority_in', 'value' => 'Priority in'),
-            array('key' => 'priority_min', 'value' => 'Priority min'),
-            array('key' => 'type_is', 'value' => 'Type is'),
-            array('key' => 'type_in', 'value' => 'Type in'),
-            array('key' => 'channel_is', 'value' => 'Channel is'),
-            array('key' => 'channel_like', 'value' => 'Channel like'),
-            array('key' => 'channel_in', 'value' => 'Channel in'),
-            array('key' => 'role_is', 'value' => 'Role is'),
-            array('key' => 'min_age', 'value' => 'Min age'),
-            array('key' => 'max_age', 'value' => 'Max age'),
-            array('key' => 'start_date', 'value' => 'Start date'),
-            array('key' => 'end_date', 'value' => 'End date'),
-            array('key' => 'date_is', 'value' => 'Date is'),
-            array('key' => '', 'value' => ''),
+        return array(
+            'filter' => $filter
         );
-
-        return new JsonResponse($data);
     }
 
     /**
@@ -109,149 +106,119 @@ class FiltersController extends Controller
      *
      * @param Request $request
      *
-     * @return ResultResponse
-     * @Route("/create", name="messages_filter_create")
+     * @return Response
+     *
+     * @ApiDoc(
+     *   description="Create a Filter",
+     *   section="message",
+     *   input="Phlexible\Bundle\MessageBundle\Form\Type\FilterType",
+     *   statusCodes={
+     *     201="Returned when filter was created",
+     *     204="Returned when filter was updated",
+     *     404="Returned when filter was not found"
+     *   }
+     * )
      */
-    public function createAction(Request $request)
+    public function postFiltersAction(Request $request)
     {
-        $title = $request->get('title');
-
-        $filterManager = $this->get('phlexible_message.filter_manager');
-
-        $filter = $filterManager->create();
-        $filter
-            ->setUserId($this->getUser()->getId())
-            ->setTitle($title)
-            ->setModifiedAt(new \DateTime())
-            ->setCreatedAt(new \DateTime());
-
-        $filterManager->updateFilter($filter);
-
-        return new ResultResponse(true, 'Filter created.');
+        return $this->processForm($request, new Filter());
     }
 
     /**
-     * Updates a Filter
+     * Update filter
      *
      * @param Request $request
-     * @param string  $id
+     * @param string  $filterId
      *
-     * @return ResultResponse
-     * @Route("/update/{id}", name="messages_filter_update")
+     * @return Response
+     *
+     * @ApiDoc(
+     *   description="Update a Filter",
+     *   section="message",
+     *   input="Phlexible\Bundle\MessageBundle\Form\Type\FilterType",
+     *   statusCodes={
+     *     201="Returned when filter was created",
+     *     204="Returned when filter was updated",
+     *     404="Returned when filter was not found"
+     *   }
+     * )
      */
-    public function updateAction(Request $request, $id)
+    public function putFilterAction(Request $request, $filterId)
     {
-        $title = $request->get('title');
-        $rawCriteria = json_decode($request->get('criteria'), true);
-
         $filterManager = $this->get('phlexible_message.filter_manager');
+        $filter = $filterManager->find($filterId);
 
-        $filter = $filterManager->find($id);
-        $filter->setTitle($title);
-
-        $criteria = new Criteria();
-        $criteria->setMode(Criteria::MODE_OR);
-        foreach ($rawCriteria as $group) {
-            $criteriaGroup = new Criteria();
-            $criteriaGroup->setMode(Criteria::MODE_AND);
-            foreach ($group as $row) {
-                if (!strlen($row['value'])) {
-                    continue;
-                }
-
-                $criterium = new Criterium($row['key'], $row['value']);
-                $criteriaGroup->add($criterium);
-            }
-            if ($criteriaGroup->count()) {
-                $criteria->addCriteria($criteriaGroup);
-            }
+        if (!$filter instanceof Filter) {
+            throw new NotFoundHttpException('Filter not found');
         }
-        $filter->setCriteria($criteria);
 
-        $filterManager->updateFilter($filter);
+        return $this->processForm($request, $filter);
+    }
 
-        return new ResultResponse(true, 'Filter updated');
+    /**
+     * @param Request $request
+     * @param Filter  $filter
+     *
+     * @return Rest\View|Response
+     */
+    private function processForm(Request $request, Filter $filter)
+    {
+        $statusCode = !$filter->getId() ? 201 : 204;
+
+        $form = $this->createForm(new FilterType(), $filter);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $filterManager = $this->get('phlexible_message.filter_manager');
+            $filterManager->updateFilter($filter);
+
+            $response = new Response();
+            $response->setStatusCode($statusCode);
+
+            // set the `Location` header only when creating new resources
+            if (201 === $statusCode) {
+                $response->headers->set(
+                    'Location',
+                    $this->generateUrl(
+                        'phlexible_api_message_get_filter',
+                        array('filterId' => $filter->getId()),
+                        true
+                    )
+                );
+            }
+
+            return $response;
+        }
+
+        return View::create($form, 400);
     }
 
     /**
      * Delete filter
      *
-     * @param string $id
+     * @param string $filterId
      *
-     * @return ResultResponse
-     * @Route("/delete/{id}", name="messages_filter_delete")
+     * @return Response
+     *
+     * @ApiDoc(
+     *   description="Delete a Filter",
+     *   section="message",
+     *   statusCodes={
+     *     204="Returned when successful",
+     *     404="Returned when message is not found"
+     *   }
+     * )
      */
-    public function deleteAction($id)
+    public function deleteFilterAction($filterId)
     {
         $filterManager = $this->get('phlexible_message.filter_manager');
-        $filter = $filterManager->find($id);
+        $filter = $filterManager->find($filterId);
         $filterManager->deleteFilter($filter);
 
-        return new ResultResponse(true, 'Filter "' . $filter->getTitle() . '" deleted.');
-    }
-
-    /**
-     * Preview messages
-     *
-     * @param Request $request
-     *
-     * @return ResultResponse
-     * @Route("/preview", name="messages_filter_preview")
-     */
-    public function previewAction(Request $request)
-    {
-        $rawCriteria = json_decode($request->get('filters'), true);
-
-        $messageManager = $this->get('phlexible_message.message_manager');
-
-        $criteria = new Criteria();
-        $criteria->setMode(Criteria::MODE_OR);
-        foreach ($rawCriteria as $group) {
-            $criteriaGroup = new Criteria();
-            $criteriaGroup->setMode(Criteria::MODE_AND);
-            foreach ($group as $row) {
-                if (!strlen($row['value'])) {
-                    continue;
-                }
-
-                $criterium = new Criterium($row['key'], $row['value']);
-                $criteriaGroup->add($criterium);
-            }
-            if ($criteriaGroup->count()) {
-                $criteria->addCriteria($criteriaGroup);
-            }
-        }
-
-        if (!$criteria->count()) {
-            return new JsonResponse(array(
-                'total'    => 0,
-                'messages' => array()
-            ));
-        }
-
-        $messages = $messageManager->findByCriteria($criteria, array('createdAt' => 'DESC'), 20);
-        $count = $messageManager->countByCriteria($criteria);
-
-        $priorityList = $messageManager->getPriorityNames();
-        $typeList = $messageManager->getTypeNames();
-
-        $data = array();
-        foreach ($messages as $message) {
-            $data[] = array(
-                'subject'    => $message->getSubject(),
-                'body'       => nl2br($message->getBody()),
-                'priority'   => $priorityList[$message->getPriority()],
-                'type'       => $typeList[$message->getType()],
-                'channel'    => $message->getChannel(),
-                'role'       => $message->getRole(),
-                'created_at' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
-                'user'       => $message->getUser(),
-            );
-        }
-
-        return new JsonResponse(array(
-            'total'    => $count,
-            'messages' => $data
+        return $this->handleView($this->view(
+            array(
+                'success' => true,
+            )
         ));
     }
 }

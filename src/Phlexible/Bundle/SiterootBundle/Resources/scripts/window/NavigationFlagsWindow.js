@@ -1,8 +1,7 @@
-Ext.provide('Phlexible.siteroots.NavigationFlagsWindow');
+Ext.define('Phlexible.siteroot.window.NavigationFlagsWindow', {
+    extend: 'Ext.window.Window',
 
-Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
-    title: Phlexible.siteroots.Strings.flags,
-    strings: Phlexible.siteroots.Strings,
+    title: '_NavigationFlagsWindow',
     iconCls: 'p-siteroot-flag-icon',
     width: 400,
     height: 360,
@@ -13,10 +12,31 @@ Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
     flags: 0,
     supports: 0,
 
+    flagsText: '_flags',
+    noPrependHomeText: '_noPrependHomeText',
+    appendActiveText: '_appendActiveText',
+    includeNoNavigationText: '_includeNoNavigationText',
+    includeRestrictedText: '_includeRestrictedText',
+    includeNotPublishedText: '_includeNotPublishedText',
+    includeTypeFullText: '_includeTypeFullText',
+    includeTypeStructureText: '_includeTypeStructureText',
+    includeTypeLayoutText: '_includeTypeLayoutText',
+    includeTypeTeaserText: '_includeTypeTeaserText',
+    includeUniqueIdText: '_includeUniqueId',
+    storeText: '_storeText',
+    cancelText: '_cancelText',
+
     initComponent: function () {
         this.flags = parseInt(this.record.get('flags'), 10);
         this.supports = parseInt(this.record.get('supports'), 10);
 
+        this.initMyItems();
+        this.initMyDockedItems();
+
+        this.callParent(arguments);
+    },
+
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'form',
@@ -25,76 +45,76 @@ Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
                 items: [
                     {
                         xtype: 'checkboxgroup',
-                        fieldLabel: this.strings.flags,
+                        fieldLabel: this.flagsText,
                         hideLabel: true,
                         columns: 1,
                         items: [
                             {
                                 name: 'flag_1',
-                                boxLabel: this.strings.flag_no_prepend_home,
+                                boxLabel: this.noPrependHomeText,
                                 flag: 1,
                                 checked: this.flags & 1,
                                 disabled: !(this.supports & 1)
                             },
                             {
                                 name: 'flag_2',
-                                boxLabel: this.strings.flag_append_active,
+                                boxLabel: this.appendActiveText,
                                 flag: 2,
                                 checked: this.flags & 2,
                                 disabled: !(this.supports & 2)
                             },
                             {
                                 name: 'flag_4',
-                                boxLabel: this.strings.flag_include_no_navigation,
+                                boxLabel: this.includeNoNavigationText,
                                 flag: 4,
                                 checked: this.flags & 4,
                                 disabled: !(this.supports & 4)
                             },
                             {
                                 name: 'flag_8',
-                                boxLabel: this.strings.flag_include_restricted,
+                                boxLabel: this.includeRestrictedText,
                                 flag: 8,
                                 checked: this.flags & 8,
                                 disabled: !(this.supports & 8)
                             },
                             {
                                 name: 'flag_16',
-                                boxLabel: this.strings.flag_include_not_published,
+                                boxLabel: this.includeNotPublishedText,
                                 flag: 16,
                                 checked: this.flags & 16,
                                 disabled: !(this.supports & 16)
                             },
                             {
                                 name: 'flag_32',
-                                boxLabel: this.strings.flag_include_type_full,
+                                boxLabel: this.includeTypeFullText,
                                 flag: 32,
                                 checked: this.flags & 32,
                                 disabled: !(this.supports & 32)
                             },
                             {
                                 name: 'flag_64',
-                                boxLabel: this.strings.flag_include_type_structure,
+                                boxLabel: this.includeTypeStructureText,
                                 flag: 64,
                                 checked: this.flags & 64,
                                 disabled: !(this.supports & 64)
                             },
                             {
                                 name: 'flag_128',
-                                boxLabel: this.strings.flag_include_type_layout,
+                                boxLabel: this.includeTypeLayoutText,
                                 flag: 128,
                                 checked: this.flags & 128,
                                 disabled: !(this.supports & 128)
                             },
                             {
                                 name: 'flag_256',
-                                boxLabel: this.strings.flag_include_type_teaser,
+                                boxLabel: this.includeTypeTeaserText,
                                 flag: 256,
                                 checked: this.flags & 256,
                                 disabled: !(this.supports & 256)
                             },
                             {
                                 name: 'flag_512',
-                                boxLabel: this.strings.flag_include_unique_id,
+                                boxLabel: this.includeUniqueIdText,
                                 flag: 512,
                                 checked: this.flags & 512,
                                 disabled: !(this.supports & 512)
@@ -104,10 +124,15 @@ Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
                 ]
             }
         ];
+    },
 
-        this.buttons = [
-            {
-                text: this.strings.store,
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            items: [{
+                text: this.storeText,
                 handler: function () {
                     var flags = 0;
                     this.getComponent(0).getComponent(0).items.each(function (cb) {
@@ -123,14 +148,12 @@ Phlexible.siteroots.NavigationFlagsWindow = Ext.extend(Ext.Window, {
                 scope: this
             },
             {
-                text: this.strings.cancel,
+                text: this.cancelText,
                 handler: function () {
                     this.close();
                 },
                 scope: this
-            }
-        ];
-
-        Phlexible.siteroots.NavigationFlagsWindow.superclass.initComponent.call(this);
+            }]
+        }];
     }
 });

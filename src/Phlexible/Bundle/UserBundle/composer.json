@@ -14,20 +14,6 @@
         "friendsofsymfony/user-bundle": "~1.3",
         "symfony/framework-bundle": "~2.3"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.brainbits.net/phlexible-bundles/",
-            "options": {
-                "ssl": {
-                    "allow_self_signed": "true"
-                }
-            }
-        }
-    ],
-    "config": {
-        "bin-dir": "bin"
-    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"

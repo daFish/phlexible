@@ -20,11 +20,12 @@ services:
         arguments: [@phlexible_siteroot.siteroot_manager]
 
     # event listeners
-    phlexible_siteroot.listener.apply_successor:
-        class: Phlexible\Bundle\SiterootBundle\EventListener\ApplySuccessorListener
-        arguments: [@phlexible_siteroot.siteroot_manager]
+    phlexible_siteroot.listener.message:
+        class: Phlexible\Bundle\SiterootBundle\EventListener\MessageListener
+        arguments:
+            - @phlexible_message.message_poster
         tags:
-            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
+            - {name: kernel.event_subscriber}
 
     # problem checkers
     phlexible_siteroot.problem.siterootcheck:
@@ -32,7 +33,7 @@ services:
         public: false
         arguments: [@phlexible_siteroot.siteroot_manager]
         tags:
-            - {name: phlexible_problem.problem_checker}
+            - {name: phlexible_problem.checker}
 
     # role providers
     phlexible_siteroot.role_provider:

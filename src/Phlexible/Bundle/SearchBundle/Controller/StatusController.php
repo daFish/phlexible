@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SearchBundle\Controller;
@@ -18,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Status controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/status/search")
+ * @Route("/search/status")
  * @Security("is_granted('ROLE_SUPER_ADMIN')")
  */
 class StatusController extends Controller
@@ -29,7 +32,7 @@ class StatusController extends Controller
      * @param Request $request
      *
      * @return Response
-     * @Route("", name="search_status")
+     * @Route("", name="phlexible_search_status")
      */
     public function indexAction(Request $request)
     {

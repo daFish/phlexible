@@ -1,0 +1,15 @@
+services:
+    phlexible_siteroot.siteroot_manager.default:
+        class: Phlexible\Bundle\SiterootBundle\Doctrine\SiterootManager
+        arguments:
+            - @phlexible_siteroot.entity_manager
+            - @event_dispatcher
+        public: false
+
+    phlexible_siteroot.entity_manager:
+        factory_service: doctrine
+        factory_method: getManager
+        class: Doctrine\ORM\EntityManager
+        public: false
+        arguments:
+            - %phlexible_siteroot.model_manager_name%

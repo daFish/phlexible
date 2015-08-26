@@ -1,8 +1,4 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-
-Phlexible.fields.Registry.addFactory('textfield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('textfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -23,12 +19,13 @@ Phlexible.fields.Registry.addFactory('textfield', function (parentConfig, item, 
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('textfield', {
+Phlexible.fields.FieldTypes.register({
+    type: 'textfield',
     titles: {
         de: 'Textfeld',
         en: 'Textfield'
     },
-    iconCls: 'p-elementtype-field_text-icon',
+    iconCls: Phlexible.Icon.get('ui-text-field'),
     allowedIn: [
         'tab',
         'accordion',

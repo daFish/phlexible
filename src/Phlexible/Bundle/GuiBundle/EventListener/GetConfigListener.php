@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\EventListener;
@@ -56,7 +59,10 @@ class GetConfigListener
 
         $languages = array();
         foreach ($this->availableLanguages as $key => $language) {
-            $name = \Locale::getDisplayName($language, $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('en'));
+            $name = \Locale::getDisplayName(
+                $language,
+                $this->tokenStorage->getToken()->getUser()->getInterfaceLanguage('en')
+            );
             $languages[$name] = $language;
             unset($languages[$key]);
         }
@@ -72,8 +78,11 @@ class GetConfigListener
         }
 
         $sets['themes'] = array(
-            array('default', 'Default Theme', 'theme_default.png'),
+            array('classic', 'Classic Theme', 'theme_default.png'),
             array('gray', 'Gray Theme', 'theme_gray.png'),
+            array('neptune', 'Neptune Theme', 'theme_neptune.png'),
+            array('crisp', 'Crisp Theme', 'theme_crisp.png'),
+            array('triton', 'Triton Theme', 'theme_triton.png'),
             //            array('slate', 'Slate Theme', 'theme_slate.png'),
             //            array('slickness', 'Slickness Theme', 'theme_slate.png'),
         );

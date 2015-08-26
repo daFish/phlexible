@@ -1,67 +1,66 @@
-Ext.provide('Phlexible.gui.grid.TypeColumnModel');
+Ext.define('Phlexible.gui.grid.TypeColumnMod', {
+    constructor: function(config) {
 
-Phlexible.gui.grid.TypeColumnModel = function (config) {
+        // if (editorsConfig) {
+        //     Ext.apply(config, editorsConfig);
+        // }
 
-//    if (editorsConfig) {
-//        Ext.apply(config, editorsConfig);
-//    }
+        if (config.editors) {
+            this.setEditors(config.editors);
+            delete config.editors;
+        }
+        if (config.field) {
+            this.setEditorField(config.field);
+            delete config.field;
+        }
+        if (config.store) {
+            this.setStore(config.store);
+            delete config.store;
+        }
+        if (config.grid) {
+            config.grid.on({
+                beforeedit: {
+                    fn: function (e) {
+                        var grid = e.grid;
+                        var record = e.record;
 
-    if (config.editors) {
-        this.setEditors(config.editors);
-        delete config.editors;
-    }
-    if (config.field) {
-        this.setEditorField(config.field);
-        delete config.field;
-    }
-    if (config.store) {
-        this.setStore(config.store);
-        delete config.store;
-    }
-    if (config.grid) {
-        config.grid.on({
-            beforeedit: {
-                fn: function (e) {
-                    var grid = e.grid;
-                    var record = e.record;
+                        // call before edit callbacks
+                        var type = record.data[this.editorField];
+                        if (this.beforeEditCallbacks[type]) {
+                            var field = e.field;
 
-                    // call before edit callbacks
-                    var type = record.data[this.editorField];
-                    if (this.beforeEditCallbacks[type]) {
-                        var field = e.field;
-
-                        if (this.beforeEditCallbacks[type]
-                            && false === this.beforeEditCallbacks[type](grid, field, record)) {
-                            return false;
+                            if (this.beforeEditCallbacks[type]
+                                && false === this.beforeEditCallbacks[type](grid, field, record)) {
+                                return false;
+                            }
                         }
-                    }
+                    },
+                    scope: this
                 },
-                scope: this
-            },
-            afteredit: {
-                fn: function (e) {
-                    var grid = e.grid;
-                    var record = e.record;
+                afteredit: {
+                    fn: function (e) {
+                        var grid = e.grid;
+                        var record = e.record;
 
-                    // call after edit callbacks
-                    var type = record.data[this.editorField];
-                    if (this.afterEditCallbacks[type]) {
-                        var field = e.field;
-
+                        // call after edit callbacks
+                        var type = record.data[this.editorField];
                         if (this.afterEditCallbacks[type]) {
-                            this.afterEditCallbacks[type](grid, field, record);
+                            var field = e.field;
+
+                            if (this.afterEditCallbacks[type]) {
+                                this.afterEditCallbacks[type](grid, field, record);
+                            }
                         }
-                    }
 
-                },
-                scope: this
-            }
-        });
-    }
+                    },
+                    scope: this
+                }
+            });
+        }
 
-    Phlexible.gui.grid.TypeColumnModel.superclass.constructor.call(this, config);
-};
-Ext.extend(Phlexible.gui.grid.TypeColumnModel, Ext.grid.ColumnModel, {
+        Phlexible.gui.grid.TypeColumnModel.superclass.constructor.call(this, config);
+    },
+
     editors: {},
     editorField: 'type',
     store: false,

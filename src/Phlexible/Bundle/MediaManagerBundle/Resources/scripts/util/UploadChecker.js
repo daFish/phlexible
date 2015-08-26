@@ -1,22 +1,19 @@
-Ext.provide('Phlexible.mediamanager.UploadChecker');
+Ext.define('Phlexible.mediamanager.util.UploadChecker', {
+    extend: 'Ext.util.Observable',
 
-Ext.require('Phlexible.mediamanager.FileReplaceWindow');
+    /**
+     * @event reload
+     */
 
-Phlexible.mediamanager.UploadChecker = function(config) {
-    config = config || {};
+    /**
+     * @param {Object} config
+     */
+    constructor: function(config) {
+        this.running = false;
 
-    this.running = false;
+        this.callParent(arguments);
+    },
 
-    this.addEvents({
-        "reload": true
-    });
-
-    if (config.listeners) {
-        this.listeners = config.listeners;
-        Phlexible.mediamanager.UploadChecker.superclass.constructor.call(this);
-    }
-};
-Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
     check: function() {
         if (this.isRunning()) {
             return;
@@ -40,6 +37,10 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
         return this.running;
     },
 
+    count: function() {
+        return this.current.total;
+    },
+
     getCurrent: function() {
         return this.current;
     },
@@ -58,7 +59,7 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
 
         var data = Ext.decode(response.responseText);
 
-        if (!data || !data.temp_id) {
+        if (!data || !data.tempId) {
             this.running = false;
             if (this.replace) {
                 this.replace.hide();
@@ -76,7 +77,7 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
                 this.replace.hide();
             }
             if (!this.wizard) {
-                this.wizard = new Phlexible.mediamanager.FileUploadWizard({
+                this.wizard = Ext.xcreate('Phlexible.mediamanager.window.FileUploadWizard', {
                     uploadChecker: this,
                     listeners: {
                         update: function () {
@@ -94,23 +95,27 @@ Ext.extend(Phlexible.mediamanager.UploadChecker, Ext.util.Observable, {
                 this.wizard.hide();
             }
             if (!this.replace) {
-                this.replace = new Phlexible.mediamanager.FileReplaceWindow({
+                this.replace = Ext.create('Phlexible.mediamanager.window.FileReplaceWindow', {
                     uploadChecker: this,
                     listeners: {
                         save: function(action, all) {
                             var file = this.getCurrent(),
                                 params = {
                                     all: all ? 1 : 0,
-                                    temp_key: file.temp_key,
-                                    temp_id: file.temp_id,
-                                    'do': action
+                                    tempKey: file.tempKey,
+                                    tempId: file.tempId,
+                                    action: action
                                 };
 
                             var request = {
                                 url: Phlexible.Router.generate('mediamanager_upload_save'),
                                 params: params,
                                 success: function (response) {
-                                    this.fireEvent('reload');
+                                    var data = Ext.decode(response.responseText);
+
+                                    if (data.data.action !== 'discard') {
+                                        this.fireEvent('reload');
+                                    }
                                     this.next();
                                 },
                                 failure: function (response) {

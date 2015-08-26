@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\DependencyInjection;
@@ -41,7 +44,7 @@ class PhlexibleMessageExtension extends Extension
         if ($container->getParameter('kernel.debug')) {
             $handlers[] = new Reference('phlexible_message.handler.debug');
         }
-        $container->findDefinition('phlexible_message.handlers')->replaceArgument(0, $handlers);
+        $container->findDefinition('phlexible_message.message_handler')->replaceArgument(0, $handlers);
 
         if ($config['message_manager'] === 'doctrine') {
             $loader->load('doctrine_message.yml');
@@ -60,6 +63,9 @@ class PhlexibleMessageExtension extends Extension
         $container->setAlias('phlexible_message.filter_manager', 'phlexible_message.doctrine.filter_manager');
 
         $loader->load('doctrine_subscription.yml');
-        $container->setAlias('phlexible_message.subscription_manager', 'phlexible_message.doctrine.subscription_manager');
+        $container->setAlias(
+            'phlexible_message.subscription_manager',
+            'phlexible_message.doctrine.subscription_manager'
+        );
     }
 }

@@ -1,16 +1,5 @@
-Ext.require('Phlexible.Handles');
-Ext.require('Phlexible.gui.menuhandle.handle.Menu');
+Ext.require('Phlexible.cms.handler.Reports');
+Phlexible.Handles.add('reports', 'Phlexible.cms.handler.Reports');
 
-Phlexible.Handles.add('reports', function() {
-    return new Phlexible.gui.menuhandle.handle.Menu({
-        text: Phlexible.cms.Strings.reports,
-        iconCls: 'p-cms-reports-icon'
-    });
-});
-
-Phlexible.Handles.add('statistics', function() {
-    return new Phlexible.gui.menuhandle.handle.Menu({
-        text: Phlexible.cms.Strings.statistics,
-        iconCls: 'p-cms-statistics-icon'
-    });
-});
+Ext.require('Phlexible.cms.handler.Statistics');
+Phlexible.Handles.add('statistics', 'Phlexible.cms.handler.Statistics');

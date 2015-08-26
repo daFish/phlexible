@@ -1,67 +1,78 @@
-gui:
-    frame: Rahmen
-    administration: Administration
-    bundle: Bundle
-    bundles: Bundles
-    no_bundles: Keine Bundles gefunden.
-    configuration: Konfiguration
-    content: Inhalt
-    dialog: Dialog
-    initialising: Initialisiere
-    setup: Setup
-    help: Hilfe
-    home: Startseite
-    debug: Debug
-    styles_and_images: 'Styles und Bilder'
-    what_do_you_want_to_do: 'Was möchten Sie tun?'
-    nothing_to_do: 'Nichts zu erledigen'
-    loading: Lade
-    menu: Menü
-    server_load: Serverauslastung
-    waiting_for_data: 'Warte auf Daten...'
-    1_min_avg: '1 Minute Mittelwert'
-    5_min_avg: '5 Minuten Mittelwert'
-    15_min_avg: '15 Minuten Mittelwert'
-    success: Erfolg
-    warning: Warnung
-    error: Fehler
-    error_occured: 'Fehler aufgetreten'
-    check_not_supported: 'Ihr Browser {0} wird nicht unterstützt.'
-    check_no_right_click: 'Ihr Browser {0} hat keine Unterstützung für Rechtsklick-Kontextmenüs.'
-    de: Deutsch
-    en: Englisch
-    fr: French
-    es: Spanisch
-    nl: Holländisch
-    cz: Tschechisch
-    online_for: 'Online seit'
-    seconds: Sekunden
-    second: Sekunde
-    minutes: Minuten
-    minute: Minute
-    hours: Stunden
-    hour: Stunde
-    days: Tagen
-    day: Tag
-    weeks: Wochen
-    week: Woche
-    months: Monaten
-    month: Monat
-    years: Jahre
-    year: Jahre
-    and: und
-    manager: Verwaltung
-    status: Status
-    icon: Icon
-    key: Schlüssel
-    filter: Filter
-    name: Name
-    version: Version
-    package: Package
-    classname: Klasse
-    path: Pfad
-    description: Beschreibung
-    dependencies: Abhängigkeiten
-    reset: Zurücksetzen
-    extensions: Erweiterungen
-    please_wait: 'Bitte warten...'
+Phlexible:
+    gui:
+        handler:
+            Konfiguration:
+                text: Konfiguration
+
+            Administration:
+                text: Administration
+
+            Debug:
+                text: Debug
+
+            Bundles:
+                text: Bundles
+
+            Help:
+                text: Hilfe
+
+            PhpInfo:
+                text: PHP Info
+
+            Reload:
+                text: Aktuellen Zustand neu laden
+
+        panel:
+            IFrame:
+                homeText: Startseite
+                reloadText: Neu laden
+                openInNewWindowText: In neuem Fenster öffnen
+
+        portlet:
+            Load:
+                title: Auslastung
+                oneMinAvgText: '1 Min'
+                fiveMinAvgText: '5 Min'
+                fifteenMinAvgText: '15 Min'
+                waitingForDataText: Warte auf Daten...
+
+        util:
+            Notify:
+                successText: Erfolg
+                failureText: Fehler
+
+            Poller:
+                pollerOnlineText: Poller aktiv
+                pollerOfflineText: Poller inaktiv
+                pollerBusyText: Poller lädt
+                pollerPausedText: Poller pausiert
+
+            RequestListener:
+                requestIdleText: Request wartend
+                requestBusyText: Request lädt
+                requestErrorText: Request fehlgeschlagen
+
+        view:
+            Help:
+                title: Hilfe
+
+            PropertiesPanel:
+                title: Properties
+
+            Bundles:
+                title: Bundles
+                nameText: Name
+                packageText: Package
+                filterText: Filter
+                resetText: Zurücksetzen
+                bundleText: Bundle
+                classnameText: Classname
+                pathText: Pfad
+
+        window:
+            RequestErrorWindow:
+                title: Anfragefehler
+
+            PhpInfoWindow:
+                title: PHP Info
+                modulesText: Module

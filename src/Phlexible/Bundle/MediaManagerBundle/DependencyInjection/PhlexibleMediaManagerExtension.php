@@ -1,19 +1,19 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MediaManagerBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -36,7 +36,9 @@ class PhlexibleMediaManagerExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $ids = array();
+        $container->setParameter('phlexible_media_manager.volume_configs', $config['volumes']);
+        /*
+        $ids = [];
         foreach ($config['volumes'] as $name => $volumeConfig) {
             $driverId = $volumeConfig['driver'];
 
@@ -52,8 +54,9 @@ class PhlexibleMediaManagerExtension extends Extension
 
             $ids[$name] = new Reference($id);
         }
+        */
 
-        $container->getDefinition('phlexible_media_manager.volume_manager')->replaceArgument(0, $ids);
+        $container->setAlias('phlexible_media_manager.volume_manager', 'phlexible_media_manager.doctrine.volume_manager');
 
         $container->setParameter('phlexible_media_manager.portlet.style', $config['portlet']['style']);
         $container->setParameter('phlexible_media_manager.portlet.num_items', $config['portlet']['num_items']);

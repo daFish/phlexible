@@ -1,7 +1,7 @@
-Ext.provide('Phlexible.elementtypes.field.TableField');
-Ext.require('Phlexible.fields.FieldHelper');
+Ext.define('Phlexible.elementtype.field.TableField', {
+    extend: 'Ext.grid.Panel',
+    xtype: 'field.table',
 
-Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
     width: 400,
     height: 200,
     isFormField: true,
@@ -48,20 +48,20 @@ Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
         this.tbar = [
             {
                 qtip: this.addRowAboveText,
-                iconCls: 'p-elementtype-table_row_add_before-icon',
+                iconCls: Phlexible.Icon.get('table-insert-row'),
                 disabled: true,
                 handler: this.addRow,
                 scope: this
             },
             {
                 qtip: this.addRowBelowText,
-                iconCls: 'p-elementtype-table_row_add_after-icon',
+                iconCls: Phlexible.Icon.get('table-insert-row'),
                 handler: this.addRowAfter,
                 scope: this
             },
             {
                 qtip: this.deleteRowText,
-                iconCls: 'p-elementtype-table_row_delete-icon',
+                iconCls: Phlexible.Icon.get('table-delete-row'),
                 disabled: true,
                 handler: this.removeRow,
                 disabled: true,
@@ -70,21 +70,21 @@ Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
             '-',
             {
                 qtip: this.addColumnBeforeText,
-                iconCls: 'p-elementtype-table_col_add_before-icon',
+                iconCls: Phlexible.Icon.get('table-insert-column'),
                 disabled: true,
                 handler: this.addCol,
                 scope: this
             },
             {
                 qtip: this.addColumnAfterText,
-                iconCls: 'p-elementtype-table_col_add_after-icon',
+                iconCls: Phlexible.Icon.get('table-insert-column'),
                 disabled: true,
                 handler: this.addColAfter,
                 scope: this
             },
             {
                 qtip: this.deleteColumnText,
-                iconCls: 'p-elementtype-table_col_delete-icon',
+                iconCls: Phlexible.Icon.get('table-delete-column'),
                 disabled: true,
                 handler: this.removeCol,
                 scope: this
@@ -178,7 +178,7 @@ Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
             }
         });
 
-        Phlexible.elementtypes.field.TableField.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     buildDiffTable: function (input) {
@@ -236,7 +236,7 @@ Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
 
     addRow: function (where) {
         var value = this.getValue();
-        var tr = Phlexible.clone(this.tableRow);
+        var tr = Ext.clone(this.tableRow);
         var r = new Ext.data.Record();
         var cell = this.getSelectionModel().getSelectedCell();
 
@@ -490,4 +490,3 @@ Phlexible.elementtypes.field.TableField = Ext.extend(Ext.grid.EditorGridPanel, {
         return config;
     }
 });
-Ext.reg('tablefield', Phlexible.elementtypes.field.TableField);

@@ -1,17 +1,24 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Controller;
 
+use Phlexible\Bundle\GuiBundle\Event\PollEvent;
+use Phlexible\Bundle\GuiBundle\GuiEvents;
+use Phlexible\Bundle\GuiBundle\Poller\MessageCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Poll controller
@@ -27,68 +34,22 @@ class PollController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @Route("", name="gui_poll")
+     * @Route("", name="phlexible_gui_poll")
      */
-    public function indexAction(Request $request)
+    public function pollAction(Request $request)
     {
-        $messages = array();
-
-        $data = array();
-        foreach ($this->get('phlexible_dashboard.portlets') as $portlet) {
-            $data[$portlet->getId()] = $portlet->getData();
+        $lastPoll = $request->getSession()->get('lastPoll');
+        if ($lastPoll) {
+            $lastPoll = new \DateTime($lastPoll);
         }
+        $messages = new MessageCollection($this->getUser()->getId(), $lastPoll);
 
-        $message = new \stdClass();
-        $message->type = 'start';
-        $message->event = 'update';
-        $message->uid = $this->getUser()->getId();
-        $message->msg = null;
-        $message->data = $data;
-        $message->objectID = null;
-        $message->ts = date('Y-m-d H:i:s');
-
-        $messages[] = (array) $message;
+        $this->get('event_dispatcher')->dispatch(GuiEvents::POLL, new PollEvent($messages));
 
         $request->getSession()->set('lastPoll', date('Y-m-d H:i:s'));
 
-        /*
-        $lastMessages = MWF_Core_Messages_Message_Query::getByFilter(
-            array(
-                array(
-                    array(
-                        'key'   => MWF_Core_Messages_Filter::CRITERIUM_START_DATE,
-                        'value' => $pollSession->lastPoll
-                    )
-                )
-            ),
-            $this->getSecurityContext()->getUser()->getId(),
-            5
-        );
+        $messages = $this->get('serializer')->serialize($messages, 'json');
 
-        foreach ($lastMessages as $lastMessage) {
-            try {
-                $user = MWF_Core_Users_User_Peer::getByUserID($lastMessage['create_uid']);
-            } catch (\Exception $e) {
-                $user = MWF_Core_Users_User_Peer::getSystemUser();
-            }
-
-            $message = new MWF_Core_Messages_Frontend_Message();
-            $message->type = 'message';
-            $message->event = 'message';
-            $message->uid = $lastMessage['create_uid'];
-            $message->msg = $lastMessage['subject'] . ' [' . $user->getUsername() . ']';
-            $message->data = array();
-            $message->objectID = null;
-            $message->ts = $lastMessage['created_at'];
-
-            if ($lastMessage['created_at'] > $pollSession->lastPoll) {
-                $pollSession->lastPoll = $lastMessage['created_at'];
-            }
-
-            $messages[] = $message;
-        }
-        */
-
-        return new JsonResponse($messages);
+        return new Response($messages);
     }
 }

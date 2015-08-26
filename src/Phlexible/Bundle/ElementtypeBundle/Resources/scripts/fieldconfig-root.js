@@ -1,10 +1,9 @@
-Ext.require('Phlexible.fields.FieldTypes');
-
-Phlexible.fields.FieldTypes.addField('root', {
+Phlexible.fields.FieldTypes.register({
+    type: 'root',
     titles: {
         de: 'Root',
         en: 'Root'
     },
-    iconCls: 'p-elementtype-container_root-icon',
+    iconCls: Phlexible.Icon.get('ui-scroll-pane-tree'),
     allowedIn: []
 });

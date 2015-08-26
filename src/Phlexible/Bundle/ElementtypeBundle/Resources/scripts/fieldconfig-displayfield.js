@@ -1,8 +1,4 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.elementtypes.field.DisplayField');
-
-Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('displayfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     // labels
     var hideLabel,
         label,
@@ -17,14 +13,14 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
         hideLabel = false;
     } else if (parentConfig.singleLine) {
         hideLabel = true;
-        label = item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
+        label = item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')];
     } else if (item.configuration.hide_label) {
         hideLabel = false;
         label = '';
         labelSeparator = '';
     } else {
         hideLabel = false;
-        label = item.labels.fieldLabel[Phlexible.Config.get('user.property.interfaceLanguage', 'en')];
+        label = item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')];
     }
 
     var field_prefix = 'field_' + item.dsId + '_';
@@ -40,9 +36,9 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
         dsId: item.dsId,
 
         fieldLabel: label,
-        helpText: contextHelp[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
-        prefix: prefix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
-        suffix: suffix[Phlexible.Config.get('user.property.interfaceLanguage', 'en')] || '',
+        helpText: contextHelp[Phlexible.User.getProperty('interfaceLanguage', 'en')] || '',
+        prefix: prefix[Phlexible.User.getProperty('interfaceLanguage', 'en')] || '',
+        suffix: suffix[Phlexible.User.getProperty('interfaceLanguage', 'en')] || '',
         labelSeparator: labelSeparator,
         hideLabel: hideLabel,
         value: item.content,
@@ -62,12 +58,13 @@ Phlexible.fields.Registry.addFactory('displayfield', function (parentConfig, ite
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('displayfield', {
+Phlexible.fields.FieldTypes.register({
+    type: 'displayfield',
     titles: {
         de: 'Anzeigefeld',
         en: 'Displayfield'
     },
-    iconCls: 'p-elementtype-field_display-icon',
+    iconCls: Phlexible.Icon.get('ui-label'),
     allowedIn: [
         'tab',
         'accordion',

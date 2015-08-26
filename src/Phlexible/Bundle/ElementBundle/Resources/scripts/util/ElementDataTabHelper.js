@@ -125,7 +125,7 @@ Phlexible.element.ElementDataTabHelper = {
                 } else if (!isRepeatable && isOptional) {
                     Ext.each(valueStructure.structures, function(valueStructureNode) {
                         if (valueStructureNode.dsId === structureNode.dsId) {
-                            var clonedStructureNode = Phlexible.clone(structureNode);
+                            var clonedStructureNode = Ext.clone(structureNode);
                             clonedStructureNode.id = valueStructureNode.id;
                             clonedStructureNode.valueStructure = valueStructureNode;
                             currentStructureNodes.push(clonedStructureNode);
@@ -146,7 +146,7 @@ Phlexible.element.ElementDataTabHelper = {
                     Ext.each(repeatableDsIds, function(dsId) {
                         if (valueStructureNode.dsId === dsId) {
                             var pt = element.prototypes.getPrototype(valueStructureNode.dsId);
-                            var clonedStructureNode = Phlexible.clone(pt);
+                            var clonedStructureNode = Ext.clone(pt);
                             clonedStructureNode.id = valueStructureNode.id;
                             clonedStructureNode.valueStructure = valueStructureNode;
                             currentStructureNodes.push(clonedStructureNode);
@@ -159,7 +159,7 @@ Phlexible.element.ElementDataTabHelper = {
                     var defaultRepeat = parseInt(pt.configuration.repeat_default, 10) || 0;
                     if (defaultRepeat > 0) {
                         for (var i=0; i<defaultRepeat; i++) {
-                            var clonedStructureNode = Phlexible.clone(pt);
+                            var clonedStructureNode = Ext.clone(pt);
                             currentStructureNodes.push(clonedStructureNode);
                         }
                     }
@@ -172,7 +172,7 @@ Phlexible.element.ElementDataTabHelper = {
             Ext.each(valueStructure.structures, function(valueStructureNode) {
                 if (valueStructureNode.parentDsId === parentConfig.dsId) {
                     var pt = element.prototypes.getPrototype(valueStructureNode.dsId);
-                    var structureNode = Phlexible.clone(pt);
+                    var structureNode = Ext.clone(pt);
                     structureNode.valueStructure = valueStructureNode;
                     currentStructureNodes.push(structureNode);
                 }

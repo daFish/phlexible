@@ -1,14 +1,20 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\Site\Domain;
 
 use Phlexible\Component\NodeType\Domain\NodeTypeConstraint;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Site
@@ -40,7 +46,7 @@ class Site
     /**
      * @var string
      */
-    private $createUserId;
+    private $createUser;
 
     /**
      * @var \DateTime
@@ -50,7 +56,7 @@ class Site
     /**
      * @var  string
      */
-    private $modifyUserId;
+    private $modifyUser;
 
     /**
      * @var NodeAlias[]
@@ -69,11 +75,13 @@ class Site
 
     /**
      * @var Navigation[]
+     * @Assert\Valid
      */
     private $navigations;
 
     /**
      * @var EntryPoint[]
+     * @Assert\Valid
      */
     private $entryPoints;
 
@@ -92,6 +100,9 @@ class Site
         if (null !== $uuid) {
             $this->id = $uuid;
         }
+
+        $this->createdAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
     }
 
     /**
@@ -147,9 +158,9 @@ class Site
      *
      * @return $this
      */
-    public function setCreateUserId($createUid)
+    public function setCreateUser($createUser)
     {
-        $this->createUserId = $createUid;
+        $this->createUser = $createUser;
 
         return $this;
     }
@@ -157,9 +168,9 @@ class Site
     /**
      * @return string
      */
-    public function getCreateUserId()
+    public function getCreateUser()
     {
-        return $this->createUserId;
+        return $this->createUser;
     }
 
     /**
@@ -183,13 +194,13 @@ class Site
     }
 
     /**
-     * @param string $modifyUid
+     * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUserId($modifyUid)
+    public function setModifyUser($modifyUser)
     {
-        $this->modifyUserId = $modifyUid;
+        $this->modifyUser = $modifyUser;
 
         return $this;
     }
@@ -197,9 +208,9 @@ class Site
     /**
      * @return string
      */
-    public function getModifyUserId()
+    public function getModifyUser()
     {
-        return $this->modifyUserId;
+        return $this->modifyUser;
     }
 
     /**
@@ -382,11 +393,11 @@ class Site
      */
     public function getNodeAlias($name, $language = null)
     {
-        $canidates = array();
+        $candidates = array();
 
         foreach ($this->nodeAliases as $nodeAlias) {
             if ($nodeAlias->getName() === $name) {
-                $canidates[$nodeAlias->getLanguage()] = $nodeAlias;
+                $candidates[$nodeAlias->getLanguage()] = $nodeAlias;
             }
         }
 

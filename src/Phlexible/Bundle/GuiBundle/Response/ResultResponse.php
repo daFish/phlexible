@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Response;
@@ -29,11 +32,12 @@ class ResultResponse extends JsonResponse
      * @param array $data       (Optional) Data
      * @param array $additional (Optional) Additional values
      */
-    public function __construct($result = self::RESULT_SUCCESS,
-                                $message = null,
-                                array $data = array(),
-                                array $additional = array())
-    {
+    public function __construct(
+        $result = self::RESULT_SUCCESS,
+        $message = null,
+        array $data = array(),
+        array $additional = array()
+    ) {
         parent::__construct();
 
         $this->setResult($result, $message, $data, $additional);
@@ -47,11 +51,12 @@ class ResultResponse extends JsonResponse
      * @param array $data       (Optional) Data
      * @param array $additional (Optional) Additional values
      */
-    public function setResult($result = self::RESULT_SUCCESS,
-                              $message = null,
-                              array $data = array(),
-                              array $additional = array())
-    {
+    public function setResult(
+        $result = self::RESULT_SUCCESS,
+        $message = null,
+        array $data = array(),
+        array $additional = array()
+    ) {
         $this->headers->set('X-Phlexible-Response', 'result');
 
         $values = array(

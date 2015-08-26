@@ -1,15 +1,17 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Portlet;
 
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Online portlet
@@ -24,17 +26,10 @@ class OnlinePortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
     private $userManager;
 
     /**
-     * @param TranslatorInterface  $translator
      * @param UserManagerInterface $userManager
      */
-    public function __construct(TranslatorInterface $translator, UserManagerInterface $userManager)
+    public function __construct(UserManagerInterface $userManager)
     {
-        $this
-            ->setId('online-portlet')
-            ->setTitle($translator->trans('users.who_is_online', array(), 'gui'))
-            ->setClass('Phlexible.users.portlet.Online')
-            ->setIconClass('p-user-portlet-icon');
-
         $this->userManager = $userManager;
     }
 

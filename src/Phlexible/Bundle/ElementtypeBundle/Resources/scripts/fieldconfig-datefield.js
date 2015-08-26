@@ -1,8 +1,4 @@
-Ext.require('Phlexible.fields.Registry');
-Ext.require('Phlexible.fields.FieldTypes');
-Ext.require('Phlexible.fields.FieldHelper');
-
-Phlexible.fields.Registry.addFactory('date', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.fields.Registry.register('date', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -25,12 +21,13 @@ Phlexible.fields.Registry.addFactory('date', function (parentConfig, item, value
     return config;
 });
 
-Phlexible.fields.FieldTypes.addField('date', {
+Phlexible.fields.FieldTypes.register({
+    type: 'date',
     titles: {
         de: 'Datum',
         en: 'Date'
     },
-    iconCls: 'p-elementtype-field_date-icon',
+    iconCls: Phlexible.Icon.get('calendar-month'),
     allowedIn: [
         'tab',
         'accordion',

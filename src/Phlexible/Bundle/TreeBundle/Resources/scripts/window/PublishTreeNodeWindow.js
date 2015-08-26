@@ -32,7 +32,7 @@ Phlexible.tree.window.PublishTreeNodeWindow = Ext.extend(Ext.Window, {
             width: 50
         });
 
-        var languages = Phlexible.clone(Phlexible.Config.get('set.language.frontend'));
+        var languages = Ext.clone(Phlexible.Config.get('set.language.frontend'));
         Ext.each(languages, function (item) {
             item[3] = this.language === item[0];
         }, this);

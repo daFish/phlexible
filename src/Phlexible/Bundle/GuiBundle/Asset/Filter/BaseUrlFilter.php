@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\GuiBundle\Asset\Filter;
@@ -41,8 +44,8 @@ class BaseUrlFilter
     public function filter($content)
     {
         return str_replace(
-            array('/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'),
-            array($this->basePath, $this->baseUrl, $this->basePath . 'bundles/'),
+            array('/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/', '/BUNDLES_URL/'),
+            array($this->basePath, $this->baseUrl, $this->basePath . 'bundles/', $this->baseUrl . 'bundles/'),
             $content
         );
     }

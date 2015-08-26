@@ -7,10 +7,6 @@ parameters:
     phlexible_user.mailer.new_password.from: %phlexible_gui.mail.from_email%
 
 services:
-    phlexible_user.successor_service:
-        class: Phlexible\Bundle\UserBundle\Successor\SuccessorService
-        arguments: [@event_dispatcher, @phlexible_message.message_poster]
-
     phlexible_user.mailer:
         class: Phlexible\Bundle\UserBundle\Mailer\Mailer
         arguments:
@@ -21,12 +17,6 @@ services:
                 new_password: {template: %phlexible_user.mailer.new_password.template%, from: %phlexible_user.mailer.new_password.from%}
 
     # event listeners
-    phlexible_user.listener.apply_successor:
-        class: Phlexible\Bundle\UserBundle\EventListener\ApplySuccessorListener
-        arguments: [@phlexible_user.user_manager, @phlexible_user.group_manager]
-        tags:
-            - {name: kernel.event_listener, event: phlexible_user.apply_successor, method: onApplySuccessor}
-
     phlexible_user.listener.get_config:
         class: Phlexible\Bundle\UserBundle\EventListener\GetConfigListener
         arguments:
@@ -42,13 +32,20 @@ services:
         tags:
             - {name: kernel.event_listener, event: phlexible_gui.get_config, method: onGetConfig}
 
+    phlexible_user.listener.message:
+        class: Phlexible\Bundle\UserBundle\EventListener\MessageListener
+        arguments:
+            - @phlexible_message.message_poster
+        tags:
+            - {name: kernel.event_subscriber}
+
     # portlets
     phlexible_user.portlet.online:
         class: Phlexible\Bundle\UserBundle\Portlet\OnlinePortlet
         public: false
-        arguments: [@translator, @phlexible_user.user_manager]
+        arguments: [@phlexible_user.user_manager]
         tags:
-            - {name: phlexible_dashboard.portlet}
+            - {name: phlexible_dashboard.portlet, alias: online-portlet}
 
     # role providers
     phlexible_user.role_provider:

@@ -294,7 +294,7 @@ Phlexible.tree.toolbar.TopToolbar = Ext.extend(Ext.Toolbar, {
 
                     var w = new Phlexible.elements.NewTaskWindow({
                         payload: payload,
-                        component_filter: 'elements',
+                        componentFilter: 'elements',
                         listeners: {
                             create: function () {
                                 this.element.reload({

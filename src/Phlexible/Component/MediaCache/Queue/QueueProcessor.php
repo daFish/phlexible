@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Component\MediaCache\Queue;
@@ -15,6 +18,8 @@ use Phlexible\Component\MediaCache\Queue as BaseQueue;
 use Phlexible\Component\MediaCache\Worker\WorkerInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\VolumeManager;
+use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
+use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Filesystem\LockHandler;
 use Temp\MediaClassifier\MediaClassifier;
 
@@ -31,7 +36,7 @@ class QueueProcessor
     private $worker;
 
     /**
-     * @var VolumeManager
+     * @var VolumeManagerInterface
      */
     private $volumeManager;
 
@@ -57,7 +62,7 @@ class QueueProcessor
 
     /**
      * @param WorkerInterface          $worker
-     * @param VolumeManager            $volumeManager
+     * @param VolumeManagerInterface   $volumeManager
      * @param TemplateManagerInterface $templateManager
      * @param MediaClassifier          $mediaClassifier
      * @param Properties               $properties
@@ -65,7 +70,7 @@ class QueueProcessor
      */
     public function __construct(
         WorkerInterface $worker,
-        VolumeManager $volumeManager,
+        VolumeManagerInterface $volumeManager,
         TemplateManagerInterface $templateManager,
         MediaClassifier $mediaClassifier,
         Properties $properties,

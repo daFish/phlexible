@@ -2,22 +2,17 @@
     "version": "1.0",
     "name": "phlexible/dashboard-bundle",
     "path-mappings": {
-        "/phlexible/phlexibledashboard/icons": "src/Phlexible/Bundle/DashboardBundle/Resources/public/icons",
-        "/phlexible/phlexibledashboard/scripts": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
-        "/phlexible/phlexibledashboard/styles": "src/Phlexible/Bundle/DashboardBundle/Resources/styles"
+        "/phlexible/dashboard-bundle/scripts": "Resources/scripts",
+        "/phlexible/dashboard-bundle/styles": "Resources/styles"
     },
     "bindings": {
-        "935e8365-ba99-51d4-b705-5b2bf925ee5b": {
-            "query": "/phlexible/phlexibledashboard/icons/*.png",
-            "type": "phlexible/icons"
-        },
-        "18aa998c-6dc3-5367-ac0b-2823440d623d": {
-            "query": "/phlexible/phlexibledashboard/scripts/**/*.js",
+        "ac83c92c-5a73-42dd-8a56-718da08be2ee": {
+            "query": "/phlexible/dashboard-bundle/scripts/**/*.js",
             "type": "phlexible/scripts"
         },
-        "275795b7-4d09-52ab-8895-e3b35bedfc97": {
-            "query": "/phlexible/phlexibledashboard/styles/**/*.css",
+        "bfdfbb8c-524c-490f-91e6-b8e1050bb698": {
+            "query": "/phlexible/dashboard-bundle/styles/**/*.css",
             "type": "phlexible/styles"
-        },
+        }
     }
 }

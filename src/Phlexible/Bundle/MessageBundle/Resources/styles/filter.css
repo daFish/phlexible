@@ -1,3 +1,4 @@
+/*
 .ext-safari .p-messages-filter-form .p-messages-plus,
 .ext-chrome .p-messages-filter-form .p-messages-plus {
     top: 0 !important;
@@ -30,7 +31,6 @@
 .p-messages-filter-form .panel-filter {
     background-color: #F0EFFF;
     margin-bottom: 5px;
-    xwidth: 475px;
 }
 
 .p-messages-filter-form .panel-filter-small {
@@ -72,8 +72,8 @@
 }
 
 .p-messages-filter-form .removeCriteriaButton {
-    /*position: absolute;
-    right: 5px;*/
+    xposition: absolute;
+    xright: 5px;
 }
 
 .p-messages-filter-form .p-messages-plus {
@@ -89,3 +89,4 @@
     top: -23px;
     z-index: 999;
 }
+*/

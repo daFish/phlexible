@@ -1,29 +1,31 @@
-Ext.provide('Phlexible.mediacache.portlet.CacheStatus');
+Ext.define('Phlexible.mediacache.portlet.CacheStatus', {
+    extend: 'Ext.dashboard.Panel',
+    alias: 'widget.cache-status-portlet',
 
-Ext.require('Ext.ux.Portlet');
-
-Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
-    title: Phlexible.mediacache.Strings.cache_status,
-    strings: Phlexible.mediacache.Strings,
-    iconCls: 'p-mediacache-portlet-icon',
-    bodyStyle: 'padding: 5px 5px 5px 5px',
+    iconCls: Phlexible.Icon.get('images-stack'),
+    bodyPadding: 5,
 
     firstData: null,
     firstTs: null,
+    imageUrl: '/bundles/phlexiblemediacache/images/portlet-cache-status.png',
+
+    emptyText: '_emptyText',
+    itemsText: '_itemsText',
+    remainingText: '_remainingText',
 
     initComponent: function () {
-        var itemsLeft = parseInt(this.record.get('data'), 10);
+        var itemsLeft = 0;
 
         if (itemsLeft) {
-            this.html = '<span id="media_cache_status">' + String.format(this.strings.cache_status_items, itemsLeft) + '</span>';
+            this.html = '<span id="media_cache_status">' + Ext.String.format(this.itemsText, itemsLeft) + '</span>';
             this.firstData = itemsLeft;
             this.firstTs = new Date();
         }
         else {
-            this.html = '<span id="media_cache_status">' + this.strings.cache_status_empty + '</span>';
+            this.html = '<span id="media_cache_status">' + this.emptyText + '</span>';
         }
 
-        Phlexible.mediacache.portlet.CacheStatus.superclass.initComponent.call(this);
+        this.callParent(arguments);
     },
 
     updateData: function (itemsLeft) {
@@ -42,22 +44,20 @@ Phlexible.mediacache.portlet.CacheStatus = Ext.extend(Ext.ux.Portlet, {
                 var secondsLeft = itemsLeft / itemsPerSecond;
                 //var minutesLeft = parseInt(secondsLeft / 60, 10);
 
-                this.body.first().update(String.format(this.strings.cache_status_items_remaining, itemsLeft, itemsPerMinute, Phlexible.Format.age(secondsLeft)));
+                this.body.first().update(Ext.String.format(this.remainingText, itemsLeft, itemsPerMinute, Phlexible.Format.age(secondsLeft)));
 
                 Ext.fly('media_cache_status').frame('#8db2e3', 1);
             }
             else {
-                this.body.first().update(String.format(this.strings.cache_status_items, itemsLeft));
+                this.body.first().update(Ext.String.format(this.itemsText, itemsLeft));
                 this.firstData = itemsLeft;
                 this.firstTs = new Date();
             }
         }
         else {
-            this.body.first().update(String.format(this.strings.cache_status_empty));
+            this.body.first().update(Ext.String.format(this.emptyText));
             this.firstTs = null;
             this.firstData = null;
         }
     }
 });
-
-Ext.reg('mediacache-portlet-cachestatus', Phlexible.mediacache.portlet.CacheStatus);

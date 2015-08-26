@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\Controller;
@@ -18,8 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Controller managing the resetting of the password
  *
- * @author Thibault Duplessis <thibault.duplessis@gmail.com>
- * @author Christophe Coevoet <stof@notk.org>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class ResettingController extends BaseResettingController
 {
@@ -31,7 +33,9 @@ class ResettingController extends BaseResettingController
      */
     public function requestAction()
     {
-        return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:request.html.'.$this->getEngine());
+        return $this->container->get('templating')->renderResponse(
+            'PhlexibleUserBundle:Resetting:request.html.' . $this->getEngine()
+        );
     }
 
     /**
@@ -48,11 +52,16 @@ class ResettingController extends BaseResettingController
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
 
         if (null === $user) {
-            return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:request.html.'.$this->getEngine(), array('invalid_username' => $username));
+            return $this->container->get('templating')->renderResponse(
+                'PhlexibleUserBundle:Resetting:request.html.' . $this->getEngine(),
+                array('invalid_username' => $username)
+            );
         }
 
         if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
-            return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:passwordAlreadyRequested.html.'.$this->getEngine());
+            return $this->container->get('templating')->renderResponse(
+                'PhlexibleUserBundle:Resetting:passwordAlreadyRequested.html.' . $this->getEngine()
+            );
         }
 
         if (null === $user->getConfirmationToken()) {
@@ -86,9 +95,12 @@ class ResettingController extends BaseResettingController
             return new RedirectResponse($this->container->get('router')->generate('fos_user_resetting_request'));
         }
 
-        return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:checkEmail.html.'.$this->getEngine(), array(
-            'email' => $email,
-        ));
+        return $this->container->get('templating')->renderResponse(
+            'PhlexibleUserBundle:Resetting:checkEmail.html.' . $this->getEngine(),
+            array(
+                'email' => $email,
+            )
+        );
     }
 
     /**
@@ -102,7 +114,9 @@ class ResettingController extends BaseResettingController
         $user = $this->container->get('fos_user.user_manager')->findUserByConfirmationToken($token);
 
         if (null === $user) {
-            throw new NotFoundHttpException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
+            throw new NotFoundHttpException(
+                sprintf('The user with "confirmation token" does not exist for value "%s"', $token)
+            );
         }
 
         if (!$user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
@@ -121,10 +135,13 @@ class ResettingController extends BaseResettingController
             return $response;
         }
 
-        return $this->container->get('templating')->renderResponse('PhlexibleUserBundle:Resetting:reset.html.'.$this->getEngine(), array(
-            'token' => $token,
-            'form' => $form->createView(),
-        ));
+        return $this->container->get('templating')->renderResponse(
+            'PhlexibleUserBundle:Resetting:reset.html.' . $this->getEngine(),
+            array(
+                'token' => $token,
+                'form' => $form->createView(),
+            )
+        );
     }
 
     /**
@@ -136,6 +153,6 @@ class ResettingController extends BaseResettingController
      */
     protected function getRedirectionUrl(UserInterface $user)
     {
-        return $this->container->get('router')->generate('gui_index');
+        return $this->container->get('router')->generate('phlexible_gui');
     }
 }

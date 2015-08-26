@@ -7,7 +7,7 @@ use Phlexible\Component\Site\Model\SiteManagerInterface;
 /**
  * Siteroots accessor
  *
- * @author Stephan Wentz <swentz@brainbits.net>
+ * @author Stephan Wentz <sw@brainbits.net>
  */
 class SitesAccessor implements \ArrayAccess, \IteratorAggregate
 {

@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\QueueBundle\Command;
@@ -57,7 +60,8 @@ class FlushCommand extends ContainerAwareCommand
             && !$input->getOption('aborted')
         ) {
             $output->writeln(
-                'Please choose either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted'
+                'Please choose either --all or one or more of the status options: ' .
+                '--pending, --running, --finished, --failed, --suspended, --aborted'
             );
 
             return 1;
@@ -72,7 +76,8 @@ class FlushCommand extends ContainerAwareCommand
                 || $input->getOption('aborted'))
         ) {
             $output->writeln(
-                'Please use either --all or one or more of the status options: --pending, --running, --finished, --failed, --suspended, --aborted'
+                'Please use either --all or one or more of the status options: ' .
+                '--pending, --running, --finished, --failed, --suspended, --aborted'
             );
 
             return 1;

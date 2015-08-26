@@ -1,59 +1,62 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\SearchBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Search controller
  *
  * @author Stephan Wentz <sw@brainbits.net>
- * @Route("/search/search")
+ *
+ * @Rest\NamePrefix("phlexible_api_search_")
  */
-class SearchController extends Controller
+class SearchController extends FOSRestController
 {
     /**
-     * Return search results
+     * Get search results
      *
-     * @param Request $request
+     * @param ParamFetcher $paramFetcher
      *
      * @return JsonResponse
-     * @Route("", name="search_search")
-     * @Method({"GET", "POST"})
+     *
+     * @Rest\QueryParam(name="query", requirements=".+", description="Search query")
+     * @Rest\QueryParam(name="start", requirements="\d+", default=0, description="First results")
+     * @Rest\QueryParam(name="limit", requirements="\d+", default=8, description="Max results")
+     * @Rest\View
      * @ApiDoc(
-     *   description="Search",
-     *   requirements={
-     *     {"name"="query", "dataType"="string", "required"=true, "description"="Search query"}
-     *   },
-     *   filters={
-     *     {"name"="limit", "dataType"="integer", "default"=8, "description"="Limit results"},
-     *     {"name"="start", "dataType"="integer", "default"=0, "description"="Result offset"}
+     *   description="Returns a collection of Search Results",
+     *   section="search",
+     *   statusCodes={
+     *     200="Returned when successful",
      *   }
      * )
      */
-    public function indexAction(Request $request)
+    public function getResultsAction(ParamFetcher $paramFetcher)
     {
-        $query = $request->get('query');
-        $limit = $request->get('limit', 8);
-        $start = $request->get('start', 0);
+        $query = $paramFetcher->get('query');
+        $limit = $paramFetcher->get('limit');
+        $start = $paramFetcher->get('start');
 
         $search = $this->get('phlexible_search.search');
         $results = $search->search($query);
 
-        return new JsonResponse(array(
-            'totalCount' => count($results),
-            'results'    => array_slice($results, $start, $limit)
-        ));
+        return array(
+            'results'    => array_slice($results, $start, $limit),
+            'totalCount' => count($results)
+        );
     }
 }

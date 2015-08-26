@@ -1,9 +1,12 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\UserBundle\RoleProvider;
@@ -25,6 +28,14 @@ class UserRoleProvider extends RoleProvider
         return array(
             'ROLE_USERS',
             'ROLE_GROUPS',
+            'ROLE_USER_ADMIN_READ',
+            'ROLE_USER_ADMIN_CREATE',
+            'ROLE_USER_ADMIN_UPDATE',
+            'ROLE_USER_ADMIN_DELETE',
+            'ROLE_GROUP_ADMIN_READ',
+            'ROLE_GROUP_ADMIN_CREATE',
+            'ROLE_GROUP_ADMIN_UPDATE',
+            'ROLE_GROUP_ADMIN_DELETE',
         );
     }
 

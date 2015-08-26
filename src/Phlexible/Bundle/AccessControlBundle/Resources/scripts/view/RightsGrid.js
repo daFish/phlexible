@@ -1,23 +1,37 @@
-Ext.provide('Phlexible.accesscontrol.RightsGrid');
+Ext.define('Phlexible.accesscontrol.RightsGrid', {
+    extend: 'Ext.grid.GridPanel',
+    alias: 'widget.accesscontrol-rights',
 
-Ext.require('Phlexible.accesscontrol.model.AccessControlEntry');
-Ext.require('Phlexible.accesscontrol.model.SecurityIdentity');
-Ext.require('Ext.ux.IconCombo');
-Ext.require('Ext.ux.grid.RowActions');
-
-Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
-    title: Phlexible.accesscontrol.Strings.access,
-    strings: Phlexible.accesscontrol.Strings,
+    title: '_RightsGrid',
     border: false,
     autoExpandColumn: 1,
     loadMask: true,
     stripeRows: true,
-    viewConfig: {
-        emptyText: Phlexible.accesscontrol.Strings.no_subjects
-    },
+    emptyText: '_emptyText',
 
     objectType: null,
     languageEnabled: false,
+
+    idText: '_idText',
+    subjectText: '_subjectText',
+    languageText: '_languageText',
+    allText: '_allText',
+    actionsText: '_actionsText',
+    deleteText: '_deleteText',
+    linkText: '_linkText',
+    restoreText: '_restoreText',
+    saveText: '_saveText',
+    usersText: '_usersText',
+    addText: '_addText',
+    groupsText: '_groupsText',
+    reloadText: '_reloadText',
+    legendText: '_legendText',
+    legendNotSetText: '_notSetText',
+    legendSetHereText: '_setHereText',
+    legendSetAboveText: '_setAboveText',
+    legendStoppedAboveText: '_stoppedAboveText',
+    legendStoppedHereText: '_stoppedHereText',
+    legendStoppedBelowText: '_stoppedBelowText',
 
     getDefaultUrls: function () {
         return {
@@ -33,12 +47,6 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     },
 
     initComponent: function () {
-        if (this.strings) {
-            this.strings = Ext.apply(Phlexible.accesscontrol.Strings, this.strings);
-        } else {
-            this.strings = Phlexible.accesscontrol.Strings;
-        }
-
         Ext.applyIf(this.urls, this.getDefaultUrls());
 
         if (!this.urls.users) {
@@ -77,14 +85,14 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             success: function (response) {
                 var fields = [
                     {
-                        header: this.strings.id,
+                        header: this.idText,
                         dataIndex: 'objectId',
                         width: 100,
                         hidden: true,
                         sortable: true
                     },
                     {
-                        header: this.strings.subject,
+                        header: this.subjectText,
                         dataIndex: 'securityName',
                         width: 100,
                         sortable: true,
@@ -98,7 +106,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                     var languageData = this.getLanguageData();
 
                     fields.push({
-                        header: this.strings.language,
+                        header: this.languageText,
                         dataIndex: 'language',
                         width: 100,
                         sortable: true,
@@ -109,7 +117,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                             }
 
                             if (!v || v == '_all_') {
-                                return Phlexible.inlineIcon('p-accesscontrol-all-icon') + ' ' + this.strings.all + suffix;
+                                return Phlexible.inlineIcon('p-accesscontrol-all-icon') + ' ' + this.allText + suffix;
                             }
 
                             Ext.each(Phlexible.Config.get('set.language.frontend'), function (item) {
@@ -237,26 +245,26 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
          */
 
         this.actions = new Ext.ux.grid.RowActions({
-            header: this.strings.actions,
+            header: this.actionsText,
             autoWidth: false,
             width: 70,
             actions: [
                 {
                     //showIndex: 'setHere',
                     iconCls: 'p-accesscontrol-delete-icon',
-                    tooltip: this.strings['delete'],
+                    tooltip: this.deleteText,
                     callback: this.deleteAction
                 },
                 {
                     //showIndex: 'inherited',
                     iconCls: 'p-accesscontrol-link-icon',
-                    tooltip: this.strings.link,
+                    tooltip: this.linkText,
                     callback: this.linkAction
                 },
                 {
                     //showIndex: 'restore',
                     iconCls: 'p-accesscontrol-restore-icon',
-                    tooltip: this.strings.restore,
+                    tooltip: this.restoreText,
                     callback: this.restoreAction
                 }
             ]
@@ -275,21 +283,21 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.columns = [
             //this.expander,
             {
-                header: this.strings.id,
+                header: this.idText,
                 dataIndex: 'objectId',
                 width: 30,
                 hidden: true,
                 sortable: true
             },
             {
-                header: this.strings.subject,
+                header: this.subjectText,
                 dataIndex: 'securityName',
                 sortable: true,
                 renderer: function (v, md, r) {
                     return Phlexible.inlineIcon('p-accesscontrol-' + r.data.type + '-icon') + ' ' + v;
                 }
             }/*,{
-             header: this.strings.language,
+             header: this.languageText,
              dataIndex: 'language',
              width: 50,
              sortable: true,
@@ -310,7 +318,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         this.tbar = [
             {
-                text: this.strings.save,
+                text: this.saveText,
                 iconCls: 'p-accesscontrol-save-icon',
                 handler: this.onSave,
                 scope: this
@@ -330,14 +338,14 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 pageSize: 20,
                 displayField: 'securityName',
                 valueField: 'securityId',
-                emptyText: this.strings.users,
+                emptyText: this.usersText,
                 selectOnFocus: true,
                 mode: 'remote',
                 typeAhead: true,
                 triggerAction: 'all'
             },
             {
-                text: this.strings.add,
+                text: this.addText,
                 iconCls: 'p-accesscontrol-add-icon',
                 handler: function () {
                     var usersCombo = this.getTopToolbar().items.items[2];
@@ -359,14 +367,14 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 }),
                 displayField: 'securityName',
                 valueField: 'securityId',
-                emptyText: this.strings.groups,
+                emptyText: this.groupsText,
                 selectOnFocus: true,
                 mode: 'remote',
                 typeAhead: true,
                 triggerAction: 'all'
             },
             {
-                text: this.strings.add,
+                text: this.addText,
                 iconCls: 'p-accesscontrol-add-icon',
                 handler: function () {
                     var groupsCombo = this.getTopToolbar().items.items[5];
@@ -377,7 +385,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             },
             '-',
             {
-                text: this.strings.reload,
+                text: this.reloadText,
                 iconCls: 'p-accesscontrol-reload-icon',
                 handler: function () {
                     this.store.reload();
@@ -389,37 +397,37 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         this.bbar = [
             {
                 xtype: 'tbtext',
-                text: this.strings.legend
+                text: this.legendText
             },
             '-',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-unchecked-icon') + ' ' + this.strings.not_set
+                text: Phlexible.inlineIcon('p-accesscontrol-unchecked-icon') + ' ' + this.legendNotSetText
             },
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-checked-icon') + ' ' + this.strings.set_here
+                text: Phlexible.inlineIcon('p-accesscontrol-checked-icon') + ' ' + this.legendSetHereText
             },
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon') + ' ' + this.strings.set_above
+                text: Phlexible.inlineIcon('p-accesscontrol-checked_inherit-icon') + ' ' + this.legendSetAboveText
             },
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon') + ' ' + this.strings.stopped_above
+                text: Phlexible.inlineIcon('p-accesscontrol-unchecked_inherit-icon') + ' ' + this.legendStoppedAboveText
             },
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-stopped-icon') + ' ' + this.strings.stopped_here
+                text: Phlexible.inlineIcon('p-accesscontrol-stopped-icon') + ' ' + this.legendStoppedHereText
             },
             ' ',
             {
                 xtype: 'tbtext',
-                text: Phlexible.inlineIcon('p-accesscontrol-single_right-icon') + ' ' + this.strings.stopped_below
+                text: Phlexible.inlineIcon('p-accesscontrol-single_right-icon') + ' ' + this.legendStoppedBelowText
             }
         ];
 
@@ -552,7 +560,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             var above = record.get('above');
             var rights = record.get('rights');
 
-            rights = Phlexible.clone(above);
+            rights = Ext.clone(above);
 
             record.beginEdit();
             record.set('rights', false);
@@ -581,7 +589,7 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         var original = record.get('original');
         var rights = record.get('rights');
 
-        rights = Phlexible.clone(original);
+        rights = Ext.clone(original);
 
         record.beginEdit();
         record.set('rights', false);
@@ -684,5 +692,3 @@ Phlexible.accesscontrol.RightsGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
     }
 });
-
-Ext.reg('accesscontrol-rightsgrid', Phlexible.accesscontrol.RightsGrid);

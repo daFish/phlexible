@@ -5,18 +5,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=8; IE=7"/>
     <link rel="icon" type="image/png" href="{{ asset("bundles/phlexiblegui/images/phlexible.png") }}">
-    <link href="{{ asset("resources/css/ext-all.css", "extjs") }}" media="screen" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.sencha.com/ext/gpl/5.1.0/build/packages/ext-theme-classic/build/resources/ext-theme-classic-all.css">
+    <script type="text/javascript" src="//cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js"></script>
+    <script type="text/javascript" src="//cdn.sencha.com/ext/gpl/5.1.0/build/packages/ext-theme-classic/build/ext-theme-classic-debug.js"></script>
     <style>
-        .p-user-login-icon {
+        .p-icon-login {
             background-image:url({{ asset("bundles/phlexibleuser/icons/login.png") }}) !important;
         }
     </style>
-    <script type="text/javascript" src="{{ asset("adapter/ext/ext-base.js", "extjs") }}"></script>
-    {% if app.debug %}
-        <script type="text/javascript" src="{{ asset("ext-all-debug.js", "extjs") }}"></script>
-    {% else %}
-        <script type="text/javascript" src="{{ asset("ext-all.js", "extjs") }}"></script>
-    {% endif %}
     <script type="text/javascript">
         //<![CDATA[
         Ext.BLANK_IMAGE_URL = "{{ asset("bundles/phlexiblegui/images/blank.gif") }}";

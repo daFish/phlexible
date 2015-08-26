@@ -105,7 +105,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
 //        }
 
         var sourceType = sourceNode.attributes.type,
-            targetType = targetNode.attributes.type;;
+            targetType = targetNode.attributes.type;
 
         if (targetType === 'reference') {
             if (this.debug) Phlexible.console.warn('targetType is reference => false');
@@ -154,7 +154,7 @@ Phlexible.elementtypes.ElementtypeStructureTreeDropZone = Ext.extend(Ext.tree.Tr
             sourceType = sourceNode.childNodes[0].attributes.type;
         }
 
-        var sourceField = Phlexible.fields.FieldTypes.getField(sourceType),
+        var sourceField = Phlexible.fields.FieldTypes.get(sourceType),
             targetParentType = targetNode.parentNode.attributes.type || null;
 
         if (position === 'append') {

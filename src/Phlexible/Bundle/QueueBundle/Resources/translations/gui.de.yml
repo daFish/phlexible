@@ -1,11 +1,25 @@
-queue:
-    queue: Warteschlange
-    no_jobs: 'Keine Jobs'
-    reload: 'Neu laden'
-    id: ID
-    command: Kommando
-    priority: Priorität
-    status: Status
-    create_time: 'Angelegt an'
-    start_time: 'Gestartet an'
-    end_time: 'Beendet an'
+Phlexible:
+    queue:
+        handler:
+            Queue:
+                text: Queue
+
+        view:
+            Main:
+                title: Warteschlange
+                queueText: Queue
+                noJobsText: 'Keine Jobs'
+                idText: ID
+                commandText: Kommando
+                priorityText: Priorität
+                stateText: Status
+                createdAtText: 'Angelegt an'
+                startedAtText: 'Gestartet an'
+                finishedAtText: 'Beendet an'
+                runTimeText: Laufzeit
+                memoryUsageText: Speicherverbrauch
+                maxRuntimeText: 'Max. Laufzeit'
+                executeAfterText: 'Ausführen nach'
+                outputText: 'Ausgabe'
+                errorOutputText: 'Fehlerausgabe'
+                reloadText: 'Neu laden'

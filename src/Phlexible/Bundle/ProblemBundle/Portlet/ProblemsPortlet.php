@@ -1,16 +1,18 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\ProblemBundle\Portlet;
 
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Problems portlet
@@ -26,18 +28,10 @@ class ProblemsPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
     private $fetcher;
 
     /**
-     * @param TranslatorInterface $translator
-     * @param ProblemFetcher      $fetcher
+     * @param ProblemFetcher $fetcher
      */
-    public function __construct(TranslatorInterface $translator, ProblemFetcher $fetcher)
+    public function __construct(ProblemFetcher $fetcher)
     {
-        $this
-            ->setId('problems-portlet')
-            ->setTitle($translator->trans('problems.problems', array(), 'gui'))
-            ->setClass('Phlexible.problems.portlet.Problems')
-            ->setIconClass('p-problem-portlet-icon')
-            ->setRole('ROLE_PROBLEMS');
-
         $this->fetcher = $fetcher;
     }
 
@@ -64,11 +58,10 @@ class ProblemsPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
 
             $data[] = array(
                 'id'       => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
-                'iconCls'  => $problem->getIconClass(),
                 'severity' => $problem->getSeverity(),
                 'msg'      => $problem->getMessage(),
                 'hint'     => $problem->getHint(),
-                'link'     => $problem->getLink(),
+                'link'     => $problem->getAttribute('link'),
             );
         }
 

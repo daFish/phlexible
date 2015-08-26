@@ -1,15 +1,17 @@
 <?php
-/**
- * phlexible
+
+/*
+ * This file is part of the phlexible package.
  *
- * @copyright 2007-2013 brainbits GmbH (http://www.brainbits.net)
- * @license   proprietary
+ * (c) Stephan Wentz <sw@brainbits.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Phlexible\Bundle\MessageBundle\Handler;
 
 use Phlexible\Bundle\MessageBundle\Entity\Message;
-use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -25,11 +27,6 @@ class LogHandler implements HandlerInterface
     private $logger;
 
     /**
-     * @var MessageManagerInterface
-     */
-    private $messageManager;
-
-    /**
      * @param LoggerInterface $logger
      */
     public function __construct(LoggerInterface $logger)
@@ -42,15 +39,14 @@ class LogHandler implements HandlerInterface
      */
     public function handle(Message $message)
     {
-        $priority = $message->getPriority();
-
+        $type    = $message->getType();
         $channel = $message->getChannel();
         $role    = $message->getRole();
         $subject = $message->getSubject();
         $body    = $message->getBody();
 
         // build message
-        $msg = "Message ($priority)";
+        $msg = "Message ($type)";
 
         if (!empty($channel)) {
             $msg .= ' in channel ' . $channel;
@@ -62,16 +58,18 @@ class LogHandler implements HandlerInterface
 
         $msg .= ': ' . $subject;
 
-        // log message
-        if ($message->getType() === Message::TYPE_ERROR) {
-            if (!empty($body)) {
-                $msg .= PHP_EOL . $body;
-            }
+        $methodMap = array(
+            Message::TYPE_INFO => 'info',
+            Message::TYPE_ERROR => 'error',
+        );
+        $method = $methodMap[$type];
 
-            $this->logger->error($msg);
-        } else {
-            $this->logger->debug($msg);
+        // log message
+        if ($type >= Message::TYPE_ERROR && !empty($body)) {
+            $msg .= PHP_EOL . $body;
         }
+
+        $this->logger->$method($msg);
     }
 
     /**
