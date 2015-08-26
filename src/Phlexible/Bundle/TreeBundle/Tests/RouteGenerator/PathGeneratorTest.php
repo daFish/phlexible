@@ -21,7 +21,7 @@ class PathGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testGeneratePath()
     {
         $decorator = $this->prophesize('Phlexible\Bundle\TreeBundle\RouteGenerator\PathDecoratorInterface');
-        $tree = $this->prophesize('Phlexible\Bundle\TreeBundle\Tree\Tree');
+        $tree = $this->prophesize('Phlexible\Component\Tree\Tree');
         $node = $this->prophesize('Phlexible\Bundle\TreeBundle\Node\NodeContext');
         $node->getTree()->willReturn($tree->reveal());
         $node->isViewable('de')->willReturn(true);

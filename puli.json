@@ -290,11 +290,11 @@
         "phlexible/mediatypes": {
             "description": "phlexible media types"
         },
-        "phlexible/metasets": {
-            "description": "phlexible meta sets"
-        },
         "phlexible/menu": {
             "description": "phlexible gui menu definitions"
+        },
+        "phlexible/metasets": {
+            "description": "phlexible meta sets"
         },
         "phlexible/node-icons": {
             "description": "phlexible tree node icons"
@@ -314,16 +314,12 @@
             "install-path": "vendor/alchemy/binary-driver",
             "installer": "composer"
         },
+        "alchemy/zippy": {
+            "install-path": "vendor/alchemy/zippy",
+            "installer": "composer"
+        },
         "brainbits/fugue-icons-bundle": {
             "install-path": "vendor/brainbits/fugue-icons-bundle",
-            "installer": "composer"
-        },
-        "brainbits/image-analyzer": {
-            "install-path": "vendor/brainbits/image-analyzer",
-            "installer": "composer"
-        },
-        "brainbits/mime": {
-            "install-path": "vendor/brainbits/mime",
             "installer": "composer"
         },
         "cocur/slugify": {
@@ -386,6 +382,10 @@
             "install-path": "vendor/friendsofsymfony/user-bundle/FOS/UserBundle",
             "installer": "composer"
         },
+        "guzzle/guzzle": {
+            "install-path": "vendor/guzzle/guzzle",
+            "installer": "composer"
+        },
         "igorw/file-serve-bundle": {
             "install-path": "vendor/igorw/file-serve-bundle/Igorw/FileServeBundle",
             "installer": "composer"
@@ -420,7 +420,8 @@
         },
         "mikey179/vfsstream": {
             "install-path": "vendor/mikey179/vfsStream",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "monolog/monolog": {
             "install-path": "vendor/monolog/monolog",
@@ -460,7 +461,8 @@
         },
         "phpdocumentor/reflection-docblock": {
             "install-path": "vendor/phpdocumentor/reflection-docblock",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpexiftool/exiftool": {
             "install-path": "vendor/phpexiftool/exiftool",
@@ -476,34 +478,46 @@
         },
         "phpspec/prophecy": {
             "install-path": "vendor/phpspec/prophecy",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpunit/php-code-coverage": {
             "install-path": "vendor/phpunit/php-code-coverage",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpunit/php-file-iterator": {
             "install-path": "vendor/phpunit/php-file-iterator",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpunit/php-text-template": {
             "install-path": "vendor/phpunit/php-text-template",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpunit/php-timer": {
             "install-path": "vendor/phpunit/php-timer",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpunit/php-token-stream": {
             "install-path": "vendor/phpunit/php-token-stream",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpunit/phpunit": {
             "install-path": "vendor/phpunit/phpunit",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "phpunit/phpunit-mock-objects": {
             "install-path": "vendor/phpunit/phpunit-mock-objects",
+            "installer": "composer",
+            "env": "dev"
+        },
+        "pimple/pimple": {
+            "install-path": "vendor/pimple/pimple",
             "installer": "composer"
         },
         "psr/log": {
@@ -552,31 +566,38 @@
         },
         "sebastian/comparator": {
             "install-path": "vendor/sebastian/comparator",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "sebastian/diff": {
             "install-path": "vendor/sebastian/diff",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "sebastian/environment": {
             "install-path": "vendor/sebastian/environment",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "sebastian/exporter": {
             "install-path": "vendor/sebastian/exporter",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "sebastian/global-state": {
             "install-path": "vendor/sebastian/global-state",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "sebastian/recursion-context": {
             "install-path": "vendor/sebastian/recursion-context",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "sebastian/version": {
             "install-path": "vendor/sebastian/version",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "seld/jsonlint": {
             "install-path": "vendor/seld/jsonlint",
@@ -592,6 +613,22 @@
         },
         "symfony/symfony": {
             "install-path": "vendor/symfony/symfony",
+            "installer": "composer"
+        },
+        "temp/image-analyzer": {
+            "install-path": "vendor/temp/image-analyzer",
+            "installer": "composer"
+        },
+        "temp/media-classifier": {
+            "install-path": "vendor/temp/media-classifier",
+            "installer": "composer"
+        },
+        "temp/media-converter": {
+            "install-path": "vendor/temp/media-converter",
+            "installer": "composer"
+        },
+        "temp/meta-reader": {
+            "install-path": "vendor/temp/meta-reader",
             "installer": "composer"
         },
         "twig/twig": {

@@ -11,8 +11,6 @@
 
 namespace Phlexible\Component\AccessControl\Tests\Permission;
 
-use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
-use Phlexible\Component\AccessControl\Domain\Entry;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 
 /**
@@ -54,7 +52,7 @@ class HierarchyMaskResolverTest extends \PHPUnit_Framework_TestCase
         $ace2->getNoInheritMask()->willReturn(0);
         $ace2->getStopMask()->willReturn(0);
 
-        $mask = $this->resolver->resolve(array($ace1, $ace2));
+        $mask = $this->resolver->resolve(array($ace1->reveal(), $ace2->reveal()));
 
         $this->assertEquals(1 | 2 | 4, $mask);
     }
