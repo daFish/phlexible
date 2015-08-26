@@ -124,6 +124,10 @@ class QueueProcessor
         $volume = $this->volumeManager->getById($cacheItem->getVolumeId());
         $file = $volume->findFile($cacheItem->getFileId(), $cacheItem->getFileVersion());
 
+        if (!$file) {
+            return null;
+        }
+
         $template = $this->templateManager->find($cacheItem->getTemplateKey());
 
         $mediaType = $this->mediaClassifier->getCollection()->get($file->getMediaType());

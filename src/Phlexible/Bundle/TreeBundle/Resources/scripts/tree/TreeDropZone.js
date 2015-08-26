@@ -142,7 +142,6 @@ Phlexible.tree.tree.TreeDropZone = Ext.extend(Ext.tree.TreeDropZone, {
                 else {
                     return false;
                 }
-
             }
         } else {
             // tree drag

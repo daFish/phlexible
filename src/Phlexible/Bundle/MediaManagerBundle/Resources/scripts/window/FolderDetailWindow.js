@@ -92,9 +92,12 @@ Phlexible.mediamanager.FolderDetailWindow = Ext.extend(Ext.Window, {
             },
             listeners: {
                 render: function (c) {
-                    if (!c.disabled) c.doLoad('folder', this.folder_id);
+                    if (!c.disabled) c.doLoad('Phlexible\\Bundle\\MediaManagerBundle\\Entity\\Folder', this.folder_id);
                 },
                 scope: this
+            },
+            createIconCls: function(permission) {
+                return 'p-mediamanager-permission_' + permission.name.toLowerCase() + '-icon';
             }
         }];
     },

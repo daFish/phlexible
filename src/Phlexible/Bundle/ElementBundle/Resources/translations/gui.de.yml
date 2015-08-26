@@ -22,6 +22,7 @@ elements:
     list: Liste
     type: Typ
     tid: TID
+    teaser_id: Teaser ID
     eid: EID
     id: ID
     version: Version
@@ -100,7 +101,7 @@ elements:
     check_input: 'Bitte füllen Sie alle benötigten Felder aus.'
     check_elements: 'Bitte wählen Sie mindestens entweder die Voll- oder die Teilelement-Checkbox.'
     duplicate: Dublizieren
-    copy: Kopieren
+    copy: Als Quelle für Einfügen setzen
     cut: Ausschneiden
     paste: Einfügen
     paste_as: '"{0}" einfügen als...'

@@ -125,6 +125,7 @@ Phlexible.elementtypes.ElementtypesList = Ext.extend(Ext.grid.GridPanel, {
         });
 
         this.viewConfig = {
+            emptyText: this.strings.no_elementtypes, 
             listeners: {
                 refresh: this.onViewRefresh,
                 scope: this

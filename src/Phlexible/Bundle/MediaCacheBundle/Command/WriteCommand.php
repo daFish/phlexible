@@ -65,7 +65,11 @@ class WriteCommand extends ContainerAwareCommand
 
             $queueProcessor->processItem(
                 $cacheItem,
-                function ($status, $worker, CacheItem $cacheItem) use ($output, $breakOnError, $current, $total) {
+                function ($status, $worker, CacheItem $cacheItem = null) use ($output, $breakOnError, $current, $total) {
+                    if (!$cacheItem) {
+                        $output->writeln('No cache item');
+                        return;
+                    }
                     $worker = ($worker ? get_class($worker) : '-');
                     $fileId = $cacheItem->getFileId();
                     $templateKey = $cacheItem->getTemplateKey();

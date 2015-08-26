@@ -42,7 +42,7 @@ class PhlexibleMediaManagerExtension extends Extension
 
             $volumeDefinition = new Definition('Phlexible\Component\MediaManager\Volume\ExtendedVolume', array(
                 $volumeConfig['id'],
-                $volumeConfig['root_dir'],
+                rtrim($volumeConfig['root_dir'], '/') . '/',
                 $volumeConfig['quota'],
                 new Reference($driverId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, false),
                 new Reference('event_dispatcher'),

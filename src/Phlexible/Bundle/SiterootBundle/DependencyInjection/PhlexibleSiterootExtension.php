@@ -31,17 +31,16 @@ class PhlexibleSiterootExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
+        $mappings = [];
         if (!empty($config['mappings'])) {
-            $mappings = array();
             foreach ($config['mappings'] as $mappedUrl => $siterootUrl) {
                 $mappings[$mappedUrl] = $siterootUrl;
             }
-            $container->setParameter('phlexible_siteroot.mappings', $mappings);
         }
 
-        //$loader->load('doctrine.yml');
+        $container->setParameter('phlexible_siteroot.mappings', $mappings);
+
         $loader->load('file.yml');
-        //$container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.doctrine.siteroot_manager');
         $container->setAlias('phlexible_siteroot.siteroot_manager', 'phlexible_siteroot.file.siteroot_manager');
     }
 }
