@@ -142,6 +142,7 @@ Ext.define('Phlexible.gui.RequestErrorWindow', {
                 title: this.payloadText,
                 iconCls: Phlexible.Icon.get('box'),
                 bodyPadding: ' 0 10 10 10',
+                autoScroll: true,
                 html: '<pre>' + JSON.stringify(this.response.payload, null, '  ') + '</pre>'
             };
         }

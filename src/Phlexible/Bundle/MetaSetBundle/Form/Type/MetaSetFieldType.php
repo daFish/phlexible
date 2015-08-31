@@ -13,6 +13,8 @@ namespace Phlexible\Bundle\MetaSetBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MetaSetFieldType extends AbstractType
@@ -29,6 +31,18 @@ class MetaSetFieldType extends AbstractType
         $builder->add('synchronized', 'checkbox');
         $builder->add('readonly', 'checkbox');
         $builder->add('required', 'checkbox');
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+            // cleanup extjs data - this shouldn't be necessary, try to remove data from extjs
+            $data = $event->getData();
+            if (isset($data['id'])) {
+                unset($data['id']);
+            }
+            if (isset($data['metaSetId'])) {
+                unset($data['metaSetId']);
+            }
+            $event->setData($data);
+        });
     }
 
     /**
@@ -37,8 +51,8 @@ class MetaSetFieldType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'Phlexible\Component\MetaSet\Model\MetaSetField',
-            'csrf_protection'   => false,
+            'data_class'      => 'Phlexible\Component\MetaSet\Domain\MetaSetField',
+            'csrf_protection' => false,
         ));
     }
 
@@ -47,6 +61,6 @@ class MetaSetFieldType extends AbstractType
      */
     public function getName()
     {
-        return 'metaset_field';
+        return 'metaSetField';
     }
 }

@@ -99,14 +99,14 @@ interface MetaSetInterface
     /**
      * @return string
      */
-    public function getCreateUser();
+    public function getCreatedBy();
 
     /**
      * @param string $createUser
      *
      * @return $this
      */
-    public function setCreateUser($createUser);
+    public function setCreatedBy($createUser);
 
     /**
      * @return \DateTime
@@ -123,14 +123,14 @@ interface MetaSetInterface
     /**
      * @return string
      */
-    public function getModifyUser();
+    public function getModifiedBy();
 
     /**
      * @param string $modifyUser
      *
      * @return $this
      */
-    public function setModifyUser($modifyUser);
+    public function setModifiedBy($modifyUser);
 
     /**
      * @return \DateTime

@@ -18,7 +18,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MetaSetBundle\Form\Type\MetaSetType;
-use Phlexible\Component\MetaSet\Model\MetaSet;
+use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -58,7 +58,7 @@ class MetaSetsController extends FOSRestController
 
         return array(
             'metasets' => array_values($metaSets),
-            'count'    => count($metaSets)
+            'total'    => count($metaSets)
         );
     }
 
@@ -89,9 +89,7 @@ class MetaSetsController extends FOSRestController
             throw new NotFoundHttpException('Meta set not found');
         }
 
-        return array(
-            'metaset' => $metaSet
-        );
+        return $metaSet;
     }
 
     /**
@@ -261,9 +259,9 @@ class MetaSetsController extends FOSRestController
         $metaSet
             ->setId(Uuid::generate())
             ->setName($name)
-            ->setCreateUser($this->getUser()->getDisplayName())
+            ->setCreatedBy($this->getUser()->getDisplayName())
             ->setCreatedAt(new \DateTime())
-            ->setModifyUser($this->getUser()->getDisplayName())
+            ->setModifiedBy($this->getUser()->getDisplayName())
             ->setModifiedAt(new \DateTime());
 
         $metaSetManager->updateMetaSet($metaSet);
@@ -353,7 +351,7 @@ class MetaSetsController extends FOSRestController
         }
 
         $metaSet
-            ->setModifyUser($this->getUser()->getDisplayName())
+            ->setModifiedBy($this->getUser()->getDisplayName())
             ->setModifiedAt(new \DateTime());
 
         foreach ($fields as $field) {

@@ -8,30 +8,46 @@
 
 namespace Phlexible\Component\Site\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * Entry point
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="entryPoint")
+ * @Serializer\ExclusionPolicy("all")
  */
 class EntryPoint
 {
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $name;
 
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $hostname;
 
     /**
      * @var int
+     * @Serializer\Type(name="integer")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $nodeId;
 
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $language;
 

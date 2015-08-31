@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('type', 'reference', {
+Phlexible.Storage.set('type', 'reference', {
     type: 'reference',
     titles: {
         de: 'Referenz',

@@ -8,82 +8,75 @@
 
 namespace Phlexible\Component\MediaTemplate\Domain;
 
+use DateTime;
+use JMS\Serializer\Annotation as Serializer;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
  * Abstract template
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="mediaTemplate")
+ * @Serializer\ExclusionPolicy("all")
+ * @Serializer\Discriminator(field="type", map={"image": "Phlexible\Component\MediaTemplate\Domain\ImageTemplate", "video": "Phlexible\Component\MediaTemplate\Domain\VideoTemplate", "audio": "Phlexible\Component\MediaTemplate\Domain\AudioTemplate"})
  */
 abstract class AbstractTemplate implements TemplateInterface
 {
     /**
      * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type(name="string")
+     * @Serializer\XmlAttribute()
      */
     private $key;
 
     /**
      * @var bool
+     * @Serializer\Expose()
+     * @Serializer\Type(name="boolean")
+     * @Serializer\XmlAttribute()
      */
     private $cache = false;
 
     /**
      * @var bool
+     * @Serializer\Expose()
+     * @Serializer\Type(name="boolean")
+     * @Serializer\XmlAttribute()
      */
     private $system = false;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type(name="string")
+     * @Serializer\XmlAttribute()
      */
     private $storage = 'default';
 
     /**
      * @var int
+     * @Serializer\Expose()
+     * @Serializer\Type(name="integer")
+     * @Serializer\XmlAttribute()
      */
     private $revision = 0;
 
     /**
-     * @var \DateTime
+     * @var DateTime
+     * @Serializer\Expose()
+     * @Serializer\Type(name="DateTime")
+     * @Serializer\XmlAttribute()
      */
     private $createdAt;
 
     /**
-     * @var string
-     */
-    private $createUser;
-
-    /**
-     * @var \DateTime
+     * @var DateTime
+     * @Serializer\Expose()
+     * @Serializer\Type(name="DateTime")
+     * @Serializer\XmlAttribute()
      */
     private $modifiedAt;
-
-    /**
-     * @var string
-     */
-    private $modifyUser;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
      * {@inheritdoc}
@@ -186,7 +179,7 @@ abstract class AbstractTemplate implements TemplateInterface
     /**
      * {@inheritdoc}
      */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setCreatedAt(DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -204,49 +197,9 @@ abstract class AbstractTemplate implements TemplateInterface
     /**
      * {@inheritdoc}
      */
-    public function setModifiedAt(\DateTime $modifiedAt)
+    public function setModifiedAt(DateTime $modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreateUser()
-    {
-        return $this->createUser;
-    }
-
-    /**
-     * @param string $createUser
-     *
-     * @return $this
-     */
-    public function setCreateUser($createUser)
-    {
-        $this->createUser = $createUser;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getModifyUser()
-    {
-        return $this->modifyUser;
-    }
-
-    /**
-     * @param string $modifyUser
-     *
-     * @return $this
-     */
-    public function setModifyUser($modifyUser)
-    {
-        $this->modifyUser = $modifyUser;
 
         return $this;
     }

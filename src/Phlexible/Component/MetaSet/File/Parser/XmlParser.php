@@ -32,9 +32,9 @@ class XmlParser implements ParserInterface
         $id = (string) $xmlAttributes['id'];
         $name = (string) $xmlAttributes['name'];
         $revision = (int) $xmlAttributes['revision'];
-        $createUser = (string) $xmlAttributes['createUser'];
+        $createdBy = (string) $xmlAttributes['createdBy'];
         $createdAt = new \DateTime((string) $xmlAttributes['createdAt']);
-        $modifyUser = (string) $xmlAttributes['modifyUser'];
+        $modifiedBy = (string) $xmlAttributes['modifiedBy'];
         $modifiedAt = new \DateTime((string) $xmlAttributes['modifiedAt']);
 
         $metaSet = new MetaSet();
@@ -43,9 +43,9 @@ class XmlParser implements ParserInterface
             ->setName($name)
             ->setRevision($revision)
             ->setCreatedAt($createdAt)
-            ->setCreateUser($createUser)
+            ->setCreatedBy($createdBy)
             ->setModifiedAt($modifiedAt)
-            ->setModifyUser($modifyUser);
+            ->setModifiedBy($modifiedBy);
 
         foreach ($xml->fields->field as $fieldNode) {
             $fieldNodeAttributes = $fieldNode->attributes();

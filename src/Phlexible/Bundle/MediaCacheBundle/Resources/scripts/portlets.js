@@ -1,4 +1,4 @@
-Phlexible.PluginManager.append('portlet', {
+Phlexible.Storage.append('portlet', {
     id: 'cachestatus-portlet',
     image: '/bundles/phlexibledashboard/images/portlet-plain.png',
     xtype: 'cache-status-portlet',

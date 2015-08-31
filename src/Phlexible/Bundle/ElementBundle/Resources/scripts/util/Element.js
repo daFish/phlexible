@@ -5,84 +5,85 @@ Ext.require('Phlexible.fields.Prototypes');
 Ext.require('Phlexible.tree.window.NewElementInstanceWindow');
 Ext.require('Phlexible.tree.window.CreateNodeWindow');
 
-Phlexible.element.Element = function (config) {
-    this.addEvents(
-        'beforeLoad',
-        'load',
-        'createElement',
-        'beforeSave',
-        'save',
-        'saveFailure',
-        'enableSave',
-        'disableSave',
-        'internalSave',
-        'beforePublish',
-        'publish',
-        'publishFailure',
-        'beforPublishAdvanced',
-        'publishAdvanced',
-        'publishAdvancedFailure',
-        'beforeSetOffline',
-        'setOffline',
-        'setOfflineFailure',
-        'beforeSetOfflineAdvanced',
-        'setOfflineAdvanced',
-        'setOfflineAdvancedFailure',
-        'beforeLock',
-        'beforeUnlock',
-        'getlock',
-        'islocked',
-        'removelock'
-    );
+Ext.define('Phlexible.element.Element', {
+    extend: 'Ext.util.Observable',
 
-    if (config.language) {
-        this.language = config.language;
-    }
-    if (config.siterootId) {
-        this.siterootId = config.siterootId;
+    constructor: function(config) {
+        this.addEvents(
+            'beforeLoad',
+            'load',
+            'createElement',
+            'beforeSave',
+            'save',
+            'saveFailure',
+            'enableSave',
+            'disableSave',
+            'internalSave',
+            'beforePublish',
+            'publish',
+            'publishFailure',
+            'beforPublishAdvanced',
+            'publishAdvanced',
+            'publishAdvancedFailure',
+            'beforeSetOffline',
+            'setOffline',
+            'setOfflineFailure',
+            'beforeSetOfflineAdvanced',
+            'setOfflineAdvanced',
+            'setOfflineAdvancedFailure',
+            'beforeLock',
+            'beforeUnlock',
+            'getlock',
+            'islocked',
+            'removelock'
+        );
 
-        var checkedLanguage = this.language || Phlexible.Config.get('language.frontend');
-        var siterootLanguages = Phlexible.Config.get('user.siteroot.languages')[this.siterootId];
-        var langBtns = [], hasChecked = false;
-        for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
-            var languageRow = Phlexible.Config.get('set.language.frontend')[i];
-            if (siterootLanguages.indexOf(languageRow[0]) === -1) {
-                continue;
+        if (config.language) {
+            this.language = config.language;
+        }
+        if (config.siterootId) {
+            this.siterootId = config.siterootId;
+
+            var checkedLanguage = this.language || Phlexible.Config.get('language.frontend');
+            var siterootLanguages = Phlexible.Config.get('user.siteroot.languages')[this.siterootId];
+            var langBtns = [], hasChecked = false;
+            for (var i = 0; i < Phlexible.Config.get('set.language.frontend').length; i++) {
+                var languageRow = Phlexible.Config.get('set.language.frontend')[i];
+                if (siterootLanguages.indexOf(languageRow[0]) === -1) {
+                    continue;
+                }
+                if (languageRow[0] === Phlexible.Config.get('language.frontend')) {
+                    hasChecked = true;
+                }
+                langBtns.push({
+                    text: languageRow[1],
+                    iconCls: languageRow[2],
+                    langKey: languageRow[0],
+                    checked: languageRow[0] === checkedLanguage
+                });
             }
-            if (languageRow[0] === Phlexible.Config.get('language.frontend')) {
-                hasChecked = true;
+            if (!hasChecked) {
+                langBtns[0].checked = true;
+                this.language = langBtns[0].langKey;
             }
-            langBtns.push({
-                text: languageRow[1],
-                iconCls: languageRow[2],
-                langKey: languageRow[0],
-                checked: languageRow[0] === checkedLanguage
-            });
+
+            this.languages = langBtns;
         }
-        if (!hasChecked) {
-            langBtns[0].checked = true;
-            this.language = langBtns[0].langKey;
+        if (config.startParams) {
+            this.startParams = config.startParams;
         }
 
-        this.languages = langBtns;
-    }
-    if (config.startParams) {
-        this.startParams = config.startParams;
-    }
+        Ext.getDoc().on('mousedown', function (e) {
+            if (this.activeDiffEl && this.activeDiffEl.isVisible()) {
+                this.activeDiffEl.hide();
+                this.activeDiffEl = null;
+            }
+        }, this);
 
-    Ext.getDoc().on('mousedown', function (e) {
-        if (this.activeDiffEl && this.activeDiffEl.isVisible()) {
-            this.activeDiffEl.hide();
-            this.activeDiffEl = null;
-        }
-    }, this);
+        this.prototypes = new Phlexible.fields.Prototypes();
 
-    this.prototypes = new Phlexible.fields.Prototypes();
-
-    this.history = new Ext.util.MixedCollection();
-};
-
-Ext.extend(Phlexible.element.Element, Ext.util.Observable, {
+        this.history = new Ext.util.MixedCollection();
+    },
     nodeId: null,
     teaserId: null,
     type: null,

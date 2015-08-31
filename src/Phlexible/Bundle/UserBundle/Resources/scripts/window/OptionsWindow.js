@@ -27,14 +27,13 @@ Ext.define('Phlexible.user.window.OptionsWindow', {
     },
 
     initMyItems: function() {
-        var xtypes = Phlexible.PluginManager.get('userOptionCards'),
-            cards = [];
+        var cards = [];
 
-        Ext.each(xtypes, function (xtype) {
+        Phlexible.Storage.each('userOptionCards', function (xtype) {
             cards.push({
                 xtype: xtype
             });
-        }, this);
+        });
 
         this.items = [{
             xtype: 'tabpanel',

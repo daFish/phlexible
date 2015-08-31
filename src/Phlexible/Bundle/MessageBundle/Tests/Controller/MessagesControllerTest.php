@@ -44,7 +44,7 @@ class MessagesControllerTest extends WebTestCase
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $client->request('GET', '/admin/rest/messages/077d56f4-ecd4-11e4-b400-001e677a6817');
+        $client->request('GET', '/admin/rest/messages/8ee6de30-4c39-11e5-8693-8418ea4ec907');
         $response = $client->getResponse();
         $content = $response->getContent();
         $data = json_decode($content, true);
@@ -52,7 +52,7 @@ class MessagesControllerTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertArrayHasKey('message', $data);
         $this->assertArrayHasKey('id', $data['message']);
-        $this->assertSame('077d56f4-ecd4-11e4-b400-001e677a6817', $data['message']['id']);
+        $this->assertSame('8ee6de30-4c39-11e5-8693-8418ea4ec907', $data['message']['id']);
     }
 
     /**

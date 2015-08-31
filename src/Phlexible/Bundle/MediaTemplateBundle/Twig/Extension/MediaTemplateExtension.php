@@ -56,7 +56,7 @@ class MediaTemplateExtension extends \Twig_Extension
             return array();
         }
 
-        return $template->toArray();
+        return $template->getParameters();
     }
 
     /**

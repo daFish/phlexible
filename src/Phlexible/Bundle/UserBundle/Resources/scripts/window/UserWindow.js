@@ -39,7 +39,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
     },
 
     initMyItems: function() {
-        var xtypes = Phlexible.PluginManager.get('userEditCards'),
+        var xtypes = Phlexible.Storage.get('userEditCards'),
             tabs = [],
             mode = this.mode,
             user = this.user;

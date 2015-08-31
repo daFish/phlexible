@@ -11,63 +11,40 @@
 
 namespace Phlexible\Component\MediaTemplate\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
  * Template collection
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="mediaTemplates")
+ * @Serializer\ExclusionPolicy("all")
  */
 class TemplateCollection
 {
     /**
      * @var TemplateInterface[]
+     * @Serializer\Expose()
+     * @Serializer\XmlList(inline=true, entry="mediaTemplate")
      */
-    private $templates = array();
+    public $mediaTemplates;
 
     /**
-     * Add template
-     *
-     * @param TemplateInterface $template
-     *
-     * @return $this
+     * @var TemplateInterface[]
+     * @Serializer\Expose()
+     * @Serializer\Type("integer")
+     * @Serializer\XmlAttribute()
      */
-    public function add(TemplateInterface $template)
-    {
-        $this->templates[$template->getKey()] = $template;
-
-        return $this;
-    }
+    public $total;
 
     /**
-     * @param string $key
-     *
-     * @return TemplateInterface
+     * @param TemplateInterface[] $mediaTemplates
+     * @param int                 $total
      */
-    public function get($key)
+    public function __construct(array $mediaTemplates, $total)
     {
-        if ($this->has($key)) {
-            return $this->templates[(string) $key];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function has($key)
-    {
-        return isset($this->templates[(string) $key]);
-    }
-
-    /**
-     * @return TemplateInterface[]
-     */
-    public function all()
-    {
-        return $this->templates;
+        $this->mediaTemplates = array_values($mediaTemplates);
+        $this->total = $total;
     }
 }

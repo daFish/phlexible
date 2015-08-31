@@ -83,8 +83,8 @@ Ext.define('Phlexible.metaset.view.Main', {
                         dataIndex: 'name',
                         flex: 1,
                         renderer: function(v, md, metaSet) {
-                            if (!metaSet.get('revision')) {
-                                return Phlexible.Icon.inlineText('new', v);
+                            if (metaSet.dirty) {
+                                md.tdCls = 'x-grid-dirty-cell';
                             }
 
                             return v;
@@ -104,7 +104,9 @@ Ext.define('Phlexible.metaset.view.Main', {
                             {
                                 iconCls: Phlexible.Icon.get(Phlexible.Icon.EDIT),
                                 tooltip: this.renameText,
-                                handler: this.renameSet,
+                                handler: function(grid, rowIndex, colIndex, item, e, metaSet) {
+                                    this.renameSet(metaSet);
+                                },
                                 scope: this
                             }
                         ]
@@ -169,6 +171,13 @@ Ext.define('Phlexible.metaset.view.Main', {
                         editor: {
                             xtype: 'textfield',
                             allowBlank: false
+                        },
+                        renderer: function(v, md, field) {
+                            if (field.dirty) {
+                                md.tdCls = 'x-grid-dirty-cell';
+                            }
+
+                            return v;
                         }
                     },
                     {
@@ -264,43 +273,36 @@ Ext.define('Phlexible.metaset.view.Main', {
     },
 
     createSet: function() {
-        var metaSet = new Phlexible.metaset.model.MetaSet({
-            revision: 0,
-            name: 'metaset-' + Ext.id(null, '')
-        });
-        this.getComponent('list').getStore().add(metaSet);
-        this.getComponent('list').getSelectionModel().select(metaSet);
+        Ext.MessageBox.prompt(this.addSetText, this.addSetDescriptionText, function(btn, name) {
+            if (btn !== 'ok') {
+                return;
+            }
+            var metaSet = new Phlexible.metaset.model.MetaSet({
+                name: name,
+                revision: 1,
+                createdAt: Ext.Date.format(new Date, "Y-m-d H:i:s"),
+                createdBy: Phlexible.User.getUsername(),
+                modifiedAt: Ext.Date.format(new Date, "Y-m-d H:i:s"),
+                modifiedBy: Phlexible.User.getUsername()
+            });
+            this.getViewModel().getStore('metasets').add(metaSet);
+            this.getComponent('list').getSelectionModel().select(metaSet);
+        }, this, false, 'metaset-' + Ext.id(null, ''));
     },
 
-    renameSet: function(grid, metaSet) {
+    renameSet: function(metaSet) {
         Ext.MessageBox.prompt(this.renameSetText, this.renameSetDescriptionText, function(btn, name) {
             if (btn !== 'ok') {
                 return;
             }
-            Ext.Ajax.request({
-                url: Phlexible.Router.generate('metaset_sets_rename'),
-                params: {
-                    name: name,
-                    id: metaSet.get('id')
-                },
-                success: function(response) {
-                    var result = Ext.decode(response.responseText);
-                    if (result.success) {
-                        this.getComponent('list').getStore().reload();
-                        Phlexible.success(result.msg);
-                    } else {
-                        Phlexible.failure(result.msg);
-                    }
-                },
-                scope: this
-            });
+            metaSet.set('name', name);
         }, this, false, metaSet.get('name'));
     },
 
     addField: function() {
         var uuid = new Ext.data.identifier.Uuid(),
             field = new Phlexible.metaset.model.MetaSetField({
-                id: uuid.generate(),
+                //id: uuid.generate(),
                 name: 'field-' + Ext.id(null, ''),
                 type: 'textfield',
                 required: false,
@@ -346,73 +348,6 @@ Ext.define('Phlexible.metaset.view.Main', {
     },
 
     save: function () {
-        var error = false,
-            url,
-            method,
-            data = {
-                metaset: {
-                    name: this.metaSet.get('name'),
-                    fields: []
-                }
-            };
-
-        this.getComponent('fields').getStore().each(function(field) {
-            if (field.get('type') === 'select' && !field.get('options')) {
-                Phlexible.Notify.failure(this.selectNeedsOptionsText);
-                error = true;
-                return false;
-            }
-            if (field.get('type') === 'suggest' && !field.get('options')) {
-                Phlexible.Notify.failure(this.suggestNeedsOptionsText);
-                error = true;
-                return false;
-            }
-
-            data.metaset.fields.push({
-                id: field.data.id,
-                name: field.data.name,
-                type: field.data.type,
-                required: field.data.required,
-                synchronized: field.data.synchronized,
-                readonly: field.data.readonly,
-                options: field.data.options
-            });
-        }, this);
-
-        if (error) {
-            return;
-        }
-
-        if (this.metaSet.get('revision')) {
-            url = Phlexible.Router.generate('phlexible_api_metaset_put_metaset', {metasetId: this.metaSet.get('id')});
-            method = 'PUT';
-        } else {
-            url = Phlexible.Router.generate('phlexible_api_metaset_post_metasets');
-            method = 'POST';
-        }
-
-        Ext.Ajax.request({
-            url: url,
-            method: method,
-            jsonData: data,
-            success: function (response) {
-                //var data = Ext.decode(response.responseText);
-
-                if (response.status === 201 || response.status === 204) {
-                    this.getComponent('list').getStore().reload({
-                        callback: function() {
-                            this.selectSet(this.getStore().getSelectionModel().getSelected()[0]);
-                        },
-                        scope: this
-                    });
-
-                    //this.getComponent('fields').getStore().reload();
-                    Phlexible.Notify.success('succ');
-                } else {
-                    Phlexible.Notify.failure('fail');
-                }
-            },
-            scope: this
-        });
+        this.getViewModel().getStore('metasets').sync();
     }
 });

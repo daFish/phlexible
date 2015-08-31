@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class MediaTemplateType extends AbstractType
+abstract class MediaTemplateType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -26,27 +26,15 @@ class MediaTemplateType extends AbstractType
         $builder->add('type', 'text');
         $builder->add('system', 'checkbox');
         $builder->add('cache', 'checkbox');
+        $builder->add('revision', 'integer');
         $builder->add('storage', 'text');
-        $builder->add('createdAt', 'datetime');
-        $builder->add('modifiedAt', 'datetime');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MediaTemplate\Model\MediaTemplate',
-            'csrf_protection' => false,
+        $builder->add('createdAt', 'datetime', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
         ));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'media_template';
+        $builder->add('modifiedAt', 'datetime', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
     }
 }

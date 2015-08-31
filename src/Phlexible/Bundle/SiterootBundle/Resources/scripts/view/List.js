@@ -1,29 +1,30 @@
-Ext.define('Phlexible.siteroot.view.List', {
+Ext.define('Phlexible.site.view.List', {
     extend: 'Ext.grid.Panel',
-    xtype: 'siteroot.list',
+    xtype: 'site.list',
 
     iconCls: Phlexible.Icon.get('globe'),
+    emptyText: '_emptyText',
 
     idText: '_idText',
-    siterootsText: '_siterootsText',
+    sitesText: '_sitesText',
     removeText: '_removeText',
     removeDescriptionText: '_removeDescriptionText',
-    addSiterootText: '_addSiterootText',
+    addSiteText: '_addSiteText',
     titleText: '_titleText',
-    saveSiterootsText: '_saveSiterootsText',
+    saveSitesText: '_saveSitesText',
 
     /**
-     * Fires after the active Siteroot has been changed
+     * Fires after the active Site has been changed
      *
-     * @event siterootChange
-     * @param {Number} siteroot_id The ID of the selected siteroot.
-     * @param {String} siteriit_title The Title of the selected siteroot.
+     * @event siteChange
+     * @param {Number} site_id The ID of the selected site.
+     * @param {String} siter_title The Title of the selected site.
      */
 
     /**
-     * Fires after a siteroot is added or title has been changed
+     * Fires after a site is added or title has been changed
      *
-     * @event siterootDataChange
+     * @event siteDataChange
      */
 
     /**
@@ -43,7 +44,7 @@ Ext.define('Phlexible.siteroot.view.List', {
                 hidden: true,
                 dataIndex: 'id'
             }, {
-                header: this.siterootsText,
+                header: this.sitesText,
                 dataIndex: 'titles',
                 flex: 1,
                 sortable: true,
@@ -62,7 +63,7 @@ Ext.define('Phlexible.siteroot.view.List', {
                         Ext.MessageBox.confirm(
                             this.removeText,
                             this.removeDescriptionText,
-                            this.onDeleteSiteroot.createDelegate(this, [r], true)
+                            this.onDeleteSite.createDelegate(this, [r], true)
                         );
                     },
                     scope: this
@@ -76,22 +77,22 @@ Ext.define('Phlexible.siteroot.view.List', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: this.addSiterootText,
+                text: this.addSiteText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
-                handler: this.onAddSiteroot,
+                handler: this.onAddSite,
                 scope: this
             },'->',{
-                text: this.saveSiterootsText,
+                text: this.saveSitesText,
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
-                handler: this.onSaveSiteroots,
+                handler: this.onSaveSites,
                 scope: this
             }]
         }];
     },
 
     /**
-     * If the siteroot store is loaded and no siteroot
-     * is selected then select the first siteroot initially.
+     * If the site store is loaded and no site
+     * is selected then select the first site initially.
      *
      * @param {Object} store
      */
@@ -112,28 +113,25 @@ Ext.define('Phlexible.siteroot.view.List', {
     /**
      * Action if site
      */
-    onAddSiteroot: function () {
-        Ext.MessageBox.prompt(this.addSiterootText, this.titleText, function (btn, text) {
+    onAddSite: function () {
+        Ext.MessageBox.prompt(this.addSiteText, this.titleText, function (btn, text) {
             if (btn !== 'ok') {
                 return;
             }
 
-            Ext.Ajax.request({
-                url: Phlexible.Router.generate('siteroot_create'),
-                params: {
-                    title: text
+            var site = Ext.create('Phlexible.site.model.Site', {
+                hostname: text,
+                titles: {
+                    de: text,
+                    en: text
                 },
-                success: function (response) {
-                    var data = Ext.decode(response.responseText);
-                    if (data.success) {
-                        this.fireEvent('siterootDataChange');
-                    }
-                    else {
-                        Phlexible.Notify.failure(data.msg);
-                    }
-                },
-                scope: this
+                createdAt: new Date(),
+                createdBy: Phlexible.User.getUsername(),
+                modifiedAt: new Date(),
+                modifiedBy: Phlexible.User.getUsername()
             });
+
+            this.store.add(site);
         }, this);
     },
 
@@ -144,18 +142,18 @@ Ext.define('Phlexible.siteroot.view.List', {
      * @param {String} text
      * @param {Object} r
      */
-    onDeleteSiteroot: function (btn, text, x, r) {
+    onDeleteSite: function (btn, text, x, r) {
 
         if (btn == 'yes') {
             Ext.Ajax.request({
-                url: Phlexible.Router.generate('siteroot_delete'),
+                url: Phlexible.Router.generate('site_delete'),
                 params: {
                     id: r.id
                 },
                 success: function (response) {
                     var data = Ext.decode(response.responseText);
                     if (data.success) {
-                        this.fireEvent('siterootDataChange');
+                        this.fireEvent('siteDataChange');
                         Phlexible.Frame.menu.load();
                     }
                     else {
@@ -168,13 +166,13 @@ Ext.define('Phlexible.siteroot.view.List', {
     },
 
     /**
-     * If a complete siteroot should be saved (including all plugins).
+     * If a complete site should be saved (including all plugins).
      *
      * The data is collected and submitted in only one request to the server
      * all plugins must register themselfs at the PHP observer for handle the
      * submit process.
      */
-    onSaveSiteroots: function () {
+    onSaveSites: function () {
         this.fireEvent('save');
         return;
 
@@ -204,18 +202,18 @@ Ext.define('Phlexible.siteroot.view.List', {
         // save data
         Ext.Ajax.request({
             method: 'POST',
-            url: Phlexible.Router.generate('siteroot_save'),
+            url: Phlexible.Router.generate('site_save'),
             params: {
-                id: this.siterootId,
+                id: this.siteId,
                 data: Ext.encode(saveData)
             },
             success: function (response) {
                 var data = Ext.decode(response.responseText);
                 if (data.success) {
-                    this.getSiterootGrid().selected = this.getSiterootGrid().getSelectionModel().getSelected().id;
-                    this.getSiterootGrid().store.reload();
+                    this.getSiteGrid().selected = this.getSiteGrid().getSelectionModel().getSelected().id;
+                    this.getSiteGrid().store.reload();
 
-//                    this.onSiterootChange(this.siterootId, this.siterootTitle);
+//                    this.onSiteChange(this.siteId, this.siteTitle);
                 }
                 else {
                     Ext.Msg.alert('Failure', data.msg);

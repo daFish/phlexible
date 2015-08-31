@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('type', 'root', {
+Phlexible.Storage.set('type', 'root', {
     type: 'root',
     titles: {
         de: 'Root',

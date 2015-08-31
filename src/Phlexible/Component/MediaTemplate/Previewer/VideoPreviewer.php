@@ -14,6 +14,7 @@ namespace Phlexible\Component\MediaTemplate\Previewer;
 use FFMpeg\FFProbe;
 use Phlexible\Component\MediaCache\Specifier\VideoSpecifier;
 use Phlexible\Component\MediaTemplate\Domain\VideoTemplate;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;
@@ -62,27 +63,19 @@ class VideoPreviewer implements PreviewerInterface
     /**
      * {@inheritdoc}
      */
-    public function create($filePath, array $params)
+    public function accept(TemplateInterface $template)
+    {
+        return $template instanceof VideoTemplate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function create(TemplateInterface $template, $filePath)
     {
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);
-        }
-
-        $template = new VideoTemplate();
-        $templateKey = 'unknown';
-        foreach ($params as $key => $value) {
-            if ($key === 'template') {
-                $templateKey = $value;
-                continue;
-            } elseif ($key === '_dc') {
-                continue;
-            } elseif ($key === 'debug') {
-                continue;
-            }
-
-            $method = 'set' . $this->toCamelCase($key);
-            $template->$method($value);
         }
 
         $spec = $this->specifier->specify($template);
@@ -92,20 +85,18 @@ class VideoPreviewer implements PreviewerInterface
 
         $file = new File($cacheFilename);
 
-        $debug = json_encode($template->toArray(), JSON_PRETTY_PRINT);
-
         $videoStream = $this->ffprobe->streams($cacheFilename)->videos()->first();
 
         $data = array(
-            'path'     => $cacheFilename,
-            'file'     => basename($cacheFilename),
-            'size'     => filesize($cacheFilename),
-            'template' => $templateKey,
-            'format'   => $extension,
-            'mimetype' => $file->getMimeType(),
-            'debug'    => $debug,
-            'width'    => $videoStream->get('width'),
-            'height'   => $videoStream->get('height'),
+            'path'       => $cacheFilename,
+            'file'       => basename($cacheFilename),
+            'size'       => filesize($cacheFilename),
+            'template'   => $template->getKey(),
+            'format'     => $extension,
+            'mimetype'   => $file->getMimeType(),
+            'parameters' => $template->getParameters(),
+            'width'      => $videoStream->get('width'),
+            'height'     => $videoStream->get('height'),
         );
 
         return $data;

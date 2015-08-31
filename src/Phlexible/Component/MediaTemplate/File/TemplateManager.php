@@ -50,7 +50,7 @@ class TemplateManager implements TemplateManagerInterface
             return $template;
         }
 
-        throw new NotFoundException("Media template $key not found.");
+        return null;
     }
 
     /**
@@ -84,7 +84,7 @@ class TemplateManager implements TemplateManagerInterface
      */
     public function findAll()
     {
-        return $this->repository->loadAll()->all();
+        return $this->repository->loadAll();
     }
 
     /**

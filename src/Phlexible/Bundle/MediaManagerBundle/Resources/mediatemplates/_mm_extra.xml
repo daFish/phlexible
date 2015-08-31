@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mediaTemplate key="_mm_extra" type="image" class="Phlexible\Component\MediaTemplate\Domain\ImageTemplate" cache="1"
-               system="1" revision="1">
-    <parameter key="width">256</parameter>
-    <parameter key="height">256</parameter>
-    <parameter key="method">exactFit</parameter>
-    <parameter key="format">jpg</parameter>
-    <parameter key="quality">70</parameter>
-    <parameter key="backgroundcolor">#FFFFFF</parameter>
+<?xml version="1.0" encoding="UTF-8"?>
+<mediaTemplate key="_mm_extra" cache="true" system="true" storage="default" revision="1">
+  <width><![CDATA[256]]></width>
+  <height><![CDATA[256]]></height>
+  <method><![CDATA[exactFit]]></method>
+  <scale><![CDATA[down]]></scale>
+  <forWeb>true</forWeb>
+  <format><![CDATA[jpg]]></format>
+  <quality><![CDATA[70]]></quality>
+  <backgroundcolor><![CDATA[#FFFFFF]]></backgroundcolor>
+  <type><![CDATA[image]]></type>
 </mediaTemplate>

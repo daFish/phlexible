@@ -38,9 +38,9 @@ class XmlDumper implements DumperInterface
         $xml->addAttribute('id', $metaSet->getId());
         $xml->addAttribute('name', $metaSet->getName());
         $xml->addAttribute('createdAt', $metaSet->getCreatedAt()->format('Y-m-d H:i:s'));
-        $xml->addAttribute('createUser', $metaSet->getCreateUser());
+        $xml->addAttribute('createdBy', $metaSet->getCreatedBy());
         $xml->addAttribute('modifiedAt', $metaSet->getModifiedAt()->format('Y-m-d H:i:s'));
-        $xml->addAttribute('modifyUser', $metaSet->getModifyUser());
+        $xml->addAttribute('modifiedBy', $metaSet->getModifiedBy());
         $xml->addAttribute('revision', $metaSet->getRevision());
 
         $fieldsNode = $xml->addChild('fields');

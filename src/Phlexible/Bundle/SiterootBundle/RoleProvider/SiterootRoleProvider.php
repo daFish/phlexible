@@ -26,7 +26,7 @@ class SiterootRoleProvider extends RoleProvider
     public function provideRoles()
     {
         return array(
-            'ROLE_SITEROOTS',
+            'ROLE_SITES',
         );
     }
 

@@ -1,13 +1,14 @@
-Ext.provide('Phlexible.tree.view.Tree');
+Ext.define('Phlexible.tree.view.Tree', {
+    extend: 'Ext.tree.Panel',
+    xequires: [
+        'Phlexible.tree.tree.TreeDropZone',
+        'Phlexible.tree.tree.TreeLoader',
+        'Phlexible.tree.tree.TreeNodeUI',
+        'Phlexible.tree.window.DeleteInstancesWindow',
+    ],
+    xtype: 'tree.tree',
 
-Ext.require('Phlexible.tree.tree.TreeDropZone');
-Ext.require('Phlexible.tree.tree.TreeLoader');
-Ext.require('Phlexible.tree.tree.TreeNodeUI');
-Ext.require('Phlexible.tree.window.DeleteInstancesWindow');
-
-Phlexible.tree.view.Tree = Ext.extend(Ext.tree.TreePanel, {
-    strings: Phlexible.elements.Strings,
-    title: Phlexible.elements.Strings.elements,
+    cls: 'p-tree-tree',
     border: true,
     loadMask: true,
     lines: true,
@@ -15,16 +16,23 @@ Phlexible.tree.view.Tree = Ext.extend(Ext.tree.TreePanel, {
     rootVisible: false,
     collapseFirst: true,
     animate: false,
-    cls: 'p-elements-elements-tree',
-
     enableDD: true,
     ddGroup: 'testtest',
     containerScroll: true,
 
     initComponent: function () {
-        if (!this.dataUrl) {
-            this.dataUrl = Phlexible.Router.generate('tree_nodes');
-        }
+        this.callParent(arguments);
+        return;
+
+        this.store = Ext.create('Ext.data.TreeStore', {
+            model: 'Phlexible.tree.model.Node',
+            root: {
+                id: -1,
+                cls: 'node_level_0',
+                type: 'root',
+                expanded: true
+            }
+        });
 
         this.element.on({
             createElement: function (element, data, node) {
@@ -141,7 +149,7 @@ Phlexible.tree.view.Tree = Ext.extend(Ext.tree.TreePanel, {
         });
 
         this.loader = new Phlexible.tree.tree.TreeLoader({
-            dataUrl: this.dataUrl,
+            dataUrl: Phlexible.Router.generate('tree_nodes'),
             uiProvider: Phlexible.tree.tree.TreeNodeUI,
             baseParams: {
                 siterootId: this.element.getSiterootId(),
@@ -319,7 +327,7 @@ Phlexible.tree.view.Tree = Ext.extend(Ext.tree.TreePanel, {
     },
 
     // private
-    initEvents: function () {
+    xxinitEvents: function () {
         Ext.tree.TreePanel.superclass.initEvents.call(this);
 
         if (this.containerScroll) {
@@ -603,5 +611,3 @@ Phlexible.tree.view.Tree = Ext.extend(Ext.tree.TreePanel, {
         }
     }
 });
-
-Ext.reg('tree-tree', Phlexible.tree.view.Tree);

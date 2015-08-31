@@ -29,8 +29,8 @@ class ShowCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('siteroot:show')
-            ->setDescription('Show siteroot infos.');
+            ->setName('site:show')
+            ->setDescription('Show site infos.');
     }
 
     /**
@@ -38,9 +38,16 @@ class ShowCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $siterootManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $s = $this->getContainer()->get('serializer');
+        $m = $this->getContainer()->get('phlexible_media_template.template_manager');
+        foreach($m->findAll() as $t) {
+            dump($t);
+        }
+        die;
 
-        foreach ($siterootManager->findAll() as $site) {
+        $siteManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
+
+        foreach ($siteManager->findAll() as $site) {
             $output->write('<info>' . $site->getTitle('en') . '</info>');
             $output->writeln(': ' . $site->getId() . ($site->isDefault() ? '<info> (default)</info> ' : ''));
 
@@ -50,23 +57,30 @@ class ShowCommand extends ContainerAwareCommand
                 if ($site->getEntryPoints()) {
                     $output->writeln('  Entry Points:');
                     foreach ($site->getEntryPoints() as $entryPoint) {
-                        $output->writeln('    ' . $entryPoint['hostname'] . ' => ' . $entryPoint['nodeId'] . ' (' . $entryPoint['language'] . ')');
+                        $output->writeln('    ' . $entryPoint->getHostname() . ' => ' . $entryPoint->getNodeId() . ' (' . $entryPoint->getLanguage() . ')');
                     }
                 }
 
                 if ($site->getNavigations()) {
                     $output->writeln('  Navigations:');
-                    foreach ($site->getNavigations() as $name => $navigation) {
-                        $output->writeln('    ' . $name . ' => ' . $navigation['nodeId']);
+                    foreach ($site->getNavigations() as $navigation) {
+                        $output->writeln('    ' . $navigation->getName() . ' => ' . $navigation->getNodeId() . ($navigation->getMaxDepth() ? ' (maxDepth: ' . $navigation->getMaxDepth() . ')' : ''));
                     }
                 }
 
-                if ($site->getSpecialTids()) {
-                    $output->writeln('  Special TIDs:');
-                    foreach ($site->getSpecialTids() as $specialTid) {
-                        $name = $specialTid['name'];
-                        $value = ($specialTid['language'] ? $specialTid['language'] . ':' : '') . $specialTid['nodeId'];
+                if ($site->getNodeAliases()) {
+                    $output->writeln('  Node Aliases:');
+                    foreach ($site->getNodeAliases() as $nodeAlias) {
+                        $name = $nodeAlias->getName();
+                        $value = $nodeAlias->getNodeId() . ($nodeAlias->getLanguage() ? ' (' . $nodeAlias->getLanguage() . ')' : '');
                         $output->writeln("    $name => $value");
+                    }
+                }
+
+                if ($site->getNodeConstraints()) {
+                    $output->writeln('  Node Constraints:');
+                    foreach ($site->getNodeConstraints() as $nodeConstraints) {
+                        $output->writeln("    {$nodeConstraints->getName()} => {$nodeConstraints->isAllowed()}");
                     }
                 }
             }

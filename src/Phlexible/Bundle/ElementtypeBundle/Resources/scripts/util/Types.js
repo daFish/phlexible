@@ -17,7 +17,7 @@ Ext.define('Phlexible.elementtype.util.Types', {
             throw new Error("Field type " + type + " not registered.");
         }
 
-        return Phlexible.PluginManager.get('type', type);
+        return Phlexible.Storage.get('type', type);
     },
 
     /**
@@ -25,7 +25,7 @@ Ext.define('Phlexible.elementtype.util.Types', {
      * @returns {Boolean}
      */
     has: function (type) {
-        return Phlexible.PluginManager.contains('type', type);
+        return Phlexible.Storage.contains('type', type);
     },
 
     /**

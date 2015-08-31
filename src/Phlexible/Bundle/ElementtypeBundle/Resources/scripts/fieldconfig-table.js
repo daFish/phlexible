@@ -5,7 +5,7 @@ Ext.Editor.prototype.beforeDestroy = function () {
     this.field = null;
 };
 
-Phlexible.PluginManager.set('field', 'table', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'table', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -30,7 +30,7 @@ Phlexible.PluginManager.set('field', 'table', function (parentConfig, item, valu
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'table',{
+Phlexible.Storage.set('type', 'table',{
     type: 'table',
     titles: {
         de: 'Tabelle',

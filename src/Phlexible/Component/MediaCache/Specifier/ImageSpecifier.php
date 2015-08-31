@@ -29,7 +29,7 @@ class ImageSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
+     * @param ImageTemplate $template
      */
     public function getExtension(TemplateInterface $template)
     {
@@ -44,7 +44,7 @@ class ImageSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param \Phlexible\Component\MediaTemplate\Domain\ImageTemplate $template
+     * @param ImageTemplate $template
      */
     public function specify(TemplateInterface $template)
     {

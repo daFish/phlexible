@@ -12,7 +12,7 @@
  }
  */
 
-Phlexible.PluginManager.set('field', 'textarea', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'textarea', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -41,7 +41,7 @@ Phlexible.PluginManager.set('field', 'textarea', function (parentConfig, item, v
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'textarea', {
+Phlexible.Storage.set('type', 'textarea', {
     type: 'textarea',
     titles: {
         de: 'Textarea',

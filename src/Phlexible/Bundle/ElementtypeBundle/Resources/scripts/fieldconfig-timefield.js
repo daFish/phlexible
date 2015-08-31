@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('field', 'time', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'time', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -16,7 +16,7 @@ Phlexible.PluginManager.set('field', 'time', function (parentConfig, item, value
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'time', {
+Phlexible.Storage.set('type', 'time', {
     type: 'time',
     titles: {
         de: 'Uhrzeit',

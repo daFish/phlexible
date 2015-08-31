@@ -29,7 +29,7 @@ class AudioSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param \Phlexible\Component\MediaTemplate\Domain\AudioTemplate $template
+     * @param AudioTemplate $template
      */
     public function getExtension(TemplateInterface $template)
     {
@@ -44,7 +44,7 @@ class AudioSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
-     * @param \Phlexible\Component\MediaTemplate\Domain\AudioTemplate $template
+     * @param AudioTemplate $template
      */
     public function specify(TemplateInterface $template)
     {

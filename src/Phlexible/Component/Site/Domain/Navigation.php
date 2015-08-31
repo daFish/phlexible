@@ -8,25 +8,38 @@
 
 namespace Phlexible\Component\Site\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * Navigation
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="navigation")
+ * @Serializer\ExclusionPolicy("all")
  */
 class Navigation
 {
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $name;
 
     /**
      * @var int
+     * @Serializer\Type(name="integer")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $nodeId;
 
     /**
      * @var int
+     * @Serializer\Type(name="integer")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $maxDepth;
 

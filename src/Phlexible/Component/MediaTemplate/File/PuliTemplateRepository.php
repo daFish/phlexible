@@ -8,6 +8,7 @@
 
 namespace Phlexible\Component\MediaTemplate\File;
 
+use JMS\Serializer\Serializer;
 use Phlexible\Component\MediaTemplate\Domain\TemplateCollection;
 use Phlexible\Component\MediaTemplate\File\Dumper\DumperInterface;
 use Phlexible\Component\MediaTemplate\File\Parser\ParserInterface;
@@ -50,23 +51,19 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     private $puliResourceDir;
 
     /**
-     * @var ParserInterface[]
+     * @var Serializer
      */
-    private $parsers = array();
+    private $serializer;
 
     /**
-     * @var DumperInterface[]
-     */
-    private $dumpers = array();
-
-    /**
-     * @var \Phlexible\Component\MediaTemplate\Domain\TemplateCollection
+     * @var array
      */
     private $templates;
 
     /**
      * @param ResourceDiscovery  $puliDiscovery
      * @param EditableRepository $puliRepository
+     * @param Serializer         $serializer
      * @param string             $defaultDumpType
      * @param string             $dumpDir
      * @param string             $puliResourceDir
@@ -74,41 +71,17 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     public function __construct(
         ResourceDiscovery $puliDiscovery,
         EditableRepository $puliRepository,
+        Serializer $serializer,
         $defaultDumpType,
         $dumpDir,
         $puliResourceDir
     ) {
         $this->puliDiscovery = $puliDiscovery;
         $this->puliRepository = $puliRepository;
+        $this->serializer = $serializer;
         $this->defaultDumpType = $defaultDumpType;
         $this->dumpDir = $dumpDir;
         $this->puliResourceDir = $puliResourceDir;
-    }
-
-    /**
-     * @param string          $type
-     * @param ParserInterface $parser
-     *
-     * @return $this
-     */
-    public function addParser($type, ParserInterface $parser)
-    {
-        $this->parsers[$type] = $parser;
-
-        return $this;
-    }
-
-    /**
-     * @param string          $type
-     * @param DumperInterface $dumper
-     *
-     * @return $this
-     */
-    public function addDumper($type, DumperInterface $dumper)
-    {
-        $this->dumpers[$type] = $dumper;
-
-        return $this;
     }
 
     /**
@@ -117,16 +90,16 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
     public function loadAll()
     {
         if ($this->templates === null) {
-            $this->templates = new TemplateCollection();
+            $this->templates = array();
 
             foreach ($this->puliDiscovery->findByType('phlexible/mediatemplates') as $binding) {
                 foreach ($binding->getResources() as $resource) {
-                    $extension = pathinfo($resource->getPath(), PATHINFO_EXTENSION);
-                    if (!isset($this->parsers[$extension])) {
-                        continue;
-                    }
-                    $parser = $this->parsers[$extension];
-                    $this->templates->add($parser->parse($resource->getBody()));
+                    $template = $this->serializer->deserialize(
+                        $resource->getBody(),
+                        'Phlexible\Component\MediaTemplate\Domain\AbstractTemplate',
+                        $this->defaultDumpType
+                    );
+                    $this->templates[$template->getKey()] = $template;
                 }
             }
         }
@@ -139,7 +112,13 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
      */
     public function load($key)
     {
-        return $this->loadAll()->get($key);
+        $templates = $this->loadAll();
+
+        if (isset($templates[$key])) {
+            return $templates[$key];
+        }
+
+        return null;
     }
 
     /**
@@ -151,8 +130,7 @@ class PuliTemplateRepository implements TemplateRepositoryInterface
             $type = $this->defaultDumpType;
         }
 
-        $dumper = $this->dumpers[$type];
-        $content = $dumper->dump($template);
+        $content = $this->serializer->serialize($template, $this->defaultDumpType);
 
         $filename = strtolower("{$template->getKey()}.{$type}");
         $path = "{$this->dumpDir}/$filename";

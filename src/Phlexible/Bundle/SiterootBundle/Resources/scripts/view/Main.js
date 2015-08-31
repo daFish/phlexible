@@ -1,25 +1,26 @@
-Ext.define('Phlexible.siteroot.view.Main', {
+Ext.define('Phlexible.site.view.Main', {
     extend: 'Ext.panel.Panel',
     requires: [
-        'Phlexible.siteroot.model.Siteroot',
-        'Phlexible.siteroot.view.List',
-        'Phlexible.siteroot.view.Navigations',
-        'Phlexible.siteroot.view.Properties',
-        'Phlexible.siteroot.view.SpecialTids',
-        'Phlexible.siteroot.view.Titles',
-        'Phlexible.siteroot.view.Urls'
+        'Phlexible.site.model.Site',
+        'Phlexible.site.view.List',
+        'Phlexible.site.view.EntryPoints',
+        'Phlexible.site.view.Navigations',
+        'Phlexible.site.view.Properties',
+        'Phlexible.site.view.NodeAliases',
+        'Phlexible.site.view.NodeConstraints',
+        'Phlexible.site.view.Site'
     ],
-    xtype: 'siteroot.main',
+    xtype: 'site.main',
 
     iconCls: Phlexible.Icon.get('globe'),
-    cls: 'p-siteroot-main',
+    cls: 'p-site-main',
     border: false,
     layout: 'border',
     referenceHolder: true,
     viewModel: {
         stores: {
-            siteroots: {
-                model: 'Phlexible.siteroot.model.Siteroot',
+            sites: {
+                model: 'Phlexible.site.model.Site',
                 autoLoad: true,
                 sorters: [{
                     property: 'title',
@@ -29,15 +30,15 @@ Ext.define('Phlexible.siteroot.view.Main', {
         }
     },
 
-    siterootText: '_siterootText',
+    siteText: '_siteText',
     checkAccordionsForErrorsText: '_checkAccordionsForErrorsText',
 
     /**
-     * Fires after the active Siteroot has been changed
+     * Fires after the active Site has been changed
      *
-     * @event siterootChange
-     * @param {Number} siterootId The ID of the selected siteroot.
-     * @param {String} siterootTitle The Title of the selected siteroot.
+     * @event siteChange
+     * @param {Number} siteId The ID of the selected site.
+     * @param {String} siteTitle The Title of the selected site.
      */
 
     /**
@@ -51,7 +52,7 @@ Ext.define('Phlexible.siteroot.view.Main', {
 
     initMyItems: function() {
         this.items = [{
-            xtype: 'siteroot.list',
+            xtype: 'site.list',
             itemId: 'list',
             reference: 'list',
             region: 'west',
@@ -61,18 +62,18 @@ Ext.define('Phlexible.siteroot.view.Main', {
             split: false,
             padding: '5 0 5 5',
             bind: {
-                store: '{siteroots}'
+                store: '{sites}'
             },
             listeners: {
                 save: this.onSave,
-                siterootDataChange: this.onSiterootDataChange,
+                siteDataChange: this.onSiteDataChange,
                 scope: this
             }
         }, {
             xtype: 'panel',
             itemId: 'accordions',
             region: 'center',
-            title: this.siterootText,
+            title: this.siteText,
             layout: 'accordion',
             padding: 5,
             bind: {
@@ -81,27 +82,33 @@ Ext.define('Phlexible.siteroot.view.Main', {
             },
             items: [
                 {
-                    xtype: 'siteroot.urls',
+                    xtype: 'site.site'
+                },
+                {
+                    xtype: 'site.entry-points',
                     bind: {
-                        store: '{list.selection.urls}'
+                        store: '{list.selection.entryPoints}'
                     }
                 },
                 {
-                    xtype: 'siteroot.titles'
+                    xtype: 'site.properties'
                 },
                 {
-                    xtype: 'siteroot.properties'
-                },
-                {
-                    xtype: 'siteroot.specialtids',
+                    xtype: 'site.node-aliases',
                     bind: {
-                        store: '{list.selection.specialTids}'
+                        store: '{list.selection.nodeAliases}'
                     }
                 },
                 {
-                    xtype: 'siteroot.navigations',
+                    xtype: 'site.navigations',
                     bind: {
                         store: '{list.selection.navigations}'
+                    }
+                },
+                {
+                    xtype: 'site.node-constraints',
+                    bind: {
+                        store: '{list.selection.nodeConstraints}'
                     }
                 }
             ]
@@ -112,17 +119,16 @@ Ext.define('Phlexible.siteroot.view.Main', {
     },
 
     /**
-     * After the siteroot data changed.
-     *  - new siteroot added
-     *  - title of siteroot changed
+     * After the site data changed.
+     *  - new site added
+     *  - title of site changed
      */
-    onSiterootDataChange: function () {
+    onSiteDataChange: function () {
         Phlexible.Frame.loadConfig();
         Phlexible.Frame.menu.load();
     },
 
     onSave: function() {
-        debugger;
-        this.getViewModel().getStore('siteroots').sync();
+        this.getViewModel().getStore('sites').sync();
     }
 });

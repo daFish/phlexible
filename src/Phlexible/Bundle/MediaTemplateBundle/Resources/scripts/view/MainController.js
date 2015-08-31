@@ -3,23 +3,30 @@ Ext.define('Phlexible.mediatemplate.view.MainController', {
 
     alias: 'controller.mediatemplate.main',
 
+    keyText: '_keyText',
+
     getTemplatePanelByType: function(type) {
         return this.getView().getCardPanel().getComponent(type);
     },
 
-    onLoadTemplate: function (mediaTemplate) {
-        var activePanel = this.getTemplatePanelByType(mediaTemplate.get('type'));
+    onSelectionChange: function(grid, mediaTemplates) {
+        if (mediaTemplates.length === 1) {
+            var card = this.getTemplatePanelByType(mediaTemplates[0].get('type'));
 
-        if (activePanel) {
-            this.getView().getCardPanel().getLayout().setActiveItem(activePanel);
-            activePanel.loadParameters(mediaTemplate.get('key'), mediaTemplate.get('parameters'));
-        } else {
-            Ext.MessageBox.alert('Warning', 'Unknown template');
+            if (card) {
+                this.getView().getCardPanel().getLayout().setActiveItem(card);
+            } else {
+                Ext.MessageBox.alert('Warning', 'Unknown template');
+            }
         }
     },
 
-    onSaveTemplate: function() {
-        this.getView().getListPanel().getStore().reload();
+    onPreviewTemplate: function(mediaTemplate, url, domHelper, resultFormatter, file) {
+        this.getView().getPreviewPanel().requestPreview(mediaTemplate, url, domHelper, resultFormatter, file);
+    },
+
+    onSave: function() {
+        this.getView().getViewModel().getStore('templates').sync();
     },
 
     onCreateTemplate: function (type) {
@@ -27,49 +34,23 @@ Ext.define('Phlexible.mediatemplate.view.MainController', {
             return;
         }
 
-        Ext.MessageBox.prompt('_title', '_title', function (btn, key) {
+        Ext.MessageBox.prompt(this.keyText, this.keyText, function (btn, key) {
             if (btn !== 'ok') {
                 return;
             }
 
-            Ext.Ajax.request({
-                url: Phlexible.Router.generate('phlexible_api_mediatemplate_post_mediatemplates'),
-                params: {
-                    type: type,
-                    key: key
-                },
-                success: function (response) {
-                    var data = Ext.decode(response.responseText);
-                    if (data.success) {
-                        Phlexible.success(data.msg);
-
-                        // store reload
-                        this.store.reload({
-                            callback: function (template_id) {
-                                var mediaTemplate = this.store.getById(template_id);
-                                var index = this.store.indexOf(r);
-                                this.selModel.selectRange(index);
-                                this.fireEvent('create', r.get('key'), r.get('type'));
-                            }.createDelegate(this, [data.id])
-                        });
-                    } else {
-                        Ext.Msg.alert('Failure', data.msg);
-                    }
-                },
-                scope: this
-
+            var mediaTemplate = Ext.create('Phlexible.mediatemplate.model.ImageTemplate', {
+                type: type,
+                cache: type === 'video' || type === 'audio' ? true : false,
+                system: false,
+                storage: 'default',
+                revision: 1,
+                createdAt: Ext.Date.format(new Date, "Y-m-d H:i:s"),
+                modifiedAt: Ext.Date.format(new Date, "Y-m-d H:i:s")
             });
+            this.getView().getViewModel().getStore('templates').add(mediaTemplate);
+            mediaTemplate.set('key', key);
+            this.getView().getListPanel().getSelectionModel().select(mediaTemplate);
         }, this);
-
-        alert("bla");
-
-        var activePanel = this.getTemplatePanelByType(templateType);
-
-        if (activePanel) {
-            this.getView().getCardPanel().getLayout().setActiveItem(activePanel);
-            activePanel.loadParameters(templateId, templateTitle);
-        } else {
-            Ext.MessageBox.alert('Warning', 'Unknown template');
-        }
     }
 });

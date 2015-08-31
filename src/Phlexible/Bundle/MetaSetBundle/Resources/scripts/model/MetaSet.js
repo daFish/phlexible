@@ -10,9 +10,9 @@ Ext.define('Phlexible.metaset.model.MetaSet', {
         {name: 'id', type: 'string'},
         {name: 'name', type: 'string'},
         {name: 'revision', type: 'integer'},
-        {name: 'createUser', type: 'string'},
+        {name: 'createdBy', type: 'string'},
         {name: 'createdAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
-        {name: 'modifyUser', type: 'string'},
+        {name: 'modifiedBy', type: 'string'},
         {name: 'modifiedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'}
     ],
     proxy: {
@@ -21,7 +21,28 @@ Ext.define('Phlexible.metaset.model.MetaSet', {
         reader: {
             type: 'json',
             rootProperty: 'metasets',
-            totalProperty: 'count'
+            totalProperty: 'total'
+        },
+        writer: {
+            type: 'json',
+            allDataOptions: {
+                persist: true,
+                associated: true
+            },
+            partialDataOptions: {
+                persist: true,
+                changes: false,
+                critical: true,
+                associated: true
+            },
+            writeRecordId: false,
+            transform: function(data, request) {
+                // do some manipulation of the unserialized data object
+                data.modifiedAt = Ext.Date.format(new Date, "Y-m-d H:i:s");
+                data.modifiedBy = Phlexible.User.getUsername();
+
+                return {metaSet: data};
+            }
         }
     }
 });

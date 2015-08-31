@@ -8,25 +8,38 @@
 
 namespace Phlexible\Component\Site\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * Node alias
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="nodeAlias")
+ * @Serializer\ExclusionPolicy("all")
  */
 class NodeAlias
 {
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $name;
 
     /**
      * @var int
+     * @Serializer\Type(name="integer")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $nodeId;
 
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $language;
 

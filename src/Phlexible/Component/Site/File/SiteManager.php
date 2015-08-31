@@ -99,7 +99,10 @@ class SiteManager implements SiteManagerInterface
                 throw new CreateCancelledException('Create canceled by callback.');
             }
 
-            $site->setId(Uuid::generate());
+            $rc = new \ReflectionClass($site);
+            $rp = $rc->getProperty('id');
+            $rp->setAccessible(true);
+            $rp->setValue($site, Uuid::generate());
 
             $this->validateSite($site);
             $this->repository->write($site);

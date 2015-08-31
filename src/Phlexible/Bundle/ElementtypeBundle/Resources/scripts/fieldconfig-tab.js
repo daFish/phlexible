@@ -1,6 +1,6 @@
 Ext.require('Phlexible.element.ElementDataTabHelper');
 
-Phlexible.PluginManager.set('field', 'tab', function (parentConfig, item, valueStructure, element) {
+Phlexible.Storage.set('field', 'tab', function (parentConfig, item, valueStructure, element) {
     var config = {
         xtype: 'panel',
         title: item.labels.fieldLabel[Phlexible.User.getProperty('interfaceLanguage', 'en')],
@@ -40,7 +40,7 @@ Phlexible.PluginManager.set('field', 'tab', function (parentConfig, item, valueS
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'tab', {
+Phlexible.Storage.set('type', 'tab', {
     type: 'tab',
     titles: {
         de: 'Reiter',

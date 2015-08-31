@@ -57,13 +57,13 @@ Phlexible.tree.window.PublishSlaveWindow = Ext.extend(Ext.Window, {
                         dataIndex: 'status',
                         width: 200,
                         renderer: function (v) {
-                            if (v == Phlexible.tree.STATUS_OFFLINE) {
+                            if (v == 'offline') {
                                 return Phlexible.elements.Strings.not_published;
                             }
-                            else if (v == Phlexible.tree.STATUS_ONLINE) {
+                            else if (v == 'online') {
                                 return '<span style="color: green;">' + Phlexible.elements.Strings.published + '</span>';
                             }
-                            else if (v == Phlexible.tree.STATUS_ASYNC) {
+                            else if (v == 'async') {
                                 return '<span style="color: red;">' + Phlexible.elements.Strings.published_async + '</span>';
                             }
                             return v;

@@ -1,13 +1,11 @@
 Ext.define('Phlexible.mediatemplate.view.audio.Main', {
     extend: 'Ext.panel.Panel',
     requires: [
-        'Phlexible.mediatemplate.view.audio.Form',
-        'Phlexible.mediatemplate.view.audio.Preview'
+        'Phlexible.mediatemplate.view.audio.Form'
     ],
-
     xtype: 'mediatemplate.audio.main',
 
-    layout: 'border',
+    layout: 'fit',
 
     initComponent: function () {
         this.initMyItems();
@@ -20,30 +18,64 @@ Ext.define('Phlexible.mediatemplate.view.audio.Main', {
             {
                 xtype: 'mediatemplate.audio.form',
                 itemId: 'form',
-                region: 'west',
-                width: 320,
-                margin: 5,
+                border: false,
                 listeners: {
-                    saveTemplate: function () {
-                        this.fireEvent('saveTemplate');
+                    save: function () {
+                        this.fireEvent('save');
                     },
-                    preview: function (params, debug) {
-                        this.getComponent('preview').createPreview(params, debug);
+                    preview: function (file) {
+                        this.fireEvent(
+                            'preview',
+                            this.mediaTemplate,
+                            Phlexible.Router.generate('mediatemplates_preview_audio'),
+                            function (data) {
+                                return {
+                                    tag: 'audio',
+                                    autoplay: 'autoplay',
+                                    controls: 'controls',
+                                    children: [
+                                        {
+                                            tag: 'source',
+                                            src: Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()}),
+                                            type: data.mimetype
+                                        }
+                                    ]
+                                }
+                            },
+                            function (data) {
+                                var s = '';
+                                if (data.template) {
+                                    s += data.template;
+                                }
+                                if (data.format) {
+                                    s += ', ' + data.format;
+                                }
+                                if (data.size) {
+                                    s += ', ' + Phlexible.Format.size(data.size);
+                                }
+                                return s;
+                            },
+                            file
+                        );
                     },
                     scope: this
                 }
-            },
-            {
-                xtype: 'mediatemplate.audio.preview',
-                itemId: 'preview',
-                region: 'center',
-                margin: '5 5 5 0',
-                header: false
             }
         ];
     },
 
-    loadParameters: function (key, parameters) {
-        this.getComponent('form').loadParameters(key, parameters);
+    setMediaTemplate: function(mediaTemplate) {
+        if (mediaTemplate && mediaTemplate.get('type') === 'audio') {
+            this.mediaTemplate = mediaTemplate;
+            this.getComponent('form').enable();
+            this.show();
+        } else {
+            this.mediaTemplate = null;
+            this.getComponent('form').disable();
+        }
+    },
+
+    getMediaTemplate: function() {
+        return this.mediaTemplate;
     }
 });

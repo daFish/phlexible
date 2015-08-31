@@ -1,18 +1,18 @@
-Ext.define('Phlexible.siteroot.view.Properties', {
+Ext.define('Phlexible.site.view.Properties', {
     extend: 'Ext.grid.PropertyGrid',
 
-    xtype: 'siteroot.properties',
+    xtype: 'site.properties',
 
     border: false,
     emptyText: '_emptyText',
 
     /**
-     * After the siteroot selection changes load the siteroot data.
+     * After the site selection changes load the site data.
      *
-     * @param {Phlexible.siteroot.model.Siteroot} siteroot
+     * @param {Phlexible.site.model.Site} site
      */
-    loadData: function (siteroot) {
-        this.setSource(siteroot.data.properties);
+    loadData: function (site) {
+        this.setSource(site.data.properties);
     },
 
     isValid: function () {

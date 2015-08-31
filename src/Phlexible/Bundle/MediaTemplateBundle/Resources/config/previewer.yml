@@ -2,21 +2,29 @@ parameters:
     phlexible_media_template.previewer.temp_dir: %kernel.cache_dir%/mediatemplates/preview/
 
 services:
-    phlexible_media_template.previewer.audio:
+    phlexible_media_template.previewer:
+        class: Phlexible\Component\MediaTemplate\Previewer\DelegatingPreviewer
+        arguments:
+            -
+                - @phlexible_media_template.image_previewer
+                - @phlexible_media_template.video_previewer
+                - @phlexible_media_template.audio_previewer
+
+    phlexible_media_template.audio_previewer:
         class: Phlexible\Component\MediaTemplate\Previewer\AudioPreviewer
         arguments:
             - @phlexible_media_cache.audio_specifier
             - @phlexible_media.transmuter
             - %phlexible_media_template.previewer.temp_dir%
 
-    phlexible_media_template.previewer.image:
+    phlexible_media_template.image_previewer:
         class: Phlexible\Component\MediaTemplate\Previewer\ImagePreviewer
         arguments:
             - @phlexible_media_cache.image_specifier
             - @phlexible_media.transmuter
             - %phlexible_media_template.previewer.temp_dir%
 
-    phlexible_media_template.previewer.video:
+    phlexible_media_template.video_previewer:
         class: Phlexible\Component\MediaTemplate\Previewer\VideoPreviewer
         arguments:
             - @phlexible_media_cache.video_specifier

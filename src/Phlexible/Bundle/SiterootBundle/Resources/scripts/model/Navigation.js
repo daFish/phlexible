@@ -1,19 +1,15 @@
-Ext.define('Phlexible.siteroot.model.Navigation', {
+Ext.define('Phlexible.site.model.Navigation', {
     extend: 'Ext.data.Model',
 
-    entityName: 'SiterootNavigation',
-    idProperty: 'id',
+    //entityName: 'SiteNavigation',
     fields: [
-        {name: 'id', type: 'string'},
-        {name: 'title', type: 'string'},
-        {name: 'handler', type: 'string'},
-        {name: 'startTreeId', type: 'int'},
+        {name: 'name', type: 'string'},
+        {name: 'nodeId', type: 'int'},
         {name: 'maxDepth', type: 'int'},
-        {name: 'flags', type: 'int'},
-        {name: 'additional'},
-        {name: 'siterootId', reference: {
-            type: 'Siteroot',
-            inverse: 'navigations'
+        {name: 'siteId', reference: {
+            type: 'Site',
+            inverse: 'navigations',
+            persist: false
         }}
     ]
 });

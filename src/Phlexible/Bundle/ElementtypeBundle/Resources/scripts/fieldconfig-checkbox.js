@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('field', 'checkbox', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'checkbox', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId),
         boxLabel = item.labels.boxLabel || {};
 
@@ -22,7 +22,7 @@ Phlexible.PluginManager.set('field', 'checkbox', function (parentConfig, item, v
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'checkbox', {
+Phlexible.Storage.set('type', 'checkbox', {
     type: 'checkbox',
     titles: {
         de: 'Checkbox',

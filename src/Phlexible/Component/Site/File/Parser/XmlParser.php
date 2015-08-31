@@ -138,9 +138,9 @@ class XmlParser implements ParserInterface
             ->setProperties($properties)
             ->setTitles($titles)
             ->setNodeConstraints($nodeConstraints)
-            ->setCreateUserId($createdBy)
+            ->setCreatedBy($createdBy)
             ->setCreatedAt(new \DateTime($createdAt))
-            ->setModifyUserId($modifiedBy)
+            ->setModifiedBy($modifiedBy)
             ->setModifiedAt(new \DateTime($modifiedAt));
 
         return $site;

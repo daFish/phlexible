@@ -1,6 +1,6 @@
 Ext.require('Phlexible.cms.field.FileField');
 
-Phlexible.PluginManager.set('field', 'file', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'file', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
@@ -33,7 +33,7 @@ Phlexible.PluginManager.set('field', 'file', function (parentConfig, item, value
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'file', {
+Phlexible.Storage.set('type', 'file', {
     type: 'file',
     titles: {
         de: 'Datei',

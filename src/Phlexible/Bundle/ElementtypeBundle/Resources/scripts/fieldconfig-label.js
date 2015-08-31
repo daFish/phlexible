@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('field', 'label', function (parentConfig, item, valueStructure, element) {
+Phlexible.Storage.set('field', 'label', function (parentConfig, item, valueStructure, element) {
     var contextHelp = item.labels.contextHelp || {},
         fieldLabel = item.labels.fieldLabel || {},
         config = {
@@ -18,7 +18,7 @@ Phlexible.PluginManager.set('field', 'label', function (parentConfig, item, valu
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'label', {
+Phlexible.Storage.set('type', 'label', {
     type: 'label',
     titles: {
         de: 'Label',

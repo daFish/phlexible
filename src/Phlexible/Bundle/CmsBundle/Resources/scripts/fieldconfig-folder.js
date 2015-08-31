@@ -1,6 +1,6 @@
 Ext.require('Phlexible.cms.field.FolderField');
 
-Phlexible.PluginManager.set('field', 'folder', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'folder', function (parentConfig, item, valueStructure, element, repeatableId) {
     element.prototypes.incCount(item.dsId);
 
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
@@ -34,7 +34,7 @@ Phlexible.PluginManager.set('field', 'folder', function (parentConfig, item, val
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'folder', {
+Phlexible.Storage.set('type', 'folder', {
     type: 'folder',
     titles: {
         de: 'Ordner',

@@ -15,8 +15,6 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
         multi: true
     },
 
-    debugPreview: false,
-
     videoText: '_videoText',
     widthText: '_widthText',
     widthHelpText: '_widthHelpText',
@@ -38,7 +36,6 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
     deinterlaceHelpText: '_deinterlaceHelpText',
     saveText: '_save',
     previewText: '_preview',
-    debugText: '_debug',
 
     initComponent: function () {
         this.initMyItems();
@@ -63,7 +60,10 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         xtype: 'numberfield',
                         itemId: 'videoWidthField',
                         flex: 1,
-                        name: 'video_width',
+                        name: 'videoWidth',
+                        bind: {
+                            value: '{list.selection.videoWidth}'
+                        },
                         fieldLabel: this.widthText,
                         helpText: this.widthHelpText
                     },
@@ -71,7 +71,10 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         xtype: 'numberfield',
                         itemId: 'videoHeightField',
                         flex: 1,
-                        name: 'video_height',
+                        name: 'videoHeight',
+                        bind: {
+                            value: '{list.selection.videoHeight}'
+                        },
                         fieldLabel: this.heightText,
                         helpText: this.heightHelpText
                     },
@@ -79,7 +82,10 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         xtype: 'checkbox',
                         itemId: 'videoForWebField',
                         flex: 1,
-                        name: 'for_web',
+                        name: 'forWeb',
+                        bind: {
+                            value: '{list.selection.forWeb}'
+                        },
                         hideLabel: true,
                         boxLabel: this.forWebText,
                         helpText: this.forWebHelpText,
@@ -95,7 +101,9 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         itemId: 'videoFormatField',
                         flex: 1,
                         name: 'format',
-                        value: '',
+                        bind: {
+                            value: '{list.selection.format}'
+                        },
                         fieldLabel: this.formatText,
                         helpText: this.formatHelpText,
                         store: Ext.create('Ext.data.Store', {
@@ -128,7 +136,10 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         xtype: 'checkbox',
                         itemId: 'videoMatchFormatField',
                         flex: 1,
-                        name: 'match_format',
+                        name: 'matchFormat',
+                        bind: {
+                            value: '{list.selection.matchFormat}'
+                        },
                         hideLabel: true,
                         boxLabel: this.matchFormatText,
                         helpText: this.matchFormatHelpText
@@ -137,8 +148,10 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         xtype: 'combo',
                         itemId: 'videoBitrateField',
                         flex: 1,
-                        name: 'video_bitrate',
-                        value: '',
+                        name: 'videoBitrate',
+                        bind: {
+                            value: '{list.selection.videoBitrate}'
+                        },
                         fieldLabel: this.bitrateText,
                         helpText: this.bitrateHelpText,
                         store: Ext.create('Ext.data.Store', {
@@ -164,7 +177,10 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         itemId: 'videoFramerateField',
                         flex: 1,
                         value: '',
-                        name: 'video_framerate',
+                        name: 'videoFramerate',
+                        bind: {
+                            value: '{list.selection.videoFramerate}'
+                        },
                         fieldLabel: this.framerateText,
                         helpText: this.framerateHelpText,
                         store: Ext.create('Ext.data.Store', {
@@ -190,6 +206,9 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
                         itemId: 'videoDeinterlaceField',
                         flex: 1,
                         name: 'deinterlace',
+                        bind: {
+                            value: '{list.selection.deinterlace}'
+                        },
                         hideLabel: true,
                         boxLabel: this.deinterlaceText,
                         helpText: this.deinterlaceHelpText
@@ -209,36 +228,24 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
             itemId: 'tbar',
             items: [
                 {
-                    text: this.saveText,
                     itemId: 'saveBtn',
+                    text: this.saveText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
-                    handler: this.saveParameters,
+                    formBind: true,
+                    handler: function() {
+                        this.fireEvent('save');
+                    },
                     scope: this
                 },
                 '->',
                 {
-                    xtype: 'splitbutton',
                     text: this.previewText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.PREVIEW),
+                    formBind: true,
                     handler: function () {
-                        var values = this.getForm().getValues();
-
-                        values.template = this.templateKey;
-                        values.debug = this.debugPreview;
-
-                        this.fireEvent('preview', values, this.debugPreview);
+                        this.fireEvent('preview');
                     },
-                    scope: this,
-                    menu: [
-                        {
-                            text: this.debugText,
-                            checked: this.debugPreview,
-                            checkHandler: function (checkItem, checked) {
-                                this.debugPreview = checked;
-                            },
-                            scope: this
-                        }
-                    ]
+                    scope: this
                 }
             ]
         }];
@@ -247,7 +254,7 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
     initMyListeners: function() {
         this.on({
             clientvalidation: function (f, valid) {
-                this.getDockedComponent('tbar').getComponent('saveBtn').setDisabled(!valid);
+                //this.getDockedComponent('tbar').getComponent('saveBtn').setDisabled(!valid);
             },
             scope: this
         });
@@ -289,38 +296,5 @@ Ext.define('Phlexible.mediatemplate.view.video.Form', {
         } else {
             match.disable();
         }
-    },
-
-    loadParameters: function (key, parameters) {
-        this.templateKey = key;
-
-        this.setTitle(key);
-
-        this.getForm().reset();
-        this.getForm().setValues(parameters);
-
-        this.updateForWeb();
-
-        this.enable();
-    },
-
-    saveParameters: function () {
-        this.getForm().submit({
-            url: Phlexible.Router.generate('mediatemplates_form_save'),
-            params: {
-                templateKey: this.templateKey
-            },
-            success: function (form, action) {
-                var data = Ext.decode(action.response.responseText);
-                if (data.success) {
-                    Phlexible.success(data.msg);
-                    this.fireEvent('paramssave');
-                }
-                else {
-                    Ext.Msg.alert('Failure', data.msg);
-                }
-            },
-            scope: this
-        });
     }
 });

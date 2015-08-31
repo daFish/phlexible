@@ -8,87 +8,119 @@
 
 namespace Phlexible\Component\MediaTemplate\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * Video template
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="mediaTemplate")
+ * @Serializer\ExclusionPolicy("all")
  */
 class VideoTemplate extends AbstractTemplate
 {
-    const TYPE_VIDEO = 'video';
-
     /**
      * @var bool
+     * @Serializer\Expose()
+     * @Serializer\Type("boolean")
      */
     private $matchFormat = false;
 
     /**
      * @var bool
+     * @Serializer\Expose()
+     * @Serializer\Type("boolean")
      */
     private $forWeb = false;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $format = 'flv';
 
     /**
      * @var bool
+     * @Serializer\Expose()
+     * @Serializer\Type("boolean")
      */
     private $deinterlace = false;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $resizeMethod;
 
     /**
      * @var int
+     * @Serializer\Expose()
+     * @Serializer\Type("integer")
      */
     private $videoWidth;
 
     /**
      * @var int
+     * @Serializer\Expose()
+     * @Serializer\Type("integer")
      */
     private $videoHeight;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $videoFormat = 'mp4';
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $videoBitrate;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $videoFramerate;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioFormat;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioBitrate;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioSamplerate;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioSamplebits;
 
     /**
      * @var int
+     * @Serializer\Expose()
+     * @Serializer\Type("integer")
      */
     private $audioChannels;
 
@@ -97,7 +129,7 @@ class VideoTemplate extends AbstractTemplate
      */
     public function getType()
     {
-        return self::TYPE_VIDEO;
+        return 'video';
     }
 
     /**
@@ -403,22 +435,22 @@ class VideoTemplate extends AbstractTemplate
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function getParameters()
     {
         return array(
-            'match_format'    => $this->matchFormat,
-            'for_web'         => $this->forWeb,
-            'format'          => $this->format,
-            'deinterlace'     => $this->deinterlace,
-            'video_width'     => $this->videoWidth,
-            'video_height'    => $this->videoHeight,
-            'video_format'    => $this->videoFormat,
-            'video_bitrate'   => $this->videoBitrate,
-            'video_framerate' => $this->videoFramerate,
-            'audio_bitrate'    => $this->audioBitrate,
-            'audio_channels'   => $this->audioChannels,
-            'audio_samplebits' => $this->audioSamplebits,
-            'audio_samplerate' => $this->audioSamplerate,
+            'match_format'    => $this->getMatchFormat(),
+            'for_web'         => $this->getForWeb(),
+            'format'          => $this->getFormat(),
+            'deinterlace'     => $this->getDeinterlace(),
+            'video_width'     => $this->getVideoWidth(),
+            'video_height'    => $this->getVideoHeight(),
+            'video_format'    => $this->getVideoFormat(),
+            'video_bitrate'   => $this->getVideoBitrate(),
+            'video_framerate' => $this->getVideoFramerate(),
+            'audio_bitrate'    => $this->getAudioBitrate(),
+            'audio_channels'   => $this->getAudioChannels(),
+            'audio_samplebits' => $this->getAudioSamplebits(),
+            'audio_samplerate' => $this->getAudioSamplerate(),
         );
     }
 }

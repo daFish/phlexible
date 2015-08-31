@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mediaTemplate key="_mm_preview_audio" type="audio" class="Phlexible\Component\MediaTemplate\Domain\AudioTemplate"
-               cache="1" system="1" revision="1">
-    <parameter key="audio_bitrate">32k</parameter>
-    <parameter key="audio_samplerate">11025</parameter>
-    <parameter key="audio_samplebits">8</parameter>
-    <parameter key="audio_channels">2</parameter>
-    <parameter key="audio_format">mp3</parameter>
+<?xml version="1.0" encoding="UTF-8"?>
+<mediaTemplate key="_mm_preview_audio" cache="true" system="true" storage="default" revision="1">
+  <audioBitrate><![CDATA[32k]]></audioBitrate>
+  <audioSamplerate><![CDATA[11025]]></audioSamplerate>
+  <audioSamplebits><![CDATA[8]]></audioSamplebits>
+  <audioChannels><![CDATA[2]]></audioChannels>
+  <audioFormat><![CDATA[mp3]]></audioFormat>
+  <type><![CDATA[audio]]></type>
 </mediaTemplate>

@@ -11,9 +11,7 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Tests\Controller;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Navigation;
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\SiterootBundle\Entity\Url;
+use Phlexible\Component\Site\Domain\Site;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -47,13 +45,13 @@ class SiterootsControllerTest extends WebTestCase
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $siterootManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroot = new Siteroot();
-        $siterootManager->updateSiteroot($siteroot);
-        $siterootId = $siteroot->getId();
+        $site = new Site();
+        $siteManager->updateSite($site);
+        $siteId = $site->getId();
 
-        $client->request('GET', "/admin/rest/siteroots/$siterootId");
+        $client->request('GET', "/admin/rest/siteroots/$siteId");
         $response = $client->getResponse();
         $content = $response->getContent();
         $data = json_decode($content, true);
@@ -61,7 +59,7 @@ class SiterootsControllerTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertArrayHasKey('siteroot', $data);
         $this->assertArrayHasKey('id', $data['siteroot']);
-        $this->assertSame($siterootId, $data['siteroot']['id']);
+        $this->assertSame($siteId, $data['siteroot']['id']);
     }
 
     /**
@@ -153,18 +151,12 @@ class SiterootsControllerTest extends WebTestCase
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $siterootManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroot = new Siteroot();
-        $siteroot->setDefault(false);
-        $navigation = new Navigation();
-        $navigation->setTitle('inititalTitle');
-        $siteroot->addNavigation($navigation);
-        $url = new Url();
-        $url->setHostname('inititalHostname');
-        $siteroot->addUrl($url);
-        $siterootManager->updateSiteroot($siteroot);
-        $siterootId = $siteroot->getId();
+        $site = new Site();
+        $site->setHostname('www.test.com');
+        $siteManager->updateSite($site);
+        $siteId = $site->getId();
 
         $data = array(
             'siteroot' => array(
@@ -179,16 +171,16 @@ class SiterootsControllerTest extends WebTestCase
             ),
         );
 
-        $client->request('PUT', "/admin/rest/siteroots/$siterootId", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('PUT', "/admin/rest/siteroots/$siteId", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(204, $response->getStatusCode());
-        $this->assertCount(1, $siterootManager->findAll());
-        $siteroot = current($siterootManager->findAll());
-        $this->assertTrue($siteroot->isDefault());
-        $navigation = $siteroot->getNavigations()->first();
+        $this->assertCount(1, $siteManager->findAll());
+        $site = current($siteManager->findAll());
+        $this->assertTrue($site->isDefault());
+        $navigation = $site->getNavigations()->first();
         $this->assertSame('testTitle', $navigation->getTitle());
-        $url = $siteroot->getUrls()->first();
+        $url = $site->getUrls()->first();
         $this->assertSame('testHostname', $url->getHostname());
     }
 
@@ -227,13 +219,13 @@ class SiterootsControllerTest extends WebTestCase
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $siterootManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
-        $siteroot = new Siteroot();
-        $siterootManager->updateSiteroot($siteroot);
-        $siterootId = $siteroot->getId();
+        $site = new Site();
+        $siteManager->updateSite($site);
+        $siteId = $site->getId();
 
-        $client->request('DELETE', "/admin/rest/siteroots/$siterootId");
+        $client->request('DELETE', "/admin/rest/siteroots/$siteId");
         $response = $client->getResponse();
 
         $this->assertSame(204, $response->getStatusCode());

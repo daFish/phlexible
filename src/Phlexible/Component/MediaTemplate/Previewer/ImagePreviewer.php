@@ -13,6 +13,7 @@ namespace Phlexible\Component\MediaTemplate\Previewer;
 
 use Phlexible\Component\MediaCache\Specifier\ImageSpecifier;
 use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;
@@ -54,31 +55,19 @@ class ImagePreviewer implements PreviewerInterface
     /**
      * {@inheritdoc}
      */
-    public function create($filePath,  array $params)
+    public function accept(TemplateInterface $template)
+    {
+        return $template instanceof ImageTemplate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function create(TemplateInterface $template, $filePath)
     {
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->cacheDir)) {
             $filesystem->mkdir($this->cacheDir);
-        }
-
-        $template = new ImageTemplate();
-        $templateKey = 'unknown';
-        foreach ($params as $key => $value) {
-            if ($key === 'xmethod') {
-                $key = 'method';
-            } elseif ($key === 'backgroundcolor' && !preg_match('/^\#[0-9A-Za-z]{6}$/', $value)) {
-                $value = '';
-            } elseif ($key === 'template') {
-                $templateKey = $value;
-                continue;
-            } elseif ($key === '_dc') {
-                continue;
-            } elseif ($key === 'debug') {
-                continue;
-            }
-
-            $method = 'set' . $this->toCamelCase($key);
-            $template->$method($value);
         }
 
         $spec = $this->specifier->specify($template);
@@ -90,18 +79,16 @@ class ImagePreviewer implements PreviewerInterface
 
         $size = getimagesize($cacheFilename);
 
-        $debug = json_encode($template->toArray(), JSON_PRETTY_PRINT);
-
         $data = array(
-            'path'     => $cacheFilename,
-            'file'     => basename($cacheFilename),
-            'size'     => filesize($cacheFilename),
-            'template' => $templateKey,
-            'format'   => $extension,
-            'mimetype' => $file->getMimeType(),
-            'debug'    => $debug,
-            'width'    => $size[0],
-            'height'   => $size[1],
+            'path'       => $cacheFilename,
+            'file'       => basename($cacheFilename),
+            'size'       => filesize($cacheFilename),
+            'template'   => $template->getKey(),
+            'format'     => $extension,
+            'mimetype'   => $file->getMimeType(),
+            'parameters' => $template->getParameters(),
+            'width'      => $size[0],
+            'height'     => $size[1],
         );
 
         return $data;

@@ -8,37 +8,49 @@
 
 namespace Phlexible\Component\MediaTemplate\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * Audio template
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="mediaTemplate")
+ * @Serializer\ExclusionPolicy("all")
  */
 class AudioTemplate extends AbstractTemplate
 {
-    const TYPE_AUDIO = 'audio';
-
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioFormat;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioBitrate;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioSamplerate;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $audioSamplebits;
 
     /**
      * @var int
+     * @Serializer\Expose()
+     * @Serializer\Type("integer")
      */
     private $audioChannels;
 
@@ -47,7 +59,7 @@ class AudioTemplate extends AbstractTemplate
      */
     public function getType()
     {
-        return self::TYPE_AUDIO;
+        return 'audio';
     }
 
     /**
@@ -153,13 +165,13 @@ class AudioTemplate extends AbstractTemplate
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function getParameters()
     {
         return array(
-            'audio_bitrate'    => $this->audioBitrate,
-            'audio_channels'   => $this->audioChannels,
-            'audio_samplebits' => $this->audioSamplebits,
-            'audio_samplerate' => $this->audioSamplerate,
+            'audio_bitrate'    => $this->getAudioBitrate(),
+            'audio_channels'   => $this->getAudioChannels(),
+            'audio_samplebits' => $this->getAudioSamplebits(),
+            'audio_samplerate' => $this->getAudioSamplerate(),
         );
     }
 }

@@ -1,60 +1,16 @@
 Phlexible:
-    siteroot:
+    site:
         handler:
-            Siteroots:
-                text: Siteroots
+            Sites:
+                text: Sites
 
         view:
-            Main:
-                title: Siteroots
-                saveSiterootDataText: 'Siteroot-Daten speichern'
-                checkAccordionsForErrorsText: 'Überprüfen Sie die markierten Akkordeons.'
-
-            List:
-                title: Siteroots
-                idText: ID
-                siterootsText: Siteroots
-                removeText: Löschen
-                removeDescriptionText: 'Sind Sie sicher?'
-                addSiterootText: 'Siteroot hinzufügen'
-                titleText: Titel
-
-            Navigations:
-                title: Navigationen
-                titleText: Titel
-                handlerText: Handler
-                startTidText: Start TID
-                maxDepthText: Max. Tiefe
-                flagsText: Flags
-                additionalText: Zusätzlich
-                removeText: Entfernen
-                removeDescriptionText: 'Sind Sie sicher?'
-                addNavigationText: 'Navigation hinzufügen'
-                emptyTitleText: 'Sie müssen einen Titel angeben.'
-
-            Properties:
-                title: Eigenschaften
-                emptyText: 'Keine Eigenschaften'
-
-            SpecialTids:
-                title: 'Special TIDs'
-                NameText: Name
-                languageText: Sprache
-                treeIdText: TID
-                removeText: Entfernen
-                removeDescriptionText: 'Sind Sie sicher?'
-                addSpecialTidText: 'Special TID hinzufügen'
-                emptyKeyText: 'Keine Special TIDs'
-
-            Titles:
-                title: Titel
-
-            Urls:
-                title: URLs
-                defaultText: Standard
+            EntryPoints:
+                title: 'Einstiegspunkte'
+                nameText: Name
                 hostnameText: Hostname
                 languageText: Sprache
-                targetText: Ziel
+                nodeIdText: TID
                 removeText: Entfernen
                 removeDescriptionText: 'Sind Sie sicher?'
                 addMappingText: Mapping hinzufügen
@@ -62,27 +18,52 @@ Phlexible:
                 emptyTargetText: 'Sie müssen ein Ziel angeben.'
                 emptyLanguageText: 'Sie müssen eine Sprache angeben.'
 
-        window:
-            NavigationFlagsWindow:
-                title: Flags
-                flagsText: Flags
-                noPrependHomeText: '"Home"-Knoten nicht als ersten Eintrag einfügen'
-                appendActiveText: 'Aktiven Knoten anhängen'
-                includeNoNavigationText: 'Knoten die nicht in der Navigation stehen einbeziehen'
-                includeRestrictedText: 'Eingeschränkte Knoten einbeziehen'
-                includeNotPublishedText: 'Nicht veröffentlichte Knoten einbeziehen'
-                includeTypeFullText: 'Vollelemente einbeziehen'
-                includeTypeStructureText: 'Strukturelemente einbeziehen'
-                includeTypeLayoutText: 'Layoutelemente einbeziehen'
-                includeTypeTeaserText: 'Teilelemente einbeziehen'
-                includeUniqueIdText: 'Unique IDs benutzen'
-                storeText: Übernehmen
-                cancelText: Abbrechen
+            Main:
+                title: Sites
+                checkAccordionsForErrorsText: 'Überprüfen Sie die markierten Akkordeons.'
 
-            SiterootNavigationWindow:
-                title: Navigation
+            List:
+                title: Sites
                 idText: ID
+                sitesText: Sites
+                removeText: Löschen
+                removeDescriptionText: 'Sind Sie sicher?'
+                addSiteText: 'Site hinzufügen'
                 titleText: Titel
-                selectSiterootText: Siteroot auswählen
-                storeText: Übernehmen
-                cancelText: Abbrechen
+                saveSitesText: 'Änderungen speichern'
+
+            Navigations:
+                title: Navigationen
+                nameText: Name
+                nodeIdText: 'Start TID'
+                maxDepthText: 'Max. Tiefe'
+                removeText: Entfernen
+                removeDescriptionText: 'Sind Sie sicher?'
+                addNavigationText: 'Navigation hinzufügen'
+                emptyTitleText: 'Sie müssen einen Titel angeben.'
+
+            NodeAliases:
+                title: 'Node Aliase'
+                nameText: Name
+                languageText: Sprache
+                nodeIdText: TID
+                removeText: Entfernen
+                removeDescriptionText: 'Sind Sie sicher?'
+                addSpecialTidText: 'Special TID hinzufügen'
+                emptyKeyText: 'Keine Special TIDs'
+
+            NodeConstraints:
+                title: 'Node Constraints'
+                typeText: Type
+                allowedText: Allowed
+                restrictionsText: Restrictions
+
+            Properties:
+                title: Eigenschaften
+                emptyText: 'Keine Eigenschaften'
+
+            Site:
+                title: Titel
+                defaultText: Standard
+                titlesText: Titel
+                hostnameText: Hostname

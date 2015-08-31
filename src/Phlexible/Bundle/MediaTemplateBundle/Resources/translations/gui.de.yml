@@ -4,12 +4,6 @@ Phlexible:
             MediaTemplates:
                 text: Media Templates
 
-        panel:
-            PreviewPanel:
-                title: Vorschau
-                noPreviewAvailableText: Keine Vorschau verfügbar
-                debugText: Debug
-
         view:
             Main:
                 title: Medienvorlagen
@@ -23,6 +17,11 @@ Phlexible:
                 audioText: Audio
                 noFilterText: Alle
 
+            Preview:
+                title: Vorschau
+                noPreviewAvailableText: Keine Vorschau verfügbar
+                debugText: Debug
+
             audio:
                 Main:
                     title: Audiovorlage
@@ -32,7 +31,6 @@ Phlexible:
                     audioText: Audio
                     saveText: Speichern
                     previewText: Vorschau
-                    debugText: Debug
 
                 Fields:
                     title: Audio
@@ -83,6 +81,7 @@ Phlexible:
                     qualityText: Qualität
                     qualityHelpText: 'Qualität des generierten Bildes.'
                     selectCompressionText: 'Bitte wählen Sie einen Kompressionsgrad'
+                    noCompressionText: 'Keine Kompression'
                     compressionText: 'Kompressionsgrad'
                     compressionHelpText: 'Kompressionsgrad des generierten Bildes.'
                     selectFilterTypeText: 'Bitte wählen Sie einen Filtertypen'
@@ -111,19 +110,12 @@ Phlexible:
                     scaleDownText: 'Nur grössere herunterskalieren'
                     depth8BitPerChannelText: '8 Bit pro Kanal'
                     depth16BitPerChannelText: '16 Bit pro Kanal'
-                    debugText: Debug
                     saveText: Speichern
                     previewText: Preview
                     keepFormatText: Format beibehalten
                     keepColorspaceText: Farbraum beibehalten
                     requiredValuesText: 'Bitte überprüfen Sie das Formular auf Pflichtfelder.'
                     saveDescriptionText: 'Bitte beachten Sie, dass nach dem Speichern alle in der Medienverwaltung hinterlegten Bilder auf der Basis dieser Medienvorlage neu berechnet werden. Das kann den Server stark belasten. Wenn Sie Ihre Einstellungen testen möchten, verwenden Sie bitte den Vorschau-Button. Ein Speichern ist hierfür nicht erforderlich.'
-
-                Preview:
-                    changeBackgroundColorToText: Hintergrundfarbe ändern:
-                    whiteText: Weiss
-                    blackText: Schwarz
-                    randomText: Zufällig
 
             video:
                 Form:
@@ -149,7 +141,6 @@ Phlexible:
                     deinterlaceHelpText: 'Aktiviert Deinterlacing ("Zeilenentflechtung"). Konvertiert Videos im Zeilensprungverfahren in Vollbildvideos.'
                     saveText: Speichern
                     previewText: Vorschau
-                    debugText: Debug
 
                 Main:
                     title: Videovorlage

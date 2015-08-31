@@ -1,8 +1,5 @@
 Ext.define('Phlexible.mediatemplate.view.List', {
     extend: 'Ext.grid.GridPanel',
-    requires: [
-        'Phlexible.mediatemplate.model.MediaTemplate'
-    ],
     xtype: 'mediatemplate.list',
 
     iconCls: Phlexible.Icon.get('image-resize'),
@@ -16,35 +13,10 @@ Ext.define('Phlexible.mediatemplate.view.List', {
     noFilterText: '_noFilterText',
 
     initComponent: function () {
-        this.initMyStore();
         this.initMyColumns();
         this.initMyDockedItems();
-        this.initMyListeners();
 
         this.callParent(arguments);
-    },
-
-    initMyStore: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.mediatemplate.model.MediaTemplate',
-            proxy: {
-                type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_api_mediatemplate_get_mediatemplates'),
-                simpleSortMode: true,
-                reader: {
-                    type: 'json',
-                    rootProperty: 'mediatemplates',
-                    idProperty: 'key',
-                    totalProperty: 'count'
-                },
-                extraParams: this.storeExtraParams
-            },
-            sorters: [{
-                property: 'key',
-                direction: 'ASC'
-            }],
-            autoLoad: true
-        });
     },
 
     initMyColumns: function() {
@@ -52,10 +24,12 @@ Ext.define('Phlexible.mediatemplate.view.List', {
             {
                 header: this.titleText,
                 dataIndex: 'key',
-                width: 35,
                 flex: 1,
                 sortable: true,
                 renderer: function (v, md, r) {
+                    if (r.dirty) {
+                        md.tdCls = 'x-grid-dirty-cell';
+                    }
                     return Phlexible.Icon.inline(Phlexible.mediatemplate.TemplateIcons[r.get('type')]) + ' ' + v;
                 }
             }
@@ -131,15 +105,6 @@ Ext.define('Phlexible.mediatemplate.view.List', {
                 }
             ]
         }];
-    },
-
-    initMyListeners: function() {
-        this.on({
-            rowdblclick: function (grid, mediaType) {
-                this.fireEvent('loadTemplate', mediaType);
-            },
-            scope: this
-        });
     },
 
     toggleFilter: function (btn) {

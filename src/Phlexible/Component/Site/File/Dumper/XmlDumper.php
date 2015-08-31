@@ -32,10 +32,10 @@ class XmlDumper
             array(
                 'id'          => $site->getId(),
                 'hostname'    => $site->getHostname(),
-                'created_at'  => $site->getCreatedAt()->format('Y-m-d H:i:s'),
-                'created_by'  => $site->getCreateUserId(),
-                'modified_at' => $site->getModifiedAt()->format('Y-m-d H:i:s'),
-                'modified_by' => $site->getModifyUserId(),
+                'createdAt'  => $site->getCreatedAt()->format('Y-m-d H:i:s'),
+                'createdBy'  => $site->getCreatedBy(),
+                'modifiedAt' => $site->getModifiedAt()->format('Y-m-d H:i:s'),
+                'modifiedBy' => $site->getModifiedBy(),
             )
         );
 

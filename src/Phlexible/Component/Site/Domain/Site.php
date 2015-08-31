@@ -11,8 +11,10 @@
 
 namespace Phlexible\Component\Site\Domain;
 
-use Phlexible\Component\NodeType\Domain\NodeTypeConstraint;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as Serializer;
+use Phlexible\Component\NodeType\Domain\NodeTypeConstraint;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,89 +22,140 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Site
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="site")
+ * @Serializer\ExclusionPolicy("all")
  */
 class Site
 {
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $id;
 
     /**
      * @var bool
+     * @Serializer\Expose()
+     * @Serializer\Type(name="boolean")
+     * @Serializer\XmlAttribute()
      */
     private $default = false;
 
     /**
      * @var string
+     * @Assert\NotBlank()
+     * @Serializer\Expose()
+     * @Serializer\Type(name="string")
+     * @Serializer\XmlAttribute()
      */
     private $hostname;
 
     /**
-     * @var \DateTime
+     * @var DateTime
+     * @Assert\NotBlank()
+     * @Serializer\Expose()
+     * @Serializer\Type(name="DateTime")
+     * @Serializer\XmlAttribute()
      */
     private $createdAt;
 
     /**
      * @var string
+     * @Assert\NotBlank()
+     * @Serializer\Expose()
+     * @Serializer\Type(name="string")
+     * @Serializer\XmlAttribute()
      */
-    private $createUser;
+    private $createdBy;
 
     /**
-     * @var \DateTime
+     * @var DateTime
+     * @Assert\NotBlank()
+     * @Serializer\Expose()
+     * @Serializer\Type(name="DateTime")
+     * @Serializer\XmlAttribute()
      */
     private $modifiedAt;
 
     /**
-     * @var  string
+     * @var string
+     * @Assert\NotBlank()
+     * @Serializer\Expose()
+     * @Serializer\Type(name="string")
+     * @Serializer\XmlAttribute()
      */
-    private $modifyUser;
-
-    /**
-     * @var NodeAlias[]
-     */
-    private $nodeAliases = array();
+    private $modifiedBy;
 
     /**
      * @var array
+     * @Serializer\Expose()
+     * @Serializer\Type(name="array<string, string>")
+     * @Serializer\XmlMap(inline=false, entry="title", keyAttribute="language")
      */
     private $titles = array();
 
     /**
      * @var array
+     * @Serializer\Expose()
+     * @Serializer\Type(name="array<string, string>")
+     * @Serializer\XmlMap(inline=false, entry="property", keyAttribute="key")
      */
     private $properties = array();
 
     /**
-     * @var Navigation[]
+     * @var NodeAlias[]|ArrayCollection
+     * @Serializer\Expose()
+     * @Serializer\Type(name="ArrayCollection<Phlexible\Component\Site\Domain\NodeAlias>")
+     * @Serializer\XmlList(inline=false, entry="nodeAlias")
+     */
+    private $nodeAliases;
+
+    /**
+     * @var Navigation[]|ArrayCollection
      * @Assert\Valid
+     * @Serializer\Expose()
+     * @Serializer\Type(name="ArrayCollection<Phlexible\Component\Site\Domain\Navigation>")
+     * @Serializer\XmlList(inline=false, entry="navigation")
      */
     private $navigations;
 
     /**
-     * @var EntryPoint[]
+     * @var EntryPoint[]|ArrayCollection
      * @Assert\Valid
+     * @Serializer\Expose()
+     * @Serializer\Type(name="ArrayCollection<Phlexible\Component\Site\Domain\EntryPoint>")
+     * @Serializer\XmlList(inline=false, entry="entryPoint")
      */
     private $entryPoints;
 
     /**
-     * @var NodeTypeConstraint[]
+     * @var NodeTypeConstraint[]|ArrayCollection
+     * @Assert\Valid
+     * @Serializer\Expose()
+     * @Serializer\Type(name="ArrayCollection<Phlexible\Component\NodeType\Domain\NodeTypeConstraint>")
+     * @Serializer\XmlList(inline=false, entry="nodeConstraint")
      */
     private $nodeConstraints;
 
     /**
      * Constructor.
      *
-     * @param string $uuid
+     * @param string $id
      */
-    public function __construct($uuid = null)
+    public function __construct($id = null)
     {
-        if (null !== $uuid) {
-            $this->id = $uuid;
+        if (null !== $id) {
+            $this->id = $id;
         }
 
-        $this->createdAt = new \DateTime();
-        $this->modifiedAt = new \DateTime();
+        $this->createdAt = new DateTime();
+        $this->modifiedAt = new DateTime();
+        $this->navigations = new ArrayCollection();
+        $this->nodeAliases = new ArrayCollection();
+        $this->entryPoints = new ArrayCollection();
+        $this->nodeConstraints = new ArrayCollection();
     }
 
     /**
@@ -154,13 +207,13 @@ class Site
     }
 
     /**
-     * @param string $createUid
+     * @param string $createdBy
      *
      * @return $this
      */
-    public function setCreateUser($createUser)
+    public function setCreatedBy($createdBy)
     {
-        $this->createUser = $createUser;
+        $this->createdBy = $createdBy;
 
         return $this;
     }
@@ -168,17 +221,17 @@ class Site
     /**
      * @return string
      */
-    public function getCreateUser()
+    public function getCreatedBy()
     {
-        return $this->createUser;
+        return $this->createdBy;
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return $this
      */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setCreatedAt(DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -186,7 +239,7 @@ class Site
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -194,13 +247,13 @@ class Site
     }
 
     /**
-     * @param string $modifyUser
+     * @param string $modifiedBy
      *
      * @return $this
      */
-    public function setModifyUser($modifyUser)
+    public function setModifiedBy($modifiedBy)
     {
-        $this->modifyUser = $modifyUser;
+        $this->modifiedBy = $modifiedBy;
 
         return $this;
     }
@@ -208,17 +261,17 @@ class Site
     /**
      * @return string
      */
-    public function getModifyUser()
+    public function getModifiedBy()
     {
-        return $this->modifyUser;
+        return $this->modifiedBy;
     }
 
     /**
-     * @param \DateTime $modifiedAt
+     * @param DateTime $modifiedAt
      *
      * @return $this
      */
-    public function setModifiedAt(\DateTime $modifiedAt)
+    public function setModifiedAt(DateTime $modifiedAt)
     {
         $this->modifiedAt = $modifiedAt;
 
@@ -226,7 +279,7 @@ class Site
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getModifiedAt()
     {
@@ -322,7 +375,7 @@ class Site
      */
     public function getNavigations()
     {
-        return $this->navigations;
+        return $this->navigations->getValues();
     }
 
     /**
@@ -332,20 +385,22 @@ class Site
      */
     public function setNavigation(Navigation $navigation)
     {
-        $this->navigations[$navigation->getName()] = $navigation;
+        if (!$this->navigations->contains($navigation)) {
+            $this->navigations->add($navigation);
+        }
 
         return $this;
     }
 
     /**
-     * @param string $name
+     * @param Navigation $navigation
      *
      * @return $this
      */
-    public function removeNavigation($name)
+    public function removeNavigation(Navigation $navigation)
     {
-        if (isset($this->navigations[$name])) {
-            unset($this->navigations[$name]);
+        if ($this->navigations->contains($navigation)) {
+            $this->navigations->removeElement($navigation);
         }
 
         return $this;
@@ -370,7 +425,7 @@ class Site
      */
     public function getNodeAliases()
     {
-        return $this->nodeAliases;
+        return $this->nodeAliases->getValues();
     }
 
     /**
@@ -379,6 +434,20 @@ class Site
      * @return $this
      */
     public function setNodeAlias(NodeAlias $nodeAlias)
+    {
+        if (!$this->nodeAliases->contains($nodeAlias)) {
+            $this->nodeAliases->add($nodeAlias);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param NodeAlias $nodeAlias
+     *
+     * @return $this
+     */
+    public function removeNodeAlias(NodeAlias $nodeAlias)
     {
         $this->nodeAliases[] = $nodeAlias;
 
@@ -456,7 +525,7 @@ class Site
      */
     public function getEntryPoints()
     {
-        return $this->entryPoints;
+        return $this->entryPoints->getValues();
     }
 
     /**
@@ -466,7 +535,9 @@ class Site
      */
     public function setEntryPoint(EntryPoint $entryPoint)
     {
-        $this->entryPoints[$entryPoint->getName()] = $entryPoint;
+        if (!$this->entryPoints->contains($entryPoint)) {
+            $this->entryPoints->add($entryPoint);
+        }
 
         return $this;
     }
@@ -478,8 +549,8 @@ class Site
      */
     public function removeEntryPoint($name)
     {
-        if (isset($this->entryPoints[$name])) {
-            unset($this->entryPoints[$name]);
+        if ($this->entryPoints->contains($name)) {
+            $this->entryPoints->removeElement($name);
         }
 
         return $this;
@@ -541,7 +612,7 @@ class Site
      */
     public function getNodeConstraints()
     {
-        return $this->nodeConstraints;
+        return $this->nodeConstraints->getValues();
     }
 
     /**
@@ -565,8 +636,8 @@ class Site
      */
     public function getNodeConstraint($name)
     {
-        if (isset($this->nodeConstraints[$name])) {
-            return $this->nodeConstraints[$name];
+        if ($this->nodeConstraints->containsKey($name)) {
+            return $this->nodeConstraints->get($name);
         }
 
         return null;
@@ -579,7 +650,9 @@ class Site
      */
     public function setNodeConstraint(NodeTypeConstraint $nodeConstraint)
     {
-        $this->nodeConstraints[$nodeConstraint->getName()] = $nodeConstraint;
+        if (!$this->nodeConstraints->containsKey($nodeConstraint->getName())) {
+            $this->nodeConstraints->set($nodeConstraint->getName(), $nodeConstraint);
+        }
 
         return $this;
     }

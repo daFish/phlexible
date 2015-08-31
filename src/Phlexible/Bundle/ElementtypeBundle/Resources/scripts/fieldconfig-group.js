@@ -1,7 +1,7 @@
 Ext.require('Phlexible.elementtype.field.Group');
 Ext.require('Phlexible.element.ElementDataTabHelper');
 
-Phlexible.PluginManager.set('field', 'group', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'group', function (parentConfig, item, valueStructure, element, repeatableId) {
     var minRepeat = parseInt(item.configuration.repeat_min, 10) || 0,
         maxRepeat = parseInt(item.configuration.repeat_max, 10) || 0,
         isRepeatable = minRepeat != maxRepeat || maxRepeat > 1,
@@ -87,7 +87,7 @@ Phlexible.PluginManager.set('field', 'group', function (parentConfig, item, valu
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'group', {
+Phlexible.Storage.set('type', 'group', {
     type: 'group',
     titles: {
         de: 'Gruppe',

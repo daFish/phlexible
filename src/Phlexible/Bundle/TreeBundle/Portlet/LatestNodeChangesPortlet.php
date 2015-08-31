@@ -121,7 +121,7 @@ class LatestNodeChangesPortlet extends Portlet
                 'language'     => $locale,
                 'version'      => 1,
                 'title'        => strip_tags($title),
-                'icon'         => $this->iconResolver->resolveNode($node),
+                'icon'         => '',//$this->iconResolver->resolveNode($node),
                 'modifiedAt'   => $node->getCreatedAt()->format('Y-m-d H:i:s'),
                 'modifyUserId' => $node->getCreateUserId(),
                 'menu'         => $menu

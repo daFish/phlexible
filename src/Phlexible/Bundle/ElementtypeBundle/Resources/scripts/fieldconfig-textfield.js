@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('field', 'textfield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'textfield', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -19,7 +19,7 @@ Phlexible.PluginManager.set('field', 'textfield', function (parentConfig, item, 
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'textfield', {
+Phlexible.Storage.set('type', 'textfield', {
     type: 'textfield',
     titles: {
         de: 'Textfeld',

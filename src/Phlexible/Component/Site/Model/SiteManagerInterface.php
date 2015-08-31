@@ -20,12 +20,12 @@ interface SiteManagerInterface
     /**
      * @param string $id
      *
-     * @return null|Site
+     * @return Site|null
      */
     public function find($id);
 
     /**
-     * @return \Phlexible\Component\Site\Domain\Site[]
+     * @return Site[]
      */
     public function findAll();
 

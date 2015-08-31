@@ -41,7 +41,7 @@ class XmlDumper implements DumperInterface
         $xml->addAttribute('system', $template->getSystem() ? 1 : 0);
         $xml->addAttribute('revision', $template->getRevision());
 
-        foreach ($template->toArray() as $key => $value) {
+        foreach ($template->getParameters() as $key => $value) {
             $parameterNode = $xml->addChild('parameter', $value);
             $parameterNode->addAttribute('key', $key);
         }

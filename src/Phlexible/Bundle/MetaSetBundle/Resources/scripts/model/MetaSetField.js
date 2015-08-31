@@ -16,7 +16,8 @@ Ext.define('Phlexible.metaset.model.MetaSetField', {
         {name: 'required', type: 'boolean'},
         {name: 'metaSetId', reference: {
             type: 'MetaSet',
-            inverse: 'fields'
+            inverse: 'fields',
+            persist: false
         }}
     ],
     validators: {

@@ -44,7 +44,7 @@ class MediaTemplatesControllerTest extends WebTestCase
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $client->request('GET', '/admin/rest/mediatemplates/cm_image--fullsize');
+        $client->request('GET', '/admin/rest/mediatemplates/_mm_small');
         $response = $client->getResponse();
         $content = $response->getContent();
         $data = json_decode($content, true);
@@ -52,7 +52,7 @@ class MediaTemplatesControllerTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertArrayHasKey('mediatemplate', $data);
         $this->assertArrayHasKey('key', $data['mediatemplate']);
-        $this->assertSame('cm_image--fullsize', $data['mediatemplate']['key']);
+        $this->assertSame('_mm_small', $data['mediatemplate']['key']);
     }
 
     /**

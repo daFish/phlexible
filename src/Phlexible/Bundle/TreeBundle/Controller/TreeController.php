@@ -46,7 +46,7 @@ class TreeController extends Controller
     public function treeAction(Request $request)
     {
         $siterootId = $request->get('siterootId');
-        $tid = $request->get('node');
+        $nodeId = $request->get('node');
         $language = $request->get('language');
 
         $treeManager = $this->get('phlexible_tree.tree_manager');
@@ -62,17 +62,21 @@ class TreeController extends Controller
 
         $data = array();
         if ($rootNode) {
-            if ($tid === null || $tid < 1) {
+            if ($nodeId === null || $nodeId < 1) {
                 $data = array($nodeSerializer->serializeNode($rootNode, $language));
             } else {
-                $node = $tree->get($tid);
+                $node = $tree->get($nodeId);
 
                 // check if children of this node should be shown
+                $hideChildren = false;
+                /*
                 $element = $elementService->findElement($node->getContentId());
                 $elementtype = $elementService->findElementtype($element);
+                $hideChildren = $elementtype->getHideChildren();
+                */
 
                 $nodes = $tree->getChildren($node);
-                if (!empty($nodes) && !$elementtype->getHideChildren()) {
+                if (!empty($nodes) && !$hideChildren) {
                     $data = $nodeSerializer->serializeNodes($nodes, $language);
                 }
             }

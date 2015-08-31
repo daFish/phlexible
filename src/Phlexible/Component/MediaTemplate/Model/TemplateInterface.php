@@ -11,6 +11,8 @@
 
 namespace Phlexible\Component\MediaTemplate\Model;
 
+use DateTime;
+
 /**
  * Template interface
  *
@@ -84,31 +86,31 @@ interface TemplateInterface
     public function setRevision($revision);
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt();
 
     /**
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return $this
      */
-    public function setCreatedAt(\DateTime $createdAt);
+    public function setCreatedAt(DateTime $createdAt);
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getModifiedAt();
 
     /**
-     * @param \DateTime $modifiedAt
+     * @param DateTime $modifiedAt
      *
      * @return $this
      */
-    public function setModifiedAt(\DateTime $modifiedAt);
+    public function setModifiedAt(DateTime $modifiedAt);
 
     /**
      * @return array
      */
-    public function toArray();
+    public function getParameters();
 }

@@ -22,7 +22,19 @@ class MetaSetType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //$builder->add('id');
         $builder->add('name');
+        $builder->add('revision', 'integer');
+        $builder->add('createdBy');
+        $builder->add('createdAt', 'datetime', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
+        $builder->add('modifiedBy');
+        $builder->add('modifiedAt', 'datetime', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
         $builder->add('fields', 'collection', array(
             'type'         => new MetaSetFieldType(),
             'allow_add'    => true,
@@ -38,8 +50,8 @@ class MetaSetType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'Phlexible\Component\MetaSet\Model\MetaSet',
-            'csrf_protection'   => false,
+            'data_class'      => 'Phlexible\Component\MetaSet\Domain\MetaSet',
+            'csrf_protection' => false,
         ));
     }
 
@@ -48,6 +60,6 @@ class MetaSetType extends AbstractType
      */
     public function getName()
     {
-        return 'metaset';
+        return 'metaSet';
     }
 }

@@ -4,12 +4,6 @@ Phlexible:
             MediaTemplates:
                 text: Media Templates
 
-        panel:
-            PreviewPanel:
-                title: Preview
-                noPreviewAvailableText: No preview available
-                debugText: Debug
-
         view:
             Main:
                 title: Media templates
@@ -22,6 +16,11 @@ Phlexible:
                 videoText: Video
                 audioText: Audio
                 noFilterText: All
+
+            Preview:
+                title: Preview
+                noPreviewAvailableText: No preview available
+                debugText: Debug
 
             audio:
                 Main:
@@ -83,6 +82,7 @@ Phlexible:
                     qualityText: Quality
                     qualityHelpText: 'Quality of the generated image.'
                     selectCompressionText: 'Please select a compression level'
+                    noCompressionText: 'No compression'
                     compressionText: 'Compression level'
                     compressionHelpText: 'Compression level of the generated image.'
                     selectFilterTypeText: 'Please select a filter type'
@@ -94,9 +94,9 @@ Phlexible:
                     colorspaceRgbText: RGB
                     colorspaceCmykText: CMYK
                     colorspaceGrayText: Grayscale
-                    methodWidthText: 'Fixed Breite'
+                    methodWidthText: 'Fixed width'
                     methodWidthHelpText: 'Image has fixed width and variable height.'
-                    methodHeightText: 'Fixed Höhe'
+                    methodHeightText: 'Fixed height'
                     methodHeightHelpText: 'Image has fixed height and variable width.'
                     methodExactText: 'Exact fit without padding'
                     methodExactHelpText: 'Image has fixed width and height, image might be distorted.'

@@ -1,32 +1,29 @@
 Ext.define('Phlexible.gui.util.Handles', {
-    constructor: function() {
-        this.handles = {};
-    },
-
     /**
-     *
      * @param {String} key
      * @returns {String|Function}
      */
     get: function(key) {
-        return this.handles[key];
+        if (!this.has(key)) {
+            throw new Error("Unknown menu item " + key);
+        }
+
+        return Phlexible.Storage.get('menu', key);
     },
 
     /**
-     *
      * @param {String} key
      * @returns {Boolean}
      */
     has: function(key) {
-        return this.handles[key] !== undefined;
+        return Phlexible.Storage.contains('menu', key);
     },
+
     /**
-     *
-     * @param {String} key
-     * @param {String|Function} name
+     * @deprecated
      */
-    add: function(key, name) {
-        this.handles[key] = name;
+    add: function(key) {
+        throw new Error("Phlexible.gui.util.Handles.add(" + key + ") was called.");
     }
 });
 

@@ -1,8 +1,16 @@
-Ext.define('Phlexible.siteroot.model.EntryPoint', {
+Ext.define('Phlexible.site.model.EntryPoint', {
     extend: 'Ext.data.Model',
 
-    entityName: 'EntryPoint',
+    //entityName: 'SiteEntryPoint',
     fields: [
-        {name: 'id', type: 'string'},
+        {name: 'name', type: 'string'},
+        {name: 'hostname', type: 'string'},
+        {name: 'nodeId', type: 'integer'},
+        {name: 'language', type: 'string'},
+        {name: 'siteId', reference: {
+            type: 'Site',
+            inverse: 'entryPoints',
+            persist: false
+        }}
     ]
 });

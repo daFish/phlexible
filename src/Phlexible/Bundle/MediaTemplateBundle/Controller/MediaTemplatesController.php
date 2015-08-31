@@ -15,11 +15,18 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Phlexible\Bundle\MediaTemplateBundle\Form\Type\AudioTemplateType;
+use Phlexible\Bundle\MediaTemplateBundle\Form\Type\ImageTemplateType;
+use Phlexible\Bundle\MediaTemplateBundle\Form\Type\MediaTemplateType;
+use Phlexible\Bundle\MediaTemplateBundle\Form\Type\VideoTemplateType;
+use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
+use Phlexible\Component\MediaTemplate\Domain\TemplateCollection;
 use Phlexible\Component\MediaTemplate\Model\MediaTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -52,9 +59,9 @@ class MediaTemplatesController extends FOSRestController
         $mediaTemplateManager = $this->get('phlexible_media_template.template_manager');
         $mediaTemplates = $mediaTemplateManager->findAll();
 
-        return array(
-            'mediatemplates' => array_values($mediaTemplates),
-            'count'          => count($mediaTemplates),
+        return new TemplateCollection(
+            $mediaTemplates,
+            count($mediaTemplates)
         );
     }
 
@@ -85,9 +92,7 @@ class MediaTemplatesController extends FOSRestController
             throw new NotFoundHttpException('Media template not found');
         }
 
-        return array(
-            'mediatemplate' => $mediaTemplate,
-        );
+        return $mediaTemplate;
     }
 
     /**
@@ -110,7 +115,7 @@ class MediaTemplatesController extends FOSRestController
      */
     public function postMediatemplatesAction(Request $request)
     {
-        return $this->processForm($request, new MediaTemplate());
+        return $this->processForm($request);
     }
 
     /**
@@ -150,11 +155,29 @@ class MediaTemplatesController extends FOSRestController
      *
      * @return Rest\View|Response
      */
-    private function processForm(Request $request, TemplateInterface $mediaTemplate)
+    private function processForm(Request $request, TemplateInterface $mediaTemplate = null)
     {
-        $statusCode = !$mediaTemplate->getId() ? 201 : 204;
+        $statusCode = !$mediaTemplate ? 201 : 204;
 
-        $form = $this->createForm(new MediaTemplateType(), $mediaTemplate);
+        /*
+        switch ($request->get('mediaTemplate')['type']) {
+            case 'image':
+                $formType = new ImageTemplateType();
+                break;
+            case 'video':
+                $formType = new VideoTemplateType();
+                break;
+            case 'audio':
+                $formType = new AudioTemplateType();
+                break;
+            default:
+                throw new BadRequestHttpException("Invalid or missing type.");
+        }
+        */
+
+        $formType = new ImageTemplateType();
+        $mediaTemplate = new ImageTemplate();
+        $form = $this->createForm($formType, $mediaTemplate);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -168,7 +191,7 @@ class MediaTemplatesController extends FOSRestController
             if (201 === $statusCode) {
                 $response->headers->set('Location',
                     $this->generateUrl(
-                        'phlexible_api_mediatemplate_get_mediatemplate', array('mediaTemplateId' => $mediaTemplate->getId()),
+                        'phlexible_api_mediatemplate_get_mediatemplate', array('mediaTemplateId' => $mediaTemplate->getKey()),
                         true // absolute
                     )
                 );

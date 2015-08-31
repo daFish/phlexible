@@ -38,29 +38,14 @@ class PreviewController extends Controller
      */
     public function imageAction(Request $request)
     {
-        $params = $request->request->all();
-
-        unset($params['module']);
-        unset($params['controller']);
-        unset($params['action']);
-
-        if (empty($params['width'])) {
-            $params['width'] = 100;
-        }
-        if (empty($params['height'])) {
-            $params['height'] = 100;
-        }
-        if (empty($params['xmethod'])) {
-            $params['xmethod'] = 'fit';
-        }
-
-        $previewer = $this->get('phlexible_media_template.previewer.image');
+        $serializer = $this->get('serializer');
+        $previewer = $this->get('phlexible_media_template.previewer');
         $locator = $this->get('file_locator');
 
         $previewImage = 'test_1000_600.jpg';
-        if (isset($params['preview_image'])) {
-            $previewImage = $params['preview_image'];
-            unset($params['preview_image']);
+        if (isset($params['file'])) {
+            $previewImage = $params['file'];
+            unset($params['file']);
             if ($previewImage === '800_600') {
                 $previewImage = "test_$previewImage.png";
             } else {
@@ -68,8 +53,10 @@ class PreviewController extends Controller
             }
         }
 
+        $template = $serializer->deserialize($request->get('params'), 'Phlexible\Component\MediaTemplate\Domain\AbstractTemplate', 'json');
+
         $filePath = $locator->locate("@PhlexibleMediaTemplateBundle/Resources/public/images/$previewImage", null, true);
-        $data = $previewer->create($filePath, $params);
+        $data = $previewer->create($template, $filePath);
 
         return new ResultResponse(true, 'Preview created', $data);
     }
@@ -82,17 +69,14 @@ class PreviewController extends Controller
      */
     public function audioAction(Request $request)
     {
-        $params = $request->request->all();
-
-        unset($params['module']);
-        unset($params['controller']);
-        unset($params['action']);
-
-        $previewer = $this->get('phlexible_media_template.previewer.audio');
+        $serializer = $this->get('serializer');
+        $previewer = $this->get('phlexible_media_template.previewer');
         $locator = $this->get('file_locator');
 
+        $template = $serializer->deserialize($request->get('params'), 'Phlexible\Component\MediaTemplate\Domain\AbstractTemplate', 'json');
+
         $filePath = $locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/audio/test.mp3', null, true);
-        $data = $previewer->create($filePath, $params);
+        $data = $previewer->create($template, $filePath);
 
         return new ResultResponse(true, 'Preview created', $data);
     }
@@ -105,17 +89,14 @@ class PreviewController extends Controller
      */
     public function videoAction(Request $request)
     {
-        $params = $request->request->all();
-
-        unset($params['module']);
-        unset($params['controller']);
-        unset($params['action']);
-
-        $previewer = $this->get('phlexible_media_template.previewer.video');
+        $serializer = $this->get('serializer');
+        $previewer = $this->get('phlexible_media_template.previewer');
         $locator = $this->get('file_locator');
 
+        $template = $serializer->deserialize($request->get('params'), 'Phlexible\Component\MediaTemplate\Domain\AbstractTemplate', 'json');
+
         $filePath = $locator->locate('@PhlexibleMediaTemplateBundle/Resources/public/video/test.mpg', null, true);
-        $data = $previewer->create($filePath, $params);
+        $data = $previewer->create($template, $filePath);
 
         return new ResultResponse(true, 'Preview created', $data);
     }

@@ -48,8 +48,10 @@ Ext.define('Phlexible.mediatemplate.view.audio.Fields', {
         this.items = [
             {
                 xtype: 'combo',
-                name: 'audio_bitrate',
-                value: '',
+                name: 'audioBitrate',
+                bind: {
+                    value: '{list.selection.audioBitrate}'
+                },
                 flex: 1,
                 fieldLabel: this.bitrateText,
                 helpText: this.bitrateHelpText,
@@ -75,8 +77,10 @@ Ext.define('Phlexible.mediatemplate.view.audio.Fields', {
             },
             {
                 xtype: 'combo',
-                name: 'audio_samplerate',
-                value: '',
+                name: 'audioSamplerate',
+                bind: {
+                    value: '{list.selection.audioSamplerate}'
+                },
                 flex: 1,
                 fieldLabel: this.samplerateText,
                 helpText: this.samplerateHelpText,
@@ -98,8 +102,10 @@ Ext.define('Phlexible.mediatemplate.view.audio.Fields', {
             },
             {
                 xtype: 'combo',
-                name: 'audio_samplebits',
-                value: '',
+                name: 'audioSamplebits',
+                bind: {
+                    value: '{list.selection.audioSamplebits}'
+                },
                 flex: 1,
                 fieldLabel: this.samplebitsText,
                 helpText: this.samplebitsHelpText,
@@ -121,8 +127,10 @@ Ext.define('Phlexible.mediatemplate.view.audio.Fields', {
             },
             {
                 xtype: 'combo',
-                name: 'audio_channels',
-                value: '',
+                name: 'audioChannels',
+                bind: {
+                    value: '{list.selection.audioChannels}'
+                },
                 flex: 1,
                 fieldLabel: this.channelsText,
                 helpText: this.channelsHelpText,

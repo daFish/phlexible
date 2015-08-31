@@ -1,6 +1,6 @@
 //xt.require('Ext.ux.netbox.InputTextMask');
 
-Phlexible.PluginManager.set('field', 'timecodefield', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'timecodefield', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -24,7 +24,7 @@ Phlexible.PluginManager.set('field', 'timecodefield', function (parentConfig, it
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'timecodefield', {
+Phlexible.Storage.set('type', 'timecodefield', {
     type: 'timecodefield',
     titles: {
         de: 'Timecodefield',

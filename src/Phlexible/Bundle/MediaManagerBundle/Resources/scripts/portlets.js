@@ -1,4 +1,4 @@
-Phlexible.PluginManager.append('portlet', {
+Phlexible.Storage.append('portlet', {
     id: 'mediamanager-portlet',
     image: '/bundles/phlexibledashboard/images/portlet-plain.png',
     xtype: 'mediamanager-latest-files-portlet',

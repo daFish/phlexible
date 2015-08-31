@@ -1,13 +1,11 @@
 Ext.define('Phlexible.mediatemplate.view.image.Main', {
     extend: 'Ext.panel.Panel',
     requires: [
-        'Phlexible.mediatemplate.view.image.Form',
-        'Phlexible.mediatemplate.view.image.Preview'
+        'Phlexible.mediatemplate.view.image.Form'
     ],
-
     xtype: 'mediatemplate.image.main',
 
-    layout: 'border',
+    layout: 'fit',
 
     initComponent: function () {
         this.initMyItems();
@@ -15,35 +13,66 @@ Ext.define('Phlexible.mediatemplate.view.image.Main', {
         this.callParent(arguments);
     },
 
-    initMyItems: function () {
+    initMyItems: function() {
         this.items = [
             {
                 xtype: 'mediatemplate.image.form',
-                region: 'west',
                 itemId: 'form',
-                width: 320,
-                margin: 5,
+                border: false,
                 listeners: {
-                    saveTemplate: function () {
-                        this.fireEvent('paramssave');
+                    save: function () {
+                        this.fireEvent('save');
                     },
-                    preview: function (params, debug) {
-                        this.getComponent('preview').createPreview(params, debug);
+                    preview: function (file) {
+                        this.fireEvent(
+                            'preview',
+                            this.mediaTemplate,
+                            Phlexible.Router.generate('mediatemplates_preview_image'),
+                            function (data) {
+                                return {
+                                    tag: 'img',
+                                    alt: 'Loading image preview',
+                                    src: Phlexible.Router.generate('mediatemplates_preview_get', {file: data.file, dc: new Date().getTime()}),
+                                    style: {
+                                        border: '1px dotted gray'
+                                    }
+                                };
+                            },
+                            function (data) {
+                                var s = '';
+                                if (data.template) {
+                                    s += data.template + ', ';
+                                }
+                                s += data.width + ' x ' + data.height;
+                                if (data.format) {
+                                    s += ', ' + data.format;
+                                }
+                                if (data.size) {
+                                    s += ', ' + Phlexible.Format.size(data.size);
+                                }
+                                return s;
+                            },
+                            file
+                        );
                     },
                     scope: this
                 }
-            },
-            {
-                xtype: 'mediatemplate.image.preview',
-                itemId: 'preview',
-                region: 'center',
-                margin: '5 5 5 0',
-                header: false
             }
         ];
     },
 
-    loadParameters: function (key, parameters) {
-        this.getComponent('form').loadParameters(key, parameters);
+    setMediaTemplate: function(mediaTemplate) {
+        if (mediaTemplate && mediaTemplate.get('type') === 'image') {
+            this.mediaTemplate = mediaTemplate;
+            this.getComponent('form').enable();
+            this.show();
+        } else {
+            this.mediaTemplate = null;
+            this.getComponent('form').disable();
+        }
+    },
+
+    getMediaTemplate: function() {
+        return this.mediaTemplate;
     }
 });

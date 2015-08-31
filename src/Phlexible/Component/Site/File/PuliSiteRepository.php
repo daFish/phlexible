@@ -9,11 +9,13 @@
 namespace Phlexible\Component\Site\File;
 
 use FluentDOM\Document;
+use JMS\Serializer\Serializer;
 use Phlexible\Component\Site\Domain\Site;
 use Phlexible\Component\Site\File\Dumper\XmlDumper;
 use Phlexible\Component\Site\File\Parser\XmlParser;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\EditableRepository;
+use Puli\Repository\Api\Resource\BodyResource;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -35,6 +37,11 @@ class PuliSiteRepository implements SiteRepositoryInterface
     private $puliRepository;
 
     /**
+     * @var Serializer
+     */
+    private $serializer;
+
+    /**
      * @var string
      */
     private $defaultDumpType;
@@ -50,18 +57,9 @@ class PuliSiteRepository implements SiteRepositoryInterface
     private $puliResourceDir;
 
     /**
-     * @var XmlParser
-     */
-    private $parser;
-
-    /**
-     * @var XmlDumper
-     */
-    private $dumper;
-
-    /**
      * @param ResourceDiscovery  $puliDiscovery
      * @param EditableRepository $puliRepository
+     * @param Serializer         $serializer
      * @param string             $defaultDumpType
      * @param string             $dumpDir
      * @param string             $puliResourceDir
@@ -69,18 +67,17 @@ class PuliSiteRepository implements SiteRepositoryInterface
     public function __construct(
         ResourceDiscovery $puliDiscovery,
         EditableRepository $puliRepository,
+        Serializer $serializer,
         $defaultDumpType,
         $dumpDir,
         $puliResourceDir
     ) {
         $this->puliDiscovery = $puliDiscovery;
         $this->puliRepository = $puliRepository;
+        $this->serializer = $serializer;
         $this->defaultDumpType = $defaultDumpType;
         $this->dumpDir = $dumpDir;
         $this->puliResourceDir = $puliResourceDir;
-
-        $this->parser = new XmlParser($this);
-        $this->dumper = new XmlDumper();
     }
 
     /**
@@ -93,7 +90,7 @@ class PuliSiteRepository implements SiteRepositoryInterface
             foreach ($bindings->getResources() as $resource) {
                 $id = basename($resource->getPath(), '.xml');
                 if (!isset($files[$id])) {
-                    $sites[$id] = $this->parse($this->loadDomFromResource($resource));
+                    $sites[$id] = $this->deserialize($resource->getBody());
                 }
             }
         }
@@ -106,16 +103,26 @@ class PuliSiteRepository implements SiteRepositoryInterface
      */
     public function load($siteId)
     {
-        return $this->parse($this->loadSiteDom($siteId));
+        return $this->deserialize($this->findResource($siteId)->getBody());
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return Site
+     */
+    private function deserialize($content)
+    {
+        return $this->serializer->deserialize($content, 'Phlexible\Component\Site\Domain\Site', $this->defaultDumpType);
     }
 
     /**
      * @param string $siteId
      *
-     * @return Document
+     * @return BodyResource
      * @throws \Exception
      */
-    private function loadSiteDom($siteId)
+    private function findResource($siteId)
     {
         $foundResource = null;
         foreach ($this->puliDiscovery->findByType('phlexible/sites') as $bindings) {
@@ -129,10 +136,10 @@ class PuliSiteRepository implements SiteRepositoryInterface
         }
 
         if (!$foundResource) {
-            throw new \Exception("Resource for $siteId not found.");
+            throw new \Exception("Resource for site $siteId not found.");
         }
 
-        return $this->loadDomFromResource($foundResource);
+        return $foundResource;
     }
 
     /**
@@ -140,7 +147,7 @@ class PuliSiteRepository implements SiteRepositoryInterface
      */
     public function write(Site $site)
     {
-        $content = $this->dumper->dump($site);
+        $content = $this->serializer->serialize($site, $this->defaultDumpType);
 
         $filename = strtolower("{$site->getId()}.xml");
         $path = "{$this->dumpDir}/$filename";
@@ -152,29 +159,5 @@ class PuliSiteRepository implements SiteRepositoryInterface
 
         $resource = new FileResource($path, $resourcePath);
         $this->puliRepository->add($resourcePath, $resource);
-    }
-
-    /**
-     * @param FileResource $resource
-     *
-     * @return Document
-     */
-    private function loadDomFromResource(FileResource $resource)
-    {
-        $dom = new Document();
-        $dom->formatOutput = true;
-        $dom->load($resource->getFilesystemPath());
-
-        return $dom;
-    }
-
-    /**
-     * @param Document $dom
-     *
-     * @return Site
-     */
-    private function parse(Document $dom)
-    {
-        return $this->parser->parse($dom);
     }
 }

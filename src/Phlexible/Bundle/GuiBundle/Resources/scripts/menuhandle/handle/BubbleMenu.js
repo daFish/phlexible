@@ -11,7 +11,6 @@ Ext.define('Phlexible.gui.menuhandle.handle.BubbleMenu', {
             }
 
             handleName = Phlexible.Handles.get(data.children[0].handle);
-            handleName = Phlexible.Handles.get(menuItem.handle);
             if (Ext.isFunction(handleName)) {
                 handler = handleName();
             } else {

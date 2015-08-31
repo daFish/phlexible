@@ -8,25 +8,37 @@
 
 namespace Phlexible\Component\NodeType\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * Node type constraint
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="nodeConstraint")
+ * @Serializer\ExclusionPolicy("all")
  */
 class NodeTypeConstraint
 {
     /**
      * @var string
+     * @Serializer\Type(name="string")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $name;
 
     /**
      * @var bool
+     * @Serializer\Type(name="boolean")
+     * @Serializer\Expose()
+     * @Serializer\XmlAttribute()
      */
     private $allowed;
 
     /**
      * @var array
+     * @Serializer\Type(name="array<string>")
+     * @Serializer\Expose()
      */
     private $nodeTypes;
 

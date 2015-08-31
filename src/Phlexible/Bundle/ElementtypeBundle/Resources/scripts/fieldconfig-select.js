@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('field', 'select', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'select', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeData, storeMode = 'remote', displayField = 'value';
     if (item.configuration.select_source === 'function' && item.configuration.select_function) {
         store = Ext.create('Ext.data.Store', {
@@ -84,7 +84,7 @@ Phlexible.PluginManager.set('field', 'select', function (parentConfig, item, val
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'select', {
+Phlexible.Storage.set('type', 'select', {
     type: 'select',
     titles: {
         de: 'Select',

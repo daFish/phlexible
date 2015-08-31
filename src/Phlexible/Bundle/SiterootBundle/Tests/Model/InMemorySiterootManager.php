@@ -14,10 +14,10 @@ namespace Phlexible\Bundle\SiterootBundle\Tests\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
-use Phlexible\Bundle\SiterootBundle\Entity\Siteroot;
-use Phlexible\Bundle\SiterootBundle\Event\SiterootEvent;
-use Phlexible\Bundle\SiterootBundle\Model\SiterootManagerInterface;
-use Phlexible\Bundle\SiterootBundle\SiterootEvents;
+use Phlexible\Component\Site\Domain\Site;
+use Phlexible\Component\Site\Event\SiteEvent;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
+use Phlexible\Component\Site\SiteEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -25,7 +25,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class InMemorySiterootManager implements SiterootManagerInterface
+class InMemorySiterootManager implements SiteManagerInterface
 {
     /**
      * @var EventDispatcherInterface
@@ -38,9 +38,9 @@ class InMemorySiterootManager implements SiterootManagerInterface
     private $messagePoster;
 
     /**
-     * @var Siteroot[]|ArrayCollection
+     * @var Site[]|ArrayCollection
      */
-    private $siteroots;
+    private $sites;
 
     /**
      * @param EventDispatcherInterface $dispatcher
@@ -53,7 +53,7 @@ class InMemorySiterootManager implements SiterootManagerInterface
         $this->dispatcher = $dispatcher;
         $this->messagePoster = $messagePoster;
 
-        $this->siteroots = new ArrayCollection();
+        $this->sites = new ArrayCollection();
     }
 
     /**
@@ -61,7 +61,7 @@ class InMemorySiterootManager implements SiterootManagerInterface
      */
     public function find($id)
     {
-        return $this->siteroots->get($id);
+        return $this->sites->get($id);
     }
 
     /**
@@ -69,68 +69,68 @@ class InMemorySiterootManager implements SiterootManagerInterface
      */
     public function findAll()
     {
-        return $this->siteroots->toArray();
+        return $this->sites->toArray();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateSiteroot(Siteroot $siteroot)
+    public function updateSite(Site $site)
     {
-        if ($this->siteroots->contains($siteroot)) {
-            $event = new SiterootEvent($siteroot);
-            if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_UPDATE_SITEROOT, $event)->isPropagationStopped()) {
+        if ($this->sites->contains($site)) {
+            $event = new SiteEvent($site);
+            if ($this->dispatcher->dispatch(SiteEvents::BEFORE_UPDATE_SITE, $event)->isPropagationStopped()) {
                 return;
             }
 
-            $this->siteroots->set($siteroot->getId(), $siteroot);
+            $this->sites->set($site->getId(), $site);
 
-            $event = new SiterootEvent($siteroot);
-            $this->dispatcher->dispatch(SiterootEvents::UPDATE_SITEROOT, $event);
+            $event = new SiteEvent($site);
+            $this->dispatcher->dispatch(SiteEvents::UPDATE_SITE, $event);
         } else {
-            $event = new SiterootEvent($siteroot);
-            if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_CREATE_SITEROOT, $event)->isPropagationStopped()) {
+            $event = new SiteEvent($site);
+            if ($this->dispatcher->dispatch(SiteEvents::BEFORE_CREATE_SITE, $event)->isPropagationStopped()) {
                 return;
             }
 
-            if (null === $siteroot->getId()) {
-                $this->applyIdentifier($siteroot);
+            if (null === $site->getId()) {
+                $this->applyIdentifier($site);
             }
 
-            $this->siteroots->set($siteroot->getId(), $siteroot);
+            $this->sites->set($site->getId(), $site);
 
-            $event = new SiterootEvent($siteroot);
-            $this->dispatcher->dispatch(SiterootEvents::CREATE_SITEROOT, $event);
+            $event = new SiteEvent($site);
+            $this->dispatcher->dispatch(SiteEvents::CREATE_SITE, $event);
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function deleteSiteroot(Siteroot $siteroot)
+    public function deleteSite(Site $site)
     {
-        $event = new SiterootEvent($siteroot);
-        if ($this->dispatcher->dispatch(SiterootEvents::BEFORE_DELETE_SITEROOT, $event)->isPropagationStopped()) {
+        $event = new SiteEvent($site);
+        if ($this->dispatcher->dispatch(SiteEvents::BEFORE_DELETE_SITE, $event)->isPropagationStopped()) {
             return;
         }
 
-        $this->siteroots->removeElement($siteroot);
+        $this->sites->removeElement($site);
 
-        $event = new SiterootEvent($siteroot);
-        $this->dispatcher->dispatch(SiterootEvents::DELETE_SITEROOT, $event);
+        $event = new SiteEvent($site);
+        $this->dispatcher->dispatch(SiteEvents::DELETE_SITE, $event);
     }
 
     /**
      * Apply UUID as identifier when entity doesn't have one yet.
      *
-     * @param Siteroot $siteroot
+     * @param Site $site
      */
-    private function applyIdentifier(Siteroot $siteroot)
+    private function applyIdentifier(Site $site)
     {
-        $reflectionClass = new \ReflectionClass(get_class($siteroot));
+        $reflectionClass = new \ReflectionClass(get_class($site));
 
         $reflectionProperty = $reflectionClass->getProperty('id');
         $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($siteroot, Uuid::generate());
+        $reflectionProperty->setValue($site, Uuid::generate());
     }
 }

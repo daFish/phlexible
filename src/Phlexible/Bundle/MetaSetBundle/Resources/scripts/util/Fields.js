@@ -1,12 +1,12 @@
 Ext.define('Phlexible.metaset.util.Fields', {
     constructor: function () {
-        this.initFields();
-        this.initEditors();
-        this.initSelectEditorCallbacks();
-        this.initBeforeEditCallbacks();
-        this.initAfterEditCallbacks();
+        this.fields = {};
+        this.editors = {};
+        this.selectEditorCallbacks = {};
+        this.beforeEditCallbacks = {};
+        this.afterEditCallbacks = {};
 
-        this.callParent(arguments);
+        this.initFields();
     },
 
     getFields: function () {
@@ -15,64 +15,49 @@ Ext.define('Phlexible.metaset.util.Fields', {
 
     getStoreData: function () {
         var data = [];
-        for (var key in this.fields) {
-            if (!this.fields.hasOwnProperty(key)) {
-                continue;
-            }
-            data.push([key, this.fields[key].title]);
-        }
+        Ext.Object.each(this.fields, function(key, field) {
+            data.push([key, field.title]);
+        });
         return data;
     },
 
     getEditors: function () {
         var editors = [];
-        for (var key in this.fields) {
-            if (!this.fields.hasOwnProperty(key)) {
-                continue;
+        Ext.Object.each(this.fields, function(key, field) {
+            if (field.editor) {
+                editors.push([key, field.editor]);
             }
-            if (this.fields[key].editor) {
-                editors.push([key, this.fields[key].editor]);
-            }
-        }
+        });
         return editors;
     },
 
     getSelectEditorCallbacks: function () {
-        var callbacks = {}, key;
-        for (key in this.fields) {
-            if (!this.fields.hasOwnProperty(key)) {
-                continue;
+        var callbacks = {};
+        Ext.Object.each(this.fields, function(key, field) {
+            if (typeof field.selectEditorCallback === 'function') {
+                callbacks[key] = field.selectEditorCallback;
             }
-            if (typeof this.fields[key].selectEditorCallback === 'function') {
-                callbacks[key] = this.fields[key].selectEditorCallback;
-            }
-        }
+        });
         return callbacks;
     },
 
     getBeforeEditCallbacks: function () {
-        var callbacks = {}, key;
-        for (key in this.fields) {
-            if (!this.fields.hasOwnProperty(key)) {
-                continue;
+        var callbacks = {};
+        Ext.Object.each(this.fields, function(key, field) {
+            if (typeof field.beforeEditCallback === 'function') {
+                callbacks[key] = field.beforeEditCallback;
             }
-            if (typeof this.fields[key].beforeEditCallback === 'function') {
-                callbacks[key] = this.fields[key].beforeEditCallback;
-            }
-        }
+        });
         return callbacks;
     },
 
     getAfterEditCallbacks: function () {
-        var callbacks = {}, key;
-        for (key in this.fields) {
-            if (!this.fields.hasOwnProperty(key)) {
-                continue;
+        var callbacks = {};
+        Ext.Object.each(this.fields, function(key, field) {
+            if (typeof field.afterEditCallback === 'function') {
+                callbacks[key] = field.afterEditCallback;
             }
-            if (typeof this.fields[key].afterEditCallback === 'function') {
-                callbacks[key] = this.fields[key].afterEditCallback;
-            }
-        }
+        });
         return callbacks;
     },
 
@@ -80,21 +65,41 @@ Ext.define('Phlexible.metaset.util.Fields', {
         return this.fields[key];
     },
 
-    initEditors: function () {
-        this.editors = {
-            textfield: {
-                xtype: 'textfield'
-            },
-            textarea: {
-                xtype: 'textarea'
-            },
-            date: {
-                xtype: 'datefield',
-                format: 'd.m.Y'
-            },
-            'boolean': {
-                xtype: 'combo',
-                store: Ext.create('Ext.data.Store', {
+    set: function(key, field) {
+        if (!field.title) {
+            throw new Error('Title is required.');
+        }
+
+        if (!field.editor) {
+            field.editor = null;
+        }
+        if (!field.configure) {
+            field.configure = Ext.emptyFn;
+        }
+        if (!field.validate) {
+            field.validate = Ext.emptyFn;
+        }
+
+        this.fields[key] = field;
+    },
+
+    initFields: function () {
+        this.set('textfield', {
+            title: 'Textfield',
+            editor: new Ext.form.TextField()
+        });
+        this.set('textarea', {
+            title: 'Textarea',
+            editor: new Ext.form.TextArea()
+        });
+        this.set('date', {
+            title: 'Date',
+            editor: new Ext.form.DateField({format: 'd.m.Y'})
+        });
+        this.set('boolean', {
+            title: 'Boolean',
+            editor: new Ext.form.ComboBox({
+                store: new Ext.data.SimpleStore({
                     fields: ['value'],
                     data: [
                         ['true'],
@@ -106,9 +111,12 @@ Ext.define('Phlexible.metaset.util.Fields', {
                 triggerAction: 'all',
                 editable: false,
                 typeAhead: false
-            },
-            select: {
-                store: Ext.create('Ext.data.Store', {
+            })
+        });
+        this.set('select', {
+            title: 'Select',
+            editor: new Ext.form.ComboBox({
+                store: new Ext.data.SimpleStore({
                     fields: ['key', 'value']
                 }),
                 valueField: 'key',
@@ -117,38 +125,17 @@ Ext.define('Phlexible.metaset.util.Fields', {
                 triggerAction: 'all',
                 editable: false,
                 typeAhead: false
-            }
-        };
-    },
-
-    initSelectEditorCallbacks: function () {
-        this.selectEditorCallbacks = {
-            select: function (editor, record) {
+            }),
+            selectEditorCallback: function (editor, record) {
                 var options = Phlexible.clone(record.data.options);
                 if (!record.data.required) {
                     options.unshift(['', '(' + Phlexible.elements.Strings.empty + ')']);
                 }
                 editor.field.store.loadData(options);
-            }
-        };
-    },
-
-    initBeforeEditCallbacks: function () {
-        this.beforeEditCallbacks = {
-            suggest: function (grid, field, record) {
-                if (grid.master !== undefined) {
-                    var isSynchronized = (1 == record.get('synchronized'));
-
-                    // skip editing english values if language is synchronized
-                    if (!grid.master && isSynchronized) {
-                        return false;
-                    }
-                }
-
-                var w = Ext.create('Phlexible.datasource.window.MetaSuggestWindow', {
-                    record: record,
-                    valueField: field,
-                    metaLanguage: grid.language,
+            },
+            configure: function (record) {
+                var w = new Phlexible.metasets.SelectConfigurationWindow({
+                    options: record.get('options'),
                     listeners: {
                         store: function (options) {
                             record.set('options', options);
@@ -166,6 +153,6 @@ Ext.define('Phlexible.metaset.util.Fields', {
 
                 return true;
             }
-        };
+        });
     }
 });

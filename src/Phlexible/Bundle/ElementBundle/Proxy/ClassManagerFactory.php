@@ -54,7 +54,7 @@ class ClassManagerFactory
             $classManagerFile = $this->generator->generate($elementtypes);
         }
 
-        $classManager = include_once $classManagerFile;
+        $classManager = include $classManagerFile;
 
         return $classManager;
     }

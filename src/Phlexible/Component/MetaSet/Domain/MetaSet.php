@@ -12,6 +12,7 @@
 namespace Phlexible\Component\MetaSet\Domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Component\MetaSet\Model\MetaSetFieldInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -48,7 +49,7 @@ class MetaSet implements MetaSetInterface
     /**
      * @var string
      */
-    private $createUser;
+    private $createdBy;
 
     /**
      * @var \DateTime
@@ -59,7 +60,7 @@ class MetaSet implements MetaSetInterface
     /**
      * @var string
      */
-    private $modifyUser;
+    private $modifiedBy;
 
     /**
      * @var \DateTime
@@ -72,6 +73,7 @@ class MetaSet implements MetaSetInterface
      */
     public function __construct()
     {
+        $this->id = Uuid::generate();
         $this->revision = 1;
         $this->fields = new ArrayCollection();
         $this->createdAt = new \DateTime();
@@ -208,17 +210,17 @@ class MetaSet implements MetaSetInterface
     /**
      * {@inheritdoc}
      */
-    public function getCreateUser()
+    public function getCreatedBy()
     {
-        return $this->createUser;
+        return $this->createdBy;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setCreateUser($createUser)
+    public function setCreatedBy($createdBy)
     {
-        $this->createUser = $createUser;
+        $this->createdBy = $createdBy;
 
         return $this;
     }
@@ -244,17 +246,17 @@ class MetaSet implements MetaSetInterface
     /**
      * {@inheritdoc}
      */
-    public function getModifyUser()
+    public function getModifiedBy()
     {
-        return $this->modifyUser;
+        return $this->modifiedBy;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setModifyUser($modifyUser)
+    public function setModifiedBy($modifiedBy)
     {
-        $this->modifyUser = $modifyUser;
+        $this->modifiedBy = $modifiedBy;
 
         return $this;
     }

@@ -13,7 +13,7 @@ Ext.define('Phlexible.elementtype.util.Registry', {
      * @returns {Boolean}
      */
     has: function (key) {
-        return Phlexible.PluginManager.contains('field', key);
+        return Phlexible.Storage.contains('field', key);
     },
 
     /**
@@ -25,7 +25,7 @@ Ext.define('Phlexible.elementtype.util.Registry', {
             throw new Error("Field factory " + key + ' not registered.');
         }
 
-        return Phlexible.PluginManager.get('field', key);
+        return Phlexible.Storage.get('field', key);
     },
 
     /**

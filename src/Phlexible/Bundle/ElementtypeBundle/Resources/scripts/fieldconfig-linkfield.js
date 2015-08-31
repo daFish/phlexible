@@ -1,6 +1,6 @@
 Ext.require('Phlexible.elementtype.field.LinkField');
 
-Phlexible.PluginManager.set('field', 'link', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'link', function (parentConfig, item, valueStructure, element, repeatableId) {
     var config = Phlexible.fields.FieldHelper.defaults(parentConfig, item, valueStructure, element, repeatableId);
 
     Ext.apply(config, {
@@ -44,7 +44,7 @@ Phlexible.PluginManager.set('field', 'link', function (parentConfig, item, value
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'link', {
+Phlexible.Storage.set('type', 'link', {
     type: 'link',
     titles: {
         de: 'Link',

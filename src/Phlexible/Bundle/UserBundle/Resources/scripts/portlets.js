@@ -1,4 +1,4 @@
-Phlexible.PluginManager.append('portlet', {
+Phlexible.Storage.append('portlet', {
     id: 'online-portlet',
     image: '/bundles/phlexibledashboard/images/portlet-plain.png',
     xtype: 'users-online-portlet',

@@ -4,6 +4,7 @@ services:
         arguments:
             - @puli.discovery
             - @puli.repository
+            - @serializer
             - "xml"
             - "%kernel.root_dir%/Resources/sites"
             - "/tipfinder/sites"

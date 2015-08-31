@@ -6,7 +6,7 @@ Ext.define('Phlexible.gui.menuhandle.handle.Group', {
 
         if (data.children && Ext.isArray(data.children)) {
             Ext.each(data.children, function (menuItem) {
-                var handleName, handler;
+                var handleName, handler, btnConfig;
 
                 if (!Phlexible.Handles.has(menuItem.handle)) {
                     Phlexible.Logger.error('Invalid handle in:', menuItem);
@@ -37,10 +37,16 @@ Ext.define('Phlexible.gui.menuhandle.handle.Group', {
                     handler.setParameters(menuItem.parameters);
                 }
 
-                btns.push(handler.createConfig(menuItem));
+                btnConfig = handler.createConfig(menuItem);
+                if (btnConfig) {
+                    btns.push(btnConfig);
+                }
             }, this);
         }
 
-        return btns;
+        return {
+            xtype: 'buttongroup',
+            items: btns
+        };
     }
 });

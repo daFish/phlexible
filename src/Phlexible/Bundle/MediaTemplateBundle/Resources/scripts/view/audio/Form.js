@@ -11,8 +11,6 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
     disabled: true,
     layout: 'accordion',
 
-    debugPreview: false,
-
     audioText: '_audioText',
     bitrateText: '_bitrateText',
     bitrateHelpText: '_bitrateHelpText',
@@ -24,7 +22,6 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
     channelsHelpText: '_channelsHelpText',
     saveText: '_saveText',
     previewText: '_previewText',
-    debugText: '_debugText',
 
     initComponent: function () {
         this.initMyItems();
@@ -48,36 +45,24 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
             itemId: 'tbar',
             items: [
                 {
+                    itemId: 'saveBtn',
                     text: this.saveText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.SAVE),
-                    itemId: 'saveBtn',
-                    handler: this.saveParameters,
+                    formBind: true,
+                    handler: function() {
+                        this.fireEvent('save');
+                    },
                     scope: this
                 },
                 '->',
                 {
-                    xtype: 'splitbutton',
                     text: this.previewText,
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.PREVIEW),
+                    formBind: true,
                     handler: function () {
-                        var values = this.getForm().getValues();
-
-                        values.template = this.templateKey;
-                        values.debug = this.debugPreview;
-
-                        this.fireEvent('preview', values, this.debugPreview);
+                        this.fireEvent('preview');
                     },
-                    scope: this,
-                    menu: [
-                        {
-                            text: this.debugText,
-                            checked: this.debugPreview,
-                            checkHandler: function (checkItem, checked) {
-                                this.debugPreview = checked;
-                            },
-                            scope: this
-                        }
-                    ]
+                    scope: this
                 }
             ]
         }];
@@ -86,41 +71,9 @@ Ext.define('Phlexible.mediatemplate.view.audio.Form', {
     initMyListeners: function() {
         this.on({
             clientvalidation: function (f, valid) {
-                this.getDockedComponent('tbar').getComponent('saveBtn').setDisabled(!valid);
-            },
-            scope: this
-        });
-    },
-
-    loadParameters: function (key, parameters) {
-        this.templateKey = key;
-
-        this.setTitle(key);
-
-        this.getForm().reset();
-        this.getForm().setValues(parameters);
-
-        this.enable();
-    },
-
-    saveParameters: function () {
-        this.getForm().submit({
-            url: Phlexible.Router.generate('mediatemplates_form_save'),
-            params: {
-                templateKey: this.templateKey
-            },
-            success: function (form, action) {
-                var data = Ext.decode(action.response.responseText);
-                if (data.success) {
-                    Phlexible.success('Success', data.msg);
-                    this.fireEvent('paramssave');
-                }
-                else {
-                    Ext.Msg.alert('Failure', data.msg);
-                }
+                //this.getDockedComponent('tbar').getComponent('saveBtn').setDisabled(!valid);
             },
             scope: this
         });
     }
-
 });

@@ -1,4 +1,4 @@
 siteroots:
     parent: config
-    handle: siteroots
-    roles: [ROLE_SITEROOTS]
+    handle: sites
+    roles: [ROLE_SITES]

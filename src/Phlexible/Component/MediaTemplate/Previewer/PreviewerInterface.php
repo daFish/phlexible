@@ -11,6 +11,8 @@
 
 namespace Phlexible\Component\MediaTemplate\Previewer;
 
+use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
+
 /**
  * Previewer interface
  *
@@ -19,10 +21,17 @@ namespace Phlexible\Component\MediaTemplate\Previewer;
 interface PreviewerInterface
 {
     /**
-     * @param string $filePath
-     * @param array  $params
+     * @param TemplateInterface $template
+     *
+     * @return bool
+     */
+    public function accept(TemplateInterface $template);
+
+    /**
+     * @param TemplateInterface $template
+     * @param string            $filePath
      *
      * @return array
      */
-    public function create($filePath, array $params);
+    public function create(TemplateInterface $template, $filePath);
 }

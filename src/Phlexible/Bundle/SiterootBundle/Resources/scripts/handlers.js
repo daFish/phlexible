@@ -1,2 +1,2 @@
-Ext.require('Phlexible.siteroot.handler.Siteroots');
-Phlexible.Handles.add('siteroots', 'Phlexible.siteroot.handler.Siteroots');
+Ext.require('Phlexible.site.handler.Sites');
+Phlexible.Storage.set('menu', 'sites', 'Phlexible.site.handler.Sites');

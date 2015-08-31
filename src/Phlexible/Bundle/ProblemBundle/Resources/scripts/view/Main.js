@@ -42,7 +42,7 @@ Ext.define('Phlexible.problem.view.Main', {
             region: 'center',
             reference: 'list',
             padding: 5,
-            bind: '{problems}',
+            bind: '{problems}'
         },{
             region: 'south',
             layout: 'form',

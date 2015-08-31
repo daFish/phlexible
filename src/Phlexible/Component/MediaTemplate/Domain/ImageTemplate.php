@@ -8,67 +8,91 @@
 
 namespace Phlexible\Component\MediaTemplate\Domain;
 
+use JMS\Serializer\Annotation as Serializer;
+
 /**
  * Image template
  *
  * @author Stephan Wentz <sw@brainbits.net>
+ * @Serializer\XmlRoot(name="mediaTemplate")
+ * @Serializer\ExclusionPolicy("all")
  */
 class ImageTemplate extends AbstractTemplate
 {
-    const TYPE_IMAGE = 'image';
+    /**
+     * @var int
+     * @Serializer\Expose()
+     * @Serializer\Type("integer")
+     */
+    private $width;
 
     /**
      * @var int
+     * @Serializer\Expose()
+     * @Serializer\Type("integer")
      */
-    private $width = 0;
-
-    /**
-     * @var int
-     */
-    private $height = 0;
+    private $height;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $method;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $scale;
 
     /**
      * @var bool
+     * @Serializer\Expose()
+     * @Serializer\Type("boolean")
      */
     private $forWeb = false;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $format;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $colorspace;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $tiffCompression;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $depth;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $quality;
 
     /**
      * @var string
+     * @Serializer\Expose()
+     * @Serializer\Type("string")
      */
     private $backgroundcolor;
 
@@ -77,7 +101,7 @@ class ImageTemplate extends AbstractTemplate
      */
     public function getType()
     {
-        return self::TYPE_IMAGE;
+        return 'image';
     }
 
     /**
@@ -303,20 +327,20 @@ class ImageTemplate extends AbstractTemplate
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function getParameters()
     {
         return array(
-            'width'            => $this->width,
-            'height'           => $this->height,
-            'method'           => $this->method,
-            'scale'            => $this->scale,
-            'for_web'          => $this->forWeb,
-            'format'           => $this->format,
-            'colorspace'       => $this->colorspace,
-            'tiff_compression' => $this->tiffCompression,
-            'depth'            => $this->depth,
-            'quality'          => $this->quality,
-            'backgroundcolor'  => $this->backgroundcolor,
+            'width'            => $this->getWidth(),
+            'height'           => $this->getHeight(),
+            'method'           => $this->getMethod(),
+            'scale'            => $this->getScale(),
+            'for_web'          => $this->isForWeb(),
+            'format'           => $this->getFormat(),
+            'colorspace'       => $this->getColorspace(),
+            'tiff_compression' => $this->getTiffCompression(),
+            'depth'            => $this->getDepth(),
+            'quality'          => $this->getQuality(),
+            'backgroundcolor'  => $this->getBackgroundcolor(),
         );
     }
 }

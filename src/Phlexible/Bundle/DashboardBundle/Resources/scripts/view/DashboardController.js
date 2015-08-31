@@ -23,7 +23,7 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
         Phlexible.Logger.debug('DashboardController.init()');
 
         Phlexible.dashboard.Portlets = Ext.create('Phlexible.dashboard.store.Portlets');
-        Phlexible.PluginManager.each('portlet', function(item) {
+        Phlexible.Storage.each('portlet', function(item) {
             Phlexible.dashboard.Portlets.add(Ext.create('Phlexible.dashboard.model.Portlet', item));
         });
 

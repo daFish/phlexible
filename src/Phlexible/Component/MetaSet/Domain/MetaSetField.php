@@ -11,6 +11,7 @@
 
 namespace Phlexible\Component\MetaSet\Domain;
 
+use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Component\MetaSet\Model\MetaSetFieldInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
@@ -69,6 +70,14 @@ class MetaSetField implements MetaSetFieldInterface
      * @var MetaSet
      */
     private $metaSet;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->id = Uuid::generate();
+    }
 
     /**
      * {@inheritdoc}

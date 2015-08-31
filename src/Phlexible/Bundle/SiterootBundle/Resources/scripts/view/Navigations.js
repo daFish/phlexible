@@ -1,17 +1,14 @@
-Ext.define('Phlexible.siteroot.view.Navigations', {
+Ext.define('Phlexible.site.view.Navigations', {
     extend: 'Ext.grid.Panel',
 
-    xtype: 'siteroot.navigations',
+    xtype: 'site.navigations',
 
     border: false,
     emptyText: '_emptyText',
 
-    titleText: '_titleText',
-    handlerText: '_handlerText',
-    startTidText: '_startTidText',
+    nameText: '_nameText',
+    nodeIdText: '_startTidText',
     maxDepthText: '_maxDepthText',
-    flagsText: '_flagsText',
-    additionalText: '_additionalText',
     removeText: '_removeText',
     removeDescriptionText: '_removeDescriptionText',
     addNavigationText: '_addNavigationText',
@@ -29,22 +26,16 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
     initMyColumns: function() {
         this.columns = [
             {
-                header: this.titleText,
-                dataIndex: 'title',
+                header: this.nameText,
+                dataIndex: 'name',
                 editor: {
                     xtype: 'textfield'
                 },
                 flex: 1
             },
             {
-                header: this.handlerText,
-                dataIndex: 'handler',
-                width: 150,
-                hidden: true
-            },
-            {
-                header: this.startTidText,
-                dataIndex: 'startTreeId',
+                header: this.nodeIdText,
+                dataIndex: 'nodeId',
                 editor: {
                     xtype: 'numberfield'
                 },
@@ -59,63 +50,10 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
                 width: 80
             },
             {
-                header: this.flagsText,
-                dataIndex: 'flags',
-                editor: {
-                    xtype: 'numberfield'
-                },
-                width: 80,
-                hidden: true
-            },
-            {
-                header: this.additionalText,
-                dataIndex: 'additional',
-                editor: {
-                    xtype: 'textfield'
-                },
-                width: 100,
-                hidden: true
-            },
-            {
                 xtype: 'actioncolumn',
                 header: this.actionsText,
                 width: 60,
                 items: [
-                    {
-                        iconCls: Phlexible.Icon.get('wrench'),
-                        hideIndex: 'hide_config',
-                        tooltip: '_configure',
-                        handler: function (grid, rowIndex, colIndex) {
-                            var r = grid.store.getAt(rowIndex);
-
-                            switch (r.get('handler')) {
-                                case 'Siteroot':
-                                    var w = Ext.create('Phlexible.siteroot.window.SiterootNavigationWindow', {
-                                        record: r,
-                                        siterootId: this.siterootId
-                                    });
-
-                                    w.show();
-
-                                    break;
-                            }
-                        },
-                        scope: this
-                    },
-                    {
-                        iconCls: Phlexible.Icon.get('flag'),
-                        tooltip: this.flagsText,
-                        handle: function (grid, rowIndex, colIndex) {
-                            var r = grid.store.getAt(rowIndex);
-
-                            var w = Ext.create('Phlexible.siteroot.window.NavigationFlagsWindow', {
-                                record: r
-                            });
-
-                            w.show();
-                        },
-                        scope: this
-                    },
                     {
                         iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                         tooltip: this.removeText,
@@ -161,9 +99,9 @@ Ext.define('Phlexible.siteroot.view.Navigations', {
      */
     onAddNavigation: function () {
         // create new empty record
-        var navigation = Ext.create('Phlexible.siteroot.model.Navigation', {
+        var navigation = Ext.create('Phlexible.site.model.Navigation', {
             id: '',
-            siteroot_id: this.siterootId,
+            site_id: this.siteId,
             title: '',
             handler: '',
             supports: 0,

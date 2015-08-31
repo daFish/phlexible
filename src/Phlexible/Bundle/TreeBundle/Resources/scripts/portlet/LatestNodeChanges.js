@@ -1,40 +1,17 @@
-Ext.provide('Phlexible.tree.model.LatestNodeChange');
-Ext.provide('Phlexible.tree.portlet.LatestNodeChanges');
+Ext.define('Phlexible.tree.portlet.LatestNodeChanges', {
+    extend: 'Ext.dashboard.Panel',
+    xtype: 'widget.tree-portlet-late-node-changes',
 
-Ext.require('Ext.ux.Portlet');
-
-Phlexible.tree.model.LatestNodeChange = Ext.data.Record.create([
-    {name: 'nodeId', type: 'int'},
-    {name: 'language', type: 'string'},
-    {name: 'version', type: 'int'},
-    {name: 'title', type: 'string'},
-    {name: 'icon', type: 'string'},
-    {name: 'modifiedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
-    {name: 'modifyUserId', type: 'string'},
-    {name: 'menu'}
-]);
-
-Phlexible.tree.portlet.LatestNodeChanges = Ext.extend(Ext.ux.Portlet, {
-    title: Phlexible.elements.Strings.latest_element_changes,
-    strings: Phlexible.elements.Strings,
+    title: 'tree.portlet',
     iconCls: 'p-element-portlet-icon',
     extraCls: 'elements-portlet',
     bodyStyle: 'padding: 5px',
 
     initComponent: function () {
-        this.store = new Ext.data.SimpleStore({
-            fields: Phlexible.tree.model.LatestNodeChange,
-            id: 'nodeId',
-            sortInfo: {field: 'modifieddAt', direction: 'DESC'}
+        this.store = Ext.create('Ext.data.Store', {
+            model: 'Phlexible.tree.model.LatestNodeChange',
+            data: this.record.get('data')
         });
-
-        var data = this.record.get('data');
-        if (data) {
-            Ext.each(data, function (item) {
-                item.time = new Date(item.time * 1000);
-                this.add(new Phlexible.tree.model.LatestNodeChange(item, item.nodeId));
-            }, this.store);
-        }
 
         this.items = [
             {
@@ -124,5 +101,3 @@ Phlexible.tree.portlet.LatestNodeChanges = Ext.extend(Ext.ux.Portlet, {
         this.store.sort('modifieddAt', 'DESC');
     }
 });
-
-Ext.reg('tree-portlet-late-node-changes', Phlexible.tree.portlet.LatestNodeChanges);

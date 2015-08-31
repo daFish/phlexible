@@ -8,7 +8,6 @@
 
 namespace Phlexible\Component\MediaTemplate\File;
 
-use Phlexible\Component\MediaTemplate\Domain\TemplateCollection;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
@@ -19,14 +18,14 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 interface TemplateRepositoryInterface
 {
     /**
-     * @return TemplateCollection
+     * @return array
      */
     public function loadAll();
 
     /**
      * @param string $key
      *
-     * @return TemplateInterface
+     * @return TemplateInterface|null
      */
     public function load($key);
 

@@ -1,4 +1,4 @@
-Phlexible.PluginManager.set('field', 'suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
+Phlexible.Storage.set('field', 'suggest', function (parentConfig, item, valueStructure, element, repeatableId) {
     var store, storeMode = 'local';
 
     if (item.configuration.suggest_source) {
@@ -82,7 +82,7 @@ Phlexible.PluginManager.set('field', 'suggest', function (parentConfig, item, va
     return config;
 });
 
-Phlexible.PluginManager.set('type', 'suggest', {
+Phlexible.Storage.set('type', 'suggest', {
     type: 'suggest',
     titles: {
         de: 'Suggest',

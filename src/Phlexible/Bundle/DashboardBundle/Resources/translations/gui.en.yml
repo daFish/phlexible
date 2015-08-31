@@ -5,9 +5,7 @@ Phlexible:
                 infoText: 'No text'
 
             Welcome:
-                welcomeToText: '{title} {version}'
                 addPortletText: 'Add portlet'
-                changeLayoutText: 'Change layout'
         view:
             Dashboard:
                 title: Dashboard
