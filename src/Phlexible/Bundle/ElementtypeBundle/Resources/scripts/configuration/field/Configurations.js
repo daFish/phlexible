@@ -7,7 +7,6 @@ Ext.define('Phlexible.elementtype.configuration.field.Configurations', {
         'Phlexible.elementtype.configuration.field.ConfigurationLabel',
         'Phlexible.elementtype.configuration.field.ConfigurationLink',
         'Phlexible.elementtype.configuration.field.ConfigurationSelect',
-        'Phlexible.elementtype.configuration.field.ConfigurationSuggest',
         'Phlexible.elementtype.configuration.field.ConfigurationTable'
     ],
     xtype: 'elementtype.configuration.field.configurations',
@@ -150,10 +149,6 @@ Ext.define('Phlexible.elementtype.configuration.field.Configurations', {
             },
             {
                 xtype: 'elementtype.configuration.field.select',
-                additional: true
-            },
-            {
-                xtype: 'elementtype.configuration.field.suggest',
                 additional: true
             },
             {

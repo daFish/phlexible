@@ -28,12 +28,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class TreeSaver
 {
     /**
-     * @var \Phlexible\Component\Elementtype\ElementtypeService
+     * @var ElementtypeService
      */
     private $elementtypeService;
 
     /**
-     * @param \Phlexible\Component\Elementtype\ElementtypeService $elementtypeService
+     * @param ElementtypeService $elementtypeService
      */
     public function __construct(ElementtypeService $elementtypeService)
     {

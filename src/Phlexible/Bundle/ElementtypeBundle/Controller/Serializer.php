@@ -11,10 +11,10 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Phlexible\Bundle\ElementtypeBundle\ElementtypeService;
-use Phlexible\Bundle\ElementtypeBundle\Model\Elementtype;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructure;
-use Phlexible\Bundle\ElementtypeBundle\Model\ElementtypeStructureNode;
+use Phlexible\Component\Elementtype\ElementtypeService;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
+use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
  * Class Serializer
@@ -171,7 +171,7 @@ class Serializer
                 $children = $structure->getChildNodes($node->getDsId());
                 $referenceRoot = $children[0];
 
-                $tmp['text'] = $referenceElementtype->getTitle($language) . ' [v' . $referenceElementtype->getRevision() . ']';
+                $tmp['text'] = $referenceElementtype->getName() . ' [v' . $referenceElementtype->getRevision() . ']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
                 $tmp['reference'] = array('refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision());

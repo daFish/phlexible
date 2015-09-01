@@ -33,7 +33,7 @@ services:
 
     phlexible_element.element_meta_data_manager:
         class: Phlexible\Bundle\ElementBundle\Meta\ElementMetaDataManager
-        arguments: [@doctrine.orm.entity_manager, @phlexible_data_source.data_source_manager, "element_meta"]
+        arguments: [@doctrine.orm.entity_manager, "element_meta"]
 
     phlexible_element.util.suggest_field:
         class: Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil

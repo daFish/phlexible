@@ -6,8 +6,8 @@ Phlexible.fields.FieldTypes = Ext.create('Phlexible.elementtype.util.Types');
 Phlexible.fields.FieldHelper = Ext.create('Phlexible.elementtype.util.Helper');
 
 Phlexible.elementtype.Format = {
-    title: function (title, meta, record) {
-        return '<img src="' + Phlexible.bundleAsset('/phlexibleelementtype/elementtypes/' + record.get('icon')) + '" width="18" height="18" border="0" alt="' + title + '" style="vertical-align: middle;" /> ' + title;
+    title: function (name, md, elementtype) {
+        return '<img src="' + Phlexible.bundleAsset('/phlexibleelementtype/elementtypes/' + elementtype.get('icon')) + '" width="18" height="18" border="0" alt="' + name + '" style="vertical-align: middle;" /> ' + name;
     },
 
     status: function (status, meta, record) {

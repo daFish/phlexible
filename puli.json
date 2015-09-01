@@ -11,7 +11,6 @@
         "/phlexible/phlexiblecontentchannel/scripts": "src/Phlexible/Bundle/ContentchannelBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/scripts": "src/Phlexible/Bundle/DashboardBundle/Resources/scripts",
         "/phlexible/phlexibledashboard/styles": "src/Phlexible/Bundle/DashboardBundle/Resources/styles",
-        "/phlexible/phlexibledatasource/scripts": "src/Phlexible/Bundle/DataSourceBundle/Resources/scripts",
         "/phlexible/phlexibleelement/menu": "src/Phlexible/Bundle/ElementBundle/Resources/menu",
         "/phlexible/phlexibleelement/scripts": "src/Phlexible/Bundle/ElementBundle/Resources/scripts",
         "/phlexible/phlexibleelement/styles": "src/Phlexible/Bundle/ElementBundle/Resources/styles",
@@ -86,10 +85,6 @@
         "275795b7-4d09-52ab-8895-e3b35bedfc97": {
             "query": "/phlexible/phlexibledashboard/styles/**/*.css",
             "type": "phlexible/styles"
-        },
-        "4893b4e8-fe37-560b-b969-4fc54c0b41b7": {
-            "query": "/phlexible/phlexibledatasource/scripts/**/*.js",
-            "type": "phlexible/scripts"
         },
         "f5ee43fe-44b1-593e-8c79-1cc51b4dd5dc": {
             "query": "/phlexible/phlexibleelement/menu/*.yml",

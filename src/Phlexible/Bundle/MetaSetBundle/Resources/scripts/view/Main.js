@@ -317,8 +317,10 @@ Ext.define('Phlexible.metaset.view.Main', {
     configureField: function(view, rowIndex, colIndex, item, e, field) {
         var win;
 
+        // TODO: event, datasource-bundle
+        /*
         if (field.get('type') === 'suggest') {
-            win = Ext.create('Phlexible.datasource.window.SuggestConfigurationWindow', {
+            win = Eet.create('Phlexible.datasource.window.SuggestConfigurationWindow', {
                 options: field.get('options'),
                 listeners: {
                     select: function(options) {
@@ -328,8 +330,11 @@ Ext.define('Phlexible.metaset.view.Main', {
                 }
             });
             win.show();
+            return;
         }
-        else if (field.get('type') === 'select') {
+        */
+
+        if (field.get('type') === 'select') {
             win = Ext.create('Phlexible.metaset.window.SelectConfigurationWindow', {
                 options: field.get('options'),
                 listeners: {
@@ -340,6 +345,7 @@ Ext.define('Phlexible.metaset.view.Main', {
                 }
             });
             win.show();
+            return;
         }
     },
 

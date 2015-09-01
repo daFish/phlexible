@@ -7,15 +7,17 @@ Phlexible:
         view:
             Main:
                 title: 'Media types'
-                emptyText: 'No mimetypes'
                 mimetypesText: Mimetypes
                 mimetypeText: Mimetype
+                noMimetypesText: 'No mimetypes'
+                iconsText: Icons
 
             List:
                 title: 'Media types'
                 nameText: Name
-                sizesText: Sizes
+                categoryText: Category
+                attributesText: Attributes
+                iconText: Icon
                 mimetypesText: Mimetypes
-                noMimetypesText: 'No mimetypes'
                 reloadText: Reload
                 iconsForText: 'Icons for "{0}"'

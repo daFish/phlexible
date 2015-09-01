@@ -27,7 +27,8 @@ Ext.define('Phlexible.mediatype.view.Main', {
 
     mimetypesText: '_mimetypesText',
     mimetypeText: '_mimetypeText',
-    emptyText: '_emptyText',
+    noMimetypesText: '_noMimetypesText',
+    iconsText: '_iconsText',
 
     initComponent: function () {
         this.initMyItems();
@@ -44,9 +45,6 @@ Ext.define('Phlexible.mediatype.view.Main', {
                 padding: 5,
                 bind: {
                     store: '{mediatypes}'
-                },
-                listeners: {
-                    mediaTypeChange: 'onChangeMediaType'
                 }
             },
             {
@@ -54,21 +52,27 @@ Ext.define('Phlexible.mediatype.view.Main', {
                 layout: 'border',
                 region: 'east',
                 itemId: 'east',
-                width: 400,
+                width: 300,
                 border: false,
                 items: [{
+                    region: 'north',
                     xtype: 'grid',
-                    region: 'center',
+                    height: 220,
                     title: this.mimetypesText,
-                    emptyText: this.emptyText,
+                    emptyText: this.noMimetypesText,
                     stripeRows: true,
                     padding: '5 5 5 0',
                     viewConfig: {
                         deferEmptyText: false
                     },
+                    store: Ext.create("Ext.data.Store", {
+                        fields: ['mimetype']
+                    }),
+                    /*
                     bind: {
                         store: '{list.selection.mimetypes}'
                     },
+                    */
                     columns: [
                         {
                             header: this.mimetypeText,
@@ -79,18 +83,19 @@ Ext.define('Phlexible.mediatype.view.Main', {
                     ]
                 },{
                     xtype: 'panel',
-                    componentId: 'icons',
-                    region: 'south',
-                    height: 280,
+                    title: this.iconsText,
+                    region: 'center',
                     padding: '0 5 5 0',
                     bodyStyle: 'background: white; background: linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(135deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 15px 15px, linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .4) 0%) 0 0, #cbdbef; background-size: 30px 30px;',
                     bodyPadding: 10,
                     html: '',
                     bind: {
-                        html: '<img width="16" height="16" src="/bundles/phlexiblemediamanager/svg/{list.selection.svg}.svg" />' +
-                        '<img width="32" height="32" src="/bundles/phlexiblemediamanager/svg/{list.selection.svg}.svg" />' +
-                        '<img width="48" height="48" src="/bundles/phlexiblemediamanager/svg/{list.selection.svg}.svg" />' +
-                        '<img width="256" height="256" src="/bundles/phlexiblemediamanager/svg/{list.selection.svg}.svg" />'
+                        html: '<div style="text-align: center;">' +
+                            '<div>16x16<br/><img width="16" height="16" src="/bundles/phlexiblemediamanager/svg/{list.selection.icon}.svg" /></div><hr/>' +
+                            '<div>32x32<br/><img width="32" height="32" src="/bundles/phlexiblemediamanager/svg/{list.selection.icon}.svg" /><div/><hr/>' +
+                            '<div>64x64<br/><img width="64" height="64" src="/bundles/phlexiblemediamanager/svg/{list.selection.icon}.svg" /><div/><hr/>' +
+                            '<div>256x256<br/><img width="256" height="256" src="/bundles/phlexiblemediamanager/svg/{list.selection.icon}.svg" /><div/>' +
+                            '</div>'
                     }
                 }]
             }

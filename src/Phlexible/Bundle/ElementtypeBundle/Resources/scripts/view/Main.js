@@ -5,7 +5,6 @@ Ext.define('Phlexible.elementtype.view.Main', {
         'Phlexible.elementtype.view.List',
         'Phlexible.elementtype.view.Tree',
         'Phlexible.elementtype.view.Usage',
-        'Phlexible.elementtype.view.Viability',
         'Phlexible.elementtype.configuration.Root',
         'Phlexible.elementtype.configuration.Field'
     ],
@@ -59,6 +58,8 @@ Ext.define('Phlexible.elementtype.view.Main', {
                 itemId: 'tabs',
                 margin: 5,
                 activeTab: 0,
+                border: true,
+                plain: true,
                 deferredRender: false,
                 items: [
                     {
@@ -116,17 +117,19 @@ Ext.define('Phlexible.elementtype.view.Main', {
                                         }
                                     },
                                     {
+                                        xtype: 'container',
                                         layout: 'card',
                                         itemId: 'cards',
                                         region: 'center',
                                         margin: '5 5 5 0',
-                                        border: true,
+                                        border: false,
                                         frame: false,
                                         items: [
                                             {
                                                 xtype: 'elementtype.configuration.root',
                                                 itemId: 'root-config',
-                                                border: false,
+                                                border: true,
+                                                plain: true,
                                                 listeners: {
                                                     saveRoot: this.onSaveRoot,
                                                     scope: this
@@ -135,7 +138,8 @@ Ext.define('Phlexible.elementtype.view.Main', {
                                             {
                                                 xtype: 'elementtype.configuration.field',
                                                 itemId: 'field-config',
-                                                border: false,
+                                                border: true,
+                                                plain: true,
                                                 listeners: {
                                                     saveField: this.onSaveField,
                                                     scope: this
@@ -146,11 +150,6 @@ Ext.define('Phlexible.elementtype.view.Main', {
                                 ]
                             }
                         ]
-                    },
-                    {
-                        xtype: 'elementtype.viability',
-                        itemId: 'viability',
-                        disabled: true
                     },
                     {
                         xtype: 'elementtype.usage',
@@ -229,10 +228,6 @@ Ext.define('Phlexible.elementtype.view.Main', {
         return this.getStructurePanel().getComponent('structure2');
     },
 
-    getViabilityTab: function () {
-        return this.getMainTabPanel().getComponent('viability');
-    },
-
     getUsageTab: function () {
         return this.getMainTabPanel().getComponent('usage');
     },
@@ -269,7 +264,6 @@ Ext.define('Phlexible.elementtype.view.Main', {
         //this.getRootTabs().clear();
         //this.getFieldTabs().clear();
         this.getEditTreePanel().load(elementtype);
-        this.getViabilityTab().load(elementtype);
         this.getUsageTab().load(elementtype);
     },
 

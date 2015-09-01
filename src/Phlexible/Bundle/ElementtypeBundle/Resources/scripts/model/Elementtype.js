@@ -3,10 +3,9 @@ Ext.define('Phlexible.elementtype.model.Elementtype', {
     entityName: 'Elementtype',
     fields: [
         {name: 'id', type: 'string'},
-        {name: 'uniqueId', type: 'string'},
+        {name: 'name', type: 'string'},
         {name: 'revision', type: 'int'},
         {name: 'type', type: 'string'},
-        {name: 'titles'},
         {name: 'icon', type: 'string'},
         {name: 'defaultTab', type: 'string'},
         {name: 'hideChildren', type: 'bool'},
@@ -24,8 +23,19 @@ Ext.define('Phlexible.elementtype.model.Elementtype', {
         {
             name: 'title',
             calculate: function (data) {
-                return data.titles.de;
+                return data.name;
             }
         }
-    ]
+    ],
+    proxy: {
+        type: 'ajax',
+        url: Phlexible.Router.generate('phlexible_api_elementtype_get_elementtypes'),
+        reader: {
+            type: 'json',
+            rootProperty: 'elementtypes',
+            idProperty: 'id',
+            totalProperty: 'total',
+            keepRawData: true
+        }
+    }
 });

@@ -155,7 +155,12 @@ Ext.define('Phlexible.elementtype.configuration.field.Properties', {
 
         if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
             values.debugDsId = node.get('dsId');
-            values.debugDump = JSON.stringify(node.data, null, '  ');
+            values.debugDump = JSON.stringify(node.data, function (key, value) {
+                if (key === 'children') {
+                    return undefined;
+                }
+                return value;
+            }, '  ');
         }
 
         this.getForm().setValues(values);

@@ -17,8 +17,7 @@ Ext.define('Phlexible.elementtype.configuration.root.Properties', {
         anchor: '100%'
     },
 
-    titleText: '_titleText',
-    uniqueIdText: '_uniqueIdText',
+    nameText: '_nameText',
     iconText: '_iconText',
     defaultTabText: '_defaultTabText',
     noDefaultTabText: '_noDefaultTabText',
@@ -40,16 +39,9 @@ Ext.define('Phlexible.elementtype.configuration.root.Properties', {
         this.items = [
             {
                 xtype: 'textfield',
-                name: 'title',
-                fieldLabel: this.titleText,
+                name: 'name',
+                fieldLabel: this.nameText,
                 allowBlank: false
-            },
-            {
-                xtype: 'textfield',
-                name: 'uniqueId',
-                fieldLabel: this.uniqueIdText,
-                allowBlank: false,
-                regex: /^[a-z0-9-_]+$/
             },
             {
                 xtype: 'textfield',
@@ -220,8 +212,7 @@ Ext.define('Phlexible.elementtype.configuration.root.Properties', {
 
     loadProperties: function(properties, node) {
         var values = {
-            title: properties.title || '',
-            uniqueId: properties.uniqueId || '',
+            name: properties.name || '',
             icon: properties.icon || '',
             defaultTab: properties.defaultTab || '',
             defaultContentTab: properties.defaultContentTab || '',
@@ -236,7 +227,7 @@ Ext.define('Phlexible.elementtype.configuration.root.Properties', {
         }
 
         if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
-            values.debugDump = JSON.stringify(node.data, function replacer(key, value) {
+            values.debugDump = JSON.stringify(node.data, function (key, value) {
                 if (key === 'children') {
                     return undefined;
                 }

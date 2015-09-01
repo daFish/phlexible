@@ -1,18 +1,18 @@
 Ext.define('Phlexible.mediatype.model.MediaType', {
     extend: 'Ext.data.Model',
-    requires: [
+    xequires: [
         'Phlexible.mediatype.model.MimeType'
     ],
 
     entityName: 'MediaType',
-    idProperty: 'id',
     fields: [
         {name: 'name', type: 'string'},
         {name: 'category', type: 'string'},
-        {name: 'svg', type: 'string'},
-        {name: 'titles'},
         {name: 'mimetypes'},
-        {name: 'icons'}
+        {name: 'attributes'},
+        {name: 'icon', calculate: function(data) {
+            return data.attributes.icon || 'document';
+        }}
     ],
     proxy: {
         type: 'rest',

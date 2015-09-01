@@ -8,8 +8,9 @@ Ext.define('Phlexible.mediatype.view.List', {
 
     nameText: '_nameText',
     mimetypesText: '_mimetypesText',
-    noMimetypesText: '_noMimetypesText',
-    sizesText: '_sizesText',
+    categoryText: '_categoryText',
+    attributesText: '_attributesText',
+    iconText: '_iconText',
     reloadText: '_reloadText',
     iconsForText: '_iconsForText',
 
@@ -26,33 +27,38 @@ Ext.define('Phlexible.mediatype.view.List', {
                 header: this.nameText,
                 dataIndex: 'name',
                 sortable: true,
-                flex: 1
+                width: 150
             },
             {
-                header: 'de', //this.strings.type,
-                dataIndex: 'titles',
-                sortable: true,
-                flex: 2,
-                renderer: function(v) {
-                    return v.en;
-                }
+                header: this.categoryText,
+                dataIndex: 'category',
+                width: 150
             },
             {
-                header: 'en', //this.strings.type,
-                dataIndex: 'titles',
-                sortable: true,
-                flex: 2,
-                renderer: function(v) {
-                    return v.en;
-                }
+                header: this.iconText,
+                dataIndex: 'icon',
+                width: 150
             },
             {
-                header: this.sizesText,
-                dataIndex: 'icons',
+                header: this.mimetypesText,
+                dataIndex: 'mimetypes',
                 sortable: false,
                 flex: 1,
                 renderer: function(v) {
-                    return Ext.Object.getKeys(v).join(',');
+                    if (Ext.isEmpty(v)) {
+                        return '&nbsp;';
+                    }
+                    return v.join(', ');
+                }
+            },
+            {
+                header: this.attributesText,
+                dataIndex: 'attributes',
+                sortable: false,
+                width: 200,
+                hidden: true,
+                renderer: function(v) {
+                    return JSON.stringify(v);
                 }
             }
         ];

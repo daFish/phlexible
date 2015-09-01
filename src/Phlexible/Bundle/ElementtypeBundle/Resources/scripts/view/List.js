@@ -68,16 +68,6 @@ Ext.define('Phlexible.elementtype.view.List', {
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.elementtype.model.Elementtype',
-            proxy: {
-                type: 'ajax',
-                url: Phlexible.Router.generate('phlexible_api_elementtype_get_elementtypes'),
-                reader: {
-                    type: 'json',
-                    rootProperty: 'elementtypes',
-                    idProperty: 'id',
-                    totalProperty: 'total'
-                }
-            },
             autoLoad: true,
             sorters: [{
                 property: 'title',
@@ -123,7 +113,7 @@ Ext.define('Phlexible.elementtype.view.List', {
             },
             {
                 header: this.nameText,
-                dataIndex: 'title',
+                dataIndex: 'name',
                 flex: 1,
                 resizable: false,
                 renderer: Phlexible.elementtype.Format.title
@@ -149,11 +139,7 @@ Ext.define('Phlexible.elementtype.view.List', {
                     var id = 'new_' + Ext.id(),
                         elementtype = new Phlexible.elementtype.model.Elementtype({
                             new: 1,
-                            uniqueId: id,
-                            titles: {
-                                de: id,
-                                en: id
-                            },
+                            name: id,
                             revision: 1,
                             type: this.filterType,
                             createdAt: new Date(),

@@ -33,24 +33,17 @@ class MetaDataManager implements MetaDataManagerInterface
     private $entityManager;
 
     /**
-     * @var DataSourceManagerInterface
-     */
-    private $dataSourceManager;
-
-    /**
      * @var string
      */
     private $tableName;
 
     /**
-     * @param EntityManager              $entityManager
-     * @param DataSourceManagerInterface $dataSourceManager
-     * @param string                     $tableName
+     * @param EntityManager $entityManager
+     * @param string        $tableName
      */
-    public function __construct(EntityManager $entityManager, DataSourceManagerInterface $dataSourceManager, $tableName)
+    public function __construct(EntityManager $entityManager, $tableName)
     {
         $this->entityManager = $entityManager;
-        $this->dataSourceManager = $dataSourceManager;
         $this->tableName = $tableName;
     }
 
@@ -134,6 +127,8 @@ class MetaDataManager implements MetaDataManagerInterface
 
                 $value = $metaData->get($field->getName(), $language);
 
+                // TODO: event, datasource-bundle
+                /*
                 if ('suggest' === $field->getType()) {
                     $dataSourceId = $field->getOptions();
                     $dataSource = $this->dataSourceManager->find($dataSourceId);
@@ -142,6 +137,7 @@ class MetaDataManager implements MetaDataManagerInterface
                     }
                     $this->dataSourceManager->updateDataSource($dataSource);
                 }
+                */
 
                 $insertData = $baseData;
 
