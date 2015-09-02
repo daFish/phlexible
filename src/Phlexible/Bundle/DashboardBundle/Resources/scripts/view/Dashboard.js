@@ -3,8 +3,10 @@
  */
 Ext.define('Phlexible.dashboard.view.Dashboard', {
     extend: 'Ext.dashboard.Dashboard',
-
-    requires: ['Ext.dashboard.Dashboard', 'Phlexible.dashboard.view.DashboardController'],
+    requires: [
+        'Ext.dashboard.Dashboard',
+        'Phlexible.dashboard.view.DashboardController'
+    ],
 
     xtype: 'dashboard.dashboard',
     controller: 'dashboard.dashboard',
