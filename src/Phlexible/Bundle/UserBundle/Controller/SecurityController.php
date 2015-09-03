@@ -26,15 +26,13 @@ use Symfony\Component\Security\Core\Security;
 class SecurityController extends BaseSecurityController
 {
     /**
+     * @param Request $request
      * @return Response
      * @Route("/login", name="fos_user_security_login")
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
-        $request = $this->container->get('request');
-        /* @var $request Request */
         $session = $request->getSession();
-        /* @var $session Session */
 
         // get the error if any (works with forward and redirect -- see below)
         if ($request->attributes->has(Security::AUTHENTICATION_ERROR)) {

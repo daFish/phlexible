@@ -12,8 +12,8 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Builder;
 
 use Phlexible\Bundle\GuiBundle\Compressor\CompressorInterface;
-use Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -24,9 +24,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 class TranslationsBuilder
 {
     /**
-     * @var CatalogAccessor
+     * @var TranslatorInterface|TranslatorBagInterface
      */
-    private $catalogAccessor;
+    private $translator;
 
     /**
      * @var CompressorInterface
@@ -44,18 +44,18 @@ class TranslationsBuilder
     private $debug;
 
     /**
-     * @param CatalogAccessor     $catalogAccessor
+     * @param TranslatorInterface $translator
      * @param CompressorInterface $javascriptCompressor
      * @param string              $cacheDir
      * @param bool                $debug
      */
     public function __construct(
-        CatalogAccessor $catalogAccessor,
+        TranslatorInterface $translator,
         CompressorInterface $javascriptCompressor,
         $cacheDir,
         $debug
     ) {
-        $this->catalogAccessor = $catalogAccessor;
+        $this->translator = $translator;
         $this->javascriptCompressor = $javascriptCompressor;
         $this->cacheDir = $cacheDir;
         $this->debug = $debug;
@@ -72,8 +72,8 @@ class TranslationsBuilder
      */
     public function build($locale, $fallbackLocale = 'en', $domain = 'gui')
     {
-        $fallbackCatalogue = $this->catalogAccessor->getCatalogues($fallbackLocale);
-        $catalogue = $this->catalogAccessor->getCatalogues($locale);
+        $fallbackCatalogue = $this->translator->getCatalogue($fallbackLocale);
+        $catalogue = $this->translator->getCatalogue($locale);
 
         $t = array();
 

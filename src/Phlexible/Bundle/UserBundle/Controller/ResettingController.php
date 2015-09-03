@@ -15,6 +15,7 @@ use FOS\UserBundle\Controller\ResettingController as BaseResettingController;
 use FOS\UserBundle\Model\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -44,9 +45,9 @@ class ResettingController extends BaseResettingController
      * @return Response
      * @Route("/resetting/send-email", name="fos_user_resetting_send_email")
      */
-    public function sendEmailAction()
+    public function sendEmailAction(Request $request)
     {
-        $username = $this->container->get('request')->request->get('username');
+        $username = $request->get('username');
 
         /** @var $user UserInterface */
         $user = $this->container->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
@@ -84,9 +85,9 @@ class ResettingController extends BaseResettingController
      * @return Response
      * @Route("/resetting/check-email", name="fos_user_resetting_check_email")
      */
-    public function checkEmailAction()
+    public function checkEmailAction(Request $request)
     {
-        $session = $this->container->get('session');
+        $session = $request->getSession();
         $email = $session->get(static::SESSION_EMAIL);
         $session->remove(static::SESSION_EMAIL);
 
@@ -109,7 +110,7 @@ class ResettingController extends BaseResettingController
      * @return Response
      * @Route("/resetting/reset/{token}", name="fos_user_resetting_reset")
      */
-    public function resetAction($token)
+    public function resetAction(Request $request, $token)
     {
         $user = $this->container->get('fos_user.user_manager')->findUserByConfirmationToken($token);
 
