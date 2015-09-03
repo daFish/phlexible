@@ -12,7 +12,6 @@ Ext.define('Phlexible.user.model.User', {
         {name: 'comment', type: 'string'},
         {name: 'username', type: 'string'},
         {name: 'email', type: 'string'},
-        {name: 'salt', type: 'string'},
         {name: 'plainPassword', type: 'string'},
         {name: 'confirmationToken', type: 'string'},
         {name: 'expired', type: 'boolean'},
@@ -30,7 +29,8 @@ Ext.define('Phlexible.user.model.User', {
         //{name: 'createUser', type: 'string'},
         {name: 'modifiedAt', type: 'date'},
         //{name: 'modifyUser', type: 'string'},
-        {name: 'extra'}
+        {name: 'extra'},
+        {name: 'notify', default: false, persist: false}
     ],
     proxy: {
         type: 'rest',
@@ -39,13 +39,24 @@ Ext.define('Phlexible.user.model.User', {
         reader: {
             type: 'json',
             rootProperty: 'users',
-            totalProperty: 'count'
+            totalProperty: 'total'
         },
         writer: {
             type: 'json',
-            writeAllFields: true,
+            allDataOptions: {
+                persist: true,
+                associated: true
+            },
+            partialDataOptions: {
+                persist: true,
+                changes: false,
+                critical: true,
+                associated: true
+            },
+            writeRecordId: false,
             transform: function(data, request) {
-                // do some manipulation of the unserialized data object
+                data.modifiedAt = new Date();
+
                 return {user: data};
             }
         }

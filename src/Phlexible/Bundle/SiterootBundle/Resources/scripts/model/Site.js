@@ -46,7 +46,6 @@ Ext.define('Phlexible.site.model.Site', {
             },
             writeRecordId: false,
             transform: function(data, request) {
-                // do some manipulation of the unserialized data object
                 data.modifiedAt = new Date();
                 data.modifiedBy = Phlexible.User.getUsername();
 

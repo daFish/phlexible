@@ -55,9 +55,9 @@ class Group implements GroupInterface
 
     /**
      * @var string
-     * @ORM\Column(name="create_user", type="string")
+     * @ORM\Column(name="created_by", type="string")
      */
-    private $createUser;
+    private $createdBy;
 
     /**
      * @var \DateTime
@@ -67,9 +67,9 @@ class Group implements GroupInterface
 
     /**
      * @var string
-     * @ORM\Column(name="modify_user", type="string")
+     * @ORM\Column(name="modified_by", type="string")
      */
-    private $modifyUser;
+    private $modifiedBy;
 
     /**
      * @var User[]|ArrayCollection
@@ -201,19 +201,19 @@ class Group implements GroupInterface
     /**
      * @return string
      */
-    public function getCreateUser()
+    public function getCreatedBy()
     {
-        return $this->createUser;
+        return $this->createdBy;
     }
 
     /**
-     * @param string $createUser
+     * @param string $createdBy
      *
      * @return $this
      */
-    public function setCreateUser($createUser)
+    public function setCreatedBy($createdBy)
     {
-        $this->createUser = $createUser;
+        $this->createdBy = $createdBy;
 
         return $this;
     }
@@ -241,19 +241,19 @@ class Group implements GroupInterface
     /**
      * @return string
      */
-    public function getModifyUser()
+    public function getModifiedBy()
     {
-        return $this->modifyUser;
+        return $this->modifiedBy;
     }
 
     /**
-     * @param string $modifyUser
+     * @param string $modifiedBy
      *
      * @return $this
      */
-    public function setModifyUser($modifyUser)
+    public function setModifiedBy($modifiedBy)
     {
-        $this->modifyUser = $modifyUser;
+        $this->modifiedBy = $modifiedBy;
 
         return $this;
     }

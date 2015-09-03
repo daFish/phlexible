@@ -24,10 +24,16 @@ class GroupType extends AbstractType
     {
         $builder->add('name');
         $builder->add('comment');
-        $builder->add('createdAt', 'datetime');
-        $builder->add('createUser', 'text');
-        $builder->add('modifiedAt', 'datetime');
-        $builder->add('modifyUser', 'text');
+        $builder->add('createdAt', 'datetime', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
+        $builder->add('createdBy', 'text');
+        $builder->add('modifiedAt', 'datetime', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
+        $builder->add('modifiedBy', 'text');
     }
 
     /**

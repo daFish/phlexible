@@ -13,6 +13,11 @@ Ext.define('Phlexible.user.view.users.List', {
     stripeRows: true,
     loadMask: true,
 
+    selModel: {
+        selType: 'rowmodel',
+        mode: 'MULTI'
+    },
+
     idText: '_id',
     usernameText: '_username',
     emailText: '_email',
@@ -38,10 +43,7 @@ Ext.define('Phlexible.user.view.users.List', {
     deleteUserWarningText: '_delete_user_warning',
 
     initComponent: function(){
-        this.initMyStoreExtraParams();
-        this.initMyStore();
         this.initMyColumns();
-        this.initMySelModel();
         this.initMyTbarItems();
         this.initMyDockedItems();
         this.initMyListeners();
@@ -50,46 +52,6 @@ Ext.define('Phlexible.user.view.users.List', {
         delete this.tbarItems;
 
         this.callParent(arguments);
-    },
-
-    initMyStoreExtraParams: function() {
-        this.storeExtraParams = {};
-    },
-
-    initMyStore: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            model: 'Phlexible.user.model.User',
-            autoLoad: true,
-            pageSize: 100,
-            remoteSort: true,
-            sorters: [{
-                property: 'username',
-                direction: 'ASC'
-            }],
-            listeners: {
-                beforeload: function(store) {
-                    store.getProxy().extraParams = this.filterHelper.getSetValues();
-
-                    // TODO: workaround due to extjs-4.2.1 buffered store load bug
-                    this.getSelectionModel().deselectAll();
-                },
-                load: function() {
-                    this.fireEvent('storeReload', this, this.store);
-                },
-                /*
-                // TODO: enable on buffered paging
-                totalcountchange: function() {
-                    var tb = this.getDockedComponent('tbar'),
-                        store = this.getStore(),
-                        formatText = Ext.Object.getSize(this.filterHelper.getSetValues()) ? this.filteredUsersText: this.totalUsersText ,
-                        cntText = Ext.String.format(formatText, store.getTotalCount());
-
-                    tb.getComponent('countBtn').setText(cntText);
-                },
-                */
-                scope: this
-            }
-        });
     },
 
     initMyColumns: function() {
@@ -160,14 +122,20 @@ Ext.define('Phlexible.user.view.users.List', {
             sortable: false,
             width: 80,
             renderer: this.flagsRenderer
+        }, {
+            xtype: 'actioncolumn',
+            width: 30,
+            items: [{
+                iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
+                tooltip: this.deleteText,
+                handler: function (grid, rowIndex, colIndex, item, e, user) {
+                    if (user) {
+                        this.store.remove(user);
+                    }
+                },
+                scope: this
+            }]
         }];
-    },
-
-    initMySelModel: function() {
-        this.selModel = {
-            selType: 'rowmodel',
-            mode: 'MULTI'
-        };
     },
 
     initMyTbarItems: function() {
@@ -180,14 +148,6 @@ Ext.define('Phlexible.user.view.users.List', {
                 iconCls: Phlexible.Icon.get(Phlexible.Icon.ADD),
                 handler: this.addUser,
                 scope: this
-            });
-            this.tbarItems.push({
-                itemId: 'deleteBtn',
-                text: this.deleteUserText,
-                iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
-                handler: this.deleteUser,
-                scope: this,
-                disabled: true
             });
         }
 
@@ -289,7 +249,9 @@ Ext.define('Phlexible.user.view.users.List', {
                 mode: 'add',
                 user: user,
                 listeners: {
-                    save: function() {
+                    create: function(user) {
+                        this.store.add(user);
+
                         this.store.sync();
                     },
                     scope: this
@@ -304,7 +266,7 @@ Ext.define('Phlexible.user.view.users.List', {
             mode: 'edit',
             user: user,
             listeners: {
-                save: function(){
+                update: function(user){
                     this.store.sync();
                 },
                 scope: this

@@ -57,13 +57,11 @@ Ext.define('Phlexible.site.view.List', {
                 items: [{
                     iconCls: Phlexible.Icon.get(Phlexible.Icon.DELETE),
                     tooltip: this.removeText,
-                    handler: function (grid, rowIndex, colIndex) {
-                        var r = grid.getStore().getAt(rowIndex);
-
+                    handler: function (grid, rowIndex, colIndex, item, e, siteroot) {
                         Ext.MessageBox.confirm(
                             this.removeText,
                             this.removeDescriptionText,
-                            this.onDeleteSite.createDelegate(this, [r], true)
+                            this.onDeleteSite.createDelegate(this, [siteroot], true)
                         );
                     },
                     scope: this

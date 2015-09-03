@@ -39,7 +39,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
     },
 
     initMyItems: function() {
-        var xtypes = Phlexible.Storage.get('userEditCards'),
+        var xtypes = Phlexible.Storage.getSection('userEditCards'),
             tabs = [],
             mode = this.mode,
             user = this.user;
@@ -170,10 +170,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
 
     doSave: function(notify) {
         var tabs = this.getComponent('tabs'),
-            valid = true,
-            params = {},
-            jsonData = {},
-            url, method;
+            valid = true;
 
         tabs.items.each(function(panel) {
             if (!panel.isValid()) {
@@ -185,77 +182,19 @@ Ext.define('Phlexible.user.window.UserWindow', {
             return;
         }
 
-        if (notify) {
-            params[notify] = notify;
-        }
+        this.user.set('notify', !!notify);
 
         tabs.items.each(function(panel) {
             if (!Ext.isFunction(panel.applyToUser)) {
                 return;
             }
             panel.applyToUser(this.user);
-            return;
-
-            var values = panel.getValues(),
-                key;
-
-            Ext.Object.each(values, function(key, value)  {
-                jsonData[key] = value;
-            });
         });
-
-        this.fireEvent('save');
-        return;
-        this.user.save();
-        return;
 
         if (this.user.phantom) {
-            /*
-             Phlexible.Rest.put('phlexible_api_user_post_users', {notify: notify}, jsonData);
-             Phlexible.Rest.put({
-             route: 'phlexible_api_user_put_user',
-             params: {userId: this.userId, notify: notify},
-             jsonData: jsonData
-             });
-             */
-
-            url = Phlexible.Router.generate('phlexible_api_user_post_users');
-            method = 'POST';
+            this.fireEvent('create', this.user);
         } else {
-            /*
-             Phlexible.Rest.put('phlexible_api_user_put_user', {userId: this.userId, notify: notify}, jsonData);
-             Phlexible.Rest.put({
-             route: 'phlexible_api_user_put_user',
-             params: {userId: this.userId, notify: notify},
-             jsonData: jsonData
-             });
-             */
-
-            url = Phlexible.Router.generate('phlexible_api_user_put_user', {userId: this.user.get('id')});
-            method = 'PUT';
-        }
-        jsonData = Ext.clone(this.user.data);
-        Phlexible.console.log(url);
-        Phlexible.console.log(method);
-        Phlexible.console.log(jsonData);
-        return;
-
-        Ext.Ajax.request({
-            url: url,
-            method: method,
-            params: params,
-            jsonData: jsonData,
-            success: this.onSaveSuccess,
-            scope: this
-        });
-    },
-
-    onSaveSuccess: function(response) {
-        var data = Ext.decode(response.responseText);
-
-        if (data.success) {
-            this.fireEvent('save', this.user.id);
-            this.close();
+            this.fireEvent('update', this.user);
         }
     }
 });

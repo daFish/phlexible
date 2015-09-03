@@ -90,12 +90,24 @@ Ext.define('Phlexible.user.view.users.Details', {
         delete this.templateExtraContent;
     },
 
+    setUsers: function(users) {
+        if (!users) {
+            this.clear();
+        } else if (Ext.isArray(users)) {
+            this.showMulti(users);
+        } else {
+            this.showSingle(users);
+        }
+    },
+
     clear: function() {
         this.setIconCls(Phlexible.Icon.get('card'));
 
         var html = this.detailTpl.apply({});
 
         this.body.update(html);
+
+        this.collapse();
     },
 
     showSingle: function(record) {
@@ -105,6 +117,8 @@ Ext.define('Phlexible.user.view.users.Details', {
             html = this.detailTpl.apply(data);
 
         this.body.update(html);
+
+        this.expand();
     },
 
     showMulti: function(records) {
@@ -117,5 +131,7 @@ Ext.define('Phlexible.user.view.users.Details', {
         }, this);
 
         this.body.update(html);
+
+        this.expand();
     }
 });

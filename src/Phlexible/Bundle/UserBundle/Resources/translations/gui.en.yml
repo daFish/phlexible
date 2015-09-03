@@ -1,6 +1,9 @@
 Phlexible:
     user:
         handler:
+            Groups:
+                text: Groups
+
             Users:
                 text: Users
 
@@ -11,12 +14,20 @@ Phlexible:
                 text: Logout
 
         view:
-            Main:
-                title: Users
-
             groups:
                 Main:
                     title: Groups
+
+                List:
+                    idText: ID
+                    groupsText: Groups
+                    groupText: Group
+                    membersText: Members
+                    commentText: Comment
+                    addGroupText: Create
+                    deleteGroupText: Delete
+                    saveText: Save
+                    resetText: Reset
 
             users:
                 Main:

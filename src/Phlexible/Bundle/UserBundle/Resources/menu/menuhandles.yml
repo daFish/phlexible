@@ -3,6 +3,11 @@ users:
     handle: users
     roles: [ROLE_USERS]
 
+groups:
+    parent: admin
+    handle: groups
+    roles: [ROLE_GROUPS]
+
 options:
     parent: account
     handle: options

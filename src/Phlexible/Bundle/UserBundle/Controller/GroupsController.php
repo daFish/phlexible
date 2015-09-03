@@ -54,7 +54,7 @@ class GroupsController extends FOSRestController
 
         return array(
             'groups' => $groups,
-            'count'  => count($groups)
+            'total'  => count($groups)
         );
     }
 
@@ -86,9 +86,7 @@ class GroupsController extends FOSRestController
             throw new NotFoundHttpException('Group not found');
         }
 
-        return array(
-            'group' => $group
-        );
+        return $group;
     }
 
     /**

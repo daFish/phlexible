@@ -3,9 +3,9 @@
  */
 Ext.define('Phlexible.user.handler.Users', {
     extend: 'Phlexible.gui.menuhandle.handle.XtypeHandle',
-    requires: ['Phlexible.user.view.Main'],
+    requires: ['Phlexible.user.view.users.Main'],
 
     text: '_users',
     iconCls: Phlexible.Icon.get('users'),
-    name: 'user.main'
+    name: 'user.users.main'
 });

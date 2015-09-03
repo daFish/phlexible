@@ -27,7 +27,7 @@ class UserType extends AbstractType
         $builder->add('comment');
         $builder->add('username');
         $builder->add('email', 'email');
-        $builder->add('salt');
+        #$builder->add('salt');
         $builder->add('plainPassword', 'password');
         $builder->add('confirmationToken');
         $builder->add('expired', 'checkbox');
@@ -38,12 +38,24 @@ class UserType extends AbstractType
         #$builder->add('groups');
         $builder->add('credentialsExpired', 'checkbox');
         #$builder->add('credentialsExpireAt', 'date');
-        $builder->add('passwordRequestedAt', 'date');
+        $builder->add('passwordRequestedAt', 'date', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
         #$builder->add('lastLogin', 'date');
-        $builder->add('expiresAt', 'date');
-        $builder->add('createdAt', 'date');
+        $builder->add('expiresAt', 'date', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
+        $builder->add('createdAt', 'date', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
         #$builder->add('createUser');
-        $builder->add('modifiedAt', 'date');
+        $builder->add('modifiedAt', 'date', array(
+            'widget' => 'single_text',
+            'input' => 'datetime'
+        ));
         #$builder->add('modifyUser');
         #$builder->add('extra');
     }

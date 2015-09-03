@@ -79,9 +79,8 @@ class UsersController extends FOSRestController
         }
 
         return array(
-            'expr'  => (string) $expr,
             'users' => $userManager->findByExpression($expr, array($sort => $dir), $limit, $start),
-            'count' => $userManager->countByExpression($expr)
+            'total' => $userManager->countByExpression($expr)
         );
     }
 
@@ -113,9 +112,7 @@ class UsersController extends FOSRestController
             throw new NotFoundHttpException('User not found');
         }
 
-        return array(
-            'user' => $user
-        );
+        return $user;
     }
 
     /**

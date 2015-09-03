@@ -20,6 +20,20 @@ Ext.define('Phlexible.user.view.users.Main', {
     iconCls: Phlexible.Icon.get('users'),
     border: false,
 
+    referenceHolder: true,
+    viewModel: {
+        stores: {
+            users: {
+                model: 'Phlexible.user.model.User',
+                autoLoad: true,
+                sorters: [{
+                    property: 'username',
+                    direction: 'ASC'
+                }]
+            }
+        }
+    },
+
     initComponent: function() {
         this.initMyFilterHelper();
         this.initMyItems();
@@ -83,24 +97,12 @@ Ext.define('Phlexible.user.view.users.Main', {
         },{
             xtype: 'user.users.list',
             itemId: 'usersGrid',
+            reference: 'list',
             region: 'center',
             padding: '5 0 5 5',
             filterHelper: this.filterHelper,
-            listeners: {
-                storeReload: function(grid, store) {
-                    var selectionModel = grid.getSelectionModel(),
-                        selection = selectionModel.getSelection(),
-                        newSelection = [];
-
-                    if (selection.length > 0) {
-                        Ext.each(selection, function(record) {
-                            newSelection.push(store.getAt(store.indexOf(record)));
-                        });
-                        this.onGridSelectionChange(grid, newSelection);
-                    }
-                },
-                selectionchange: this.onGridSelectionChange,
-                scope: this
+            bind: {
+                store: '{users}'
             }
         },{
             xtype: 'user.users.details',
@@ -111,25 +113,11 @@ Ext.define('Phlexible.user.view.users.Main', {
             split: true,
             collapsible: true,
             collapsed: true,
-            overflowY: 'auto'
+            overflowY: 'auto',
+            bind: {
+                users: '{list.selection}'
+            }
         }];
-    },
-
-    onGridSelectionChange: function(grid, selected) {
-        var detailPanel = this.getComponent('detailPanel');
-
-        if (selected.length === 0) {
-            detailPanel.clear();
-            detailPanel.collapse();
-        }
-        else if (selected.length === 1) {
-            detailPanel.showSingle(selected[0]);
-            detailPanel.expand();
-        }
-        else {
-            detailPanel.showMulti(selected);
-            detailPanel.expand();
-        }
     },
 
     loadParams: function(params) {
