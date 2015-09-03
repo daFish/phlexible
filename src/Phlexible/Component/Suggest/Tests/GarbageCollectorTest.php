@@ -11,11 +11,11 @@
 
 namespace Phlexible\Component\Suggest\Tests;
 
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Component\Suggest\SuggestEvents;
+use Phlexible\Component\Suggest\Domain\DataSource;
+use Phlexible\Component\Suggest\Domain\DataSourceValueBag;
 use Phlexible\Component\Suggest\Event\GarbageCollectEvent;
 use Phlexible\Component\Suggest\GarbageCollector\GarbageCollector;
+use Phlexible\Component\Suggest\SuggestEvents;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\EventDispatcher\EventDispatcher;

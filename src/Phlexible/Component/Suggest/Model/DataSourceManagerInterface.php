@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\Suggest\Model;
 
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+use Phlexible\Component\Suggest\Domain\DataSource;
 
 /**
  * Data source manager interface

@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\Suggest\Event;
 
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
+use Phlexible\Component\Suggest\Domain\DataSourceValueBag;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

@@ -11,10 +11,10 @@
 
 namespace Phlexible\Component\Suggest\GarbageCollector;
 
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Component\Suggest\SuggestEvents;
+use Phlexible\Component\Suggest\Domain\DataSourceValueBag;
 use Phlexible\Component\Suggest\Event\GarbageCollectEvent;
 use Phlexible\Component\Suggest\Model\DataSourceManagerInterface;
+use Phlexible\Component\Suggest\SuggestEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

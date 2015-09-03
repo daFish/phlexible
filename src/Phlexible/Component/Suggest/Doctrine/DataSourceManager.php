@@ -13,7 +13,7 @@ namespace Phlexible\Component\Suggest\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\DataSourceBundle\DataSource\DataSourceRepository;
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSource;
+use Phlexible\Component\Suggest\Domain\DataSource;
 use Phlexible\Component\Suggest\Model\DataSourceManagerInterface;
 
 /**
