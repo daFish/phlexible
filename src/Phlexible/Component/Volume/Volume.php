@@ -228,6 +228,10 @@ class Volume implements VolumeInterface, \IteratorAggregate
     {
         $folders = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $parentFolder->getId()));
 
+        if (!$folders) {
+            return array();
+        }
+
         foreach ($folders as $folder) {
             $folder->setVolume($this);
         }
@@ -673,7 +677,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             ->setPath($folderPath)
             ->setAttributes($attributes)
             ->setCreatedAt(new \DateTime())
-            ->setCreateUser($folder->getCreateUser())
+            ->setCreateUser($user)
             ->setModifiedAt($folder->getCreatedAt())
             ->setModifyUser($folder->getCreateUser());
 

@@ -86,22 +86,14 @@ Ext.define('Phlexible.user.edit.Properties', {
     },
 
     loadUser: function(user) {
-        this.setSource(user.get('properties'));
+        this.setSource(Ext.clone(user.get('properties')));
     },
 
     isValid: function() {
         return true;
     },
 
-    getValues: function() {
-        var modifiedRecords = this.getStore().getRange(),
-            data = {},
-            i;
-
-        for(i = 0; i < modifiedRecords.length; i += 1) {
-            data[modifiedRecords[i].get('name')] = modifiedRecords[i].get('value');
-        }
-
-        return data;
+    applyToUser: function(user) {
+        user.set('properties', this.getSource());
     }
 });

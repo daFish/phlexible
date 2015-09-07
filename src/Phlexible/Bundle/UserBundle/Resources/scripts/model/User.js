@@ -21,13 +21,13 @@ Ext.define('Phlexible.user.model.User', {
         {name: 'roles'},
         {name: 'groups'},
         {name: 'credentialsExpired', type: 'boolean'},
-        {name: 'credentialsExpireAt', type: 'date'},
-        {name: 'passwordRequestedAt', type: 'date'},
-        {name: 'lastLogin', type: 'date'},
-        {name: 'expiresAt', type: 'date'},
-        {name: 'createdAt', type: 'date'},
+        {name: 'credentialsExpireAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
+        {name: 'passwordRequestedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
+        {name: 'lastLogin', type: 'date', persist: false, dateFormat: 'Y-m-d H:i:s'},
+        {name: 'expiresAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
+        {name: 'createdAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
         //{name: 'createUser', type: 'string'},
-        {name: 'modifiedAt', type: 'date'},
+        {name: 'modifiedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
         //{name: 'modifyUser', type: 'string'},
         {name: 'extra'},
         {name: 'notify', default: false, persist: false}
@@ -55,7 +55,7 @@ Ext.define('Phlexible.user.model.User', {
             },
             writeRecordId: false,
             transform: function(data, request) {
-                data.modifiedAt = new Date();
+                data.modifiedAt = Ext.Date.format(new Date(), 'Y-m-d H:i:s');
 
                 return {user: data};
             }

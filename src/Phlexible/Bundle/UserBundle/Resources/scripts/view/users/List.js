@@ -233,17 +233,17 @@ Ext.define('Phlexible.user.view.users.List', {
                 firstname: '',
                 lastname: '',
                 email: '',
-                options: {
-                    theme: Phlexible.Config.get('users.defaults.theme')
-                },
-                account: {
+                enabled: true,
+                properties: {
+                    theme: Phlexible.Config.get('users.defaults.theme'),
                     forcePasswordChange: Phlexible.Config.get('users.defaults.force_password_change'),
                     noPasswordChange: Phlexible.Config.get('users.defaults.cant_change_password'),
                     noPasswordExpire: Phlexible.Config.get('users.defaults.password_doesnt_expire')
                 },
                 roles: [
                     'user'
-                ]
+                ],
+                createdAt: new Date()
             }),
             win = Ext.create('Phlexible.user.window.UserWindow', {
                 mode: 'add',

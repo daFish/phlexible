@@ -394,4 +394,12 @@ class User extends BaseUser
     {
         return $this->setProperty('interfaceLanguage', $interfaceLanguage);
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCredentialsExpireAt()
+    {
+        return $this->credentialsExpireAt;
+    }
 }

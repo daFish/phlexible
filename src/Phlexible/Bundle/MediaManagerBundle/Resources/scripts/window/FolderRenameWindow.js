@@ -23,7 +23,8 @@ Ext.define('Phlexible.mediamanager.window.FolderRenameWindow', {
             xtype: 'textfield',
             flex: 1,
             fieldLabel: this.nameText,
-            value: this.folderName
+            value: this.folder.get('name'),
+            allowBlank: false
         }];
 
         this.dockedItems = [{
@@ -51,24 +52,9 @@ Ext.define('Phlexible.mediamanager.window.FolderRenameWindow', {
     },
 
     submit: function() {
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_patch', {folderId: this.folderId}),
-            method: 'PATCH',
-            params: {
-                name: this.getComponent(1).getValue()
-            },
-            success: function(response) {
-                var data = Ext.decode(response.responseText);
+        this.folder.set('text', this.getComponent(1).getValue());
+        this.folder.set('name', this.getComponent(1).getValue());
 
-                if (data.success) {
-                    Phlexible.Notify.success(data.msg);
-                    this.fireEvent('success', data.data);
-                    this.close();
-                } else {
-                    Phlexible.Notify.failure('Failure', data.msg);
-                }
-            },
-            scope: this
-        });
+        this.close();
     }
 });

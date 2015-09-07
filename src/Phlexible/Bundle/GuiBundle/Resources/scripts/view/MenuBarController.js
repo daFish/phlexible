@@ -70,14 +70,15 @@ Ext.define('Phlexible.gui.view.MenuBarController', {
      */
     populateMenu: function(items) {
         this.getView().items.each(function(item) {
-            if (item.itemId !== 'tray') {
-                item.destroy();
+            if (item.itemId !== 'tray' && item.itemId !== 'logo') {
+                //item.destroy();
             }
         });
 
-        var i = 0;
+        var i = 1;
 
         Ext.each(items, function(item) {
+            item.scale = 'medium';
             this.getView().insert(i, item);
             i += 1;
         }, this);

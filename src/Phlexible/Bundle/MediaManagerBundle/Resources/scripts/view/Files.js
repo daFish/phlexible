@@ -111,23 +111,8 @@ Ext.define('Phlexible.mediamanager.view.Files', {
     initMyStore: function() {
         this.store = Ext.create('Ext.data.Store', {
             model: 'Phlexible.mediamanager.model.File',
-            proxy: {
-                type: 'ajax',
-                url: Phlexible.Router.generate('mediamanager_file_list'),
-                simpleSortMode: true,
-                reader: {
-                    type: 'json',
-                    rootProperty: 'files',
-                    idProperty: 'id',
-                    totalProperty: 'total'
-                },
-                extraParams: {
-                    limit: Phlexible.Config.get('mediamanager.files.num_files', 10),
-                    filter: Ext.encode(this.activeFilter)
-                }
-            },
-            sorters: [{property: "name", direction: "ASC"}],
             remoteSort: true,
+            sorters: [{property: "name", direction: "ASC"}],
             listeners: {
                 load: function (store) {
                     if (this.startFileId) {

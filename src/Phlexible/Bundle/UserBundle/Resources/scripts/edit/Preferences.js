@@ -49,12 +49,17 @@ Ext.define('Phlexible.user.edit.Preferences', {
         var properties = user.get('properties') || {};
 
         this.getForm().setValues({
-            dateFormat: properties['preferences.dateFormat'],
             theme: properties['preferences.theme']
         });
     },
 
     isValid: function() {
         return this.getForm().isValid();
+    },
+
+    applyToUser: function(user) {
+        var properties = user.get('properties');
+        properties.theme = this.getComponent(0).getValue();
+        user.set('properties', properties);
     }
 });

@@ -65,12 +65,15 @@ Ext.define('Phlexible.user.edit.Groups', {
         return true;
     },
 
-    getValues: function() {
-        var mr = this.getStore().getRange();
-        var data = {};
-        for(var i=0; i<mr.length; i++) {
-            data[mr[i].get('id')] = mr[i].get('member') ? 1 : 0;
-        }
-        return data;
+    applyToUser: function(user) {
+        var groups = {};
+        this.getStore().each(function(group) {
+            if (!group.get('member')) {
+                return;
+            }
+            groups.push(group.get('id'));
+        });
+
+        user.set('groups', groups);
     }
 });

@@ -50,7 +50,7 @@ class InitCommand extends ContainerAwareCommand
 
         $volume = $volumeManager->get($name);
 
-        $volume->createFolder(null, 'root', array(), $userManager->getSystemUserId());
+        $volume->createFolder(null, 'root', array(), 'cli');
 
         return 0;
     }

@@ -133,7 +133,7 @@ class VolumeManager implements VolumeManagerInterface
 
             $volume = new $class(
                 $volumeConfig['id'],
-                $volumeConfig['name'],
+                $name,
                 $volumeConfig['root_dir'],
                 $volumeConfig['quota'],
                 $this->eventDispatcher
@@ -162,9 +162,9 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function getById($id)
     {
-        foreach ($this->volumeConfigs as $volumeConfig) {
+        foreach ($this->volumeConfigs as $name => $volumeConfig) {
             if ($volumeConfig['id'] === $id) {
-                return $this->getOrCreateVolume($volumeConfig['name']);
+                return $this->getOrCreateVolume($name);
             }
         }
 
@@ -216,7 +216,12 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function all()
     {
-        return $this->volumes;
+        $volumes = array();
+        foreach ($this->volumeConfigs as $name => $volumeConfig) {
+            $volumes[] = $this->get($name);
+        }
+
+        return $volumes;
     }
 
     /**

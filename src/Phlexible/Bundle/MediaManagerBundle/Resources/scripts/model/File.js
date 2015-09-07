@@ -29,5 +29,20 @@ Ext.define('Phlexible.mediamanager.model.File', {
         {name: 'usageStatus', type: 'int'},
         {name: 'focal'},
         {name: 'attributes'}
-    ]
+    ],
+    proxy: {
+        type: 'rest',
+        url: Phlexible.Router.generate('phlexible_api_mediamanager_get_files'),
+        simpleSortMode: true,
+        reader: {
+            type: 'json',
+            rootProperty: 'files',
+            idProperty: 'id',
+            totalProperty: 'total'
+        },
+        extraParams: {
+            limit: 30//Phlexible.Config.get('mediamanager.files.num_files', 10),
+            //filter: Ext.encode(this.activeFilter)
+        }
+    }
 });

@@ -192,6 +192,7 @@ Ext.define('Phlexible.user.window.UserWindow', {
         });
 
         if (this.user.phantom) {
+            this.user.set('createdAt', new Date());
             this.fireEvent('create', this.user);
         } else {
             this.fireEvent('update', this.user);

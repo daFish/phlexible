@@ -89,5 +89,9 @@ Ext.define('Phlexible.user.edit.Account', {
 
     isValid: function() {
         return this.getForm().isValid();
+    },
+
+    applyToUser: function(user) {
+        this.getForm().updateRecord(user);
     }
 });

@@ -63,19 +63,6 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
     initMyStore: function() {
         this.store = Ext.create('Ext.data.TreeStore', {
             model: 'Phlexible.mediamanager.model.Folder',
-            proxy: {
-                type: 'ajax',
-                url: Phlexible.Router.generate('mediamanager_folder_list'),
-                reader: {
-                    type: 'json'
-                }
-            },
-            root: {
-                id: 'root',
-                text: 'root',
-                expanded: true,
-                iconCls: Phlexible.Icon.get('folder')
-            },
             folderSort: true,
             listeners: {
                 load: function (loader, node) {
@@ -355,17 +342,15 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
     },
 
     showCreateFolderWindow: function () {
-        var nodes = this.getSelectionModel().getSelection(),
+        var folders = this.getSelectionModel().getSelection(),
             folder;
-        if (!nodes.length) {
+        if (!folders.length) {
             return;
         }
-        folder = nodes[0];
+        folder = folders[0];
 
         var w = Ext.create('Phlexible.mediamanager.window.FolderCreateWindow', {
-            submitParams: {
-                parentId: folder.id
-            },
+            folder: folder,
             listeners: {
                 success: this.onCreateFolder,
                 scope: this
@@ -376,20 +361,17 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
     },
 
     showRenameFolderWindow: function () {
-        var nodes = this.getSelectionModel().getSelection(),
+        var folders = this.getSelectionModel().getSelection(),
             folder;
-        if (!nodes.length) {
+        if (!folders.length) {
             return;
         }
-        folder = nodes[0];
+        folder = folders[0];
 
         var w = Ext.create('Phlexible.mediamanager.window.FolderRenameWindow', {
-            folderId: folder.id,
-            folderName: folder.data.name,
+            folder: folder,
             listeners: {
                 success: function (data) {
-                    folder.set('text', data.name);
-                    folder.set('name', data.name);
                 },
                 scope: this
             }
@@ -399,19 +381,19 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
     },
 
     showDeleteFolderWindow: function () {
-        var nodes = this.getSelectionModel().getSelection(),
+        var folders = this.getSelectionModel().getSelection(),
             folder;
-        if (!nodes.length) {
+        if (!folders.length) {
             return;
         }
-        folder = nodes[0];
+        folder = folders[0];
 
         Ext.MessageBox.confirm(
             'Confirm',
-            'Do you really want to delete the folder "' + folder.text + '" with all files and subfolders?',
+            'Do you really want to delete the folder "' + folder.get('name') + '" with all files and subfolders?',
             function (btn) {
                 if (btn == 'yes') {
-                    this.deleteFolder(folder.data.volumeId, folder.id);
+                    this.deleteFolder(folder);
                 }
             },
             this
@@ -437,93 +419,15 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
         w.show();
     },
 
-    deleteFolder: function (volumeId, folderId) {
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_delete'),
-            params: {
-                volumeId: volumeId,
-                folderId: folderId
-            },
-            success: function (response) {
-                var data = Ext.decode(response.responseText);
-                if (data.success) {
-                    var parent_id = data.data.parent_id,
-                        node;
-                    this.root.cascade(function (n) {
-                        if (n.id === parent_id) {
-                            node = n;
-                            return false;
-                        }
-                    });
-                    if (!node) return;
-                    node.select();
-                    node.attributes.children = false;
-                    //this.folderChange(node);
-                    node.reload();
-                } else {
-                    Ext.MessageBox.alert('Status', 'Delete failed: ' + data.msg);
-                }
-            },
-            scope: this
-        });
+    deleteFolder: function (folder) {
+        this.getSelectionModel().select(folder.parentNode)
+        folder.drop();
     },
 
     onContextMenu: function (grid, record, tr, rowIndex, event) {
         event.stopEvent();
 
-        /*
-        if (record.data.slot) {
-            if (record.data.slot == 'search') {
-                var cm = new Ext.menu.Menu({
-                    items: [
-                        {
-                            text: 'Delete',
-                            handler: function (btn) {
-                                Ext.Ajax.request({
-                                    url: Phlexible.Router.generate('extendedsearch_data_delete'),
-                                    params: {
-                                        id: node.data.slotId
-                                    },
-                                    success: function (response) {
-                                        var node = this.getRootNode().findChild('slot', 'searches');
-                                        if (node) {
-                                            node.attributes.children = false;
-                                            node.reload(function () {
-                                                if (node) {
-                                                    if (node.hasChildNodes()) {
-                                                        node.ui.wrap.style.display = 'block';
-                                                    } else {
-                                                        node.ui.wrap.style.display = 'none';
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    },
-                                    scope: this
-                                });
-                            },
-                            scope: this
-                        }
-                    ]
-                });
-
-                cm.showAt([coords[0], coords[1]]);
-
-                return;
-            }
-
-            return;
-        }
-        */
-
         var contextmenu = this.folderContextMenu;
-
-        /*
-        if (!record.isSelected()) {
-            record.select();
-            //this.folderChange(record);
-        }
-        */
 
         contextmenu.getComponent('nameBtn').setText(record.get('text'));
         contextmenu.getComponent('nameBtn').setIconCls(Phlexible.Icon.get('folder'));

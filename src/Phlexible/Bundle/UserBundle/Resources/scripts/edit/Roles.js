@@ -65,12 +65,15 @@ Ext.define('Phlexible.user.edit.Roles', {
         return true;
     },
 
-    getValues: function() {
-        var mr = this.getStore().getRange();
-        var data = {};
-        for(var i=0; i<mr.length; i++) {
-            data[mr[i].get('id')] = mr[i].get('member') ? 1 : 0;
-        }
-        return data;
+    applyToUser: function(user) {
+        var roles = {};
+        this.getStore().each(function(role) {
+            if (!role.get('member')) {
+                return;
+            }
+            roles.push(role.get('id'));
+        });
+
+        user.set('roles', roles);
     }
 });

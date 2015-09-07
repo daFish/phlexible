@@ -44,26 +44,22 @@ class FolderSerializer
     public function serialize(ExtendedFolderInterface $folder)
     {
         $volume = $folder->getVolume();
-        $hasVersions = $volume->hasFeature('versions');
 
         $usage = $this->folderUsageManager->getStatus($folder);
         $usedIn = $this->folderUsageManager->getUsedIn($folder);
 
-        $attributes = $folder->getAttributes();
-
         $data = array(
-            'id'           => $folder->getId(),
-            'name'         => $folder->getName(),
-            'path'         => '/'. $folder->getPath(),
-            'hasVersions'  => $hasVersions,
-            'volumeId'     => $volume->getId(),
-            'createUser'   => $folder->getCreateUser(),
-            'createTime'   => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
-            'modifyUser'   => $folder->getModifyUser(),
-            'modifyTime'   => $folder->getModifiedAt() ? $folder->getModifiedAt()->format('Y-m-d H:i:s') : null,
-            'usedIn'       => $usedIn,
-            'used'         => $usage,
-            'attributes'   => $attributes,
+            'id'          => $folder->getId(),
+            'name'        => $folder->getName(),
+            'path'        => $folder->getPath(),
+            'volumeId'    => $volume->getId(),
+            'createdBy'   => $folder->getCreateUser(),
+            'createdAt'   => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
+            'modifiedBy'  => $folder->getModifyUser(),
+            'modifiedAt'  => $folder->getModifiedAt() ? $folder->getModifiedAt()->format('Y-m-d H:i:s') : null,
+            'attributes'  => $folder->getAttributes(),
+            'usedIn'      => $usedIn,
+            'used'        => $usage,
         );
 
         return $data;

@@ -32,8 +32,7 @@ Ext.define('Phlexible.user.edit.Password', {
     initComponent: function() {
         this.items = [{
             xtype: 'checkbox',
-            itemId: 'addOptin',
-            boxLabel: this.addOptinText,
+            boxLabel: this.mode !== 'add' ? this.editOptinText: this.addOptinText,
             hideLabel: true,
             checked: true,
             name: 'optin',
@@ -41,23 +40,7 @@ Ext.define('Phlexible.user.edit.Password', {
             disabled: this.mode !== 'add',
             hidden: this.mode !== 'add',
             listeners: {
-                check: function(c, checked) {
-                    this.getComponent('passwordFieldset').setDisabled(checked);
-                },
-                scope: this
-            }
-        },{
-            xtype: 'checkbox',
-            itemId: 'editOptin',
-            boxLabel: this.editOptinText,
-            hideLabel: true,
-            checked: false,
-            name: 'optin',
-            border: false,
-            disabled: this.mode === 'add',
-            hidden: this.mode === 'add',
-            listeners: {
-                check: function(c, checked) {
+                change: function(c, checked) {
                     this.getComponent('passwordFieldset').setDisabled(checked);
                 },
                 scope: this
@@ -101,8 +84,8 @@ Ext.define('Phlexible.user.edit.Password', {
                                 length = Phlexible.Config.get('users.system.password_min_length'),
                                 password = generator.create(length, false);
 
-                            this.getComponent('passswordFieldset').getComponent('generateFieldset').getComponent('generateContainer').getComponent('generatedPassword').setValue(password);
-                            this.getComponent('passswordFieldset').getComponent('password').setValue(password);
+                            this.getComponent('passwordFieldset').getComponent('generateFieldset').getComponent('generateContainer').getComponent('generatedPassword').setValue(password);
+                            this.getComponent('passwordFieldset').getComponent('password').setValue(password);
                         },
                         scope: this
                     }]
@@ -119,5 +102,9 @@ Ext.define('Phlexible.user.edit.Password', {
 
     isValid: function() {
         return this.getForm().isValid();
+    },
+
+    applyToUser: function(user) {
+        this.getForm().updateRecord(user);
     }
 });

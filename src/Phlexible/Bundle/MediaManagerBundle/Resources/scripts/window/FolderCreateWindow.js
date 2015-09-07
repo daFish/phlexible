@@ -14,16 +14,19 @@ Ext.define('Phlexible.mediamanager.window.FolderCreateWindow', {
     cancelText: '_cancelText',
     createText: '_createText',
 
+    folderName: '',
+
     initComponent: function() {
         this.items = [{
             xtype: 'displayfield',
             hideLabel: true,
-            value: this.renameDescriptionText
+            value: this.createDescriptionText
         },{
             xtype: 'textfield',
             flex: 1,
             fieldLabel: this.nameText,
-            value: this.folderName
+            value: this.folderName,
+            allowBlank: false
         }];
 
         this.dockedItems = [{
@@ -51,24 +54,20 @@ Ext.define('Phlexible.mediamanager.window.FolderCreateWindow', {
     },
 
     submit: function() {
-        Ext.Ajax.request({
-            url: Phlexible.Router.generate('mediamanager_folder_create'),
-            method: 'POST',
-            params: {
-                name: this.getComponent(1).getValue()
-            },
-            success: function(response) {
-                var data = Ext.decode(response.responseText);
-
-                if (data.success) {
-                    Phlexible.Notify.success(data.msg);
-                    this.fireEvent('success', data.data);
-                    this.close();
-                } else {
-                    Phlexible.Notify.failure('Failure', data.msg);
-                }
-            },
-            scope: this
+        var folder = Ext.create('Phlexible.mediamanager.model.Folder', {
+            text: this.getComponent(1).getValue(),
+            name: this.getComponent(1).getValue(),
+            leaf: true,
+            createdAt: new Date(),
+            createdBy: Phlexible.User.getUsername(),
+            modifiedAt: new Date(),
+            modifiedBy: Phlexible.User.getUsername(),
+            rights: this.folder.get('rights')
         });
+
+        this.folder.appendChild(folder);
+        this.folder.expand();
+
+        this.close();
     }
 });

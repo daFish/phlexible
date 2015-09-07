@@ -36,5 +36,9 @@ Ext.define('Phlexible.user.edit.Comment', {
 
     isValid: function() {
         return this.getForm().isValid();
+    },
+
+    applyToUser: function(user) {
+        this.getForm().updateRecord(user);
     }
 });

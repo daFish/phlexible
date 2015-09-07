@@ -6,8 +6,8 @@ Ext.define('Phlexible.mediamanager.view.FolderMeta', {
 
     initMyUrls: function () {
         this.urls = {
-            load: Phlexible.Router.generate('mediamanager_folder_meta'),
-            save: Phlexible.Router.generate('mediamanager_folder_meta_save')
+            load: Phlexible.Router.generate('phlexible_api_mediamanager_get_folder_metasets'),
+            save: Phlexible.Router.generate('phlexible_api_mediamanager_put_folder_metaset')
         };
 
         this.metasetUrls = {

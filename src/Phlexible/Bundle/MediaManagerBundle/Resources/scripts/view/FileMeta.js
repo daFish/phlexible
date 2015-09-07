@@ -25,7 +25,6 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
     valueText: '_valueText',
 
     initComponent: function () {
-        this.initMyUrls();
         this.initMyStore();
         this.initMyColumns();
         this.initMyDockedItems();
@@ -42,8 +41,8 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
 
     initMyUrls: function () {
         this.urls = {
-            load: Phlexible.Router.generate('mediamanager_file_meta'),
-            save: Phlexible.Router.generate('mediamanager_file_meta_save')
+            load: Phlexible.Router.generate('phlexible_api_mediamanager_get_file_metasets'),
+            save: Phlexible.Router.generate('phlexible_api_mediamanager_put_file_metaset')
         };
 
         this.metasetUrls = {
@@ -59,15 +58,6 @@ Ext.define('Phlexible.mediamanager.view.FileMeta', {
         this.store = Ext.create('Ext.data.TreeStore', {
             model: 'Phlexible.mediamanager.model.FileMetaSet',
             data: this.fieldData,
-            proxy: {
-                type: 'ajax',
-                reader: {
-                    type: 'json',
-                    typeProperty: 'mtype'
-                },
-                url: this.urls.load,
-                extraParams: {}
-            },
             autoLoad: false,
             listeners: {
                 load: function (store, records) {
