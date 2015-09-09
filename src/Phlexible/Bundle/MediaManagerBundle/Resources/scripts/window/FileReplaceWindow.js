@@ -53,7 +53,7 @@ Ext.define('Phlexible.mediamanager.window.FileReplaceWindow', {
             '<div class="p-mediamanager-file-replace-desc">',
             '<div class="p-mediamanager-file-replace-name">{[Ext.String.ellipsis(values.name, 50)]}</div>',
             '<tpl if="values.type">',
-            //'<div class="p-mediamanager-file-replace-type">{[Phlexible.documenttypes.DocumentTypes.getText(values.type)]}</div>',
+            //'<div class="p-mediamanager-file-replace-type">{[Phlexible.mediatype.MediaTypes.getText(values.type)]}</div>',
             '</tpl>',
             '<div class="p-mediamanager-file-replace-size">' + this.sizeText + ': {[Phlexible.Format.size(values.size)]}</div>',
             '</div>',

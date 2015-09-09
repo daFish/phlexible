@@ -1,9 +1,8 @@
 Ext.define('Phlexible.mediamanager.view.FolderProperties', {
-    extend: 'Ext.Component',
+    extend: 'Ext.panel.Panel',
     xtype: 'mediamanager.folder-properties',
 
-    title: '_FolderPropertiesPanel',
-    iconCls: Phlexible.Icon.get('property'),
+    iconCls: Phlexible.Icon.get('information'),
     cls: 'p-mediamanager-folder-properties',
     padding: 10,
 
@@ -21,55 +20,65 @@ Ext.define('Phlexible.mediamanager.view.FolderProperties', {
     modifiedByText: '_modifiedByText',
 
     initComponent: function () {
-        this.initMyTemplates();
-        this.data = this.folder.data;
+        this.tpl = this.createTpl();
+        if (this.folder) {
+            this.data = this.folder.data;
+        } else {
+            this.data = {
+                name: '',
+                path: '',
+                size: 0,
+                folders: 0,
+                createUser: '',
+                createTime: 0,
+                modifyUser: '',
+                modifyTime: 0
+            }
+        }
 
         this.callParent(arguments);
     },
 
-    initMyTemplates: function() {
-        this.tpl = new Ext.XTemplate(
+    createTpl: function() {
+        return new Ext.XTemplate(
             '<table border="0" cellpadding="0" cellspacing="7">',
             '<tr>',
-            '<td>'+this.typeText+':</td>',
-            '<td>{[this.strings[values.type]]}</div>',
+            '<td>' + this.typeText + ':</td>',
+            '<td>{type}</div>',
             '</tr>',
             '<tr>',
-            '<td>'+this.pathText+':</td>',
+            '<td>' + this.pathText + ':</td>',
             '<td>{path}</td>',
             '</tr>',
             '<tr>',
-            '<td>'+this.sizeText+':</td>',
+            '<td>' + this.sizeText + ':</td>',
             '<td>{[Phlexible.Format.size(values.size)]} ({size} Bytes)</td>',
             '</tr>',
             '<tr>',
-            '<td>'+this.contentsText+':</td>',
-            '<td>{folders} <tpl if="values.folders==1">'+this.folderText+'<tpl else>'+this.foldersText+'</tpl>, {files} <tpl if="values.folders==1">'+this.fileText+'<tpl else>'+this.filesText+'</tpl></td>',
+            '<td>' + this.contentsText + ':</td>',
+            '<td>{folders} <tpl if="values.folders==1">' + this.folderText + '<tpl else>' + this.foldersText + '</tpl>, {files} <tpl if="values.folders==1">'+this.fileText+'<tpl else>' + this.filesText + '</tpl></td>',
             '</tr>',
             '<tr>',
-            '<td>'+this.createdAtText+':</td>',
+            '<td>' + this.createdAtText + ':</td>',
             '<td>{[Phlexible.Format.date(values.createTime)]}</td>',
             '</tr>',
             '<tr>',
-            '<td>'+this.createdByText+':</td>',
+            '<td>' + this.createdByText + ':</td>',
             '<td>{createUser}</td>',
             '</tr>',
-            '<tpl if="values.modify_date">',
+            '<tpl if="values.modifyTime">',
             '<tr>',
-            '<td>'+this.modifiedAtText+':</td>',
+            '<td>' + this.modifiedAtText + ':</td>',
             '<td>{[Phlexible.Format.date(values.modifyTime)]}</td>',
             '</tr>',
             '</tpl>',
-            '<tpl if="values.modify_user">',
+            '<tpl if="values.modifyUser">',
             '<tr>',
-            '<td>'+this.modifiedByText+':</td>',
+            '<td>' + this.modifiedByText + ':</td>',
             '<td>{modifyUser}</td>',
             '</tr>',
             '</tpl>',
-            '</table>',
-            {
-                strings: Phlexible.mediamanager.Strings
-            }
+            '</table>'
         );
     }
 });

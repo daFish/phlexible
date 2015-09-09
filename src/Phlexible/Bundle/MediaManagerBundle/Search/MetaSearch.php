@@ -85,6 +85,8 @@ class MetaSearch implements SearchProviderInterface
      */
     public function search($query)
     {
+        // TODO: repair
+        return array();
         $files = array();
         foreach ($this->volumeManager->all() as $volume) {
             $foundFiles = $volume->search($query);

@@ -28,7 +28,10 @@ Ext.define('Phlexible.mediamanager.model.File', {
         {name: 'usedIn'},
         {name: 'usageStatus', type: 'int'},
         {name: 'focal'},
-        {name: 'attributes'}
+        {name: 'attributes'},
+        {name: 'mediaTypeTitle', calculate: function(data) {
+            return data.mediaType;
+        }}
     ],
     proxy: {
         type: 'rest',

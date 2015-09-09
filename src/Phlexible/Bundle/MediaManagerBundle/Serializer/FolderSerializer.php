@@ -52,7 +52,7 @@ class FolderSerializer
             'id'          => $folder->getId(),
             'name'        => $folder->getName(),
             'path'        => $folder->getPath(),
-            'volumeId'    => $volume->getId(),
+            'volumeId'    => $folder->getVolumeId(),
             'createdBy'   => $folder->getCreateUser(),
             'createdAt'   => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
             'modifiedBy'  => $folder->getModifyUser(),

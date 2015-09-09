@@ -226,7 +226,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFoldersByParentFolder(FolderInterface $parentFolder)
     {
-        $folders = $this->volumeManager->findFolderBy(array('volumeId' => $this->id, 'path' => $parentFolder->getId()));
+        $folders = $this->volumeManager->findFoldersBy(array('volumeId' => $this->id, 'parentId' => $parentFolder->getId()));
 
         if (!$folders) {
             return array();
@@ -264,9 +264,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function findFiles(array $criteria, $order = null, $limit = null, $start = null)
+    public function findFiles(array $criteria, $orderBy = array(), $limit = null, $start = null)
     {
-        $files = $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+        $files = $this->volumeManager->findFilesBy($criteria, $orderBy, $limit, $start);
 
         foreach ($files as $file) {
             $file->setVolume($this);
@@ -316,7 +316,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
      */
     public function findFilesByFolder(
         FolderInterface $folder,
-        $order = null,
+        $orderBy = array(),
         $limit = null,
         $start = null,
         $includeHidden = false)
@@ -328,7 +328,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             $criteria['hidden'] = false;
         }
 
-        $files = $this->volumeManager->findFilesBy($criteria, $order, $limit, $start);
+        $files = $this->volumeManager->findFilesBy($criteria, $orderBy, $limit, $start);
 
         foreach ($files as $file) {
             $file->setVolume($this);
@@ -369,9 +369,9 @@ class Volume implements VolumeInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function findFilesByExpression(Expression $expression, $order = null, $limit = null, $start = null)
+    public function findFilesByExpression(Expression $expression, $orderBy = array(), $limit = null, $start = null)
     {
-        $files = $this->volumeManager->findFilesByExpression($expression, $order, $limit, $start);
+        $files = $this->volumeManager->findFilesByExpression($expression, $orderBy, $limit, $start);
 
         foreach ($files as $file) {
             $file->setVolume($this);

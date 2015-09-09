@@ -5,15 +5,14 @@ Ext.define('Phlexible.mediamanager.view.FolderMeta', {
     checkRight: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
 
     initMyUrls: function () {
-        this.urls = {
-            load: Phlexible.Router.generate('phlexible_api_mediamanager_get_folder_metasets'),
-            save: Phlexible.Router.generate('phlexible_api_mediamanager_put_folder_metaset')
+        this.routes = {
+            load: 'phlexible_api_mediamanager_get_folder_metasets'
         };
 
         this.metasetUrls = {
-            list: Phlexible.Router.generate('mediamanager_folder_meta_sets_list'),
-            save: Phlexible.Router.generate('mediamanager_folder_meta_sets_save'),
-            available: Phlexible.Router.generate('phlexible_api_metaset_get_metasets')
+            list: 'mediamanager_folder_meta_sets_list',
+            save: 'mediamanager_folder_meta_sets_save',
+            available: 'phlexible_api_metaset_get_metasets'
         };
     },
 

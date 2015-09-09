@@ -180,10 +180,10 @@ class FileSerializer
         $data = array(
             'id'              => $file->getID(),
             'name'            => $file->getName(),
-            'path'            => '/' . $folder->getPath() . $file->getName(),
+            'path'            => $folder->getPath() . $file->getName(),
             'volumeId'        => $volume->getId(),
             'folderId'        => $file->getFolderID(),
-            'folderPath'      => '/' . $folder->getPath(),
+            'folderPath'      => $folder->getPath(),
             'hasVersions'     => $hasVersions,
             'mimeType'        => $file->getMimetype(),
             'mediaCategory'   => null,

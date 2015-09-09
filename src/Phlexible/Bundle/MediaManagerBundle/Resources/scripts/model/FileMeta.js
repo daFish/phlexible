@@ -34,5 +34,12 @@ Ext.define('Phlexible.mediamanager.model.FileMeta', {
         name: 'iconCls',
         type: 'string',
         defaultValue: 'p-icon-weather-cloud'
-    }]
+    }],
+    proxy: {
+        type: 'rest-filter',
+        reader: {
+            type: 'json',
+            rootProperty: 'meta'
+        }
+    }
 });

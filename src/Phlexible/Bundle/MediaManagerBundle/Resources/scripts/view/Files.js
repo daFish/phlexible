@@ -636,7 +636,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
     },
 
     nameRenderer: function (name, e, r) {
-        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(r.get('mediaType')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
+        var documentTypeClass = Phlexible.mediatype.MediaTypes.getClass(r.get('mediaType')) || Phlexible.mediatype.MediaTypes.getClass('_unknown');
         documentTypeClass += "-small";
 
         var prefix = ' ';
@@ -899,7 +899,7 @@ Ext.define('Phlexible.mediamanager.view.Files', {
         }
         else {
             contextmenu.getComponent('nameBtn').setText(record.get('name'));
-            var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(record.get('mediaType')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
+            var documentTypeClass = Phlexible.mediatype.MediaTypes.getClass(record.get('mediaType')) || Phlexible.mediatype.MediaTypes.getClass('_unknown');
             contextmenu.getComponent('nameBtn').setIconCls(documentTypeClass + '-small');
 
             if (this.checkRights(Phlexible.mediamanager.Rights.FILE_MODIFY) == '1') {

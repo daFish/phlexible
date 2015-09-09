@@ -13,12 +13,9 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
-use Phlexible\Bundle\MediaManagerBundle\Event\GetSlotsEvent;
-use Phlexible\Bundle\MediaManagerBundle\MediaManagerEvents;
-use Phlexible\Component\MediaManager\Slot\SiteSlot;
-use Phlexible\Component\MediaManager\Slot\Slots;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\Volume\Folder\SizeCalculator;
 use Phlexible\Component\Volume\Model\FolderInterface;
@@ -43,9 +40,13 @@ class FoldersController extends FOSRestController
     /**
      * List folders
      *
-     * @param Request $request
+     * @param ParamFetcher $paramFetcher
      *
      * @return Response
+     *
+     * @Rest\QueryParam(name="parentId", strict=true, nullable=true, requirements="^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$", description="Parent ID")
+     * @Rest\QueryParam(name="name", strict=true, nullable=true, allowBlank=false, requirements="\w+", description="Folder name")
+     * @Rest\QueryParam(name="path", strict=true, nullable=true, allowBlank=false, requirements="^\/.*", description="Folder path")
      *
      * @Rest\View
      * @ApiDoc(
@@ -57,110 +58,55 @@ class FoldersController extends FOSRestController
      *   }
      * )
      */
-    public function getFoldersAction(Request $request)
+    public function getFoldersAction(ParamFetcher $paramFetcher)
     {
-        $data = array();
+        $criteria = array();
+
+        if ($paramFetcher->get('parentId') !== null) {
+            $criteria['parentId'] = $paramFetcher->get('parentId') ?: null;
+        }
+        if ($paramFetcher->get('name')) {
+            $criteria['name'] = $paramFetcher->get('name');
+        }
+        if ($paramFetcher->get('path')) {
+            $criteria['path'] = $paramFetcher->get('path');
+        }
 
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         $folderSerializer = $this->get('phlexible_media_manager.folder_serializer');
-
-        foreach ($volumeManager->all() as $volume) {
-            $rootFolder = $volume->findRootFolder();
-
-            if (
-                !$this->isGranted('ROLE_SUPER_ADMIN') &&
-                !$this->isGranted('FOLDER_READ', $rootFolder)
-            ) {
-                continue;
-            }
-
-            // TODO: fix
-            $userRights = array();
-            foreach ($permissionRegistry->get(get_class($rootFolder))->all() as $permission) {
-                $userRights[] = $permission->getName();
-            }
-
-            $data = $folderSerializer->serialize($rootFolder);
-            $data['rights'] = $userRights;
-            $data['text'] = $data['name'];
-            $data['expanded'] = true;
-        }
-
-        return array(
-            'folders' => $data
-        );
-    }
-
-    /**
-     * List folders
-     *
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @Rest\View
-     * @ApiDoc(
-     *   description="Returns a collection of Folder",
-     *   section="mediamanager",
-     *   resource=true,
-     *   statusCodes={
-     *     200="Returned when successful",
-     *   }
-     * )
-     */
-    public function getFolderFoldersAction(Request $request, $folderId)
-    {
-        $data = array();
-
-        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
-        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
-        $folderSerializer = $this->get('phlexible_media_manager.folder_serializer');
-
-        $volume = $volumeManager->getByFolderId($folderId);
-        $folder = $volume->findFolder($folderId);
-
-        if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $folder)) {
-            return new JsonResponse(array());
-        }
 
         $folders = array();
-        foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
+        foreach ($volumeManager->findFoldersBy($criteria) as $folder) {
             if (
                 !$this->isGranted('ROLE_SUPER_ADMIN') &&
-                !$this->isGranted('FOLDER_READ', $subFolder)
+                !$this->isGranted('FOLDER_READ', $folder)
             ) {
                 continue;
             }
 
             // TODO: fix
             $userRights = array();
-            foreach ($permissionRegistry->get(get_class($subFolder))->all() as $permission) {
+            foreach ($permissionRegistry->get(get_class($folder))->all() as $permission) {
                 $userRights[] = $permission->getName();
             }
 
-            $folderUsageService = $this->get('phlexible_media_manager.folder_usage_manager');
-            $usage = $folderUsageService->getStatus($subFolder);
-            $usedIn = $folderUsageService->getUsedIn($subFolder);
-            // TODO: also files in folder!
+            $data = $folderSerializer->serialize($folder);
+            $data['rights'] = $userRights;
+            $data['text'] = $data['name'];
+            $data['expanded'] = false;
+            $data['leaf'] = true;
 
-            $tmp = $folderSerializer->serialize($subFolder);
-
-            $tmp['rights'] = $userRights;
-            $tmp['text'] = $tmp['name'];
-            $tmp['expanded'] = false;
-            $tmp['expandable'] = false;
-            $tmp['leaf'] = true;
-            if ($volume->countFoldersByParentFolder($subFolder)) {
-                $tmp['leaf'] = false;
-                $tmp['expandable'] = true;
+            if ($volumeManager->countFoldersBy(array('parentId' => $folder->getId()))) {
+                $data['leaf'] = false;
+                $data['expandable'] = true;
             }
 
-            $data[] = $tmp;
+            $folders[] = $data;
         }
 
         return array(
-            'folders' => $data
+            'folders' => $folders
         );
     }
 
@@ -186,12 +132,27 @@ class FoldersController extends FOSRestController
     public function getFolderAction(Request $request, $folderId)
     {
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
+        $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         $folderSerializer = $this->get('phlexible_media_manager.folder_serializer');
 
-        $volume = $volumeManager->getByFolderId($folderId);
-        $folder = $volume->findFolder($folderId);
+        $folder = $volumeManager->findFolder($folderId);
+
+        if (!$folder instanceof FolderInterface) {
+            throw $this->createNotFoundException("Folder $folderId not found.");
+        }
+
+        if (!$this->isGranted('ROLE_SUPER_ADMIN') && !$this->isGranted('FOLDER_READ', $folder)) {
+            return new JsonResponse(array());
+        }
+
+        // TODO: fix
+        $userRights = array();
+        foreach ($permissionRegistry->get(get_class($folder))->all() as $permission) {
+            $userRights[] = $permission->getName();
+        }
 
         $data = $folderSerializer->serialize($folder);
+        $data['rights'] = $userRights;
 
         return array(
             'folder' => $data,

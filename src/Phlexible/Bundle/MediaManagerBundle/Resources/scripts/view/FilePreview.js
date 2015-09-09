@@ -2,24 +2,17 @@ Ext.define('Phlexible.mediamanager.view.FilePreview', {
     extend: 'Ext.panel.Panel',
     xtype: 'mediamanager.file-preview',
 
-    title: '_FilePreviewPanel',
-    cls: 'p-mediamanager-preview-panel',
-    height: 270,
-    padding: 5,
+    cls: 'p-mediamanager-preview',
 
     fileId: null,
     fileVersion: null,
-    fileName: null,
-    mediaType: null,
-    mediaCategory: null,
-    cache: null,
 
     noPreviewAvailableText: '_noPreviewAvailableText',
 
     // private
     initComponent: function () {
-        if (this.fileId && this.fileVersion && this.fileName && this.mediaType && this.cache) {
-            this.html = this.getHtml(this.fileId, this.fileVersion, this.fileName, this.mediaType, this.cache);
+        if (this.file) {
+            this.html = this.getHtml(this.file);
         }
         else {
             this.html = this.createNoPreview();
@@ -28,67 +21,55 @@ Ext.define('Phlexible.mediamanager.view.FilePreview', {
         this.callParent(arguments);
     },
 
-    loadRecord: function (r) {
-        this.load(r.get('id'), r.get('version'), r.get('name'), r.get('mediaType'), r.get('mediaCategory'), r.get('cache'));
+    loadRecord: function (file) {
+        this.load(file);
     },
 
-    load: function (fileId, fileVersion, fileName, mediaType, cache) {
-        if (this.fileId != fileId || this.fileVersion != fileVersion) {
-            this.fileId = fileId;
-            this.fileVersion = fileVersion;
-            this.fileName = fileName;
-            this.mediaType = mediaType;
-            this.cache = cache;
+    load: function (file) {
+        if (this.fileId != file.getId() || this.fileVersion != file.get('version')) {
+            this.fileId = file.getId();
+            this.fileVersion = file.get('version');
 
-            this.body.update('');
-            this.body.insertFirst(this.getHtml(fileId, fileVersion, fileName, mediaType, cache));
+            //this.body.update('');
+            this.update(this.getHtml(file));
         }
     },
 
-    getHtml: function (fileId, fileVersion, fileName, mediaType, cache) {
-        switch (mediaCategory.toUpperCase()) {
+    getHtml: function (file) {
+        var parts = file.get('mediaType').split(':');
+        switch (parts[0]) {
             case Phlexible.mediamanager.AUDIO:
-                return this.createAudioPlayer(256, 256, fileId, fileVersion, fileName, cache);
+                return this.createAudioPlayer(256, 256, file);
                 break;
 
             case Phlexible.mediamanager.VIDEO:
-                return this.createVideoPlayer(256, 256, fileId, fileVersion, fileName, cache);
-                break;
-
-            case Phlexible.mediamanager.FLASH:
-                return this.createFlashPlayer(256, 256, fileId, fileVersion, fileName, cache);
+                return this.createVideoPlayer(256, 256, file);
                 break;
 
             case Phlexible.mediamanager.IMAGE:
             default:
-                return this.createImage(256, 256, fileId, fileVersion, fileName, cache);
+                return this.createImage(256, 256, file);
         }
     },
 
-    getLink: function (fileId, templateKey, fileVersion, cache) {
-        if (cache && templateKey && cache[templateKey]) {
-            return cache[templateKey];
+    getLink: function (file, templateKey) {
+        if (file.get('cache') && templateKey && file.get('cache')[templateKey]) {
+            return file.get('cache')[templateKey];
         }
 
         var parameters = {
-            fileId: fileId,
+            fileId: file.getId(),
             templateKey: templateKey
         };
-        if (fileVersion) {
-            parameters.fileVersion = fileVersion;
-        }
-        if (cache && cache[templateKey]) {
-            parameters.cache = cache[templateKey];
-        } else if (cache !== false) {
-            parameters.waiting = 1;
+        if (file.get('version')) {
+            parameters.fileVersion = file.get('version');
         }
 
-        return Phlexible.Router.generate('mediamanager_media', parameters);
+        return Phlexible.Router.generate('phlexible_mediamanager_media', parameters);
     },
 
     empty: function () {
-        this.body.update('');
-        this.body.insertFirst(this.createNoPreview());
+        this.update(this.createNoPreview());
     },
 
     createNoPreview: function () {
@@ -114,29 +95,14 @@ Ext.define('Phlexible.mediamanager.view.FilePreview', {
         return '<table border="0" width="100%" height="100%"><tr><td align="center" valign="middle">' + this.noPreviewAvailableText + '</td></tr></table>';
     },
 
-    createFlashPlayer: function (width, height, fileId, fileVersion, fileName, cache) {
-        var link = this.getLink(fileId, fileVersion) + '/' + fileName + '.swf';
-
-        return {
-            tag: 'embed',
-            src: link,
-            width: width,
-            height: height,
-            allowfullscreen: 'true',
-            allowscriptaccess: 'always',
-            wmode: 'transparent',
-            flashvars: link
-        };
-        return '<embed src="' + link + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
-    },
-
-    createAudioPlayer: function (width, height, fileId, fileVersion, fileName, cache) {
+    createAudioPlayer: function (width, height, file) {
+        var cache = file.get('cache');
         if (!cache._mm_preview_audio || cache._mm_preview_audio.substr(0, 2) !== 'ok') {
-            return this.createImage(256, 256, fileId, fileVersion, fileName, cache);
+            return this.createImage(256, 256, file);
         }
 
-        var image = this.getLink(fileId, '_mm_preview_player', fileVersion, cache);
-        var audio = this.getLink(fileId, '_mm_preview_audio', fileVersion, false) + '/name/' + fileName + '.mp3';
+        var image = this.getLink(file, '_mm_preview_player');
+        var audio = this.getLink(file, '_mm_preview_audio') + '/name/' + fileName + '.mp3';
         //var link = '&file=' + audio + '&image=' + image + '&height=' + height + '&width=' + width + '';
 
         var config = {
@@ -166,7 +132,8 @@ Ext.define('Phlexible.mediamanager.view.FilePreview', {
         //return '<embed src="' + Phlexible.bundleAsset('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
-    createVideoPlayer: function (width, height, fileId, fileVersion, fileName, cache) {
+    createVideoPlayer: function (width, height, file) {
+        var cache = file.get('cache');
         if (!cache._mm_preview_video || cache._mm_preview_video_mp4.substr(0, 2) !== 'ok' || cache._mm_preview_video_ogg.substr(0, 2) !== 'ok') {
             return this.createImage(256, 256, fileId, fileVersion, fileName, cache);
         }
@@ -211,18 +178,18 @@ Ext.define('Phlexible.mediamanager.view.FilePreview', {
         //return '<embed src="' + Phlexible.bundleAsset('/phlexiblemediamanager/flash/player.swf') + '" width="' + width + '" height="' + height + '" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" flashvars="' + link + '" />';
     },
 
-    createImage: function (width, height, fileId, fileVersion, fileName, cache) {
-        var link = this.getLink(fileId, '_mm_extra', fileVersion, cache);
+    createImage: function (width, height, file) {
+        var link = this.getLink(file, '_mm_extra');
 
         return {
             tag: 'img',
             style: 'border: 1px solid lightgray;',
-            alt: fileName,
+            alt: file.get('name'),
             src: link,
             width: width,
             height: height
         };
-        return '<img style="border: 1px solid lightgray;" alt="' + fileName + '" src="' + link + '" width="' + width + '" height="' + height + '" />';
+        return '<img style="border: 1px solid lightgray;" alt="' + file.get('name') + '" src="' + link + '" width="' + width + '" height="' + height + '" />';
     },
 
     createText: function (width, height, fileId, fileName) {

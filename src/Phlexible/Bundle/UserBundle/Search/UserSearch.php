@@ -15,6 +15,9 @@ use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Webmozart\Expression\Comparison\Contains;
+use Webmozart\Expression\Logic\Disjunction;
+use Webmozart\Expression\Selector\Key;
 
 /**
  * User search
@@ -57,11 +60,12 @@ class UserSearch implements SearchProviderInterface
      */
     public function search($query)
     {
-        $expr = $this->userManager->expr();
-        $expr = $expr->orContains($query, 'firstname');
-        $expr = $expr->orContains($query, 'lastname');
-        $expr = $expr->orContains($query, 'username');
-        $expr = $expr->orContains($query, 'email');
+        $expr = new Disjunction(array(
+            new Key('firstname', new Contains($query)),
+            new Key('lastname', new Contains($query)),
+            new Key('username', new Contains($query)),
+            new Key('email', new Contains($query)),
+        ));
 
         $users = $this->userManager->findByExpression($expr);
 

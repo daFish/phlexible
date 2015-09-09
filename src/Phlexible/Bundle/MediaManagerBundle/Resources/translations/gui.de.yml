@@ -29,6 +29,15 @@ Phlexible:
                 title: Vorschau
                 noPreviewAvailableText: 'Keine Vorschau verfügbar'
 
+            FileProperties:
+                title: Dateiinformationen
+                name: Name
+                size: Größe
+                createdAtText: 'Angelegt an'
+                createdByText: 'Angelegt von'
+                modifiedAtText: 'Geändert an'
+                modifiedByText: 'Geändert von'
+
             Files:
                 title: Dateien
                 emptyText: 'Keine Dateien vorhanden.'
@@ -72,7 +81,7 @@ Phlexible:
                 title: 'Ordner-Metadaten'
 
             FolderProperties:
-                title: Ordnereigenschaften
+                title: Ordnerinformationen
                 typeText: Typ
                 pathText: Pfad
                 sizeText: Grösse
@@ -137,7 +146,7 @@ Phlexible:
         window:
             FileDetailWindow:
                 title: Dateieigenschaften
-                folderText: Ordner
+                pathText: Pfad
                 idText: ID
                 nameText: Name
                 attributesText: Attribute
@@ -172,6 +181,9 @@ Phlexible:
 
             FolderDetailWindow:
                 title: Ordnereigenschaften
+                pathText: Pfad
+                idText: ID
+                nameText: Name
 
             FolderRenameWindow:
                 title: 'Ordner umbenennen'

@@ -31,7 +31,15 @@ class FileRepository extends EntityRepository
      */
     public function countBy(array $criteria)
     {
-        return 0;
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->select($qb->expr()->count('c.id'));
+
+        foreach ($criteria as $key => $value) {
+            $qb->andWhere($qb->expr()->eq("c.$key", $qb->expr()->literal($value)));
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -84,7 +92,7 @@ class FileRepository extends EntityRepository
 
         $this->applyExpression($queryBuilder, $expression);
 
-        return $queryBuilder->getQuery()->getSingleScalarResult();
+        return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
     /**

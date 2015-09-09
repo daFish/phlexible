@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -32,12 +33,12 @@ class NodeTitleSearch extends AbstractNodeSearch
     private $treeManager;
 
     /**
-     * @var \Phlexible\Component\Site\Model\SiteManagerInterface
+     * @var SiteManagerInterface
      */
     private $siterootManager;
 
     /**
-     * @var \Phlexible\Bundle\TreeBundle\Icon\IconResolver
+     * @var IconResolver
      */
     private $iconResolver;
 
@@ -49,8 +50,8 @@ class NodeTitleSearch extends AbstractNodeSearch
     /**
      * @param EntityManagerInterface        $entityManager
      * @param TreeManagerInterface          $treeManager
-     * @param \Phlexible\Component\Site\Model\SiteManagerInterface      $siterootManager
-     * @param \Phlexible\Bundle\TreeBundle\Icon\IconResolver                  $iconResolver
+     * @param SiteManagerInterface          $siterootManager
+     * @param IconResolver                  $iconResolver
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
@@ -88,20 +89,22 @@ class NodeTitleSearch extends AbstractNodeSearch
      */
     public function search($query)
     {
+        $treeContext = new WorkingTreeContext('de');
+
         $repo = $this->entityManager->getRepository('PhlexibleTreeBundle:NodeMappedField');
         $qb = $repo->createQueryBuilder('n');
         $qb
             ->select('n.id', 'n.language')
-            ->where($qb->expr()->like('n.backend', "%$query%"))
-            ->orWhere($qb->expr()->like('n.page', "%$query%"))
-            ->orWhere($qb->expr()->like('n.navigation', "%$query%"));
+            ->where($qb->expr()->like('n.backend', $qb->expr()->literal("%$query%")))
+            ->orWhere($qb->expr()->like('n.page', $qb->expr()->literal("%$query%")))
+            ->orWhere($qb->expr()->like('n.navigation', $qb->expr()->literal("%$query%")));
 
         $results = array();
         foreach ($qb->getQuery()->getScalarResult() as $row) {
             $nodeId = $row['id'];
             $language = $row['language'];
 
-            $tree = $this->treeManager->getByNodeId($nodeId);
+            $tree = $this->treeManager->getByNodeId($treeContext, $nodeId);
             $node = $tree->get($nodeId);
 
             if (!$this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN') && !$this->authorizationChecker->isGranted('VIEW', $node)) {

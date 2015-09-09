@@ -17,6 +17,9 @@ use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Webmozart\Expression\Comparison\Contains;
+use Webmozart\Expression\Logic\Disjunction;
+use Webmozart\Expression\Selector\Key;
 
 /**
  * File search
@@ -76,9 +79,13 @@ class FileSearch implements SearchProviderInterface
      */
     public function search($query)
     {
+        $expr = new Disjunction(array(
+            new Key('name', new Contains($query)),
+        ));
+
         $files = array();
         foreach ($this->volumeManager->all() as $volume) {
-            $foundFiles = $volume->search($query);
+            $foundFiles = $volume->findFilesByExpression($expr);
             if ($foundFiles) {
                 $files += $foundFiles;
             }

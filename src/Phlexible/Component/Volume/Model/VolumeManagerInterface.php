@@ -12,8 +12,10 @@
 namespace Phlexible\Component\Volume\Model;
 
 use Phlexible\Component\Volume\Exception\AlreadyExistsException;
+use Phlexible\Component\Volume\Exception\NotFoundException;
 use Phlexible\Component\Volume\FileSource\FileSourceInterface;
 use Phlexible\Component\Volume\HashCalculator\HashCalculatorInterface;
+use Phlexible\Component\Volume\VolumeInterface;
 use Webmozart\Expression\Expression;
 
 /**
@@ -24,6 +26,47 @@ use Webmozart\Expression\Expression;
 interface VolumeManagerInterface
 {
     const FEATURE_VERSIONS = 'versions';
+
+    /**
+     * @param string $name
+     *
+     * @return VolumeInterface
+     */
+    public function get($name);
+
+    /**
+     * @param string $id
+     *
+     * @return VolumeInterface
+     */
+    public function getById($id);
+
+    /**
+     * Return volume by file ID
+     *
+     * @param string $fileId
+     *
+     * @return VolumeInterface
+     * @throws NotFoundException
+     */
+    public function getByFileId($fileId);
+
+    /**
+     * Return volume by folder ID
+     *
+     * @param string $folderId
+     *
+     * @return VolumeInterface
+     * @throws NotFoundException
+     */
+    public function getByFolderId($folderId);
+
+    /**
+     * Return all volumes
+     *
+     * @return VolumeInterface[]
+     */
+    public function all();
 
     /**
      * @param string $feature
@@ -55,14 +98,14 @@ interface VolumeManagerInterface
     public function findFolder($id);
 
     /**
-     * @param array      $criteria
-     * @param array|null $orderBy
-     * @param int|null   $limit
-     * @param int|null   $offset
+     * @param array    $criteria
+     * @param array    $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
      *
      * @return FolderInterface[]
      */
-    public function findFoldersBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null);
+    public function findFoldersBy(array $criteria = array(), $orderBy = array(), $limit = null, $offset = null);
 
     /**
      * @param array $criteria
@@ -72,22 +115,22 @@ interface VolumeManagerInterface
     public function countFoldersBy(array $criteria = array());
 
     /**
-     * @param array      $criteria
-     * @param array|null $orderBy
+     * @param array $criteria
+     * @param array $orderBy
      *
      * @return FolderInterface|null
      */
-    public function findFolderBy(array $criteria = array(), $orderBy = null);
+    public function findFolderBy(array $criteria = array(), $orderBy = array());
 
     /**
      * @param Expression $expression
-     * @param array|null $orderBy
+     * @param array      $orderBy
      * @param int|null   $limit
      * @param int|null   $offset
      *
      * @return FolderInterface[]
      */
-    public function findFoldersByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null);
+    public function findFoldersByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null);
 
     /**
      * @param Expression $expression
@@ -97,14 +140,14 @@ interface VolumeManagerInterface
     public function countFoldersByExpression(Expression $expression);
 
     /**
-     * @param array      $criteria
-     * @param array|null $orderBy
-     * @param int|null   $limit
-     * @param int|null   $offset
+     * @param array    $criteria
+     * @param array    $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
      *
      * @return FileInterface[]
      */
-    public function findFilesBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null);
+    public function findFilesBy(array $criteria = array(), $orderBy = array(), $limit = null, $offset = null);
 
     /**
      * @param array $criteria
@@ -114,12 +157,12 @@ interface VolumeManagerInterface
     public function countFilesBy(array $criteria = array());
 
     /**
-     * @param array      $criteria
-     * @param array|null $orderBy
+     * @param array $criteria
+     * @param array $orderBy
      *
      * @return FileInterface|null
      */
-    public function findFileBy(array $criteria = array(), $orderBy = null);
+    public function findFileBy(array $criteria = array(), $orderBy = array());
 
     /**
      * @param Expression $expression
@@ -129,7 +172,7 @@ interface VolumeManagerInterface
      *
      * @return FileInterface[]
      */
-    public function findFilesByExpression(Expression $expression, $order = null, $limit = null, $start = null);
+    public function findFilesByExpression(Expression $expression, $orderBy = array(), $limit = null, $start = null);
 
     /**
      * @param Expression $expression

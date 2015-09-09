@@ -1,9 +1,9 @@
 Ext.define('Phlexible.mediamanager.model.FileMetaSet', {
     extend: 'Ext.data.TreeModel',
+
     entityName: 'FileMetaSet',
     childType: 'Phlexible.mediamanager.model.FileMeta',
     idProperty: 'id',
-
     fields: [{
         name: 'id',
         type: 'string'
@@ -22,11 +22,10 @@ Ext.define('Phlexible.mediamanager.model.FileMetaSet', {
         defaultValue: 'p-icon-weather-clouds'
     }],
     proxy: {
-        type: 'rest',
+        type: 'rest-filter',
         reader: {
             type: 'json',
-            typeProperty: 'mtype'
-        },
-        extraParams: {}
+            rootProperty: 'sets'
+        }
     }
 });

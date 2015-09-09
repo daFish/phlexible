@@ -56,12 +56,6 @@ Ext.define('Phlexible.dashboard.view.DashboardController', {
             add: this.save,
             remove: this.save,
             render: function() {
-                Ext.DomHelper.append(this.getView().getEl(), {
-                    tag: 'img',
-                    src: '/bundles/phlexiblegui/images/watermark.gif',
-                    cls: 'p-dashboard-watermark'
-                });
-
                 if (Phlexible.User.isGranted('ROLE_ADMIN')) {
                     Ext.DomHelper.append(this.getView().getEl(), {
                         tag: 'div',

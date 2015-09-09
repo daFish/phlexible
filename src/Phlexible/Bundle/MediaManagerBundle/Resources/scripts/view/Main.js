@@ -1,6 +1,7 @@
 Ext.define('Phlexible.mediamanager.view.Main', {
     extend: 'Ext.panel.Panel',
     requires: [
+        'Phlexible.mediamanager.model.Folder',
         'Phlexible.mediamanager.toolbar.UploadStatus',
         'Phlexible.mediamanager.view.Files',
         'Phlexible.mediamanager.view.Folders',
@@ -9,10 +10,23 @@ Ext.define('Phlexible.mediamanager.view.Main', {
     xtype: 'mediamanager.main',
 
     iconCls: Phlexible.Icon.get('images'),
-    layout: 'border',
-    closable: true,
     cls: 'p-mediamanager-main',
+    layout: 'border',
     border: false,
+    closable: true,
+    referenceHolder: true,
+    viewModel: {
+        stores: {
+            folders: {
+                type: 'tree',
+                model: 'Phlexible.mediamanager.model.Folder',
+                folderSort: true,
+                root: {
+                    expanded: true
+                }
+            }
+        }
+    },
 
     mode: '',
     params: {},
@@ -89,7 +103,7 @@ Ext.define('Phlexible.mediamanager.view.Main', {
             }
         }
 
-        if (this.params.mediaCategory || this.params.mediaTypes) {
+        if (this.params.mediaTypes) {
             this.hideFilter = true;
         }
 
@@ -102,11 +116,15 @@ Ext.define('Phlexible.mediamanager.view.Main', {
     initMyItems: function() {
         this.items = [{
             xtype: 'mediamanager.folders',
-            itemId: 'folders',
+            itemId: 'tree',
+            reference: 'tree',
             region: 'west',
             margin: '5 0 5 5',
             width: 200,
-            start_folder_path: this.params.start_folder_path || false,
+            startFolderPath: this.params.startFolderPath || false,
+            bind: {
+                store: '{folders}'
+            },
             split: true,
             minWidth: 100,
             maxWidth: 400,
@@ -144,7 +162,7 @@ Ext.define('Phlexible.mediamanager.view.Main', {
             itemId: 'attributes',
             region: 'east',
             margin: '5 5 5 0',
-            width: 290,
+            width: 320,
             collapsible: true,
             collapsed: this.params.hide_properties || false,
             mode: this.mode,
@@ -555,7 +573,7 @@ Ext.define('Phlexible.mediamanager.view.Main', {
     },
 
     getFolderTree: function () {
-        return this.getComponent('folders');
+        return this.getComponent('tree');
     },
 
     getAttributesPanel: function () {
@@ -602,7 +620,7 @@ Ext.define('Phlexible.mediamanager.view.Main', {
         div.style.left = '10px';
         div.style.right = '10px';
         div.style.bottom = '10px';
-        div.style.height = '30px';
+        div.style.height = '50px';
         div.style.border = '2px dashed lightgrey';
         div.style.textAlign = 'center';
         div.style.verticalAlign = 'center';
@@ -616,14 +634,20 @@ Ext.define('Phlexible.mediamanager.view.Main', {
         div.appendChild(text);
         this.dropper = c.body.dom.appendChild(div);
 
-        plupload.addEvent(div, 'dragenter', function (e) {
-            div.style.borderColor = 'lightblue';
+        c.el.on('dragenter', function() {
+            div.style.borderColor = 'green';
+            div.style.backgroundColor = 'lightgreen';
+            div.style.color = 'black';
         });
-        plupload.addEvent(div, 'dragleave', function (e) {
+        c.el.on('dragleave', function() {
             div.style.borderColor = 'lightgrey';
+            div.style.backgroundColor = '#f3f3f3';
+            div.style.color = 'gray';
         });
-        plupload.addEvent(div, 'drop', function (e) {
+        c.el.on('drop', function() {
             div.style.borderColor = 'lightgrey';
+            div.style.backgroundColor = '#f3f3f3';
+            div.style.color = 'gray';
         });
         plupload.addEvent(c.body.dom, 'drop', function (e) {
             e.preventDefault();
@@ -674,7 +698,7 @@ Ext.define('Phlexible.mediamanager.view.Main', {
             url: Phlexible.Router.generate('mediamanager_upload'),
             flash_swf_url: Phlexible.bundleAsset('/phlexiblemediamanager/plupload/Moxie.swf'),
             silverlight_xap_url: Phlexible.bundleAsset('/phlexiblemediamanager/plupload/Moxie.xap'),
-            drop_element: dropper,
+            drop_element: this.getFilesGrid().el.dom,
             multipart: true,
             multipart_params: {
             }

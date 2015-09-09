@@ -77,7 +77,7 @@ Ext.define('Phlexible.mediamanager.view.FileVersions', {
             '<div class="thumb"><img src="{[Phlexible.Router.generate(\"mediamanager_media\", {fileId: values.id, templateKey: \"_mm_medium\", fileVersion: values.version})]}" width="48" height="48"></div>',
             '<div class="text">',
             '<span><b qtip="{name}">{[values.name.shorten(25)]}</b></span><br />',
-            //'<span>[v{version}] {[Phlexible.documenttypes.DocumentTypes.getText(values.mediaType)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
+            //'<span>[v{version}] {[Phlexible.mediatype.MediaTypes.getText(values.mediaType)]}, {[Phlexible.Format.size(values.size)]}</span><br />',
             //'<span>Create User: {create_user_id}</span><br />',
             '<span>{create_time}</span><br />',
             '</div>',
@@ -151,6 +151,8 @@ Ext.define('Phlexible.mediamanager.view.FileVersions', {
             this.fileVersion = null;
         }
 
+        // TODO: fix
+        return;
         this.getComponent(0).getStore().getProxy().setUrl(Phlexible.Router.generate('mediamanager_file_detail', {fileId: this.fileId}));
         this.getComponent(0).getStore().load();
     },

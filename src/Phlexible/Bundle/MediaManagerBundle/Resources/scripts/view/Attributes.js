@@ -2,14 +2,22 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
     extend: 'Ext.panel.Panel',
     requires: [
         'Phlexible.mediamanager.view.FileMeta',
+        'Phlexible.mediamanager.view.FileProperties',
         'Phlexible.mediamanager.view.FilePreview',
         'Phlexible.mediamanager.view.FileVersions',
         'Phlexible.mediamanager.view.FolderMeta'
     ],
     xtype: 'mediamanager.attributes',
+    cls: 'p-mediamanager-attributes',
 
     iconCls: Phlexible.Icon.get('document'),
     autoScroll: true,
+    layout: {
+        type: 'accordion',
+        titleCollapse: true,
+        fill: false,
+        multi: true
+    },
 
     folderRights: {},
     mode: '',
@@ -17,69 +25,34 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
     noFileSelectedText: '_noFileSelected',
     attributesText: '_attributesText',
     noAttributesText: '_noAttributesText',
+    nameText: '_nameText',
+    typeText: '_typeText',
+    sizeText: '_sizeText',
+    createdByText: '_createdByText',
+    createdAtText: '_createdAtText',
 
     initComponent: function () {
-        this.initMyTemplates();
-        this.initMyAccordions();
+        this.setTitle(this.noFileSelectedText);
+
         this.initMyItems();
 
         this.callParent(arguments);
     },
 
     initMyItems: function() {
-        this.setTitle(this.noFileSelectedText);
-
-        this.items = [
-            {
-                xtype: 'mediamanager.file-preview',
-                itemId: 'preview',
-                header: false,
-                border: false
-            },
-            {
-                itemId: 'details',
-                header: false,
-                border: false,
-                autoHeight: true,
-                tpl: this.detailsTpl,
-                data: {}
-            },
-            {
-                xtype: 'panel',
-                itemId: 'accordions',
-                header: false,
-                border: false,
-                layout: {
-                    type: 'accordion',
-                    titleCollapse: true,
-                    fill: true
-                },
-                items: this.accordionPanels
-            }
-        ];
-
-        delete this.accordionPanels;
-    },
-
-    initMyTemplates: function() {
-        this.detailsTpl = new Ext.XTemplate(
-            '<div>',
-            '<div style="color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div>',
-            '<div>{[Ext.String.ellipsis(values.name, 40)]}</div>',
-            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.type]}:</div>',
-            '<div>{mediaType}</div>',
-            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.size]}:</div>',
-            '<div>{[Phlexible.Format.size(values.size)]}</div>',
-            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.created_by]}:</div>',
-            '<div>{createUser}</div>',
-            '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.create_date]}:</div>',
-            '<div>{[Phlexible.Format.date(values.createTime)]}</div>',
-            '</div>'
-        );
-    },
-
-    initMyAccordions: function() {
-        this.accordionPanels = [{
+        this.items = [{
+            xtype: 'mediamanager.file-preview',
+            itemId: 'preview',
+            height: 270,
+            bodyPadding: 5,
+            border: false
+        },{
+            xtype: 'mediamanager.file-properties',
+            itemId: 'details',
+            bodyPadding: 5,
+            border: false,
+            autoHeight: true
+        },{
             xtype: 'mediamanager.file-versions',
             itemId: 'versions',
             border: false,
@@ -210,7 +183,7 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
         }];
 
         if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {
-            this.accordionPanels.push({
+            this.items.push({
                 xtype: 'grid',
                 itemId: 'file-debug',
                 title: 'Debug File',
@@ -238,7 +211,7 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
                 ]
             });
 
-            this.accordionPanels.push({
+            this.items.push({
                 xtype: 'grid',
                 itemId: 'folder-debug',
                 title: 'Debug Folder',
@@ -266,7 +239,7 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
                 ]
             });
 
-            this.accordionPanels.push({
+            this.items.push({
                 xtype: 'grid',
                 itemId: 'cache-debug',
                 title: 'Debug Cache',
@@ -314,44 +287,40 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
         return this.getComponent('details');
     },
 
-    getAccordionPanel: function () {
-        return this.getComponent('accordions');
-    },
-
     getFileVersionsPanel: function () {
-        return this.getAccordionPanel().getComponent('versions');
+        return this.getComponent('versions');
     },
 
     getFileAttributesPanel: function () {
-        return this.getAccordionPanel().getComponent('attributes');
+        return this.getComponent('attributes');
     },
 
     getFolderMetaPanel: function () {
-        return this.getAccordionPanel().getComponent('folder-meta');
+        return this.getComponent('folder-meta');
     },
 
     getFileMetaPanel: function () {
-        return this.getAccordionPanel().getComponent('file-meta');
+        return this.getComponent('file-meta');
     },
 
     getFolderUsedPanel: function () {
-        return this.getAccordionPanel().getComponent('folder-usage');
+        return this.getComponent('folder-usage');
     },
 
     getFileUsedPanel: function () {
-        return this.getAccordionPanel().getComponent('file-usage');
+        return this.getComponent('file-usage');
     },
 
     getFileDebugPanel: function () {
-        return this.getAccordionPanel().getComponent('file-debug');
+        return this.getComponent('file-debug');
     },
 
     getFolderDebugPanel: function () {
-        return this.getAccordionPanel().getComponent('folder-debug');
+        return this.getComponent('folder-debug');
     },
 
     getCacheDebugPanel: function () {
-        return this.getAccordionPanel().getComponent('cache-debug');
+        return this.getComponent('cache-debug');
     },
 
     setFolderRights: function (folderRights) {
@@ -359,10 +328,6 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
 
         this.getFileMetaPanel().setRights(folderRights);
         this.getFolderMetaPanel().setRights(folderRights);
-    },
-
-    loadFolderMeta: function (folderId) {
-        this.getFolderMetaPanel().loadMeta({folderId: folderId});
     },
 
     emptyFolder: function() {
@@ -380,8 +345,8 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
     },
 
     loadFolder: function(folder) {
-        this.setFolderRights(folder.data.rights);
-        this.loadFolderMeta(folder.id);
+        this.setFolderRights(folder.get('rights'));
+        this.getFolderMetaPanel().loadMeta({folderId: folder.getId()});
 
         // folder usage
         if (folder.get('usedIn')) {
@@ -433,8 +398,8 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
 
     loadFile: function (file) {
         this.setTitle(Ext.String.ellipsis(file.get('name'), 40));
-        var documentTypeClass = Phlexible.documenttypes.DocumentTypes.getClass(file.get('mediaType')) || Phlexible.documenttypes.DocumentTypes.getClass('_unknown');
-        this.setIconCls(documentTypeClass + '-small');
+        var mediaTypeClass = Phlexible.mediatype.MediaTypes.getClass(file.get('mediaType')) || Phlexible.mediatype.MediaTypes.getClass('_unknown');
+        this.setIconCls(mediaTypeClass + '-small');
 
         this.getPreviewPanel().loadRecord(file);
 
@@ -445,6 +410,7 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
 //        this.attributesPanel.setTitle(this.strings.attributes + ' [' + properties.attributesCnt + ']');
 //        this.attributesPanel.setSource(properties.attributes);
         var details = {
+            name: file.get('name'),
             mediaType: file.get('mediaTypeTitle'),
             version: file.get('version'),
             size: file.get('size'),
@@ -464,8 +430,8 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
         this.getFileAttributesPanel().setSource(file.get('attributes'));
 
         this.getFileMetaPanel().loadMeta({
-            fileId: this.fileId,
-            fileVersion: this.fileVersion
+            fileId: file.getId(),
+            fileVersion: file.get('version')
         });
 
         if (Phlexible.User.isGranted('ROLE_SUPER_ADMIN')) {

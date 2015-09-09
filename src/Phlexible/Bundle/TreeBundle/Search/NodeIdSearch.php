@@ -11,6 +11,7 @@ namespace Phlexible\Bundle\TreeBundle\Search;
 use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
+use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -26,7 +27,7 @@ class NodeIdSearch extends AbstractNodeSearch
     private $treeManager;
 
     /**
-     * @var \Phlexible\Component\Site\Model\SiteManagerInterface
+     * @var SiteManagerInterface
      */
     private $siterootManager;
 
@@ -47,8 +48,8 @@ class NodeIdSearch extends AbstractNodeSearch
 
     /**
      * @param TreeManagerInterface          $treeManager
-     * @param \Phlexible\Component\Site\Model\SiteManagerInterface      $siterootManager
-     * @param \Phlexible\Bundle\TreeBundle\Icon\IconResolver                  $iconResolver
+     * @param SiteManagerInterface          $siterootManager
+     * @param IconResolver                  $iconResolver
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param string                        $defaultLanguage
      */
@@ -87,7 +88,12 @@ class NodeIdSearch extends AbstractNodeSearch
      */
     public function search($query)
     {
-        $tree = $this->treeManager->getByNodeId((int) $query);
+        if (!is_int($query)) {
+            return array();
+        }
+
+        $treeContext = new WorkingTreeContext('de');
+        $tree = $this->treeManager->getByNodeId($treeContext, (int) $query);
 
         if (!$tree) {
             return array();

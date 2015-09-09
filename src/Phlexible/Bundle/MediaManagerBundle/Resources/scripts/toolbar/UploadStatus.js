@@ -80,8 +80,8 @@ Ext.define('Phlexible.mediamanager.toolbar.UploadStatus', {
         Phlexible.console.debug('UploadStatusBar::addFile(' + id + ')');
         var iconCls = Phlexible.Icon.get('document');
         var ext = name.split('.').pop();
-        if (Phlexible.documenttypes.DocumentTypes.classMap[ext]) {
-            iconCls = Phlexible.documenttypes.DocumentTypes.classMap[ext].cls + '-small';
+        if (Phlexible.mediatype.MediaTypes.get(ext)) {
+            iconCls = Phlexible.mediatype.MediaTypes.get(ext).cls + '-small';
         }
         var text = name;
         if (size) {

@@ -1,7 +1,10 @@
 Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
     extend: 'Ext.window.Window',
+    requires: [
+        'Phlexible.mediamanager.view.FilePreview',
+        'Phlexible.mediamanager.view.FileProperties'
+    ],
 
-    title: '_FileDetailWindow',
     iconCls: Phlexible.Icon.get('document'),
     width: 900,
     minWidth: 900,
@@ -17,7 +20,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
     file: null,
     folderRights: [],
 
-    folderText: '_folderText',
+    pathText: '_pathText',
     idText: '_idText',
     nameText: '_nameText',
     attributesText: '_attributesText',
@@ -25,31 +28,13 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
 
     initComponent: function () {
         this.title = this.file.get('name');
-        this.iconCls = Phlexible.documenttypes.DocumentTypes.getClass(this.file.get('mediaType')) + "-small";
+        this.iconCls = Phlexible.mediatype.MediaTypes.getClass(this.file.get('mediaType')) + "-small";
 
-        this.initMyTemplates();
         this.initMyTabs();
         this.initMyItems();
         this.initMyDockedItems();
 
         this.callParent(arguments);
-    },
-
-    initMyTemplates: function() {
-        this.fileDetailTemplate = new Ext.XTemplate(
-            '<div>',
-                '<div style="color: grey;">{[Phlexible.mediamanager.Strings.name]}:</div>',
-                '<div>{[Ext.String.ellipsis(values.name, 40)]}</div>',
-                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.type]}:</div>',
-                '<div>{mediaType}</div>',
-                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.size]}:</div>',
-                '<div>{[Phlexible.Format.size(values.size)]}</div>',
-                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.created_by]}:</div>',
-                '<div>{createUser}</div>',
-                '<div style="color: grey; padding-top: 5px;">{[Phlexible.mediamanager.Strings.create_date]}:</div>',
-                '<div>{[Phlexible.Format.date(values.createTime)]}</div>',
-            '</div>'
-        );
     },
 
     initMyItems: function() {
@@ -66,7 +51,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
                 bodyStyle: 'background-color: white;',
                 items: [
                     {
-                        xtype: 'mediamanager-file-preview',
+                        xtype: 'mediamanager.file-preview',
                         itemId: 'preview',
                         region: 'north',
                         border: false,
@@ -78,14 +63,13 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
                         cache: this.file.get('cache')
                     },
                     {
-                        xtype: 'panel',
+                        xtype: 'mediamanager.file-properties',
                         itemId: 'details',
                         region: 'center',
                         header: false,
                         border: false,
                         autoHeight: true,
                         padding: 5,
-                        tpl: this.fileDetailTemplate,
                         data: this.file.data
                     }
                 ]
@@ -110,7 +94,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
             itemId: 'tbar',
             dock: 'top',
             items: [
-                this.folderText,
+                this.pathText,
                 {
                     xtype: 'textfield',
                     itemId: 'pathField',
@@ -123,7 +107,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
                     xtype: 'textfield',
                     itemId: 'nameField',
                     value: this.file.get('name'),
-                    width: 326
+                    flex: 1
                 },
                 ' ',
                 this.idText,
@@ -170,7 +154,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
     initMyTabs: function () {
         this.tabs = [
             {
-                xtype: 'mediamanager-file-versions',
+                xtype: 'mediamanager.file-versions',
                 itemId: 'versions',
                 region: 'center',
                 fileId: this.file.get('id'),
@@ -201,7 +185,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
                 hidden: false
             },
             {
-                xtype: 'mediamanager-file-meta',
+                xtype: 'mediamanager.file-meta',
                 itemId: 'meta',
                 border: false,
                 params: {
@@ -293,7 +277,7 @@ Ext.define('Phlexible.mediamanager.window.FileDetailWindow', {
 
     setFile: function(file) {
         this.setTitle(file.get('name'));
-        this.setIconCls(Phlexible.documenttypes.DocumentTypes.getClass(file.get('mediaType')) + "-small");
+        this.setIconCls(Phlexible.mediatype.MediaTypes.getClass(file.get('mediaType')) + "-small");
 
         this.getPreviewPanel().load(
             file.get('fileId'),

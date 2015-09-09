@@ -84,13 +84,13 @@ interface UserManagerInterface extends BaseUserManagerInterface
 
     /**
      * @param Expression $expression
-     * @param array|null $sort
+     * @param array      $sort
      * @param int|null   $limit
      * @param int|null   $offset
      *
      * @return UserInterface[]
      */
-    public function findByExpression(Expression $expression, array $sort = null, $limit = null, $offset = null);
+    public function findByExpression(Expression $expression, array $sort = array(), $limit = null, $offset = null);
 
     /**
      * @param Expression $expression

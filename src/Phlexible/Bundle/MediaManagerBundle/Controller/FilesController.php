@@ -70,14 +70,14 @@ class FilesController extends FOSRestController
         $data = array();
         $total = 0;
 
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $volume = $this->getVolumeByFolderId($folderId);
-        $authorizationChecker = $this->get('security.authorization_checker');
 
         $folder = $volume->findFolder($folderId);
 
         if (
-            $authorizationChecker->isGranted('ROLE_SUPER_ADMIN') ||
-            $authorizationChecker->isGranted('FILE_READ', $folder)
+            $this->isGranted('ROLE_SUPER_ADMIN') ||
+            $this->isGranted('FILE_READ', $folder)
         ) {
             $expr = Expr::equals($folderId, 'folder');
 
@@ -87,12 +87,12 @@ class FilesController extends FOSRestController
 
             if ($expression) {
                 $expression = json_decode($expression, true);
-                $serializer = new ArrayExpressionSerializer();
-                $expr = new Conjunction(array($expr, $serializer->deserialize($expression)));
+                $expressionSerializer = new ArrayExpressionSerializer();
+                $expr = new Conjunction(array($expr, $expressionSerializer->deserialize($expression)));
             }
 
-            $files = $volume->findFilesByExpression($expr, array($sort => $dir), $limit, $start);
-            $total = $volume->countFilesByExpression($expr);
+            $files = $volumeManager->findFilesByExpression($expr, array($sort => $dir), $limit, $start);
+            $total = $volumeManager->countFilesByExpression($expr);
 
             $serializer = $this->get('phlexible_media_manager.file_serializer');
 

@@ -169,7 +169,7 @@ class UserManager extends BaseUserManager implements UserManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByExpression(Expression $expr, array $sort = null, $limit = null, $offset = null)
+    public function findByExpression(Expression $expr, array $sort = array(), $limit = null, $offset = null)
     {
         return $this->getUserRepository()->findByExpression($expr, $sort, $limit, $offset);
     }

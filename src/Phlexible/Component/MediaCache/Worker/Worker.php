@@ -127,7 +127,7 @@ class Worker implements WorkerInterface
             ->setFileSize(0)
             ->setError(null);
 
-        if (!file_exists($file->getPhysicalPath())) {
+        if (!file_exists($file->getVolume()->getPhysicalPath($file))) {
             return $this->applyError(
                 $cacheItem,
                 CacheItem::STATUS_MISSING,
@@ -161,7 +161,7 @@ class Worker implements WorkerInterface
 
         try {
             $spec = $this->specifier->specify($template);
-            $tempFilename = $this->transmuter->transmute($file->getPhysicalPath(), $spec, $tempFilename);
+            $tempFilename = $this->transmuter->transmute($file->getVolume()->getPhysicalPath($file), $spec, $tempFilename);
 
             if (!$tempFilename) {
                 return $this->applyError(

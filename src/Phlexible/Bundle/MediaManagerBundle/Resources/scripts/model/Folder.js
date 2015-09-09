@@ -1,32 +1,22 @@
-Ext.define('Ext.data.proxy.TreeRest', {
+Ext.define('Phlexible.data.proxy.TreeRest', {
     extend: 'Ext.data.proxy.Rest',
-    alias: 'proxy.treerest',
+    alias: 'proxy.rest-filter',
+
     buildUrl: function(request) {
         var me        = this,
             operation = request.getOperation(),
             records   = operation.getRecords(),
             record    = records ? records[0] : null,
+            node      = operation.node || null,
             format    = me.getFormat(),
             url       = me.getUrl(request),
-            id, params;
+            params    = [],
+            id;
 
         if (record && !record.phantom) {
             id = record.getId();
         } else {
             id = operation.getId();
-        }
-
-        if (id !== 'root' && me.getAppendId() && me.isValidId(id)) {
-            if (!url.match(me.slashRe)) {
-                url += '/';
-            }
-
-            url += encodeURIComponent(id);
-            url += '/folders';
-            params = request.getParams();
-            if (params) {
-                delete params[me.getIdParam()];
-            }
         }
 
         if (format) {
@@ -37,18 +27,29 @@ Ext.define('Ext.data.proxy.TreeRest', {
             url += format;
         }
 
-        if (me.getNoCache()) {
-            url = Ext.urlAppend(url, Ext.String.format("{0}={1}", me.getCacheString(), Ext.Date.now()));
+        if (node && this.parameters) {
+            Ext.Object.each(this.parameters, function(key, config) {
+                var value = node.get(config.field);
+                if (config.skipIf && value === config.skipIf) {
+                    return false;
+                }
+                if (config.emptyIf && value === config.emptyIf) {
+                    value = '';
+                }
+                params.push(key + '=' + encodeURI(value));
+            });
+            url += '?' + params.join('&');
         }
 
         request.setUrl(url);
 
-        return url;
+        return Ext.data.proxy.Rest.superclass.buildUrl.call(this, request);
     }
 });
 
 Ext.define('Phlexible.mediamanager.model.Folder', {
     extend: 'Ext.data.TreeModel',
+
     entityName: 'Folder',
     fields: [
         {name: 'id', type: 'string'},
@@ -65,17 +66,14 @@ Ext.define('Phlexible.mediamanager.model.Folder', {
         {name: 'rights'}
     ],
     proxy: {
-        type: 'treerest',
+        type: 'rest-filter',
         url: Phlexible.Router.generate('phlexible_api_mediamanager_get_folders'),
+        parameters: {
+            parentId: {field: 'id', emptyIf: 'root'}
+        },
         reader: {
             type: 'json',
             rootProperty: 'folders'
         }
-    },
-    root: {
-        id: 'root',
-        text: 'root',
-        expanded: true,
-        iconCls: Phlexible.Icon.get('folder')
     }
 });

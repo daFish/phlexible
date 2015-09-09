@@ -1,8 +1,5 @@
 Ext.define('Phlexible.mediamanager.view.Folders', {
-    extend: 'Ext.tree.TreePanel',
-    requires: [
-        'Phlexible.mediamanager.model.Folder'
-    ],
+    extend: 'Ext.tree.Panel',
     xtype: 'mediamanager.folders',
 
     cls: 'p-mediamanager-folders',
@@ -21,14 +18,6 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
     deleteFolderText: '_deleteFolderText',
     folderRightsText: '_folderRightsText',
     propertiesText: '_propertiesText',
-
-    /**
-     * @event folderChange
-     * Fires after a Folder has been selected
-     * @param {Number} folderId The ID of the selected Folder.
-     * @param {String} folderName The Name of the selected Folder.
-     * @param {Phlexible.mediamanager.model.Folder} node The TreeNode of the selected Folder.
-     */
 
     /**
      * @event reload
@@ -61,34 +50,15 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
     },
 
     initMyStore: function() {
-        this.store = Ext.create('Ext.data.TreeStore', {
-            model: 'Phlexible.mediamanager.model.Folder',
-            folderSort: true,
-            listeners: {
-                load: function (loader, node) {
-                    if (this.startFolderPath) {
-                        this.selectPath(this.startFolderPath);
-                    }
-                },
-                scope: this
-            }
+        return;
+        this.store.on({
+            load: function (loader, node) {
+                if (this.startFolderPath) {
+                    this.selectPath(this.startFolderPath);
+                }
+            },
+            scope: this
         });
-
-        /*
-         this.root.appendChild(new Ext.tree.AsyncTreeNode({
-         text: this.strings.root,
-         draggable: false,
-         id: -1,
-         expanded: true
-         }));
-         this.root.appendChild(new Ext.tree.AsyncTreeNode({
-         text: this.strings.trash,
-         draggable: false,
-         id: 'trash',
-         cls: 'p-trash-node',
-         expanded: true
-         }));
-         */
     },
 
     initMyContextMenus: function() {
@@ -420,7 +390,7 @@ Ext.define('Phlexible.mediamanager.view.Folders', {
     },
 
     deleteFolder: function (folder) {
-        this.getSelectionModel().select(folder.parentNode)
+        this.getSelectionModel().select(folder.parentNode);
         folder.drop();
     },
 

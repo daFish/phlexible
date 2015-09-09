@@ -29,6 +29,15 @@ Phlexible:
                 title: Preview
                 noPreviewAvailableText: 'No preview available'
 
+            FileProperties:
+                title: File information
+                name: Name
+                size: Size
+                createdAtText: 'Created at'
+                createdByText: 'Created by'
+                modifiedAtText: 'Modified at'
+                modifiedByText: 'Modified by'
+
             Files:
                 title: Files
                 emptyText: 'No files present.'
@@ -72,7 +81,7 @@ Phlexible:
                 title: 'Folder meta data'
 
             FolderProperties:
-                title: Ordnereigenschaften
+                title: Folder information
                 typeText: Type
                 pathText: Path
                 sizeText: Size
@@ -137,7 +146,7 @@ Phlexible:
         window:
             FileDetailWindow:
                 title: File details
-                folderText: Folder
+                pathText: Path
                 idText: ID
                 nameText: Name
                 attributesText: Attributes
@@ -172,6 +181,9 @@ Phlexible:
 
             FolderDetailWindow:
                 title: Folder details
+                pathText: Path
+                idText: ID
+                nameText: Name
 
             FolderRenameWindow:
                 title: 'Rename folder'

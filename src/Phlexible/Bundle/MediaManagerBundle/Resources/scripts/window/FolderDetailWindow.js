@@ -1,5 +1,9 @@
 Ext.define('Phlexible.mediamanager.window.FolderDetailWindow', {
     extend: 'Ext.window.Window',
+    requires: [
+        'Phlexible.mediamanager.view.FolderProperties',
+        'Phlexible.mediamanager.view.FolderMeta'
+    ],
 
     title: '_FolderDetailWindow',
     iconCls: Phlexible.Icon.get('folder'),
@@ -15,6 +19,10 @@ Ext.define('Phlexible.mediamanager.window.FolderDetailWindow', {
     activeTabId: 'properties',
 
     folder: null,
+
+    pathText: '_pathText',
+    idText: '_idText',
+    nameText: '_nameText',
 
     initComponent: function () {
         if (!this.folder) {
@@ -37,6 +45,7 @@ Ext.define('Phlexible.mediamanager.window.FolderDetailWindow', {
         }
 
         this.initMyItems(activeTab);
+        this.initMyDockedItems();
 
         this.callParent(arguments);
     },
@@ -52,11 +61,11 @@ Ext.define('Phlexible.mediamanager.window.FolderDetailWindow', {
 
     initMyTabs: function() {
         this.tabs = [{
-            xtype: 'mediamanager-folder-properties',
+            xtype: 'mediamanager.folder-properties',
             itemId: 'properties',
             folder: this.folder
         },{
-            xtype: 'mediamanager-folder-meta',
+            xtype: 'mediamanager.folder-meta',
             itemId: 'meta',
             border: false,
             stripeRows: true,
@@ -92,5 +101,39 @@ Ext.define('Phlexible.mediamanager.window.FolderDetailWindow', {
                 return 'p-mediamanager-permission_' + permission.name.toLowerCase() + '-icon';
             }
         }*/];
+    },
+
+
+    initMyDockedItems: function() {
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            itemId: 'tbar',
+            dock: 'top',
+            items: [
+                this.pathText,
+                {
+                    xtype: 'textfield',
+                    itemId: 'pathField',
+                    value: this.folder.get('path'),
+                    width: 200
+                },
+                ' ',
+                this.nameText,
+                {
+                    xtype: 'textfield',
+                    itemId: 'nameField',
+                    value: this.folder.get('name'),
+                    flex: 1
+                },
+                ' ',
+                this.idText,
+                {
+                    xtype: 'textfield',
+                    itemId: 'idField',
+                    value: this.folder.get('id'),
+                    width: 240
+                }
+            ]
+        }];
     }
 });

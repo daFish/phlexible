@@ -11,5 +11,12 @@ Ext.define('Phlexible.mediamanager.model.FolderMeta', {
         {name: 'synchronized', type: 'bool'},
         {name: 'readonly', type: 'bool'},
         {name: 'values'}
-    ]
+    ],
+    proxy: {
+        type: 'rest-filter',
+        reader: {
+            type: 'json',
+            rootProperty: 'meta'
+        }
+    }
 });

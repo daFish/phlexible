@@ -110,14 +110,14 @@ interface VolumeInterface
     public function findFile($id, $version = 1);
 
     /**
-     * @param array      $criteria
-     * @param array|null $order
-     * @param int|null   $limit
-     * @param int|null   $start
+     * @param array    $criteria
+     * @param array    $orderBy
+     * @param int|null $limit
+     * @param int|null $start
      *
      * @return FileInterface[]
      */
-    public function findFiles(array $criteria, $order = null, $limit = null, $start = null);
+    public function findFiles(array $criteria, $orderBy = array(), $limit = null, $start = null);
 
     /**
      * @param array $criteria
@@ -143,7 +143,7 @@ interface VolumeInterface
 
     /**
      * @param FolderInterface $folder
-     * @param string          $order
+     * @param array           $orderBy
      * @param int             $limit
      * @param int             $start
      * @param bool            $includeHidden
@@ -152,7 +152,7 @@ interface VolumeInterface
      */
     public function findFilesByFolder(
         FolderInterface $folder,
-        $order = null,
+        $orderBy = array(),
         $limit = null,
         $start = null,
         $includeHidden = false);
@@ -174,10 +174,13 @@ interface VolumeInterface
 
     /**
      * @param Expression $expression
+     * @param array      $orderBy
+     * @param int|null   $limit
+     * @param int|null   $start
      *
      * @return FileInterface[]
      */
-    public function findFilesByExpression(Expression $expression);
+    public function findFilesByExpression(Expression $expression, $orderBy = array(), $limit = null, $start = null);
 
     /**
      * @param Expression $expression

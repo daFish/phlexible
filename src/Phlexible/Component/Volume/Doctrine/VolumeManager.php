@@ -259,7 +259,7 @@ class VolumeManager implements VolumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findFoldersBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null)
+    public function findFoldersBy(array $criteria = array(), $orderBy = array(), $limit = null, $offset = null)
     {
         return $this->getFolderRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
@@ -275,7 +275,7 @@ class VolumeManager implements VolumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findFolderBy(array $criteria = array(), $orderBy = null)
+    public function findFolderBy(array $criteria = array(), $orderBy = array())
     {
         return $this->getFolderRepository()->findOneBy($criteria, $orderBy);
     }
@@ -283,7 +283,7 @@ class VolumeManager implements VolumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findFoldersByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    public function findFoldersByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null)
     {
         return $this->getFolderRepository()->findByExpression($expression, $orderBy, $limit, $offset);
     }
@@ -299,7 +299,7 @@ class VolumeManager implements VolumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findFilesBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = null)
+    public function findFilesBy(array $criteria = array(), $orderBy = array(), $limit = null, $offset = null)
     {
         return $this->getFileRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
@@ -315,7 +315,7 @@ class VolumeManager implements VolumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findFileBy(array $criteria = array(), $orderBy = null)
+    public function findFileBy(array $criteria = array(), $orderBy = array())
     {
         return $this->getFileRepository()->findOneBy($criteria, $orderBy);
     }
@@ -323,9 +323,9 @@ class VolumeManager implements VolumeManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findFilesByExpression(Expression $expression, $order = null, $limit = null, $start = null)
+    public function findFilesByExpression(Expression $expression, $orderBy = array(), $limit = null, $start = null)
     {
-        return $this->getFileRepository()->findByExpression($expression, $order, $limit, $start);
+        return $this->getFileRepository()->findByExpression($expression, $orderBy, $limit, $start);
     }
 
     /**
@@ -350,7 +350,8 @@ class VolumeManager implements VolumeManagerInterface
      */
     public function createFile(FileInterface $file, FileSourceInterface $fileSource)
     {
-        $path = $file->getPhysicalPath();
+        $path = $file->getVolume()->getPhysicalPath($file);
+        //$path = $file->getPhysicalPath();
         $filesystem = new Filesystem();
 
         if (!file_exists($path)) {
