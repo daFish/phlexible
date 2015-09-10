@@ -66,6 +66,9 @@ class PhlexibleMessageExtension extends Extension
             $container->setParameter($this->getAlias() . '.subscription_backend_type_' . $config['subscription_db_driver'], true);
         }
 
+        $container->setParameter('phlexible_message.message_model_manager_name', $config['message_model_manager_name']);
+        $container->setParameter('phlexible_message.filter_model_manager_name', $config['filter_model_manager_name']);
+        $container->setParameter('phlexible_message.subscription_model_manager_name', $config['subscription_model_manager_name']);
         $container->setAlias('phlexible_message.message_manager', $config['service']['message_manager']);
         $container->setAlias('phlexible_message.filter_manager', $config['service']['filter_manager']);
         $container->setAlias('phlexible_message.subscription_manager', $config['service']['subscription_manager']);

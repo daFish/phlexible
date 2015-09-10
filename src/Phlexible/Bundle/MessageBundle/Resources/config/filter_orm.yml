@@ -7,4 +7,5 @@ services:
     phlexible_message.filter_entity_manager:
         class: Doctrine\ORM\EntityManager
         public: false
+        factory: [@doctrine, "getManager"]
         arguments: [%phlexible_message.filter_model_manager_name%]
