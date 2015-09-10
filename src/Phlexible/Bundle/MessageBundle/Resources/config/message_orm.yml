@@ -1,0 +1,10 @@
+services:
+    phlexible_message.message_manager.default:
+        class: Phlexible\Bundle\MessageBundle\Doctrine\MessageManager
+        public: false
+        arguments: [@phlexible_message.message_entity_manager]
+
+    phlexible_message.message_entity_manager:
+        class: Doctrine\ORM\EntityManager
+        public: false
+        arguments: [%phlexible_message.message_model_manager_name%]

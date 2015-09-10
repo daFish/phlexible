@@ -346,7 +346,7 @@ Ext.define('Phlexible.mediamanager.view.Attributes', {
 
     loadFolder: function(folder) {
         this.setFolderRights(folder.get('rights'));
-        this.getFolderMetaPanel().loadMeta({folderId: folder.getId()});
+        this.getFolderMetaPanel().loadFolder(folder);
 
         // folder usage
         if (folder.get('usedIn')) {

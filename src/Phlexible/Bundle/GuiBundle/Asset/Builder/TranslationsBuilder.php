@@ -111,7 +111,7 @@ class TranslationsBuilder
             $filesystem->mkdir(dirname($cacheFilename));
         }
 
-        if ($this->debug) {
+        if (!$this->debug) {
             $content = $this->compress($content);
         }
 

@@ -43,23 +43,22 @@ class FolderSerializer
      */
     public function serialize(ExtendedFolderInterface $folder)
     {
-        $volume = $folder->getVolume();
-
         $usage = $this->folderUsageManager->getStatus($folder);
         $usedIn = $this->folderUsageManager->getUsedIn($folder);
 
         $data = array(
-            'id'          => $folder->getId(),
-            'name'        => $folder->getName(),
-            'path'        => $folder->getPath(),
-            'volumeId'    => $folder->getVolumeId(),
-            'createdBy'   => $folder->getCreateUser(),
-            'createdAt'   => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
-            'modifiedBy'  => $folder->getModifyUser(),
-            'modifiedAt'  => $folder->getModifiedAt() ? $folder->getModifiedAt()->format('Y-m-d H:i:s') : null,
-            'attributes'  => $folder->getAttributes(),
-            'usedIn'      => $usedIn,
-            'used'        => $usage,
+            'id'         => $folder->getId(),
+            'name'       => $folder->getName(),
+            'path'       => $folder->getPath(),
+            'volumeId'   => $folder->getVolumeId(),
+            'createdBy'  => $folder->getCreateUser(),
+            'createdAt'  => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
+            'modifiedBy' => $folder->getModifyUser(),
+            'modifiedAt' => $folder->getModifiedAt() ? $folder->getModifiedAt()->format('Y-m-d H:i:s') : null,
+            'attributes' => $folder->getAttributes(),
+            'metasets'   => $folder->getMetasets(),
+            'usedIn'     => $usedIn,
+            'used'       => $usage,
         );
 
         return $data;

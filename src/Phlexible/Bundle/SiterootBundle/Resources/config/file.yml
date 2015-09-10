@@ -1,6 +1,7 @@
 services:
     phlexible_siteroot.puli_repository:
         class: Phlexible\Component\Site\File\PuliSiteRepository
+        public: false
         arguments:
             - @puli.discovery
             - @puli.repository
@@ -11,6 +12,7 @@ services:
 
     phlexible_siteroot.siteroot_manager.default:
         class: Phlexible\Component\Site\File\SiteManager
+        public: false
         arguments:
             - @phlexible_siteroot.puli_repository
             - @validator

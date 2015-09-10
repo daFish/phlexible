@@ -3,10 +3,6 @@ parameters:
     app.web_dir:  %kernel.root_dir%/../web/
 
 services:
-    pattern_locator:
-        class: Phlexible\Bundle\GuiBundle\Locator\PatternResourceLocator
-        arguments: [@kernel, "%kernel.root_dir%/Resources"]
-
     phlexible_gui.route_extractor:
         class: Phlexible\Bundle\GuiBundle\Routing\RouteExtractor
         arguments: [@router]

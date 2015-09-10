@@ -1,19 +1,31 @@
 Ext.define('Phlexible.mediamanager.view.FolderMeta', {
-    extend: 'Phlexible.mediamanager.view.FileMeta',
+    extend: 'Phlexible.mediamanager.view.AbstractMeta',
+    requires: [
+        'Phlexible.mediamanager.view.AbstractMeta',
+        'Phlexible.mediamanager.model.FolderMetaSet',
+        'Phlexible.mediamanager.model.FolderMeta'
+    ],
     xtype: 'mediamanager.folder-meta',
 
-    checkRight: Phlexible.mediamanager.Rights.FOLDER_MODIFY,
+    getMetaRoute: function() {
+        return 'phlexible_api_mediamanager_get_folder_metas';
+    },
 
-    initMyUrls: function () {
-        this.routes = {
-            load: 'phlexible_api_mediamanager_get_folder_metasets'
-        };
+    getMetasetRoute: function() {
+        return 'phlexible_api_mediamanager_get_folder_metasets';
+    },
 
-        this.metasetUrls = {
-            list: 'mediamanager_folder_meta_sets_list',
-            save: 'mediamanager_folder_meta_sets_save',
-            available: 'phlexible_api_metaset_get_metasets'
-        };
+    getMetasetModel: function() {
+        return 'Phlexible.mediamanager.model.FolderMetaSet';
+    },
+
+    getCheckRight: function() {
+        return Phlexible.mediamanager.Rights.FOLDER_MODIFY;
+    },
+
+    loadFolder: function(folder) {
+        this.loadMeta({folderId: folder.getId()});
+        this.sourceItem = folder;
     },
 
     createMetaGridConfig: function(setId, title, fields, small) {

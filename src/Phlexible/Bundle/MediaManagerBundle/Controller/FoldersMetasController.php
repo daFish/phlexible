@@ -47,49 +47,53 @@ class FoldersMetasController extends FOSRestController
      */
     public function getMetasAction(Request $request, $folderId)
     {
-        $folder = $this->get('phlexible_media_manager.volume_manager')->getByFolderId($folderId)->findFolder($folderId);
-
+        $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $folderMetaSetResolver = $this->get('phlexible_media_manager.folder_meta_set_resolver');
         $folderMetaDataManager = $this->get('phlexible_media_manager.folder_meta_data_manager');
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
 
-        $meta = array();
+        $folder = $volumeManager->findFolder($folderId);
+
+        $folderMetaSets = array();
 
         foreach ($folderMetaSetResolver->resolve($folder) as $metaSet) {
             $metaData = $folderMetaDataManager->findByMetaSetAndFolder($metaSet, $folder);
 
-            $fieldDatas = array();
+            $folderMetas = array();
 
             foreach ($metaSet->getFields() as $field) {
                 $options = $optionResolver->resolve($field);
 
-                $fieldData = array(
-                    'key'          => $field->getName(),
+                $folderMeta = array(
+                    'id'           => $field->getId(),
+                    'name'         => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
                     'required'     => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
+                    'values'       => array(),
+                    'leaf'         => true,
                 );
 
                 if ($metaData) {
                     foreach ($metaData->getLanguages() as $language) {
-                        $fieldData["value_$language"] = $metaData->get($field->getName(), $language);
+                        $fieldData['value'][$language] = $metaData->get($field->getName(), $language);
                     }
                 }
 
-                $fieldDatas[] = $fieldData;
+                $folderMetas[] = $folderMeta;
             }
 
-            $meta[] = array(
-                'set_id' => $metaSet->getId(),
-                'title'  => $metaSet->getName(),
-                'fields' => $fieldDatas
+            $folderMetaSets[] = array(
+                'id'       => $metaSet->getId(),
+                'name'     => $metaSet->getName(),
+                'children' => $folderMetas
             );
         }
 
         return array(
-            'meta' => $meta
+            'metasets' => $folderMetaSets
         );
     }
 

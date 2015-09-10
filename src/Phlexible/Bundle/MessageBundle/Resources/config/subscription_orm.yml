@@ -1,0 +1,10 @@
+services:
+    phlexible_message.subscription_manager.default:
+        class: Phlexible\Bundle\MessageBundle\Doctrine\SubscriptionManager
+        public: false
+        arguments: [@phlexible_message.subscription_entity_manager]
+
+    phlexible_message.subscription_entity_manager:
+        class: Doctrine\ORM\EntityManager
+        public: false
+        arguments: [%phlexible_message.subscription_model_manager_name%]

@@ -43,7 +43,6 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeOverwritten()
                     ->cannotBeEmpty()
                 ->end()
-                ->scalarNode('model_manager_name')->defaultNull()->end()
                 ->arrayNode('mappings')
                     ->canBeUnset()
                     ->useAttributeAsKey('name')

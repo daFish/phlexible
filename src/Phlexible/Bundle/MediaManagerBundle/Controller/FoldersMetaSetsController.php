@@ -62,7 +62,7 @@ class FoldersMetaSetsController extends FOSRestController
             );
         }
 
-        return new JsonResponse(array('sets' => $sets));
+        return new JsonResponse(array('metasets' => $sets));
     }
 
     /**

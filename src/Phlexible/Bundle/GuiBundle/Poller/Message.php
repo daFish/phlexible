@@ -11,6 +11,9 @@
 
 namespace Phlexible\Bundle\GuiBundle\Poller;
 
+use DateTime;
+use DateTimeInterface;
+
 /**
  * Poller message
  *
@@ -34,7 +37,7 @@ class Message
     private $data;
 
     /**
-     * @var \DateTime
+     * @var DateTimeInterface
      */
     private $timestamp;
 
@@ -49,7 +52,7 @@ class Message
         $this->event = $event;
         $this->data = $data;
 
-        $this->timestamp = new \DateTime();
+        $this->timestamp = new DateTime();
     }
 
     /**
@@ -77,7 +80,7 @@ class Message
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getTimestamp()
     {

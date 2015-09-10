@@ -18,10 +18,13 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\SiterootBundle\Form\Type\SiteType;
 use Phlexible\Component\Site\Domain\Site;
 use Phlexible\Component\Site\Domain\SiteCollection;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Site controller
@@ -33,6 +36,33 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class SitesController extends FOSRestController
 {
+    /**
+     * @var SiteManagerInterface
+     */
+    private $siteManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param SiteManagerInterface $siteManager
+     * @param FormFactoryInterface $formFactory
+     * @param RouterInterface      $router
+     */
+    public function __construct(SiteManagerInterface $siteManager, FormFactoryInterface $formFactory, RouterInterface $router)
+    {
+        $this->siteManager = $siteManager;
+        $this->formFactory = $formFactory;
+        $this->router = $router;
+    }
+
     /**
      * Get sites
      *
@@ -50,9 +80,7 @@ class SitesController extends FOSRestController
      */
     public function getSitesAction()
     {
-        $siteManager = $this->get('phlexible_siteroot.siteroot_manager');
-
-        $sites = $siteManager->findAll();
+        $sites = $this->siteManager->findAll();
 
         return new SiteCollection(
             $sites,
@@ -80,8 +108,7 @@ class SitesController extends FOSRestController
      */
     public function getSiteAction($siteId)
     {
-        $siteManager = $this->get('phlexible_siteroot.siteroot_manager');
-        $site = $siteManager->find($siteId);
+        $site = $this->siteManager->find($siteId);
 
         if (!$site instanceof Site) {
             throw new NotFoundHttpException('Site not found');
@@ -134,8 +161,7 @@ class SitesController extends FOSRestController
      */
     public function putSiteAction(Request $request, $siteId)
     {
-        $siteManager = $this->get('phlexible_siteroot.siteroot_manager');
-        $site = $siteManager->find($siteId);
+        $site = $this->siteManager->find($siteId);
 
         if (!$site instanceof Site) {
             throw new NotFoundHttpException('Site not found');
@@ -154,12 +180,11 @@ class SitesController extends FOSRestController
     {
         $statusCode = !$site->getId() ? 201 : 204;
 
-        $form = $this->createForm(new SiteType(), $site);
+        $form = $this->formFactory->create(new SiteType(), $site);
         $form->submit($request);
 
         if ($form->isValid()) {
-            $siteManager = $this->get('phlexible_siteroot.siteroot_manager');
-            $siteManager->updateSite($site);
+            $this->siteManager->updateSite($site);
 
             $response = new Response();
             $response->setStatusCode($statusCode);
@@ -168,7 +193,7 @@ class SitesController extends FOSRestController
             if (201 === $statusCode) {
                 $response->headers->set(
                     'Location',
-                    $this->generateUrl(
+                    $this->router->generate(
                         'phlexible_api_site_get_site',
                         array('siteId' => $site->getId()),
                         true
@@ -201,13 +226,12 @@ class SitesController extends FOSRestController
      */
     public function deleteSiteAction($siteId)
     {
-        $siteManager = $this->get('phlexible_siteroot.siteroot_manager');
-        $site = $siteManager->find($siteId);
+        $site = $this->siteManager->find($siteId);
 
         if (!$site instanceof Site) {
             throw new NotFoundHttpException('Site not found');
         }
 
-        $siteManager->deleteSite($site);
+        $this->siteManager->deleteSite($site);
     }
 }

@@ -6,14 +6,30 @@ Ext.define('Phlexible.mediamanager.model.FolderMetaSet', {
     idProperty: 'id',
     fields: [
         {name: 'id', type: 'string'},
-        {name: 'key', type: 'string'},
-        {name: 'title', type: 'string'}
+        {name: 'name', type: 'string'}
     ],
     proxy: {
         type: 'rest-filter',
         reader: {
             type: 'json',
-            rootProperty: 'sets'
+            rootProperty: 'metasets'
+        },
+        writer: {
+            type: 'json',
+            allDataOptions: {
+                persist: true,
+                associated: true
+            },
+            partialDataOptions: {
+                persist: true,
+                changes: false,
+                critical: true,
+                associated: true
+            },
+            writeRecordId: false,
+            transform: function(data, request) {
+                return {set: data};
+            }
         }
     }
 });

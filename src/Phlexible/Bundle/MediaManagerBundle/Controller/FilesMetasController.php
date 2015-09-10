@@ -54,10 +54,9 @@ class FilesMetasController extends FOSRestController
         $volumeManager = $this->get('phlexible_media_manager.volume_manager');
         $fileMetaSetResolver = $this->get('phlexible_media_manager.file_meta_set_resolver');
         $fileMetaDataManager = $this->get('phlexible_media_manager.file_meta_data_manager');
-
-        $file = $volumeManager->getByFileId($fileId)->findFile($fileId, $fileVersion);
-
         $optionResolver = $this->get('phlexible_meta_set.option_resolver');
+
+        $file = $volumeManager->findFile($fileId, $fileVersion);
 
         $fileMetaSets = array();
 
@@ -70,7 +69,8 @@ class FilesMetasController extends FOSRestController
                 $options = $optionResolver->resolve($field);
 
                 $fileMeta = array(
-                    'key'          => $field->getName(),
+                    'id'           => $field->getId(),
+                    'name'         => $field->getName(),
                     'type'         => $field->getType(),
                     'options'      => $options,
                     'readonly'     => $field->isReadonly(),
@@ -91,13 +91,13 @@ class FilesMetasController extends FOSRestController
 
             $fileMetaSets[] = array(
                 'id'       => $metaSet->getId(),
-                'title'    => $metaSet->getName(),
+                'name'     => $metaSet->getName(),
                 'children' => $fileMetas
             );
         }
 
         return array(
-            'metas' => $fileMetaSets
+            'metasets' => $fileMetaSets
         );
     }
 

@@ -1,5 +1,5 @@
 services:
-    phlexible_media_template.file.puli_repository:
+    phlexible_media_template.puli_repository:
         class: Phlexible\Component\MediaTemplate\File\PuliTemplateRepository
         public: false
         arguments:
@@ -10,7 +10,7 @@ services:
             - %phlexible_media_template.dumper.filesystem_dir%
             - %phlexible_media_template.dumper.puli_resource_dir%
 
-    phlexible_media_template.file.template_manager:
+    phlexible_media_template.template_manager.default:
         class: Phlexible\Component\MediaTemplate\File\TemplateManager
         public: false
-        arguments: [@phlexible_media_template.file.puli_repository]
+        arguments: [@phlexible_media_template.puli_repository]

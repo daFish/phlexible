@@ -60,9 +60,10 @@ Ext.define('Phlexible.mediamanager.model.Folder', {
         {name: 'createdBy', type: 'string'},
         {name: 'modifiedAt', type: 'date', dateFormat: 'Y-m-d H:i:s'},
         {name: 'modifiedBy', type: 'string'},
-        {name: 'usageStatus', type: 'int'},
-        {name: 'usedIn'},
         {name: 'attributes'},
+        {name: 'metasets'},
+        {name: 'usedIn'},
+        {name: 'usageStatus', type: 'int'},
         {name: 'rights'}
     ],
     proxy: {

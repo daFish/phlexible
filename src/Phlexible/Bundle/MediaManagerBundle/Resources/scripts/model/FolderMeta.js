@@ -1,10 +1,11 @@
 Ext.define('Phlexible.mediamanager.model.FolderMeta', {
     extend: 'Ext.data.TreeModel',
-    entityName: 'FolderMeta',
-    idProperty: 'key',
 
+    entityName: 'FolderMeta',
+    idProperty: 'id',
     fields: [
-        {name: 'key', type: 'string'},
+        {name: 'id', type: 'string'},
+        {name: 'name', type: 'string'},
         {name: 'type', type: 'string'},
         {name: 'options', type: 'string'},
         {name: 'required', type: 'bool'},

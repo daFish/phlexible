@@ -1,4 +1,8 @@
 services:
+    phlexible_siteroot.sites_controller:
+        class: Phlexible\Bundle\SiterootBundle\Controller\SitesController
+        arguments: [@phlexible_siteroot.siteroot_manager, @form.factory, @router]
+
     phlexible_siteroot.siteroot_saver:
         class: Phlexible\Bundle\SiterootBundle\Controller\Siteroot\SiterootSaver
         arguments: [@phlexible_siteroot.siteroot_manager]

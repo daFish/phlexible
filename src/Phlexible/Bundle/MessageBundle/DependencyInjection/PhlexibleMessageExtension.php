@@ -46,26 +46,28 @@ class PhlexibleMessageExtension extends Extension
         }
         $container->findDefinition('phlexible_message.message_handler')->replaceArgument(0, $handlers);
 
-        if ($config['message_manager'] === 'doctrine') {
-            $loader->load('doctrine_message.yml');
-            $container->setAlias('phlexible_message.message_manager', 'phlexible_message.doctrine.message_manager');
-        } elseif ($config['message_manager'] === 'elastica') {
-            $loader->load('elastica_message.yml');
-            $container->setAlias('phlexible_message.message_manager', 'phlexible_message.elastica.message_manager');
-        } else {
-            throw new \InvalidArgumentException('message_manager needs to be doctrine or elastica');
+        if ('custom' !== $config['message_db_driver']) {
+            $loader->load(sprintf('message_%s.yml', $config['message_db_driver']));
+            $container->setParameter($this->getAlias() . '.message_backend_type_' . $config['message_db_driver'], true);
+
+            if ('elastica' === $config['message_db_driver']) {
+                $container->setParameter('phlexible_message.elastica_index_name', $config['elastica_index_name']);
+                $container->setParameter('phlexible_message.elastica_type_name', $config['elastica_type_name']);
+            }
         }
 
-        $container->setParameter('phlexible_message.elastica_index_name', $config['elastica_index_name']);
-        $container->setParameter('phlexible_message.elastica_type_name', $config['elastica_type_name']);
+        if ('custom' !== $config['filter_db_driver']) {
+            $loader->load(sprintf('filter_%s.yml', $config['filter_db_driver']));
+            $container->setParameter($this->getAlias() . '.filter_backend_type_' . $config['filter_db_driver'], true);
+        }
 
-        $loader->load('doctrine_filter.yml');
-        $container->setAlias('phlexible_message.filter_manager', 'phlexible_message.doctrine.filter_manager');
+        if ('custom' !== $config['subscription_db_driver']) {
+            $loader->load(sprintf('subscription_%s.yml', $config['subscription_db_driver']));
+            $container->setParameter($this->getAlias() . '.subscription_backend_type_' . $config['subscription_db_driver'], true);
+        }
 
-        $loader->load('doctrine_subscription.yml');
-        $container->setAlias(
-            'phlexible_message.subscription_manager',
-            'phlexible_message.doctrine.subscription_manager'
-        );
+        $container->setAlias('phlexible_message.message_manager', $config['service']['message_manager']);
+        $container->setAlias('phlexible_message.filter_manager', $config['service']['filter_manager']);
+        $container->setAlias('phlexible_message.subscription_manager', $config['service']['subscription_manager']);
     }
 }

@@ -17,11 +17,11 @@ use Phlexible\Component\Site\Domain\Site;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
- * In memory siteroot manager
+ * In memory site manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class InMemoryTestSiterootManager implements SiteManagerInterface
+class InMemorySiteManager implements SiteManagerInterface
 {
     /**
      * @var Site[]|ArrayCollection
@@ -30,10 +30,16 @@ class InMemoryTestSiterootManager implements SiteManagerInterface
 
     /**
      * Constructor.
+     *
+     * @param array $sites
      */
-    public function __construct()
+    public function __construct(array $sites = array())
     {
         $this->sites = new ArrayCollection();
+
+        foreach ($sites as $site) {
+            $this->sites->set($site->getId(), $site);
+        }
     }
 
     /**

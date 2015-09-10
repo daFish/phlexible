@@ -1,5 +1,5 @@
 services:
-    phlexible_message.elastica.message_manager:
+    phlexible_message.message_manager.default:
         class: Phlexible\Bundle\MessageBundle\Elastica\MessageManager
         public: false
         arguments:

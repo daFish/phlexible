@@ -15,33 +15,25 @@ use Phlexible\Component\Site\Domain\Site;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class SiterootsControllerTest
- *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class SiterootsControllerTest extends WebTestCase
+class SitesControllerFunctionalTest extends WebTestCase
 {
-    /**
-     * @group functional
-     */
-    public function testGetSiterootsReturnsJsonWithCorrectKeys()
+    public function testGetSitesReturnsJsonWithCorrectKeys()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $client->request('GET', '/admin/rest/siteroots');
+        $client->request('GET', '/admin/rest/sites');
         $response = $client->getResponse();
         $content = $response->getContent();
         $data = json_decode($content, true);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertArrayHasKey('siteroots', $data);
-        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('sites', $data);
+        $this->assertArrayHasKey('total', $data);
     }
 
-    /**
-     * @group functional
-     */
-    public function testGetSiterootReturnsJsonWithCorrectKeys()
+    public function testGetSiteReturnsJsonWithCorrectKeys()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
@@ -51,25 +43,25 @@ class SiterootsControllerTest extends WebTestCase
         $siteManager->updateSite($site);
         $siteId = $site->getId();
 
-        $client->request('GET', "/admin/rest/siteroots/$siteId");
+        $client->request('GET', "/admin/rest/sites/$siteId");
         $response = $client->getResponse();
         $content = $response->getContent();
         $data = json_decode($content, true);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertArrayHasKey('siteroot', $data);
-        $this->assertArrayHasKey('id', $data['siteroot']);
-        $this->assertSame($siteId, $data['siteroot']['id']);
+        $this->assertArrayHasKey('site', $data);
+        $this->assertArrayHasKey('id', $data['site']);
+        $this->assertSame($siteId, $data['site']['id']);
     }
 
     /**
      * @group functional
      */
-    public function testGetSiterootRespondsWith404ForUnknownSiteroot()
+    public function testGetSiteRespondsWith404ForUnknownSite()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $client->request('GET', '/admin/rest/siteroots/invalid');
+        $client->request('GET', '/admin/rest/sites/invalid');
         $response = $client->getResponse();
 
         $this->assertSame(404, $response->getStatusCode());
@@ -78,14 +70,14 @@ class SiterootsControllerTest extends WebTestCase
     /**
      * @group functional
      */
-    public function testPostSiterootsCreatesNewSiteroot()
+    public function testPostSitesCreatesNewSite()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $siterootManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         $data = array(
-            'siteroot' => array(
+            'site' => array(
                 'default' => true,
                 'titles' => array('de' => 'testDe', 'en' => 'testEn'),
                 'specialTids' => array(
@@ -100,32 +92,32 @@ class SiterootsControllerTest extends WebTestCase
             ),
         );
 
-        $client->request('POST', "/admin/rest/siteroots", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('POST', "/admin/rest/sites", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(201, $response->getStatusCode());
-        $this->assertCount(1, $siterootManager->findAll());
-        $siteroot = current($siterootManager->findAll());
-        $this->assertTrue($siteroot->isDefault());
-        $specialTid = $siteroot->getSpecialTid('de', 'testSpecialTid');
+        $this->assertCount(1, $siteManager->findAll());
+        $site = current($siteManager->findAll());
+        $this->assertTrue($site->isDefault());
+        $specialTid = $site->getSpecialTid('de', 'testSpecialTid');
         $this->assertSame(123, $specialTid);
-        $navigation = $siteroot->getNavigations()->first();
+        $navigation = $site->getNavigations()->first();
         $this->assertSame('testNavigation', $navigation->getTitle());
-        $url = $siteroot->getUrls()->first();
+        $url = $site->getUrls()->first();
         $this->assertSame('testHostname', $url->getHostname());
     }
 
     /**
      * @group functional
      */
-    public function testPostSiterootsRespondsWith400OnError()
+    public function testPostSitesRespondsWith400OnError()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $siterootManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         $data = array(
-            'siteroot' => array(
+            'site' => array(
                 'default' => true,
                 //'titles' => array('de' => 'testDe', 'en' => 'testEn'),
                 'navigations' => array(
@@ -137,17 +129,17 @@ class SiterootsControllerTest extends WebTestCase
             ),
         );
 
-        $client->request('POST', "/admin/rest/siteroots", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('POST', "/admin/rest/sites", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(400, $response->getStatusCode());
-        $this->assertCount(0, $siterootManager->findAll());
+        $this->assertCount(0, $siteManager->findAll());
     }
 
     /**
      * @group functional
      */
-    public function testPutSiterootUpdatesExistingSiteroot()
+    public function testPutSiteUpdatesExistingSite()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
@@ -159,7 +151,7 @@ class SiterootsControllerTest extends WebTestCase
         $siteId = $site->getId();
 
         $data = array(
-            'siteroot' => array(
+            'site' => array(
                 'default' => true,
                 //'titles' => array('de' => 'testDe', 'en' => 'testEn'),
                 'navigations' => array(
@@ -171,7 +163,7 @@ class SiterootsControllerTest extends WebTestCase
             ),
         );
 
-        $client->request('PUT', "/admin/rest/siteroots/$siteId", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('PUT', "/admin/rest/sites/$siteId", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(204, $response->getStatusCode());
@@ -187,14 +179,14 @@ class SiterootsControllerTest extends WebTestCase
     /**
      * @group functional
      */
-    public function testPutSiterootRespondsWith404ForUnknownSiteroot()
+    public function testPutSiteRespondsWith404ForUnknownSite()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $siterootManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
+        $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         $data = array(
-            'siteroot' => array(
+            'site' => array(
                 'default' => true,
                 'navigations' => array(
                     array('title' => 'testNavigation'),
@@ -205,17 +197,17 @@ class SiterootsControllerTest extends WebTestCase
             ),
         );
 
-        $client->request('PUT', "/admin/rest/siteroots/invalid", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('PUT', "/admin/rest/sites/invalid", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertCount(0, $siterootManager->findAll());
+        $this->assertCount(0, $siteManager->findAll());
     }
 
     /**
      * @group functional
      */
-    public function testDeleteSiterootDeletesSiteroot()
+    public function testDeleteSiteDeletesSite()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
@@ -225,7 +217,7 @@ class SiterootsControllerTest extends WebTestCase
         $siteManager->updateSite($site);
         $siteId = $site->getId();
 
-        $client->request('DELETE', "/admin/rest/siteroots/$siteId");
+        $client->request('DELETE', "/admin/rest/sites/$siteId");
         $response = $client->getResponse();
 
         $this->assertSame(204, $response->getStatusCode());
@@ -234,11 +226,11 @@ class SiterootsControllerTest extends WebTestCase
     /**
      * @group functional
      */
-    public function testDeleteSiterootRespondsWith404ForUnknownSiteroot()
+    public function testDeleteSiteRespondsWith404ForUnknownSite()
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
 
-        $client->request('DELETE', "/admin/rest/siteroots/invalid");
+        $client->request('DELETE', "/admin/rest/sites/invalid");
         $response = $client->getResponse();
 
         $this->assertSame(404, $response->getStatusCode());

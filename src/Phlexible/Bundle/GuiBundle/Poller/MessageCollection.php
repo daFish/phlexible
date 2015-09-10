@@ -11,6 +11,8 @@
 
 namespace Phlexible\Bundle\GuiBundle\Poller;
 
+use DateTimeInterface;
+
 /**
  * Poller message collection
  *
@@ -24,7 +26,7 @@ class MessageCollection
     private $userId;
 
     /**
-     * @var \DateTime|null
+     * @var DateTimeInterface|null
      */
     private $lastPoll;
 
@@ -34,11 +36,11 @@ class MessageCollection
     private $messages = array();
 
     /**
-     * @param string    $userId
-     * @param \DateTime $lastPoll
-     * @param Message[] $messages
+     * @param string            $userId
+     * @param DateTimeInterface $lastPoll
+     * @param Message[]         $messages
      */
-    public function __construct($userId, \DateTime $lastPoll = null, array $messages = array())
+    public function __construct($userId, DateTimeInterface $lastPoll = null, array $messages = array())
     {
         $this->userId = $userId;
         $this->lastPoll = $lastPoll;
@@ -57,7 +59,7 @@ class MessageCollection
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTimeInterface|null
      */
     public function getLastPoll()
     {
