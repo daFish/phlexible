@@ -15,7 +15,6 @@ use Phlexible\Bundle\ElementBundle\Change\AddChange;
 use Phlexible\Bundle\ElementBundle\Change\Checker;
 use Phlexible\Bundle\ElementBundle\Change\RemoveChange;
 use Phlexible\Bundle\ElementBundle\Change\UpdateChange;
-use Phlexible\Bundle\ElementBundle\Model\ElementStructure;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;

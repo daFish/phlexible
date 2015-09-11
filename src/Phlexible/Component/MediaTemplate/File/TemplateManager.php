@@ -11,7 +11,6 @@
 
 namespace Phlexible\Component\MediaTemplate\File;
 
-use Phlexible\Component\MediaTemplate\Exception\NotFoundException;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 

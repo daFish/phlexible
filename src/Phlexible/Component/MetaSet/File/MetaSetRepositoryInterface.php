@@ -19,7 +19,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 interface MetaSetRepositoryInterface
 {
     /**
-     * @return \Phlexible\Component\MetaSet\Domain\MetaSetCollection
+     * @return MetaSetCollection
      */
     public function loadAll();
 

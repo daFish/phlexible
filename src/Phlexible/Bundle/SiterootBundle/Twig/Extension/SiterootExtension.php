@@ -35,7 +35,7 @@ class SiterootExtension extends \Twig_Extension
     private $siterootRequestMatcher;
 
     /**
-     * @var \Phlexible\Component\Site\Site\SitesAccessor
+     * @var SitesAccessor
      */
     private $siterootsAccessor;
 
@@ -47,8 +47,8 @@ class SiterootExtension extends \Twig_Extension
     /**
      * @param SiteManagerInterface $siterootManager
      * @param SiteRequestMatcher   $siterootRequestMatcher
-     * @param \Phlexible\Component\Site\Site\SitesAccessor        $siterootsAccessor
-     * @param RequestStack             $requestStack
+     * @param SitesAccessor        $siterootsAccessor
+     * @param RequestStack         $requestStack
      */
     public function __construct(
         SiteManagerInterface $siterootManager,
@@ -84,7 +84,7 @@ class SiterootExtension extends \Twig_Extension
     }
 
     /**
-     * @return \Phlexible\Component\Site\Domain\Site
+     * @return Site
      */
     public function currentSiteroot()
     {

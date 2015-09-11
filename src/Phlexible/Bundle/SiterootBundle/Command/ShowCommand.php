@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\SiterootBundle\Command;
 
-use Phlexible\Component\Site\File\Dumper\XmlDumper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

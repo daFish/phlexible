@@ -18,7 +18,6 @@ use Phlexible\Component\MetaSet\Domain\MetaData;
 use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
-use Phlexible\Component\Suggest\Model\DataSourceManagerInterface;
 
 /**
  * Meta data manager

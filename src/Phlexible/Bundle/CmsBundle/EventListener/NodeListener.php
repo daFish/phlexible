@@ -9,8 +9,6 @@
 namespace Phlexible\Bundle\CmsBundle\EventListener;
 
 use Phlexible\Bundle\CmsBundle\Usage\UsageUpdater;
-use Phlexible\Bundle\ElementBundle\ElementEvents;
-use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Phlexible\Component\Node\Event\NodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

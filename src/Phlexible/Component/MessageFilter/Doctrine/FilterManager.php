@@ -29,7 +29,7 @@ class FilterManager implements FilterManagerInterface
     private $entityManager;
 
     /**
-     * @var \Phlexible\Component\MessageFilter\Doctrine\Repository\FilterRepository
+     * @var FilterRepository
      */
     private $filterRepository;
 

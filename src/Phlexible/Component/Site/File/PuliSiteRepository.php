@@ -8,11 +8,8 @@
 
 namespace Phlexible\Component\Site\File;
 
-use FluentDOM\Document;
 use JMS\Serializer\Serializer;
 use Phlexible\Component\Site\Domain\Site;
-use Phlexible\Component\Site\File\Dumper\XmlDumper;
-use Phlexible\Component\Site\File\Parser\XmlParser;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\EditableRepository;
 use Puli\Repository\Api\Resource\BodyResource;

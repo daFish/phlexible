@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\AccessControlBundle\SecurityProvider;
 
-use Phlexible\Bundle\UserBundle\Model\GroupManagerInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityProviderInterface;
 use Phlexible\Component\AccessControl\SecurityProvider\SecurityResolverInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;

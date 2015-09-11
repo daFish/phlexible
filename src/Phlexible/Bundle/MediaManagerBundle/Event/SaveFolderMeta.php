@@ -11,8 +11,6 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Event;
 
-use Phlexible\Bundle\MediaManagerBundle\Events;
-
 /**
  * Save folder meta event
  *

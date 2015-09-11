@@ -11,10 +11,7 @@
 
 namespace Phlexible\Component\Expression\Serializer;
 
-use Webmozart\Expression\Comparison;
 use Webmozart\Expression\Expression;
-use Webmozart\Expression\Logic;
-use Webmozart\Expression\Selector;
 
 /**
  * Expression serializer interface

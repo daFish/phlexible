@@ -8,8 +8,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle\Area;
 
-use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
-use Phlexible\Bundle\TeaserBundle\Teaser\TeaserContext;
+use Phlexible\Bundle\TreeBundle\Entity\PartNode;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
 
@@ -38,11 +37,10 @@ class AreaManager
      * @param NodeContext $forNode
      * @param bool        $includeLocalHidden
      *
-     * @return Teaser[]
+     * @return PartNode[]
      */
     public function findCascadingByAreaAndNode($area, NodeContext $forNode, $includeLocalHidden = true)
     {
-        /* @var $teasers Teaser[] */
         $teasers = array();
         $forNodeId = $forNode->getId();
 
@@ -83,7 +81,7 @@ class AreaManager
      * @param mixed       $area
      * @param NodeContext $node
      *
-     * @return Teaser[]
+     * @return PartNod[]
      */
     public function findByAreaAndNode($area, NodeContext $node)
     {

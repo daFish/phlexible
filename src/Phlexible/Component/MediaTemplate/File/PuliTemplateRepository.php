@@ -9,9 +9,6 @@
 namespace Phlexible\Component\MediaTemplate\File;
 
 use JMS\Serializer\Serializer;
-use Phlexible\Component\MediaTemplate\Domain\TemplateCollection;
-use Phlexible\Component\MediaTemplate\File\Dumper\DumperInterface;
-use Phlexible\Component\MediaTemplate\File\Parser\ParserInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Api\EditableRepository;

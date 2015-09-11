@@ -13,7 +13,6 @@ use Phlexible\Bundle\TreeBundle\Icon\IconResolver;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Phlexible\Component\Tree\WorkingTreeContext;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Latest node changes portlet

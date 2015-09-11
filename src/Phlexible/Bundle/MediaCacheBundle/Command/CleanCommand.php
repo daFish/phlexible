@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
-use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

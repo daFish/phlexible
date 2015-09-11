@@ -11,11 +11,10 @@
 
 namespace Phlexible\Bundle\ElementBundle\Util;
 
-use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
-use Phlexible\Component\MetaSet\Domain\MetaSetField;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
+use Phlexible\Component\Suggest\Domain\DataSourceValueBag;
 
 /**
  * Utility class for suggest fields.

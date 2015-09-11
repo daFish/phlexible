@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Proxy\Generator;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 

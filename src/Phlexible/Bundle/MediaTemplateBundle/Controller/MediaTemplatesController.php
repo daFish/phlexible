@@ -15,18 +15,13 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\MediaTemplateBundle\Form\Type\AudioTemplateType;
 use Phlexible\Bundle\MediaTemplateBundle\Form\Type\ImageTemplateType;
-use Phlexible\Bundle\MediaTemplateBundle\Form\Type\MediaTemplateType;
-use Phlexible\Bundle\MediaTemplateBundle\Form\Type\VideoTemplateType;
 use Phlexible\Component\MediaTemplate\Domain\ImageTemplate;
 use Phlexible\Component\MediaTemplate\Domain\TemplateCollection;
-use Phlexible\Component\MediaTemplate\Model\MediaTemplate;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

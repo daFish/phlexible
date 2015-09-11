@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 
-use Phlexible\Bundle\SiterootBundle\Entity\Url;
 use Phlexible\Bundle\TreeBundle\Entity\RedirectRoute;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;

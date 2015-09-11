@@ -12,8 +12,6 @@
 namespace Phlexible\Component\Site\Domain;
 
 use JMS\Serializer\Annotation as Serializer;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Site

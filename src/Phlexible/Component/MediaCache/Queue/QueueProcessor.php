@@ -17,9 +17,7 @@ use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Queue as BaseQueue;
 use Phlexible\Component\MediaCache\Worker\WorkerInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\Model\VolumeManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Filesystem\LockHandler;
 use Temp\MediaClassifier\MediaClassifier;
 

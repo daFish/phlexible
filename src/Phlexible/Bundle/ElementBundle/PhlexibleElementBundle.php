@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\ElementBundle;
 
-use Phlexible\Bundle\ProblemBundle\Problem;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**

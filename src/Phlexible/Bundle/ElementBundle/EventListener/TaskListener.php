@@ -11,12 +11,8 @@
 
 namespace Phlexible\Bundle\ElementBundle\EventListener;
 
-use Phlexible\Bundle\TaskBundle\Entity\Task;
-use Phlexible\Bundle\TaskBundle\Model\TaskManagerInterface;
 use Phlexible\Bundle\TreeBundle\Event\PublishNodeContextEvent;
-use Phlexible\Bundle\TreeBundle\Event\PublishNodeEvent;
 use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineContextEvent;
-use Phlexible\Bundle\TreeBundle\Event\SetNodeOfflineEvent;
 use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Phlexible\Component\Node\Event\NodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

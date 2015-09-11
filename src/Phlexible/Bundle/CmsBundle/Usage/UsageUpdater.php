@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\CmsBundle\Usage;
 
-use Phlexible\Bundle\ElementBundle\Entity\Element;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**

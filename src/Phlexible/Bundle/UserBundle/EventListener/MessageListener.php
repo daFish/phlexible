@@ -18,7 +18,6 @@ use Phlexible\Bundle\UserBundle\UserMessage;
 use Phlexible\Component\Message\Domain\Message;
 use Phlexible\Component\Message\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Message listener

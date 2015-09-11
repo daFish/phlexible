@@ -11,7 +11,6 @@
 
 namespace Phlexible\Component\Elementtype\Domain;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
 use Symfony\Component\Validator\Constraints as Assert;

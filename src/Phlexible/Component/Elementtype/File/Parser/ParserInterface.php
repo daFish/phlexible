@@ -21,14 +21,14 @@ interface ParserInterface
     /**
      * @param string $xml
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
+     * @return Elementtype
      */
     public function parseString($xml);
 
     /**
      * @param Document $dom
      *
-     * @return \Phlexible\Component\Elementtype\Domain\Elementtype
+     * @return Elementtype
      */
     public function parse(Document $dom);
 }

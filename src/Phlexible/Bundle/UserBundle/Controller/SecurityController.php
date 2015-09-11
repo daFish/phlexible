@@ -15,7 +15,6 @@ use FOS\UserBundle\Controller\SecurityController as BaseSecurityController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 
@@ -34,7 +33,6 @@ class SecurityController extends BaseSecurityController
     public function loginAction(Request $request)
     {
         $session = $request->getSession();
-
 
         $authErrorKey = Security::AUTHENTICATION_ERROR;
         $lastUsernameKey = Security::LAST_USERNAME;

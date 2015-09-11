@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\MediaTypeBundle\Controller;
 
 use Phlexible\Bundle\MediaTypeBundle\Compiler\CssCompiler;
-use Phlexible\Bundle\MediaTypeBundle\Compiler\ScriptCompiler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

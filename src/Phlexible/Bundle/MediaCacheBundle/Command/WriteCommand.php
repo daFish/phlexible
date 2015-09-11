@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\QueueItem;
 use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;

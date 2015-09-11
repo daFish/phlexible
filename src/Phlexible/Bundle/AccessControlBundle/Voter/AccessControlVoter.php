@@ -18,7 +18,6 @@ use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalDomainObjectInterface;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
-use Phlexible\Component\AccessControl\Model\UserSecurityIdentity;
 use Phlexible\Component\AccessControl\Permission\PermissionRegistry;
 use Phlexible\Component\AccessControl\Rights\CalculatedRights;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

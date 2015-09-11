@@ -8,7 +8,6 @@
 
 namespace Phlexible\Component\Tree;
 
-use Phlexible\Bundle\TreeBundle\Model\NodeStateManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContextFactoryInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeHasherInterface;
 use Phlexible\Component\Node\Model\NodeManagerInterface;

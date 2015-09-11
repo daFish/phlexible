@@ -8,7 +8,6 @@
 
 namespace Phlexible\Component\AccessControl\Domain;
 
-use FOS\UserBundle\Model\UserInterface;
 use Phlexible\Component\AccessControl\Model\ObjectIdentityInterface;
 use Phlexible\Component\AccessControl\Model\SecurityIdentityInterface;
 use Phlexible\Component\AccessControl\Permission\Permission;

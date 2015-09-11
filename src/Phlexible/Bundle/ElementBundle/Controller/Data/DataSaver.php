@@ -15,7 +15,6 @@ use Phlexible\Bundle\ElementBundle\ElementEvents;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 use Phlexible\Bundle\ElementBundle\Event\SaveElementEvent;
-use Phlexible\Bundle\ElementBundle\Event\SaveNodeDataEvent;
 use Phlexible\Bundle\ElementBundle\Exception\InvalidArgumentException;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;

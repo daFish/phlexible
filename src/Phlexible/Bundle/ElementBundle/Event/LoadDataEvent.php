@@ -11,7 +11,6 @@
 
 namespace Phlexible\Bundle\ElementBundle\Event;
 
-use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\EventDispatcher\Event;
 
