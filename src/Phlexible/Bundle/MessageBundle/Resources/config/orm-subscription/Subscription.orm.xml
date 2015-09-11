@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="Phlexible\Component\MessageSubscription\Domain\Subscription" table="message_subscription">
+        <id name="id" column="id" type="string" length="36">
+            <generator strategy="UUID" />
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </id>
+
+        <field name="userId" column="user_id" type="string" length="36">
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </field>
+        <field name="handler" column="handler" type="string" length="255" nullable="true" />
+        <field name="attributes" column="attributes" type="json_array" nullable="true" />
+
+        <many-to-one target-entity="Phlexible\Component\MessageFilter\Domain\Filter" field="filter">
+            <join-column name="filter_id" referenced-column-name="id" on-delete="CASCADE" />
+        </many-to-one>
+    </entity>
+
+</doctrine-mapping>

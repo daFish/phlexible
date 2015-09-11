@@ -11,6 +11,7 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Phlexible\Bundle\MediaCacheBundle\DependencyInjection\Compiler\AddSpecifiersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleMediaCacheBundle extends Bundle
 {
-    const RESOURCE_MEDIA_CACHE = 'mediacache';
+    const ROLE_MEDIA_CACHE = 'ROLE_MEDIA_CACHE';
 
     /**
      * {@inheritdoc}
@@ -30,5 +31,13 @@ class PhlexibleMediaCacheBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new AddSpecifiersPass());
+
+        $container->addCompilerPass(
+            DoctrineOrmMappingsPass::createXmlMappingDriver(
+                array(realpath(__DIR__.'/Resources/config/orm') => 'Phlexible\Component\MediaCache\Domain'),
+                array('phlexible_media_cache.model_manager_name'),
+                'phlexible_media_cache.backend_type_orm'
+            )
+        );
     }
 }

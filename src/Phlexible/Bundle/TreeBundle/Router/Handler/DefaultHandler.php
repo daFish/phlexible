@@ -146,7 +146,7 @@ class DefaultHandler implements RequestMatcherInterface, UrlGeneratorInterface
 
             $siteroot = $this->treeManager->getBySiteRootId($treeNode->getId())->getSiteroot();
 
-            $hostname = $this->siterootHostnameGenerator->generate($siteroot, $language);
+            $hostname = $this->siterootHostnameGenerator->generate($siteroot);
 
             $port = '';
             if ($scheme === 'http' && $this->requestContext->getHttpPort() !== 80) {

@@ -11,9 +11,9 @@
 
 namespace Phlexible\Bundle\SiterootBundle\EventListener;
 
-use Phlexible\Bundle\MessageBundle\Entity\Message;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\SiterootBundle\SiterootMessage;
+use Phlexible\Component\Message\Domain\Message;
+use Phlexible\Component\Message\Message\MessagePoster;
 use Phlexible\Component\Site\Event\SiteEvent;
 use Phlexible\Component\Site\SiteEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

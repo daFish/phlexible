@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\UserBundle;
 
-use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Phlexible\Component\Message\Domain\Message;
 
 /**
  * User message

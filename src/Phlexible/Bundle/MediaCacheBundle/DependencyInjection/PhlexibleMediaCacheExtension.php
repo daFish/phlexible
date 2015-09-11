@@ -37,8 +37,6 @@ class PhlexibleMediaCacheExtension extends Extension
         $configuration = $this->getConfiguration($config, $container);
         $config = $this->processConfiguration($configuration, $config);
 
-        $container->setParameter('phlexible_media_cache.process_on_add', $config['process_on_add']);
-
         $ids = array();
         foreach ($config['storages'] as $name => $storageConfig) {
             if (!isset($storageConfig['id']) || !isset($storageConfig['options'])) {
@@ -52,7 +50,14 @@ class PhlexibleMediaCacheExtension extends Extension
 
         $container->getDefinition('phlexible_media_cache.storage_manager')->replaceArgument(0, $ids);
 
-        $loader->load('doctrine.yml');
-        $container->setAlias('phlexible_media_cache.cache_manager', 'phlexible_media_cache.doctrine.cache_manager');
+        if ('custom' !== $config['db_driver']) {
+            $loader->load(sprintf('%s.yml', $config['db_driver']));
+            $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
+        }
+
+        $container->setParameter('phlexible_media_cache.process_on_add', $config['process_on_add']);
+        $container->setParameter('phlexible_media_cache.model_manager_name', $config['model_manager_name']);
+
+        $container->setAlias('phlexible_media_cache.cache_manager', $config['service']['cache_manager']);
     }
 }

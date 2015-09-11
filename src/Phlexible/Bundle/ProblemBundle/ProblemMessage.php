@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\ProblemBundle;
 
-use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Phlexible\Component\Message\Domain\Message;
 
 /**
  * Problem message

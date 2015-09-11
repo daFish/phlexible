@@ -15,8 +15,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\MessageBundle\Entity\Subscription;
 use Phlexible\Bundle\MessageBundle\Form\Type\SubscriptionType;
+use Phlexible\Component\MessageSubscription\Domain\Subscription;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,7 +147,7 @@ class SubscriptionsController extends FOSRestController
 
     /**
      * @param Request      $request
-     * @param Subscription $subscription
+     * @param \Phlexible\Component\MessageSubscription\Domain\Subscription $subscription
      *
      * @return Rest\View|Response
      */

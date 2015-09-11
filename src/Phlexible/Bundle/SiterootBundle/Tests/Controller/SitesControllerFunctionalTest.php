@@ -19,9 +19,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class SitesControllerFunctionalTest extends WebTestCase
 {
+    /**
+     * @group functional
+     */
     public function testGetSitesReturnsJsonWithCorrectKeys()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $client->request('GET', '/admin/rest/sites');
         $response = $client->getResponse();
@@ -33,9 +36,12 @@ class SitesControllerFunctionalTest extends WebTestCase
         $this->assertArrayHasKey('total', $data);
     }
 
+    /**
+     * @group functional
+     */
     public function testGetSiteReturnsJsonWithCorrectKeys()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
@@ -49,9 +55,17 @@ class SitesControllerFunctionalTest extends WebTestCase
         $data = json_decode($content, true);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertArrayHasKey('site', $data);
-        $this->assertArrayHasKey('id', $data['site']);
-        $this->assertSame($siteId, $data['site']['id']);
+        $this->assertArrayHasKey('id', $data);
+        $this->assertArrayHasKey('default', $data);
+        $this->assertArrayHasKey('createdAt', $data);
+        $this->assertArrayHasKey('modifiedAt', $data);
+        $this->assertArrayHasKey('titles', $data);
+        $this->assertArrayHasKey('properties', $data);
+        $this->assertArrayHasKey('nodeAliases', $data);
+        $this->assertArrayHasKey('navigations', $data);
+        $this->assertArrayHasKey('entryPoints', $data);
+        $this->assertArrayHasKey('nodeConstraints', $data);
+        $this->assertSame($siteId, $data['id']);
     }
 
     /**
@@ -59,7 +73,7 @@ class SitesControllerFunctionalTest extends WebTestCase
      */
     public function testGetSiteRespondsWith404ForUnknownSite()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $client->request('GET', '/admin/rest/sites/invalid');
         $response = $client->getResponse();
@@ -72,23 +86,28 @@ class SitesControllerFunctionalTest extends WebTestCase
      */
     public function testPostSitesCreatesNewSite()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         $data = array(
             'site' => array(
+                'hostname' => 'www.test.com',
                 'default' => true,
                 'titles' => array('de' => 'testDe', 'en' => 'testEn'),
-                'specialTids' => array(
-                    array('name' => 'testSpecialTid', 'language' => 'de', 'treeId' => 123)
+                'createdAt' => date('Y-m-d H:i:s'),
+                'createdBy' => 'test',
+                'modifiedAt' => date('Y-m-d H:i:s'),
+                'modifiedBy' => 'test',
+                'nodeAliases' => array(
+                    array('name' => 'testSpecialTid', 'language' => 'de', 'nodeId' => 123)
                 ),
-                'navigations' => array(
-                    array('title' => 'testNavigation', 'startTreeId' => 123),
-                ),
-                'urls' => array(
-                    array('hostname' => 'testHostname', 'language' => 'de', 'target' => 123),
-                ),
+                #'navigations' => array(
+                #    array('name' => 'testNavigation', 'nodeId' => 123),
+                #),
+                #'entryPoints' => array(
+                #    array('hostname' => 'testHostname', 'language' => 'de', 'nodeId' => 123),
+                #),
             ),
         );
 
@@ -99,10 +118,15 @@ class SitesControllerFunctionalTest extends WebTestCase
         $this->assertCount(1, $siteManager->findAll());
         $site = current($siteManager->findAll());
         $this->assertTrue($site->isDefault());
+        $this->assertSame('www.test.com', $site->getHostname());
+
+        return;
         $specialTid = $site->getSpecialTid('de', 'testSpecialTid');
         $this->assertSame(123, $specialTid);
+
         $navigation = $site->getNavigations()->first();
         $this->assertSame('testNavigation', $navigation->getTitle());
+
         $url = $site->getUrls()->first();
         $this->assertSame('testHostname', $url->getHostname());
     }
@@ -112,20 +136,18 @@ class SitesControllerFunctionalTest extends WebTestCase
      */
     public function testPostSitesRespondsWith400OnError()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         $data = array(
             'site' => array(
                 'default' => true,
-                //'titles' => array('de' => 'testDe', 'en' => 'testEn'),
-                'navigations' => array(
-                    array('title' => null, 'handler' => 'testHandler'),
-                ),
-                'urls' => array(
-                    array('hostname' => null, 'language' => 'de', 'target' => 123),
-                ),
+                'titles' => array('de' => 'testDe', 'en' => 'testEn'),
+                'createdAt' => date('Y-m-d H:i:s'),
+                'createdBy' => 'test',
+                'modifiedAt' => date('Y-m-d H:i:s'),
+                'modifiedBy' => 'test',
             ),
         );
 
@@ -141,7 +163,7 @@ class SitesControllerFunctionalTest extends WebTestCase
      */
     public function testPutSiteUpdatesExistingSite()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
@@ -152,14 +174,13 @@ class SitesControllerFunctionalTest extends WebTestCase
 
         $data = array(
             'site' => array(
+                'hostname' => 'www.test.de',
                 'default' => true,
-                //'titles' => array('de' => 'testDe', 'en' => 'testEn'),
-                'navigations' => array(
-                    array('title' => 'testTitle', 'startTreeId' => 123),
-                ),
-                'urls' => array(
-                    array('hostname' => 'testHostname', 'language' => 'de', 'target' => 123),
-                ),
+                'titles' => array('de' => 'testDe', 'en' => 'testEn'),
+                'createdAt' => date('Y-m-d H:i:s'),
+                'createdBy' => 'test',
+                'modifiedAt' => date('Y-m-d H:i:s'),
+                'modifiedBy' => 'test',
             ),
         );
 
@@ -170,10 +191,7 @@ class SitesControllerFunctionalTest extends WebTestCase
         $this->assertCount(1, $siteManager->findAll());
         $site = current($siteManager->findAll());
         $this->assertTrue($site->isDefault());
-        $navigation = $site->getNavigations()->first();
-        $this->assertSame('testTitle', $navigation->getTitle());
-        $url = $site->getUrls()->first();
-        $this->assertSame('testHostname', $url->getHostname());
+        $this->assertSame('www.test.de', $site->getHostname());
     }
 
     /**
@@ -181,19 +199,19 @@ class SitesControllerFunctionalTest extends WebTestCase
      */
     public function testPutSiteRespondsWith404ForUnknownSite()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         $data = array(
             'site' => array(
+                'hostname' => 'www.test.de',
                 'default' => true,
-                'navigations' => array(
-                    array('title' => 'testNavigation'),
-                ),
-                'urls' => array(
-                    array('hostname' => 'testHostname'),
-                ),
+                'titles' => array('de' => 'testDe', 'en' => 'testEn'),
+                'createdAt' => date('Y-m-d H:i:s'),
+                'createdBy' => 'test',
+                'modifiedAt' => date('Y-m-d H:i:s'),
+                'modifiedBy' => 'test',
             ),
         );
 
@@ -209,7 +227,7 @@ class SitesControllerFunctionalTest extends WebTestCase
      */
     public function testDeleteSiteDeletesSite()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $siteManager = static::$kernel->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
@@ -228,7 +246,7 @@ class SitesControllerFunctionalTest extends WebTestCase
      */
     public function testDeleteSiteRespondsWith404ForUnknownSite()
     {
-        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz'));
+        $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
         $client->request('DELETE', "/admin/rest/sites/invalid");
         $response = $client->getResponse();

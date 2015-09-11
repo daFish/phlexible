@@ -11,8 +11,8 @@
 
 namespace Phlexible\Component\MediaCache\Queue;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 
 /**
@@ -127,7 +127,7 @@ class BatchResolver
     }
 
     /**
-     * @param CacheItem $cacheItem
+     * @param \Phlexible\Component\MediaCache\Domain\CacheItem $cacheItem
      *
      * @return bool
      */

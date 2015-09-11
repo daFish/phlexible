@@ -11,10 +11,10 @@
 
 namespace Phlexible\Component\MediaCache\Storage;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Exception\InvalidArgumentException;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**

@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\MessageBundle\DataCollector;
 
-use Phlexible\Bundle\MessageBundle\Handler\DebugHandler;
+use Phlexible\Component\Message\Handler\DebugHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;

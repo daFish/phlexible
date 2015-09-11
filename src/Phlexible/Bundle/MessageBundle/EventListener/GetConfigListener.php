@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\MessageBundle\EventListener;
 
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
-use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
+use Phlexible\Component\Message\Model\MessageManagerInterface;
 
 /**
  * Get config listener

@@ -16,9 +16,8 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Bundle\MessageBundle\Entity\Filter;
 use Phlexible\Bundle\MessageBundle\Form\Type\FilterType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Phlexible\Component\MessageFilter\Domain\Filter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -157,7 +156,7 @@ class FiltersController extends FOSRestController
 
     /**
      * @param Request $request
-     * @param Filter  $filter
+     * @param \Phlexible\Component\MessageFilter\Domain\Filter  $filter
      *
      * @return Rest\View|Response
      */

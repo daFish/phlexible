@@ -13,8 +13,8 @@ namespace Phlexible\Bundle\MediaManagerBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Phlexible\Bundle\MessageBundle\Entity\Message;
 use Phlexible\Component\Expression\Traversal\QueryBuilderExpressionVisitor;
+use Phlexible\Component\Message\Domain\Message;
 use Webmozart\Expression\Expression;
 
 /**

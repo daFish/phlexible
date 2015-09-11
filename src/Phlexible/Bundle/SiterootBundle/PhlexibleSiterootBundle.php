@@ -20,5 +20,5 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleSiterootBundle extends Bundle
 {
-    const RESOURCE_SITEROOTS = 'siteroots';
+    const ROLE_SITEROOTS = 'ROLE_SITEROOTS';
 }

@@ -22,7 +22,7 @@ use Phlexible\Bundle\ElementBundle\Event\ElementVersionEvent;
 use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementBundle\Model\ElementVersionManagerInterface;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
+use Phlexible\Component\Message\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

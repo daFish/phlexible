@@ -11,9 +11,9 @@
 
 namespace Phlexible\Bundle\MessageBundle\EventListener;
 
-use Phlexible\Bundle\MessageBundle\Event\MessageEvent;
-use Phlexible\Bundle\MessageBundle\Handler\HandlerInterface;
-use Phlexible\Bundle\MessageBundle\MessageEvents;
+use Phlexible\Component\Message\Event\MessageEvent;
+use Phlexible\Component\Message\Handler\HandlerInterface;
+use Phlexible\Component\Message\MessageEvents;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;

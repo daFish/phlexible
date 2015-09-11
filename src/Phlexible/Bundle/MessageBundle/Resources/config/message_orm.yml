@@ -1,6 +1,6 @@
 services:
     phlexible_message.message_manager.default:
-        class: Phlexible\Bundle\MessageBundle\Doctrine\MessageManager
+        class: Phlexible\Component\Message\Doctrine\MessageManager
         public: false
         arguments: [@phlexible_message.message_entity_manager]
 

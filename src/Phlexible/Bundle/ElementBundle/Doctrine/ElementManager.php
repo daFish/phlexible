@@ -21,7 +21,7 @@ use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementBundle\Exception\DeleteCancelledException;
 use Phlexible\Bundle\ElementBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementBundle\Model\ElementManagerInterface;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
+use Phlexible\Component\Message\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

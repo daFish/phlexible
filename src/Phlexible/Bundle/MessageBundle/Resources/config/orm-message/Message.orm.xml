@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="Phlexible\Component\Message\Domain\Message" table="message" repository-class="Phlexible\Component\Message\Doctrine\Repository\MessageRepository">
+        <indexes>
+            <index columns="created_at" />
+        </indexes>
+
+        <id name="id" column="id" type="string" length="36">
+            <generator strategy="UUID" />
+            <options>
+                <option name="fixed">true</option>
+            </options>
+        </id>
+
+        <field name="subject" column="subject" type="string" length="255" />
+        <field name="body" column="body" type="text" nullable="true" />
+        <field name="type" column="type" type="smallint" length="1"/>
+        <field name="channel" column="channel" type="string" length="255" nullable="true" />
+        <field name="role" column="role" type="string" length="255" nullable="true" />
+        <field name="user" column="user" type="string" length="255" />
+        <field name="createdAt" column="created_at" type="datetime" />
+    </entity>
+
+</doctrine-mapping>

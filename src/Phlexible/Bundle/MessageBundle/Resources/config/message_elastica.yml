@@ -1,6 +1,6 @@
 services:
     phlexible_message.message_manager.default:
-        class: Phlexible\Bundle\MessageBundle\Elastica\MessageManager
+        class: Phlexible\Component\Message\Elastica\MessageManager
         public: false
         arguments:
             - @phlexible_elastica.default_client

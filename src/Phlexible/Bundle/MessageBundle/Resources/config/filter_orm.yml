@@ -1,6 +1,6 @@
 services:
     phlexible_message.filter_manager.default:
-        class: Phlexible\Bundle\MessageBundle\Doctrine\FilterManager
+        class: Phlexible\Component\MessageFilter\Doctrine\FilterManager
         public: false
         arguments: [@phlexible_message.filter_entity_manager]
 

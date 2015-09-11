@@ -6,15 +6,15 @@ parameters:
 
 services:
     phlexible_message.message_handler:
-        class: Phlexible\Bundle\MessageBundle\Handler\ChainHandler
+        class: Phlexible\Component\Message\Handler\ChainHandler
         arguments: [[]]
 
     phlexible_message.message_poster:
-        class: Phlexible\Bundle\MessageBundle\Message\MessagePoster
+        class: Phlexible\Component\Message\Message\MessagePoster
         arguments: [@event_dispatcher]
 
     phlexible_message.digest_assembler:
-        class: Phlexible\Bundle\MessageBundle\Digest\DigestAssembler
+        class: Phlexible\Component\Message\Digest\DigestAssembler
         arguments:
             - @phlexible_message.subscription_manager
             - @phlexible_message.filter_manager
@@ -22,14 +22,14 @@ services:
             - @phlexible_user.user_manager
 
     phlexible_message.digester:
-        class: Phlexible\Bundle\MessageBundle\Digest\Digester
+        class: Phlexible\Component\Message\Digest\Digester
         arguments:
             - @phlexible_message.digest_assembler
             - @phlexible_message.message_poster
             - @phlexible_message.digest_mailer
 
     phlexible_message.digest_mailer:
-        class: Phlexible\Bundle\MessageBundle\Mailer\DigestMailer
+        class: Phlexible\Component\Message\Mailer\DigestMailer
         arguments:
             - @twig
             - @mailer
@@ -41,21 +41,21 @@ services:
             - {name: monolog.logger, channel: mailer}
 
     phlexible_message.handler.debug:
-        class: Phlexible\Bundle\MessageBundle\Handler\DebugHandler
+        class: Phlexible\Component\Message\Handler\DebugHandler
         public: false
 
     phlexible_message.handler.log:
-        class: Phlexible\Bundle\MessageBundle\Handler\LogHandler
+        class: Phlexible\Component\Message\Handler\LogHandler
         public: false
         arguments: [@logger]
 
     phlexible_message.handler.message_manager:
-        class: Phlexible\Bundle\MessageBundle\Handler\BufferHandler
+        class: Phlexible\Component\Message\Handler\BufferHandler
         public: false
         arguments: [@phlexible_message.handler.message_manager.real]
 
     phlexible_message.handler.message_manager.real:
-        class: Phlexible\Bundle\MessageBundle\Handler\MessageManagerHandler
+        class: Phlexible\Component\Message\Handler\MessageManagerHandler
         public: false
         arguments: [@phlexible_message.message_manager]
 

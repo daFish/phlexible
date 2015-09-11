@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\Model;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
@@ -88,7 +88,7 @@ interface CacheManagerInterface
     public function countAll();
 
     /**
-     * @param CacheItem $cacheItem
+     * @param \Phlexible\Component\MediaCache\Domain\CacheItem $cacheItem
      */
     public function updateCacheItem(CacheItem $cacheItem);
 

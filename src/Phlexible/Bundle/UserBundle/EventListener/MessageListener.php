@@ -11,12 +11,12 @@
 
 namespace Phlexible\Bundle\UserBundle\EventListener;
 
-use Phlexible\Bundle\MessageBundle\Entity\Message;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Bundle\UserBundle\Event\GroupEvent;
 use Phlexible\Bundle\UserBundle\Event\UserEvent;
 use Phlexible\Bundle\UserBundle\UserEvents;
 use Phlexible\Bundle\UserBundle\UserMessage;
+use Phlexible\Component\Message\Domain\Message;
+use Phlexible\Component\Message\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

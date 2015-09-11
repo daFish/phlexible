@@ -12,8 +12,8 @@
 namespace Phlexible\Bundle\MessageBundle\Portlet;
 
 use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
-use Phlexible\Bundle\MessageBundle\Model\MessageManagerInterface;
-use Phlexible\Bundle\MessageBundle\Model\SubscriptionManagerInterface;
+use Phlexible\Component\Message\Model\MessageManagerInterface;
+use Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class MessagesPortlet extends Portlet
 {
     /**
-     * @var SubscriptionManagerInterface
+     * @var \Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface
      */
     private $subscriptionManager;
 
@@ -39,7 +39,7 @@ class MessagesPortlet extends Portlet
     private $tokenStorage;
 
     /**
-     * @param SubscriptionManagerInterface $subscriptionManager
+     * @param \Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface $subscriptionManager
      * @param MessageManagerInterface      $messageManager
      * @param TokenStorageInterface        $tokenStorage
      */

@@ -11,8 +11,8 @@
 
 namespace Phlexible\Bundle\MediaCacheBundle\Command;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -72,7 +72,7 @@ class CleanCommand extends ContainerAwareCommand
         }
 
         foreach ($cacheManager->findAll() as $cacheItem) {
-            /* @var $cacheItem CacheItem */
+            /* @var $cacheItem \Phlexible\Component\MediaCache\Domain\CacheItem */
             $template = $templateManager->find($cacheItem->getTemplateKey());
             $storage = $storageManager->get($template->getStorage());
             $path = $storage->getLocalPath($cacheItem);

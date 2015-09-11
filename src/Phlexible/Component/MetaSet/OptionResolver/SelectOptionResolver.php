@@ -18,7 +18,7 @@ use Phlexible\Component\MetaSet\Domain\MetaSetField;
 class SelectOptionResolver implements OptionResolverInterface
 {
     /**
-     * @param \Phlexible\Component\MetaSet\Domain\MetaSetField $field
+     * @param MetaSetField $field
      *
      * @return null|array
      */

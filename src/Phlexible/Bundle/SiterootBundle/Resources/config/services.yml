@@ -9,7 +9,7 @@ services:
 
     phlexible_siteroot.siteroot_request_matcher:
         class: Phlexible\Component\Site\Site\SiteRequestMatcher
-        arguments: [@phlexible_siteroot.siteroot_manager, %phlexible_siteroot.mappings%]
+        arguments: [@phlexible_siteroot.siteroot_manager, @phlexible_siteroot.siteroot_hostname_mapper]
 
     phlexible_siteroot.siteroot_hostname_mapper:
         class: Phlexible\Component\Site\Site\SiteHostnameMapper

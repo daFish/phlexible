@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Elementtype manager
+ * Site manager
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,9 +60,9 @@ class SiteManager implements SiteManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function find($elementtypeId)
+    public function find($id)
     {
-        return $this->repository->load($elementtypeId);
+        return $this->repository->load($id);
     }
 
     /**
@@ -136,7 +136,7 @@ class SiteManager implements SiteManagerInterface
             throw new DeleteCancelledException('Delete canceled by listener.');
         }
 
-        $this->deleteSite($site);
+        $this->repository->deleteSite($site);
 
         // post event
         $event = new SiteEvent($site);

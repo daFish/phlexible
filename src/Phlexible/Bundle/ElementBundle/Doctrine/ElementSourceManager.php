@@ -20,9 +20,9 @@ use Phlexible\Bundle\ElementBundle\Event\ElementSourceEvent;
 use Phlexible\Bundle\ElementBundle\Exception\CreateCancelledException;
 use Phlexible\Bundle\ElementBundle\Exception\UpdateCancelledException;
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\MessageBundle\Message\MessagePoster;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\File\Parser\XmlParser;
+use Phlexible\Component\Message\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

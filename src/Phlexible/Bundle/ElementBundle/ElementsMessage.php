@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\ElementBundle;
 
-use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Phlexible\Component\Message\Domain\Message;
 
 /**
  * Elements message

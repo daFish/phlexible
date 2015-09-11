@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Serializer;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaManager\Usage\FileUsageManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;

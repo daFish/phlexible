@@ -11,6 +11,8 @@
 
 namespace Phlexible\Bundle\MessageBundle;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -20,4 +22,31 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PhlexibleMessageBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(
+            DoctrineOrmMappingsPass::createXmlMappingDriver(
+                array(realpath(__DIR__.'/Resources/config/orm-message') => 'Phlexible\Component\Message\Domain'),
+                array('phlexible_message.message_model_manager_name'),
+                'phlexible_message.message_backend_type_orm'
+            )
+        );
+        $container->addCompilerPass(
+            DoctrineOrmMappingsPass::createXmlMappingDriver(
+                array(realpath(__DIR__.'/Resources/config/orm-filter') => 'Phlexible\Component\MessageFilter\Domain'),
+                array('phlexible_message.filter_model_manager_name'),
+                'phlexible_message.filter_backend_type_orm'
+            )
+        );
+        $container->addCompilerPass(
+            DoctrineOrmMappingsPass::createXmlMappingDriver(
+                array(realpath(__DIR__.'/Resources/config/orm-subscription') => 'Phlexible\Component\MessageSubscription\Domain'),
+                array('phlexible_message.subscription_model_manager_name'),
+                'phlexible_message.subscription_backend_type_orm'
+            )
+        );
+    }
 }

@@ -25,18 +25,18 @@ class SiteRequestMatcher
     private $siteManager;
 
     /**
-     * @var array
+     * @var SiteHostnameMapper
      */
-    private $urlMappings;
+    private $hostnameMapper;
 
     /**
      * @param SiteManagerInterface $siteManager
-     * @param array                $urlMappings
+     * @param SiteHostnameMapper   $hostnameMapper
      */
-    public function __construct(SiteManagerInterface $siteManager, array $urlMappings)
+    public function __construct(SiteManagerInterface $siteManager, SiteHostnameMapper $hostnameMapper)
     {
         $this->siteManager = $siteManager;
-        $this->urlMappings = $urlMappings;
+        $this->hostnameMapper = $hostnameMapper;
     }
 
     /**
@@ -48,13 +48,10 @@ class SiteRequestMatcher
     {
         $defaultSiteroot = null;
 
-        $hostname = $request->getHttpHost();
+        $hostname = $this->hostnameMapper->fromLocal($request->getHttpHost());
 
         foreach ($this->siteManager->findAll() as $siteroot) {
             $siterootHostname = $siteroot->getHostname();
-            if (isset($this->urlMappings[$siterootHostname])) {
-                $siterootHostname = $this->urlMappings[$siterootHostname];
-            }
             if ($siterootHostname === $hostname) {
                 return $siteroot;
             }

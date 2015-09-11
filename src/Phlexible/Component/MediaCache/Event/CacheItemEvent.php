@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\MediaCache\Event;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -27,7 +27,7 @@ class CacheItemEvent extends Event
     private $cacheItem;
 
     /**
-     * @param CacheItem $cacheItem
+     * @param \Phlexible\Component\MediaCache\Domain\CacheItem $cacheItem
      */
     public function __construct(CacheItem $cacheItem)
     {

@@ -12,14 +12,14 @@
 namespace Phlexible\Component\MediaCache\Queue;
 
 use Phlexible\Bundle\GuiBundle\Properties\Properties;
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Bundle\MediaCacheBundle\Exception\AlreadyRunningException;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Queue as BaseQueue;
 use Phlexible\Component\MediaCache\Worker\WorkerInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
-use Phlexible\Component\Volume\VolumeManager;
 use Phlexible\Component\MediaType\Model\MediaTypeManagerInterface;
 use Phlexible\Component\Volume\Model\VolumeManagerInterface;
+use Phlexible\Component\Volume\VolumeManager;
 use Symfony\Component\Filesystem\LockHandler;
 use Temp\MediaClassifier\MediaClassifier;
 
@@ -119,7 +119,7 @@ class QueueProcessor
     }
 
     /**
-     * @param CacheItem $cacheItem
+     * @param \Phlexible\Component\MediaCache\Domain\CacheItem $cacheItem
      * @param callable  $callback
      *
      * @return CacheItem

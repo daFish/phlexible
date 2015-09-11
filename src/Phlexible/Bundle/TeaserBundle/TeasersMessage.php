@@ -11,7 +11,7 @@
 
 namespace Phlexible\Bundle\TeaserBundle;
 
-use Phlexible\Bundle\MessageBundle\Entity\Message;
+use Phlexible\Component\Message\Domain\Message;
 
 /**
  * Teasers message

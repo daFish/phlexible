@@ -8,11 +8,10 @@
 
 namespace Phlexible\Component\MediaCache\Worker;
 
-use Phlexible\Bundle\MediaCacheBundle\Entity\CacheItem;
 use Phlexible\Component\MediaCache\CacheIdStrategy\CacheIdStrategyInterface;
+use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaCache\Model\CacheManagerInterface;
 use Phlexible\Component\MediaCache\Specifier\SpecifierInterface;
-use Phlexible\Component\MediaCache\Specifier\SpecifierResolver;
 use Phlexible\Component\MediaCache\Storage\StorageManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
@@ -217,7 +216,7 @@ class Worker implements WorkerInterface
      * @param TemplateInterface     $template
      * @param ExtendedFileInterface $file
      *
-     * @return CacheItem
+     * @return \Phlexible\Component\MediaCache\Domain\CacheItem
      */
     protected function applyError(
         CacheItem $cacheItem,

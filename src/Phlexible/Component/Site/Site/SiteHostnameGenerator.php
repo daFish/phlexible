@@ -31,12 +31,11 @@ class SiteHostnameGenerator
     }
 
     /**
-     * @param Site   $site
-     * @param string $language
+     * @param Site $site
      *
      * @return string
      */
-    public function generate(Site $site, $language)
+    public function generate(Site $site)
     {
         $hostname = $site->getHostname();
 
