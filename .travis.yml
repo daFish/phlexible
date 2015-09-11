@@ -14,4 +14,4 @@ php:
   - hhvm
 
 script:
-  - vendor/bin/phpunit --verbose
+  - vendor/bin/phpunit --exclude-group functional --verbose
