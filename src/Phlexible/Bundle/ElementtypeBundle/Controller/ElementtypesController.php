@@ -60,22 +60,6 @@ class ElementtypesController extends FOSRestController
                 'count'        => count($elementtypes)
             )
         ));
-
-        $checker = $this->get('phlexible_element.checker');
-        $changes = $checker->check();
-        $hasChanges = false;
-        foreach ($changes as $change) {
-            if ($change->getNeedImport()) {
-                $hasChanges = true;
-                break;
-            }
-        }
-
-        return new JsonResponse(array(
-            'elementtypes' => $elementtypes,
-            'total'        => count($elementtypes),
-            'changes'      => $hasChanges,
-        ));
     }
 
     /**

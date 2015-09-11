@@ -48,10 +48,7 @@ class TestCheckCommand extends ContainerAwareCommand
         $classManager = $this->getContainer()->get('phlexible_element.proxy.class_manager');
 
         $news = $classManager->create($elementVersion);
-        dump($news);die;
-
-        $x = $news->getMain()->first();
-        dump($news->__toArray());
+        dump($news);
 
         return 0;
     }

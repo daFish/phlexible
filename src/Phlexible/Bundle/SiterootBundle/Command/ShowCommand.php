@@ -37,13 +37,6 @@ class ShowCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $s = $this->getContainer()->get('serializer');
-        $m = $this->getContainer()->get('phlexible_media_template.template_manager');
-        foreach($m->findAll() as $t) {
-            dump($t);
-        }
-        die;
-
         $siteManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         foreach ($siteManager->findAll() as $site) {

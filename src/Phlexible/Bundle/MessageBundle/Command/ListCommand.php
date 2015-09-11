@@ -57,11 +57,6 @@ class ListCommand extends ContainerAwareCommand
 
             return 1;
         }
-        $t = new ArrayExpressionSerializer();
-        $s = $this->getContainer()->get('serializer');
-        dump($t->serialize($filter->getExpression()));
-        dump($s->serialize($filter, 'json'));
-        die;
 
         $messages = $messageManager->findByExpression($filter->getExpression(), array('createdAt' => 'DESC'), $limit);
         $messages = array_reverse($messages);
