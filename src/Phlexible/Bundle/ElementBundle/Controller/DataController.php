@@ -29,8 +29,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Data controller
@@ -205,7 +205,7 @@ class DataController extends Controller
         $permissionRegistry = $this->get('phlexible_access_control.permission_registry');
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             if (!$this->isGranted(array('permission' => 'VIEW', 'language' => $language), $node)) {
-                throw new AccessDeniedHttpException();
+                throw new AccessDeniedException();
             }
 
             // TODO: fix

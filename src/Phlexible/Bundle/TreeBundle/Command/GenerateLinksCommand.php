@@ -9,7 +9,6 @@
 namespace Phlexible\Bundle\TreeBundle\Command;
 
 use Phlexible\Component\Tree\LiveTreeContext;
-use Phlexible\Component\Tree\WorkingTreeContext;
 use Phlexible\Component\Tree\TreeIterator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
