@@ -79,7 +79,8 @@ class DigestMailer
             )
         );
 
-        echo $content;die;
+        echo $content;
+        throw new \RuntimeException("content");
 
         return $this->sendEmailMessage($content, $from, $digest->getUser()->getEmail());
     }

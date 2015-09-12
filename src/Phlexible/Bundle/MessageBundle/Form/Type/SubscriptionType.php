@@ -34,7 +34,7 @@ class SubscriptionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Bundle\MessageBundle\Entity\Subscription',
+            'data_class'      => 'Phlexible\Component\MessageSubscription\Domain\Subscription',
             'csrf_protection' => false,
         ));
     }

@@ -47,7 +47,7 @@ class FilterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Bundle\MessageBundle\Entity\Filter',
+            'data_class'      => 'Phlexible\Component\MessageFilter\Domain\Filter',
             'csrf_protection' => false,
         ));
     }

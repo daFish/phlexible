@@ -18,7 +18,7 @@ use Webmozart\Expression\Expression;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ExpressionSerializer
+interface ExpressionSerializerInterface
 {
     /**
      * @param Expression $expr

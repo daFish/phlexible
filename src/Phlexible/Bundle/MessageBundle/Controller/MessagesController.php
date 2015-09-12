@@ -17,7 +17,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\MessageBundle\Form\Type\MessageType;
-use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializerInterface;
 use Phlexible\Component\Message\Domain\Message;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -71,7 +71,7 @@ class MessagesController extends FOSRestController
 
         if ($expression) {
             $expression = json_decode($expression, true);
-            $serializer = new ArrayExpressionSerializer();
+            $serializer = new ArrayExpressionSerializerInterface();
             $expr = $serializer->deserialize($expression);
         }
 

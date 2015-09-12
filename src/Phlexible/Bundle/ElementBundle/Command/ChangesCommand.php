@@ -12,7 +12,6 @@
 namespace Phlexible\Bundle\ElementBundle\Command;
 
 use Phlexible\Bundle\ElementBundle\Change\AddChange;
-use Phlexible\Bundle\ElementBundle\Change\Checker;
 use Phlexible\Bundle\ElementBundle\Change\RemoveChange;
 use Phlexible\Bundle\ElementBundle\Change\UpdateChange;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

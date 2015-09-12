@@ -8,7 +8,6 @@
 
 namespace Phlexible\Bundle\MessageBundle\Command;
 
-use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

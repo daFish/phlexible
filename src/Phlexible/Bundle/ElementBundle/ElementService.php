@@ -188,7 +188,7 @@ class ElementService
         $this->elementManager->updateElement($element, false);
 
         if ($content) {
-            die("content");
+            throw new \RuntimeException("content");
         }
 
         $this->elementVersionManager->updateElementVersion($elementVersion, true);

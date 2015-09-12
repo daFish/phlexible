@@ -21,8 +21,10 @@ use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
 use Phlexible\Bundle\TreeBundle\Entity\PageNode;
 use Phlexible\Bundle\TreeBundle\Entity\PartNode;
 use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
+use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Elementtype\ElementtypeStructure\Serializer\ArraySerializer as ElementtypeArraySerializer;
+use Phlexible\Component\Node\Model\NodeInterface;
 use Phlexible\Component\Tree\WorkingTreeContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -525,7 +527,7 @@ class DataController extends Controller
             $updateTids = $db->fetchCol($select);
 
             $parentNode = $node->getParentNode();
-            if ($parentNode && $parentNode->getSortMode() != Tree::SORT_MODE_FREE) {
+            if ($parentNode && $parentNode->getSortMode() != TreeInterface::SORT_MODE_FREE) {
                 foreach ($updateTids as $updateTid) {
                     if (!$updateTid) {
                         continue;

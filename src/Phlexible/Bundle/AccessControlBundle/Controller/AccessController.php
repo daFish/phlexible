@@ -10,7 +10,6 @@ namespace Phlexible\Bundle\AccessControlBundle\Controller;
 
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Component\AccessControl\Domain\Entry;
-use Phlexible\Component\AccessControl\Domain\ObjectIdentity;
 use Phlexible\Component\AccessControl\Exception\InvalidArgumentException;
 use Phlexible\Component\AccessControl\Model\HierarchicalObjectIdentity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

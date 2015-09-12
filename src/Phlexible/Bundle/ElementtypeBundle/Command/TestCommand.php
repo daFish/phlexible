@@ -135,7 +135,6 @@ class TestCommand extends ContainerAwareCommand
             ->andWhere("elementtype_version = $version")
             ->orderBy('ets.sort', 'ASC');
 
-        dump($qb->execute()->fetchAll());die;
         foreach ($qb->execute()->fetchAll() as $row) {
             $type = $row['type'];
 
