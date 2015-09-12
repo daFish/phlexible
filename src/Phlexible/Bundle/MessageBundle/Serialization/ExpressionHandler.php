@@ -16,7 +16,7 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
-use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializerInterface;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Webmozart\Expression\Expression;
 
 /**
@@ -27,7 +27,7 @@ use Webmozart\Expression\Expression;
 class ExpressionHandler implements SubscribingHandlerInterface
 {
     /**
-     * @var ArrayExpressionSerializerInterface
+     * @var ArrayExpressionSerializer
      */
     private $serializer;
 
@@ -36,7 +36,7 @@ class ExpressionHandler implements SubscribingHandlerInterface
      */
     public function __construct()
     {
-        $this->serializer = new ArrayExpressionSerializerInterface();
+        $this->serializer = new ArrayExpressionSerializer();
     }
 
     /**

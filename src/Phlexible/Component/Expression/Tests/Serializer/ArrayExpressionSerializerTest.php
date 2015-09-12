@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\Expression\Test\Serializer;
 
-use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializerInterface;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Webmozart\Expression\Expr;
 
 /**
@@ -26,7 +26,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
         $expr = Expr::equals('John', 'firstname')
             ->andEquals('Doe', 'lastname');
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $data = $serializer->serialize($expr);
 
         $this->assertEquals(
@@ -46,7 +46,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
         $expr = Expr::equals('John', 'firstname')
             ->orEquals('Doe', 'lastname');
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $data = $serializer->serialize($expr);
 
         $this->assertEquals(
@@ -65,7 +65,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $expr = Expr::not(Expr::equals('John', 'firstname'));
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $data = $serializer->serialize($expr);
 
         $this->assertEquals(
@@ -84,7 +84,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
                 ->orEquals('Doe', 'lastname')
         );
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $data = $serializer->serialize($expr);
 
         $this->assertEquals(
@@ -126,7 +126,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
             ->andLessThan(3, 'logins')
             ->andLessThanEqual(4, 'logins');
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $data = $serializer->serialize($expr);
 
         $this->assertEquals(
@@ -168,7 +168,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $expr = $serializer->deserialize($data);
 
         $this->assertSame('firstname=="John" && lastname=="Doe"', (string) $expr);
@@ -184,7 +184,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $expr = $serializer->deserialize($data);
 
         $this->assertSame('firstname=="John" || lastname=="Doe"', (string) $expr);
@@ -197,7 +197,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
             'expression' => array('field' => 'firstname', 'op' => 'equals', 'value' => 'John'),
         );
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $expr = $serializer->deserialize($data);
 
         $this->assertSame('not(firstname=="John")', (string) $expr);
@@ -216,7 +216,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $expr = $serializer->deserialize($data);
 
         $this->assertSame('username=="jdoe" && (firstname.startsWith("Joh") || lastname.endsWith("oe"))', (string) $expr);
@@ -252,7 +252,7 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $serializer = new ArrayExpressionSerializerInterface();
+        $serializer = new ArrayExpressionSerializer();
         $expr = $serializer->deserialize($data);
 
         $this->assertSame('username=="jdoe" && username!="xdoe" && username==="jdoe" && username!=="xdoe" && username.startsWith("Joh") && username.endsWith("oe") && username.contains("do") && username.matches("/test/") && username.in("jdoe", "xdoe") && properties.keyExists("xxx") && properties.keyNotExists("yyy") && username===null && username!==null && username.empty() && username.notEmpty() && logins>1 && logins>=2 && logins<3 && logins<=4', (string) $expr);

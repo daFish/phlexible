@@ -20,7 +20,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
 use Phlexible\Bundle\UserBundle\Entity\User;
 use Phlexible\Bundle\UserBundle\Form\Type\UserType;
-use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializerInterface;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,7 +74,7 @@ class UsersController extends FOSRestController
 
         if ($expression) {
             $expression = json_decode($expression, true);
-            $serializer = new ArrayExpressionSerializerInterface();
+            $serializer = new ArrayExpressionSerializer();
             $expr = $serializer->deserialize($expression);
         }
 

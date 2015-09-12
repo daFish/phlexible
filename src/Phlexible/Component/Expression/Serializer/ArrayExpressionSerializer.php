@@ -22,7 +22,7 @@ use Webmozart\Expression\Selector;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class ArrayExpressionSerializerInterface implements ExpressionSerializerInterface
+class ArrayExpressionSerializer implements ExpressionSerializerInterface
 {
     /**
      * {@inheritdoc}

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Controller;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializerInterface;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Phlexible\Component\Volume\Model\FileInterface;
 use Phlexible\Component\Volume\Model\FolderInterface;
 use Phlexible\Component\Volume\VolumeInterface;
@@ -87,7 +87,7 @@ class FilesController extends FOSRestController
 
             if ($expression) {
                 $expression = json_decode($expression, true);
-                $expressionSerializer = new ArrayExpressionSerializerInterface();
+                $expressionSerializer = new ArrayExpressionSerializer();
                 $expr = new Conjunction(array($expr, $expressionSerializer->deserialize($expression)));
             }
 

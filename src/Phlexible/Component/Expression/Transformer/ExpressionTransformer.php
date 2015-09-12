@@ -11,7 +11,7 @@
 
 namespace Phlexible\Component\Expression\Transformer;
 
-use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializerInterface;
+use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Webmozart\Expression\Expression;
@@ -24,7 +24,7 @@ use Webmozart\Expression\Expression;
 class ExpressionTransformer implements DataTransformerInterface
 {
     /**
-     * @var ArrayExpressionSerializerInterface
+     * @var ArrayExpressionSerializer
      */
     private $serializer;
 
@@ -33,7 +33,7 @@ class ExpressionTransformer implements DataTransformerInterface
      */
     public function __construct()
     {
-        $this->serializer = new ArrayExpressionSerializerInterface();
+        $this->serializer = new ArrayExpressionSerializer();
     }
 
     /**
