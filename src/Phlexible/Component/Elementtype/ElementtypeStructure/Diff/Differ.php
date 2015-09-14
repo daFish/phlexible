@@ -22,7 +22,7 @@ use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 class Differ
 {
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $fromStructure
+     * @param ElementtypeStructure $fromStructure
      * @param ElementtypeStructure $toStructure
      *
      * @return Diff
@@ -38,8 +38,8 @@ class Differ
 
     /**
      * @param Diff                 $diff
-     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $fromStructure
-     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $toStructure
+     * @param ElementtypeStructure $fromStructure
+     * @param ElementtypeStructure $toStructure
      *
      * @return Diff
      */

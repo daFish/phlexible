@@ -10,8 +10,7 @@ $iterator = Finder::create()
     ->exclude('Resources')
     ->exclude('Tests')
     ->exclude('vendor')
-    ->in(__DIR__.'/src')
-;
+    ->in(__DIR__.'/src');
 
 return new Sami($iterator, array(
     'title'                => 'phlexible API',

@@ -1,0 +1,10 @@
+preset: symfony
+
+linting: true
+
+enabled:
+    - long_array_syntax
+    - strict
+
+disabled:
+    - unalign_double_arrow
