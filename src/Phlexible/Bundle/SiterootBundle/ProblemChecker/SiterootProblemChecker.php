@@ -92,8 +92,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                                     ->setSeverity(Problem::SEVERITY_WARNING)
                                     ->setMessage("Special TID $specialTidKey from Siteroot {$siteRoot->getTitle()} has TID $specialTid from wrong Siteroot {$node->getTree()->getSiteroot()->getTitle()}.")
                                     ->setHint("Set new value for Special TIDs $specialTidKey in the Siteroot")
-                                    ->setIconClass('p-siteroot-component-icon')
-                                ;
+                                    ->setIconClass('p-siteroot-component-icon');
                                 $problems[] = $problem;
                             }
                         } catch (\Exception $e) {
@@ -104,8 +103,7 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                                 ->setSeverity(Problem::SEVERITY_WARNING)
                                 ->setMessage("Special TID $specialTidKey has unknown TID $specialTid in Siteroot {$siteRoot->getTitle()}.")
                                 ->setHint("Set new value for Special TIDs $specialTidKey in the Siteroot.")
-                                ->setIconClass('p-siteroot-component-icon')
-                            ;
+                                ->setIconClass('p-siteroot-component-icon');
                             $problems[] = $problem;
                         }
                     }

@@ -171,9 +171,8 @@ class TreeSaver
             $node
                 ->setDsId(!empty($row['ds_id']) ? $row['ds_id'] : Uuid::generate())
                 ->setParentDsId($parentNode->getDsId())
-                ->setParentNode($parentNode)
+                ->setParentNode($parentNode);
             //    ->setSort(++$sort)
-            ;
 
             if ($row['type'] == 'reference' && isset($row['reference']['new'])) {
                 $firstChild = $row['children'][0];
@@ -202,9 +201,8 @@ class TreeSaver
                 $node
                     ->setType('reference')
                     ->setName('reference_' . $referenceElementtype->getName())
-                    ->setReferenceElementtypeId($referenceElementtype->getId())
+                    ->setReferenceElementtypeId($referenceElementtype->getId());
                     //->setReferenceVersion($referenceElementtypeVersion->getVersion())
-                ;
 
                 $elementtypeStructure->addNode($node);
             } elseif ($row['type'] == 'reference') {
@@ -213,9 +211,8 @@ class TreeSaver
                 $node
                     ->setType('reference')
                     ->setName('reference_' . $referenceElementtype->getName())
-                    ->setReferenceElementtypeId($referenceElementtype->getId())
+                    ->setReferenceElementtypeId($referenceElementtype->getId());
                 //    ->setReferenceVersion($row['reference']['refVersion'])
-                ;
 
                 $elementtypeStructure->addNode($node);
             } else {

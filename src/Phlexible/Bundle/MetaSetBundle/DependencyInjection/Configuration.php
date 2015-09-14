@@ -86,8 +86,7 @@ class Configuration implements ConfigurationInterface
             ->validate()
                 ->ifTrue(function($v){return 'custom' === $v['db_driver'] && 'phlexible_meta_set.meta_set_manager.default' === $v['service']['meta_set_manager'];})
                 ->thenInvalid('You need to specify your own meta set manager service when using the "custom" driver.')
-            ->end()
-        ;
+            ->end();
 
         $this->addServiceSection($rootNode);
 

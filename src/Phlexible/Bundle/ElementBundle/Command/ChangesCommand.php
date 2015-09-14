@@ -151,7 +151,6 @@ class ChangesCommand extends ContainerAwareCommand
             //->setParentId($structure->getParentId())
             //->setParentDsId($structure->getParentDsId())
             ->setParentName($structure->getParentName());
-        ;
 
         foreach ($structure->getValues() as $value) {
             $elementStructure->setValue($value);
