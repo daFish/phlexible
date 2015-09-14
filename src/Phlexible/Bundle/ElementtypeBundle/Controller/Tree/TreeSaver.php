@@ -135,9 +135,8 @@ class TreeSaver
         $rootNode
             ->setDsId($rootDsId)
             ->setType($rootType)
-            ->setName('root')
+            ->setName('root');
         //    ->setSort($sort++)
-        ;
 
         $elementtypeStructure->addNode($rootNode);
 

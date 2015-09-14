@@ -85,8 +85,7 @@ class DiffResult
     {
         $value
             ->setAttribute('diff', 'removed')
-            ->setAttribute('oldValue', $value->getValue())
+            ->setAttribute('oldValue', $value->getValue());
             //->setValue('')
-        ;
     }
 }
