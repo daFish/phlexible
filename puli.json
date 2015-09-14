@@ -374,7 +374,7 @@
             "installer": "composer"
         },
         "friendsofsymfony/user-bundle": {
-            "install-path": "vendor/friendsofsymfony/user-bundle/FOS/UserBundle",
+            "install-path": "vendor/friendsofsymfony/user-bundle",
             "installer": "composer"
         },
         "guzzle/guzzle": {
