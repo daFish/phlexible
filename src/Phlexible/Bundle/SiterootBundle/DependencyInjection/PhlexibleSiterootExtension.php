@@ -39,7 +39,7 @@ class PhlexibleSiterootExtension extends Extension
             $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
         }
 
-        $mappings = [];
+        $mappings = array();
         if (!empty($config['mappings'])) {
             foreach ($config['mappings'] as $mappedUrl => $siterootUrl) {
                 $mappings[$mappedUrl] = $siterootUrl;

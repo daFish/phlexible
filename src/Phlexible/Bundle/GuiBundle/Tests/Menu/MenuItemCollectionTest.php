@@ -23,16 +23,17 @@ class MenuItemCollectionTest extends \PHPUnit_Framework_TestCase
 {
     public function testMerge()
     {
-        $items = new MenuItemCollection();
-        $items->set('foo', new MenuItem('foo'));
+        $menuItems = new MenuItemCollection();
+        $menuItems->set('foo', new MenuItem('foo'));
         $mergeItems = new MenuItemCollection();
         $mergeItems->set('foo', new MenuItem('mergeFoo'));
         $mergeItems->set('bar', new MenuItem('bar'));
 
-        $items->merge($mergeItems);
+        $menuItems->merge($mergeItems);
 
-        $this->assertCount(2, $items);
-        $this->assertSame('mergeFoo', $items->getItems()['foo']->getHandle());
+        $this->assertCount(2, $menuItems);
+        $items = $menuItems->getItems();
+        $this->assertSame('mergeFoo', $items['foo']->getHandle());
 
     }
 

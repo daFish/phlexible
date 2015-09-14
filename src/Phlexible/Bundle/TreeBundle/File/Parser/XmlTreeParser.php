@@ -27,7 +27,8 @@ class XmlTreeParser
     {
         $xml = simplexml_load_string($content);
 
-        $siterootId = (string) $xml->attributes()['siterootId'];
+        $attributes = $xml->attributes();
+        $siterootId = (string) $attributes['siterootId'];
 
         $this->parseNode($nodes, $siterootId, $xml->node);
     }

@@ -31,7 +31,7 @@ class YamlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoad()
     {
-        $items = <<<EOF
+        $menuItems = <<<EOF
 menus:
     handle: menus
 
@@ -41,18 +41,19 @@ config:
     roles: [a, b]
 EOF;
 
-        vfsStream::setup('root', null, array('items.yml' => $items));
+        vfsStream::setup('root', null, array('items.yml' => $menuItems));
 
         $loader = new YamlFileLoader();
-        $items = $loader->load(vfsStream::url('root/items.yml'));
+        $menuItems = $loader->load(vfsStream::url('root/items.yml'));
 
-        $this->assertCount(2, $items);
-        $this->assertArrayHasKey('menus', $items->getItems());
-        $this->assertSame('menus', $items->getItems()['menus']->getHandle());
-        $this->assertArrayHasKey('config', $items->getItems());
-        $this->assertSame('configuration', $items->getItems()['config']->getHandle());
-        $this->assertSame('menus', $items->getItems()['config']->getParent());
-        $this->assertSame(array('a', 'b'), $items->getItems()['config']->getRoles());
+        $this->assertCount(2, $menuItems);
+        $items = $menuItems->getItems();
+        $this->assertArrayHasKey('menus', $items);
+        $this->assertSame('menus', $items['menus']->getHandle());
+        $this->assertArrayHasKey('config', $items);
+        $this->assertSame('configuration', $items['config']->getHandle());
+        $this->assertSame('menus', $items['config']->getParent());
+        $this->assertSame(array('a', 'b'), $items['config']->getRoles());
     }
 
     /**

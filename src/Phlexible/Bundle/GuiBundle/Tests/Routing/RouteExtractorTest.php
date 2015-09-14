@@ -16,11 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Simple css compressor test
+ * Route extractor test
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class CssiptCompressorTest extends \PHPUnit_Framework_TestCase
+class RouteExtractorTest extends \PHPUnit_Framework_TestCase
 {
     public function testExtract()
     {
@@ -39,8 +39,9 @@ class CssiptCompressorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('', $data->getBasePath());
         $this->assertSame('', $data->getBaseUrl());
         $this->assertCount(3, $data->getRoutes());
-        $this->assertSame(array('path' => '/foo', 'variables' => array(), 'defaults' => array()), $data->getRoutes()[0]);
-        $this->assertSame(array('path' => '/bar', 'variables' => array(), 'defaults' => array('test' => 123)), $data->getRoutes()[1]);
-        $this->assertSame(array('path' => '/baz/{id}', 'variables' => array('id'), 'defaults' => array('id' => 234)), $data->getRoutes()[2]);
+        $routes = $data->getRoutes();
+        $this->assertSame(array('path' => '/foo', 'variables' => array(), 'defaults' => array()), $routes[0]);
+        $this->assertSame(array('path' => '/bar', 'variables' => array(), 'defaults' => array('test' => 123)), $routes[1]);
+        $this->assertSame(array('path' => '/baz/{id}', 'variables' => array('id'), 'defaults' => array('id' => 234)), $routes[2]);
     }
 }

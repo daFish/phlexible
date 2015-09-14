@@ -131,7 +131,12 @@ class TempStorage
     {
         // TODO: cleanup file?
 
-        if ($this->session->has('mediamanager.temp_files') && isset($this->session->get('mediamanager.temp_files')[$file->getId()])) {
+        if (!$this->session->has('mediamanager.temp_files')) {
+            return $this;
+        }
+
+        $tempFiles = $this->session->get('mediamanager.temp_files');
+        if (isset($tempFiles[$file->getId()])) {
             $tempFiles = $this->session->get('mediamanager.temp_files');
             unset($tempFiles[$file->getId()]);
             $this->session->set('mediamanager.temp_files', $tempFiles);

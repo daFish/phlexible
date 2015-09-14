@@ -24,14 +24,15 @@ class HierarchicalSorterTest extends \PHPUnit_Framework_TestCase
 {
     public function testSort()
     {
-        $items = new MenuItemCollection();
-        $items->set('main', new MenuItem('main'));
-        $items->set('sub', new MenuItem('sub', 'main'));
+        $menuItems = new MenuItemCollection();
+        $menuItems->set('main', new MenuItem('main'));
+        $menuItems->set('sub', new MenuItem('sub', 'main'));
 
         $sorter = new HierarchicalSorter();
-        $hierarchy = $sorter->sort($items);
+        $hierarchy = $sorter->sort($menuItems);
 
-        $this->assertArrayHasKey('main', $hierarchy->getItems());
-        $this->assertArrayHasKey('sub', $hierarchy->getItems()['main']->getItems()->getItems());
+        $items = $hierarchy->getItems();
+        $this->assertArrayHasKey('main', $items);
+        $this->assertArrayHasKey('sub', $items['main']->getItems()->getItems());
     }
 }

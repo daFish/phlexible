@@ -272,7 +272,7 @@ class TreeController extends Controller
             $this->getUser()->getId()
         );
 
-        return new ResultResponse(true, 'Element copied.', ['id' => $targetNode->getId()]);
+        return new ResultResponse(true, 'Element copied.', array('id' => $targetNode->getId()));
     }
 
     /**
