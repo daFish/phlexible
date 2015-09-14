@@ -192,6 +192,11 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
         }
     }
 
+    /**
+     * @param string|int|float|array $value
+     *
+     * @return array|\Doctrine\ORM\Query\Expr\Literal
+     */
     private function literal($value)
     {
         if (is_array($value)) {

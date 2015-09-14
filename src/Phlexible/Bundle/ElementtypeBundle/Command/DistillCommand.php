@@ -72,6 +72,10 @@ class DistillCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param ClassMap    $classMap
+     * @param Elementtype $elementtype
+     */
     private function mapElementtype(ClassMap $classMap, Elementtype $elementtype)
     {
         $elementtypeStructure = $elementtype->getStructure();

@@ -135,7 +135,7 @@ class Synchronizer
     }
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype   $elementtype
+     * @param Elementtype   $elementtype
      * @param ElementSource $elementSource
      */
     private function applyElementtypeToElementSource(Elementtype $elementtype, ElementSource $elementSource)
@@ -158,6 +158,9 @@ class Synchronizer
         $this->elementSourceManager->updateElementSource($elementSource, false);
     }
 
+    /**
+     * @param ElementSource $elementSource
+     */
     private function removeElementSource(ElementSource $elementSource)
     {
         $this->elementSourceManager->deleteElementSource($elementSource);

@@ -13,6 +13,7 @@ namespace Phlexible\Bundle\ElementBundle\Proxy\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Definition writer
@@ -144,6 +145,9 @@ class DefinitionWriter
         return $this->outputDir . '/' . $relativeFilename;
     }
 
+    /**
+     * Clear proxies
+     */
     private function clear()
     {
         $filesystem = new Filesystem();
@@ -155,7 +159,7 @@ class DefinitionWriter
         $finder = new Finder();
 
         foreach ($finder->in($this->outputDir)->directories()->depth(0) as $dir) {
-            /* @var $dir \Symfony\Component\Finder\SplFileInfo */
+            /* @var $dir SplFileInfo */
 
             $filesystem->remove($dir->getPathname());
         }

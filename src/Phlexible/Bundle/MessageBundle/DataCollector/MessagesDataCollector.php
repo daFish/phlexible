@@ -93,6 +93,9 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
         return 'messages';
     }
 
+    /**
+     * @return array
+     */
     private function sanitizeMessages()
     {
         $messages = $this->debugHandler->getMessages();
@@ -100,6 +103,9 @@ class MessagesDataCollector extends DataCollector implements LateDataCollectorIn
         return $messages;
     }
 
+    /**
+     * @return array
+     */
     private function computeErrorsCount()
     {
         $count = array(

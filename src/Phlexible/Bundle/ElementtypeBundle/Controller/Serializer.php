@@ -23,8 +23,14 @@ use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
  */
 class Serializer
 {
+    /**
+     * @var ElementtypeService
+     */
     private $elementtypeService;
 
+    /**
+     * @param ElementtypeService $elementtypeService
+     */
     public function __construct(ElementtypeService $elementtypeService)
     {
         $this->elementtypeService = $elementtypeService;

@@ -14,6 +14,11 @@ namespace Phlexible\Bundle\MediaTemplateBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Media template form type
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 abstract class MediaTemplateType extends AbstractType
 {
     /**

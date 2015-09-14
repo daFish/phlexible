@@ -67,7 +67,7 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null)
+    public function findBy(array $criteria, $orderBy = array(), $limit = null, $offset = null)
     {
         return $this->getMessageRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
@@ -75,7 +75,7 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOneBy(array $criteria, $orderBy = null)
+    public function findOneBy(array $criteria, $orderBy = array())
     {
         return $this->getMessageRepository()->findOneBy($criteria, $orderBy);
     }
@@ -91,7 +91,7 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    public function findByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null)
     {
         return $this->getMessageRepository()->findByExpression($expression, $orderBy, $limit, $offset);
     }
@@ -107,7 +107,7 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOneByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    public function findOneByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null)
     {
         return $this->getMessageRepository()->findOneByExpression($expression, $orderBy);
     }

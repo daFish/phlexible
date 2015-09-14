@@ -15,6 +15,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Meta set form type
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class MetaSetType extends AbstractType
 {
     /**

@@ -325,6 +325,9 @@ class NodeContext implements DomainObjectInterface
         return ($this->node instanceof PageInterface) ? $this->node->getInNavigation() : false;
     }
 
+    /**
+     * @return bool
+     */
     public function isPublished()
     {
     }

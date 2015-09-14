@@ -110,6 +110,11 @@ class VolumeManager implements VolumeManagerInterface
         return $this->entityManager->getRepository($this->folderClass);
     }
 
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
     public function hasFeature($name)
     {
         return true;

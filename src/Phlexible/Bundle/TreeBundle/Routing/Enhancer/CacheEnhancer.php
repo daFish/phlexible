@@ -16,6 +16,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Cache enhancer
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class CacheEnhancer implements RouteEnhancerInterface
 {
     /**

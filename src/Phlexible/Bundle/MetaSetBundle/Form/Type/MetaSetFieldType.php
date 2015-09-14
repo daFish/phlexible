@@ -17,6 +17,11 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Meta set field form type
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class MetaSetFieldType extends AbstractType
 {
     /**

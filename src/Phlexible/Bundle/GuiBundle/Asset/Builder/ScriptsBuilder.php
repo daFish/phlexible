@@ -210,7 +210,14 @@ class ScriptsBuilder
 
         $results = new ArrayCollection();
 
-        function addToResult($file, ArrayCollection $results, array $symbols)
+        /**
+         * @param \stdClass       $file
+         * @param ArrayCollection $results
+         * @param array           $symbols
+         *
+         * @throws \Exception
+         */
+        function addToResult(\stdClass $file, ArrayCollection $results, array $symbols)
         {
             if (!empty($file->added)) {
                 return;

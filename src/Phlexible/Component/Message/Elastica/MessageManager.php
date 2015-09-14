@@ -178,11 +178,10 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    public function findByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null)
     {
         $query = new Query();
         $this->applyExpressionToQuery($expression, $query);
-
 
         if ($limit !== null && $offset !== null) {
             $query
@@ -190,7 +189,7 @@ class MessageManager implements MessageManagerInterface
                 ->setFrom($offset);
         }
 
-        if ($orderBy !== null) {
+        if (count($orderBy)) {
             $sort = array();
             foreach ($orderBy as $field => $dir) {
                 $sort[] = array($field => strtolower($dir));
@@ -199,9 +198,9 @@ class MessageManager implements MessageManagerInterface
         }
 
         $documents = $this->getType()->search($query);
-        $mesages = $this->mapDocuments($documents);
+        $messages = $this->mapDocuments($documents);
 
-        return $mesages;
+        return $messages;
     }
 
     /**
@@ -218,14 +217,21 @@ class MessageManager implements MessageManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function findOneByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null)
+    public function findOneByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null)
     {
+        $result = $this->findByExpression($expression, $orderBy, 1);
+
+        if (!$result) {
+            return null;
+        }
+
+        return current($result);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function findBy(array $criteria = array(), $orderBy = null, $limit = null, $offset = 0)
+    public function findBy(array $criteria = array(), $orderBy = array(), $limit = null, $offset = 0)
     {
         $query = new Query();
 
@@ -243,7 +249,7 @@ class MessageManager implements MessageManagerInterface
                 ->setFrom($offset);
         }
 
-        if ($orderBy !== null) {
+        if (count($orderBy)) {
             $sort = array();
             foreach ($orderBy as $field => $dir) {
                 $sort[] = array($field => strtolower($dir));
@@ -274,6 +280,14 @@ class MessageManager implements MessageManagerInterface
         }
 
         return current($result);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function expr()
+    {
+        return Expr::true();
     }
 
     /**
@@ -370,6 +384,9 @@ class MessageManager implements MessageManagerInterface
         $query->setPostFilter($this->createFilterFromExpression($expression));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     private function createFilterFromExpression(Expression $expression)
     {
         $andFilter = new Filter\BoolAnd();
@@ -379,6 +396,9 @@ class MessageManager implements MessageManagerInterface
         return $andFilter;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     private function loopExpression(Expression $expression, Filter\BoolAnd $andFilter)
     {
         foreach ($expression as $criterium) {

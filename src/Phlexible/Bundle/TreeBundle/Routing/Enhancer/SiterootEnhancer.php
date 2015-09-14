@@ -16,6 +16,11 @@ use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Siteroot enhancer
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class SiterootEnhancer implements RouteEnhancerInterface
 {
     /**

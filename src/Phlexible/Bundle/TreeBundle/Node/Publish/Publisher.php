@@ -226,6 +226,19 @@ class Publisher
         return array_values($result);
     }
 
+    /**
+     * @param array         $result
+     * @param int           $depth
+     * @param string        $path
+     * @param NodeInterface $node
+     * @param int           $version
+     * @param string        $language
+     * @param bool          $onlyAsync
+     * @param bool          $onlyOffline
+     * @param bool          $isInstance
+     *
+     * @return array
+     */
     private function handleNode(
         array $result,
         $depth,
@@ -286,6 +299,18 @@ class Publisher
         return $result;
     }
 
+    /**
+     * @param array         $result
+     * @param int           $depth
+     * @param string        $path
+     * @param NodeInterface $node
+     * @param string        $language
+     * @param bool          $onlyAsync
+     * @param bool          $onlyOffline
+     * @param bool          $includeTeaserInstances
+     *
+     * @return array
+     */
     protected function handleTeasers(
         array $result,
         $depth,
@@ -305,6 +330,18 @@ class Publisher
         return $result;
     }
 
+    /**
+     * @param array  $result
+     * @param int    $depth
+     * @param string $path
+     * @param Teaser $teaser
+     * @param string $language
+     * @param bool   $onlyAsync
+     * @param bool   $onlyOffline
+     * @param bool   $isInstance
+     *
+     * @return mixed
+     */
     protected function handleTeaser(
         $result,
         $depth,

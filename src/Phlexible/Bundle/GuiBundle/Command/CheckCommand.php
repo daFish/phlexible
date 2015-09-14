@@ -115,6 +115,12 @@ class CheckCommand extends ContainerAwareCommand
         return $checkPassed ? 0 : 1;
     }
 
+    /**
+     * @param Requirement $requirement
+     * @param int         $lineSize
+     *
+     * @return null|string
+     */
     private function getErrorMessage(Requirement $requirement, $lineSize)
     {
         if ($requirement->isFulfilled()) {

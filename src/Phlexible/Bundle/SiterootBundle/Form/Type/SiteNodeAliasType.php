@@ -17,6 +17,11 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Site node alias form type
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class SiteNodeAliasType extends AbstractType
 {
     /**

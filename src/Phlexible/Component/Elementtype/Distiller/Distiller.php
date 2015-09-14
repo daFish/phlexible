@@ -25,7 +25,7 @@ use Phlexible\Component\Elementtype\Field\FieldRegistry;
 class Distiller
 {
     /**
-     * @var \Phlexible\Component\Elementtype\ElementtypeService
+     * @var ElementtypeService
      */
     private $elementtypeService;
 
@@ -35,7 +35,7 @@ class Distiller
     private $fieldRegistry;
 
     /**
-     * @param \Phlexible\Component\Elementtype\ElementtypeService $elementtypeService
+     * @param ElementtypeService $elementtypeService
      * @param FieldRegistry      $fieldRegistry
      */
     public function __construct(ElementtypeService $elementtypeService, FieldRegistry $fieldRegistry)
@@ -57,6 +57,12 @@ class Distiller
         return $data;
     }
 
+    /**
+     * @param ElementtypeStructure     $structure
+     * @param ElementtypeStructureNode $node
+     *
+     * @return array
+     */
     private function iterate(ElementtypeStructure $structure, ElementtypeStructureNode $node)
     {
         $data = array();

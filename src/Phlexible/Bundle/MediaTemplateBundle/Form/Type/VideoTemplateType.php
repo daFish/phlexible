@@ -14,6 +14,11 @@ namespace Phlexible\Bundle\MediaTemplateBundle\Form\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Video template form type
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class VideoTemplateType extends MediaTemplateType
 {
     /**

@@ -35,23 +35,23 @@ interface MessageManagerInterface
      * Find messages
      *
      * @param array $criteria
-     * @param null  $orderBy
-     * @param null  $limit
-     * @param null  $offset
+     * @param array $orderBy
+     * @param int   $limit
+     * @param int   $offset
      *
      * @return Message[]
      */
-    public function findBy(array $criteria, $orderBy = null, $limit = null, $offset = null);
+    public function findBy(array $criteria, $orderBy = array(), $limit = null, $offset = null);
 
     /**
      * Find message
      *
      * @param array $criteria
-     * @param null  $orderBy
+     * @param array $orderBy
      *
      * @return Message
      */
-    public function findOneBy(array $criteria, $orderBy = null);
+    public function findOneBy(array $criteria, $orderBy = array());
 
     /**
      * @return Expression
@@ -66,7 +66,7 @@ interface MessageManagerInterface
      *
      * @return Message[]
      */
-    public function findByExpression(Expression $expression, $orderBy = null, $limit = null, $offset = null);
+    public function findByExpression(Expression $expression, $orderBy = array(), $limit = null, $offset = null);
 
     /**
      * @param Expression $expression
@@ -81,7 +81,7 @@ interface MessageManagerInterface
      *
      * @return Message
      */
-    public function findOneByExpression(Expression $expression, $orderBy = null);
+    public function findOneByExpression(Expression $expression, $orderBy = array());
 
     /**
      * Return type map

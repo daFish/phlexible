@@ -67,6 +67,14 @@ class ImportCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param string          $sourceFile
+     * @param FolderInterface $targetFolder
+     * @param bool            $delete
+     *
+     * @return OutputInterface
+     */
     private function importFile(OutputInterface $output, $sourceFile, FolderInterface $targetFolder, $delete = false)
     {
         try {
@@ -99,6 +107,13 @@ class ImportCommand extends ContainerAwareCommand
         return $output;
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param string           $sourceDir
+     * @param FolderInterface $targetFolder
+     *
+     * @return OutputInterface
+     */
     private function importDir(OutputInterface $output, $sourceDir, FolderInterface $targetFolder)
     {
         try {

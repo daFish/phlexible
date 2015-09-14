@@ -17,6 +17,11 @@ use Phlexible\Component\Tree\LiveTreeContext;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Node enhancer
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class NodeEnhancer implements RouteEnhancerInterface
 {
     /**

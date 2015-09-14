@@ -72,11 +72,27 @@ class ExpressionHandler implements SubscribingHandlerInterface
         );
     }
 
+    /**
+     * @param JsonSerializationVisitor $visitor
+     * @param Expression               $expression
+     * @param array                    $type
+     * @param Context                  $context
+     *
+     * @return array
+     */
     public function serializeExpressionToJson(JsonSerializationVisitor $visitor, Expression $expression, array $type, Context $context)
     {
         return $this->serializer->serialize($expression);
     }
 
+    /**
+     * @param JsonDeserializationVisitor $visitor
+     * @param array                      $json
+     * @param array                      $type
+     * @param Context                    $context
+     *
+     * @return Expression
+     */
     public function deserializeJsonToExpression(JsonDeserializationVisitor $visitor, array $json, array $type, Context $context)
     {
         return $this->serializer->deserialize($json);

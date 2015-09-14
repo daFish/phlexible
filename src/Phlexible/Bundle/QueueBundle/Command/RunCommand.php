@@ -124,6 +124,9 @@ class RunCommand extends ContainerAwareCommand
         return $this->getContainer()->get('phlexible_queue.job_manager');
     }
 
+    /**
+     * Check running jobs
+     */
     private function checkRunningJobs()
     {
         foreach ($this->runningJobs as $i => $runningJob) {
@@ -206,6 +209,9 @@ class RunCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param Job $job
+     */
     private function startJob(Job $job)
     {
         $job

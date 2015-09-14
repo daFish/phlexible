@@ -28,6 +28,12 @@ class ElementValuesExtractor implements ValuesExtractorInterface
         return $values;
     }
 
+    /**
+     * @param array  $content
+     * @param string $language
+     *
+     * @return array
+     */
     private function extractRecursive($content, $language)
     {
         $values = array();

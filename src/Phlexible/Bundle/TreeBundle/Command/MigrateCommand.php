@@ -66,6 +66,10 @@ class MigrateCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param string $parentId
+     * @param string $parentSlug
+     */
     private function recurseNodes($parentId, $parentSlug)
     {
         $dbal = $this->getContainer()->get('doctrine.dbal.default_connection');

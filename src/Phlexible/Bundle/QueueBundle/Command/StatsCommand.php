@@ -69,6 +69,10 @@ class StatsCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param string          $state
+     */
     private function getJobStatistics(OutputInterface $output, $state)
     {
         $jobManager = $this->getContainer()->get('phlexible_queue.job_manager');
@@ -115,6 +119,9 @@ class StatsCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param OutputInterface $output
+     */
     private function getMainStatistics(OutputInterface $output)
     {
         $jobManager = $this->getContainer()->get('phlexible_queue.job_manager');

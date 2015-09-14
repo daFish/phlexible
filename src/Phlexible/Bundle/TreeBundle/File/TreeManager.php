@@ -20,6 +20,11 @@ use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Phlexible\Component\Tree\Tree;
 
+/**
+ * File based Node manager
+ *
+ * @author Stephan Wentz <sw@brainbits.net>
+ */
 class NodeManager implements NodeManagerInterface
 {
     /**
@@ -98,6 +103,9 @@ class NodeManager implements NodeManagerInterface
      */
     private $states;
 
+    /**
+     * Load
+     */
     private function load()
     {
         if ($this->nodes) {

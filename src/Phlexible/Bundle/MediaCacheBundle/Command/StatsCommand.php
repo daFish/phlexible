@@ -70,6 +70,10 @@ class StatsCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param OutputInterface $output
+     * @param array           $items
+     */
     private function outputItems(OutputInterface $output, array $items)
     {
         $table = new Table($output);

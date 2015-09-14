@@ -75,6 +75,11 @@ class ReadCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param OutputInterface              $output
+     * @param ExtendedVolumeInterface      $volume
+     * @param ExtendedFolderInterface|null $folder
+     */
     private function readVolume(OutputInterface $output, ExtendedVolumeInterface $volume, ExtendedFolderInterface $folder = null)
     {
         $target = $volume;
@@ -92,6 +97,11 @@ class ReadCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param OutputInterface         $output
+     * @param ExtendedVolumeInterface $volume
+     * @param ExtendedFileInterface   $file
+     */
     private function readFile(OutputInterface $output, ExtendedVolumeInterface $volume, ExtendedFileInterface $file)
     {
         $output->writeln('  + <fg=green>' . $file->getName() . '</fg=green> ' . $file->getId() . ' ' . $file->getPhysicalPath());

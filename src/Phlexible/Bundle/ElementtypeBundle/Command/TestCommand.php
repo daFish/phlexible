@@ -123,6 +123,14 @@ class TestCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param Connection $conn
+     * @param string     $id
+     * @param int        $version
+     * @param array      $map
+     *
+     * @return ElementtypeStructure
+     */
     private function buildStructure(Connection $conn, $id, $version, $map)
     {
         $structure = new ElementtypeStructure();

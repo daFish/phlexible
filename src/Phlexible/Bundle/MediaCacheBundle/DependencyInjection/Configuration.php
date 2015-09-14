@@ -69,6 +69,9 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    /**
+     * @param ArrayNodeDefinition $node
+     */
     private function addServiceSection(ArrayNodeDefinition $node)
     {
         $node

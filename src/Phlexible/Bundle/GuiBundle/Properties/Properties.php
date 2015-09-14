@@ -132,6 +132,9 @@ class Properties
         return (bool) mb_strlen($this->get($component, $name));
     }
 
+    /**
+     * Load properties
+     */
     private function load()
     {
         if ($this->properties !== null) {
