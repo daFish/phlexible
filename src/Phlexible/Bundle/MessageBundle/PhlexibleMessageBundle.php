@@ -29,21 +29,21 @@ class PhlexibleMessageBundle extends Bundle
     {
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createXmlMappingDriver(
-                array(realpath(__DIR__.'/Resources/config/orm-message') => 'Phlexible\Component\Message\Domain'),
+                array($this->getPath().'/Resources/config/orm-message' => 'Phlexible\Component\Message\Domain'),
                 array('phlexible_message.message_model_manager_name'),
                 'phlexible_message.message_backend_type_orm'
             )
         );
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createXmlMappingDriver(
-                array(realpath(__DIR__.'/Resources/config/orm-filter') => 'Phlexible\Component\MessageFilter\Domain'),
+                array($this->getPath().'/Resources/config/orm-filter' => 'Phlexible\Component\MessageFilter\Domain'),
                 array('phlexible_message.filter_model_manager_name'),
                 'phlexible_message.filter_backend_type_orm'
             )
         );
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createXmlMappingDriver(
-                array(realpath(__DIR__.'/Resources/config/orm-subscription') => 'Phlexible\Component\MessageSubscription\Domain'),
+                array($this->getPath().'/Resources/config/orm-subscription' => 'Phlexible\Component\MessageSubscription\Domain'),
                 array('phlexible_message.subscription_model_manager_name'),
                 'phlexible_message.subscription_backend_type_orm'
             )
