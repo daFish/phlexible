@@ -3,6 +3,13 @@ preset: symfony
 linting: true
 
 enabled:
-    - long_array_syntax
+    - ordered_use
     - strict
+    - psr4
 
+disabled:
+    - empty_return
+
+    # Unusable at the moment
+    # https://github.com/StyleCI/StyleCI/issues/471
+    - psr0
