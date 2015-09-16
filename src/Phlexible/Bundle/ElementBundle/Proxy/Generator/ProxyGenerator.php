@@ -275,9 +275,13 @@ class ProxyGenerator
         if ($capitaliseFirstChar) {
             $str = ucfirst($str);
         }
-        $func = create_function('$c', 'return strtoupper($c[1]);');
+
+        $func = function ($str) {
+            return strtoupper($str[1]);
+        };
 
         $str = preg_replace_callback('/_([a-zA-Z])/', $func, $str);
+
         return $str;
     }
 }
