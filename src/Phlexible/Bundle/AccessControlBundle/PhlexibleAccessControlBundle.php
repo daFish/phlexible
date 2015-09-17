@@ -32,14 +32,11 @@ class PhlexibleAccessControlBundle extends Bundle
     {
         $container->addCompilerPass(new AddPermissionsPass());
 
-        $modelDir = realpath(__DIR__.'/Resources/config/doctrine/model');
-        $mappings = array(
-            $modelDir => 'Phlexible\Component\AccessControl\Domain',
-        );
-
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createXmlMappingDriver(
-                $mappings,
+                array(
+                    $this->getPath().'/Resources/config/doctrine/model' => 'Phlexible\Component\AccessControl\Domain',
+                ),
                 array(null),
                 'phlexible_access_control.backend_type_orm',
                 array('PhlexibleAccessControlBundle' => 'Phlexible\Component\AccessControl\Domain')

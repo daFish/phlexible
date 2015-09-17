@@ -34,7 +34,7 @@ class PhlexibleMediaCacheBundle extends Bundle
 
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createXmlMappingDriver(
-                array(realpath(__DIR__.'/Resources/config/orm') => 'Phlexible\Component\MediaCache\Domain'),
+                array($this->getPath().'/Resources/config/orm' => 'Phlexible\Component\MediaCache\Domain'),
                 array('phlexible_media_cache.model_manager_name'),
                 'phlexible_media_cache.backend_type_orm'
             )

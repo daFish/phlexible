@@ -25,6 +25,7 @@ class TestPermissionProvider implements PermissionProviderInterface
         return new PermissionCollection('collection1');
     }
 }
+
 /**
  * Permission registry test
  *

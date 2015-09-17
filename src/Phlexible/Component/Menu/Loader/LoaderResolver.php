@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
+namespace Phlexible\Component\Menu\Loader;
 
 /**
  * Loader resolver

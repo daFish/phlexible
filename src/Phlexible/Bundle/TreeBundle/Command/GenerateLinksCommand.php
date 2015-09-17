@@ -54,6 +54,8 @@ class GenerateLinksCommand extends ContainerAwareCommand
             $treeContext = new LiveTreeContext($locale);
 
             foreach ($treeManager->getAll($treeContext) as $tree) {
+                $batch = 0;
+
                 $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
                 foreach ($rii as $node) {
                     $versions = $node->getContentVersions();
@@ -64,15 +66,21 @@ class GenerateLinksCommand extends ContainerAwareCommand
 
                     foreach ($versions as $version) {
                         foreach ($nodeLinkRepository->findBy(array('nodeId' => $node->getId(), 'language' => $locale, 'version' => $version)) as $link) {
+                            $batch++;
                             $em->remove($link);
                         }
 
                         foreach ($linkExtractor->extract($node, $locale, $version) as $extractedLink) {
+                            $batch++;
                             $em->persist($extractedLink);
                         }
                     }
 
-                    $em->flush();
+                    if ($batch > 100) {
+                        $em->flush();
+                        $em->clear();
+                        $batch = 0;
+                    }
                 }
             }
         }

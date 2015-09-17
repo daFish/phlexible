@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
+namespace Phlexible\Component\Menu\Loader;
 
 /**
- * Loader exception
+ * Loader resolver exception
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LoaderException extends \RuntimeException
+class LoaderResolverException extends \RuntimeException
 {
 }

@@ -39,36 +39,30 @@ class CheckCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $problemCheckers = $this->getContainer()->get('phlexible_problem.problem_checkers');
+        $problemCollector = $this->getContainer()->get('phlexible_problem.problem_collector');
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $problemsRepository = $em->getRepository('PhlexibleProblemBundle:Problem');
 
-        $existing = new ProblemCollection($problemsRepository->findAll());
-        $countExisting = count($existing);
+        $existingProblems = new ProblemCollection($problemsRepository->findAll());
+        $problems = $problemCollector->collect();
 
         $known = array();
         $added = array();
         $removed = array();
 
-        foreach ($problemCheckers as $problemChecker) {
-            $problems = $problemChecker->check();
-
-            $output->writeln(get_class($problemChecker) . ' => ' . count($problems));
-
-            foreach ($existing->diff($problems) as $problem) {
-                $output->writeln("<error> + {$problem->getId()}</error>");
-                $em->persist($problem);
-                $added[] = $problem->getId();
-            }
-
-            foreach ($existing->intersect($problems) as $problem) {
-                $output->writeln(" = {$problem->getId()}");
-                $existing = $problems->diff($existing);
-                $known[] = $problem->getId();
-            }
+        foreach ($existingProblems->diff($problems) as $problem) {
+            $output->writeln("<error> + {$problem->getId()}</error>");
+            $em->persist($problem);
+            $added[] = $problem->getId();
         }
 
-        foreach ($existing as $problem) {
+        foreach ($existingProblems->intersect($problems) as $problem) {
+            $output->writeln(" = {$problem->getId()}");
+            $existingProblems = $problems->diff($existingProblems);
+            $known[] = $problem->getId();
+        }
+
+        foreach ($existingProblems as $problem) {
             $output->writeln("<info> - {$problem->getId()}</info>");
             $em->remove($problem);
             $removed[] = $problem->getId();

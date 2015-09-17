@@ -99,7 +99,6 @@ class FoldersController extends FOSRestController
 
             if ($volumeManager->countFoldersBy(array('parentId' => $folder->getId()))) {
                 $data['leaf'] = false;
-                $data['expandable'] = true;
             }
 
             $folders[] = $data;

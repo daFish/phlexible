@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Menu;
+namespace Phlexible\Component\Menu;
 
 /**
  * Menu item

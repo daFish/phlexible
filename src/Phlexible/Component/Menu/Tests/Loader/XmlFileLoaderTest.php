@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Tests\Menu\Loader;
+namespace Phlexible\Component\Menu\Tests\Loader;
 
 use org\bovigo\vfs\vfsStream;
-use Phlexible\Bundle\GuiBundle\Menu\Loader\XmlFileLoader;
+use Phlexible\Component\Menu\Loader\XmlFileLoader;
 
 /**
  * YAML file loader test
@@ -63,7 +63,7 @@ EOF;
     }
 
     /**
-     * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedException \Phlexible\Component\Menu\Loader\LoaderException
      * @expectedExceptionMessage The attribute 'name' is required but missing
      */
     public function testValidateWithMissingName()
@@ -86,7 +86,7 @@ EOF;
     }
 
     /**
-     * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedException \Phlexible\Component\Menu\Loader\LoaderException
      * @expectedExceptionMessage The attribute 'name' is required but missing
      */
     public function testLoadWithMissingHandler()

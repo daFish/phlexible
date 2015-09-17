@@ -1,4 +1,8 @@
 services:
+    phlexible_problem.problem_collector:
+        class: Phlexible\Bundle\ProblemBundle\Problem\ProblemCollector
+        arguments: [@phlexible_problem.problem_checkers]
+
     phlexible_problem.problem_checkers:
         class: Phlexible\Bundle\ProblemBundle\Domain\ProblemCheckerCollection
         arguments: [[]]

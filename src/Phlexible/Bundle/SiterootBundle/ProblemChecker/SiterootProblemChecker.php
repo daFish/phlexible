@@ -43,9 +43,9 @@ class SiterootProblemChecker implements ProblemCheckerInterface
     {
         $problems = new ProblemCollection();
 
-        $siteroots = $this->siterootManager->findAll();
+        $sites = $this->siterootManager->findAll();
 
-        if (!count($siteroots)) {
+        if (!count($sites)) {
             $problems->add(new Problem(
                 'siteroots_no_siteroots',
                 Problem::SEVERITY_WARNING,
@@ -56,23 +56,23 @@ class SiterootProblemChecker implements ProblemCheckerInterface
             return $problems;
         }
 
-        foreach ($siteroots as $siteRoot) {
-            if (!$siteRoot->getNavigations()) {
+        foreach ($sites as $site) {
+            if (!$site->getNavigations()) {
                 $problems->add(new Problem(
-                    "siteroots_no_navigation_{$siteRoot->getId()}",
+                    "siteroots_no_navigation_{$site->getId()}",
                     Problem::SEVERITY_WARNING,
-                    "No Navigation defined for Siteroot {$siteRoot->getTitle()}.",
-                    'Add Navigations to the Siteroot.'
+                    "No navigation defined for site {$site->getTitle()}.",
+                    'Add a navigation to the site.'
                 ));
             }
 
-            $specialTids = $siteRoot->getSpecialTids();
-            if (!$specialTids) {
+            $nodeAliases = $site->getNodeAliases();
+            if (!$nodeAliases) {
                 $problems->add(new Problem(
-                    "siteroots_no_specialtids_{$siteRoot->getId()}",
+                    "site_no_node_aliases_{$site->getId()}",
                     Problem::SEVERITY_WARNING,
-                    "No Special TIDs defined for Siteroot {$siteRoot->getTitle()}.",
-                    'Add Special TIDs to the Siteroot.'
+                    "No node aliases defined for Site {$site->getTitle()}.",
+                    'Add a node alias to the site.'
                 ));
             } else {
                 // TODO: repair
@@ -111,21 +111,21 @@ class SiterootProblemChecker implements ProblemCheckerInterface
                 */
             }
 
-            if (!$siteRoot->getTitles()) {
+            if (!$site->getTitles()) {
                 $problems->add(new Problem(
-                    "siteroots_no_titles_{$siteRoot->getId()}",
+                    "site_no_titles_{$site->getId()}",
                     Problem::SEVERITY_WARNING,
-                    "No Titles defined for Siteroot {$siteRoot->getId()}.",
-                    'Set Titles for the Siteroot'
+                    "No Titles defined for Siteroot {$site->getId()}.",
+                    'Set the titles for the Siteroot.'
                 ));
             }
 
-            if (!$siteRoot->getUrls()) {
+            if (!$site->getEntryPoints()) {
                 $problems->add(new Problem(
-                    "siteroots_no_urls_{$siteRoot->getId()}",
+                    "site_no_entry_pointy_{$site->getId()}",
                     Problem::SEVERITY_WARNING,
-                    "No Urls defined for Siteroot {$siteRoot->getTitle('en')}.",
-                    'Set Urls for the Siteroot'
+                    "No entry points defined for site {$site->getTitle('en')}.",
+                    'Add at least one entry point for the site.'
                 ));
             }
         }

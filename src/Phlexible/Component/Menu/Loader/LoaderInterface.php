@@ -9,21 +9,30 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
+namespace Phlexible\Component\Menu\Loader;
 
 /**
- * Loader resolver interface
+ * Loader interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface LoaderResolverInterface
+interface LoaderInterface
 {
     /**
-     * Resolve loader for file
+     * Load config file
      *
      * @param string $file
      *
-     * @return LoaderInterface
+     * @return MenuItemCollection
      */
-    public function resolve($file);
+    public function load($file);
+
+    /**
+     * Is the config file supported?
+     *
+     * @param string $file
+     *
+     * @return bool
+     */
+    public function supports($file);
 }

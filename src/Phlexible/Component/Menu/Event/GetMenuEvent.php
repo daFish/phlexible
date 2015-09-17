@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Event;
+namespace Phlexible\Component\Menu\Event;
 
-use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
+use Phlexible\Component\Menu\MenuItemCollection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

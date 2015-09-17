@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
+namespace Phlexible\Component\Menu\Loader;
 
-use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
-use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
+use Phlexible\Component\Menu\MenuItem;
+use Phlexible\Component\Menu\MenuItemCollection;
 
 /**
  * XML file loader

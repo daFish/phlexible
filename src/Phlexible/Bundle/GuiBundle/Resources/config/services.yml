@@ -21,12 +21,8 @@ services:
             - @event_dispatcher
 
     phlexible_gui.menu.loader:
-        class: Phlexible\Bundle\GuiBundle\Menu\MenuLoader
+        class: Phlexible\Component\Menu\PuliMenuLoader
         arguments: [@puli.discovery, @event_dispatcher]
-
-    phlexible_gui.catalog_accessor:
-        class: Phlexible\Bundle\GuiBundle\Translator\CatalogAccessor
-        arguments: [@translator]
 
     phlexible_gui.security.role_hierarchy_factory:
         class: Phlexible\Bundle\GuiBundle\Security\RoleHierarchyFactory

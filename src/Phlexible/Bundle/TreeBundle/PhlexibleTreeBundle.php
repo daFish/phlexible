@@ -30,9 +30,8 @@ class PhlexibleTreeBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $modelDir = realpath(__DIR__.'/Resources/config/doctrine');
         $mappings = array(
-            $modelDir => 'Phlexible\Component\Node\Domain',
+            $this->getPath().'/Resources/config/doctrine' => 'Phlexible\Component\Node\Domain',
         );
 
         $container->addCompilerPass(
@@ -47,7 +46,7 @@ class PhlexibleTreeBundle extends Bundle
         $container->addCompilerPass(
             DoctrineOrmMappingsPass::createAnnotationMappingDriver(
                 array('Phlexible\Bundle\TreeBundle\Entity'),
-                array(realpath(__DIR__.'/Entity')),
+                array($this->getPath().'/Entity'),
                 array(null),
                 'phlexible_tree.backend_type_orm',
                 array('PhlexibleTreeBundle' => 'Phlexible\Bundle\TreeBundle\Entity')
@@ -66,7 +65,7 @@ class PhlexibleTreeBundle extends Bundle
      */
     private function buildMappingCompilerPass()
     {
-        $arguments = array(array(realpath(__DIR__ . '/Resources/config/doctrine-base')), '.orm.xml');
+        $arguments = array(array($this->getPath().'/Resources/config/doctrine-base'), '.orm.xml');
         $locator = new Definition('Doctrine\Common\Persistence\Mapping\Driver\DefaultFileLocator', $arguments);
         $driver = new Definition('Doctrine\ORM\Mapping\Driver\XmlDriver', array($locator));
 

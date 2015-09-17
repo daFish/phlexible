@@ -9,24 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Menu;
+namespace Phlexible\Component\Menu;
 
-use Phlexible\Bundle\GuiBundle\Event\GetMenuEvent;
 use Phlexible\Bundle\GuiBundle\GuiEvents;
-use Phlexible\Bundle\GuiBundle\Menu\Loader\DelegatingLoader;
-use Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderResolver;
-use Phlexible\Bundle\GuiBundle\Menu\Loader\XmlFileLoader;
-use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
+use Phlexible\Component\Menu\Event\GetMenuEvent;
+use Phlexible\Component\Menu\Loader\DelegatingLoader;
+use Phlexible\Component\Menu\Loader\LoaderResolver;
+use Phlexible\Component\Menu\Loader\XmlFileLoader;
+use Phlexible\Component\Menu\Loader\YamlFileLoader;
 use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Resource\FileResource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Menu loader
+ * Puli menu loader
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class MenuLoader
+class PuliMenuLoader
 {
     /**
      * @var ResourceDiscovery

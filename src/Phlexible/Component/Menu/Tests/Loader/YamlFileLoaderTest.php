@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Tests\Menu\Loader;
+namespace Phlexible\Component\Menu\Tests\Loader;
 
 use org\bovigo\vfs\vfsStream;
-use Phlexible\Bundle\GuiBundle\Menu\Loader\YamlFileLoader;
+use Phlexible\Component\Menu\Loader\YamlFileLoader;
 
 /**
  * YAML file loader test
@@ -57,7 +57,7 @@ EOF;
     }
 
     /**
-     * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedException \Phlexible\Component\Menu\Loader\LoaderException
      */
     public function testLoadWithInvalidParent()
     {
@@ -75,7 +75,7 @@ EOF;
     }
 
     /**
-     * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedException \Phlexible\Component\Menu\Loader\LoaderException
      */
     public function testLoadWithMissingHandler()
     {
@@ -90,7 +90,7 @@ EOF;
     }
 
     /**
-     * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedException \Phlexible\Component\Menu\Loader\LoaderException
      */
     public function testLoadWithInvalidHandler()
     {
@@ -106,7 +106,7 @@ EOF;
     }
 
     /**
-     * @expectedException \Phlexible\Bundle\GuiBundle\Menu\Loader\LoaderException
+     * @expectedException \Phlexible\Component\Menu\Loader\LoaderException
      */
     public function testLoadWithInvalidRoles()
     {

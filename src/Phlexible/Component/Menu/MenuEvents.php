@@ -9,13 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Menu\Loader;
+namespace Phlexible\Component\Menu;
 
 /**
- * Loader resolver exception
+ * Menu events
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class LoaderResolverException extends \RuntimeException
+class MenuEvents
 {
+    /**
+     * Get menu event
+     */
+    const GET_MENU = 'menu.get_menu';
 }

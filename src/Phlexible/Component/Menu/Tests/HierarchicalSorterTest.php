@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\GuiBundle\Tests\Menu;
+namespace Phlexible\Component\Menu\Tests;
 
-use Phlexible\Bundle\GuiBundle\Menu\HierarchicalSorter;
-use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
-use Phlexible\Bundle\GuiBundle\Menu\MenuItemCollection;
+use Phlexible\Component\Menu\HierarchicalSorter;
+use Phlexible\Component\Menu\MenuItem;
+use Phlexible\Component\Menu\MenuItemCollection;
 
 /**
  * Hierarchy builder test

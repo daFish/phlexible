@@ -11,11 +11,13 @@
 
 namespace Phlexible\Bundle\TreeBundle\EventListener;
 
-use Phlexible\Bundle\GuiBundle\Event\GetMenuEvent;
-use Phlexible\Bundle\GuiBundle\Menu\MenuItem;
 use Phlexible\Bundle\TreeBundle\Model\TreeManagerInterface;
+use Phlexible\Component\Menu\Event\GetMenuEvent;
+use Phlexible\Component\Menu\MenuEvents;
+use Phlexible\Component\Menu\MenuItem;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Phlexible\Component\Tree\WorkingTreeContext;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -23,7 +25,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class GetMenuListener
+class GetMenuListener implements EventSubscriberInterface
 {
     /**
      * @var SiteManagerInterface
@@ -54,6 +56,16 @@ class GetMenuListener
         $this->siterootManager = $siterootManager;
         $this->treeManager = $treeManager;
         $this->authorizationChecker = $authorizationChecker;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            MenuEvents::GET_MENU => 'onGetMenu',
+        );
     }
 
     /**
