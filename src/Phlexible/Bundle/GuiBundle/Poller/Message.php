@@ -15,7 +15,7 @@ use DateTime;
 use DateTimeInterface;
 
 /**
- * Poller message
+ * Poller message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

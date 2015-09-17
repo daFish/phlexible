@@ -17,7 +17,7 @@ use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,7 +64,7 @@ class GetConfigListener
     private $availableLanguages;
 
     /**
-     * @param SiteManagerInterface      $siterootManager
+     * @param SiteManagerInterface          $siterootManager
      * @param TreeManagerInterface          $treeManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param bool                          $publishCommentRequired
@@ -82,8 +82,7 @@ class GetConfigListener
         $createUseMultilanguage,
         $createRestricted,
         $availableLanguages
-    )
-    {
+    ) {
         $this->siterootManager = $siterootManager;
         $this->treeManager = $treeManager;
         $this->authorizationChecker = $authorizationChecker;

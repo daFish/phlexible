@@ -13,12 +13,12 @@ namespace Phlexible\Bundle\MediaManagerBundle\EventListener;
 
 use Phlexible\Bundle\DataSourceBundle\Entity\DataSourceValueBag;
 use Phlexible\Component\MediaManager\Util\SuggestFieldUtil;
-use Phlexible\Component\Suggest\SuggestEvents;
 use Phlexible\Component\Suggest\Event\GarbageCollectEvent;
+use Phlexible\Component\Suggest\SuggestEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Data source listener
+ * Data source listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

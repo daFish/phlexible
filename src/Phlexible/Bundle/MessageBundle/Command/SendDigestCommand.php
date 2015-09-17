@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Info command
+ * Info command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,7 +42,7 @@ class SendDigestCommand extends ContainerAwareCommand
         $digest = $container->get('phlexible_message.digester');
         $recipients = $digest->sendDigestMails();
 
-        $output->writeln(count($recipients) . ' digest mails sent.');
+        $output->writeln(count($recipients).' digest mails sent.');
 
         return 0;
     }

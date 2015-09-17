@@ -15,7 +15,7 @@ use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Domain\MetaSetField;
 
 /**
- * XML parser
+ * XML parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

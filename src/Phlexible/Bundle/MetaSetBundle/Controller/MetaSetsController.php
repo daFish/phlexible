@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Sets controller
+ * Sets controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -37,7 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class MetaSetsController extends FOSRestController
 {
     /**
-     * Get meta sets
+     * Get meta sets.
      *
      * @return Response
      *
@@ -58,12 +58,12 @@ class MetaSetsController extends FOSRestController
 
         return array(
             'metasets' => array_values($metaSets),
-            'total'    => count($metaSets)
+            'total' => count($metaSets),
         );
     }
 
     /**
-     * Get meta set
+     * Get meta set.
      *
      * @param string $metasetId
      *
@@ -93,7 +93,7 @@ class MetaSetsController extends FOSRestController
     }
 
     /**
-     * Get meta sets
+     * Get meta sets.
      *
      * @param Request $request
      *
@@ -116,7 +116,7 @@ class MetaSetsController extends FOSRestController
     }
 
     /**
-     * Get meta set
+     * Get meta set.
      *
      * @param Request $request
      * @param string  $metasetId
@@ -179,7 +179,7 @@ class MetaSetsController extends FOSRestController
     }
 
     /**
-     * List fields
+     * List fields.
      *
      * @param Request $request
      *
@@ -197,13 +197,13 @@ class MetaSetsController extends FOSRestController
         $data = array();
         foreach ($fields as $field) {
             $data[] = array(
-                'id'           => $field->getId(),
-                'key'          => $field->getName(),
-                'type'         => $field->getType(),
-                'required'     => $field->isRequired(),
+                'id' => $field->getId(),
+                'key' => $field->getName(),
+                'type' => $field->getType(),
+                'required' => $field->isRequired(),
                 'synchronized' => $field->isSynchronized(),
-                'readonly'     => $field->isReadonly(),
-                'options'      => $field->getOptions(),
+                'readonly' => $field->isReadonly(),
+                'options' => $field->getOptions(),
             );
         }
 
@@ -238,7 +238,7 @@ class MetaSetsController extends FOSRestController
     }
 
     /**
-     * Create set
+     * Create set.
      *
      * @param Request $request
      *
@@ -270,7 +270,7 @@ class MetaSetsController extends FOSRestController
     }
 
     /**
-     * Rename set
+     * Rename set.
      *
      * @param Request $request
      *
@@ -298,7 +298,7 @@ class MetaSetsController extends FOSRestController
     }
 
     /**
-     * Save set
+     * Save set.
      *
      * @param Request $request
      *

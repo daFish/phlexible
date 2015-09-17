@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node lock manager interface
+ * Node lock manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>

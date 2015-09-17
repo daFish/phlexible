@@ -18,7 +18,7 @@ use Phlexible\Component\MessageSubscription\Domain\Subscription;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Digest
+ * Digest.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,11 +50,11 @@ class Digest
     private $messages;
 
     /**
-     * @param UserInterface $user
-     * @param \Phlexible\Component\MessageFilter\Domain\Filter        $filter
-     * @param \Phlexible\Component\MessageSubscription\Domain\Subscription  $subscription
-     * @param DateTime      $lastSend
-     * @param Message[]     $messages
+     * @param UserInterface                                                $user
+     * @param \Phlexible\Component\MessageFilter\Domain\Filter             $filter
+     * @param \Phlexible\Component\MessageSubscription\Domain\Subscription $subscription
+     * @param DateTime                                                     $lastSend
+     * @param Message[]                                                    $messages
      */
     public function __construct(
         UserInterface $user,

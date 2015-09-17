@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 
 /**
- * Datasource link extractor
+ * Datasource link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -30,7 +30,7 @@ class DatasourceLinkExtractor implements LinkExtractorInterface
         //$value = $value['value'];
 
         return array(
-            array('type' => 'datasource', 'target' => '123')
+            array('type' => 'datasource', 'target' => '123'),
         );
     }
 }

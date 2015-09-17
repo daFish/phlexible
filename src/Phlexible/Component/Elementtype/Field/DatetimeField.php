@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Datetime field
+ * Datetime field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,5 +33,4 @@ class DatetimeField extends AbstractField
     {
         return 'datetime';
     }
-
 }

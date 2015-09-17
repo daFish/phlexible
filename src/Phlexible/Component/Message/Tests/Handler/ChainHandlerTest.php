@@ -15,7 +15,7 @@ use Phlexible\Component\Message\Domain\Message;
 use Phlexible\Component\Message\Handler\ChainHandler;
 
 /**
- * Chain handler test
+ * Chain handler test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

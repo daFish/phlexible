@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * User form type
+ * User form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -66,8 +66,8 @@ class UserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'Phlexible\Bundle\UserBundle\Entity\User',
-            'csrf_protection'   => false,
+            'data_class' => 'Phlexible\Bundle\UserBundle\Entity\User',
+            'csrf_protection' => false,
         ));
     }
 

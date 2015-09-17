@@ -16,7 +16,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Temp\MediaConverter\Format\Image;
 
 /**
- * Image specifier
+ * Image specifier.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -32,6 +32,7 @@ class ImageSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
+     *
      * @param ImageTemplate $template
      */
     public function getExtension(TemplateInterface $template)
@@ -47,6 +48,7 @@ class ImageSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
+     *
      * @param ImageTemplate $template
      */
     public function specify(TemplateInterface $template)

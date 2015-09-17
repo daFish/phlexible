@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTypeBundle\Compiler;
 use Temp\MediaClassifier\Model\MediaTypeCollection;
 
 /**
- * Compiler interface
+ * Compiler interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

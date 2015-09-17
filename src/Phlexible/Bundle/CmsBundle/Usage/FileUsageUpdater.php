@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
- * File usage updater
+ * File usage updater.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

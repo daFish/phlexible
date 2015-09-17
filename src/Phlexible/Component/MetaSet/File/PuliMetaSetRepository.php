@@ -21,7 +21,7 @@ use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Puli meta set repository
+ * Puli meta set repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -15,7 +15,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Selection
+ * Selection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,20 +33,20 @@ class Selection
      */
     public function add(SelectionItem $item)
     {
-        $this->items[$item->getTarget()->getId() . '_' . $item->getLanguage()] = $item;
+        $this->items[$item->getTarget()->getId().'_'.$item->getLanguage()] = $item;
 
         return $this;
     }
 
     /**
      * @param NodeInterface|Teaser $target
-     * @param string                   $language
+     * @param string               $language
      *
      * @return bool
      */
     public function has($target, $language)
     {
-        $key = $target->getId() . '_' . $language;
+        $key = $target->getId().'_'.$language;
 
         return isset($this->items[$key]);
     }

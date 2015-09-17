@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * List command
+ * List command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -65,20 +65,19 @@ class ListCommand extends ContainerAwareCommand
         foreach ($messages as $message) {
             $output->writeln(
                 sprintf(
-                    "[%s] %s: %s [%s, %s]",
+                    '[%s] %s: %s [%s, %s]',
                     $message->getCreatedAt()->format('Y-m-d H:i:s'),
                     $types[$message->getType()],
                     $message->getSubject(),
-                    $message->getChannel() ? : '-',
-                    $message->getRole() ? : '-'
+                    $message->getChannel() ?: '-',
+                    $message->getRole() ?: '-'
                 )
             );
             if ($showBody) {
-                $output->writeln(' > ' . $message->getBody());
+                $output->writeln(' > '.$message->getBody());
             }
         }
 
         return 0;
     }
-
 }

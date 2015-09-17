@@ -17,7 +17,7 @@ use Phlexible\Bundle\TeaserBundle\Area\AreaManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Twig teaser extension
+ * Twig teaser extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,8 +64,7 @@ class TeaserExtension extends \Twig_Extension
         ElementSourceManagerInterface $elementSourceManager,
         AreaManager $areaManager,
         RequestStack $requestStack
-    )
-    {
+    ) {
         $this->elementService = $elementService;
         $this->elementSourceManager = $elementSourceManager;
         $this->areaManager = $areaManager;
@@ -93,7 +92,7 @@ class TeaserExtension extends \Twig_Extension
             $request = $this->requestStack->getCurrentRequest();
 
             if (!$request->attributes->has('node')) {
-                throw new \InvalidArgumentException("Need a node request attribute for navigations");
+                throw new \InvalidArgumentException('Need a node request attribute for navigations');
             }
 
             $node = $request->attributes->get('node');
@@ -124,8 +123,8 @@ class TeaserExtension extends \Twig_Extension
             }
 
             $this->teasers[$name] = array(
-                'name'    => $area->getName(),
-                'teasers' => $teasers
+                'name' => $area->getName(),
+                'teasers' => $teasers,
             );
         }
 

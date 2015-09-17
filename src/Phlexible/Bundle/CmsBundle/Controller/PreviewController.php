@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Preview controller
+ * Preview controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/frontend/preview")

@@ -20,7 +20,7 @@ use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
 use Psr\Log\LoggerInterface;
 
 /**
- * Synchronizer
+ * Synchronizer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -66,8 +66,7 @@ class Synchronizer
         ElementSourceManagerInterface $elementSourceManager,
         XmlDumper $xmlDumper,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->elementManager = $elementManager;
         $this->elementVersionManager = $elementVersionManager;
         $this->elementSourceManager = $elementSourceManager;

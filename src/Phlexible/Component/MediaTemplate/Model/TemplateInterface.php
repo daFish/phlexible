@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\Model;
 use DateTime;
 
 /**
- * Template interface
+ * Template interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

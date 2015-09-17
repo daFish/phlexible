@@ -14,7 +14,7 @@ namespace Phlexible\Component\MessageSubscription\Model;
 use Phlexible\Component\MessageSubscription\Domain\Subscription;
 
 /**
- * Subscription manager interface
+ * Subscription manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -15,7 +15,7 @@ use Phlexible\Component\Menu\MenuItem;
 use Phlexible\Component\Menu\MenuItemCollection;
 
 /**
- * Menu item collection test
+ * Menu item collection test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,7 +34,6 @@ class MenuItemCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $menuItems);
         $items = $menuItems->getItems();
         $this->assertSame('mergeFoo', $items['foo']->getHandle());
-
     }
 
     public function testToArray()

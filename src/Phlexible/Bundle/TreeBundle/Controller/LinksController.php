@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Links controller
+ * Links controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/links")
@@ -92,17 +92,16 @@ class LinksController extends Controller
         $links = $queryBuilder->getQuery()->getResult();
         $total = $countQueryBuilder->getQuery()->getSingleScalarResult();
 
-
         foreach ($links as $link) {
             $result[] = array(
-                'id'       => $link->getId(),
-                'type'     => $link->getType(),
+                'id' => $link->getId(),
+                'type' => $link->getType(),
                 'language' => $link->getLanguage(),
-                'version'  => $link->getVersion(),
-                'field'    => $link->getField(),
-                'target'   => $link->getTarget(),
-                'iconCls'  => 'p-element-component-icon',
-                'link'     => array(),
+                'version' => $link->getVersion(),
+                'field' => $link->getField(),
+                'target' => $link->getTarget(),
+                'iconCls' => 'p-element-component-icon',
+                'link' => array(),
             );
         }
 
@@ -157,7 +156,7 @@ class LinksController extends Controller
             ->from('tree', 't')
             ->join('t', 'element', 'e', 't.type_id = e.eid')
             ->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = ' . $qb->expr()->literal($language))
+            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = '.$qb->expr()->literal($language))
             ->where($qb->expr()->eq('t.id', $qb->expr()->literal($query)))
             ->orderBy('title', 'ASC');
 
@@ -166,7 +165,7 @@ class LinksController extends Controller
         }
 
         if ($elementTypeIds) {
-            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
+            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN ('.$elementTypeIds.')');
         }
 
         $results1 = $qb->execute()->fetchAll();
@@ -177,7 +176,7 @@ class LinksController extends Controller
             ->from('tree', 't')
             ->join('t', 'element', 'e', 't.type_id = e.eid')
             ->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND e.latest_version = ev.version')
-            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = ' . $qb->expr()->literal($language))
+            ->join('ev', 'element_version_mapped_field', 'evmf', 'evmf.element_version_id = ev.id AND evmf.language = '.$qb->expr()->literal($language))
             ->where($qb->expr()->like('evmf.backend', $qb->expr()->literal("%$query%")))
             ->orderBy('title', 'ASC');
 
@@ -186,7 +185,7 @@ class LinksController extends Controller
         }
 
         if ($elementTypeIds) {
-            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN (' . $elementTypeIds . ')');
+            $qb->join('e', 'element_version', 'ev', 'e.eid = ev.eid AND ev.element_type_id IN ('.$elementTypeIds.')');
         }
 
         $results2 = $qb->execute()->fetchAll();
@@ -199,12 +198,12 @@ class LinksController extends Controller
         foreach ($results as $row) {
             $siteroot = $siterootManager->find($row['siteroot_id']);
             $data[] = array(
-                'id'    => $row['id'],
-                'type'  => ($siterootId === $row['siteroot_id'] ? 'internal' : 'intrasiteroot'),
-                'tid'   => $row['id'],
-                'eid'   => $row['eid'],
+                'id' => $row['id'],
+                'type' => ($siterootId === $row['siteroot_id'] ? 'internal' : 'intrasiteroot'),
+                'tid' => $row['id'],
+                'eid' => $row['eid'],
                 'title' => $siteroot->getTitle($language)
-                    . ' :: ' . $row['title'] . ' [' . $row['id'] . ']',
+                    .' :: '.$row['title'].' ['.$row['id'].']',
             );
         }
 

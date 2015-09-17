@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Generator;
 
 /**
- * Value definition
+ * Value definition.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

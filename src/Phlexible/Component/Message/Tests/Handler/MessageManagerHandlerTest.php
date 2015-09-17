@@ -13,10 +13,9 @@ namespace Phlexible\Component\Message\Tests\Handler;
 
 use Phlexible\Component\Message\Domain\Message;
 use Phlexible\Component\Message\Handler\MessageManagerHandler;
-use Prophecy\Argument;
 
 /**
- * Message manager handler test
+ * Message manager handler test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * XML tree dumper
+ * XML tree dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -24,7 +24,7 @@ class XmlTreeDumper
 {
     /**
      * @param TreeInterface $tree
-     * @param Site      $siteroot
+     * @param Site          $siteroot
      *
      * @return string
      */

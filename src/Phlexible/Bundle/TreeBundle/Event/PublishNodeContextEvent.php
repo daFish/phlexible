@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Publish node context event
+ * Publish node context event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

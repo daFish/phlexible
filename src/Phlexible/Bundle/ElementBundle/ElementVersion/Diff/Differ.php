@@ -15,7 +15,7 @@ use cogpowered\FineDiff\Diff;
 use cogpowered\FineDiff\Granularity\Word;
 
 /**
- * Differ
+ * Differ.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,8 +33,8 @@ class Differ
     }
 
     /**
-     * @param array  $from
-     * @param array  $to
+     * @param array $from
+     * @param array $to
      *
      * @return array
      */
@@ -50,10 +50,10 @@ class Differ
             foreach ($toValues as $toValue) {
                 if ($fromValue['id'] === $toValue['id']) {
                     $found = true;
-                    if ($fromValue['content'] != $toValue['content']) {
+                    if ($fromValue['content'] !== $toValue['content']) {
                         $fromValue['attributes'] = array(
-                            'type'      => 'change',
-                            'diff'      => $this->diffValue($fromValue['content'], $toValue['content']),
+                            'type' => 'change',
+                            'diff' => $this->diffValue($fromValue['content'], $toValue['content']),
                             'diffValue' => $toValue['content'],
                         );
                     }
@@ -105,7 +105,7 @@ class Differ
             }
             if (!$found) {
                 $fromChild['attributes'] = array(
-                    'type'  => 'add',
+                    'type' => 'add',
                 );
                 $children[] = $fromChild;
             }
@@ -141,11 +141,11 @@ class Differ
      */
     private function diffValue($fromValue, $toValue)
     {
-        if (is_array($fromValue) ||is_array($toValue)) {
+        if (is_array($fromValue) || is_array($toValue)) {
             return '';
         }
 
-        $granularity = new Word;
+        $granularity = new Word();
         $diff = new Diff($granularity);
 
         return $diff->render($toValue, $fromValue);

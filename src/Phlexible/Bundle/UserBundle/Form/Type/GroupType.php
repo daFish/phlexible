@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Group form type
+ * Group form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,12 +31,12 @@ class GroupType extends AbstractType
         $builder->add('comment');
         $builder->add('createdAt', 'datetime', array(
             'widget' => 'single_text',
-            'input' => 'datetime'
+            'input' => 'datetime',
         ));
         $builder->add('createdBy', 'text');
         $builder->add('modifiedAt', 'datetime', array(
             'widget' => 'single_text',
-            'input' => 'datetime'
+            'input' => 'datetime',
         ));
         $builder->add('modifiedBy', 'text');
     }
@@ -47,8 +47,8 @@ class GroupType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'Phlexible\Bundle\UserBundle\Entity\Group',
-            'csrf_protection'   => false,
+            'data_class' => 'Phlexible\Bundle\UserBundle\Entity\Group',
+            'csrf_protection' => false,
         ));
     }
 

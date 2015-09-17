@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Search controller
+ * Search controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/search")
@@ -84,9 +84,9 @@ class SearchController extends Controller
                 /* @var $file ExtendedFileInterface */
 
                 $results[] = array(
-                    'id'        => $file->getId(),
-                    'version'   => $file->getVersion(),
-                    'name'      => $file->getName(),
+                    'id' => $file->getId(),
+                    'version' => $file->getVersion(),
+                    'name' => $file->getName(),
                     'folder_id' => $file->getFolderId(),
                 );
             }

@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Abstract node search
+ * Abstract node search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,16 +42,16 @@ abstract class AbstractNodeSearch implements SearchProviderInterface
         $handlerData = array(
             'handler' => 'element',
             'parameters' => array(
-                'id'             => $node->getId(),
-                'siteroot_id'    => $siteroot->getId(),
-                'title'          => $siteroot->getTitle($language),
-                'start_tid_path' => '/' . implode('/', $node->getTree()->getIdPath($node)),
-            )
+                'id' => $node->getId(),
+                'siteroot_id' => $siteroot->getId(),
+                'title' => $siteroot->getTitle($language),
+                'start_tid_path' => '/'.implode('/', $node->getTree()->getIdPath($node)),
+            ),
         );
 
         return new SearchResult(
             $node->getId(),
-            $siteroot->getTitle($language) . ' :: ' . $node->getField('backend', $language) . ' (' . $language . ', ' . $node->getId() . ')',
+            $siteroot->getTitle($language).' :: '.$node->getField('backend', $language).' ('.$language.', '.$node->getId().')',
             $node->getCreateUserId(),
             $node->getCreatedAt(),
             $icon,

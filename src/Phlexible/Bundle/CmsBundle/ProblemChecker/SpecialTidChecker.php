@@ -13,11 +13,11 @@ namespace Phlexible\Bundle\CmsBundle\ProblemChecker;
 
 use Doctrine\ORM\EntityManager;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
-use Phlexible\Bundle\ProblemBundle\Problem\ProblemCollection;
 use Phlexible\Bundle\ProblemBundle\Model\ProblemCheckerInterface;
+use Phlexible\Bundle\ProblemBundle\Problem\ProblemCollection;
 
 /**
- * Special TID problem checker
+ * Special TID problem checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

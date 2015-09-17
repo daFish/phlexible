@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Redirect route
+ * Redirect route.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @ORM\MappedSuperclass()
@@ -36,7 +36,7 @@ class RedirectRoute extends Route
     /**
      * Whether this is a permanent redirect. Defaults to false.
      *
-     * @var boolean
+     * @var bool
      */
     private $permanent = false;
 
@@ -124,5 +124,4 @@ class RedirectRoute extends Route
 
         return $this;
     }
-
 }

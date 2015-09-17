@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Suffix path decorator
+ * Suffix path decorator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

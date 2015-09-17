@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Get menu listener
+ * Get menu listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ class GetMenuListener implements EventSubscriberInterface
     private $authorizationChecker;
 
     /**
-     * @param SiteManagerInterface      $siterootManager
+     * @param SiteManagerInterface          $siterootManager
      * @param TreeManagerInterface          $treeManager
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
@@ -51,8 +51,7 @@ class GetMenuListener implements EventSubscriberInterface
         SiteManagerInterface $siterootManager,
         TreeManagerInterface $treeManager,
         AuthorizationCheckerInterface $authorizationChecker
-    )
-    {
+    ) {
         $this->siterootManager = $siterootManager;
         $this->treeManager = $treeManager;
         $this->authorizationChecker = $authorizationChecker;
@@ -90,11 +89,11 @@ class GetMenuListener implements EventSubscriberInterface
             $menuItem->setParameters(
                 array(
                     'siterootId' => $siteroot->getId(),
-                    'title'      => $siteroot->getTitle(),
+                    'title' => $siteroot->getTitle(),
                 )
             );
 
-            $items->set('siteroot_' . $siteroot->getId(), $menuItem);
+            $items->set('siteroot_'.$siteroot->getId(), $menuItem);
         }
     }
 }

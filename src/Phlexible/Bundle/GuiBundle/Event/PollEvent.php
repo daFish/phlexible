@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Poller\MessageCollection;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Poll event
+ * Poll event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

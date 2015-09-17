@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field\Container;
 
 /**
- * Accordion Container
+ * Accordion Container.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

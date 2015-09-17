@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Expression\Exception;
 
 /**
- * Invalid argument exception for expressions
+ * Invalid argument exception for expressions.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
-
 }

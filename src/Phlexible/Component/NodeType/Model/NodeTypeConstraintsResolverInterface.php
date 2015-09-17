@@ -14,7 +14,7 @@ namespace Phlexible\Component\NodeType\Model;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node type constraints resolver interface
+ * Node type constraints resolver interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

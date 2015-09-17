@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Generate links command
+ * Generate links command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -56,7 +56,6 @@ class GenerateLinksCommand extends ContainerAwareCommand
             $treeContext = new LiveTreeContext($locale);
 
             foreach ($treeManager->getAll($treeContext) as $tree) {
-
                 $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
                 foreach ($rii as $node) {
                     $versions = $node->getContentVersions();
@@ -67,12 +66,12 @@ class GenerateLinksCommand extends ContainerAwareCommand
 
                     foreach ($versions as $version) {
                         foreach ($nodeLinkRepository->findBy(array('nodeId' => $node->getId(), 'language' => $locale, 'version' => $version)) as $link) {
-                            $batch++;
+                            ++$batch;
                             $em->remove($link);
                         }
 
                         foreach ($linkExtractor->extract($node, $locale, $version) as $extractedLink) {
-                            $batch++;
+                            ++$batch;
                             $em->persist($extractedLink);
                         }
 
@@ -89,4 +88,3 @@ class GenerateLinksCommand extends ContainerAwareCommand
         return 0;
     }
 }
-

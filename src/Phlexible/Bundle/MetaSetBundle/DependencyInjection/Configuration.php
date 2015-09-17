@@ -16,7 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Meta sets configuration
+ * Meta sets configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -84,7 +84,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
             ->validate()
-                ->ifTrue(function($v){return 'custom' === $v['db_driver'] && 'phlexible_meta_set.meta_set_manager.default' === $v['service']['meta_set_manager'];})
+                ->ifTrue(function ($v) {return 'custom' === $v['db_driver'] && 'phlexible_meta_set.meta_set_manager.default' === $v['service']['meta_set_manager'];})
                 ->thenInvalid('You need to specify your own meta set manager service when using the "custom" driver.')
             ->end();
 

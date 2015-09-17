@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Multi select field
+ * Multi select field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

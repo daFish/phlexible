@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Abstract field
+ * Abstract field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

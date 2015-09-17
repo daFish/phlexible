@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Filters controller
+ * Filters controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class FiltersController extends FOSRestController
 {
     /**
-     * Get filters
+     * Get filters.
      *
      * @param ParamFetcher $paramFetcher
      *
@@ -64,12 +64,12 @@ class FiltersController extends FOSRestController
 
         return array(
             'filters' => $filters,
-            'count'   => count($filters)
+            'count' => count($filters),
         );
     }
 
     /**
-     * Get filter
+     * Get filter.
      *
      * @param string $filterId
      *
@@ -96,12 +96,12 @@ class FiltersController extends FOSRestController
         }
 
         return array(
-            'filter' => $filter
+            'filter' => $filter,
         );
     }
 
     /**
-     * Create filter
+     * Create filter.
      *
      * @param Request $request
      *
@@ -124,7 +124,7 @@ class FiltersController extends FOSRestController
     }
 
     /**
-     * Update filter
+     * Update filter.
      *
      * @param Request $request
      * @param string  $filterId
@@ -155,8 +155,8 @@ class FiltersController extends FOSRestController
     }
 
     /**
-     * @param Request $request
-     * @param \Phlexible\Component\MessageFilter\Domain\Filter  $filter
+     * @param Request                                          $request
+     * @param \Phlexible\Component\MessageFilter\Domain\Filter $filter
      *
      * @return Rest\View|Response
      */
@@ -193,7 +193,7 @@ class FiltersController extends FOSRestController
     }
 
     /**
-     * Delete filter
+     * Delete filter.
      *
      * @param string $filterId
      *

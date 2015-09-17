@@ -16,7 +16,7 @@ use Phlexible\Component\Message\Mailer\DigestMailer;
 use Phlexible\Component\Message\Message\MessagePoster;
 
 /**
- * Digester
+ * Digester.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,7 +50,7 @@ class Digester
     }
 
     /**
-     * Static send function for use with events
+     * Static send function for use with events.
      *
      * @return array
      */
@@ -67,8 +67,8 @@ class Digester
 
         if (count($digests)) {
             $message = Message::create(
-                count($digests) . ' digest mail(s) sent.',
-                'Status: ' . PHP_EOL . print_r($digests, true),
+                count($digests).' digest mail(s) sent.',
+                'Status: '.PHP_EOL.print_r($digests, true),
                 null,
                 null,
                 'ROLE_MESSAGES',

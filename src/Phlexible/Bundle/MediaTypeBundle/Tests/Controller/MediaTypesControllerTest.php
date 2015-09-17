@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTypeBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class MediaTypesControllerTest
+ * Class MediaTypesControllerTest.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

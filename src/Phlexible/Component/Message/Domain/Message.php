@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Message\Domain;
 
 /**
- * Message
+ * Message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -134,7 +134,7 @@ class Message
      */
     public static function getDefaultCreatedAt()
     {
-        return new \DateTime;
+        return new \DateTime();
     }
 
     /**

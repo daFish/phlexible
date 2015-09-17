@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\Previewer;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Previewer interface
+ * Previewer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

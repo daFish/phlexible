@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use Phlexible\Component\Menu\Loader\YamlFileLoader;
 
 /**
- * YAML file loader test
+ * YAML file loader test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -71,7 +71,6 @@ EOF;
 
         $loader = new YamlFileLoader();
         $items = $loader->load(vfsStream::url('root/items.yml'));
-
     }
 
     /**

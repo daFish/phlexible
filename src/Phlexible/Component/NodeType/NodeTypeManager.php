@@ -17,7 +17,7 @@ use Phlexible\Component\NodeType\Model\NodeTypeManagerInterface;
 use Phlexible\Component\NodeType\Model\NodeTypeProviderInterface;
 
 /**
- * Node type manager
+ * Node type manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

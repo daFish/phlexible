@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Node mapped field
+ * Node mapped field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -140,7 +140,7 @@ class NodeMappedField
     private $custom5Name;
 
     /**
-     * Return mapped field
+     * Return mapped field.
      *
      * @param string $field
      * @param string $language

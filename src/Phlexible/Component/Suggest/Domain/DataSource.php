@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Data source
+ * Data source.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

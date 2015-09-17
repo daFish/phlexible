@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Asset controller
+ * Asset controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediatypes/asset")
@@ -43,8 +43,8 @@ class AssetController extends Controller
             $key = str_replace(':', '-', (string) $mediaType);
             $item = array(
                 'cls' => sprintf('p-mediatype-%s', $key),
-                'de'  => $translator->trans($key, array(), 'mediatypes', 'de'),
-                'en'  => $translator->trans($key, array(), 'mediatypes', 'en'),
+                'de' => $translator->trans($key, array(), 'mediatypes', 'de'),
+                'en' => $translator->trans($key, array(), 'mediatypes', 'en'),
             );
 
             $data[(string) $mediaType] = $item;
@@ -72,7 +72,7 @@ class AssetController extends Controller
         $css = $compiler->compile($mediaClassifier->getCollection());
         $css = str_replace(
             array('/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/'),
-            array($basePath, $baseUrl, $basePath . 'bundles/'),
+            array($basePath, $baseUrl, $basePath.'bundles/'),
             $css
         );
 

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 use Phlexible\Bundle\TreeBundle\Entity\NodeLink;
 
 /**
- * Link extractor interface
+ * Link extractor interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

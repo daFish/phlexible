@@ -20,7 +20,7 @@ use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
 
 /**
- * Doctrine message manager
+ * Doctrine message manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

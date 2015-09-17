@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Folder command
+ * Folder command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -52,13 +52,13 @@ class FolderCommand extends ContainerAwareCommand
         $folder = $volumeManager->getByFolderId($folderId)->findFolder($folderId);
 
         $data = array(
-            'ID'             => $folder->getId(),
-            'Path'           => $folder->getPhysicalPath(),
-            'Created At'     => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
+            'ID' => $folder->getId(),
+            'Path' => $folder->getPhysicalPath(),
+            'Created At' => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
             'Create User ID' => $folder->getCreateUserId(),
-            'Modified At'    => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
+            'Modified At' => $folder->getModifiedAt()->format('Y-m-d H:i:s'),
             'Modify User ID' => $folder->getModifyUserId(),
-            'Name'           => $folder->getName(),
+            'Name' => $folder->getName(),
         );
 
         $table = new Table($output);

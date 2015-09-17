@@ -14,7 +14,7 @@ namespace Phlexible\Component\MetaSet\Domain;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 
 /**
- * Meta data
+ * Meta data.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Model;
 
 /**
- * Structure interface
+ * Structure interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

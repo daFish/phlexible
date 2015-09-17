@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Dump routes command
+ * Dump routes command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -45,4 +45,3 @@ class DumpRoutesCommand extends ContainerAwareCommand
         return 0;
     }
 }
-

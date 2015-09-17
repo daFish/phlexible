@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\SelectFieldProvider;
 
 /**
- * Select field provider collection
+ * Select field provider collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

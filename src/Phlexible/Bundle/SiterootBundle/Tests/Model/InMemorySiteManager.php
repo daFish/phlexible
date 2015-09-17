@@ -17,7 +17,7 @@ use Phlexible\Component\Site\Domain\Site;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
- * In memory site manager
+ * In memory site manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

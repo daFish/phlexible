@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Message\Exception;
 
 /**
- * Invalid argument exception
+ * Invalid argument exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
-
 }

@@ -17,7 +17,7 @@ use FOS\UserBundle\Model\GroupInterface;
 use JMS\Serializer\Annotation\Type;
 
 /**
- * Group
+ * Group.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

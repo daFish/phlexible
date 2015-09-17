@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\Problem;
 use Phlexible\Bundle\ProblemBundle\Domain\ProblemCheckerCollection;
 
 /**
- * Problem collector
+ * Problem collector.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

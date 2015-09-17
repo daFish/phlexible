@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Model\StructureInterface;
 use Phlexible\Component\Node\Domain\Node;
 
 /**
- * Structure node
+ * Structure node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

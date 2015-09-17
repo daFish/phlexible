@@ -16,10 +16,8 @@ use Phlexible\Bundle\SiterootBundle\Tests\Model\InMemorySiteManager;
 use Phlexible\Component\Site\Domain\Site;
 use Prophecy\Argument;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @author Stephan Wentz <sw@brainbits.net>
@@ -89,7 +87,7 @@ class SitesControllerTest extends WebTestCase
                 'default' => true,
                 'titles' => array('de' => 'testDe', 'en' => 'testEn'),
                 'specialTids' => array(
-                    array('name' => 'testSpecialTid', 'language' => 'de', 'treeId' => 123)
+                    array('name' => 'testSpecialTid', 'language' => 'de', 'treeId' => 123),
                 ),
                 'navigations' => array(
                     array('title' => 'testNavigation', 'startTreeId' => 123),

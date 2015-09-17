@@ -14,7 +14,7 @@ namespace Phlexible\Component\Message\Handler;
 use Phlexible\Component\Message\Domain\Message;
 
 /**
- * Handler interface
+ * Handler interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

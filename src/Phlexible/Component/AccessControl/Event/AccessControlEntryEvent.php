@@ -15,7 +15,7 @@ use Phlexible\Bundle\AccessControlBundle\Entity\AccessControlEntry;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Access control entry event
+ * Access control entry event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

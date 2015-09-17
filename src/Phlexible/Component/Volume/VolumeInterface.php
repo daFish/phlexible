@@ -20,7 +20,7 @@ use Webmozart\Expression\Expression;
 
 /**
  * Volume interface
- * Represents a complete set of classes used to get a virtual set of folders and files
+ * Represents a complete set of classes used to get a virtual set of folders and files.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

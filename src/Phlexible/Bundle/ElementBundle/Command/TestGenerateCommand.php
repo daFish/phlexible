@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Test generate command
+ * Test generate command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -50,4 +50,3 @@ class TestGenerateCommand extends ContainerAwareCommand
         return 0;
     }
 }
-

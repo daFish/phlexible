@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Access controller
+ * Access controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/access")
@@ -70,16 +70,16 @@ class AccessController extends Controller
 
             foreach ($acl->getEntries() as $ace) {
                 $identities[] = array(
-                    'id'             => $ace->getId(),
-                    'objectType'     => $acl->getObjectIdentity()->getType(),
-                    'objectId'       => $acl->getObjectIdentity()->getIdentifier(),
-                    'mask'           => $ace->getMask(),
-                    'stopMask'       => $ace->getStopMask(),
-                    'noInheritMask'  => $ace->getNoInheritMask(),
+                    'id' => $ace->getId(),
+                    'objectType' => $acl->getObjectIdentity()->getType(),
+                    'objectId' => $acl->getObjectIdentity()->getIdentifier(),
+                    'mask' => $ace->getMask(),
+                    'stopMask' => $ace->getStopMask(),
+                    'noInheritMask' => $ace->getNoInheritMask(),
                     'objectLanguage' => null,
-                    'securityType'   => $ace->getSecurityType(),
-                    'securityId'     => $ace->getSecurityIdentifier(),
-                    'securityName'   => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
+                    'securityType' => $ace->getSecurityType(),
+                    'securityId' => $ace->getSecurityIdentifier(),
+                    'securityName' => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
                 );
             }
         }

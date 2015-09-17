@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Site\Exception;
 
 /**
- * Update cancelled exception
+ * Update cancelled exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class UpdateCancelledException extends RuntimeException
 {
-
 }

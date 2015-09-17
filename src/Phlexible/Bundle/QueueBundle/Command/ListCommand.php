@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * List jobs command
+ * List jobs command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

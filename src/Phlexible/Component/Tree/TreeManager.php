@@ -19,7 +19,7 @@ use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
- * Tree manager
+ * Tree manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,8 +47,8 @@ class TreeManager implements TreeManagerInterface
 
     /**
      * @param \Phlexible\Component\Site\Model\SiteManagerInterface $siterootManager
-     * @param NodeManagerInterface     $nodeManager
-     * @param TreeFactoryInterface     $treeFactory
+     * @param NodeManagerInterface                                 $nodeManager
+     * @param TreeFactoryInterface                                 $treeFactory
      */
     public function __construct(
         SiteManagerInterface $siterootManager,
@@ -65,7 +65,7 @@ class TreeManager implements TreeManagerInterface
      */
     public function getBySiteRootId(TreeContextInterface $treeContext, $siterootId)
     {
-        $identifier = $treeContext->getWorkspace() . '_' . $treeContext->getLocale() . '_' . $siterootId;
+        $identifier = $treeContext->getWorkspace().'_'.$treeContext->getLocale().'_'.$siterootId;
 
         if (!isset($this->trees[$identifier])) {
             $tree = $this->treeFactory->factory($treeContext, $siterootId);
@@ -117,7 +117,7 @@ class TreeManager implements TreeManagerInterface
             ->setContentType($type)
             ->setContentId($typeId)
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime);
+            ->setCreatedAt(new \DateTime());
 
         $this->nodeManager->updateNode($node);
 

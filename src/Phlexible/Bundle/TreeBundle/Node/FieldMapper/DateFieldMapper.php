@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
- * Date field mapper
+ * Date field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

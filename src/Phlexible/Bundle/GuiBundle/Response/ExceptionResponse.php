@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Exception response
+ * Exception response.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>
@@ -39,7 +39,7 @@ class ExceptionResponse extends JsonResponse
     }
 
     /**
-     * Set exception data
+     * Set exception data.
      *
      * @param \Exception $exception
      */
@@ -58,10 +58,10 @@ class ExceptionResponse extends JsonResponse
     private function getExceptionData(\Exception $exception)
     {
         $data = array(
-            'classname'     => get_class($exception),
-            'message'       => $exception->getMessage(),
-            'code'          => $exception->getCode(),
-            'trace'         => $exception->getTrace(),
+            'classname' => get_class($exception),
+            'message' => $exception->getMessage(),
+            'code' => $exception->getCode(),
+            'trace' => $exception->getTrace(),
             'traceAsString' => $exception->getTraceAsString(),
         );
 
@@ -104,8 +104,8 @@ class ExceptionResponse extends JsonResponse
         $content = preg_split('#<br />#', $code);
 
         $lines = array();
-        for ($i = max($line - 3, 1), $max = min($line + 3, count($content)); $i <= $max; $i++) {
-            $lines[] = '<li' . ($i == $line ? ' class="selected"' : '') . '>' .
+        for ($i = max($line - 3, 1), $max = min($line + 3, count($content)); $i <= $max; ++$i) {
+            $lines[] = '<li'.($i === $line ? ' class="selected"' : '').'>'.
                 '<code>'.$this->fixCodeMarkup($content[$i - 1]).'</code></li>';
         }
 

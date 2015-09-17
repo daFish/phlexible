@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Changes controller
+ * Changes controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/changes")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ChangesController extends Controller
 {
     /**
-     * Return Element History
+     * Return Element History.
      *
      * @param Request $request
      *
@@ -36,13 +36,13 @@ class ChangesController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $nodeId   = $request->get('nodeId', null);
-        $action   = $request->get('action', null);
-        $comment  = $request->get('comment', null);
-        $sort     = $request->get('sort', 'createdAt');
-        $dir      = $request->get('dir', 'DESC');
-        $offset   = $request->get('start', 0);
-        $limit    = $request->get('limit', 25);
+        $nodeId = $request->get('nodeId', null);
+        $action = $request->get('action', null);
+        $comment = $request->get('comment', null);
+        $sort = $request->get('sort', 'createdAt');
+        $dir = $request->get('dir', 'DESC');
+        $offset = $request->get('start', 0);
+        $limit = $request->get('limit', 25);
 
         $criteria = array();
 
@@ -71,20 +71,20 @@ class ChangesController extends Controller
             }
 
             $changes[] = array(
-                'id'        => $change->getId(),
-                'nodeId'    => $change->getNodeId(),
-                'type'      => $type,
-                'version'   => $change->getVersion(),
-                'language'  => $change->getLanguage(),
-                'comment'   => $change->getComment(),
-                'action'    => $change->getAction(),
-                'username'  => $change->getCreateUserId(),
+                'id' => $change->getId(),
+                'nodeId' => $change->getNodeId(),
+                'type' => $type,
+                'version' => $change->getVersion(),
+                'language' => $change->getLanguage(),
+                'comment' => $change->getComment(),
+                'action' => $change->getAction(),
+                'username' => $change->getCreateUserId(),
                 'createdAt' => $change->getCreatedAt()->format('Y-m-d H:i:s'),
             );
         }
 
         $data = array(
-            'total'   => $count,
+            'total' => $count,
             'history' => $changes,
         );
 

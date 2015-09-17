@@ -14,7 +14,7 @@ namespace Phlexible\Component\NodeType\Domain;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Node type constraint
+ * Node type constraint.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="nodeConstraint")

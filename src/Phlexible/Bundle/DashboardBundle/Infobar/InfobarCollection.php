@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\DashboardBundle\Infobar;
 
 /**
- * Infobar collection
+ * Infobar collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -24,7 +24,7 @@ class InfobarCollection
     private $infobars = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param Infobar[] $infobars
      */
@@ -36,9 +36,9 @@ class InfobarCollection
     }
 
     /**
-     * Add infobar
+     * Add infobar.
      *
-     * @param  Infobar $infobar
+     * @param Infobar $infobar
      *
      * @return $this
      */
@@ -50,7 +50,7 @@ class InfobarCollection
     }
 
     /**
-     * Return array representation of infobars
+     * Return array representation of infobars.
      *
      * @return Infobar[]
      */

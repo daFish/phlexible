@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Groups controller
+ * Groups controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Security("is_granted('ROLE_GROUPS')")
@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class GroupsController extends FOSRestController
 {
     /**
-     * Get groups
+     * Get groups.
      *
      * @return Response
      *
@@ -54,12 +54,12 @@ class GroupsController extends FOSRestController
 
         return array(
             'groups' => $groups,
-            'total'  => count($groups)
+            'total' => count($groups),
         );
     }
 
     /**
-     * Get group
+     * Get group.
      *
      * @param string $groupId
      *
@@ -90,7 +90,7 @@ class GroupsController extends FOSRestController
     }
 
     /**
-     * Create new group
+     * Create new group.
      *
      * @param Request $request
      *
@@ -114,7 +114,7 @@ class GroupsController extends FOSRestController
     }
 
     /**
-     * Create new group
+     * Create new group.
      *
      * @param Request $request
      * @param string  $groupId
@@ -180,7 +180,7 @@ class GroupsController extends FOSRestController
     }
 
     /**
-     * Delete group
+     * Delete group.
      *
      * @param string $groupId
      *

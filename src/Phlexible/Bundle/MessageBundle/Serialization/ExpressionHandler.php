@@ -11,16 +11,16 @@
 
 namespace Phlexible\Bundle\MessageBundle\Serialization;
 
-use JMS\Serializer\Handler\SubscribingHandlerInterface;
+use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
+use JMS\Serializer\Handler\SubscribingHandlerInterface;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
-use JMS\Serializer\Context;
 use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Webmozart\Expression\Expression;
 
 /**
- * Expression handler
+ * Expression handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,27 +47,27 @@ class ExpressionHandler implements SubscribingHandlerInterface
         return array(
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
-                'format'    => 'json',
-                'type'      => 'Webmozart\Expression\Logic\Disjunction',
-                'method'    => 'serializeExpressionToJson',
+                'format' => 'json',
+                'type' => 'Webmozart\Expression\Logic\Disjunction',
+                'method' => 'serializeExpressionToJson',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
-                'format'    => 'json',
-                'type'      => 'Webmozart\Expression\Logic\Conjunction',
-                'method'    => 'serializeExpressionToJson',
+                'format' => 'json',
+                'type' => 'Webmozart\Expression\Logic\Conjunction',
+                'method' => 'serializeExpressionToJson',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
-                'format'    => 'json',
-                'type'      => 'Webmozart\Expression\Logic\Disjunction',
-                'method'    => 'deserializeJsonToExpression',
+                'format' => 'json',
+                'type' => 'Webmozart\Expression\Logic\Disjunction',
+                'method' => 'deserializeJsonToExpression',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
-                'format'    => 'json',
-                'type'      => 'Webmozart\Expression\Logic\Conjunction',
-                'method'    => 'deserializeJsonToExpression',
+                'format' => 'json',
+                'type' => 'Webmozart\Expression\Logic\Conjunction',
+                'method' => 'deserializeJsonToExpression',
             ),
         );
     }

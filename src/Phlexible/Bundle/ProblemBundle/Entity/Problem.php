@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Problem
+ * Problem.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

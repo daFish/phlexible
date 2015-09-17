@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Element source
+ * Element source.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -310,7 +310,7 @@ class ElementSource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getHideChildren()
     {
@@ -318,7 +318,7 @@ class ElementSource
     }
 
     /**
-     * @param boolean $hideChildren
+     * @param bool $hideChildren
      *
      * @return $this
      */
@@ -370,7 +370,7 @@ class ElementSource
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNoIndex()
     {
@@ -378,7 +378,7 @@ class ElementSource
     }
 
     /**
-     * @param boolean $noIndex
+     * @param bool $noIndex
      *
      * @return $this
      */

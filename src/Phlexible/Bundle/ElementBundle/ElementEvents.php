@@ -12,14 +12,14 @@
 namespace Phlexible\Bundle\ElementBundle;
 
 /**
- * Element events
+ * Element events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class ElementEvents
 {
     /**
-     * Fired after configuring element
+     * Fired after configuring element.
      */
     const CONFIGURE_ELEMENT = 'phlexible_element.configure_element';
 
@@ -122,5 +122,4 @@ class ElementEvents
      * Fired on element load.
      */
     const LOAD_DATA = 'phlexible_element.load_data';
-
 }

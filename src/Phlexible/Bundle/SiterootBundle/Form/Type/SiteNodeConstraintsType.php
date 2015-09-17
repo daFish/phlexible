@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Site node constraint form type
+ * Site node constraint form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -32,7 +32,7 @@ class SiteNodeConstraintsType extends AbstractType
         $builder->add('name');
         $builder->add('allowed', 'checkbox');
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             // cleanup extjs data - this shouldn't be necessary, try to remove data from extjs
             $data = $event->getData();
             if (isset($data['id'])) {
@@ -51,8 +51,8 @@ class SiteNodeConstraintsType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'Phlexible\Component\NodeType\Domain\NodeTypeConstraint',
-            'csrf_protection'   => false,
+            'data_class' => 'Phlexible\Component\NodeType\Domain\NodeTypeConstraint',
+            'csrf_protection' => false,
         ));
     }
 

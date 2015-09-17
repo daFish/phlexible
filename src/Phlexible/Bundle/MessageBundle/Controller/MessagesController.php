@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Messages controller
+ * Messages controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -36,7 +36,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class MessagesController extends FOSRestController
 {
     /**
-     * Get messages
+     * Get messages.
      *
      * @param ParamFetcher $paramFetcher
      *
@@ -76,15 +76,15 @@ class MessagesController extends FOSRestController
         }
 
         return array(
-            'expr'     => (string) $expr,
+            'expr' => (string) $expr,
             'messages' => $messageManager->findByExpression($expr, array($sort => $dir), $limit, $start),
-            'count'    => $messageManager->countByExpression($expr),
-            'facets'   => $messageManager->getFacetsByExpression($expr),
+            'count' => $messageManager->countByExpression($expr),
+            'facets' => $messageManager->getFacetsByExpression($expr),
         );
     }
 
     /**
-     * Get message
+     * Get message.
      *
      * @param string $messageId
      *
@@ -111,12 +111,12 @@ class MessagesController extends FOSRestController
         }
 
         return array(
-            'message' => $message
+            'message' => $message,
         );
     }
 
     /**
-     * Create message
+     * Create message.
      *
      * @param Request $request
      *
@@ -178,7 +178,7 @@ class MessagesController extends FOSRestController
     }
 
     /**
-     * Delete message
+     * Delete message.
      *
      * @param string $messageId
      *

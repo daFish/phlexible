@@ -20,7 +20,7 @@ use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Puli site repository
+ * Puli site repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -120,6 +120,7 @@ class PuliSiteRepository implements SiteRepositoryInterface
      * @param string $siteId
      *
      * @return BodyResource
+     *
      * @throws \Exception
      */
     private function findResource($siteId)

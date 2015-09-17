@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Generator;
 
 /**
- * Manager definition
+ * Manager definition.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,8 +40,8 @@ class ManagerDefinition
     public function addMainClass(MainClassDefinition $class, $filename)
     {
         $this->ids[$class->getElementtypeId()] = array(
-            'classname' => $class->getNamespace() . '\\' . $class->getClassname(),
-            'filename'  => $filename
+            'classname' => $class->getNamespace().'\\'.$class->getClassname(),
+            'filename' => $filename,
         );
         $this->names[] = $class->getElementtypeName();
     }
@@ -69,8 +69,8 @@ class ManagerDefinition
     public function addStructureClass(StructureClassDefinition $class, $filename)
     {
         $this->dsIds[$class->getDsId()] = array(
-            'classname' => $class->getNamespace() . '\\' . $class->getClassname(),
-            'filename'  => $filename
+            'classname' => $class->getNamespace().'\\'.$class->getClassname(),
+            'filename' => $filename,
         );
     }
 

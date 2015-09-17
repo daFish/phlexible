@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field\Container;
 
 /**
- * Reference container
+ * Reference container.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

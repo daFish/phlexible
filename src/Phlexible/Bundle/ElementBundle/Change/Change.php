@@ -15,7 +15,7 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
- * Elementtype change
+ * Elementtype change.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

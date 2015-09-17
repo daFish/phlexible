@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\Problem;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 
 /**
- * Problems fetcher interface
+ * Problems fetcher interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

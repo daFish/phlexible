@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\Domain;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Entry point
+ * Entry point.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="entryPoint")

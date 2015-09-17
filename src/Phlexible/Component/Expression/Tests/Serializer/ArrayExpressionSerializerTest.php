@@ -15,7 +15,7 @@ use Phlexible\Component\Expression\Serializer\ArrayExpressionSerializer;
 use Webmozart\Expression\Expr;
 
 /**
- * Message criteria array parser
+ * Message criteria array parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -222,7 +222,6 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('username=="jdoe" && (firstname.startsWith("Joh") || lastname.endsWith("oe"))', (string) $expr);
     }
 
-
     public function testDeserializeComparisons()
     {
         $data = array(
@@ -257,5 +256,4 @@ class ArrayExpressionSerializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame('username=="jdoe" && username!="xdoe" && username==="jdoe" && username!=="xdoe" && username.startsWith("Joh") && username.endsWith("oe") && username.contains("do") && username.matches("/test/") && username.in("jdoe", "xdoe") && properties.keyExists("xxx") && properties.keyNotExists("yyy") && username===null && username!==null && username.empty() && username.notEmpty() && logins>1 && logins>=2 && logins<3 && logins<=4', (string) $expr);
     }
-
 }

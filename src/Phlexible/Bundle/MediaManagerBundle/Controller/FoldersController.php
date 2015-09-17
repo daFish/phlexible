@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Folder controller
+ * Folder controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -38,7 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class FoldersController extends FOSRestController
 {
     /**
-     * List folders
+     * List folders.
      *
      * @param ParamFetcher $paramFetcher
      *
@@ -105,12 +105,12 @@ class FoldersController extends FOSRestController
         }
 
         return array(
-            'folders' => $folders
+            'folders' => $folders,
         );
     }
 
     /**
-     * Return folder
+     * Return folder.
      *
      * @param Request $request
      * @param string  $folderId
@@ -159,7 +159,7 @@ class FoldersController extends FOSRestController
     }
 
     /**
-     * Folder size
+     * Folder size.
      *
      * @param Request $request
      * @param string  $folderId
@@ -185,19 +185,19 @@ class FoldersController extends FOSRestController
         $folder = $volume->findFolder($folderId);
 
         if (!$folder instanceof FolderInterface) {
-            throw new NotFoundHttpException("Folder not found");
+            throw new NotFoundHttpException('Folder not found');
         }
 
         $calculator = new SizeCalculator();
         $calculatedSize = $calculator->calculate($volume, $folder);
 
         $data = array(
-            'title'       => $folder->getName(),
-            'type'        => 'folder',
-            'path'        => '/' . $folder->getPath(),
-            'size'        => $calculatedSize->getSize(),
-            'files'       => $calculatedSize->getNumFiles(),
-            'folders'     => $calculatedSize->getNumFolders(),
+            'title' => $folder->getName(),
+            'type' => 'folder',
+            'path' => '/'.$folder->getPath(),
+            'size' => $calculatedSize->getSize(),
+            'files' => $calculatedSize->getNumFiles(),
+            'folders' => $calculatedSize->getNumFolders(),
             'create_time' => $folder->getCreatedAt()->format('U') * 1000,
             'create_user' => $folder->getCreateUser(),
             'modify_time' => $folder->getModifiedAt()->format('U') * 1000,
@@ -205,12 +205,12 @@ class FoldersController extends FOSRestController
         );
 
         return array(
-            'size' => $data
+            'size' => $data,
         );
     }
 
     /**
-     * Create new folder
+     * Create new folder.
      *
      * @param Request $request
      *
@@ -239,7 +239,7 @@ class FoldersController extends FOSRestController
     }
 
     /**
-     * Update folder
+     * Update folder.
      *
      * @param Request $request
      * @param string  $folderId
@@ -265,7 +265,7 @@ class FoldersController extends FOSRestController
         $folder = $volume->findFolder($folderId);
 
         if (!$folder instanceof FolderInterface) {
-            throw new NotFoundHttpException("Folder not found");
+            throw new NotFoundHttpException('Folder not found');
         }
 
         if ($name) {
@@ -279,12 +279,13 @@ class FoldersController extends FOSRestController
     }
 
     /**
-     * Rename folder
+     * Rename folder.
      *
      * @param Request $request
      * @param string  $folderId
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -305,18 +306,19 @@ class FoldersController extends FOSRestController
         $folder = $volume->findFolder($folderId);
 
         if (!$folder instanceof FolderInterface) {
-            throw new NotFoundHttpException("Folder not found");
+            throw new NotFoundHttpException('Folder not found');
         }
 
         $volume->renameFolder($folder, $folderName, $this->getUser()->getUsername());
     }
 
     /**
-     * Move folder
+     * Move folder.
      *
      * @param Request $request
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -338,7 +340,7 @@ class FoldersController extends FOSRestController
         $folder = $volume->findFolder($folderId);
 
         if (!$folder instanceof FolderInterface) {
-            throw new NotFoundHttpException("Folder not found");
+            throw new NotFoundHttpException('Folder not found');
         }
 
         $targetFolder = $volume->findFolder($targetId);
@@ -349,12 +351,13 @@ class FoldersController extends FOSRestController
     }
 
     /**
-     * Delete folder
+     * Delete folder.
      *
      * @param Request $request
      * @param string  $folderId
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -373,7 +376,7 @@ class FoldersController extends FOSRestController
         $folder = $volume->findFolder($folderId);
 
         if (!$folder instanceof FolderInterface) {
-            throw new NotFoundHttpException("Folder not found");
+            throw new NotFoundHttpException('Folder not found');
         }
 
         if ($folder->isRoot()) {
@@ -440,16 +443,16 @@ class FoldersController extends FOSRestController
             }
 
             $tmp = array(
-                'id'        => $subFolder->getId(),
-                'text'      => $subFolder->getName(),
-                'leaf'      => false,
+                'id' => $subFolder->getId(),
+                'text' => $subFolder->getName(),
+                'leaf' => false,
                 'numChilds' => $volume->countFilesByFolder($subFolder),
                 'draggable' => true,
-                'expanded'  => true,
+                'expanded' => true,
                 'allowDrop' => true,
                 'allowChildren' => true,
-                'isTarget'  => true,
-                'rights'    => $userRights,
+                'isTarget' => true,
+                'rights' => $userRights,
             );
 
             if ($volume->countFoldersByParentFolder($subFolder)) {

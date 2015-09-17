@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Data saver
+ * Data saver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class NodeSaver
     }
 
     /**
-     * Save element data
+     * Save element data.
      *
      * @param NodeContext   $nodeContext
      * @param Request       $request

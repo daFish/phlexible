@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Set node offline context event
+ * Set node offline context event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

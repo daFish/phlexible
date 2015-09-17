@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Twig media extension
+ * Twig media extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -55,8 +55,7 @@ class MediaExtension extends \Twig_Extension
         VolumeManagerInterface $volumeManager,
         FileMetaSetResolver $metaSetResolver,
         FileMetaDataManager $metaDataManager
-    )
-    {
+    ) {
         $this->router = $router;
         $this->volumeManager = $volumeManager;
         $this->metaSetResolver = $metaSetResolver;
@@ -293,14 +292,14 @@ class MediaExtension extends \Twig_Extension
         $file = $volume->findFile($fileId, $fileVersion);
 
         $info = array(
-            'name'          => $file->getName(),
-            'mimetype'      => $file->getMimeType(),
-            'mediaType'     => $file->getMediaType(),
-            'size'          => $file->getSize(),
-            'attributes'    => $file->getAttributes(),
-            'createdAt'     => $file->getCreatedAt(),
-            'modifiedAt'    => $file->getModifiedAt(),
-            'meta'          => array(),
+            'name' => $file->getName(),
+            'mimetype' => $file->getMimeType(),
+            'mediaType' => $file->getMediaType(),
+            'size' => $file->getSize(),
+            'attributes' => $file->getAttributes(),
+            'createdAt' => $file->getCreatedAt(),
+            'modifiedAt' => $file->getModifiedAt(),
+            'meta' => array(),
         );
 
         $metasets = $this->metaSetResolver->resolve($file);

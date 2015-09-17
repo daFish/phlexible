@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Generator;
 
 /**
- * Main class definition
+ * Main class definition.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

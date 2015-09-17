@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Migrate command
+ * Migrate command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,7 +54,7 @@ class MigrateCommand extends ContainerAwareCommand
 
         $slugify = new Slugify();
 
-        foreach ($dbal->fetchAll("SELECT * FROM node WHERE parent_id IS NULL") as $row) {
+        foreach ($dbal->fetchAll('SELECT * FROM node WHERE parent_id IS NULL') as $row) {
             $slug = $dbal->fetchColumn("SELECT hostname FROM siteroot WHERE id = '{$row['siteroot_id']}'");
             $slug = $slugify->slugify($slug);
 
@@ -84,4 +84,3 @@ class MigrateCommand extends ContainerAwareCommand
         }
     }
 }
-

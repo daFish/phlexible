@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Usage\FolderUsageManager;
 use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 
 /**
- * Folder serializer
+ * Folder serializer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,7 +35,7 @@ class FolderSerializer
     }
 
     /**
-     * Serialize file
+     * Serialize file.
      *
      * @param ExtendedFolderInterface $folder
      *
@@ -47,18 +47,18 @@ class FolderSerializer
         $usedIn = $this->folderUsageManager->getUsedIn($folder);
 
         $data = array(
-            'id'         => $folder->getId(),
-            'name'       => $folder->getName(),
-            'path'       => $folder->getPath(),
-            'volumeId'   => $folder->getVolumeId(),
-            'createdBy'  => $folder->getCreateUser(),
-            'createdAt'  => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
+            'id' => $folder->getId(),
+            'name' => $folder->getName(),
+            'path' => $folder->getPath(),
+            'volumeId' => $folder->getVolumeId(),
+            'createdBy' => $folder->getCreateUser(),
+            'createdAt' => $folder->getCreatedAt()->format('Y-m-d H:i:s'),
             'modifiedBy' => $folder->getModifyUser(),
             'modifiedAt' => $folder->getModifiedAt() ? $folder->getModifiedAt()->format('Y-m-d H:i:s') : null,
             'attributes' => $folder->getAttributes(),
-            'metasets'   => $folder->getMetasets(),
-            'usedIn'     => $usedIn,
-            'used'       => $usage,
+            'metasets' => $folder->getMetasets(),
+            'usedIn' => $usedIn,
+            'used' => $usage,
         );
 
         return $data;

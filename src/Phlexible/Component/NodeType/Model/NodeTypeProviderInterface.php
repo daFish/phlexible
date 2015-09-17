@@ -12,7 +12,7 @@
 namespace Phlexible\Component\NodeType\Model;
 
 /**
- * Node type provider interface
+ * Node type provider interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

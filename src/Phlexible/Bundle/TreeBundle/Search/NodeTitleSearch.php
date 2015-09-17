@@ -19,7 +19,7 @@ use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Node title search
+ * Node title search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

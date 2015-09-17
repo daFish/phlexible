@@ -20,7 +20,7 @@ use Phlexible\Component\Site\Domain\NodeAlias;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * XML parser
+ * XML parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

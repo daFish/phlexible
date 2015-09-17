@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Model;
 
 /**
- * Part interface
+ * Part interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

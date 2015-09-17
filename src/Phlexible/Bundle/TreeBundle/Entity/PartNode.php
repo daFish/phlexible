@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Model\PartInterface;
 use Phlexible\Component\Node\Domain\Node;
 
 /**
- * Part node
+ * Part node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

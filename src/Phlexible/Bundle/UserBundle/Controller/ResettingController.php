@@ -20,14 +20,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Controller managing the resetting of the password
+ * Controller managing the resetting of the password.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class ResettingController extends BaseResettingController
 {
     /**
-     * Request reset user password: show form
+     * Request reset user password: show form.
      *
      * @return Response
      * @Route("/resetting/request", name="fos_user_resetting_request")
@@ -35,12 +35,12 @@ class ResettingController extends BaseResettingController
     public function requestAction()
     {
         return $this->container->get('templating')->renderResponse(
-            'PhlexibleUserBundle:Resetting:request.html.' . $this->getEngine()
+            'PhlexibleUserBundle:Resetting:request.html.'.$this->getEngine()
         );
     }
 
     /**
-     * Request reset user password: submit form and send email
+     * Request reset user password: submit form and send email.
      *
      * @return Response
      * @Route("/resetting/send-email", name="fos_user_resetting_send_email")
@@ -54,14 +54,14 @@ class ResettingController extends BaseResettingController
 
         if (null === $user) {
             return $this->container->get('templating')->renderResponse(
-                'PhlexibleUserBundle:Resetting:request.html.' . $this->getEngine(),
+                'PhlexibleUserBundle:Resetting:request.html.'.$this->getEngine(),
                 array('invalid_username' => $username)
             );
         }
 
         if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
             return $this->container->get('templating')->renderResponse(
-                'PhlexibleUserBundle:Resetting:passwordAlreadyRequested.html.' . $this->getEngine()
+                'PhlexibleUserBundle:Resetting:passwordAlreadyRequested.html.'.$this->getEngine()
             );
         }
 
@@ -80,7 +80,7 @@ class ResettingController extends BaseResettingController
     }
 
     /**
-     * Tell the user to check his email provider
+     * Tell the user to check his email provider.
      *
      * @return Response
      * @Route("/resetting/check-email", name="fos_user_resetting_check_email")
@@ -97,7 +97,7 @@ class ResettingController extends BaseResettingController
         }
 
         return $this->container->get('templating')->renderResponse(
-            'PhlexibleUserBundle:Resetting:checkEmail.html.' . $this->getEngine(),
+            'PhlexibleUserBundle:Resetting:checkEmail.html.'.$this->getEngine(),
             array(
                 'email' => $email,
             )
@@ -105,7 +105,7 @@ class ResettingController extends BaseResettingController
     }
 
     /**
-     * Reset user password
+     * Reset user password.
      *
      * @return Response
      * @Route("/resetting/reset/{token}", name="fos_user_resetting_reset")
@@ -137,7 +137,7 @@ class ResettingController extends BaseResettingController
         }
 
         return $this->container->get('templating')->renderResponse(
-            'PhlexibleUserBundle:Resetting:reset.html.' . $this->getEngine(),
+            'PhlexibleUserBundle:Resetting:reset.html.'.$this->getEngine(),
             array(
                 'token' => $token,
                 'form' => $form->createView(),

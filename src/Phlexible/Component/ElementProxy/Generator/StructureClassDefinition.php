@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Generator;
 
 /**
- * Structure class definition
+ * Structure class definition.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,14 +12,14 @@
 namespace Phlexible\Bundle\GuiBundle\Compressor;
 
 /**
- * Compressor interface
+ * Compressor interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface CompressorInterface
 {
     /**
-     * Compress given string
+     * Compress given string.
      *
      * @param string $buffer
      *
@@ -29,7 +29,7 @@ interface CompressorInterface
 
     /**
      * Compress given file
-     * Replaces the pointed out file with the compressed version
+     * Replaces the pointed out file with the compressed version.
      *
      * @param string $filename
      *
@@ -38,7 +38,7 @@ interface CompressorInterface
     public function compressFile($filename);
 
     /**
-     * Compress given stream
+     * Compress given stream.
      *
      * @param resource $stream
      *

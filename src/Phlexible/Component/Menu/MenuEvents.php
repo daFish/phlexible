@@ -12,14 +12,14 @@
 namespace Phlexible\Component\Menu;
 
 /**
- * Menu events
+ * Menu events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class MenuEvents
 {
     /**
-     * Get menu event
+     * Get menu event.
      */
     const GET_MENU = 'menu.get_menu';
 }

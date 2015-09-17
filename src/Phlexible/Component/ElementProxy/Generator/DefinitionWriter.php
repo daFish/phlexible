@@ -16,7 +16,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Definition writer
+ * Definition writer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,7 +47,7 @@ class DefinitionWriter
      */
     public function getManagerFile()
     {
-        return $this->outputDir . '/ClassManager.php';
+        return $this->outputDir.'/ClassManager.php';
     }
 
     /**
@@ -80,7 +80,7 @@ class DefinitionWriter
     private function writeMainClass(MainClassDefinition $class, ManagerDefinition $manager, \Twig_Environment $twig, $namespacePrefix)
     {
         $content = $twig->render('Main.php.twig', array('class' => $class));
-        $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $class->getNamespace())) . '/' . $class->getClassname() . '.php';
+        $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $class->getNamespace())).'/'.$class->getClassname().'.php';
         $this->dumpFile($relativeFilename, $content);
 
         $manager->addMainClass($class, $relativeFilename);
@@ -99,7 +99,7 @@ class DefinitionWriter
         foreach ($class->getCollections() as $collection) {
             foreach ($collection->getClasses() as $structure) {
                 $content = $twig->render('Structure.php.twig', array('class' => $structure));
-                $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $structure->getNamespace())) . '/' . $structure->getClassname() . '.php';
+                $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $structure->getNamespace())).'/'.$structure->getClassname().'.php';
                 $this->dumpFile($relativeFilename, $content);
 
                 $manager->addStructureClass($structure, $relativeFilename);
@@ -110,7 +110,7 @@ class DefinitionWriter
 
         foreach ($class->getChildren() as $structure) {
             $content = $twig->render('Structure.php.twig', array('class' => $structure));
-            $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $structure->getNamespace())) . '/' . $structure->getClassname() . '.php';
+            $relativeFilename = str_replace('\\', '/', str_replace($namespacePrefix, '', $structure->getNamespace())).'/'.$structure->getClassname().'.php';
             $this->dumpFile($relativeFilename, $content);
 
             $manager->addStructureClass($structure, $relativeFilename);
@@ -128,10 +128,10 @@ class DefinitionWriter
     {
         $content = "<?php return new \\Phlexible\\Component\\ElementProxy\\ClassManager(
     '{$this->outputDir}',
-    " . var_export($manager->getNames(), true) . ",
-    " . var_export($manager->getIds(), true) . ",
-    " . var_export($manager->getDsIds(), true) . "
-);";
+    ".var_export($manager->getNames(), true).',
+    '.var_export($manager->getIds(), true).',
+    '.var_export($manager->getDsIds(), true).'
+);';
         $relativeFilename = 'ClassManager.php';
 
         return $this->dumpFile($relativeFilename, $content);
@@ -147,13 +147,13 @@ class DefinitionWriter
     {
         $filesystem = new Filesystem();
 
-        $filesystem->dumpFile($this->outputDir . '/' . $relativeFilename, $content);
+        $filesystem->dumpFile($this->outputDir.'/'.$relativeFilename, $content);
 
-        return $this->outputDir . '/' . $relativeFilename;
+        return $this->outputDir.'/'.$relativeFilename;
     }
 
     /**
-     * Clear proxies
+     * Clear proxies.
      */
     private function clear()
     {

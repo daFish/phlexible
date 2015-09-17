@@ -15,7 +15,7 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Elementtype event
+ * Elementtype event.
  *
  * @author Phillip Look <pl@brainbits.net>
  */

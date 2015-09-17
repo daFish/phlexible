@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Menu\Loader;
 
 /**
- * Loader resolver
+ * Loader resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

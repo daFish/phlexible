@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Display field
+ * Display field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -20,7 +20,7 @@ use Phlexible\Component\Message\Message\MessagePoster;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Message listener
+ * Message listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

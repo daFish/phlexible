@@ -18,7 +18,7 @@ use Phlexible\Component\Elementtype\ElementtypeService;
 use Phlexible\Component\Elementtype\Field\FieldRegistry;
 
 /**
- * Distiller
+ * Distiller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -72,7 +72,7 @@ class Distiller
 
             if ($field->isField()) {
                 $data[$childNode->getName()] = array(
-                    'node'  => $childNode,
+                    'node' => $childNode,
                     'field' => $field,
                 );
             }
@@ -82,9 +82,9 @@ class Distiller
 
                 if ($childNode->isRepeatable() || $childNode->isOptional()) {
                     $data[$node->getName()] = array(
-                        'node'     => $childNode,
-                        'field'    => $field,
-                        'children' => $childData
+                        'node' => $childNode,
+                        'field' => $field,
+                        'children' => $childData,
                     );
                 } else {
                     $data = array_merge($data, $childData);

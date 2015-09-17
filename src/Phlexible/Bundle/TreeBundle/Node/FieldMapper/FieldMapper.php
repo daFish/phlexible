@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Field mapper
+ * Field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

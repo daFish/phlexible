@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Icon controller
+ * Icon controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/icons")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 class IconsController extends Controller
 {
     /**
-     * Delivers icons
+     * Delivers icons.
      *
      * @param Request $request
      *
@@ -42,7 +42,7 @@ class IconsController extends Controller
             foreach ($binding->getResources() as $resource) {
                 $icons[] = array(
                     'name' => $resource->getName(),
-                    'url'  => $this->generateUrl('tree_icon', array('icon' => $resource->getName())),
+                    'url' => $this->generateUrl('tree_icon', array('icon' => $resource->getName())),
                 );
             }
         }
@@ -51,7 +51,7 @@ class IconsController extends Controller
     }
 
     /**
-     * Delivers an icon
+     * Delivers an icon.
      *
      * @param Request $request
      * @param string  $icon
@@ -93,5 +93,4 @@ class IconsController extends Controller
                 )
             );
     }
-
 }

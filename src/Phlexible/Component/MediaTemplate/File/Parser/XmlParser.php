@@ -15,7 +15,7 @@ use Phlexible\Component\MediaTemplate\Exception\InvalidClassException;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * XML loader
+ * XML loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -68,7 +68,7 @@ class XmlParser implements ParserInterface
             $parameterNodeAttributes = $parameterNode->attributes();
             $key = (string) $parameterNodeAttributes['key'];
             $value = (string) $parameterNode;
-            $method = 'set' . $this->toCamelCase($key);
+            $method = 'set'.$this->toCamelCase($key);
 
             $template->$method($value);
         }
@@ -83,8 +83,8 @@ class XmlParser implements ParserInterface
      */
     private function toCamelCase($value)
     {
-        $chunks    = explode('_', $value);
-        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+        $chunks = explode('_', $value);
+        $ucfirsted = array_map(function ($s) { return ucfirst($s); }, $chunks);
 
         return implode('', $ucfirsted);
     }

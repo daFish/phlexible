@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Reorder child nodes context event
+ * Reorder child nodes context event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

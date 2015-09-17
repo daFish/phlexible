@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tree controller
+ * Tree controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Marcus Stöhr <mstoehr@brainbits.net>
@@ -36,7 +36,7 @@ class TreeController extends Controller
     const MODE_ET_TARGET = 4;
 
     /**
-     * Return the Element data tree
+     * Return the Element data tree.
      *
      * @param Request $request
      *
@@ -86,7 +86,7 @@ class TreeController extends Controller
     }
 
     /**
-     * List all types
+     * List all types.
      *
      * @param Request $request
      *
@@ -121,7 +121,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Create an Element
+     * Create an Element.
      *
      * @param Request $request
      *
@@ -169,19 +169,19 @@ class TreeController extends Controller
 
         return new ResultResponse(
             true,
-            'Element EID "' . $element->getEid() . ' (' . $masterLanguage . ')" created.',
+            'Element EID "'.$element->getEid().' ('.$masterLanguage.')" created.',
             array(
-                'eid'             => $element->getEid(),
-                'tid'             => $node->getId(),
+                'eid' => $element->getEid(),
+                'tid' => $node->getId(),
                 'master_language' => $masterLanguage,
-                'navigation'      => $navigation,
-                'restricted'      => $restricted
+                'navigation' => $navigation,
+                'restricted' => $restricted,
             )
         );
     }
 
     /**
-     * Create an Element
+     * Create an Element.
      *
      * @param Request $request
      *
@@ -209,7 +209,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Copy an Element
+     * Copy an Element.
      *
      * @param Request $request
      *
@@ -276,7 +276,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Move an Element
+     * Move an Element.
      *
      * @param Request $request
      *
@@ -306,7 +306,7 @@ class TreeController extends Controller
 
     /**
      * predelete action
-     * check if element has instances
+     * check if element has instances.
      *
      * @param Request $request
      *
@@ -340,7 +340,7 @@ class TreeController extends Controller
                     $instanceTitle,
                     $instanceNode->getCreatedAt()->format('Y-m-d H:i:s'),
                     (bool) $instanceNode->getTree()->isInstanceMaster($instanceNode),
-                    (bool) ($instanceNode->getId() === $nodeId)
+                    (bool) ($instanceNode->getId() === $nodeId),
                 );
             }
 
@@ -351,7 +351,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Delete an Element
+     * Delete an Element.
      *
      * @param Request $request
      *
@@ -382,7 +382,7 @@ class TreeController extends Controller
     }
 
     /**
-     * Save node
+     * Save node.
      *
      * @param Request $request
      *
@@ -412,10 +412,10 @@ class TreeController extends Controller
         $msg = "Node {$node->getId()} updated.";
 
         $data = array(
-            'title'         => $node->getField('backend', $language),
-            'icon'          => $icon,
-            'navigation'    => $node->getInNavigation(),
-            'restricted'    => $node->getAttribute('needAuthentication'),
+            'title' => $node->getField('backend', $language),
+            'icon' => $icon,
+            'navigation' => $node->getInNavigation(),
+            'restricted' => $node->getAttribute('needAuthentication'),
         );
 
         return new ResultResponse(true, $msg, $data);

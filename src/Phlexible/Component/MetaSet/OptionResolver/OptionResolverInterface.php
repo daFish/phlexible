@@ -14,7 +14,7 @@ namespace Phlexible\Component\MetaSet\OptionResolver;
 use Phlexible\Component\MetaSet\Domain\MetaSetField;
 
 /**
- * Option resolver interface
+ * Option resolver interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

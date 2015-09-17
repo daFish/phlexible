@@ -16,7 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Media cache configuration
+ * Media cache configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             // Using the custom driver requires changing the manager services
             ->validate()
-                ->ifTrue(function($v){return 'custom' === $v['db_driver'] && 'phlexible_media_cache.cache_manager.default' === $v['service']['cache_manager'];})
+                ->ifTrue(function ($v) {return 'custom' === $v['db_driver'] && 'phlexible_media_cache.cache_manager.default' === $v['service']['cache_manager'];})
                 ->thenInvalid('You need to specify your own cache manager service when using the "custom" driver.')
             ->end();
 

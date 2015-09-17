@@ -15,14 +15,14 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
- * Elementtype manager interface
+ * Elementtype manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ElementtypeManagerInterface
 {
     /**
-     * Find element type by ID
+     * Find element type by ID.
      *
      * @param int $elementtypeId
      *
@@ -31,14 +31,14 @@ interface ElementtypeManagerInterface
     public function find($elementtypeId);
 
     /**
-     * Find all element types
+     * Find all element types.
      *
      * @return Elementtype[]
      */
     public function findAll();
 
     /**
-     * Validate element type
+     * Validate element type.
      *
      * @param Elementtype $elementtype
      *
@@ -47,14 +47,14 @@ interface ElementtypeManagerInterface
     public function validateElementtype(Elementtype $elementtype);
 
     /**
-     * Save element type
+     * Save element type.
      *
      * @param Elementtype $elementtype
      */
     public function updateElementtype(Elementtype $elementtype);
 
     /**
-     * Delete an element type
+     * Delete an element type.
      *
      * @param Elementtype $elementtype
      */

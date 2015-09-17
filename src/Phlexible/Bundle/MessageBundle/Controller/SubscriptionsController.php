@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Subscriptions controller
+ * Subscriptions controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class SubscriptionsController extends FOSRestController
 {
     /**
-     * Get subscriptions
+     * Get subscriptions.
      *
      * @return Response
      *
@@ -55,12 +55,12 @@ class SubscriptionsController extends FOSRestController
 
         return array(
             'subscriptions' => $subscriptions,
-            'count'         => count($subscriptions),
+            'count' => count($subscriptions),
         );
     }
 
     /**
-     * Get subscription
+     * Get subscription.
      *
      * @param string $subscriptionId
      *
@@ -87,12 +87,12 @@ class SubscriptionsController extends FOSRestController
         }
 
         return array(
-            'subscription' => $subscription
+            'subscription' => $subscription,
         );
     }
 
     /**
-     * Create subscription
+     * Create subscription.
      *
      * @param Request $request
      *
@@ -115,7 +115,7 @@ class SubscriptionsController extends FOSRestController
     }
 
     /**
-     * Update subscription
+     * Update subscription.
      *
      * @param Request $request
      * @param string  $subscriptionId
@@ -146,7 +146,7 @@ class SubscriptionsController extends FOSRestController
     }
 
     /**
-     * @param Request      $request
+     * @param Request                                                      $request
      * @param \Phlexible\Component\MessageSubscription\Domain\Subscription $subscription
      *
      * @return Rest\View|Response
@@ -184,7 +184,7 @@ class SubscriptionsController extends FOSRestController
     }
 
     /**
-     * Delete subscription
+     * Delete subscription.
      *
      * @param string $subscriptionId
      *

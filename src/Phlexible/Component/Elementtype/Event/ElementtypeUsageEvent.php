@@ -15,7 +15,7 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
- * Elementtype event
+ * Elementtype event.
  *
  * @author Phillip Look <pl@brainbits.net>
  */

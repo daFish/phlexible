@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Types controller
+ * Types controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/types")
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TypesController extends Controller
 {
     /**
-     * List all types
+     * List all types.
      *
      * @param Request $request
      *

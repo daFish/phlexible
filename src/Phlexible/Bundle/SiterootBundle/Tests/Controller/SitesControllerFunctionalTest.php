@@ -100,7 +100,7 @@ class SitesControllerFunctionalTest extends WebTestCase
                 'modifiedAt' => date('Y-m-d H:i:s'),
                 'modifiedBy' => 'test',
                 'nodeAliases' => array(
-                    array('name' => 'testSpecialTid', 'language' => 'de', 'nodeId' => 123)
+                    array('name' => 'testSpecialTid', 'language' => 'de', 'nodeId' => 123),
                 ),
                 #'navigations' => array(
                 #    array('name' => 'testNavigation', 'nodeId' => 123),
@@ -111,7 +111,7 @@ class SitesControllerFunctionalTest extends WebTestCase
             ),
         );
 
-        $client->request('POST', "/admin/rest/sites", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('POST', '/admin/rest/sites', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(201, $response->getStatusCode());
@@ -151,7 +151,7 @@ class SitesControllerFunctionalTest extends WebTestCase
             ),
         );
 
-        $client->request('POST', "/admin/rest/sites", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('POST', '/admin/rest/sites', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(400, $response->getStatusCode());
@@ -215,7 +215,7 @@ class SitesControllerFunctionalTest extends WebTestCase
             ),
         );
 
-        $client->request('PUT', "/admin/rest/sites/invalid", array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
+        $client->request('PUT', '/admin/rest/sites/invalid', array(), array(), array('CONTENT_TYPE' => 'application/json'), json_encode($data));
         $response = $client->getResponse();
 
         $this->assertSame(404, $response->getStatusCode());
@@ -248,7 +248,7 @@ class SitesControllerFunctionalTest extends WebTestCase
     {
         $client = static::createClient(array(), array('HTTP_APIKEY' => 'swentz', 'HTTP_ACCEPT' => 'application/json'));
 
-        $client->request('DELETE', "/admin/rest/sites/invalid");
+        $client->request('DELETE', '/admin/rest/sites/invalid');
         $response = $client->getResponse();
 
         $this->assertSame(404, $response->getStatusCode());

@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Type;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Elementtype
+ * Elementtype.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -231,7 +231,7 @@ class Elementtype
     }
 
     /**
-     * Return element type icon
+     * Return element type icon.
      *
      * @return string
      */
@@ -253,7 +253,7 @@ class Elementtype
     }
 
     /**
-     * Return element type default tab
+     * Return element type default tab.
      *
      * @return string
      */
@@ -395,7 +395,7 @@ class Elementtype
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDeleted()
     {
@@ -403,7 +403,7 @@ class Elementtype
     }
 
     /**
-     * @param boolean $deleted
+     * @param bool $deleted
      *
      * @return $this
      */
@@ -435,7 +435,7 @@ class Elementtype
     }
 
     /**
-     * Return element type default content tab
+     * Return element type default content tab.
      *
      * @return string
      */
@@ -535,5 +535,4 @@ class Elementtype
 
         return $this;
     }
-
 }

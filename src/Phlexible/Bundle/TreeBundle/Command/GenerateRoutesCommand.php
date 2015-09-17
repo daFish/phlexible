@@ -24,7 +24,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Generate routes command
+ * Generate routes command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -91,10 +91,10 @@ class GenerateRoutesCommand extends ContainerAwareCommand
                         $route->setRequirements($newRoute->getRequirements());
                         $route->setSchemes($newRoute->getSchemes());
                         unset($routes[$route->getName()]);
-                        $output->writeln('UPDATE: ' . $route->getName() . ' => ' . current($route->getSchemes()) . '://' . $route->getHost() . $route->getPath());
+                        $output->writeln('UPDATE: '.$route->getName().' => '.current($route->getSchemes()).'://'.$route->getHost().$route->getPath());
                     } else {
                         $route = $newRoute;
-                        $output->writeln('NEW: ' . $route->getName() . ' => ' . current($route->getSchemes()) . '://' . $route->getHost() . $route->getPath());
+                        $output->writeln('NEW: '.$route->getName().' => '.current($route->getSchemes()).'://'.$route->getHost().$route->getPath());
                     }
 
                     $routeManager->updateRoute($route);
@@ -108,17 +108,16 @@ class GenerateRoutesCommand extends ContainerAwareCommand
                     $routeManager->deleteRoute($routes[$route->getName()]);
                     unset($routes[$route->getName()]);
                 }
-                $output->writeln($route->getName() . ' => ' . current($route->getSchemes()) . '://' . $route->getHost() . $route->getPath());
+                $output->writeln($route->getName().' => '.current($route->getSchemes()).'://'.$route->getHost().$route->getPath());
                 $routeManager->updateRoute($route);
             }
         }
 
         foreach ($routes as $route) {
-            $output->writeln('REMOVE: ' . $route->getName() . ' => ' . current($route->getSchemes()) . '://' . $route->getHost() . $route->getPath());
+            $output->writeln('REMOVE: '.$route->getName().' => '.current($route->getSchemes()).'://'.$route->getHost().$route->getPath());
             $routeManager->deleteRoute($route);
         }
 
         return 0;
     }
 }
-

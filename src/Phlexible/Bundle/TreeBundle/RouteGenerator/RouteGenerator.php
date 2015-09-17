@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * URL generator
+ * URL generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,7 +46,7 @@ class RouteGenerator implements RouteGeneratorInterface
             array(
                 'nodeId' => $node->getId(),
                 'siterootId' => $siteroot->getId(),
-                '_locale' => $language
+                '_locale' => $language,
             ),
             array(),
             array(),
@@ -71,7 +71,7 @@ class RouteGenerator implements RouteGeneratorInterface
             array(
                 'nodeId' => $node->getId(),
                 'siterootId' => $siterootId,
-                '_locale' => $language
+                '_locale' => $language,
             ),
             array(),
             array(),

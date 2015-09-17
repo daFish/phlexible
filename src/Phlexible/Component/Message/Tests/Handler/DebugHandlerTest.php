@@ -15,7 +15,7 @@ use Phlexible\Component\Message\Domain\Message;
 use Phlexible\Component\Message\Handler\DebugHandler;
 
 /**
- * Debug handler test
+ * Debug handler test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,7 +54,7 @@ class DebugHandlerTest extends \PHPUnit_Framework_TestCase
                     'role' => $message2->getRole(),
                     'user' => $message2->getUser(),
                     'createdAt' => $message2->getCreatedAt()->format('Y-m-d H:i:s'),
-                )
+                ),
             )
         );
     }

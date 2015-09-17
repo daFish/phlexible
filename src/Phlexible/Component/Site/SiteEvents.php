@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Site;
 
 /**
- * Site events
+ * Site events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

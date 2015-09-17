@@ -22,7 +22,7 @@ use Puli\Repository\Resource\FileResource;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Puli menu loader
+ * Puli menu loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

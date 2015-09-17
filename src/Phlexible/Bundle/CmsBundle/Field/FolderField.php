@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\CmsBundle\Field;
 use Phlexible\Component\Elementtype\Field\AbstractField;
 
 /**
- * Folder field
+ * Folder field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

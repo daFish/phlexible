@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Image template form type
+ * Image template form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,7 +47,7 @@ class ImageTemplateType extends MediaTemplateType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MediaTemplate\Domain\ImageTemplate',
+            'data_class' => 'Phlexible\Component\MediaTemplate\Domain\ImageTemplate',
             'csrf_protection' => false,
         ));
     }

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\RoleProvider;
 use Phlexible\Bundle\GuiBundle\Security\RoleProvider\RoleProvider;
 
 /**
- * Element role provider
+ * Element role provider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,8 +48,8 @@ class ElementRoleProvider extends RoleProvider
         return array(
             'ROLE_ELEMENT_ADMIN' => $this->provideRoles(),
             'ROLE_ELEMENT_MANAGER' => array(
-                'ROLE_ELEMENTS'
-            )
+                'ROLE_ELEMENTS',
+            ),
         );
     }
 

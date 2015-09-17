@@ -19,7 +19,7 @@ use Phlexible\Component\AccessControl\Model\DomainObjectInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Node context
+ * Node context.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -56,7 +56,7 @@ class NodeContext implements DomainObjectInterface
      * @param MediatorInterface $mediator
      * @param string            $language
      */
-    public function __construct(NodeInterface $node, TreeInterface $tree, MediatorInterface$mediator, $language)
+    public function __construct(NodeInterface $node, TreeInterface $tree, MediatorInterface $mediator, $language)
     {
         $this->node = $node;
         $this->tree = $tree;
@@ -554,7 +554,7 @@ class NodeContext implements DomainObjectInterface
             $template = $this->node->getTemplate();
 
             if (!$template) {
-                $template = '::' . $this->node->getContentType() . '.html.twig';
+                $template = '::'.$this->node->getContentType().'.html.twig';
             }
         }
 

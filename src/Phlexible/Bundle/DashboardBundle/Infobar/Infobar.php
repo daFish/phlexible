@@ -12,18 +12,18 @@
 namespace Phlexible\Bundle\DashboardBundle\Infobar;
 
 /**
- * Infobar
+ * Infobar.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class Infobar
 {
-    const REGION_TOP    = 'top';
+    const REGION_TOP = 'top';
     const REGION_BOTTOM = 'bottom';
 
     const TYPE_DEFAULT = '';
-    const TYPE_NOTICE  = 'notice';
-    const TYPE_URGENT  = 'urgent';
+    const TYPE_NOTICE = 'notice';
+    const TYPE_URGENT = 'urgent';
 
     /**
      * @var string
@@ -51,7 +51,7 @@ class Infobar
     protected $data;
 
     /**
-     * Return identifier
+     * Return identifier.
      *
      * @return string
      */
@@ -61,7 +61,7 @@ class Infobar
     }
 
     /**
-     * Return xtype
+     * Return xtype.
      *
      * @return string
      */
@@ -71,7 +71,7 @@ class Infobar
     }
 
     /**
-     * Return region
+     * Return region.
      *
      * @return string
      */
@@ -81,7 +81,7 @@ class Infobar
     }
 
     /**
-     * Return type
+     * Return type.
      *
      * @return string
      */
@@ -91,7 +91,7 @@ class Infobar
     }
 
     /**
-     * Return data
+     * Return data.
      *
      * @return array
      */
@@ -101,18 +101,18 @@ class Infobar
     }
 
     /**
-     * Return array representation of this infobar
+     * Return array representation of this infobar.
      *
      * @return array
      */
     public function toArray()
     {
         return array(
-            'id'     => $this->getID(),
-            'xtype'  => $this->getXtype(),
+            'id' => $this->getID(),
+            'xtype' => $this->getXtype(),
             'region' => $this->getRegion(),
-            'type'   => $this->getType(),
-            'data'   => $this->getData(),
+            'type' => $this->getType(),
+            'data' => $this->getData(),
         );
     }
 }

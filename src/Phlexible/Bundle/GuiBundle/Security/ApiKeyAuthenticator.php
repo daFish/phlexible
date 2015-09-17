@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
 /**
- * Class ApiKeyAuthenticator
+ * Class ApiKeyAuthenticator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

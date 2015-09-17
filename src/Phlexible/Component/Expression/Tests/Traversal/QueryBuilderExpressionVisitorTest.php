@@ -18,7 +18,7 @@ use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
 
 /**
- * Message criteria array parser
+ * Message criteria array parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -73,7 +73,7 @@ class QueryBuilderExpressionVisitorTest extends WebTestCase
 
         $qb = $this->applyVisitor($expr);
 
-        $this->assertSame("1 = 1", (string) $qb->getDQLPart('where'));
+        $this->assertSame('1 = 1', (string) $qb->getDQLPart('where'));
     }
 
     /**

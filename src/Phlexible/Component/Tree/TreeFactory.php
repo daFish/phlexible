@@ -17,7 +17,7 @@ use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Tree factory
+ * Tree factory.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

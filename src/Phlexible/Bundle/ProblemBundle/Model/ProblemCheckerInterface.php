@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\Model;
 use Phlexible\Bundle\ProblemBundle\Problem\ProblemCollection;
 
 /**
- * Problem checker interface
+ * Problem checker interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -25,7 +25,7 @@ interface ProblemCheckerInterface
     const SEVERITY_INFO = 'info';
 
     /**
-     * Check for problems
+     * Check for problems.
      *
      * @return ProblemCollection
      */

@@ -14,7 +14,7 @@ namespace Phlexible\Component\Elementtype\Field\Container;
 use Phlexible\Component\Elementtype\Field\Field;
 
 /**
- * Abstract container
+ * Abstract container.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MetaSetBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class MetaSetsControllerTest
+ * Class MetaSetsControllerTest.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

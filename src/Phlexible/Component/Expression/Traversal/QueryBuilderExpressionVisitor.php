@@ -23,7 +23,7 @@ use Webmozart\Expression\Traversal\ExpressionTraverser;
 use Webmozart\Expression\Traversal\ExpressionVisitor;
 
 /**
- * Expression visitor
+ * Expression visitor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,7 +60,7 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
     }
 
     /**
-     * Applies the given expression to a query builder
+     * Applies the given expression to a query builder.
      *
      * @param Expression $expr
      */
@@ -89,7 +89,7 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
             $this->currentStack->push(new SplStack());
         } elseif ($expr instanceof Selector\Key) {
             if ($this->currentField) {
-                throw new UnsupportedExpressionException("Sub-keys not supported.");
+                throw new UnsupportedExpressionException('Sub-keys not supported.');
             }
             $this->currentField = $expr->getKey();
         } elseif (
@@ -98,7 +98,7 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
             $expr instanceof Selector\AtMost ||
             $expr instanceof Selector\Exactly
         ) {
-            throw new UnsupportedExpressionException("Selector " . get_class($expr) . " not supported.");
+            throw new UnsupportedExpressionException('Selector '.get_class($expr).' not supported.');
         }
 
         return $expr;
@@ -137,7 +137,7 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function walkComparison(Expression $expr)
     {
@@ -148,10 +148,10 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
         }
 
         if (!$this->currentField) {
-            throw new UnsupportedExpressionException("Comparison without field not supported.");
+            throw new UnsupportedExpressionException('Comparison without field not supported.');
         }
 
-        $field = $this->alias . '.' . $this->currentField;
+        $field = $this->alias.'.'.$this->currentField;
 
         if ($expr instanceof Comparison\Contains) {
             return $this->qb->expr()->like($field, $this->literal("%{$expr->getComparedValue()}%"));
@@ -166,19 +166,19 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
         } elseif ($expr instanceof Comparison\In) {
             return $this->qb->expr()->in($field, $this->literal($expr->getAcceptedValues()));
         } elseif ($expr instanceof Comparison\IsEmpty) {
-            throw new UnsupportedExpressionException("Comparison " . get_class($expr) . " not supported.");
+            throw new UnsupportedExpressionException('Comparison '.get_class($expr).' not supported.');
         } elseif ($expr instanceof Comparison\KeyExists) {
-            throw new UnsupportedExpressionException("Comparison " . get_class($expr) . " not supported.");
+            throw new UnsupportedExpressionException('Comparison '.get_class($expr).' not supported.');
         } elseif ($expr instanceof Comparison\KeyNotExists) {
-            throw new UnsupportedExpressionException("Comparison " . get_class($expr) . " not supported.");
+            throw new UnsupportedExpressionException('Comparison '.get_class($expr).' not supported.');
         } elseif ($expr instanceof Comparison\LessThan) {
             return $this->qb->expr()->lt($field, $this->literal($expr->getComparedValue()));
         } elseif ($expr instanceof Comparison\LessThanEqual) {
             return $this->qb->expr()->lte($field, $this->literal($expr->getComparedValue()));
         } elseif ($expr instanceof Comparison\Matches) {
-            throw new UnsupportedExpressionException("Comparison " . get_class($expr) . " not supported.");
+            throw new UnsupportedExpressionException('Comparison '.get_class($expr).' not supported.');
         } elseif ($expr instanceof Comparison\NotEmpty) {
-            throw new UnsupportedExpressionException("Comparison " . get_class($expr) . " not supported.");
+            throw new UnsupportedExpressionException('Comparison '.get_class($expr).' not supported.');
         } elseif ($expr instanceof Comparison\NotEquals) {
             return $this->qb->expr()->neq($field, $this->literal($expr->getComparedValue()));
         } elseif ($expr instanceof Comparison\NotSame) {
@@ -188,7 +188,7 @@ class QueryBuilderExpressionVisitor implements ExpressionVisitor
         } elseif ($expr instanceof Comparison\StartsWith) {
             return $this->qb->expr()->like($field, $this->literal("{$expr->getAcceptedPrefix()}%"));
         } else {
-            throw new UnhandledExpressionException("Comparison " . get_class($expr) . " not handled.");
+            throw new UnhandledExpressionException('Comparison '.get_class($expr).' not handled.');
         }
     }
 

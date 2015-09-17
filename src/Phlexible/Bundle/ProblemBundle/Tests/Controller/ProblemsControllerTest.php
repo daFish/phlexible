@@ -15,7 +15,7 @@ use Phlexible\Bundle\ProblemBundle\Controller\ProblemsController;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 
 /**
- * Problems controller test
+ * Problems controller test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

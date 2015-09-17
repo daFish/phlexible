@@ -25,7 +25,7 @@ use Webmozart\Expression\Expr;
 use Webmozart\Expression\Expression;
 
 /**
- * User manager
+ * User manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

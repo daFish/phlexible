@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Elementtype\Exception;
 
 /**
- * Exception interface for elementtype bundle
+ * Exception interface for elementtype bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

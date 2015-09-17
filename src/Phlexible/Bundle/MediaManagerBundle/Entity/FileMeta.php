@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaManagerBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * File meta
+ * File meta.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * File command
+ * File command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -53,18 +53,18 @@ class FileCommand extends ContainerAwareCommand
         $file = $volume->findFile($fileId);
 
         $data = array(
-            'ID'             => $file->getId(),
-            'Folder ID'      => $file->getFolderId(),
-            'Path'           => $file->getPhysicalPath(),
-            'Created At'     => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+            'ID' => $file->getId(),
+            'Folder ID' => $file->getFolderId(),
+            'Path' => $file->getPhysicalPath(),
+            'Created At' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
             'Create User ID' => $file->getCreateUserId(),
-            'Modified At'    => $file->getModifiedAt()->format('Y-m-d H:i:s'),
+            'Modified At' => $file->getModifiedAt()->format('Y-m-d H:i:s'),
             'Modify User ID' => $file->getModifyUserId(),
-            'Hash'           => $file->getHash(),
-            'MimeType'       => $file->getMimeType(),
-            'Name'           => $file->getName(),
-            'Size'           => $file->getSize(),
-            'Version'        => $file->getVersion(),
+            'Hash' => $file->getHash(),
+            'MimeType' => $file->getMimeType(),
+            'Name' => $file->getName(),
+            'Size' => $file->getSize(),
+            'Version' => $file->getVersion(),
         );
 
         $table = new Table($output);

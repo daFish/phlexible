@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Suggest\Exception;
 
 /**
- * Exception interface for data source bundle
+ * Exception interface for data source bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

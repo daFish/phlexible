@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Security controller
+ * Security controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -27,6 +27,7 @@ class SecurityController extends BaseSecurityController
 {
     /**
      * @param Request $request
+     *
      * @return Response
      * @Route("/login", name="fos_user_security_login")
      */
@@ -52,6 +53,7 @@ class SecurityController extends BaseSecurityController
         // last username entered by the user
         $lastUsername = (null === $session) ? '' : $session->get($lastUsernameKey);
         $csrfToken = $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue();
+
         return $this->renderLogin(array(
             'last_username' => $lastUsername,
             'error' => $error,
@@ -66,7 +68,7 @@ class SecurityController extends BaseSecurityController
     public function checkAction()
     {
         throw new \RuntimeException(
-            'You must configure the check path to be handled by the firewall using form_login in your security ' .
+            'You must configure the check path to be handled by the firewall using form_login in your security '.
             'firewall configuration.'
         );
     }

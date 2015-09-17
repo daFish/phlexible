@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Site form type
+ * Site form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -32,51 +32,51 @@ class SiteType extends AbstractType
         $builder->add('createdBy', 'text');
         $builder->add('createdAt', 'datetime', array(
             'widget' => 'single_text',
-            'input' => 'datetime'
+            'input' => 'datetime',
         ));
         $builder->add('modifiedBy', 'text');
         $builder->add('modifiedAt', 'datetime', array(
             'widget' => 'single_text',
-            'input' => 'datetime'
+            'input' => 'datetime',
         ));
         $builder->add('titles', 'collection', array(
-            'type'         => 'text',
-            'allow_add'    => true,
+            'type' => 'text',
+            'allow_add' => true,
             #'allow_delete' => true,
             'by_reference' => false,
             #'delete_empty' => true,
         ));
         $builder->add('properties', 'collection', array(
-            'type'         => 'text',
-            'allow_add'    => true,
+            'type' => 'text',
+            'allow_add' => true,
             #'allow_delete' => true,
             'by_reference' => false,
             #'delete_empty' => true,
         ));
         $builder->add('nodeAliases', 'collection', array(
-            'type'         => new SiteNodeAliasType(),
-            'allow_add'    => true,
+            'type' => new SiteNodeAliasType(),
+            'allow_add' => true,
             #'allow_delete' => true,
             'by_reference' => false,
             #'delete_empty' => true,
         ));
         $builder->add('nodeConstraints', 'collection', array(
-            'type'         => new SiteNodeConstraintsType(),
-            'allow_add'    => true,
+            'type' => new SiteNodeConstraintsType(),
+            'allow_add' => true,
             #'allow_delete' => true,
             'by_reference' => false,
             #'delete_empty' => true,
         ));
         $builder->add('navigations', 'collection', array(
-            'type'         => new SiteNavigationType(),
-            'allow_add'    => true,
+            'type' => new SiteNavigationType(),
+            'allow_add' => true,
             #'allow_delete' => true,
             'by_reference' => false,
             #'delete_empty' => true,
         ));
         $builder->add('entryPoints', 'collection', array(
-            'type'         => new SiteEntryPointType(),
-            'allow_add'    => true,
+            'type' => new SiteEntryPointType(),
+            'allow_add' => true,
             #'allow_delete' => true,
             'by_reference' => false,
             #'delete_empty' => true,
@@ -89,8 +89,8 @@ class SiteType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'Phlexible\Component\Site\Domain\Site',
-            'csrf_protection'   => false,
+            'data_class' => 'Phlexible\Component\Site\Domain\Site',
+            'csrf_protection' => false,
         ));
     }
 

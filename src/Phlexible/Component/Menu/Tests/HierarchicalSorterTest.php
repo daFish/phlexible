@@ -16,7 +16,7 @@ use Phlexible\Component\Menu\MenuItem;
 use Phlexible\Component\Menu\MenuItemCollection;
 
 /**
- * Hierarchy builder test
+ * Hierarchy builder test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

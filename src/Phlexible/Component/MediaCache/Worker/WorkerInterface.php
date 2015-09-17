@@ -17,14 +17,14 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Temp\MediaClassifier\Model\MediaType;
 
 /**
- * Cache worker interface
+ * Cache worker interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface WorkerInterface
 {
     /**
-     * Process template and file
+     * Process template and file.
      *
      * @param TemplateInterface     $template
      * @param ExtendedFileInterface $file

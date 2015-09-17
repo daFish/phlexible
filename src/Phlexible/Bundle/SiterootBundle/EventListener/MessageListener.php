@@ -19,7 +19,7 @@ use Phlexible\Component\Site\SiteEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Message listener
+ * Message listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

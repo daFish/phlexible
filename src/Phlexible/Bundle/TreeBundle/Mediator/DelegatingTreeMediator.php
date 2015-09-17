@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Delegating tree mediator
+ * Delegating tree mediator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,6 +46,7 @@ class DelegatingTreeMediator implements MediatorInterface
 
         return $this;
     }
+
     /**
      * {@inheritdoc}
      */

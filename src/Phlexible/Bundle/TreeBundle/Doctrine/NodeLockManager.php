@@ -19,7 +19,7 @@ use Phlexible\Bundle\TreeBundle\Model\NodeLockManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node lock manager
+ * Node lock manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>

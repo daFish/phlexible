@@ -17,14 +17,14 @@ use Phlexible\Component\MessageFilter\Domain\Filter;
 use Webmozart\Expression\Expression;
 
 /**
- * Message check
+ * Message check.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class MessageChecker
 {
     /**
-     * Check if message satisfies the given filter
+     * Check if message satisfies the given filter.
      *
      * @param Filter  $filter
      * @param Message $message
@@ -37,23 +37,24 @@ class MessageChecker
     }
 
     /**
-     * Check if message satisfies the given expression
+     * Check if message satisfies the given expression.
      *
      * @param Expression $expression
      * @param Message    $message
      *
      * @throws InvalidArgumentException
+     *
      * @return bool
      */
     public function check(Expression $expression, Message $message)
     {
         return $expression->evaluate(array(
-            'subject'   => $message->getSubject(),
-            'body'      => $message->getBody(),
-            'type'      => $message->getType(),
-            'channel'   => $message->getChannel(),
-            'role'      => $message->getRole(),
-            'user'      => $message->getUser(),
+            'subject' => $message->getSubject(),
+            'body' => $message->getBody(),
+            'type' => $message->getType(),
+            'channel' => $message->getChannel(),
+            'role' => $message->getRole(),
+            'user' => $message->getUser(),
             'createdAt' => $message->getCreatedAt(),
         ));
     }

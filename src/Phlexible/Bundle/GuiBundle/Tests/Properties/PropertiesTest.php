@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Entity\Property;
 use Phlexible\Bundle\GuiBundle\Properties\Properties;
 
 /**
- * Properties test
+ * Properties test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

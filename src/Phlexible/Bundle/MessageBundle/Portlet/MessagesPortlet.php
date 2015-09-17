@@ -17,7 +17,7 @@ use Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Messages portlet
+ * Messages portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,8 +40,8 @@ class MessagesPortlet extends Portlet
 
     /**
      * @param \Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface $subscriptionManager
-     * @param MessageManagerInterface      $messageManager
-     * @param TokenStorageInterface        $tokenStorage
+     * @param MessageManagerInterface                                                     $messageManager
+     * @param TokenStorageInterface                                                       $tokenStorage
      */
     public function __construct(
         SubscriptionManagerInterface $subscriptionManager,
@@ -54,7 +54,7 @@ class MessagesPortlet extends Portlet
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -83,13 +83,13 @@ class MessagesPortlet extends Portlet
         $data = array();
         foreach ($messages as $message) {
             $data[] = array(
-                'id'        => $message->getId(),
-                'subject'   => $message->getSubject(),
-                'body'      => $message->getBody(),
-                'type'      => $message->getType(),
-                'channel'   => $message->getChannel(),
-                'role'      => $message->getRole(),
-                'user'      => $message->getUser(),
+                'id' => $message->getId(),
+                'subject' => $message->getSubject(),
+                'body' => $message->getBody(),
+                'type' => $message->getType(),
+                'channel' => $message->getChannel(),
+                'role' => $message->getRole(),
+                'user' => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('Y-m-d H:i:s'),
             );
         }

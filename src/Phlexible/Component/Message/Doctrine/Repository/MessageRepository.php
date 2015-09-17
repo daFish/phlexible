@@ -18,14 +18,14 @@ use Phlexible\Component\Message\Domain\Message;
 use Webmozart\Expression\Expression;
 
 /**
- * Message repository
+ * Message repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class MessageRepository extends EntityRepository
 {
     /**
-     * Find messages by expression
+     * Find messages by expression.
      *
      * @param Expression $expression
      * @param array      $orderBy
@@ -62,7 +62,7 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * Count messages by expression
+     * Count messages by expression.
      *
      * @param Expression $expression
      *
@@ -80,7 +80,7 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * Find message by expression
+     * Find message by expression.
      *
      * @param Expression $expression
      * @param array      $orderBy
@@ -114,8 +114,8 @@ class MessageRepository extends EntityRepository
 
         return array(
             'channels' => array_column($channels, 'channel'),
-            'types'    => array_column($types, 'type'),
-            'roles'    => array_column($roles, 'role'),
+            'types' => array_column($types, 'type'),
+            'roles' => array_column($roles, 'role'),
         );
     }
 
@@ -158,13 +158,13 @@ class MessageRepository extends EntityRepository
                 },
                 array_column($fullTypes, 'type')
             ),
-            'channels'   => $channels,
-            'roles'      => $roles,
+            'channels' => $channels,
+            'roles' => $roles,
         );
     }
 
     /**
-     * Apply expression
+     * Apply expression.
      *
      * @param QueryBuilder $queryBuilder
      * @param Expression   $expression

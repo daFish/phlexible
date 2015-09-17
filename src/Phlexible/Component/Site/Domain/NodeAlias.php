@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\Domain;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Node alias
+ * Node alias.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="nodeAlias")

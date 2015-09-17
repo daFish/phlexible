@@ -16,7 +16,7 @@ use Phlexible\Component\Node\Model\NodeInterface;
 use Symfony\Cmf\Bundle\RoutingBundle\Routing\DynamicRouter;
 
 /**
- * Tree router
+ * Tree router.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

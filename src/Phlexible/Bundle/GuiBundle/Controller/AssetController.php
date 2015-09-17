@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Asset controller
+ * Asset controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/gui/asset")
@@ -26,11 +26,12 @@ use Symfony\Component\HttpFoundation\Response;
 class AssetController extends Controller
 {
     /**
-     * Output scripts
+     * Output scripts.
      *
      * @param Request $request
      *
      * @return Response
+     *
      * @throws \Exception
      * @Route("/scripts", name="phlexible_gui_asset_scripts")
      */
@@ -41,7 +42,7 @@ class AssetController extends Controller
             $file = $scriptsBuilder->build();
         } catch (\Exception $e) {
             if (!in_array('text/html', $request->getAcceptableContentTypes())) {
-                return new Response("alert('" . str_replace("'", "\'", $e->getMessage()) . "');");
+                return new Response("alert('".str_replace("'", "\'", $e->getMessage())."');");
             } else {
                 throw $e;
             }
@@ -51,7 +52,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Output css
+     * Output css.
      *
      * @param Request $request
      *
@@ -67,7 +68,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Output translations
+     * Output translations.
      *
      * @param Request $request
      * @param string  $language

@@ -19,7 +19,7 @@ use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Resource\FileResource;
 
 /**
- * CSS builder
+ * CSS builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,7 +64,7 @@ class CssBuilder
     }
 
     /**
-     * Build stream
+     * Build stream.
      *
      * @param string $baseUrl
      * @param string $basePath
@@ -73,7 +73,7 @@ class CssBuilder
      */
     public function build($baseUrl, $basePath)
     {
-        $cache = new ResourceCollectionCache($this->cacheDir . '/gui.css', $this->debug);
+        $cache = new ResourceCollectionCache($this->cacheDir.'/gui.css', $this->debug);
 
         $resources = $this->findBindings();
 
@@ -88,7 +88,6 @@ class CssBuilder
             if (!$this->debug) {
                 $this->compressor->compressFile((string) $cache);
             }
-
         }
 
         return (string) $cache;
@@ -104,6 +103,7 @@ class CssBuilder
 
     /**
      * @param ResourceBinding[] $bindings
+     *
      * @return string
      */
     private function buildCss(array $bindings)
@@ -117,10 +117,10 @@ class CssBuilder
             }
         }
 
-        $css = '/* Created: ' . date('Y-m-d H:i:s') . ' */';
+        $css = '/* Created: '.date('Y-m-d H:i:s').' */';
         foreach ($input as $file) {
             if ($this->debug) {
-                $css .= PHP_EOL . "/* File: $file */" . PHP_EOL;
+                $css .= PHP_EOL."/* File: $file */".PHP_EOL;
             }
             $css .= file_get_contents($file);
         }

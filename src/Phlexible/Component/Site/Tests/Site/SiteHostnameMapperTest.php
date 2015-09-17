@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\Tests\Site;
 use Phlexible\Component\Site\Site\SiteHostnameMapper;
 
 /**
- * Site hostname mapper test
+ * Site hostname mapper test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

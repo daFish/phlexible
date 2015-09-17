@@ -12,14 +12,14 @@
 namespace Phlexible\Component\Message;
 
 /**
- * Message events
+ * Message events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class MessageEvents
 {
     /**
-     * Message Event
+     * Message Event.
      */
     const MESSAGE = 'phlexible_message.message';
 }

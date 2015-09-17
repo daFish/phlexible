@@ -15,7 +15,7 @@ use Phlexible\Component\Menu\MenuItem;
 use Phlexible\Component\Menu\MenuItemCollection;
 
 /**
- * XML file loader
+ * XML file loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,6 +43,7 @@ class XmlFileLoader implements LoaderInterface
      * @param string $file
      *
      * @throws LoaderException
+     *
      * @return MenuItemCollection
      */
     private function import($file)
@@ -98,12 +99,12 @@ class XmlFileLoader implements LoaderInterface
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->load($xmlFile);
 
-        if (!$dom->schemaValidate(__DIR__ . '/schema/menu.xsd')) {
+        if (!$dom->schemaValidate(__DIR__.'/schema/menu.xsd')) {
             $errors = libxml_get_errors();
             foreach ($errors as $error) {
                 if ($error->level >= LIBXML_ERR_ERROR) {
                     throw new LoaderException(
-                        "Schema error in {$error->file}, line {$error->line}, column {$error->column} " .
+                        "Schema error in {$error->file}, line {$error->line}, column {$error->column} ".
                         "[{$error->level}]: {$error->message}"
                     );
                 }

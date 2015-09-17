@@ -15,7 +15,7 @@ use FluentDOM\Document;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,10 +33,10 @@ class XmlDumper
             'site',
             '',
             array(
-                'id'          => $site->getId(),
-                'hostname'    => $site->getHostname(),
-                'createdAt'  => $site->getCreatedAt()->format('Y-m-d H:i:s'),
-                'createdBy'  => $site->getCreatedBy(),
+                'id' => $site->getId(),
+                'hostname' => $site->getHostname(),
+                'createdAt' => $site->getCreatedAt()->format('Y-m-d H:i:s'),
+                'createdBy' => $site->getCreatedBy(),
                 'modifiedAt' => $site->getModifiedAt()->format('Y-m-d H:i:s'),
                 'modifiedBy' => $site->getModifiedBy(),
             )
@@ -46,10 +46,10 @@ class XmlDumper
             $entryPointsNode = $rootElement->appendElement('entryPoints');
             foreach ($site->getEntryPoints() as $entryPoint) {
                 $entryPointsNode->appendElement('entryPoint', '', array(
-                    'name'     => $entryPoint->getName(),
+                    'name' => $entryPoint->getName(),
                     'hostname' => $entryPoint->getHostname(),
                     'language' => $entryPoint->getLanguage(),
-                    'nodeId'   => $entryPoint->getNodeId(),
+                    'nodeId' => $entryPoint->getNodeId(),
                 ));
             }
         }
@@ -76,8 +76,8 @@ class XmlDumper
             $nodeAliasesNode = $rootElement->appendElement('navigations');
             foreach ($site->getNavigations() as $navigation) {
                 $nodeAliasesNode->appendElement('navigation', '', array(
-                    'name'     => $navigation->getName(),
-                    'nodeId'   => $navigation->getNodeId(),
+                    'name' => $navigation->getName(),
+                    'nodeId' => $navigation->getNodeId(),
                     'maxDepth' => $navigation->getMaxDepth(),
                 ));
             }
@@ -87,8 +87,8 @@ class XmlDumper
             $nodeAliasesNode = $rootElement->appendElement('nodeAliases');
             foreach ($site->getNodeAliases() as $nodeAlias) {
                 $attributes = array(
-                    'name'     => $nodeAlias->getName(),
-                    'nodeId'   => $nodeAlias->getNodeId(),
+                    'name' => $nodeAlias->getName(),
+                    'nodeId' => $nodeAlias->getNodeId(),
                 );
                 if ($nodeAlias->getLanguage()) {
                     $attributes['language'] = $nodeAlias->getLanguage();
@@ -101,7 +101,7 @@ class XmlDumper
             $nodeConstraintsNode = $rootElement->appendElement('nodeConstraints');
             foreach ($site->getNodeConstraints() as $nodeConstraint) {
                 $nodeConstraintNode = $nodeConstraintsNode->appendElement('nodeConstraint', '', array(
-                    'name'    => $nodeConstraint->getName(),
+                    'name' => $nodeConstraint->getName(),
                     'allowed' => $nodeConstraint->isAllowed() ? 1 : 0,
                 ));
                 foreach ($nodeConstraint->getNodeTypes() as $nodeType) {
@@ -111,6 +111,5 @@ class XmlDumper
         }
 
         return $dom->saveXML();
-
     }
 }

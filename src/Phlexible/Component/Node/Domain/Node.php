@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Node
+ * Node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

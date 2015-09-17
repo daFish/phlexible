@@ -33,7 +33,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Webmozart\Expression\Expression;
 
 /**
- * Volume
+ * Volume.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -82,8 +82,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $rootDir,
         $quota,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->rootDir = $rootDir;
@@ -394,7 +393,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
     public function getPhysicalPath(FileInterface $file)
     {
         $rootDir = rtrim($this->getRootDir(), '/');
-        $physicalPath = $rootDir . '/' . $file->getHash();
+        $physicalPath = $rootDir.'/'.$file->getHash();
 
         return $physicalPath;
     }
@@ -661,7 +660,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         if ($targetFolder) {
             $folderPath = $name;
             if ($targetFolder->getPath()) {
-                $folderPath = rtrim($targetFolder->getPath(), '/') . '/' . $folderPath;
+                $folderPath = rtrim($targetFolder->getPath(), '/').'/'.$folderPath;
             }
         }
 
@@ -705,7 +704,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $parentFolder = $this->findFolder($folder->getParentId());
         $newPath = $name;
         if ($parentFolder->getPath()) {
-            $newPath = rtrim($parentFolder->getPath(), '/') . '/' . $newPath;
+            $newPath = rtrim($parentFolder->getPath(), '/').'/'.$newPath;
         }
 
         $folder
@@ -745,7 +744,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
         $oldPath = $folder->getPath();
         $newPath = $folder->getName();
         if ($targetFolder->getPath()) {
-            $newPath = rtrim($targetFolder->getPath(), '/') . '/' . $newPath;
+            $newPath = rtrim($targetFolder->getPath(), '/').'/'.$newPath;
         }
 
         $folder
@@ -781,7 +780,7 @@ class Volume implements VolumeInterface, \IteratorAggregate
             throw new IOException("Move folder {$folder->getName()} cancelled.");
         }
 
-        $copiedFolder = $this->createFolder($targetFolder, $folder->getName() . '_copy_' . uniqid(), $folder->getAttributes(), $user);
+        $copiedFolder = $this->createFolder($targetFolder, $folder->getName().'_copy_'.uniqid(), $folder->getAttributes(), $user);
 
         foreach ($this->findFoldersByParentFolder($folder) as $subFolder) {
             $this->copyFolder($subFolder, $copiedFolder, $user);

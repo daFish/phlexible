@@ -12,19 +12,19 @@
 namespace Phlexible\Bundle\TreeBundle;
 
 /**
- * Tree events
+ * Tree events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class TreeEvents
 {
     /**
-     * Fired after configuring navigation
+     * Fired after configuring navigation.
      */
     const CONFIGURE_NAVIGATION = 'phlexible_tree.configure_navigation';
 
     /**
-     * Fired after configuring node
+     * Fired after configuring node.
      */
     const CONFIGURE_TREE_NODE = 'phlexible_tree.configure_tree_node';
 
@@ -189,7 +189,7 @@ class TreeEvents
     const REORDER_CHILD_NODES_CONTEXT = 'phlexible_tree.reorder_child_nodes_context';
 
     /**
-     * Fired when the is filtered
+     * Fired when the is filtered.
      */
     const TREE_FILTER = 'phlexible_tree.tree_filter';
 
@@ -222,5 +222,4 @@ class TreeEvents
      * Fired after a route is deleted.
      */
     const DELETE_ROUTE = 'phlexible_tree.delete_route';
-
 }

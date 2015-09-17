@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -73,7 +73,7 @@ class GetConfigListener
             $sets['backendLanguages'][] = array(
                 $language,
                 $languageTitle,
-                'p-gui-' . $language . '-icon',
+                'p-gui-'.$language.'-icon',
             );
         }
 
@@ -88,8 +88,8 @@ class GetConfigListener
         );
 
         $sets['dateFormats'] = array(
-            array('Y-m-d H:i:s', date('Y-m-d H:i:s') . ' (Y-m-d H:i:s)'),
-            array('d.m.Y H:i:s', date('d.m.Y H:i:s') . ' (d.m.Y H:i:s)'),
+            array('Y-m-d H:i:s', date('Y-m-d H:i:s').' (Y-m-d H:i:s)'),
+            array('d.m.Y H:i:s', date('d.m.Y H:i:s').' (d.m.Y H:i:s)'),
         );
 
         $config
@@ -97,6 +97,5 @@ class GetConfigListener
             ->set('set.themes', $sets['themes'])
             ->set('set.dateFormats', $sets['dateFormats'])
             ->set('language.backend', $this->defaultLanguage);
-
     }
 }

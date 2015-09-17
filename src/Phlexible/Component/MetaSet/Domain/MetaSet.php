@@ -18,7 +18,7 @@ use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Meta set
+ * Meta set.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

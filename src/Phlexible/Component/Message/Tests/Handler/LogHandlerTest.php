@@ -16,7 +16,7 @@ use Phlexible\Component\Message\Handler\LogHandler;
 use Prophecy\Argument;
 
 /**
- * Log handler test
+ * Log handler test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

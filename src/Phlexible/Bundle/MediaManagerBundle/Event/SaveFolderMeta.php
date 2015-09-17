@@ -12,13 +12,13 @@
 namespace Phlexible\Bundle\MediaManagerBundle\Event;
 
 /**
- * Save folder meta event
+ * Save folder meta event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class SaveFolderMetaEvent extends BeforeSaveFolderMetaEvent
+class SaveFolderMeta extends BeforeSaveFolderMetaEvent
 {
-    /**
+    /*
      * @var string
      */
     //private $eventName = Events::SAVE_FOLDER_META;

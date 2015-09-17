@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Menu\Loader;
 
 /**
- * Delgating loader
+ * Delgating loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

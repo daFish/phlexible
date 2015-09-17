@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Elementtype form type
+ * Elementtype form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,7 +35,7 @@ class ElementtypeType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\Elementtype\Domain\Elementtype',
+            'data_class' => 'Phlexible\Component\Elementtype\Domain\Elementtype',
             'csrf_protection' => false,
         ));
     }

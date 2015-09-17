@@ -14,7 +14,7 @@ namespace Phlexible\Component\MetaSet\File\Dumper;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

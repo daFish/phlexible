@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Change;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
- * Elementtype add change
+ * Elementtype add change.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -27,7 +27,7 @@ class AddChange extends Change
 
     /**
      * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
-     * @param bool        $needImport
+     * @param bool                                                $needImport
      */
     public function __construct(Elementtype $elementtype, $needImport)
     {

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Lock
+ * Lock.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -112,7 +112,7 @@ class NodeLock
     }
 
     /**
-     * Touch lock
+     * Touch lock.
      *
      * @return $this
      */

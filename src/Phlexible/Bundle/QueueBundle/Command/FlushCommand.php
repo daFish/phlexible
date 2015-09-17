@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Flush jobs command
+ * Flush jobs command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -60,7 +60,7 @@ class FlushCommand extends ContainerAwareCommand
             && !$input->getOption('aborted')
         ) {
             $output->writeln(
-                'Please choose either --all or one or more of the status options: ' .
+                'Please choose either --all or one or more of the status options: '.
                 '--pending, --running, --finished, --failed, --suspended, --aborted'
             );
 
@@ -76,7 +76,7 @@ class FlushCommand extends ContainerAwareCommand
                 || $input->getOption('aborted'))
         ) {
             $output->writeln(
-                'Please use either --all or one or more of the status options: ' .
+                'Please use either --all or one or more of the status options: '.
                 '--pending, --running, --finished, --failed, --suspended, --aborted'
             );
 

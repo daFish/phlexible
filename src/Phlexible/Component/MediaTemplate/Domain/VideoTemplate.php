@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\Domain;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Video template
+ * Video template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="mediaTemplate")
@@ -136,7 +136,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getMatchFormat()
     {
@@ -144,7 +144,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * @param boolean $matchFormat
+     * @param bool $matchFormat
      *
      * @return $this
      */
@@ -156,7 +156,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getForWeb()
     {
@@ -164,7 +164,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * @param boolean $forWeb
+     * @param bool $forWeb
      *
      * @return $this
      */
@@ -196,7 +196,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getDeinterlace()
     {
@@ -204,7 +204,7 @@ class VideoTemplate extends AbstractTemplate
     }
 
     /**
-     * @param boolean $deinterlace
+     * @param bool $deinterlace
      *
      * @return $this
      */
@@ -441,17 +441,17 @@ class VideoTemplate extends AbstractTemplate
     public function getParameters()
     {
         return array(
-            'match_format'    => $this->getMatchFormat(),
-            'for_web'         => $this->getForWeb(),
-            'format'          => $this->getFormat(),
-            'deinterlace'     => $this->getDeinterlace(),
-            'video_width'     => $this->getVideoWidth(),
-            'video_height'    => $this->getVideoHeight(),
-            'video_format'    => $this->getVideoFormat(),
-            'video_bitrate'   => $this->getVideoBitrate(),
+            'match_format' => $this->getMatchFormat(),
+            'for_web' => $this->getForWeb(),
+            'format' => $this->getFormat(),
+            'deinterlace' => $this->getDeinterlace(),
+            'video_width' => $this->getVideoWidth(),
+            'video_height' => $this->getVideoHeight(),
+            'video_format' => $this->getVideoFormat(),
+            'video_bitrate' => $this->getVideoBitrate(),
             'video_framerate' => $this->getVideoFramerate(),
-            'audio_bitrate'    => $this->getAudioBitrate(),
-            'audio_channels'   => $this->getAudioChannels(),
+            'audio_bitrate' => $this->getAudioBitrate(),
+            'audio_channels' => $this->getAudioChannels(),
             'audio_samplebits' => $this->getAudioSamplebits(),
             'audio_samplerate' => $this->getAudioSamplerate(),
         );

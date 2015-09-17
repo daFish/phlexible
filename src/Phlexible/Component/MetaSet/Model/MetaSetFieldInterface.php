@@ -14,7 +14,7 @@ namespace Phlexible\Component\MetaSet\Model;
 use Phlexible\Component\MetaSet\Domain\MetaSet;
 
 /**
- * Meta set field interface
+ * Meta set field interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

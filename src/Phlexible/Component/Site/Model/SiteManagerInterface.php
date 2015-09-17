@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\Model;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Siteroot manager interface
+ * Siteroot manager interface.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

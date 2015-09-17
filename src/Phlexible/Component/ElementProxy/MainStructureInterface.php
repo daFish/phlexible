@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy;
 
 /**
- * Main structure interface
+ * Main structure interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,5 +42,4 @@ interface MainStructureInterface extends StructureInterface
      * @return string
      */
     public function __elementtypeName();
-
 }

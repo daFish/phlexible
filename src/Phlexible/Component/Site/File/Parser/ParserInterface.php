@@ -15,7 +15,7 @@ use FluentDOM\Document;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Parser interface
+ * Parser interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Component\Tree;
 use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 
 /**
- * Tree factory
+ * Tree factory.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

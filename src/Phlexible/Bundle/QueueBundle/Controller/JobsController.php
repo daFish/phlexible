@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Data controller
+ * Data controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Security("is_granted('ROLE_QUEUE')")
@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JobsController extends FOSRestController
 {
     /**
-     * Get jobs
+     * Get jobs.
      *
      * @return Response
      *
@@ -54,12 +54,12 @@ class JobsController extends FOSRestController
 
         return array(
             'jobs' => $jobs,
-            'count' => count($jobs)
+            'count' => count($jobs),
         );
     }
 
     /**
-     * Get job
+     * Get job.
      *
      * @param string $jobId
      *
@@ -87,12 +87,12 @@ class JobsController extends FOSRestController
         }
 
         return array(
-            'job' => $job
+            'job' => $job,
         );
     }
 
     /**
-     * Create job
+     * Create job.
      *
      * @param Request $request
      *
@@ -115,7 +115,7 @@ class JobsController extends FOSRestController
     }
 
     /**
-     * Update job
+     * Update job.
      *
      * @param Request $request
      * @param string  $jobId
@@ -180,7 +180,7 @@ class JobsController extends FOSRestController
     }
 
     /**
-     * Delete job
+     * Delete job.
      *
      * @param string $jobId
      *

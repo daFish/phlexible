@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Data saver
+ * Data saver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -79,7 +79,7 @@ class DataSaver
     }
 
     /**
-     * Save element data
+     * Save element data.
      *
      * @param Request       $request
      * @param UserInterface $user
@@ -244,6 +244,7 @@ class DataSaver
      * @param array                $map
      *
      * @throws InvalidArgumentException
+     *
      * @return ElementStructure
      */
     private function applyValues(ElementStructure $rootElementStructure, ElementtypeStructure $elementtypeStructure, array $values, $language, array $map = null)
@@ -276,7 +277,7 @@ class DataSaver
                 }
                 $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
                 if (!$elementStructure) {
-                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
+                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: ".print_r($map, true));
                 }
                 $elementStructure->setValue($elementStructureValue);
             } elseif (preg_match('/^field-([-a-f0-9]{36})-new-.+$/', $identifier, $match)) {
@@ -297,7 +298,7 @@ class DataSaver
                 }
                 $elementStructure = $this->findStructureByDataId($rootElementStructure, $mapId);
                 if (!$elementStructure) {
-                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: " . print_r($map, true));
+                    throw new InvalidArgumentException("Element structure $mapId not found. Repeatable identifier: $repeatableIdentifier. Map: ".print_r($map, true));
                 }
                 $elementStructure->setValue($elementStructureValue);
             }

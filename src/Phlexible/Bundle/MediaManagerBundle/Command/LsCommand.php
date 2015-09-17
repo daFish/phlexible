@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * List command
+ * List command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,19 +51,19 @@ class LsCommand extends ContainerAwareCommand
             $volume = $volumeManager->getByFolderId($folderId);
             $folder = $volume->findFolder($folderId);
 
-            $output->writeln('default:/' . $folder->getPath() . ' (' . $folder->getId() . ')');
+            $output->writeln('default:/'.$folder->getPath().' ('.$folder->getId().')');
 
             foreach ($volume->findFoldersByParentFolder($folder) as $subFolder) {
-                $output->writeln('+  ' . $subFolder->getName() . ' (' . $subFolder->getId() . ')');
+                $output->writeln('+  '.$subFolder->getName().' ('.$subFolder->getId().')');
             }
 
             foreach ($volume->findFilesByFolder($folder, array('name' => 'ASC')) as $file) {
-                $output->writeln('-  ' . $file->getName() . ' (' . $file->getId() . ')');
+                $output->writeln('-  '.$file->getName().' ('.$file->getId().')');
             }
         } else {
             foreach ($volumeManager->all() as $volumeName => $volume) {
                 $folder = $volume->findRootFolder();
-                $output->writeln($volumeName . ':/ (' . $folder->getId() . ')');
+                $output->writeln($volumeName.':/ ('.$folder->getId().')');
             }
         }
 

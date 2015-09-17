@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Tree;
 
 /**
- * Tree context
+ * Tree context.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

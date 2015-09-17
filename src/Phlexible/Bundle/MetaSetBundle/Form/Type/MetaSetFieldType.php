@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Meta set field form type
+ * Meta set field form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -37,7 +37,7 @@ class MetaSetFieldType extends AbstractType
         $builder->add('readonly', 'checkbox');
         $builder->add('required', 'checkbox');
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             // cleanup extjs data - this shouldn't be necessary, try to remove data from extjs
             $data = $event->getData();
             if (isset($data['id'])) {
@@ -56,7 +56,7 @@ class MetaSetFieldType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MetaSet\Domain\MetaSetField',
+            'data_class' => 'Phlexible\Component\MetaSet\Domain\MetaSetField',
             'csrf_protection' => false,
         ));
     }

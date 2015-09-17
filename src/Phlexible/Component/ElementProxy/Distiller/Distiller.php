@@ -17,7 +17,7 @@ use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Field\FieldRegistry;
 
 /**
- * Distiller
+ * Distiller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\Model\NodeChangeManagerInterface;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node change manager
+ * Node change manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

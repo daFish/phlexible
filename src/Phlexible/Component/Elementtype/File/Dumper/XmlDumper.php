@@ -19,7 +19,7 @@ use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Exception\InvalidArgumentException;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -37,15 +37,15 @@ class XmlDumper implements DumperInterface
             'elementtype',
             '',
             array(
-                'id'           => $elementtype->getId(),
-                'name'         => $elementtype->getName(),
-                'revision'     => $elementtype->getRevision(),
-                'type'         => $elementtype->getType(),
-                'icon'         => $elementtype->getIcon(),
-                'defaultTab'   => $elementtype->getDefaultTab(),
+                'id' => $elementtype->getId(),
+                'name' => $elementtype->getName(),
+                'revision' => $elementtype->getRevision(),
+                'type' => $elementtype->getType(),
+                'icon' => $elementtype->getIcon(),
+                'defaultTab' => $elementtype->getDefaultTab(),
                 'hideChildren' => $elementtype->getHideChildren() ? '1' : '0',
-                'noIndex'      => $elementtype->getNoIndex() ? '1' : '0',
-                'deleted'      => $elementtype->getDeleted() ? '1' : '0',
+                'noIndex' => $elementtype->getNoIndex() ? '1' : '0',
+                'deleted' => $elementtype->getDeleted() ? '1' : '0',
             )
         );
 
@@ -80,13 +80,12 @@ class XmlDumper implements DumperInterface
         }
 
         return $dom->saveXML();
-
     }
 
     /**
-     * @param ElementtypeStructure     $structure
+     * @param ElementtypeStructure                                             $structure
      * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode $node
-     * @param Element                  $element
+     * @param Element                                                          $element
      *
      * @return Element
      */
@@ -120,8 +119,8 @@ class XmlDumper implements DumperInterface
                             'label',
                             $languageValue,
                             array(
-                                'type'     => $key,
-                                'language' => $language
+                                'type' => $key,
+                                'language' => $language,
                             )
                         );
                     }

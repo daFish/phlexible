@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Node\Model;
 
 /**
- * Tree node interface
+ * Tree node interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

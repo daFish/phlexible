@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Suggest\Exception;
 
 /**
- * Not found exception
+ * Not found exception.
  *
  * @author Phillip Look <pl@brainbits.net>
  */
 class NotFoundException extends InvalidArgumentException
 {
-
 }

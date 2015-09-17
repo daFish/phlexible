@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Online controller
+ * Online controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -28,7 +28,7 @@ class OnlineController extends Controller
     /**
      * @param Request     $request
      * @param NodeContext $node
-     * @param Site    $siteroot
+     * @param Site        $siteroot
      *
      * @return Response
      * @Route("/", name="cms_online")

@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Dump tree command
+ * Dump tree command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -63,10 +63,9 @@ class DumpTreeCommand extends ContainerAwareCommand
 
             $filename = "/tmp/{$siteroot->getId()}.xml";
             file_put_contents($filename, $content);
-            $output->writeln($siteroot->getTitle() . ' => ' . $filename);
+            $output->writeln($siteroot->getTitle().' => '.$filename);
         }
 
         return 0;
     }
 }
-

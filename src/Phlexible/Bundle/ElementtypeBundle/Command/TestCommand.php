@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Test command
+ * Test command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,7 +61,7 @@ class TestCommand extends ContainerAwareCommand
             ->from('elementtype', 'et');
 
         $filesystem = new Filesystem();
-        $path = $this->getContainer()->getParameter('kernel.root_dir') . '/Resources/elementtypes/';
+        $path = $this->getContainer()->getParameter('kernel.root_dir').'/Resources/elementtypes/';
         $filesystem->mkdir($path);
 
         $rows = $qb->execute()->fetchAll();
@@ -70,7 +70,7 @@ class TestCommand extends ContainerAwareCommand
         foreach ($rows as $row) {
             $uniqueId = str_replace('_', '-', $row['unique_id']);
             $id = md5($uniqueId);
-            $id = substr($id, 0, 8) . '-' . substr($id, 8, 4) . '-' . substr($id, 12, 4) . '-' . substr($id, 16, 4) . '-' . substr($id, 20);
+            $id = substr($id, 0, 8).'-'.substr($id, 8, 4).'-'.substr($id, 12, 4).'-'.substr($id, 16, 4).'-'.substr($id, 20);
             $map[$row['id']] = array('id' => $id, 'uniqueId' => $uniqueId);
         }
 
@@ -113,11 +113,11 @@ class TestCommand extends ContainerAwareCommand
                 ->setModifiedAt(new \DateTime($versionRow['created_at']))
                 ->setModifyUser($versionRow['create_user']);
 
-            $output->writeln($row['id'] . " => " . $elementtype->getId() . " " . $elementtype->getName());
+            $output->writeln($row['id'].' => '.$elementtype->getId().' '.$elementtype->getName());
 
             $elementtypeManager->validateElementtype($elementtype);
 
-            $filesystem->dumpFile($path . $map[$row['id']]['uniqueId'] . '.xml', $dumper->dump($elementtype));
+            $filesystem->dumpFile($path.$map[$row['id']]['uniqueId'].'.xml', $dumper->dump($elementtype));
         }
 
         return 0;
@@ -235,4 +235,3 @@ class TestCommand extends ContainerAwareCommand
         return $structure;
     }
 }
-

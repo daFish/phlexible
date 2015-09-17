@@ -11,11 +11,11 @@
 
 namespace Phlexible\Bundle\TreeBundle\Tests\RouteGenerator;
 
-use Phlexible\Bundle\TreeBundle\RouteGenerator\SuffixPathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\Path;
+use Phlexible\Bundle\TreeBundle\RouteGenerator\SuffixPathDecorator;
 
 /**
- * Suffix path decorator test
+ * Suffix path decorator test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Tree bundle
+ * Tree bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

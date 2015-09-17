@@ -17,7 +17,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Webmozart\Expression\Expression;
 
 /**
- * Expression transformer
+ * Expression transformer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,6 +58,7 @@ class ExpressionTransformer implements DataTransformerInterface
      * @param array $expression
      *
      * @return Expression|null
+     *
      * @throws TransformationFailedException if object (issue) is not found.
      */
     public function reverseTransform($expression)

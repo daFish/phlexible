@@ -17,7 +17,7 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Translations builder
+ * Translations builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -62,7 +62,7 @@ class TranslationsBuilder
     }
 
     /**
-     * Get all translations for the given domain
+     * Get all translations for the given domain.
      *
      * @param string $locale
      * @param string $fallbackLocale
@@ -101,10 +101,10 @@ class TranslationsBuilder
         foreach ($t as $class => $values) {
             $values = array('override' => $class) + $values;
             $className = sprintf('Ext.locale.%s.%s', $locale, $class);
-            $content .= sprintf($template, $className, json_encode($values, JSON_PRETTY_PRINT)) . PHP_EOL;
+            $content .= sprintf($template, $className, json_encode($values, JSON_PRETTY_PRINT)).PHP_EOL;
         }
 
-        $cacheFilename = $this->cacheDir . '/translations-' . $locale . '.js';
+        $cacheFilename = $this->cacheDir.'/translations-'.$locale.'.js';
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists(dirname($cacheFilename))) {
@@ -121,7 +121,7 @@ class TranslationsBuilder
     }
 
     /**
-     * Javascript-aware compress the input string
+     * Javascript-aware compress the input string.
      *
      * @param string $script
      *

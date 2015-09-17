@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\CmsBundle\Field;
 use Phlexible\Component\Elementtype\Field\AbstractField;
 
 /**
- * Abstract media field
+ * Abstract media field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

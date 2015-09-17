@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Media types controller
+ * Media types controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MediaTypesController extends FOSRestController
 {
     /**
-     * Get media types
+     * Get media types.
      *
      * @return Response
      *
@@ -49,7 +49,7 @@ class MediaTypesController extends FOSRestController
 
         return array(
             'mediatypes' => array_values($mediaTypes),
-            'count'      => count($mediaTypes),
+            'count' => count($mediaTypes),
         );
     }
 }

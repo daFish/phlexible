@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\File;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Site repository interface
+ * Site repository interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

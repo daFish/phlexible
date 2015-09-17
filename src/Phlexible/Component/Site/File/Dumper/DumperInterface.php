@@ -15,7 +15,7 @@ use FluentDOM\Document;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Dumper interface
+ * Dumper interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

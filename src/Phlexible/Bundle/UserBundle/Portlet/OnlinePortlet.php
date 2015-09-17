@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\UserBundle\Portlet;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
 
 /**
- * Online portlet
+ * Online portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,7 +34,7 @@ class OnlinePortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
     }
 
     /**
-     * Return portlet data
+     * Return portlet data.
      *
      * @return array
      */
@@ -45,9 +45,9 @@ class OnlinePortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
         $data = array();
         foreach ($users as $user) {
             $data[] = array(
-                'uid'      => $user->getId(),
+                'uid' => $user->getId(),
                 'username' => $user->getUsername(),
-                'image'    => '/bundles/users/images/male-black-blonde.png',
+                'image' => '/bundles/users/images/male-black-blonde.png',
             );
         }
 

@@ -16,16 +16,16 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Route generator interface
+ * Route generator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface RouteGeneratorInterface
 {
     /**
-     * @param NodeContext $node
-     * @param \Phlexible\Component\Site\Domain\Site    $siteroot
-     * @param string      $language
+     * @param NodeContext                           $node
+     * @param \Phlexible\Component\Site\Domain\Site $siteroot
+     * @param string                                $language
      *
      * @return Route
      */

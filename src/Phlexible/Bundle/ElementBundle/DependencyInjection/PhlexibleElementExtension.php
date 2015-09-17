@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Element extension
+ * Element extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -28,15 +28,15 @@ class PhlexibleElementExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         $loader->load('tasks.yml');
         $loader->load('content.yml');
         $loader->load('proxy.yml');
         $loader->load('doctrine.yml');
 
-        $container->setParameter('phlexible_element.proxy_view_dir', __DIR__ . '/../Resources/views');
-        
+        $container->setParameter('phlexible_element.proxy_view_dir', __DIR__.'/../Resources/views');
+
         $container->setAlias('phlexible_element.element_manager', 'phlexible_element.doctrine.element_manager');
         $container->setAlias('phlexible_element.element_version_manager', 'phlexible_element.doctrine.element_version_manager');
         $container->setAlias('phlexible_element.element_source_manager', 'phlexible_element.doctrine.element_source_manager');

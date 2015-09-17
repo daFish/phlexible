@@ -14,7 +14,7 @@ namespace Phlexible\Component\AccessControl\Tests\Permission;
 use Phlexible\Component\AccessControl\Permission\HierarchyMaskResolver;
 
 /**
- * Hierarchy mask resolver test
+ * Hierarchy mask resolver test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

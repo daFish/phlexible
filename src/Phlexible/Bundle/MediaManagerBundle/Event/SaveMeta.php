@@ -14,13 +14,13 @@ namespace Phlexible\Bundle\MediaManagerBundle\Event;
 use Phlexible\Bundle\MediaManagerBundle\Events;
 
 /**
- * Save meta event
+ * Save meta event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class SaveMetaEvent extends BeforeSaveMetaEvent
+class SaveMeta extends BeforeSaveMetaEvent
 {
-    /**
+    /*
      * @var string
      */
     //private $eventName = Events::SAVE_META;

@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Component\NodeType\Model\NodeTypeProviderInterface;
 
 /**
- * Node type manager
+ * Node type manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,9 +41,9 @@ class ElementNodeTypeProvider implements NodeTypeProviderInterface
     public function getTypes()
     {
         $typeMap = array(
-            'full'      => 'page',
+            'full' => 'page',
             'structure' => 'structure',
-            'part'      => 'part'
+            'part' => 'part',
         );
 
         $typeNames = array();

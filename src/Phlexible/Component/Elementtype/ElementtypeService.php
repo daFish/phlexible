@@ -18,7 +18,7 @@ use Phlexible\Component\Elementtype\Model\ElementtypeManagerInterface;
 use Phlexible\Component\Elementtype\Usage\UsageManager;
 
 /**
- * Elementtype service
+ * Elementtype service.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,7 +47,7 @@ class ElementtypeService
     }
 
     /**
-     * Find element type by ID
+     * Find element type by ID.
      *
      * @param int $elementtypeId
      *
@@ -59,7 +59,7 @@ class ElementtypeService
     }
 
     /**
-     * Find element type by unique ID
+     * Find element type by unique ID.
      *
      * @param string $type
      *
@@ -78,7 +78,7 @@ class ElementtypeService
     }
 
     /**
-     * Find all element types
+     * Find all element types.
      *
      * @return Elementtype[]
      */
@@ -91,6 +91,7 @@ class ElementtypeService
      * @param Elementtype $elementtype
      *
      * @return Elementtype[]
+     *
      * @deprecated
      */
     public function findAllowedParents(Elementtype $elementtype)
@@ -118,14 +119,13 @@ class ElementtypeService
                     break;
                 }
             }
-
         }
 
         return $elementtypes;
     }
 
     /**
-     * Create a new empty Element Type
+     * Create a new empty Element Type.
      *
      * @param string               $type
      * @param string               $name
@@ -148,12 +148,12 @@ class ElementtypeService
     {
         if (!$icon) {
             $icons = array(
-                Elementtype::TYPE_FULL            => 'artikel_list.gif',
-                Elementtype::TYPE_STRUCTURE       => 'nav_haupt.gif',
-                Elementtype::TYPE_LAYOUTAREA      => '_fallback.gif',
+                Elementtype::TYPE_FULL => 'artikel_list.gif',
+                Elementtype::TYPE_STRUCTURE => 'nav_haupt.gif',
+                Elementtype::TYPE_LAYOUTAREA => '_fallback.gif',
                 Elementtype::TYPE_LAYOUTCONTAINER => '_fallback.gif',
-                Elementtype::TYPE_PART            => 'teaser_hellblau_list.gif',
-                Elementtype::TYPE_REFERENCE       => '_fallback.gif',
+                Elementtype::TYPE_PART => 'teaser_hellblau_list.gif',
+                Elementtype::TYPE_REFERENCE => '_fallback.gif',
             );
 
             $icon = $icons[$type];
@@ -186,7 +186,7 @@ class ElementtypeService
     }
 
     /**
-     * Delete an Element Type
+     * Delete an Element Type.
      *
      * @param Elementtype $elementtype
      */
@@ -196,7 +196,7 @@ class ElementtypeService
     }
 
     /**
-     * Duplicate an elementtype
+     * Duplicate an elementtype.
      *
      * @param Elementtype $sourceElementtype
      * @param string      $user
@@ -212,7 +212,7 @@ class ElementtypeService
 
         $elementtype
             ->setId(null)
-            ->setName($elementtype->getName() . '-' . $uniqId)
+            ->setName($elementtype->getName().'-'.$uniqId)
             ->setRevision(1)
             ->setStructure($elementtypeStructure)
             ->setCreatedAt(new \DateTime())

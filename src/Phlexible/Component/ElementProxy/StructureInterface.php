@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy;
 
 /**
- * Structure interface
+ * Structure interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

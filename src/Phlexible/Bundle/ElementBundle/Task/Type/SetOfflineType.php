@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Task\Type;
 
 /**
- * Set element offline task type
+ * Set element offline task type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -27,7 +27,7 @@ class SetOfflineType extends AbstractType
     }
 
     /**
-     * Get required parameters for this task
+     * Get required parameters for this task.
      *
      * @return array
      */
@@ -37,7 +37,7 @@ class SetOfflineType extends AbstractType
     }
 
     /**
-     * Return the task resource
+     * Return the task resource.
      *
      * @return string
      */

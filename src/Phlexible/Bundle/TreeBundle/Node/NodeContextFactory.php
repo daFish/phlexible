@@ -17,7 +17,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Node context factory
+ * Node context factory.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,9 +46,9 @@ class NodeContextFactory implements NodeContextFactoryInterface
     public function factory(TreeInterface $tree, NodeInterface $node, $language)
     {
         if ($node instanceof PartNode) {
-            $class = __NAMESPACE__ . '\TeaserContext';
+            $class = __NAMESPACE__.'\TeaserContext';
         } else {
-            $class = __NAMESPACE__ . '\NodeContext';
+            $class = __NAMESPACE__.'\NodeContext';
         }
 
         return new $class($node, $tree, $this->mediator, $language);

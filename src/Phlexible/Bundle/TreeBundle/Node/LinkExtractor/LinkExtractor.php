@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Entity\NodeLink;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Link extractor
+ * Link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

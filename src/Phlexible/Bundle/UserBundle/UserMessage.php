@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\UserBundle;
 use Phlexible\Component\Message\Domain\Message;
 
 /**
- * User message
+ * User message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

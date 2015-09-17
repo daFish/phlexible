@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\RouteGenerator\LanguagePathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\Path;
 
 /**
- * Language path decorator test
+ * Language path decorator test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

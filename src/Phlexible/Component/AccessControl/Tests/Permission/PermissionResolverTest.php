@@ -16,7 +16,7 @@ use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Phlexible\Component\AccessControl\Permission\PermissionResolver;
 
 /**
- * Permission resolver test
+ * Permission resolver test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -18,7 +18,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Search controller
+ * Search controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class SearchController extends FOSRestController
 {
     /**
-     * Get search results
+     * Get search results.
      *
      * @param ParamFetcher $paramFetcher
      *
@@ -55,8 +55,8 @@ class SearchController extends FOSRestController
         $results = $search->search($query);
 
         return array(
-            'results'    => array_slice($results, $start, $limit),
-            'totalCount' => count($results)
+            'results' => array_slice($results, $start, $limit),
+            'totalCount' => count($results),
         );
     }
 }

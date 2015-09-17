@@ -30,7 +30,7 @@ class PhlexibleRequirements extends RequirementCollection
     {
         $this->addPhpIniRecommendation(
             'post_max_size',
-            function() {
+            function () {
                 $size = ini_get('post_max_size');
                 $size = trim($size);
                 $unit = strtolower(substr($size, -1, 1));
@@ -54,7 +54,7 @@ class PhlexibleRequirements extends RequirementCollection
 
         $this->addPhpIniRecommendation(
             'upload_max_filesize',
-            function() {
+            function () {
                 $size = ini_get('upload_max_filesize');
                 $size = trim($size);
                 $unit = strtolower(substr($size, -1, 1));

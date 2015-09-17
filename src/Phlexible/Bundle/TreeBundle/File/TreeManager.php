@@ -21,11 +21,11 @@ use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Phlexible\Component\Tree\Tree;
 
 /**
- * File based Node manager
+ * File based Node manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class NodeManager implements NodeManagerInterface
+class TreeManager implements NodeManagerInterface
 {
     /**
      * @var SiteManagerInterface
@@ -51,6 +51,7 @@ class NodeManager implements NodeManagerInterface
     public function find($id)
     {
         $this->load();
+
         return $this->nodes->get($id);
     }
 
@@ -72,14 +73,15 @@ class NodeManager implements NodeManagerInterface
     {
         $this->load();
         //print_r($criteria);
-        $nodes = $this->nodes->filter(function($node) use ($criteria) {
+        $nodes = $this->nodes->filter(function ($node) use ($criteria) {
             foreach ($criteria as $key => $value) {
-                $get = 'get' . ucfirst($key);
+                $get = 'get'.ucfirst($key);
 
                 if ($node->$get() !== $value) {
                     return false;
                 }
             }
+
             return true;
         });
 
@@ -104,7 +106,7 @@ class NodeManager implements NodeManagerInterface
     private $states;
 
     /**
-     * Load
+     * Load.
      */
     private function load()
     {
@@ -118,7 +120,7 @@ class NodeManager implements NodeManagerInterface
         foreach ($this->siterootManager->findAll() as $siteroot) {
             $siterootNodes = new ArrayCollection();
             $siterootStates = new ArrayCollection();
-            $parser->parse(file_get_contents('/tmp/' . $siteroot->getId() . '.xml'), $siterootNodes, $siterootStates);
+            $parser->parse(file_get_contents('/tmp/'.$siteroot->getId().'.xml'), $siterootNodes, $siterootStates);
             foreach ($siterootNodes as $key => $siterootNode) {
                 $this->nodes->set($key, $siterootNode);
             }
@@ -191,7 +193,7 @@ class NodeManager implements NodeManagerInterface
      */
     public function isPublished(NodeInterface $node, $language)
     {
-        return $this->states->containsKey($node->getId() . '_' . $language);
+        return $this->states->containsKey($node->getId().'_'.$language);
     }
 
     /**
@@ -214,7 +216,7 @@ class NodeManager implements NodeManagerInterface
      */
     public function getPublishedVersion(NodeInterface $node, $language)
     {
-        return $this->states->get($node->getId() . '_' . $language)->getVersion();
+        return $this->states->get($node->getId().'_'.$language)->getVersion();
     }
 
     /**
@@ -222,7 +224,7 @@ class NodeManager implements NodeManagerInterface
      */
     public function getPublishedAt(NodeInterface $node, $language)
     {
-        return $this->states->get($node->getId() . '_' . $language)->getPublishedAt();
+        return $this->states->get($node->getId().'_'.$language)->getPublishedAt();
     }
 
     /**
@@ -268,6 +270,6 @@ class NodeManager implements NodeManagerInterface
      */
     public function findOneOnlineByTreeNodeAndLanguage(NodeInterface $node, $language)
     {
-        return $this->states->get($node->getId() . '_' . $language);
+        return $this->states->get($node->getId().'_'.$language);
     }
 }

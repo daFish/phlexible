@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\RouteGenerator\PathGenerator;
 use Prophecy\Argument;
 
 /**
- * Path generator test
+ * Path generator test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

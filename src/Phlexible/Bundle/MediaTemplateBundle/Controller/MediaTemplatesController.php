@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Media templates controller
+ * Media templates controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -35,7 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class MediaTemplatesController extends FOSRestController
 {
     /**
-     * Get media templates
+     * Get media templates.
      *
      * @return Response
      *
@@ -61,7 +61,7 @@ class MediaTemplatesController extends FOSRestController
     }
 
     /**
-     * Get media template
+     * Get media template.
      *
      * @param string $mediaTemplateId
      *
@@ -91,7 +91,7 @@ class MediaTemplatesController extends FOSRestController
     }
 
     /**
-     * Create media template
+     * Create media template.
      *
      * @param Request $request
      *
@@ -114,7 +114,7 @@ class MediaTemplatesController extends FOSRestController
     }
 
     /**
-     * Update media template
+     * Update media template.
      *
      * @param Request $request
      * @param string  $mediaTemplateId
@@ -199,7 +199,7 @@ class MediaTemplatesController extends FOSRestController
     }
 
     /**
-     * Delete media template
+     * Delete media template.
      *
      * @param string $mediaTemplateId
      *

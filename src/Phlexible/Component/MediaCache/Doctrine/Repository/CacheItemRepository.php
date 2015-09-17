@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaCache\Doctrine\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Cache item repository
+ * Cache item repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Compressor;
 use Phlexible\Bundle\GuiBundle\Exception\InvalidArgumentException;
 
 /**
- * Abstract string compressor
+ * Abstract string compressor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,6 +35,7 @@ abstract class AbstractStringCompressor implements CompressorInterface
 
     /**
      * {@inheritdoc}
+     *
      * @throws InvalidArgumentException
      */
     public function compressStream($stream)

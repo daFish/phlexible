@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Editor field
+ * Editor field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

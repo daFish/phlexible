@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\Site;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
- * Siteroots accessor
+ * Siteroots accessor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,11 +34,11 @@ class SitesAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Whether a offset exists
+     * Whether a offset exists.
      *
      * @param mixed $offset
      *
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      */
     public function offsetExists($offset)
     {
@@ -46,7 +46,7 @@ class SitesAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Offset to retrieve
+     * Offset to retrieve.
      *
      * @param mixed $offset
      *
@@ -58,7 +58,7 @@ class SitesAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Offset to set
+     * Offset to set.
      *
      * @param mixed $offset
      * @param mixed $value
@@ -68,7 +68,7 @@ class SitesAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Offset to unset
+     * Offset to unset.
      *
      * @param mixed $offset
      */
@@ -77,7 +77,7 @@ class SitesAccessor implements \ArrayAccess, \IteratorAggregate
     }
 
     /**
-     * Retrieve an external iterator
+     * Retrieve an external iterator.
      *
      * @return \Traversable
      */

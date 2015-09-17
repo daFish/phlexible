@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Media template extension
+ * Media template extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -37,7 +37,7 @@ class PhlexibleMediaTemplateExtension extends Extension
 
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('%s.yml', $config['db_driver']));
-            $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
+            $container->setParameter($this->getAlias().'.backend_type_'.$config['db_driver'], true);
         }
 
         $container->setParameter('phlexible_media_template.dumper.filesystem_dir', $config['dumper']['filesystem_dir']);

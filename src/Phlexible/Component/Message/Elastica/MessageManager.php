@@ -23,7 +23,7 @@ use Phlexible\Component\Message\Model\MessageManagerInterface;
 use Webmozart\Expression\Expression;
 
 /**
- * Elastica message manager
+ * Elastica message manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -79,16 +79,16 @@ class MessageManager implements MessageManagerInterface
         $resultSet = $this->getType()->search($query);
         $facets = $resultSet->getFacets();
         $filterSets = array(
-            'types'      => array_column($facets['types']['terms'], 'term'),
-            'channels'   => array_column($facets['channels']['terms'], 'term'),
-            'roles'      => array_column($facets['roles']['terms'], 'term'),
+            'types' => array_column($facets['types']['terms'], 'term'),
+            'channels' => array_column($facets['channels']['terms'], 'term'),
+            'roles' => array_column($facets['roles']['terms'], 'term'),
         );
 
         return $filterSets;
     }
 
     /**
-     * Return facets
+     * Return facets.
      *
      * @param Expression $expression
      *
@@ -126,9 +126,9 @@ class MessageManager implements MessageManagerInterface
         $facets = $resultSet->getFacets();
 
         $filterSets = array(
-            'types'      => array_column($facets['types']['terms'], 'term'),
-            'channels'   => array_column($facets['channels']['terms'], 'term'),
-            'roles'      => array_column($facets['roles']['terms'], 'term'),
+            'types' => array_column($facets['types']['terms'], 'term'),
+            'channels' => array_column($facets['channels']['terms'], 'term'),
+            'roles' => array_column($facets['roles']['terms'], 'term'),
         );
 
         return $filterSets;
@@ -264,7 +264,7 @@ class MessageManager implements MessageManagerInterface
     }
 
     /**
-     * Find message
+     * Find message.
      *
      * @param array $criteria
      * @param null  $orderBy
@@ -309,13 +309,13 @@ class MessageManager implements MessageManagerInterface
         $document = new Document(
             $message->getId(),
             array(
-                'id'        => $message->getId(),
-                'subject'   => $message->getSubject(),
-                'body'      => $message->getBody(),
-                'type'      => $message->getType(),
-                'channel'   => $message->getChannel(),
-                'role'      => $message->getRole(),
-                'user'      => $message->getUser(),
+                'id' => $message->getId(),
+                'subject' => $message->getSubject(),
+                'body' => $message->getBody(),
+                'type' => $message->getType(),
+                'channel' => $message->getChannel(),
+                'role' => $message->getRole(),
+                'user' => $message->getUser(),
                 'createdAt' => $message->getCreatedAt()->format('U'),
             )
         );
@@ -369,7 +369,7 @@ class MessageManager implements MessageManagerInterface
     }
 
     /**
-     * Apply criteria to query
+     * Apply criteria to query.
      *
      * @param Expression $expression
      * @param Query      $query
@@ -417,12 +417,12 @@ class MessageManager implements MessageManagerInterface
 
             switch ($type) {
                 case 'like':
-                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard($key, '*' . $value . '*')));
+                    $andFilter->addFilter(new Filter\Query(new Query\Wildcard($key, '*'.$value.'*')));
                     break;
 
                 case 'notLike':
                     $andFilter->addFilter(
-                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard($key, '*' . $value . '*')))
+                        new Filter\BoolNot(new Filter\Query(new Query\Wildcard($key, '*'.$value.'*')))
                     );
                     break;
 

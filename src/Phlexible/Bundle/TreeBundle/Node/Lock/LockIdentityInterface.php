@@ -12,14 +12,14 @@
 namespace Phlexible\Bundle\ElementBundle\Lock;
 
 /**
- * Lock identity
+ * Lock identity.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface LockIdentityInterface
 {
     /**
-     * Return string representation of this lock identity
+     * Return string representation of this lock identity.
      *
      * @return string
      */

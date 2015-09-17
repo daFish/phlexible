@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Show command
+ * Show command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,23 +40,23 @@ class ShowCommand extends ContainerAwareCommand
         $siteManager = $this->getContainer()->get('phlexible_siteroot.siteroot_manager');
 
         foreach ($siteManager->findAll() as $site) {
-            $output->write('<info>' . $site->getTitle('en') . '</info>');
-            $output->writeln(': ' . $site->getId() . ($site->isDefault() ? '<info> (default)</info> ' : ''));
+            $output->write('<info>'.$site->getTitle('en').'</info>');
+            $output->writeln(': '.$site->getId().($site->isDefault() ? '<info> (default)</info> ' : ''));
 
             if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                $output->writeln('  ID: ' . $site->getId());
-                $output->writeln('  Hostname: ' . $site->getHostname());
+                $output->writeln('  ID: '.$site->getId());
+                $output->writeln('  Hostname: '.$site->getHostname());
                 if ($site->getEntryPoints()) {
                     $output->writeln('  Entry Points:');
                     foreach ($site->getEntryPoints() as $entryPoint) {
-                        $output->writeln('    ' . $entryPoint->getHostname() . ' => ' . $entryPoint->getNodeId() . ' (' . $entryPoint->getLanguage() . ')');
+                        $output->writeln('    '.$entryPoint->getHostname().' => '.$entryPoint->getNodeId().' ('.$entryPoint->getLanguage().')');
                     }
                 }
 
                 if ($site->getNavigations()) {
                     $output->writeln('  Navigations:');
                     foreach ($site->getNavigations() as $navigation) {
-                        $output->writeln('    ' . $navigation->getName() . ' => ' . $navigation->getNodeId() . ($navigation->getMaxDepth() ? ' (maxDepth: ' . $navigation->getMaxDepth() . ')' : ''));
+                        $output->writeln('    '.$navigation->getName().' => '.$navigation->getNodeId().($navigation->getMaxDepth() ? ' (maxDepth: '.$navigation->getMaxDepth().')' : ''));
                     }
                 }
 
@@ -64,7 +64,7 @@ class ShowCommand extends ContainerAwareCommand
                     $output->writeln('  Node Aliases:');
                     foreach ($site->getNodeAliases() as $nodeAlias) {
                         $name = $nodeAlias->getName();
-                        $value = $nodeAlias->getNodeId() . ($nodeAlias->getLanguage() ? ' (' . $nodeAlias->getLanguage() . ')' : '');
+                        $value = $nodeAlias->getNodeId().($nodeAlias->getLanguage() ? ' ('.$nodeAlias->getLanguage().')' : '');
                         $output->writeln("    $name => $value");
                     }
                 }

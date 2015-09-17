@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Path decorator interface
+ * Path decorator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

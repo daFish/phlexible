@@ -15,7 +15,7 @@ use Phlexible\Component\Message\Domain\Message;
 use Psr\Log\LoggerInterface;
 
 /**
- * Log handler
+ * Log handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -39,24 +39,24 @@ class LogHandler implements HandlerInterface
      */
     public function handle(Message $message)
     {
-        $type    = $message->getType();
+        $type = $message->getType();
         $channel = $message->getChannel();
-        $role    = $message->getRole();
+        $role = $message->getRole();
         $subject = $message->getSubject();
-        $body    = $message->getBody();
+        $body = $message->getBody();
 
         // build message
         $msg = "Message ($type)";
 
         if (!empty($channel)) {
-            $msg .= ' in channel ' . $channel;
+            $msg .= ' in channel '.$channel;
         }
 
         if (!empty($role)) {
-            $msg .= ' with role ' . $role;
+            $msg .= ' with role '.$role;
         }
 
-        $msg .= ': ' . $subject;
+        $msg .= ': '.$subject;
 
         $methodMap = array(
             Message::TYPE_INFO => 'info',
@@ -66,7 +66,7 @@ class LogHandler implements HandlerInterface
 
         // log message
         if ($type >= Message::TYPE_ERROR && !empty($body)) {
-            $msg .= PHP_EOL . $body;
+            $msg .= PHP_EOL.$body;
         }
 
         $this->logger->$method($msg);
