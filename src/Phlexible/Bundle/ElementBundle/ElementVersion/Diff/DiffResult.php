@@ -13,7 +13,7 @@ namespace Phlexible\Bundle\ElementBundle\ElementVersion\Diff;
 
 use cogpowered\FineDiff\Diff;
 use cogpowered\FineDiff\Granularity\Word;
-use Phlexible\Bundle\ElementBundle\Proxy\ChildStructureInterface;
+use Phlexible\Component\ElementProxy\ChildStructureInterface;
 
 /**
  * Diff result

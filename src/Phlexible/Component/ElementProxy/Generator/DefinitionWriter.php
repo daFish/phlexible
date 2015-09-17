@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\Proxy\Generator;
+namespace Phlexible\Component\ElementProxy\Generator;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -25,13 +25,20 @@ class DefinitionWriter
     /**
      * @var string
      */
+    private $viewDir;
+
+    /**
+     * @var string
+     */
     private $outputDir;
 
     /**
+     * @param string $viewDir
      * @param string $outputDir
      */
-    public function __construct($outputDir)
+    public function __construct($viewDir, $outputDir)
     {
+        $this->viewDir = $viewDir;
         $this->outputDir = $outputDir;
     }
 
@@ -51,7 +58,7 @@ class DefinitionWriter
      */
     public function write(array $classes, $namespacePrefix)
     {
-        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(__DIR__ . '/../../Resources/views/'));
+        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->viewDir));
 
         $this->clear();
 
@@ -119,7 +126,7 @@ class DefinitionWriter
      */
     private function writeManager(ManagerDefinition $manager)
     {
-        $content = "<?php return new \\Phlexible\\Bundle\\ElementBundle\\Proxy\\ClassManager(
+        $content = "<?php return new \\Phlexible\\Component\\ElementProxy\\ClassManager(
     '{$this->outputDir}',
     " . var_export($manager->getNames(), true) . ",
     " . var_export($manager->getIds(), true) . ",

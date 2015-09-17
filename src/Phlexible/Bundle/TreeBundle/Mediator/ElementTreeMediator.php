@@ -14,11 +14,11 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Doctrine\ORM\EntityManagerInterface;
 use Phlexible\Bundle\ElementBundle\ElementService;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
-use Phlexible\Bundle\ElementBundle\Proxy\ClassManager;
 use Phlexible\Bundle\TreeBundle\Entity\PageNode;
 use Phlexible\Bundle\TreeBundle\Entity\PartNode;
 use Phlexible\Bundle\TreeBundle\Entity\StructureNode;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
+use Phlexible\Component\ElementProxy\ClassManager;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**

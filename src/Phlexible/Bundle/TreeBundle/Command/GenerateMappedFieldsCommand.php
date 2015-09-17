@@ -49,6 +49,8 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
         $repo = $em->getRepository('PhlexibleTreeBundle:NodeMappedField');
 
         $languages = array('de');
+        $batch = 0;
+        $batchSize = 100;
 
         foreach ($treeManager->getAll() as $tree) {
             $tree->setDefaultLanguage('de');
@@ -80,14 +82,19 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
                         }
 
                         $mappedField->setMapping($extractedFields);
+                        $batch++;
 
                         if ($output->getVerbosity() > OutputInterface::VERBOSITY_VERBOSE) {
                             $output->writeln("  $version-$language " . json_encode($extractedFields));
                         }
+
+                        if ($batch > $batchSize) {
+                            $em->flush();
+                            $em->clear();
+                            $batch = 0;
+                        }
                     }
                 }
-
-                $em->flush();
             }
         }
 

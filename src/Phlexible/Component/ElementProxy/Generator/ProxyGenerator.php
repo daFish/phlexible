@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\Proxy\Generator;
+namespace Phlexible\Component\ElementProxy\Generator;
 
-use Phlexible\Bundle\ElementBundle\Proxy\Distiller\DistilledFieldNode;
-use Phlexible\Bundle\ElementBundle\Proxy\Distiller\DistilledNodeCollection;
-use Phlexible\Bundle\ElementBundle\Proxy\Distiller\Distiller;
-use Phlexible\Bundle\ElementBundle\Proxy\Distiller\HasChildNodesInterface;
+use Phlexible\Component\ElementProxy\Distiller\DistilledFieldNode;
+use Phlexible\Component\ElementProxy\Distiller\DistilledNodeCollection;
+use Phlexible\Component\ElementProxy\Distiller\Distiller;
+use Phlexible\Component\ElementProxy\Distiller\HasChildNodesInterface;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**

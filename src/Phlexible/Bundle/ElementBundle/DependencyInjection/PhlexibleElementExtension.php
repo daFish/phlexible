@@ -35,6 +35,8 @@ class PhlexibleElementExtension extends Extension
         $loader->load('proxy.yml');
         $loader->load('doctrine.yml');
 
+        $container->setParameter('phlexible_element.proxy_view_dir', __DIR__ . '/../Resources/views');
+        
         $container->setAlias('phlexible_element.element_manager', 'phlexible_element.doctrine.element_manager');
         $container->setAlias('phlexible_element.element_version_manager', 'phlexible_element.doctrine.element_version_manager');
         $container->setAlias('phlexible_element.element_source_manager', 'phlexible_element.doctrine.element_source_manager');

@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\Proxy;
+namespace Phlexible\Component\ElementProxy;
 
 /**
- * Child structure interface
+ * Main structure interface
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-interface ChildStructureInterface extends StructureInterface
+interface MainStructureInterface extends StructureInterface
 {
     /**
      * @return string
@@ -26,10 +26,21 @@ interface ChildStructureInterface extends StructureInterface
     /**
      * @return string
      */
-    public function __name();
+    public function __version();
 
     /**
      * @return string
      */
-    public function __dsId();
+    public function __elementtypeId();
+
+    /**
+     * @return int
+     */
+    public function __elementtypeRevision();
+
+    /**
+     * @return string
+     */
+    public function __elementtypeName();
+
 }

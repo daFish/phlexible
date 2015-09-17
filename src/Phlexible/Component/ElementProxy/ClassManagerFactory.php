@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\Proxy;
+namespace Phlexible\Component\ElementProxy;
 
 use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
-use Phlexible\Bundle\ElementBundle\Proxy\Generator\ProxyGenerator;
+use Phlexible\Component\ElementProxy\Generator\ProxyGenerator;
 
 /**
  * Class manager factory

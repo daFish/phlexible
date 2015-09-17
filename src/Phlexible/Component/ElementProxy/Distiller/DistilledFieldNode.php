@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\Proxy\Distiller;
+namespace Phlexible\Component\ElementProxy\Distiller;
 
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Field\AbstractField;

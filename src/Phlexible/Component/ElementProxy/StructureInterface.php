@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Phlexible\Bundle\ElementBundle\Proxy;
+namespace Phlexible\Component\ElementProxy;
 
 /**
  * Structure interface

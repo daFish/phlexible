@@ -1,26 +1,28 @@
 services:
     phlexible_element.proxy.distiller:
-        class: Phlexible\Bundle\ElementBundle\Proxy\Distiller\Distiller
+        class: Phlexible\Component\ElementProxy\Distiller\Distiller
         arguments: [@phlexible_elementtype.field.registry]
 
     phlexible_element.proxy.definition_writer:
-        class: Phlexible\Bundle\ElementBundle\Proxy\Generator\DefinitionWriter
-        arguments: [%kernel.cache_dir%/element_proxy]
+        class: Phlexible\Component\ElementProxy\Generator\DefinitionWriter
+        arguments:
+            - %phlexible_element.proxy_view_dir%
+            - %kernel.cache_dir%/element_proxy
 
     phlexible_element.proxy.class_generator:
-        class: Phlexible\Bundle\ElementBundle\Proxy\Generator\ProxyGenerator
+        class: Phlexible\Component\ElementProxy\Generator\ProxyGenerator
         arguments:
             - @phlexible_element.proxy.distiller
             - @phlexible_element.proxy.definition_writer
 
     phlexible_element.proxy.class_manager_factory:
-        class: Phlexible\Bundle\ElementBundle\Proxy\ClassManagerFactory
+        class: Phlexible\Component\ElementProxy\ClassManagerFactory
         arguments:
             - @phlexible_element.proxy.class_generator
             - @phlexible_element.element_source_manager
 
     phlexible_element.proxy.class_manager:
-        class: Phlexible\Bundle\ElementBundle\Proxy\ClassManager
+        class: Phlexible\Component\ElementProxy\ClassManager
         factory: [@phlexible_element.proxy.class_manager_factory, factory]
         arguments:
             - @phlexible_element.proxy.class_generator

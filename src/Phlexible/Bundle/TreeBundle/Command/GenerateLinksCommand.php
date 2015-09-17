@@ -49,12 +49,13 @@ class GenerateLinksCommand extends ContainerAwareCommand
         $nodeLinkRepository = $em->getRepository('PhlexibleTreeBundle:NodeLink');
 
         $locales = array('de');
+        $batch = 0;
+        $batchSize = 100;
 
         foreach ($locales as $locale) {
             $treeContext = new LiveTreeContext($locale);
 
             foreach ($treeManager->getAll($treeContext) as $tree) {
-                $batch = 0;
 
                 $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
                 foreach ($rii as $node) {
@@ -74,12 +75,12 @@ class GenerateLinksCommand extends ContainerAwareCommand
                             $batch++;
                             $em->persist($extractedLink);
                         }
-                    }
 
-                    if ($batch > 100) {
-                        $em->flush();
-                        $em->clear();
-                        $batch = 0;
+                        if ($batch > $batchSize) {
+                            $em->flush();
+                            $em->clear();
+                            $batch = 0;
+                        }
                     }
                 }
             }
