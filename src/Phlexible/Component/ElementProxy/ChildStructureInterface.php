@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy;
 
 /**
- * Child structure interface
+ * Child structure interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

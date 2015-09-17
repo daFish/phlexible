@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\File\Parser;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Loader interface
+ * Loader interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

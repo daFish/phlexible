@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Download controller
+ * Download controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/download")
@@ -56,8 +56,8 @@ class DownloadController extends Controller
         return $this->get('igorw_file_serve.response_factory')
             ->create($filepath, $file->getMimeType(), array(
                 'serve_filename' => $filename,
-                'absolute_path'  => true,
-                'inline'         => false,
+                'absolute_path' => true,
+                'inline' => false,
             ));
     }
 
@@ -83,26 +83,26 @@ class DownloadController extends Controller
         $prefix = $folder->getPath();
         $prefixLength = 0;
         if ($prefix && mb_strpos($prefix, '/') !== false) {
-            $prefix = mb_substr($prefix, 0, -mb_strlen('/' . $folder->getName()));
+            $prefix = mb_substr($prefix, 0, -mb_strlen('/'.$folder->getName()));
             $prefixLength = mb_strlen($prefix) + 1;
             $prefix = '';
         } elseif ($folder->isRoot()) {
-            $prefix = $folder->getName() . '/';
+            $prefix = $folder->getName().'/';
         } else {
             $prefix = '';
         }
 
-        $filename = 'folder_' . $folder->getName() . '_' . date('YmdHis');
+        $filename = 'folder_'.$folder->getName().'_'.date('YmdHis');
         $filename = preg_replace('/[^a-zA-Z0-9-_]/', '_', $filename);
-        $filename = $path . $filename . '.zip';
+        $filename = $path.$filename.'.zip';
 
         $rii = new \RecursiveIteratorIterator(new FolderIterator($folder), \RecursiveIteratorIterator::SELF_FIRST);
 
         $files = array();
         foreach ($rii as $folder) {
-            $folderPath = $folder->getPath() . '/';
+            $folderPath = $folder->getPath().'/';
             foreach ($volume->findFilesByFolder($folder) as $file) {
-                $displayName = $prefix . $folderPath . $file->getName();
+                $displayName = $prefix.$folderPath.$file->getName();
                 $displayName = mb_substr($displayName, $prefixLength, null, 'UTF-8');
                 $files[$displayName] = $file->getPhysicalPath();
             }
@@ -136,13 +136,13 @@ class DownloadController extends Controller
         $firstFile = $volume->findFile($firstFileId);
         $folder = $volume->findFolder($firstFile->getFolderId());
 
-        $filename = $path . 'files_' . $folder->getName() . '_' . date('YmdHis') . '.zip';
+        $filename = $path.'files_'.$folder->getName().'_'.date('YmdHis').'.zip';
 
         $files = array();
         foreach ($fileIds as $fileId) {
             $file = $volume->findFile($fileId);
 
-            $files[$folder->getName() . '/' . $file->getName()] = $file->getPhysicalPath();
+            $files[$folder->getName().'/'.$file->getName()] = $file->getPhysicalPath();
         }
 
         $zippy = Zippy::load();
@@ -152,7 +152,7 @@ class DownloadController extends Controller
     }
 
     /**
-     * Stream file
+     * Stream file.
      *
      * @param Request $request
      *
@@ -164,7 +164,7 @@ class DownloadController extends Controller
         $filename = basename($request->get('filename'));
 
         $path = $this->container->getParameter('phlexible_media_manager.temp_dir');
-        $filepath = $path .'/' . $filename;
+        $filepath = $path.'/'.$filename;
 
         if (!$filename || !file_exists($filepath)) {
             return $this->createNotFoundException();
@@ -173,7 +173,7 @@ class DownloadController extends Controller
         return $this->get('igorw_file_serve.response_factory')
             ->create($filepath, 'application/zip', array(
                 'absolute_path' => true,
-                'inline'        => false,
+                'inline' => false,
             ));
     }
 }

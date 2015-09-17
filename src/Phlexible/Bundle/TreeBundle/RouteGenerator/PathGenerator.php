@@ -15,7 +15,7 @@ use Cocur\Slugify\Slugify;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Path generator
+ * Path generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -87,7 +87,7 @@ class PathGenerator implements PathGeneratorInterface
 
         $parts = array_map(array($this->slugify, 'slugify'), $parts);
 
-        $path = new Path(array('/' . implode('/', array_reverse($parts))));
+        $path = new Path(array('/'.implode('/', array_reverse($parts))));
 
         foreach ($this->decorators as $decorator) {
             $decorator->decoratePath($path, $node, $language);

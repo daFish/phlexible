@@ -16,7 +16,7 @@ use cogpowered\FineDiff\Granularity\Word;
 use Phlexible\Component\ElementProxy\ChildStructureInterface;
 
 /**
- * Diff result
+ * Diff result.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -55,7 +55,7 @@ class DiffResult
      */
     private function applyModifiedValue($value, $oldValue)
     {
-        $granularity = new Word;
+        $granularity = new Word();
         $diff = new Diff($granularity);
 
         $value

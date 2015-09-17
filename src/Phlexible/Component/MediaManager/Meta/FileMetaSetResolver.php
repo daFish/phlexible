@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
- * File meta set resolver
+ * File meta set resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\SiterootBundle;
 use Phlexible\Component\Message\Domain\Message;
 
 /**
- * Siteroot message
+ * Siteroot message.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

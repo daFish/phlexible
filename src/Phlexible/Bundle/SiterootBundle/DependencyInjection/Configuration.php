@@ -16,7 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Container configuration
+ * Container configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,7 +51,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             // Using the custom driver requires changing the manager services
             ->validate()
-                ->ifTrue(function($v){return 'custom' === $v['db_driver'] && 'phlexible_siteroot.siteroot_manager.default' === $v['service']['siteroot_manager'];})
+                ->ifTrue(function ($v) {return 'custom' === $v['db_driver'] && 'phlexible_siteroot.siteroot_manager.default' === $v['service']['siteroot_manager'];})
                 ->thenInvalid('You need to specify your own siteroot manager service when using the "custom" driver.')
             ->end();
 

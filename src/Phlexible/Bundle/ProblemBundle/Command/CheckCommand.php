@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Check command
+ * Check command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -80,23 +80,23 @@ class CheckCommand extends ContainerAwareCommand
         $countRemove = count($removed);
         $parts = array();
         if ($known) {
-            $body .= 'Known: ' . PHP_EOL . ' = ' . implode(PHP_EOL . ' = ', $known) . PHP_EOL;
+            $body .= 'Known: '.PHP_EOL.' = '.implode(PHP_EOL.' = ', $known).PHP_EOL;
             $parts[] = "$countKnown existing";
             $type = ProblemMessage::TYPE_ERROR;
         }
         if ($added) {
-            $body .= 'Added: ' . PHP_EOL . ' + ' . implode(PHP_EOL . ' + ', $added) . PHP_EOL;
+            $body .= 'Added: '.PHP_EOL.' + '.implode(PHP_EOL.' + ', $added).PHP_EOL;
             $parts[] = "$countAdd added";
             $type = ProblemMessage::TYPE_ERROR;
         }
         if ($removed) {
-            $body .= 'Removed: ' . PHP_EOL . ' - ' . implode(PHP_EOL . ' - ', $removed) . PHP_EOL;
+            $body .= 'Removed: '.PHP_EOL.' - '.implode(PHP_EOL.' - ', $removed).PHP_EOL;
             $parts[] = "$countRemove removed";
         }
         if (count($parts)) {
-            $subject = "Problem check result: " . implode(" and ", $parts). " problems";
+            $subject = 'Problem check result: '.implode(' and ', $parts).' problems';
         } else {
-            $subject = "Problem check result: no problems";
+            $subject = 'Problem check result: no problems';
         }
 
         $this->getContainer()->get('phlexible_message.message_poster')

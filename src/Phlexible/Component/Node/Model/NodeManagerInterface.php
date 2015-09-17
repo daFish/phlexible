@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Node\Model;
 
 /**
- * Node manager interface
+ * Node manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

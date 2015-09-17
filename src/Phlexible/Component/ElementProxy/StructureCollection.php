@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy;
 
 /**
- * Structure collection
+ * Structure collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -57,6 +57,7 @@ abstract class StructureCollection
 
         $this->items[] = $item;
     }
+
     /**
      * @return array
      */

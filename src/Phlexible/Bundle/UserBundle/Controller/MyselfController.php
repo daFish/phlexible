@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Myself controller
+ * Myself controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Rest\NamePrefix("phlexible_api_user_")
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 class MyselfController extends Controller
 {
     /**
-     * Get information about current user
+     * Get information about current user.
      *
      * @return Response
      *
@@ -49,7 +49,7 @@ class MyselfController extends Controller
     }
 
     /**
-     * Update current user
+     * Update current user.
      *
      * @param Request $request
      *

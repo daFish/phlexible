@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;
 
 /**
- * Video previewer
+ * Video previewer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -80,7 +80,7 @@ class VideoPreviewer implements PreviewerInterface
 
         $spec = $this->specifier->specify($template);
         $extension = $this->specifier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_image.' . $extension;
+        $cacheFilename = $this->cacheDir.'preview_image.'.$extension;
         $this->transmuter->transmute($filePath, $spec, $cacheFilename);
 
         $file = new File($cacheFilename);
@@ -88,15 +88,15 @@ class VideoPreviewer implements PreviewerInterface
         $videoStream = $this->ffprobe->streams($cacheFilename)->videos()->first();
 
         $data = array(
-            'path'       => $cacheFilename,
-            'file'       => basename($cacheFilename),
-            'size'       => filesize($cacheFilename),
-            'template'   => $template->getKey(),
-            'format'     => $extension,
-            'mimetype'   => $file->getMimeType(),
+            'path' => $cacheFilename,
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
+            'template' => $template->getKey(),
+            'format' => $extension,
+            'mimetype' => $file->getMimeType(),
             'parameters' => $template->getParameters(),
-            'width'      => $videoStream->get('width'),
-            'height'     => $videoStream->get('height'),
+            'width' => $videoStream->get('width'),
+            'height' => $videoStream->get('height'),
         );
 
         return $data;
@@ -109,8 +109,8 @@ class VideoPreviewer implements PreviewerInterface
      */
     private function toCamelCase($value)
     {
-        $chunks    = explode('_', $value);
-        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+        $chunks = explode('_', $value);
+        $ucfirsted = array_map(function ($s) { return ucfirst($s); }, $chunks);
 
         return implode('', $ucfirsted);
     }

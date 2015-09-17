@@ -16,7 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Media template configuration
+ * Media template configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -63,7 +63,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             // Using the custom driver requires changing the manager services
             ->validate()
-                ->ifTrue(function($v){return 'custom' === $v['db_driver'] && 'phlexible_media_template.template_manager.default' === $v['service']['template_manager'];})
+                ->ifTrue(function ($v) {return 'custom' === $v['db_driver'] && 'phlexible_media_template.template_manager.default' === $v['service']['template_manager'];})
                 ->thenInvalid('You need to specify your own template manager service when using the "custom" driver.')
             ->end();
 

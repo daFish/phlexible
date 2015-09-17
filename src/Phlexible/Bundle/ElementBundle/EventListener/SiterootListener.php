@@ -21,7 +21,7 @@ use Phlexible\Component\Elementtype\ElementtypeService;
 use Phlexible\Component\Site\Event\SiteEvent;
 
 /**
- * Siteroot listener
+ * Siteroot listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -118,17 +118,17 @@ class SiterootListener
         $mappings = array(
             'backend' => array(
                 'fields' => array(
-                    array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1)
+                    array('ds_id' => $textfield->getDsId(), 'field' => 'Title', 'index' => 1),
                 ),
-                'pattern' => '$1'
-            )
+                'pattern' => '$1',
+            ),
         );
 
         $user = $this->userManager->find($siteroot->getModifyUserId());
 
         $elementtype = $this->elementtypeService->createElementtype(
             'structure',
-            'site_root_' . $siteroot->getId(),
+            'site_root_'.$siteroot->getId(),
             'www_root.gif',
             $elementtypeStructure,
             $mappings,

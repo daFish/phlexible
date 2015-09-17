@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Upload handler
+ * Upload handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -53,7 +53,7 @@ class UploadHandler
     }
 
     /**
-     * Handle upload
+     * Handle upload.
      *
      * @param UploadedFile $uploadedFile
      * @param string       $folderId

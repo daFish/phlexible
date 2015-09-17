@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Domain;
 
 /**
- * Elementtype structure node
+ * Elementtype structure node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

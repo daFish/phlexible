@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTypeBundle\Compiler;
 use Temp\MediaClassifier\Model\MediaTypeCollection;
 
 /**
- * CSS generator
+ * CSS generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

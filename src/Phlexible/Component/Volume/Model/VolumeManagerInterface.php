@@ -19,7 +19,7 @@ use Phlexible\Component\Volume\VolumeInterface;
 use Webmozart\Expression\Expression;
 
 /**
- * Volume Manager interface
+ * Volume Manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,27 +42,29 @@ interface VolumeManagerInterface
     public function getById($id);
 
     /**
-     * Return volume by file ID
+     * Return volume by file ID.
      *
      * @param string $fileId
      *
      * @return VolumeInterface
+     *
      * @throws NotFoundException
      */
     public function getByFileId($fileId);
 
     /**
-     * Return volume by folder ID
+     * Return volume by folder ID.
      *
      * @param string $folderId
      *
      * @return VolumeInterface
+     *
      * @throws NotFoundException
      */
     public function getByFolderId($folderId);
 
     /**
-     * Return all volumes
+     * Return all volumes.
      *
      * @return VolumeInterface[]
      */

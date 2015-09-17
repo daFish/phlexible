@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 use Twig_Environment;
 
 /**
- * Digest mailer
+ * Digest mailer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -61,7 +61,7 @@ class DigestMailer
     }
 
     /**
-     * Send digest mail
+     * Send digest mail.
      *
      * @param Digest $digest
      *
@@ -75,12 +75,12 @@ class DigestMailer
         $content = $this->templating->render(
             $template,
             array(
-                'digest' => $digest
+                'digest' => $digest,
             )
         );
 
         echo $content;
-        throw new \RuntimeException("content");
+        throw new \RuntimeException('content');
 
         return $this->sendEmailMessage($content, $from, $digest->getUser()->getEmail());
     }
@@ -108,7 +108,7 @@ class DigestMailer
 
             $this->mailer->send($mail);
         } catch (\Exception $e) {
-            $this->logger->error(__METHOD__ . ' failed to send mail: ' . $e->getMessage());
+            $this->logger->error(__METHOD__.' failed to send mail: '.$e->getMessage());
 
             return false;
         }

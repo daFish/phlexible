@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
- * Site manager test
+ * Site manager test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -156,7 +156,6 @@ class SiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->manager->deleteSite($site);
     }
 }
-
 
 class TestEventListener
 {

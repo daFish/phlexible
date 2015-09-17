@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Node context
+ * Node context.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

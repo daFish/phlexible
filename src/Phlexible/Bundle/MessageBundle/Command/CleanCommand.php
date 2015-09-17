@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Clean command
+ * Clean command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -55,7 +55,7 @@ class CleanCommand extends ContainerAwareCommand
         while ($messages = $messageManager->findByExpr($expr, array('createdAt' => 'ASC'))) {
             foreach ($messages as $message) {
                 $messageManager->deleteMessage($message);
-                $count++;
+                ++$count;
             }
         }
 

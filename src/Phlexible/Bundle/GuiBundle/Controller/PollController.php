@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Poll controller
+ * Poll controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/gui/poll")
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PollController extends Controller
 {
     /**
-     * Poll Action
+     * Poll Action.
      *
      * @param Request $request
      *

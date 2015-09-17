@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\ElementVersion\Serializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
- * Serializer interface
+ * Serializer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,11 +43,11 @@ class ArraySerializer implements SerializerInterface
         if (isset($structure['values'])) {
             foreach ($structure['values'] as $dsId => $value) {
                 $valueDatas[] = array(
-                    'id'         => $structure['id'] . '_' . $dsId,
-                    'dsId'       => $dsId,
-                    'name'       => $structure['id'] . '_' . $dsId,
-                    'type'       => gettype($value[$language]),
-                    'content'    => $value[$language],
+                    'id' => $structure['id'].'_'.$dsId,
+                    'dsId' => $dsId,
+                    'name' => $structure['id'].'_'.$dsId,
+                    'type' => gettype($value[$language]),
+                    'content' => $value[$language],
                     'attributes' => array(),
                 );
             }
@@ -55,7 +55,7 @@ class ArraySerializer implements SerializerInterface
 
         $id = isset($structure['id']) ? $structure['id'] : null;
         $dsId = isset($structure['dsId']) ? $structure['dsId'] : null;
-        $name = $parentDsId . '_' . $dsId;
+        $name = $parentDsId.'_'.$dsId;
 
         $children = array();
         if (isset($structure['collections'])) {
@@ -65,15 +65,15 @@ class ArraySerializer implements SerializerInterface
         }
 
         return array(
-            'id'         => $id,
-            'dsId'       => $dsId,
-            'parentId'   => $parentId,
+            'id' => $id,
+            'dsId' => $dsId,
+            'parentId' => $parentId,
             'parentDsId' => $parentDsId,
-            'name'       => $name,
+            'name' => $name,
             'parentName' => $parentName,
             'attributes' => array(),
             'structures' => $children,
-            'values'     => $valueDatas,
+            'values' => $valueDatas,
         );
 
         return $structureData;

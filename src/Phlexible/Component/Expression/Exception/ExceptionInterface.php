@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Expression\Exception;
 
 /**
- * Exception interface for expressions
+ * Exception interface for expressions.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface ExceptionInterface
 {
-
 }

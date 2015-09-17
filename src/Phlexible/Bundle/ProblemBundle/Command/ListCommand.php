@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * List command
+ * List command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -49,7 +49,7 @@ class ListCommand extends ContainerAwareCommand
         }
 
         $cnt = count($problems);
-        $output->writeln('<error>Found ' . $cnt . ' Problem' . ($cnt > 1 ? 's' : '') . '</error>');
+        $output->writeln('<error>Found '.$cnt.' Problem'.($cnt > 1 ? 's' : '').'</error>');
         $output->writeln('');
 
         $table = new Table($output);
@@ -61,7 +61,7 @@ class ListCommand extends ContainerAwareCommand
                     $problem->isLive() ? 'live' : 'cached',
                     $this->createSeverety($problem->getSeverity()),
                     $problem->getMessage(),
-                    $problem->getHint()
+                    $problem->getHint(),
                 )
             );
         }
@@ -78,23 +78,22 @@ class ListCommand extends ContainerAwareCommand
      */
     private function createSeverety($severety)
     {
-        switch ($severety)
-        {
+        switch ($severety) {
             case Problem::SEVERITY_CRITICAL:
-                return '<error>' . $severety . '</error>';
+                return '<error>'.$severety.'</error>';
                 break;
 
             case Problem::SEVERITY_WARNING:
-                return '<comment>' . $severety . '</comment>';
+                return '<comment>'.$severety.'</comment>';
                 break;
 
             case Problem::SEVERITY_NOTICE:
-                return '<info>' . $severety . '</info>';
+                return '<info>'.$severety.'</info>';
                 break;
 
             case Problem::SEVERITY_INFO:
             default:
-                return $severety . '</info>';
+                return $severety.'</info>';
         }
     }
 }

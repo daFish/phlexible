@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Mediator interface
+ * Mediator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

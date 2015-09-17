@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Distiller;
 
 /**
- * Has child nodes interface
+ * Has child nodes interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

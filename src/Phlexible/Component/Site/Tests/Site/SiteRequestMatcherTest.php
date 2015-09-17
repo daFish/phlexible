@@ -18,7 +18,7 @@ use Phlexible\Component\Site\Site\SiteRequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Site request matcher test
+ * Site request matcher test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

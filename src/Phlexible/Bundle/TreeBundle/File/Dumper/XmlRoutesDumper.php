@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\File\Dumper;
 use Phlexible\Bundle\TreeBundle\Model\RouteManagerInterface;
 
 /**
- * XML routes dumper
+ * XML routes dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

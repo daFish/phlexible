@@ -15,7 +15,7 @@ use Phlexible\Component\Message\Domain\Message;
 use Phlexible\Component\Message\Model\MessageManagerInterface;
 
 /**
- * Message manager handler
+ * Message manager handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

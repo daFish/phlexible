@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Response listener
+ * Response listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

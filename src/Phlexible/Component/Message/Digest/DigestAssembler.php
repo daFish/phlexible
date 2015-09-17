@@ -18,7 +18,7 @@ use Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface;
 use Webmozart\Expression\Expr;
 
 /**
- * Digest assembler
+ * Digest assembler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -46,9 +46,9 @@ class DigestAssembler
 
     /**
      * @param \Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface $subscriptionManager
-     * @param FilterManagerInterface       $filterManager
-     * @param MessageManagerInterface      $messageManager
-     * @param UserManagerInterface         $userManager
+     * @param FilterManagerInterface                                                      $filterManager
+     * @param MessageManagerInterface                                                     $messageManager
+     * @param UserManagerInterface                                                        $userManager
      */
     public function __construct(
         SubscriptionManagerInterface $subscriptionManager,

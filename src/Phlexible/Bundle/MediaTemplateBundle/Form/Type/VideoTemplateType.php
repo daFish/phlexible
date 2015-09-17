@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Video template form type
+ * Video template form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,7 +51,7 @@ class VideoTemplateType extends MediaTemplateType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MediaTemplate\Domain\VideoTemplate',
+            'data_class' => 'Phlexible\Component\MediaTemplate\Domain\VideoTemplate',
             'csrf_protection' => false,
         ));
     }

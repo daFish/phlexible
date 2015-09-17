@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
- * Simple field mapper
+ * Simple field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -35,7 +35,7 @@ class SimpleFieldMapper implements FieldMapperInterface
         $replace = array();
         foreach ($mapping['fields'] as $field) {
             $value = $valueExtractor->extract($content, $field, $language);
-            $replace['$' . $field['index']] = $value;
+            $replace['$'.$field['index']] = $value;
         }
         $title = str_replace(array_keys($replace), array_values($replace), $pattern);
 

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Model;
 use Phlexible\Bundle\TreeBundle\Entity\Route;
 
 /**
- * Tree manager interface
+ * Tree manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

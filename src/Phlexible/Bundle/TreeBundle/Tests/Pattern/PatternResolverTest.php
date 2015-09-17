@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Tests\Pattern;
 use Phlexible\Bundle\TreeBundle\Pattern\PatternResolver;
 
 /**
- * Pattern resolver test
+ * Pattern resolver test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

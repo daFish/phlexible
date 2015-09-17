@@ -15,7 +15,7 @@ use Phlexible\Bundle\DashboardBundle\Infobar\InfobarCollection;
 use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

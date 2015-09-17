@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Event;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Move node context event
+ * Move node context event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

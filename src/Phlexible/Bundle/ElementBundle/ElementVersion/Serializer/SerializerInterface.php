@@ -14,14 +14,14 @@ namespace Phlexible\Bundle\ElementBundle\ElementVersion\Serializer;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
- * Serializer interface
+ * Serializer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface SerializerInterface
 {
     /**
-     * Serialize structure
+     * Serialize structure.
      *
      * @param ElementVersion $elementVersion
      * @param string         $language

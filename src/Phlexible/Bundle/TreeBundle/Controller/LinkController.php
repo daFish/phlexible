@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Link controller
+ * Link controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Marcus Stöhr <mstoehr@brainbits.net>
@@ -34,7 +34,7 @@ class LinkController extends Controller
     const MODE_ET_TARGET = 4;
 
     /**
-     * Return the Element data tree
+     * Return the Element data tree.
      *
      * @param Request $request
      *
@@ -53,7 +53,7 @@ class LinkController extends Controller
         $iconResolver = $this->get('phlexible_tree.icon_resolver');
 
         if (null === $language) {
-            if ($id != 'root') {
+            if ($id !== 'root') {
                 $tree = $treeManager->getByNodeId($id);
                 $node = $tree->get($id);
             } else {
@@ -87,13 +87,13 @@ class LinkController extends Controller
                 $element = $elementService->findElement($rootNode->getContentId());
 
                 $data[] = array(
-                    'id'       => $rootNode->getId(),
-                    'eid'      => (int) $rootNode->getContentId(),
-                    'text'     => $siteroot->getTitle(),
-                    'icon'     => $iconResolver->resolveNode($rootNode),
+                    'id' => $rootNode->getId(),
+                    'eid' => (int) $rootNode->getContentId(),
+                    'text' => $siteroot->getTitle(),
+                    'icon' => $iconResolver->resolveNode($rootNode),
                     // 'cls'      => 'siteroot-node',
                     // 'children' => $startNode->hasChildren() ? $this->_recurseNodes($startNode->getChildren(), $language) : array(),
-                    'leaf'     => !$tree->hasChildren($rootNode),
+                    'leaf' => !$tree->hasChildren($rootNode),
                     'expanded' => $siterootId === $currentSiterootId,
                 );
             }
@@ -108,7 +108,7 @@ class LinkController extends Controller
     }
 
     /**
-     * Return the Element data tree
+     * Return the Element data tree.
      *
      * @param Request $request
      *
@@ -133,7 +133,7 @@ class LinkController extends Controller
         $elementService = $this->get('phlexible_element.element_service');
 
         if (!$language) {
-            if ($id != 'root') {
+            if ($id !== 'root') {
                 $tree = $treeManager->getByNodeId($id);
                 $node = $tree->get($id);
             } else {
@@ -222,7 +222,7 @@ class LinkController extends Controller
             $targetNode = $targetTree->get($targetTid);
         }
 
-        if ($id == 'root') {
+        if ($id === 'root') {
             $siterootManager = $this->get('phlexible_siteroot.siteroot_manager');
             $siteroots = $siterootManager->findAll();
 
@@ -262,13 +262,13 @@ class LinkController extends Controller
                 }
 
                 $data[] = array(
-                    'id'       => $rootNode->getID(),
-                    'eid'      => $rootNode->getTypeId(),
-                    'text'     => $siteroot->getTitle(),
-                    'icon'     => $iconResolver->resolveNode($rootNode),
+                    'id' => $rootNode->getID(),
+                    'eid' => $rootNode->getTypeId(),
+                    'text' => $siteroot->getTitle(),
+                    'icon' => $iconResolver->resolveNode($rootNode),
                     'children' => $children,
-                    'leaf'     => !$tree->hasChildren($rootNode),
-                    'expanded' => false
+                    'leaf' => !$tree->hasChildren($rootNode),
+                    'expanded' => false,
                 );
             }
         } else {
@@ -313,8 +313,8 @@ class LinkController extends Controller
 
         $select = $db->select()
             ->distinct()
-            ->from(array('et' => $db->prefix . 'element_tree'), array('id'))
-            ->join(array('e' => $db->prefix . 'element'), 'et.eid = e.eid', array())
+            ->from(array('et' => $db->prefix.'element_tree'), array('id'))
+            ->join(array('e' => $db->prefix.'element'), 'et.eid = e.eid', array())
             ->where('et.siteroot_id = ?', $siteRootId)
             ->where('e.element_type_id IN (?)', $elementtypeIds)
             ->order('et.sort');
@@ -334,12 +334,12 @@ class LinkController extends Controller
 
             if (!isset($data[$treeId])) {
                 $data[$node->getId()] = array(
-                    'id'       => $node->getId(),
-                    'eid'      => $node->getTypeId(),
-                    'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $node->getId() . ']',
-                    'icon'     => $iconResolver->resolveElement($element),
+                    'id' => $node->getId(),
+                    'eid' => $node->getTypeId(),
+                    'text' => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()).' ['.$node->getId().']',
+                    'icon' => $iconResolver->resolveElement($element),
                     'children' => array(),
-                    'leaf'     => true,
+                    'leaf' => true,
                     'expanded' => false,
                     'disabled' => !in_array($elementVersion->getElementTypeID(), $elementtypeIds),
                 );
@@ -358,12 +358,12 @@ class LinkController extends Controller
                     $elementVersion = $elementService->findElementVersion($element, $element->getLatestVersion());
 
                     $data[$parentNode->getId()] = array(
-                        'id'       => $parentNode->getId(),
-                        'eid'      => $parentNode->getTypeId(),
-                        'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $parentNode->getId() . ']',
-                        'icon'     => $iconResolver->resolveNode($parentNode),
+                        'id' => $parentNode->getId(),
+                        'eid' => $parentNode->getTypeId(),
+                        'text' => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()).' ['.$parentNode->getId().']',
+                        'icon' => $iconResolver->resolveNode($parentNode),
                         'children' => array(),
-                        'leaf'     => false,
+                        'leaf' => false,
                         'expanded' => false,
                         'disabled' => !in_array($elementVersion->getElementTypeID(), $elementtypeIds),
                     );
@@ -371,7 +371,7 @@ class LinkController extends Controller
                     $data[$parentNode->getId()]['leaf'] = false;
                 }
 
-                $data[$parentNode->getId()]['children'][$node->getId()] =& $data[$node->getId()];
+                $data[$parentNode->getId()]['children'][$node->getId()] = &$data[$node->getId()];
 
                 $node = $parentNode;
             } while ($parentNode);
@@ -396,7 +396,7 @@ class LinkController extends Controller
     {
         if (is_array($data['children']) && count($data['children'])) {
             $sortSelect = $db->select()
-                ->from($db->prefix . 'element_tree', array('id', 'sort'))
+                ->from($db->prefix.'element_tree', array('id', 'sort'))
                 ->where('parent_id = ?', $data['id'])
                 ->where('id IN (?)', array_keys($data['children']))
                 ->order('sort');
@@ -420,7 +420,7 @@ class LinkController extends Controller
     }
 
     /**
-     * Recurse over tree nodes
+     * Recurse over tree nodes.
      *
      * @param NodeContext[] $nodes
      * @param string        $language
@@ -446,16 +446,16 @@ class LinkController extends Controller
             $children = $tree->getChildren($node);
 
             $dataNode = array(
-                'id'       => $node->getId(),
-                'eid'      => $node->getContentId(),
-                'text'     => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()) . ' [' . $tid . ']',
-                'icon'     => $iconResolver->resolveNode($node),
+                'id' => $node->getId(),
+                'eid' => $node->getContentId(),
+                'text' => $elementVersion->getBackendTitle($language, $element->getMasterLanguage()).' ['.$tid.']',
+                'icon' => $iconResolver->resolveNode($node),
                 'children' => !$tree->hasChildren($node)
                         ? array()
-                        : $mode == self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)
+                        : $mode === self::MODE_NOET_TARGET && $tree->isParentOf($node, $targetNode)
                             ? $this->recurseLinkNodes($children, $language, $mode, $targetNode)
                             : false,
-                'leaf'     => !$tree->hasChildren($node),
+                'leaf' => !$tree->hasChildren($node),
                 'expanded' => false,
             );
 
@@ -482,7 +482,7 @@ class LinkController extends Controller
     }
 
     /**
-     * Strip all disabled nodes recursivly
+     * Strip all disabled nodes recursivly.
      *
      * @param array $data
      *

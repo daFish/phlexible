@@ -16,7 +16,7 @@ use Phlexible\Component\NodeType\Model\NodeTypeConstraintsResolverInterface;
 use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
- * Node type constraint resolver
+ * Node type constraint resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

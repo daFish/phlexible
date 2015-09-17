@@ -15,14 +15,14 @@ use Phlexible\Bundle\TreeBundle\Exception\NodeNotFoundException;
 use Phlexible\Component\Tree\TreeContextInterface;
 
 /**
- * Tree manager interface
+ * Tree manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface TreeManagerInterface
 {
     /**
-     * Return tree by siteroot ID
+     * Return tree by siteroot ID.
      *
      * @param TreeContextInterface $treeContext
      * @param string               $siterootId
@@ -32,12 +32,13 @@ interface TreeManagerInterface
     public function getBySiteRootId(TreeContextInterface $treeContext, $siterootId);
 
     /**
-     * Get tree by node ID
+     * Get tree by node ID.
      *
      * @param TreeContextInterface $treeContext
      * @param int                  $nodeId
      *
      * @return TreeInterface
+     *
      * @throws NodeNotFoundException
      */
     public function getByNodeId(TreeContextInterface $treeContext, $nodeId);

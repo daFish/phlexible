@@ -19,7 +19,7 @@ use Phlexible\Component\Node\Model\NodeInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Publisher
+ * Publisher.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -250,7 +250,7 @@ class Publisher
         $onlyOffline,
         $isInstance = false)
     {
-        if (array_key_exists('treenode_' . $node->getId(), $result)) {
+        if (array_key_exists('treenode_'.$node->getId(), $result)) {
             return $result;
         }
 
@@ -282,18 +282,18 @@ class Publisher
         }
         $elementVersion = $this->elementService->findElementVersion($element, $version);
 
-        $result['treenode_' . $node->getId()] = array(
-            'type'      => 'full_element',
-            'instance'  => $isInstance,
-            'depth'     => $depth,
-            'path'      => $path . '+' . $language,
-            'tid'       => $node->getId(),
+        $result['treenode_'.$node->getId()] = array(
+            'type' => 'full_element',
+            'instance' => $isInstance,
+            'depth' => $depth,
+            'path' => $path.'+'.$language,
+            'tid' => $node->getId(),
             'teaser_id' => null,
-            'eid'       => $node->getEid(),
-            'version'   => $version,
-            'language'  => $language,
-            'title'     => $elementVersion->getBackendTitle($language),
-            'icon'      => '',// TODO: $elementVersion->getIconUrl($node->getIconParams($language)),
+            'eid' => $node->getEid(),
+            'version' => $version,
+            'language' => $language,
+            'title' => $elementVersion->getBackendTitle($language),
+            'icon' => '',// TODO: $elementVersion->getIconUrl($node->getIconParams($language)),
         );
 
         return $result;
@@ -356,13 +356,13 @@ class Publisher
             return $result;
         }
 
-        if (array_key_exists('teaser_' . $teaser['id'], $result)) {
+        if (array_key_exists('teaser_'.$teaser['id'], $result)) {
             return $result;
         }
 
         $version = $this->_db->fetchOne($this->_versionSelect, array('eid' => $teaser['teaser_eid']));
 
-        $isAsync = !!($teaser['version'] && $teaser['version'] != $version);
+        $isAsync = !!($teaser['version'] && $teaser['version'] !== $version);
         $isPublished = !!$teaser['version'];
 
         $include = true;
@@ -385,18 +385,18 @@ class Publisher
 
         $teaserNode = new Makeweb_Teasers_Node($teaser['id']);
 
-        $result['teaser_' . $teaser['id']] = array(
-            'type'      => 'part_element',
-            'instance'  => $isInstance,
-            'depth'     => $depth,
-            'path'      => $path . '+' . $language . '+' . $teaser['id'] . '+' . $language,
-            'tid'       => null,
+        $result['teaser_'.$teaser['id']] = array(
+            'type' => 'part_element',
+            'instance' => $isInstance,
+            'depth' => $depth,
+            'path' => $path.'+'.$language.'+'.$teaser['id'].'+'.$language,
+            'tid' => null,
             'teaser_id' => $teaser['id'],
-            'eid'       => $teaser['teaser_eid'],
-            'version'   => $version,
-            'language'  => $language,
-            'title'     => $elementVersion->getBackendTitle($language),
-            'icon'      => $elementVersion->getIconUrl($teaserNode->getIconParams($language)),
+            'eid' => $teaser['teaser_eid'],
+            'version' => $version,
+            'language' => $language,
+            'title' => $elementVersion->getBackendTitle($language),
+            'icon' => $elementVersion->getIconUrl($teaserNode->getIconParams($language)),
         );
 
         return $result;

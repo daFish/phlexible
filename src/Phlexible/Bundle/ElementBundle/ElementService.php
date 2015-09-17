@@ -21,7 +21,7 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\File\Dumper\XmlDumper;
 
 /**
- * Element service
+ * Element service.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,7 +58,7 @@ class ElementService
     }
 
     /**
-     * Find element by ID
+     * Find element by ID.
      *
      * @param int $eid
      *
@@ -188,7 +188,7 @@ class ElementService
         $this->elementManager->updateElement($element, false);
 
         if ($content) {
-            throw new \RuntimeException("content");
+            throw new \RuntimeException('content');
         }
 
         $this->elementVersionManager->updateElementVersion($elementVersion, true);

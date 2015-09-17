@@ -17,7 +17,7 @@ use Phlexible\Component\Elementtype\ElementtypeService;
 use Phlexible\Component\Elementtype\Usage\UsageManager;
 
 /**
- * Elementtype change checker
+ * Elementtype change checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,8 +54,7 @@ class Checker
         ElementService $elementService,
         ElementSourceManagerInterface $elementSourceManager,
         UsageManager $elementtypeUsageManager
-    )
-    {
+    ) {
         $this->elementtypeService = $elementtypeService;
         $this->elementService = $elementService;
         $this->elementSourceManager = $elementSourceManager;

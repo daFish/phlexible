@@ -17,7 +17,7 @@ use Phlexible\Component\Node\Event\NodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Node listener
+ * Node listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

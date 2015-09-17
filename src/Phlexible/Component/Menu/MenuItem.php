@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Menu;
 
 /**
- * Menu item
+ * Menu item.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

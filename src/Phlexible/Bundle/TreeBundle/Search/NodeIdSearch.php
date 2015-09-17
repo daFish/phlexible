@@ -18,7 +18,7 @@ use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Node ID search
+ * Node ID search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

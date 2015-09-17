@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\Domain;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Audio template
+ * Audio template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="mediaTemplate")
@@ -171,8 +171,8 @@ class AudioTemplate extends AbstractTemplate
     public function getParameters()
     {
         return array(
-            'audio_bitrate'    => $this->getAudioBitrate(),
-            'audio_channels'   => $this->getAudioChannels(),
+            'audio_bitrate' => $this->getAudioBitrate(),
+            'audio_channels' => $this->getAudioChannels(),
             'audio_samplebits' => $this->getAudioSamplebits(),
             'audio_samplerate' => $this->getAudioSamplerate(),
         );

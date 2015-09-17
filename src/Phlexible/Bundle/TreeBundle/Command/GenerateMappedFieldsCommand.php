@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Generate mapped fields command
+ * Generate mapped fields command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,7 +58,7 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
             $rii = new \RecursiveIteratorIterator(new TreeIterator($tree), \RecursiveIteratorIterator::SELF_FIRST);
             foreach ($rii as $node) {
                 if ($output->getVerbosity() > OutputInterface::VERBOSITY_NORMAL) {
-                    $output->writeln(get_class($node) . " {$node->getId()}");
+                    $output->writeln(get_class($node)." {$node->getId()}");
                 }
                 $versions = $node->getContentVersions();
                 if (!$versions) {
@@ -82,10 +82,10 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
                         }
 
                         $mappedField->setMapping($extractedFields);
-                        $batch++;
+                        ++$batch;
 
                         if ($output->getVerbosity() > OutputInterface::VERBOSITY_VERBOSE) {
-                            $output->writeln("  $version-$language " . json_encode($extractedFields));
+                            $output->writeln("  $version-$language ".json_encode($extractedFields));
                         }
 
                         if ($batch > $batchSize) {
@@ -101,4 +101,3 @@ class GenerateMappedFieldsCommand extends ContainerAwareCommand
         return 0;
     }
 }
-

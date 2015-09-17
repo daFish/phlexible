@@ -18,7 +18,7 @@ use Phlexible\Component\Volume\Model\FolderInterface;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * Folder
+ * Folder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -128,7 +128,7 @@ class Folder implements FolderInterface
     {
         return array(
             'type' => 'folder',
-            'id'   => $this->id,
+            'id' => $this->id,
         );
     }
 

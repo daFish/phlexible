@@ -17,7 +17,7 @@ use Phlexible\Component\Message\MessageEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Message poster
+ * Message poster.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,11 +12,11 @@
 namespace Phlexible\Bundle\GuiBundle\Security;
 
 use FOS\UserBundle\Security\UserProvider;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class ApiKeyUserProvider
+ * Class ApiKeyUserProvider.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

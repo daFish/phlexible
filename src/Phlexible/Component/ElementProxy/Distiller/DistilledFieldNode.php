@@ -15,7 +15,7 @@ use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 use Phlexible\Component\Elementtype\Field\AbstractField;
 
 /**
- * Distilled field node
+ * Distilled field node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

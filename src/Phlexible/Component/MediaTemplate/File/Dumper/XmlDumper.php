@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\File\Dumper;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * XML dumper
+ * XML dumper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

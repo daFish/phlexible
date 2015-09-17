@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Phlexible\Component\Volume\Model\FileInterface;
 
 /**
- * File usage manager
+ * File usage manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,7 +42,7 @@ class FileUsageManager
     }
 
     /**
-     * Return aggregated status
+     * Return aggregated status.
      *
      * @param FileInterface $file
      *
@@ -59,7 +59,7 @@ class FileUsageManager
     }
 
     /**
-     * Return highest aggregated status
+     * Return highest aggregated status.
      *
      * @param FileInterface $file
      *
@@ -83,7 +83,7 @@ class FileUsageManager
     }
 
     /**
-     * Return aggregated status
+     * Return aggregated status.
      *
      * @param FileInterface $file
      *
@@ -102,8 +102,8 @@ class FileUsageManager
         foreach ($qb->getQuery()->getScalarResult() as $row) {
             $usedIn[] = array(
                 'usage_type' => $row['usageType'],
-                'usage_id'   => $row['usageId'],
-                'status'     => $row['status'],
+                'usage_id' => $row['usageId'],
+                'status' => $row['status'],
             );
         }
 

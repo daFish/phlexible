@@ -16,7 +16,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Temp\MediaConverter\Format\Audio;
 
 /**
- * Audio specifier
+ * Audio specifier.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -32,6 +32,7 @@ class AudioSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
+     *
      * @param AudioTemplate $template
      */
     public function getExtension(TemplateInterface $template)
@@ -47,6 +48,7 @@ class AudioSpecifier implements SpecifierInterface
 
     /**
      * {@inheritdoc}
+     *
      * @param AudioTemplate $template
      */
     public function specify(TemplateInterface $template)

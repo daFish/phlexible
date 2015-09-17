@@ -26,7 +26,7 @@ use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Tree
+ * Tree.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -139,7 +139,7 @@ class Tree implements TreeInterface
                 array(
                     'workspace' => $this->treeContext->getWorkspace(),
                     'siterootId' => $this->siterootId,
-                    'parentId' => null
+                    'parentId' => null,
                 )
             );
 
@@ -170,9 +170,9 @@ class Tree implements TreeInterface
         if (!isset($this->nodes[$id])) {
             $node = $this->nodeManager->findOneBy(array(
                 'siterootId' => $this->siterootId,
-                'id'         => $id,
-                'locale'     => $this->treeContext->getLocale(),
-                'workspace'  => $this->treeContext->getWorkspace()
+                'id' => $id,
+                'locale' => $this->treeContext->getLocale(),
+                'workspace' => $this->treeContext->getWorkspace(),
             ));
 
             if ($node) {
@@ -201,7 +201,7 @@ class Tree implements TreeInterface
         }
 
         if ($this->treeContext->getWorkspace() === 'live') {
-            throw new \Exception("Not capable of fetching work node");
+            throw new \Exception('Not capable of fetching work node');
         }
 
         if ($node->getWorkspace() === 'live') {
@@ -211,7 +211,6 @@ class Tree implements TreeInterface
         }
 
         return $this->nodes[$id];
-
     }
 
     /**
@@ -244,9 +243,9 @@ class Tree implements TreeInterface
             $types,
             array(
                 'siterootId' => $this->siterootId,
-                'parentId'   => $node->getId(),
-                'locale'     => $this->treeContext->getLocale(),
-                'workspace'  => $this->treeContext->getWorkspace()
+                'parentId' => $node->getId(),
+                'locale' => $this->treeContext->getLocale(),
+                'workspace' => $this->treeContext->getWorkspace(),
             ),
             array('sort' => 'ASC')
         );
@@ -390,7 +389,7 @@ class Tree implements TreeInterface
     public function updateNode(NodeContext $node)
     {
         if ($node->getWorkspace() !== 'working') {
-            throw new \Exception("Can only update working node");
+            throw new \Exception('Can only update working node');
         }
 
         $this->nodeManager->updateNode($node->getNode());
@@ -428,7 +427,7 @@ class Tree implements TreeInterface
         $node = $this->mediator->createNodeForContentDocument($contentDocument);
         $node
             ->setSiterootId($this->siterootId)
-            ->setPath($parentNode->getPath() . '/' . 'xxx')
+            ->setPath($parentNode->getPath().'/'.'xxx')
             ->setParentPath($parentNode->getPath())
             ->setParentId($parentNode->getId())
             ->setAttributes($attributes)
@@ -438,7 +437,7 @@ class Tree implements TreeInterface
             ->setInNavigation($navigation)
             ->setNeedAuthentication($needAuthentication)
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime);
+            ->setCreatedAt(new \DateTime());
 
         $this->nodeManager->updateNode($node);
 
@@ -457,8 +456,7 @@ class Tree implements TreeInterface
         NodeContext $afterNode = null,
         NodeContext $sourceNode,
         $userId
-    )
-    {
+    ) {
         $sort = 0;
         $sortNodes = array();
         if ($parentNode->getSortMode() === 'free') {
@@ -487,7 +485,7 @@ class Tree implements TreeInterface
             ->setSortMode($sourceNode->getSortMode())
             ->setSortDir($sourceNode->getSortDir())
             ->setCreateUserId($userId)
-            ->setCreatedAt(new \DateTime);
+            ->setCreatedAt(new \DateTime());
 
         $this->nodeManager->updateNode($node, false);
 
@@ -499,7 +497,7 @@ class Tree implements TreeInterface
     }
 
     /**
-     * Reorders node after beforeNode
+     * Reorders node after beforeNode.
      *
      * {@inheritdoc}
      */

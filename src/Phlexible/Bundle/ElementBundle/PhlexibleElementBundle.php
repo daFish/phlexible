@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Element bundle
+ * Element bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

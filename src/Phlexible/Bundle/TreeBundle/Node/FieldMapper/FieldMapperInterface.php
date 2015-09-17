@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
- * Field mapper interface
+ * Field mapper interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

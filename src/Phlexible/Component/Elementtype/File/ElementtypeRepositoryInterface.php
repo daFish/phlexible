@@ -14,7 +14,7 @@ namespace Phlexible\Component\Elementtype\File;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
- * Elementtype repository interface
+ * Elementtype repository interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

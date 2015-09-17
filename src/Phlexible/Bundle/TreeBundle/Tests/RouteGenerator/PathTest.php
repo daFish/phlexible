@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Tests\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\Path;
 
 /**
- * Path test
+ * Path test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Entity\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * XML routes parser
+ * XML routes parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

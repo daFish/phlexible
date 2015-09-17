@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Task\Type;
 
 /**
- * General element task type
+ * General element task type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -27,7 +27,7 @@ class GeneralType extends AbstractType
     }
 
     /**
-     * Get required parameters for this task
+     * Get required parameters for this task.
      *
      * @return array
      */

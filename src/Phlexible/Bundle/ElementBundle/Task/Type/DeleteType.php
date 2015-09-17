@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Task\Type;
 
 /**
- * Delete element task type
+ * Delete element task type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -27,7 +27,7 @@ class DeleteType extends AbstractType
     }
 
     /**
-     * Get required parameters for this task
+     * Get required parameters for this task.
      *
      * @return array
      */
@@ -37,7 +37,7 @@ class DeleteType extends AbstractType
     }
 
     /**
-     * Return the task resource
+     * Return the task resource.
      *
      * @return string
      */

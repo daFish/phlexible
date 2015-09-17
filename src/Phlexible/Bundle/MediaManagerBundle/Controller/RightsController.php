@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Rights controller
+ * Rights controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/mediamanager/folder/{$folderId}")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 class RightsController extends Controller
 {
     /**
-     * List subjects
+     * List subjects.
      *
      * @param Request $request
      *
@@ -73,16 +73,16 @@ class RightsController extends Controller
 
             foreach ($acl->getEntries() as $ace) {
                 $identities[] = array(
-                    'id'             => $ace->getId(),
-                    'objectType'     => $acl->getObjectIdentity()->getType(),
-                    'objectId'       => $acl->getObjectIdentity()->getIdentifier(),
-                    'mask'           => $ace->getMask(),
-                    'stopMask'       => $ace->getStopMask(),
-                    'noInheritMask'  => $ace->getNoInheritMask(),
+                    'id' => $ace->getId(),
+                    'objectType' => $acl->getObjectIdentity()->getType(),
+                    'objectId' => $acl->getObjectIdentity()->getIdentifier(),
+                    'mask' => $ace->getMask(),
+                    'stopMask' => $ace->getStopMask(),
+                    'noInheritMask' => $ace->getNoInheritMask(),
                     'objectLanguage' => null,
-                    'securityType'   => $ace->getSecurityType(),
-                    'securityId'     => $ace->getSecurityIdentifier(),
-                    'securityName'   => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
+                    'securityType' => $ace->getSecurityType(),
+                    'securityId' => $ace->getSecurityIdentifier(),
+                    'securityName' => $resolver->resolveName($ace->getSecurityType(), $ace->getSecurityIdentifier()),
                 );
             }
         }
@@ -113,7 +113,7 @@ class RightsController extends Controller
 
                     $subjects = array();
                     foreach ($users as $user) {
-                        $subjects['uid__' . $user->getId()] = $user->getFirstname() . ' ' . $user->getLastname();
+                        $subjects['uid__'.$user->getId()] = $user->getFirstname().' '.$user->getLastname();
                     }
 
                     return $subjects;
@@ -124,11 +124,11 @@ class RightsController extends Controller
                     $subjects = array();
 
                     foreach ($groups as $group) {
-                        $subjects['gid__' . $group->getId()] = $group->getName();
+                        $subjects['gid__'.$group->getId()] = $group->getName();
                     }
 
                     return $subjects;
-                }
+                },
             )
         );
 
@@ -136,7 +136,7 @@ class RightsController extends Controller
     }
 
     /**
-     * Add subject
+     * Add subject.
      *
      * @param Request $request
      *
@@ -171,9 +171,9 @@ class RightsController extends Controller
         $rights = array();
         foreach ($contentRights as $right) {
             $rights[$right] = array(
-                'right'  => $right,
+                'right' => $right,
                 'status' => -1,
-                'info'   => '',
+                'info' => '',
             );
         }
 
@@ -183,31 +183,31 @@ class RightsController extends Controller
             $user = $this->get('phlexible_user.user_manager')->find($objectId);
 
             $subject = array(
-                'type'        => 'user',
+                'type' => 'user',
                 'object_type' => 'uid',
-                'object_id'   => $objectId,
-                'label'       => $user->getFirstname() . ' ' . $user->getLastname(),
-                'rights'      => $rights,
-                'original'    => $rights,
-                'above'       => $rights,
-                'language'    => '_all_',
-                'inherited'   => 0,
-                'restore'     => 0,
+                'object_id' => $objectId,
+                'label' => $user->getFirstname().' '.$user->getLastname(),
+                'rights' => $rights,
+                'original' => $rights,
+                'above' => $rights,
+                'language' => '_all_',
+                'inherited' => 0,
+                'restore' => 0,
             );
         } elseif ($objectType === 'gid') {
             $group = $this->get('phlexible_user.group_manager')->find($objectId);
 
             $subject = array(
-                'type'        => 'group',
+                'type' => 'group',
                 'object_type' => 'gid',
-                'object_id'   => $objectId,
-                'label'       => $group->getName(),
-                'rights'      => $rights,
-                'original'    => $rights,
-                'above'       => $rights,
-                'language'    => '_all_',
-                'inherited'   => 0,
-                'restore'     => 0,
+                'object_id' => $objectId,
+                'label' => $group->getName(),
+                'rights' => $rights,
+                'original' => $rights,
+                'above' => $rights,
+                'language' => '_all_',
+                'inherited' => 0,
+                'restore' => 0,
             );
         }
 

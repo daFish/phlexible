@@ -17,7 +17,7 @@ use Phlexible\Component\MessageFilter\Domain\Filter;
 use Phlexible\Component\MessageFilter\Model\FilterManagerInterface;
 
 /**
- * Doctrine filter manager
+ * Doctrine filter manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

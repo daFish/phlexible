@@ -15,7 +15,7 @@ use Phlexible\Component\Message\Domain\Message;
 use Phlexible\Component\Message\Handler\BufferHandler;
 
 /**
- * Buffer handler test
+ * Buffer handler test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class ProblemsControllerTest
+ * Class ProblemsControllerTest.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

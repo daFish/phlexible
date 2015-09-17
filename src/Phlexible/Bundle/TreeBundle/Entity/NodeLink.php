@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Node link
+ * Node link.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

@@ -15,7 +15,7 @@ use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Cache item event
+ * Cache item event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

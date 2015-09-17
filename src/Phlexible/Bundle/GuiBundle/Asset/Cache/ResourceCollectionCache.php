@@ -17,7 +17,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Filter phlexible baseurl and basepath
+ * Filter phlexible baseurl and basepath.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -29,7 +29,7 @@ class ResourceCollectionCache
     private $file;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $debug;
 

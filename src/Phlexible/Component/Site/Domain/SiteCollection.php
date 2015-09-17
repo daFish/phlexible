@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\Domain;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Site
+ * Site.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="sites")

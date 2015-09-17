@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
- * Pattern field mapper
+ * Pattern field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -35,7 +35,7 @@ class PatternFieldMapper implements FieldMapperInterface
         $replace = array();
         foreach ($mapping['fields'] as $mappingField) {
             $value = $valueExtractor->extract($content, $mappingField, $language);
-            $replace['$' . $mappingField['index']] = $value;
+            $replace['$'.$mappingField['index']] = $value;
         }
         $title = str_replace(array_keys($replace), array_values($replace), $pattern);
 

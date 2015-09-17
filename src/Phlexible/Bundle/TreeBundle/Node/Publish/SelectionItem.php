@@ -15,7 +15,7 @@ use Phlexible\Bundle\TeaserBundle\Entity\Teaser;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Selection item
+ * Selection item.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,12 +58,12 @@ class SelectionItem
 
     /**
      * @param \Phlexible\Component\Node\Model\NodeInterface|Teaser $target
-     * @param int                      $version
-     * @param string                   $language
-     * @param string                   $title
-     * @param bool                     $isInstance
-     * @param int                      $depth
-     * @param string                   $path
+     * @param int                                                  $version
+     * @param string                                               $language
+     * @param string                                               $title
+     * @param bool                                                 $isInstance
+     * @param int                                                  $depth
+     * @param string                                               $path
      */
     public function __construct($target, $version, $language, $title, $isInstance, $depth, $path)
     {
@@ -85,7 +85,7 @@ class SelectionItem
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isInstance()
     {
@@ -131,5 +131,4 @@ class SelectionItem
     {
         return $this->version;
     }
-
 }

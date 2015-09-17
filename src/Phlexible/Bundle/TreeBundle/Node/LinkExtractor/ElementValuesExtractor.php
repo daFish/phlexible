@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 
 /**
- * Element values extractor
+ * Element values extractor.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */
@@ -42,7 +42,7 @@ class ElementValuesExtractor implements ValuesExtractorInterface
                 $values[] = array(
                     'field' => $descriptor['name'],
                     'type' => $descriptor['type'],
-                    'value' => $descriptor['value']
+                    'value' => $descriptor['value'],
                 );
             }
         }

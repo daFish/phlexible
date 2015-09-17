@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\QueueBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class JobsControllerTest
+ * Class JobsControllerTest.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Twig_Environment;
 
 /**
- * Exception listener
+ * Exception listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -49,7 +49,7 @@ class ExceptionListener
      * @param Twig_Environment     $twig
      * @param TreeManagerInterface $treeManager
      * @param LoggerInterface      $logger
-     * @param boolean              $debug
+     * @param bool                 $debug
      */
     public function __construct(
         Twig_Environment $twig,
@@ -107,8 +107,8 @@ class ExceptionListener
 
         if ($this->twig->getLoader()->exists("::error/error-$code.html.twig")) {
             $template = "::error/error-$code.html.twig";
-        } elseif ($this->twig->getLoader()->exists("::error/error.html.twig")) {
-            $template = "::error/error.html.twig";
+        } elseif ($this->twig->getLoader()->exists('::error/error.html.twig')) {
+            $template = '::error/error.html.twig';
         } else {
             return;
         }

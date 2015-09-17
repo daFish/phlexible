@@ -15,7 +15,7 @@ namespace Phlexible\Component\MediaTemplate\Ffmpeg\Format\Video;
 use FFMpeg\Format\Video\DefaultVideo;
 
 /**
- * The Flv video format
+ * The Flv video format.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,7 +33,7 @@ class Flv extends DefaultVideo
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supportBFrames()
     {
@@ -41,7 +41,7 @@ class Flv extends DefaultVideo
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAvailableAudioCodecs()
     {
@@ -49,7 +49,7 @@ class Flv extends DefaultVideo
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getAvailableVideoCodecs()
     {

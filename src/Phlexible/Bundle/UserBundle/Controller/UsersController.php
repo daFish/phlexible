@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Users controller
+ * Users controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UsersController extends FOSRestController
 {
     /**
-     * Get users
+     * Get users.
      *
      * @param ParamFetcher $paramFetcher
      *
@@ -80,12 +80,12 @@ class UsersController extends FOSRestController
 
         return array(
             'users' => $userManager->findByExpression($expr, array($sort => $dir), $limit, $start),
-            'total' => $userManager->countByExpression($expr)
+            'total' => $userManager->countByExpression($expr),
         );
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @param string $userId
      *
@@ -116,7 +116,7 @@ class UsersController extends FOSRestController
     }
 
     /**
-     * Create user
+     * Create user.
      *
      * @param Request $request
      *
@@ -141,12 +141,13 @@ class UsersController extends FOSRestController
     }
 
     /**
-     * Update user
+     * Update user.
      *
      * @param Request $request
      * @param string  $userId
      *
      * @return ResultResponse
+     *
      * @throws \Exception
      *
      * @Security("is_granted('ROLE_USER_ADMIN_UPDATE')")
@@ -193,11 +194,11 @@ class UsersController extends FOSRestController
 
             if ($request->get('username') && $request->get('username') !== $user->getUsername()
                 && $userManager->checkUsername($request->get('username'))) {
-                throw new BadRequestHttpException('Username "' . $request->get('username') . '" already exists.');
+                throw new BadRequestHttpException('Username "'.$request->get('username').'" already exists.');
             }
             if ($request->get('email') && $request->get('email') !== $user->getEmail()
                 && $userManager->checkEmail($request->get('email'))) {
-                throw new BadRequestHttpException('Email "' . $request->get('email') . '" already exists.');
+                throw new BadRequestHttpException('Email "'.$request->get('email').'" already exists.');
             }
 
             if ($optin) {
@@ -230,7 +231,7 @@ class UsersController extends FOSRestController
     }
 
     /**
-     * Delete user
+     * Delete user.
      *
      * @param Request $request
      * @param string  $userId
@@ -260,7 +261,7 @@ class UsersController extends FOSRestController
     }
 
     /**
-     * Return roles for user
+     * Return roles for user.
      *
      * @param int $userId
      *
@@ -293,13 +294,13 @@ class UsersController extends FOSRestController
 
         return $this->handleView($this->view(
             array(
-                'roles' => $roleData
+                'roles' => $roleData,
             )
         ));
     }
 
     /**
-     * Return groups for user
+     * Return groups for user.
      *
      * @param int $userId
      *
@@ -331,7 +332,7 @@ class UsersController extends FOSRestController
 
         return $this->handleView($this->view(
             array(
-                'groups' => $groupData
+                'groups' => $groupData,
             )
         ));
     }
@@ -368,8 +369,8 @@ class UsersController extends FOSRestController
         $roleData = array();
         foreach ($roles as $role) {
             $roleData[] = array(
-                'id'     => $role,
-                'role'   => $role,
+                'id' => $role,
+                'role' => $role,
             );
         }
 

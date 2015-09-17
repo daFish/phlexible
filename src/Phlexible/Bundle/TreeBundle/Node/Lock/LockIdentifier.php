@@ -14,13 +14,12 @@ namespace Phlexible\Bundle\ElementBundle\Lock;
 use InvalidArgumentException;
 
 /**
- * Lock identifier
+ * Lock identifier.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class LockIdentifier implements LockIdentityInterface
 {
-
     /**
      * @var array
      */
@@ -32,7 +31,7 @@ class LockIdentifier implements LockIdentityInterface
     private $args = array();
 
     /**
-     * Create a new identifier based on the given parameters
+     * Create a new identifier based on the given parameters.
      *
      * @throws InvalidArgumentException
      */
@@ -50,7 +49,7 @@ class LockIdentifier implements LockIdentityInterface
     }
 
     /**
-     * Return dtring representation of this identifier
+     * Return dtring representation of this identifier.
      *
      * @return string
      */

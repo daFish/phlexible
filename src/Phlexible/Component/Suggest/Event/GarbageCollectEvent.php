@@ -15,7 +15,7 @@ use Phlexible\Component\Suggest\Domain\DataSourceValueBag;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Garbage collect event
+ * Garbage collect event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

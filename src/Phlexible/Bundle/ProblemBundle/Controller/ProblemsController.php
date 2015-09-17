@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Problems controller
+ * Problems controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ProblemsController extends FOSRestController
 {
     /**
-     * Get problems
+     * Get problems.
      *
      * @return JsonResponse
      *
@@ -51,12 +51,12 @@ class ProblemsController extends FOSRestController
 
         return array(
             'problems' => $problems,
-            'count'    => count($problems)
+            'count' => count($problems),
         );
     }
 
     /**
-     * Get problem
+     * Get problem.
      *
      * @param string $problemId
      *

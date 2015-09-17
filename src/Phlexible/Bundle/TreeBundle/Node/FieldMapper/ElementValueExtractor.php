@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
- * Element value extractor
+ * Element value extractor.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

@@ -17,7 +17,7 @@ use Phlexible\Component\Suggest\Domain\DataSource;
 use Phlexible\Component\Suggest\Model\DataSourceManagerInterface;
 
 /**
- * Doctrine data source manager
+ * Doctrine data source manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

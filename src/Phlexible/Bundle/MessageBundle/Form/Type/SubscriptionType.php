@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Subscription form type
+ * Subscription form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -39,7 +39,7 @@ class SubscriptionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MessageSubscription\Domain\Subscription',
+            'data_class' => 'Phlexible\Component\MessageSubscription\Domain\Subscription',
             'csrf_protection' => false,
         ));
     }

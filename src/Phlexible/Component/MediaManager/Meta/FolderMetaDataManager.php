@@ -18,7 +18,7 @@ use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 
 /**
- * Folder meta data manager
+ * Folder meta data manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

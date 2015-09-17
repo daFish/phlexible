@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Phlexible\Component\Node\Domain\Node;
 
 /**
- * Root node
+ * Root node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

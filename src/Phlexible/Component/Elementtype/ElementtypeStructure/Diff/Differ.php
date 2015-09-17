@@ -15,7 +15,7 @@ use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
- * Differ
+ * Differ.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

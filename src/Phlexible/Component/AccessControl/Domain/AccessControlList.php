@@ -18,7 +18,7 @@ use Phlexible\Component\AccessControl\Permission\PermissionCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Access control list
+ * Access control list.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,8 +48,7 @@ class AccessControlList implements \Countable
         PermissionCollection $permissions,
         ObjectIdentityInterface $objectIdentity,
         array $accessControlEntries = array()
-    )
-    {
+    ) {
         $this->permissions = $permissions;
         $this->objectIdentity = $objectIdentity;
         $this->entries = $accessControlEntries;
@@ -152,15 +151,14 @@ class AccessControlList implements \Countable
         $noInheritMask,
         $stopMask,
         $contentLanguage = null
-    )
-    {
+    ) {
         if ($contentLanguage === '_all_') {
             $contentLanguage = null;
         }
 
         $ace = null;
         foreach ($this->entries as $entry) {
-            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
+            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() === $securityIdentity->getType()) {
                 $ace = $entry;
                 break;
             }
@@ -194,7 +192,7 @@ class AccessControlList implements \Countable
     {
         $aces = null;
         foreach ($this->entries as $index => $entry) {
-            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() == $securityIdentity->getType()) {
+            if ($entry->getSecurityIdentifier() === $securityIdentity->getIdentifier() && $entry->getSecurityType() === $securityIdentity->getType()) {
                 unset($this->entries[$index]);
             }
         }

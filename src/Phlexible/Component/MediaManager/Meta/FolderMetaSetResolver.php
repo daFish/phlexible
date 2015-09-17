@@ -15,7 +15,7 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFolderInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetManagerInterface;
 
 /**
- * Folder meta set resolver
+ * Folder meta set resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

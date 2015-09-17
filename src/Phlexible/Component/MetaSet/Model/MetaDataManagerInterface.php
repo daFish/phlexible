@@ -14,14 +14,14 @@ namespace Phlexible\Component\MetaSet\Model;
 use Phlexible\Component\MetaSet\Domain\MetaSet;
 
 /**
- * Meta data manager interface
+ * Meta data manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface MetaDataManagerInterface
 {
     /**
-     * Load meta data
+     * Load meta data.
      *
      * @param MetaSet $metaSet
      * @param array   $identifiers

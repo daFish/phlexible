@@ -14,11 +14,10 @@ namespace Phlexible\Component\MetaSet\Domain;
 use Phlexible\Bundle\GuiBundle\Util\Uuid;
 use Phlexible\Component\MetaSet\Model\MetaSetFieldInterface;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Meta set field
+ * Meta set field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

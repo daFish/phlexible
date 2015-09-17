@@ -11,19 +11,19 @@
 
 namespace Phlexible\Bundle\DashboardBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add infobars pass
+ * Add infobars pass.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class AddInfobarsPass implements CompilerPassInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

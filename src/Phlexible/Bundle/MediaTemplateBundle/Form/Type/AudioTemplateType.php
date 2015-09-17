@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Audio template form type
+ * Audio template form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,7 +41,7 @@ class AudioTemplateType extends MediaTemplateType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MediaTemplate\Domain\AudioTemplate',
+            'data_class' => 'Phlexible\Component\MediaTemplate\Domain\AudioTemplate',
             'csrf_protection' => false,
         ));
     }

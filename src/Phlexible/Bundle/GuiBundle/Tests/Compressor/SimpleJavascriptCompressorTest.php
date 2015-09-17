@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use Phlexible\Bundle\GuiBundle\Compressor\SimpleJavascriptCompressor;
 
 /**
- * Simple Javascript compressor test
+ * Simple Javascript compressor test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -67,7 +67,7 @@ EOF;
         $js = $this->createJs();
 
         $stream = fopen('php://memory', 'r+');
-        fputs($stream, $js);
+        fwrite($stream, $js);
         rewind($stream);
 
         $compressed = stream_get_contents($this->compressor->compressStream($stream));

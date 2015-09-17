@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Event\ViewEvent;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * View frame listener
+ * View frame listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

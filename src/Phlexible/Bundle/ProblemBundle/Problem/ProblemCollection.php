@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ProblemBundle\Problem;
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 
 /**
- * Problem collection
+ * Problem collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

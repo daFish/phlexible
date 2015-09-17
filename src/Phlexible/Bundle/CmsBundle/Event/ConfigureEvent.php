@@ -15,7 +15,7 @@ use Phlexible\Bundle\CmsBundle\Configurator\Configuration;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Configure event
+ * Configure event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

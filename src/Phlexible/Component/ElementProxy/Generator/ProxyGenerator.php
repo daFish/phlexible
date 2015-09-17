@@ -18,7 +18,7 @@ use Phlexible\Component\ElementProxy\Distiller\HasChildNodesInterface;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
- * Php class generator
+ * Php class generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -54,7 +54,7 @@ class ProxyGenerator
         $this->distiller = $distiller;
         $this->writer = $writer;
         $this->namespacePrefix = $namespacePrefix;
-        $this->referenceNamespacePrefix = $namespacePrefix . 'Reference';
+        $this->referenceNamespacePrefix = $namespacePrefix.'Reference';
     }
 
     /**
@@ -81,7 +81,7 @@ class ProxyGenerator
             $nodes = $this->distiller->distill($elementtype);
 
             $classname = $this->normalizeName($elementtype->getName());
-            $namespace = $this->namespacePrefix . $classname;
+            $namespace = $this->namespacePrefix.$classname;
 
             $definitions[] = $this->makeMainClass(
                 $namespace,
@@ -113,12 +113,12 @@ class ProxyGenerator
     }
 
     /**
-     * @param string                   $namespace
-     * @param string                   $classname
-     * @param DistilledNodeCollection  $nodes
-     * @param string                   $nodeName
-     * @param string                   $dsId
-     * @param array                    $children
+     * @param string                  $namespace
+     * @param string                  $classname
+     * @param DistilledNodeCollection $nodes
+     * @param string                  $nodeName
+     * @param string                  $dsId
+     * @param array                   $children
      *
      * @return StructureClassDefinition
      */
@@ -131,12 +131,12 @@ class ProxyGenerator
     }
 
     /**
-     * @param string                   $namespace
-     * @param string                   $classname
-     * @param DistilledNodeCollection  $nodes
-     * @param string                   $nodeName
-     * @param string                   $dsId
-     * @param array                    $children
+     * @param string                  $namespace
+     * @param string                  $classname
+     * @param DistilledNodeCollection $nodes
+     * @param string                  $nodeName
+     * @param string                  $dsId
+     * @param array                   $children
      *
      * @return CollectionStructureClassDefinition
      */
@@ -156,7 +156,7 @@ class ProxyGenerator
     private function extractValues(DistilledNodeCollection $nodes)
     {
         $nodes = $nodes->filter(
-            function($node) {
+            function ($node) {
                 return !$node instanceof HasChildNodesInterface;
             }
         );
@@ -186,7 +186,7 @@ class ProxyGenerator
     private function generateSubClasses($namespace, DistilledNodeCollection $nodes)
     {
         $nodes = $nodes->filter(
-            function($node) {
+            function ($node) {
                 return $node instanceof HasChildNodesInterface;
             }
         );
@@ -210,7 +210,7 @@ class ProxyGenerator
             $collectionNamespace = !$node->isReferenced() ? $namespace : $this->referenceNamespacePrefix;
 
             if ($node->isRepeatable()) {
-                $collectionClassname = !$node->isReferenced() ? $normalizedCollectionName . $nodeName . 'Structure' : $nodeName . 'Structure';
+                $collectionClassname = !$node->isReferenced() ? $normalizedCollectionName.$nodeName.'Structure' : $nodeName.'Structure';
 
                 $collectionClasses[$collectionName][] = $this->makeCollectionStructureClass(
                     $collectionNamespace,
@@ -239,7 +239,7 @@ class ProxyGenerator
                 continue;
             }
             $data['collections'][$collectionName] = new CollectionDefinition(
-                ucfirst($this->normalizeName($collectionName)) . 'Collection',
+                ucfirst($this->normalizeName($collectionName)).'Collection',
                 $namespace,
                 lcfirst($this->normalizeName($collectionName)),
                 $collectionName,

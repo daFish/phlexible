@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Menu\Loader;
 
 /**
- * Loader exception
+ * Loader exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

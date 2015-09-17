@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Site\Site;
 
 /**
- * Site hostname mapper
+ * Site hostname mapper.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

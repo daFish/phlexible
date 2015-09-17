@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Poller;
 use DateTimeInterface;
 
 /**
- * Poller message collection
+ * Poller message collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

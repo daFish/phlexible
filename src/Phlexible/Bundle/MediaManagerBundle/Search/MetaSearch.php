@@ -11,16 +11,16 @@
 
 namespace Phlexible\Bundle\MediaManagerBundle\Search;
 
-use Phlexible\Component\MediaManager\Meta\FileMetaDataManager;
-use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Bundle\SearchBundle\Search\SearchResult;
 use Phlexible\Bundle\SearchBundle\SearchProvider\SearchProviderInterface;
 use Phlexible\Bundle\UserBundle\Model\UserManagerInterface;
+use Phlexible\Component\MediaManager\Meta\FileMetaDataManager;
+use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Meta search
+ * Meta search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -121,13 +121,13 @@ class MetaSearch implements SearchProviderInterface
                 $file->getName(),
                 $file->getCreateUser(),
                 $file->getCreatedAt(),
-                '/media/' . $file->getId() . '/_mm_small',
+                '/media/'.$file->getId().'/_mm_small',
                 'Mediamanager Meta Search',
                 array(
-                    'handler'    => 'media',
+                    'handler' => 'media',
                     'parameters' => array(
-                        'startFileId'     => $file->getId(),
-                        'startFolderPath' => '/' . implode('/', $folderPath)
+                        'startFileId' => $file->getId(),
+                        'startFolderPath' => '/'.implode('/', $folderPath),
                     ),
                 )
             );

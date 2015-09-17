@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 
 /**
- * Folder field link extractor
+ * Folder field link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -30,7 +30,7 @@ class FolderFieldLinkExtractor implements LinkExtractorInterface
         $value = $value['value'];
 
         return array(
-            array('type' => 'folder', 'target' => $value)
+            array('type' => 'folder', 'target' => $value),
         );
     }
 }

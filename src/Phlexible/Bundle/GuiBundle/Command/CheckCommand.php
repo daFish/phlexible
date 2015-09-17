@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Check command
+ * Check command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,7 +51,6 @@ class CheckCommand extends ContainerAwareCommand
         $output->writeln($formattedBlock);
 
         $output->write('> Checking phlexible requirements:'.PHP_EOL.'  ');
-
 
         $messages = array();
         foreach ($phlexibleRequirements->getRequirements() as $req) {
@@ -127,7 +126,7 @@ class CheckCommand extends ContainerAwareCommand
             return null;
         }
 
-        $errorMessage  = wordwrap($requirement->getTestMessage(), $lineSize - 3, PHP_EOL.'   ').PHP_EOL;
+        $errorMessage = wordwrap($requirement->getTestMessage(), $lineSize - 3, PHP_EOL.'   ').PHP_EOL;
         $errorMessage .= '   > '.wordwrap($requirement->getHelpText(), $lineSize - 5, PHP_EOL.'   > ').PHP_EOL;
 
         return $errorMessage;

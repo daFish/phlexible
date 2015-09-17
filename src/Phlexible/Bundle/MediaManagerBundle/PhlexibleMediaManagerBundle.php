@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaManagerBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Media manager bundle
+ * Media manager bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;
 
 /**
- * Audio preview
+ * Audio preview.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -72,18 +72,18 @@ class AudioPreviewer implements PreviewerInterface
 
         $spec = $this->specifier->specify($template);
         $extension = $this->specifier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_audio.' . $extension;
+        $cacheFilename = $this->cacheDir.'preview_audio.'.$extension;
         $this->transmuter->transmute($filePath, $spec, $cacheFilename);
 
         $file = new File($cacheFilename);
 
         $data = array(
-            'path'       => $cacheFilename,
-            'file'       => basename($cacheFilename),
-            'size'       => filesize($cacheFilename),
-            'template'   => $template->getKey(),
-            'format'     => $extension,
-            'mimetype'   => $file->getMimeType(),
+            'path' => $cacheFilename,
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
+            'template' => $template->getKey(),
+            'format' => $extension,
+            'mimetype' => $file->getMimeType(),
             'parameters' => $template->getParameters(),
         );
 
@@ -97,8 +97,8 @@ class AudioPreviewer implements PreviewerInterface
      */
     private function toCamelCase($value)
     {
-        $chunks    = explode('_', $value);
-        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+        $chunks = explode('_', $value);
+        $ucfirsted = array_map(function ($s) { return ucfirst($s); }, $chunks);
 
         return implode('', $ucfirsted);
     }

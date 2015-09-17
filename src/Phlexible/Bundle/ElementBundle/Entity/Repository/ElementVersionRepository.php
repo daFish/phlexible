@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 use Phlexible\Bundle\ElementBundle\Entity\Element;
 
 /**
- * Element version repository
+ * Element version repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

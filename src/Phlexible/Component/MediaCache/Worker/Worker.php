@@ -26,7 +26,7 @@ use Temp\MediaClassifier\Model\MediaType;
 use Temp\MediaConverter\Transmuter;
 
 /**
- * Cache worker
+ * Cache worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -151,7 +151,7 @@ class Worker implements WorkerInterface
             );
         }
 
-        $tempFilename = $this->tempDir . '/' . $cacheId . '.' . $this->specifier->getExtension($template);
+        $tempFilename = $this->tempDir.'/'.$cacheId.'.'.$this->specifier->getExtension($template);
 
         $filesystem = new Filesystem();
         if (!$filesystem->exists($this->tempDir)) {
@@ -169,7 +169,7 @@ class Worker implements WorkerInterface
                 return $this->applyError(
                     $cacheItem,
                     CacheItem::STATUS_INAPPLICABLE,
-                    'File type '.((string) $mediaType).' not convertable to ' . $template->getType() . ' template ' . $template->getKey() . '.',
+                    'File type '.((string) $mediaType).' not convertable to '.$template->getType().' template '.$template->getKey().'.',
                     $file->getPhysicalPath(),
                     $template,
                     $file
@@ -210,7 +210,7 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * Apply error to cache item
+     * Apply error to cache item.
      *
      * @param CacheItem             $cacheItem
      * @param string                $status
@@ -229,15 +229,15 @@ class Worker implements WorkerInterface
         TemplateInterface $template,
         ExtendedFileInterface $file)
     {
-        $error = $message . PHP_EOL
-            . PHP_EOL
-            . 'Template type: ' . $template->getType() . PHP_EOL
-            . 'Template key: ' . $template->getKey() . PHP_EOL
-            . 'File name: ' . $file->getName() . PHP_EOL
-            . 'File path: ' . $inputFilename . PHP_EOL
-            . 'File ID: ' . $file->getId() . ':' . $file->getVersion() . PHP_EOL
-            . 'File mime type: ' . $file->getMimeType() . PHP_EOL
-            . 'File media type: ' . strtolower($file->getMediaType());
+        $error = $message.PHP_EOL
+            .PHP_EOL
+            .'Template type: '.$template->getType().PHP_EOL
+            .'Template key: '.$template->getKey().PHP_EOL
+            .'File name: '.$file->getName().PHP_EOL
+            .'File path: '.$inputFilename.PHP_EOL
+            .'File ID: '.$file->getId().':'.$file->getVersion().PHP_EOL
+            .'File mime type: '.$file->getMimeType().PHP_EOL
+            .'File media type: '.strtolower($file->getMediaType());
 
         $cacheItem
             ->setCacheStatus($status)

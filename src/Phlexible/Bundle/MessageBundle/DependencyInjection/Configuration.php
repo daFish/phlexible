@@ -16,7 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Messages configuration
+ * Messages configuration.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -72,23 +72,23 @@ class Configuration implements ConfigurationInterface
             ->end()
             // Using the custom driver requires changing the manager services
             ->validate()
-                ->ifTrue(function($v){return 'custom' === $v['message_db_driver'] && 'phlexible_message.message_manager.default' === $v['service']['message_manager'];})
+                ->ifTrue(function ($v) {return 'custom' === $v['message_db_driver'] && 'phlexible_message.message_manager.default' === $v['service']['message_manager'];})
                 ->thenInvalid('You need to specify your own message manager service when using the "custom" driver.')
             ->end()
             ->validate()
-                ->ifTrue(function($v){return 'custom' === $v['filter_db_driver'] && 'phlexible_message.filter_manager.default' === $v['service']['filter_manager'];})
+                ->ifTrue(function ($v) {return 'custom' === $v['filter_db_driver'] && 'phlexible_message.filter_manager.default' === $v['service']['filter_manager'];})
                 ->thenInvalid('You need to specify your own filter manager service when using the "custom" driver.')
             ->end()
             ->validate()
-                ->ifTrue(function($v){return 'custom' === $v['subscription_db_driver'] && 'phlexible_message.subscription_manager.default' === $v['service']['subscription_manager'];})
+                ->ifTrue(function ($v) {return 'custom' === $v['subscription_db_driver'] && 'phlexible_message.subscription_manager.default' === $v['service']['subscription_manager'];})
                 ->thenInvalid('You need to specify your own subscription manager service when using the "custom" driver.')
             ->end()
             ->validate()
-                ->ifTrue(function($v){return 'elastica' === $v['message_db_driver'] && null === $v['elastica_index_name'];})
+                ->ifTrue(function ($v) {return 'elastica' === $v['message_db_driver'] && null === $v['elastica_index_name'];})
                 ->thenInvalid('You need to specify the elastica_index_name for the "elastica" driver.')
             ->end()
             ->validate()
-                ->ifTrue(function($v){return 'elastica' === $v['message_db_driver'] && null === $v['elastica_type_name'];})
+                ->ifTrue(function ($v) {return 'elastica' === $v['message_db_driver'] && null === $v['elastica_type_name'];})
                 ->thenInvalid('You need to specify the elastica_type_name for the "elastica" driver.')
             ->end();
 

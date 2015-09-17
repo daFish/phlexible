@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Checkbox field
+ * Checkbox field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Routing\Route as BaseRoute;
 
 /**
- * Route
+ * Route.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @ORM\Entity

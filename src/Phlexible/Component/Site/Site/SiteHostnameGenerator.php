@@ -14,7 +14,7 @@ namespace Phlexible\Component\Site\Site;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Site hostname generator
+ * Site hostname generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

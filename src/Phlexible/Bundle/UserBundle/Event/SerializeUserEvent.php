@@ -16,7 +16,7 @@ use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Serialize user event
+ * Serialize user event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,7 +33,7 @@ class SerializeUserEvent extends Event
     private $userData;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param UserInterface   $user
      * @param ArrayCollection $userData
@@ -45,7 +45,7 @@ class SerializeUserEvent extends Event
     }
 
     /**
-     * Return user
+     * Return user.
      *
      * @return UserInterface
      */
@@ -55,7 +55,7 @@ class SerializeUserEvent extends Event
     }
 
     /**
-     * Return user data
+     * Return user data.
      *
      * @return ArrayCollection
      */

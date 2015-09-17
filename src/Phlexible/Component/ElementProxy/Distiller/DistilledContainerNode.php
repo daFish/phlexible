@@ -14,7 +14,7 @@ namespace Phlexible\Component\ElementProxy\Distiller;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
- * Distilled container node
+ * Distilled container node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

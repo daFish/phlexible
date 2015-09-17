@@ -15,7 +15,7 @@ use Phlexible\Component\MetaSet\Domain\MetaSetCollection;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Meta set repository interface
+ * Meta set repository interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

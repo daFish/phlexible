@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tree controller
+ * Tree controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/elementtypes/tree")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TreeController extends Controller
 {
     /**
-     * Save an Element Type data tree
+     * Save an Element Type data tree.
      *
      * @param Request $request
      *

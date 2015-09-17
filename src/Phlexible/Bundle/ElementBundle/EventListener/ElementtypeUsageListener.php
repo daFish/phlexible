@@ -20,7 +20,7 @@ use Phlexible\Component\Tree\WorkingTreeContext;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Elementtype usage listeners
+ * Elementtype usage listeners.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -84,7 +84,7 @@ class ElementtypeUsageListener
 
             $event->addUsage(
                 new Usage(
-                    $event->getElementtype()->getType() . ' element',
+                    $event->getElementtype()->getType().' element',
                     'element',
                     $node->getId(),
                     $node->getField('backend', $language),

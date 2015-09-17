@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MediaTypeBundle\Compiler;
 use Temp\MediaClassifier\Model\MediaTypeCollection;
 
 /**
- * PHP compiler
+ * PHP compiler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

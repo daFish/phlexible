@@ -15,7 +15,7 @@ use Phlexible\Component\NodeType\Domain\NodeTypeConstraint;
 use Phlexible\Component\NodeType\NodeTypeConstraintsResolver;
 
 /**
- * Node type constraint resolver test
+ * Node type constraint resolver test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -68,7 +68,7 @@ class NodeTypeConstraintsResolverTest extends \PHPUnit_Framework_TestCase
         $site = $this->prophesize('Phlexible\Component\Site\Domain\Site');
         $site->getNodeConstraints()->willReturn(array(
             'homepage' => new NodeTypeConstraint('homepage', true, array('article')),
-            'article'  => new NodeTypeConstraint('article', false),
+            'article' => new NodeTypeConstraint('article', false),
         ));
 
         $siteManager = $this->prophesize('Phlexible\Component\Site\Model\SiteManagerInterface');
@@ -90,7 +90,7 @@ class NodeTypeConstraintsResolverTest extends \PHPUnit_Framework_TestCase
         $site = $this->prophesize('Phlexible\Component\Site\Domain\Site');
         $site->getNodeConstraints()->willReturn(array(
             'homepage' => new NodeTypeConstraint('homepage', true, array('article')),
-            'article'  => new NodeTypeConstraint('article', true),
+            'article' => new NodeTypeConstraint('article', true),
         ));
 
         $siteManager = $this->prophesize('Phlexible\Component\Site\Model\SiteManagerInterface');

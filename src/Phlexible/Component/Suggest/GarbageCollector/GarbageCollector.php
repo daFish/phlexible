@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Garbage collector for datas ource values.
- * - unused values can be removed
+ * - unused values can be removed.
  *
  * @author Phillip Look <pl@brainbits.net>
  */
@@ -54,8 +54,8 @@ class GarbageCollector
     /**
      * Start garbage collection.
      *
-     * @param string  $mode
-     * @param boolean $pretend
+     * @param string $mode
+     * @param bool   $pretend
      *
      * @return array
      */
@@ -151,9 +151,9 @@ class GarbageCollector
         $this->dispatcher->dispatch(SuggestEvents::GARBAGE_COLLECT, $event);
 
         return array(
-            'active'   => $activeValues,
+            'active' => $activeValues,
             'inactive' => $inactiveValues,
-            'remove'   => $removeValues,
+            'remove' => $removeValues,
         );
     }
 }

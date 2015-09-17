@@ -17,7 +17,7 @@ use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Siteroot enhancer
+ * Siteroot enhancer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

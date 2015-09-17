@@ -13,12 +13,12 @@ namespace Phlexible\Bundle\ElementBundle\EventListener;
 
 use Phlexible\Bundle\ElementBundle\Util\SuggestFieldUtil;
 use Phlexible\Bundle\ElementBundle\Util\SuggestMetaFieldUtil;
-use Phlexible\Component\Suggest\SuggestEvents;
 use Phlexible\Component\Suggest\Event\GarbageCollectEvent;
+use Phlexible\Component\Suggest\SuggestEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Datasource listener
+ * Datasource listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

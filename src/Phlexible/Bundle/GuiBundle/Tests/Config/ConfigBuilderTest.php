@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Config\ConfigBuilder;
 use Prophecy\Argument;
 
 /**
- * Config builder test
+ * Config builder test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

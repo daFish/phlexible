@@ -45,7 +45,7 @@ class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
 {
     public function testVoteIsAbstainedForNonDomainObject()
     {
-        $object = new \stdClass;
+        $object = new \stdClass();
         $permissionRegistry = new PermissionRegistry();
 
         $accessManager = $this->prophesize('Phlexible\Component\AccessControl\Model\AccessManagerInterface');

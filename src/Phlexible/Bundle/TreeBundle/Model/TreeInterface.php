@@ -17,19 +17,19 @@ use Phlexible\Component\Node\Model\NodeInterface;
 use Phlexible\Component\Tree\TreeContextInterface;
 
 /**
- * Tree interface
+ * Tree interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface TreeInterface
 {
-    const SORT_MODE_TITLE       = 'title';
-    const SORT_MODE_CREATEDATE  = 'createdate';
+    const SORT_MODE_TITLE = 'title';
+    const SORT_MODE_CREATEDATE = 'createdate';
     const SORT_MODE_PUBLISHDATE = 'publishdate';
-    const SORT_MODE_CUSTOMDATE  = 'customdate';
-    const SORT_MODE_FREE        = 'free';
+    const SORT_MODE_CUSTOMDATE = 'customdate';
+    const SORT_MODE_FREE = 'free';
 
-    const SORT_DIR_ASC  = 'asc';
+    const SORT_DIR_ASC = 'asc';
     const SORT_DIR_DESC = 'desc';
 
     /**
@@ -43,14 +43,14 @@ interface TreeInterface
     public function getSiterootId();
 
     /**
-     * Return the root node
+     * Return the root node.
      *
      * @return NodeInterface
      */
     public function getRoot();
 
     /**
-     * Return a node
+     * Return a node.
      *
      * @param int $id
      *
@@ -59,7 +59,7 @@ interface TreeInterface
     public function get($id);
 
     /**
-     * Return a node
+     * Return a node.
      *
      * @param int $id
      *
@@ -77,7 +77,7 @@ interface TreeInterface
     public function has($id);
 
     /**
-     * Return child nodes
+     * Return child nodes.
      *
      * @param NodeContext $node
      *
@@ -95,7 +95,7 @@ interface TreeInterface
     public function hasChildren(NodeContext $node);
 
     /**
-     * Return parent node
+     * Return parent node.
      *
      * @param NodeContext $node
      *
@@ -104,7 +104,7 @@ interface TreeInterface
     public function getParent(NodeContext $node);
 
     /**
-     * Return ID path array
+     * Return ID path array.
      *
      * @param NodeContext $node
      *
@@ -113,7 +113,7 @@ interface TreeInterface
     public function getIdPath(NodeContext $node);
 
     /**
-     * Return node path array
+     * Return node path array.
      *
      * @param NodeContext $node
      *
@@ -156,7 +156,7 @@ interface TreeInterface
     public function updateNode(NodeContext $node);
 
     /**
-     * Create a node
+     * Create a node.
      *
      * @param NodeContext $parentNode
      * @param NodeContext $afterNode
@@ -198,7 +198,7 @@ interface TreeInterface
     );
 
     /**
-     * Reorder node
+     * Reorder node.
      *
      * @param NodeContext $node
      * @param NodeContext $beforeNode
@@ -208,7 +208,7 @@ interface TreeInterface
     public function reorder(NodeContext $node, NodeContext $beforeNode);
 
     /**
-     * Reorder node
+     * Reorder node.
      *
      * @param NodeContext $node
      * @param array       $sortIds
@@ -218,7 +218,7 @@ interface TreeInterface
     public function reorderChildren(NodeContext $node, array $sortIds);
 
     /**
-     * Move node
+     * Move node.
      *
      * @param NodeContext $node
      * @param NodeContext $toNode
@@ -227,7 +227,7 @@ interface TreeInterface
     public function move(NodeContext $node, NodeContext $toNode, $uid);
 
     /**
-     * Delete node
+     * Delete node.
      *
      * @param NodeContext $node
      * @param string      $userId
@@ -235,14 +235,11 @@ interface TreeInterface
      */
     public function delete(NodeContext $node, $userId, $comment = null);
 
-
-
-
-
-
-
     public function isInstance(NodeContext $node);
+
     public function isInstanceMaster(NodeContext $node);
+
     public function getPublishedLanguages(NodeContext $node);
+
     public function isAsync(NodeContext $node);
 }

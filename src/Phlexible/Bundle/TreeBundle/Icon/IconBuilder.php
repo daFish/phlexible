@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Icon;
 use Symfony\Component\Config\FileLocatorInterface;
 
 /**
- * Icon builder
+ * Icon builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -41,7 +41,7 @@ class IconBuilder
     }
 
     /**
-     * Create parameter icon
+     * Create parameter icon.
      *
      * @param string $filename
      * @param array  $params
@@ -70,7 +70,7 @@ class IconBuilder
             $filename = $fallback;
         }
 
-        $cacheFilename = $this->cacheDir . '/' . md5(basename($filename) . '__' . json_encode($overlays)) . '.png';
+        $cacheFilename = $this->cacheDir.'/'.md5(basename($filename).'__'.json_encode($overlays)).'.png';
 
         if (1 || !file_exists($cacheFilename) || (time() - filemtime($cacheFilename)) > 60 * 60 * 24 * 30) {
             $target = imagecreate(18, 18);
@@ -86,7 +86,7 @@ class IconBuilder
             if (!empty($overlays['status'])) {
                 // apply status overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'status_' . $overlays['status'] . '.gif')
+                    $this->locator->locate($overlayDir.'status_'.$overlays['status'].'.gif')
                 );
                 imagecopy($target, $overlayIcon, 10, 10, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -95,7 +95,7 @@ class IconBuilder
             if (!empty($overlays['instance'])) {
                 // apply alias overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'instance.gif')
+                    $this->locator->locate($overlayDir.'instance.gif')
                 );
                 imagecopy($target, $overlayIcon, 0, 10, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);
@@ -104,7 +104,7 @@ class IconBuilder
             if (!empty($overlays['lock'])) {
                 // apply lock overlay
                 $overlayIcon = imagecreatefromgif(
-                    $this->locator->locate($overlayDir . 'lock.gif')
+                    $this->locator->locate($overlayDir.'lock.gif')
                 );
                 imagecopy($target, $overlayIcon, 0, 0, 0, 0, 8, 8);
                 imagedestroy($overlayIcon);

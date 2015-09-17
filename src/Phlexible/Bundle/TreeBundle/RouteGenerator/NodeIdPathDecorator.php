@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node ID path generator
+ * Node ID path generator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -39,6 +39,6 @@ class NodeIdPathDecorator implements PathDecoratorInterface
     public function decoratePath(Path $path, NodeContext $node, $language)
     {
         // add tid and postfix
-        $path->append($this->separator . $node->getId());
+        $path->append($this->separator.$node->getId());
     }
 }

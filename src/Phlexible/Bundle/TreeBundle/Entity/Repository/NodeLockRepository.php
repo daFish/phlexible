@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Entity\NodeLock;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node lock repository
+ * Node lock repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

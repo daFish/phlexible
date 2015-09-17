@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 
 /**
- * Values extractor interface
+ * Values extractor interface.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

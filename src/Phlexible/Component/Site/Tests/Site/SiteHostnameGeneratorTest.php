@@ -16,7 +16,7 @@ use Phlexible\Component\Site\Site\SiteHostnameGenerator;
 use Phlexible\Component\Site\Site\SiteHostnameMapper;
 
 /**
- * Site hostname generator test
+ * Site hostname generator test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

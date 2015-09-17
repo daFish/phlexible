@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Language path decorator
+ * Language path decorator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -26,6 +26,6 @@ class LanguagePathDecorator implements PathDecoratorInterface
     public function decoratePath(Path $path, NodeContext $node, $language)
     {
         // add language
-        $path->prepend('/' . $language);
+        $path->prepend('/'.$language);
     }
 }

@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Node context event
+ * Node context event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,7 +35,7 @@ class NodeContextEvent extends Event
     }
 
     /**
-     * Return node
+     * Return node.
      *
      * @return NodeContext
      */

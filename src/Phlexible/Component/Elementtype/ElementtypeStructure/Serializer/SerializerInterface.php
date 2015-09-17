@@ -14,14 +14,14 @@ namespace Phlexible\Component\Elementtype\ElementtypeStructure\Serializer;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
 
 /**
- * Serializer interface
+ * Serializer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface SerializerInterface
 {
     /**
-     * Serialize structure
+     * Serialize structure.
      *
      * @param ElementtypeStructure $elementtypeStructure
      *

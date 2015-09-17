@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Info controller
+ * Info controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/dashboard/info")
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 class InfoController extends Controller
 {
     /**
-     * Return info
+     * Return info.
      *
      * @param Request $request
      *
@@ -56,7 +56,7 @@ class InfoController extends Controller
         $projectTitle = $this->container->getParameter('phlexible_gui.project.title');
         $projectVersion = $this->container->getParameter('phlexible_gui.project.version');
 
-        return array('Project:', $projectTitle . ' ' . $projectVersion);
+        return array('Project:', $projectTitle.' '.$projectVersion);
     }
 
     /**
@@ -67,7 +67,7 @@ class InfoController extends Controller
         $env = $this->container->getParameter('kernel.environment');
         $debug = $this->container->getParameter('kernel.debug');
 
-        return array('Env:', $env . ($debug ? ' [DEBUG]' : ''));
+        return array('Env:', $env.($debug ? ' [DEBUG]' : ''));
     }
 
     /**
@@ -79,7 +79,7 @@ class InfoController extends Controller
     {
         $serverName = $request->server->get('SERVER_NAME');
 
-        return array('Host:', $serverName . ' [' . PHP_SAPI . ']');
+        return array('Host:', $serverName.' ['.PHP_SAPI.']');
     }
 
     /**
@@ -94,7 +94,7 @@ class InfoController extends Controller
         $db = $connection->getDatabase();
         $dbName = $connection->getDriver()->getName();
 
-        return array('Default Database:', $dbHost . ' / ' . $db . ' [' . $dbName . ']');
+        return array('Default Database:', $dbHost.' / '.$db.' ['.$dbName.']');
     }
 
     /**
@@ -107,7 +107,7 @@ class InfoController extends Controller
         $sessionId = $request->getSession()->getId();
         $remoteAddress = $request->server->get('REMOTE_ADDR');
 
-        return array('Session:', $sessionId . ' [' . $remoteAddress . ']');
+        return array('Session:', $sessionId.' ['.$remoteAddress.']');
     }
 
     /**
@@ -118,7 +118,7 @@ class InfoController extends Controller
         $username = $this->getUser()->getUsername();
         $roles = $this->getUser()->getRoles();
 
-        return array('User:', $username . ' [' . implode(', ', $roles) . ']');
+        return array('User:', $username.' ['.implode(', ', $roles).']');
     }
 
     /**

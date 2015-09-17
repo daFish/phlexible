@@ -16,14 +16,14 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 /**
- * Exception listener
+ * Exception listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class ExceptionListener extends ContainerAware
 {
     /**
-     * on Kernel Exception
+     * on Kernel Exception.
      *
      * @param GetResponseForExceptionEvent $event
      */

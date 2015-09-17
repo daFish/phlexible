@@ -21,7 +21,7 @@ use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * XML loader
+ * XML loader.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -116,6 +116,7 @@ class PuliElementtypeRepository implements ElementtypeRepositoryInterface
      * @param string $elementtypeId
      *
      * @return Document
+     *
      * @throws \Exception
      */
     private function loadElementtypeDom($elementtypeId)

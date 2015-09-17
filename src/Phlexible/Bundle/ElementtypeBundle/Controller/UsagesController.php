@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Usage controller
+ * Usage controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -30,9 +30,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UsagesController extends FOSRestController
 {
     /**
-     * Return Usage of an Element Type
+     * Return Usage of an Element Type.
      *
      * @param string $elementtypeId
+     *
      * @return Response
      *
      * @Rest\View
@@ -58,17 +59,17 @@ class UsagesController extends FOSRestController
         $usages = array();
         foreach ($usageManager->getUsage($elementtype) as $usage) {
             $usages[] = array(
-                'type'           => $usage->getType(),
-                'as'             => $usage->getAs(),
-                'id'             => $usage->getId(),
-                'title'          => $usage->getTitle(),
+                'type' => $usage->getType(),
+                'as' => $usage->getAs(),
+                'id' => $usage->getId(),
+                'title' => $usage->getTitle(),
                 'latest_version' => $usage->getLatestVersion(),
             );
         }
 
         return array(
             'usages' => $usages,
-            'total'  => count($usages)
+            'total' => count($usages),
         );
     }
 }

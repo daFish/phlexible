@@ -20,7 +20,7 @@ use Phlexible\Bundle\TreeBundle\TreeEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Route manager
+ * Route manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

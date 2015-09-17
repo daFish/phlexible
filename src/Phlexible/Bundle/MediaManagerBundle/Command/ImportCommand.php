@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Import command
+ * Import command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -88,7 +88,7 @@ class ImportCommand extends ContainerAwareCommand
                 '465d7b7b-5371-11e4-b400-001e677a6817'
             );
 
-            $output->write($sourceFile . ' imported');
+            $output->write($sourceFile.' imported');
 
             if ($delete) {
                 if (unlink($sourceFile)) {
@@ -109,7 +109,7 @@ class ImportCommand extends ContainerAwareCommand
 
     /**
      * @param OutputInterface $output
-     * @param string           $sourceDir
+     * @param string          $sourceDir
      * @param FolderInterface $targetFolder
      *
      * @return OutputInterface
@@ -143,7 +143,7 @@ class ImportCommand extends ContainerAwareCommand
                 }
             }
 
-            $output->writeln($sourceDir . ' imported');
+            $output->writeln($sourceDir.' imported');
         } catch (\Exception $e) {
             $output->writeln('Could not import directory:');
             $output->writeln($e->getMessage());
@@ -152,5 +152,4 @@ class ImportCommand extends ContainerAwareCommand
 
         return $output;
     }
-
 }

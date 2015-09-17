@@ -18,7 +18,7 @@ use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
- * XML parser
+ * XML parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -91,7 +91,7 @@ class XmlParser implements ParserInterface
                     foreach ($fieldNodes as $fieldNode) {
                         /* @var $fieldNode Element */
                         $field = array(
-                            'dsId'  => (string) $fieldNode->getAttribute('dsId'),
+                            'dsId' => (string) $fieldNode->getAttribute('dsId'),
                             'title' => (string) $fieldNode->getAttribute('title'),
                         );
                         if ($fieldNode->hasAttribute('index')) {
@@ -105,7 +105,7 @@ class XmlParser implements ParserInterface
                 }
                 $mappings[$key] = array(
                     'pattern' => $pattern,
-                    'fields'  => $fields,
+                    'fields' => $fields,
                 );
             }
         }
@@ -157,10 +157,10 @@ class XmlParser implements ParserInterface
     }
 
     /**
-     * @param Element                  $node
-     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure     $elementtypeStructure
-     * @param ElementtypeStructureNode $parentNode
-     * @param bool                     $isReferenced
+     * @param Element                                                      $node
+     * @param \Phlexible\Component\Elementtype\Domain\ElementtypeStructure $elementtypeStructure
+     * @param ElementtypeStructureNode                                     $parentNode
+     * @param bool                                                         $isReferenced
      */
     private function loadNode(Element $node, ElementtypeStructure $elementtypeStructure, ElementtypeStructureNode $parentNode = null, $isReferenced = false)
     {

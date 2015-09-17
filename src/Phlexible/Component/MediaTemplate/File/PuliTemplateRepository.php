@@ -19,7 +19,7 @@ use Puli\Repository\Resource\FileResource;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Puli template repository
+ * Puli template repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

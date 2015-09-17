@@ -15,7 +15,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Temp\MediaConverter\Format\Specification;
 
 /**
- * Specifier interface
+ * Specifier interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,7 +31,7 @@ interface SpecifierInterface
     public function accept(TemplateInterface $template);
 
     /**
-     * Determine extension from template
+     * Determine extension from template.
      *
      * @param TemplateInterface $template
      *

@@ -11,13 +11,13 @@
 
 namespace Phlexible\Bundle\ElementtypeBundle\Controller;
 
-use Phlexible\Component\Elementtype\ElementtypeService;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructure;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
+use Phlexible\Component\Elementtype\ElementtypeService;
 
 /**
- * Class Serializer
+ * Class Serializer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -69,33 +69,33 @@ class Serializer
         );
 
         $data = array(
-            'text'               => $elementtype->getTitle($language)
-                . ' [v' . $elementtype->getRevision() . ', '
-                . $elementtype->getType() . ']',
-            'id'                 => md5(serialize($rootNode)),
-            'dsId'               => $rootDsId,
-            'elementtypeId'      => $elementtype->getId(),
+            'text' => $elementtype->getTitle($language)
+                .' [v'.$elementtype->getRevision().', '
+                .$elementtype->getType().']',
+            'id' => md5(serialize($rootNode)),
+            'dsId' => $rootDsId,
+            'elementtypeId' => $elementtype->getId(),
             'elementtypeVersion' => $elementtype->getRevision(),
-            'icon'               => '/bundles/phlexibleelementtype/elementtypes/' . $elementtype->getIcon(),
-            'cls'                => 'p-elementtypes-type-' . $type,
-            'leaf'               => false,
-            'expanded'           => true,
-            'type'               => $rootType,
-            'allowDrag'          => ($type == Elementtype::TYPE_REFERENCE),
-            'allowDrop'          => $mode == 'edit',
-            'editable'           => $mode == 'edit',
-            'properties'         => array(
-                'title'             => $elementtype->getTitle($language),
-                'referenceTitle'    => "{$elementtype->getTitle($language)} [v{$elementtype->getRevision()}]",
-                'uniqueId'          => $elementtype->getUniqueId(),
-                'icon'              => $elementtype->getIcon(),
-                'hideChildren'      => $elementtype->getHideChildren() ? 'on' : '',
-                'defaultTab'        => $elementtype->getDefaultTab(),
+            'icon' => '/bundles/phlexibleelementtype/elementtypes/'.$elementtype->getIcon(),
+            'cls' => 'p-elementtypes-type-'.$type,
+            'leaf' => false,
+            'expanded' => true,
+            'type' => $rootType,
+            'allowDrag' => ($type === Elementtype::TYPE_REFERENCE),
+            'allowDrop' => $mode === 'edit',
+            'editable' => $mode === 'edit',
+            'properties' => array(
+                'title' => $elementtype->getTitle($language),
+                'referenceTitle' => "{$elementtype->getTitle($language)} [v{$elementtype->getRevision()}]",
+                'uniqueId' => $elementtype->getUniqueId(),
+                'icon' => $elementtype->getIcon(),
+                'hideChildren' => $elementtype->getHideChildren() ? 'on' : '',
+                'defaultTab' => $elementtype->getDefaultTab(),
                 'defaultContentTab' => $elementtype->getDefaultContentTab(),
-                'type'              => $type,
-                'template'          => $elementtype->getTemplate(),
-                'metaset'           => $elementtype->getMetaSetId(),
-                'comment'           => $elementtype->getComment(),
+                'type' => $type,
+                'template' => $elementtype->getTemplate(),
+                'metaset' => $elementtype->getMetaSetId(),
+                'comment' => $elementtype->getComment(),
             ),
             'mappings' => $elementtype->getMappings(),
             'children' => $this->serializeNodes(
@@ -105,14 +105,14 @@ class Serializer
                 $mode,
                 false,
                 true
-            )
+            ),
         );
 
         return $data;
     }
 
     /**
-     * Build an Element Type data tree
+     * Build an Element Type data tree.
      *
      * @param ElementtypeStructure       $structure
      * @param ElementtypeStructureNode[] $nodes
@@ -137,27 +137,27 @@ class Serializer
             /* @var $node ElementtypeStructureNode */
 
             $tmp = array(
-                'id'         => md5(serialize($node)),
-                'text'       => $node->getLabel('fieldLabel', $language) . ' (' . $node->getName() . ')',
-                'dsId'       => $node->getDsId(),
-                'cls'        => 'p-elementtypes-node p-elementtypes-type-' . $node->getType()
-                    . ($reference ? ' p-elementtypes-reference' : ''),
-                'leaf'       => true,
-                'expanded'   => false,
-                'type'       => $node->getType(),
-                'reference'  => $reference,
-                'allowDrag'  => $allowDrag,
-                'allowDrop'  => $mode == 'edit' && !$reference,
-                'editable'   => $mode == 'edit' || !$reference,
+                'id' => md5(serialize($node)),
+                'text' => $node->getLabel('fieldLabel', $language).' ('.$node->getName().')',
+                'dsId' => $node->getDsId(),
+                'cls' => 'p-elementtypes-node p-elementtypes-type-'.$node->getType()
+                    .($reference ? ' p-elementtypes-reference' : ''),
+                'leaf' => true,
+                'expanded' => false,
+                'type' => $node->getType(),
+                'reference' => $reference,
+                'allowDrag' => $allowDrag,
+                'allowDrop' => $mode === 'edit' && !$reference,
+                'editable' => $mode === 'edit' || !$reference,
                 'properties' => array(
-                    'title'   => $node->getName(),
-                    'type'    => $node->getType(),
+                    'title' => $node->getName(),
+                    'type' => $node->getType(),
                     'comment' => $node->getComment(),
-                    'image'   => '',
+                    'image' => '',
                 ),
-                'configuration'    => $node->getConfiguration(),
-                'labels'           => $node->getLabels(),
-                'validation'       => $node->getValidation()
+                'configuration' => $node->getConfiguration(),
+                'labels' => $node->getLabels(),
+                'validation' => $node->getValidation(),
             );
 
             if ($structure->hasChildNodes($node->getDsId())) {
@@ -177,7 +177,7 @@ class Serializer
                 $children = $structure->getChildNodes($node->getDsId());
                 $referenceRoot = $children[0];
 
-                $tmp['text'] = $referenceElementtype->getName() . ' [v' . $referenceElementtype->getRevision() . ']';
+                $tmp['text'] = $referenceElementtype->getName().' [v'.$referenceElementtype->getRevision().']';
                 $tmp['leaf'] = false;
                 $tmp['expanded'] = true;
                 $tmp['reference'] = array('refID' => $referenceElementtype->getId(), 'refVersion' => $referenceElementtype->getRevision());
@@ -199,5 +199,4 @@ class Serializer
 
         return $return;
     }
-
 }

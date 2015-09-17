@@ -18,7 +18,7 @@ use Phlexible\Component\Message\Domain\Message;
 use Webmozart\Expression\Expression;
 
 /**
- * File repository
+ * File repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,7 +43,7 @@ class FileRepository extends EntityRepository
     }
 
     /**
-     * Find messages by expression
+     * Find messages by expression.
      *
      * @param Expression $expression
      * @param array      $orderBy
@@ -78,7 +78,7 @@ class FileRepository extends EntityRepository
     }
 
     /**
-     * Count messages by expression
+     * Count messages by expression.
      *
      * @param Expression $expression
      *
@@ -96,7 +96,7 @@ class FileRepository extends EntityRepository
     }
 
     /**
-     * Find message by expression
+     * Find message by expression.
      *
      * @param Expression $expression
      * @param array      $orderBy
@@ -120,7 +120,7 @@ class FileRepository extends EntityRepository
     }
 
     /**
-     * Apply expression
+     * Apply expression.
      *
      * @param QueryBuilder $queryBuilder
      * @param Expression   $expression

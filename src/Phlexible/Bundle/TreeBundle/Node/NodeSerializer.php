@@ -21,7 +21,7 @@ use Phlexible\Component\NodeType\Model\NodeTypeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Tree interface
+ * Tree interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -74,7 +74,7 @@ class NodeSerializer
     }
 
     /**
-     * Serialize nodes
+     * Serialize nodes.
      *
      * @param NodeContext[] $nodes
      * @param string        $language
@@ -97,7 +97,7 @@ class NodeSerializer
     }
 
     /**
-     * Serialize node
+     * Serialize node.
      *
      * @param NodeContext $node
      * @param string      $language
@@ -138,48 +138,48 @@ class NodeSerializer
         }
 
         $data = array(
-            'id'               => $node->getId(),
-            'text'             => $node->getTitle(),
-            'allow_drag'       => true,
-            'areas'            => array(),
-            'qtip'             => $qtip,
+            'id' => $node->getId(),
+            'text' => $node->getTitle(),
+            'allow_drag' => true,
+            'areas' => array(),
+            'qtip' => $qtip,
 
-            'workspace'        => $node->getWorkspace(),
-            'locale'           => $node->getLocale(),
-            'siterootId'       => $node->getSiterootId(),
-            'path'             => $node->getPath(),
-            'parentPath'       => $node->getParentPath(),
-            'type'             => $type,
-            'contentType'      => $node->getContentType(),
-            'contentId'        => $node->getContentId(),
-            'contentVersion'   => $node->getContentVersion(),
-            'title'            => $node->getTitle(),
-            'pageTitle'        => $node->getTitle(), // @deprecated
-            'navigationTitle'  => $node->getNavigationTitle(),
-            'backendTitle'     => $node->getBackendTitle(),
-            'slug'             => $node->getSlug(),
-            'customDate'       => $node->getField('date', $language),
-            'forward'          => $node->getField('forward', $language),
-            'sortMode'         => $node->getSortMode(),
-            'sortDir'          => $node->getSortDir(),
-            'sort'             => $node->getSort(),
+            'workspace' => $node->getWorkspace(),
+            'locale' => $node->getLocale(),
+            'siterootId' => $node->getSiterootId(),
+            'path' => $node->getPath(),
+            'parentPath' => $node->getParentPath(),
+            'type' => $type,
+            'contentType' => $node->getContentType(),
+            'contentId' => $node->getContentId(),
+            'contentVersion' => $node->getContentVersion(),
+            'title' => $node->getTitle(),
+            'pageTitle' => $node->getTitle(), // @deprecated
+            'navigationTitle' => $node->getNavigationTitle(),
+            'backendTitle' => $node->getBackendTitle(),
+            'slug' => $node->getSlug(),
+            'customDate' => $node->getField('date', $language),
+            'forward' => $node->getField('forward', $language),
+            'sortMode' => $node->getSortMode(),
+            'sortDir' => $node->getSortDir(),
+            'sort' => $node->getSort(),
             //'icon'             => $this->iconResolver->resolveNode($node),
-            'iconCls'          => 'p-icon-document-text-image',
-            'inNavigation'     => $node->getInNavigation(),
-            'isRestricted'     => $node->getAttribute('security'),
-            'isInstance'       => $node->getTree()->isInstance($node),
-            'createdAt'        => $node->getCreatedAt()->format('Y-m-d H:i:s'),
-            'createdBy'        => $node->getCreateUserId(),
-            'modifiedAt'       => $node->getModifiedAt() ? $node->getModifiedAt()->format('Y-m-d H:i:s') : null,
-            'modifiedBy'       => $node->getModifyUserId(),
-            'publishedAt'      => $node->getPublishedAt() ? $node->getPublishedAt()->format('Y-m-d H:i:s') : null,
-            'publishedBy'      => $node->getPublishUserId(),
-            'isPublished'      => $node->getWorkspace() === 'live',
-            'isAsync'          => $node->isAsync(),
+            'iconCls' => 'p-icon-document-text-image',
+            'inNavigation' => $node->getInNavigation(),
+            'isRestricted' => $node->getAttribute('security'),
+            'isInstance' => $node->getTree()->isInstance($node),
+            'createdAt' => $node->getCreatedAt()->format('Y-m-d H:i:s'),
+            'createdBy' => $node->getCreateUserId(),
+            'modifiedAt' => $node->getModifiedAt() ? $node->getModifiedAt()->format('Y-m-d H:i:s') : null,
+            'modifiedBy' => $node->getModifyUserId(),
+            'publishedAt' => $node->getPublishedAt() ? $node->getPublishedAt()->format('Y-m-d H:i:s') : null,
+            'publishedBy' => $node->getPublishUserId(),
+            'isPublished' => $node->getWorkspace() === 'live',
+            'isAsync' => $node->isAsync(),
             'publishedVersion' => $node->getContentVersion(),
 
             'allowedTypes' => $allowedTypes,
-            'permissions'  => $permissions,
+            'permissions' => $permissions,
             'hideChildren' => $hideChildren,
         );
 

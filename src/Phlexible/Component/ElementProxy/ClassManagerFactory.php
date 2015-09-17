@@ -15,7 +15,7 @@ use Phlexible\Bundle\ElementBundle\Model\ElementSourceManagerInterface;
 use Phlexible\Component\ElementProxy\Generator\ProxyGenerator;
 
 /**
- * Class manager factory
+ * Class manager factory.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -32,7 +32,7 @@ class ClassManagerFactory
     private $elementSourceManager;
 
     /**
-     * @param ProxyGenerator             $generator
+     * @param ProxyGenerator                $generator
      * @param ElementSourceManagerInterface $elementSourceManager
      */
     public function __construct(ProxyGenerator $generator, ElementSourceManagerInterface $elementSourceManager)

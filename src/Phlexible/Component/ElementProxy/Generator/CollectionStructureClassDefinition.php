@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Generator;
 
 /**
- * Collection structure class definition
+ * Collection structure class definition.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

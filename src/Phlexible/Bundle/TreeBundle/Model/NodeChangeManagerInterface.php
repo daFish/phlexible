@@ -15,31 +15,31 @@ use Phlexible\Bundle\TreeBundle\Entity\NodeChange;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node history managerInterface
+ * Node history managerInterface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface NodeChangeManagerInterface
 {
-    const ACTION_CREATE_ELEMENT         = 'createElement';
+    const ACTION_CREATE_ELEMENT = 'createElement';
     const ACTION_CREATE_ELEMENT_VERSION = 'createElementVersion';
-    const ACTION_SAVE_ELEMENT           = 'saveElement';
-    const ACTION_SAVE_ELEMENT_MASTER    = 'saveElementMaster';
-    const ACTION_SAVE_ELEMENT_SLAVE     = 'saveElementSlave';
+    const ACTION_SAVE_ELEMENT = 'saveElement';
+    const ACTION_SAVE_ELEMENT_MASTER = 'saveElementMaster';
+    const ACTION_SAVE_ELEMENT_SLAVE = 'saveElementSlave';
 
-    const ACTION_CREATE_NODE          = 'createNode';
-    const ACTION_UPDATE_NODE          = 'updateNode';
-    const ACTION_DELETE_NODE          = 'deleteNode';
-    const ACTION_MOVE_NODE            = 'moveNode';
+    const ACTION_CREATE_NODE = 'createNode';
+    const ACTION_UPDATE_NODE = 'updateNode';
+    const ACTION_DELETE_NODE = 'deleteNode';
+    const ACTION_MOVE_NODE = 'moveNode';
     const ACTION_CREATE_NODE_INSTANCE = 'createNodeInstance';
-    const ACTION_PUBLISH_NODE         = 'publishNode';
-    const ACTION_SET_NODE_OFFLINE     = 'setNodeOffline';
+    const ACTION_PUBLISH_NODE = 'publishNode';
+    const ACTION_SET_NODE_OFFLINE = 'setNodeOffline';
 
-    const ACTION_CREATE_TEASER          = 'createTeaser';
-    const ACTION_DELETE_TEASER          = 'deleteTeaser';
+    const ACTION_CREATE_TEASER = 'createTeaser';
+    const ACTION_DELETE_TEASER = 'deleteTeaser';
     const ACTION_CREATE_TEASER_INSTANCE = 'createInstance';
-    const ACTION_PUBLISH_TEASER         = 'publishTeaser';
-    const ACTION_SET_TEASER_OFFLINE     = 'setTeaserOffline';
+    const ACTION_PUBLISH_TEASER = 'publishTeaser';
+    const ACTION_SET_TEASER_OFFLINE = 'setTeaserOffline';
 
     /**
      * @param array      $criteria
@@ -59,7 +59,7 @@ interface NodeChangeManagerInterface
     public function countBy(array $criteria);
 
     /**
-     * Insert new history entry
+     * Insert new history entry.
      *
      * @param string      $action
      * @param NodeContext $node

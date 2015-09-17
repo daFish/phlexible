@@ -16,7 +16,7 @@ use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Latest files portlet
+ * Latest files portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -69,19 +69,19 @@ class LatestFilesPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portle
     }
 
     /**
-     * Return settings
+     * Return settings.
      *
      * @return array
      */
     public function getSettings()
     {
         return array(
-            'style' => $this->style
+            'style' => $this->style,
         );
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -103,19 +103,19 @@ class LatestFilesPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portle
                 $cacheStatus = array();
                 foreach ($cacheItems as $cacheItem) {
                     $cacheStatus[$cacheItem->getTemplateKey()] =
-                        $cacheItem->getCacheStatus() . ';' . $cacheItem->getCreatedAt()->format('YmdHis');
+                        $cacheItem->getCacheStatus().';'.$cacheItem->getCreatedAt()->format('YmdHis');
                 }
 
                 $data[] = array(
-                    'id'          => sprintf('%s___%s', $file->getId(), $file->getVersion()),
-                    'fileId'      => $file->getId(),
+                    'id' => sprintf('%s___%s', $file->getId(), $file->getVersion()),
+                    'fileId' => $file->getId(),
                     'fileVersion' => $file->getVersion(),
-                    'folderId'    => $file->getFolderId(),
-                    'folderPath'  => null,//$folder->getIdPath(),
-                    'mediaType'   => strtolower($file->getMediaType()),
-                    'createdAt'   => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-                    'name'       => $file->getName(),
-                    'cache'       => $cacheStatus
+                    'folderId' => $file->getFolderId(),
+                    'folderPath' => null,//$folder->getIdPath(),
+                    'mediaType' => strtolower($file->getMediaType()),
+                    'createdAt' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'name' => $file->getName(),
+                    'cache' => $cacheStatus,
                 );
             }
         } catch (\Exception $e) {

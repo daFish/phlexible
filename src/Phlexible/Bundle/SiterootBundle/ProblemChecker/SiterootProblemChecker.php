@@ -13,11 +13,11 @@ namespace Phlexible\Bundle\SiterootBundle\ProblemChecker;
 
 use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Model\ProblemCheckerInterface;
-use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Phlexible\Bundle\ProblemBundle\Problem\ProblemCollection;
+use Phlexible\Component\Site\Model\SiteManagerInterface;
 
 /**
- * Siteroot problem checker
+ * Siteroot problem checker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

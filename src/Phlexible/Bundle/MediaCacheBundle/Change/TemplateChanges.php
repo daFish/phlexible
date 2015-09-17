@@ -20,7 +20,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateManagerInterface;
 use Phlexible\Component\Volume\Model\VolumeManagerInterface;
 
 /**
- * Template changes
+ * Template changes.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -71,8 +71,7 @@ class TemplateChanges
         BatchBuilder $batchBuilder,
         BatchResolver $batchResolver,
         QueueProcessor $queueProcessor
-    )
-    {
+    ) {
         $this->templateManager = $templateManager;
         $this->cacheManager = $cacheManager;
         $this->volumeManager = $volumeManager;

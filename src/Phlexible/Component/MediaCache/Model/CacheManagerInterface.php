@@ -15,7 +15,7 @@ use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Cache manager interface
+ * Cache manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

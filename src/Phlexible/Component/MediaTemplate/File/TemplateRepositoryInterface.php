@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\File;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Template repository interface
+ * Template repository interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

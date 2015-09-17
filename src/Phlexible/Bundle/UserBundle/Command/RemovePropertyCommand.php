@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Remove property command
+ * Remove property command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,27 +40,29 @@ class RemovePropertyCommand extends ContainerAwareCommand
                     'key',
                     InputArgument::REQUIRED,
                     'Property key.'
-                )
+                ),
             ));
     }
 
     /**
      * Executes the current command.
      *
-     * @param  InputInterface  $input  An InputInterface instance
-     * @param  OutputInterface $output An OutputInterface instance
-     * @return integer         0 if everything went fine, or an error code
+     * @param InputInterface  $input  An InputInterface instance
+     * @param OutputInterface $output An OutputInterface instance
+     *
+     * @return int 0 if everything went fine, or an error code
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $username = $input->getArgument('username');
-        $key      = $input->getArgument('key');
+        $key = $input->getArgument('key');
 
         $userManager = $this->getContainer()->get('phlexible_user.user_manager');
         $user = $userManager->findUserByUsername($username);
 
         if (!$user) {
             $output->writeln("User $username not found.");
+
             return 0;
         }
 

@@ -14,7 +14,7 @@ namespace Phlexible\Component\MessageFilter\Model;
 use Phlexible\Component\MessageFilter\Domain\Filter;
 
 /**
- * Filter manager
+ * Filter manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

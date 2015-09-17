@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Select field
+ * Select field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

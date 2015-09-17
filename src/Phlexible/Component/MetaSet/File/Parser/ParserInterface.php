@@ -14,7 +14,7 @@ namespace Phlexible\Component\MetaSet\File\Parser;
 use Phlexible\Component\MetaSet\Model\MetaSetInterface;
 
 /**
- * Parser interface
+ * Parser interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

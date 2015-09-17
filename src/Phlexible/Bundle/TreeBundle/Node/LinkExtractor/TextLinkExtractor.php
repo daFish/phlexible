@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 
 /**
- * Text link extractor
+ * Text link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

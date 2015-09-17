@@ -15,7 +15,7 @@ use Symfony\Component\Config\FileLocatorInterface;
 use Temp\MediaClassifier\Loader\LoaderInterface;
 
 /**
- * Media bundle
+ * Media bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

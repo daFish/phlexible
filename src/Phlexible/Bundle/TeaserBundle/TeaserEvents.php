@@ -12,19 +12,19 @@
 namespace Phlexible\Bundle\TeaserBundle;
 
 /**
- * Teaser events
+ * Teaser events.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class TeaserEvents
 {
     /**
-     * Fired after configuring layoutarea
+     * Fired after configuring layoutarea.
      */
     const CONFIGURE_LAYOUTAREA = 'phlexible_teaser.configure_layoutarea';
 
     /**
-     * Fired after configuring teaser
+     * Fired after configuring teaser.
      */
     const CONFIGURE_TEASER = 'phlexible_teaser.configure_teaser';
 

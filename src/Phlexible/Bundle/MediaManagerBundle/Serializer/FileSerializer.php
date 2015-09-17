@@ -21,7 +21,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Temp\MediaClassifier\MediaClassifier;
 
 /**
- * File serializer
+ * File serializer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -58,8 +58,7 @@ class FileSerializer
         CacheManagerInterface $cacheManager,
         FileUsageManager $fileUsageManager,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->mediaClassifier = $mediaClassifier;
         $this->cacheManager = $cacheManager;
         $this->fileUsageManager = $fileUsageManager;
@@ -67,7 +66,7 @@ class FileSerializer
     }
 
     /**
-     * Serialize file
+     * Serialize file.
      *
      * @param VolumeInterface $volume
      * @param FileInterface   $file
@@ -108,7 +107,7 @@ class FileSerializer
                     $cache[$cacheItem->getTemplateKey()] = $this->router->generate(
                         'phlexible_mediamanager_media',
                         array(
-                            'fileId'      => $file->getId(),
+                            'fileId' => $file->getId(),
                             'fileVersion' => $file->getVersion(),
                             'templateKey' => $cacheItem->getTemplateKey(),
                         )
@@ -118,7 +117,7 @@ class FileSerializer
                         'phlexible_mediamanager_media_delegate',
                         array(
                             'mediaTypeName' => $file->getMediaType(),
-                            'templateKey'   => $cacheItem->getTemplateKey(),
+                            'templateKey' => $cacheItem->getTemplateKey(),
                         )
                     );
                 }
@@ -139,15 +138,15 @@ class FileSerializer
         if ($all || in_array('versions', $fields)) {
             foreach ($volume->findFileVersions($file->getId()) as $fileVersion) {
                 $version = array(
-                    'id'            => $fileVersion->getId(),
-                    'folderId'      => $fileVersion->getFolderId(),
-                    'name'          => $fileVersion->getName(),
-                    'size'          => $fileVersion->getSize(),
-                    'version'       => $fileVersion->getVersion(),
-                    'mediaType'     => null,
+                    'id' => $fileVersion->getId(),
+                    'folderId' => $fileVersion->getFolderId(),
+                    'name' => $fileVersion->getName(),
+                    'size' => $fileVersion->getSize(),
+                    'version' => $fileVersion->getVersion(),
+                    'mediaType' => null,
                     'mediaCategory' => null,
-                    'createUser'    => $fileVersion->getCreateUser(),
-                    'createTime'    => $fileVersion->getCreatedAt()->format('Y-m-d'),
+                    'createUser' => $fileVersion->getCreateUser(),
+                    'createTime' => $fileVersion->getCreatedAt()->format('Y-m-d'),
                 );
 
                 if ($fileVersion instanceof ExtendedFileInterface) {
@@ -178,32 +177,32 @@ class FileSerializer
         }
 
         $data = array(
-            'id'              => $file->getID(),
-            'name'            => $file->getName(),
-            'path'            => $folder->getPath() . $file->getName(),
-            'volumeId'        => $volume->getId(),
-            'folderId'        => $file->getFolderID(),
-            'folderPath'      => $folder->getPath(),
-            'hasVersions'     => $hasVersions,
-            'mimeType'        => $file->getMimetype(),
-            'mediaCategory'   => null,
-            'mediaType'       => null,
-            'mediaTypeTitle'  => null,
-            'present'         => file_exists($volume->getPhysicalPath($file)),
-            'size'            => $file->getSize(),
-            'hidden'          => $file->isHidden() ? 1 : 0,
-            'version'         => $version,
-            'usageStatus'     => $usageStatus,
-            'createUser'      => $file->getCreateUser(),
-            'createTime'      => $file->getCreatedAt()->format('Y-m-d H:i:s'),
-            'modifyUser'      => $file->getModifyUser(),
-            'modifyTime'      => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
-            'cache'           => $cache,
-            'meta'            => $meta,
-            'usedIn'          => $usedIn,
-            'attributes'      => $attributes,
-            'versions'        => $versions,
-            'navigation'      => $navigation,
+            'id' => $file->getID(),
+            'name' => $file->getName(),
+            'path' => $folder->getPath().$file->getName(),
+            'volumeId' => $volume->getId(),
+            'folderId' => $file->getFolderID(),
+            'folderPath' => $folder->getPath(),
+            'hasVersions' => $hasVersions,
+            'mimeType' => $file->getMimetype(),
+            'mediaCategory' => null,
+            'mediaType' => null,
+            'mediaTypeTitle' => null,
+            'present' => file_exists($volume->getPhysicalPath($file)),
+            'size' => $file->getSize(),
+            'hidden' => $file->isHidden() ? 1 : 0,
+            'version' => $version,
+            'usageStatus' => $usageStatus,
+            'createUser' => $file->getCreateUser(),
+            'createTime' => $file->getCreatedAt()->format('Y-m-d H:i:s'),
+            'modifyUser' => $file->getModifyUser(),
+            'modifyTime' => $file->getModifiedAt() ? $file->getModifiedAt()->format('Y-m-d H:i:s') : null,
+            'cache' => $cache,
+            'meta' => $meta,
+            'usedIn' => $usedIn,
+            'attributes' => $attributes,
+            'versions' => $versions,
+            'navigation' => $navigation,
         );
 
         if ($file instanceof ExtendedFileInterface) {

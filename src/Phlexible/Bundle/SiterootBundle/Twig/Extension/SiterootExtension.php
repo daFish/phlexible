@@ -18,7 +18,7 @@ use Phlexible\Component\Site\Site\SitesAccessor;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Twig siteroot extension
+ * Twig siteroot extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -79,7 +79,7 @@ class SiterootExtension extends \Twig_Extension
     public function getGlobals()
     {
         return array(
-            'siteroots' => $this->siterootsAccessor
+            'siteroots' => $this->siterootsAccessor,
         );
     }
 

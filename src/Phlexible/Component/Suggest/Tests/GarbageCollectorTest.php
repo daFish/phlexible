@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * DataSource Test
+ * DataSource Test.
  *
  * @author Phillip Look <pl@brainbits.net>
  */
@@ -50,7 +50,6 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-
         $this->eventDispatcher = new EventDispatcher();
         $this->manager = $this->prophesize('Phlexible\Component\Suggest\Model\DataSourceManagerInterface');
         $this->garbageCollector = new GarbageCollector($this->manager->reveal(), $this->eventDispatcher);
@@ -67,14 +66,14 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
         $fired = 0;
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function() use (&$fired) {
-                $fired++;
+            function () use (&$fired) {
+                ++$fired;
             }
         );
         $this->eventDispatcher->addListener(
             SuggestEvents::GARBAGE_COLLECT,
-            function() use (&$fired) {
-                $fired++;
+            function () use (&$fired) {
+                ++$fired;
             }
         );
 
@@ -171,7 +170,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markActive(array('value1', 'value2'));
             }
         );
@@ -200,7 +199,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markActive(array('value1', 'value2'));
             }
         );
@@ -229,7 +228,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markActive(array('value1', 'value2'));
             }
         );
@@ -258,7 +257,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markInactive(array('value1', 'value2'));
             }
         );
@@ -287,7 +286,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markInactive(array('value1', 'value2'));
             }
         );
@@ -316,7 +315,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markInactive(array('value1', 'value2'));
             }
         );
@@ -349,7 +348,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markActive(array('value1', 'value2'));
                 $event->markInactive(array('value3', 'value4'));
             }
@@ -383,7 +382,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markActive(array('value1', 'value2'));
                 $event->markInactive(array('value3', 'value4'));
             }
@@ -417,7 +416,7 @@ class GarbageCollectorTest extends \PHPUnit_Framework_TestCase
 
         $this->eventDispatcher->addListener(
             SuggestEvents::BEFORE_GARBAGE_COLLECT,
-            function(GarbageCollectEvent $event) {
+            function (GarbageCollectEvent $event) {
                 $event->markActive(array('value1', 'value2'));
                 $event->markInactive(array('value3', 'value4'));
             }

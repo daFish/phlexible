@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Elementtype\Exception;
 
 /**
- * Runtime exception for elementtype bundle
+ * Runtime exception for elementtype bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-
 }

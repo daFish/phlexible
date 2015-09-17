@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\LockHandler;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
- * Run job(s) command
+ * Run job(s) command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -125,7 +125,7 @@ class RunCommand extends ContainerAwareCommand
     }
 
     /**
-     * Check running jobs
+     * Check running jobs.
      */
     private function checkRunningJobs()
     {
@@ -139,9 +139,9 @@ class RunCommand extends ContainerAwareCommand
             if ($this->verbose) {
                 if (!empty($newOutput)) {
                     $this->output->writeln(
-                        'Job ' . $runningJob->getJob()->getId() . ': ' . str_replace(
+                        'Job '.$runningJob->getJob()->getId().': '.str_replace(
                             "\n",
-                            "\nJob " . $runningJob->getJob()->getId() . ": ",
+                            "\nJob ".$runningJob->getJob()->getId().': ',
                             $newOutput
                         )
                     );
@@ -149,9 +149,9 @@ class RunCommand extends ContainerAwareCommand
 
                 if (!empty($newErrorOutput)) {
                     $this->output->writeln(
-                        'Job ' . $runningJob->getJob()->getId() . ': ' . str_replace(
+                        'Job '.$runningJob->getJob()->getId().': '.str_replace(
                             "\n",
-                            "\nJob " . $runningJob->getJob()->getId() . ": ",
+                            "\nJob ".$runningJob->getJob()->getId().': ',
                             $newErrorOutput
                         )
                     );
@@ -164,7 +164,7 @@ class RunCommand extends ContainerAwareCommand
             if ($runningJob->getJob()->getMaxRuntime() > 0 && $runtime > $runningJob->getJob()->getMaxRuntime()) {
                 $runningJob->getProcess()->stop(5);
 
-                $this->output->writeln($runningJob->getJob() . ' terminated; maximum runtime exceeded.');
+                $this->output->writeln($runningJob->getJob().' terminated; maximum runtime exceeded.');
                 $runningJob->getJob()->setState(Job::STATE_ABORTED);
                 $runningJob->getJob()->setFinishedAt(new \DateTime());
                 $this->getJobManager()->updateJob($runningJob->getJob());
@@ -186,7 +186,7 @@ class RunCommand extends ContainerAwareCommand
             }
 
             $this->output->writeln(
-                $runningJob->getJob() . ' finished with exit code ' . $runningJob->getProcess()->getExitCode() . '.'
+                $runningJob->getJob().' finished with exit code '.$runningJob->getProcess()->getExitCode().'.'
             );
 
             // If the Job exited with an exception, let's reload it so that we
@@ -227,9 +227,9 @@ class RunCommand extends ContainerAwareCommand
 
         $consoleDir = $this->getContainer()->getParameter('kernel.root_dir');
         if (!file_exists("$consoleDir/console")) {
-            $consoleDir = $this->getContainer()->getParameter('kernel.root_dir') . '/../bin';
+            $consoleDir = $this->getContainer()->getParameter('kernel.root_dir').'/../bin';
             if (!file_exists("$consoleDir/console")) {
-                throw new \RuntimeException("console not found.");
+                throw new \RuntimeException('console not found.');
             }
         }
 
@@ -274,12 +274,12 @@ class RunCommand extends ContainerAwareCommand
         }
 
         $subject = "Job {$job->getId()} $readableStatus.";
-        $body = "Runtime: {$job->getRuntime()} s" . PHP_EOL .
-            "Command:   {$job->getCommand()}" . PHP_EOL .
-            "Exit code: {$job->getExitCode()}" . PHP_EOL .
-            "Output:" . PHP_EOL .
-            $job->getOutput() . PHP_EOL .
-            "Error output:" . PHP_EOL .
+        $body = "Runtime: {$job->getRuntime()} s".PHP_EOL.
+            "Command:   {$job->getCommand()}".PHP_EOL.
+            "Exit code: {$job->getExitCode()}".PHP_EOL.
+            'Output:'.PHP_EOL.
+            $job->getOutput().PHP_EOL.
+            'Error output:'.PHP_EOL.
             $job->getErrorOutput();
 
         $message = QueueMessage::create($subject, $body, $type);

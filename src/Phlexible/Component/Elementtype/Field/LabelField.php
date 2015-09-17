@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Label field
+ * Label field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

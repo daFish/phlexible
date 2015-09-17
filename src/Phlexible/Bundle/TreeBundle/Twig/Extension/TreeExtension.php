@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Twig tree extension
+ * Twig tree extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -71,8 +71,7 @@ class TreeExtension extends \Twig_Extension
         RequestStack $requestStack,
         AuthorizationCheckerInterface $authorizationChecker,
         TokenStorageInterface $tokenStorage
-    )
-    {
+    ) {
         $this->treeManager = $treeManager;
         $this->patternResolver = $patternResolver;
         $this->requestStack = $requestStack;
@@ -105,10 +104,10 @@ class TreeExtension extends \Twig_Extension
             $request = $this->requestStack->getCurrentRequest();
 
             if (!$request->attributes->has('siteroot')) {
-                throw new \InvalidArgumentException("Need a siteroot request attribute for navigations.");
+                throw new \InvalidArgumentException('Need a siteroot request attribute for navigations.');
             }
             if (!$request->attributes->has('node')) {
-                throw new \InvalidArgumentException("Need a node request attribute for navigations");
+                throw new \InvalidArgumentException('Need a node request attribute for navigations');
             }
 
             $siteroot = $request->attributes->get('siteroot');
@@ -121,7 +120,7 @@ class TreeExtension extends \Twig_Extension
             }
 
             if (empty($navigations[$name]['nodeId'])) {
-                throw new \Exception("No start node ID");
+                throw new \Exception('No start node ID');
             }
 
             $navigation = $navigations[$name];
@@ -191,7 +190,7 @@ class TreeExtension extends \Twig_Extension
      * @param string      $name
      * @param string      $language
      * @param NodeContext $node
-     * @param Site    $siteroot
+     * @param Site        $siteroot
      *
      * @return string
      */
@@ -220,7 +219,7 @@ class TreeExtension extends \Twig_Extension
      * @param string      $pattern
      * @param string      $language
      * @param NodeContext $node
-     * @param Site    $siteroot
+     * @param Site        $siteroot
      *
      * @return string
      */

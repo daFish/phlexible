@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 
 /**
- * File field link extractor
+ * File field link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -30,7 +30,7 @@ class FileFieldLinkExtractor implements LinkExtractorInterface
         $value = $value['value'];
 
         return array(
-            array('type' => 'file', 'target' => $value)
+            array('type' => 'file', 'target' => $value),
         );
     }
 }

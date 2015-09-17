@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Password field
+ * Password field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

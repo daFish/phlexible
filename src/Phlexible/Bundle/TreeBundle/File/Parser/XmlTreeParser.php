@@ -16,7 +16,7 @@ use Phlexible\Component\Node\Model\NodeInterface;
 use SimpleXMLElement;
 
 /**
- * XML tree parser
+ * XML tree parser.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -43,6 +43,7 @@ class XmlTreeParser
      * @param NodeInterface|null $parentNode
      *
      * @return NodeInterface
+     *
      * @throws \Exception
      */
     private function parseNode(ArrayCollection $nodes, $siterootId, SimpleXMLElement $nodeNode, NodeInterface $parentNode = null)

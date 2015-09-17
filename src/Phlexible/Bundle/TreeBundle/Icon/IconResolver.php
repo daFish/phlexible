@@ -20,7 +20,7 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Icon resolver
+ * Icon resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,14 +40,14 @@ class IconResolver
      * @param RouterInterface $router
      * @param ElementService  $elementService
      */
-    public function __construct( RouterInterface $router, ElementService $elementService)
+    public function __construct(RouterInterface $router, ElementService $elementService)
     {
         $this->router = $router;
         $this->elementService = $elementService;
     }
 
     /**
-     * Resolve icon
+     * Resolve icon.
      *
      * @param string $icon
      *
@@ -59,11 +59,11 @@ class IconResolver
             $icon = '_fallback.gif';
         }
 
-        return '/bundles/phlexibletree/node-icons/' . $icon;
+        return '/bundles/phlexibletree/node-icons/'.$icon;
     }
 
     /**
-     * Resolve element type to icon
+     * Resolve element type to icon.
      *
      * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
      *
@@ -75,7 +75,7 @@ class IconResolver
     }
 
     /**
-     * Resolve element source to icon
+     * Resolve element source to icon.
      *
      * @param ElementSource $elementSource
      *
@@ -87,7 +87,7 @@ class IconResolver
     }
 
     /**
-     * Resolve element to icon
+     * Resolve element to icon.
      *
      * @param Element $element
      *
@@ -101,7 +101,7 @@ class IconResolver
     }
 
     /**
-     * Resolve tree node to icon
+     * Resolve tree node to icon.
      *
      * @param NodeContext $node
      *
@@ -111,14 +111,14 @@ class IconResolver
     {
         $parameters = array();
 
-        $parameters['status'] = $node->isAsync() ? 'async': 'online';
+        $parameters['status'] = $node->isAsync() ? 'async' : 'online';
 
         if ($node->getTree()->isInstance($node)) {
             $parameters['instance'] = $node->getTree()->isInstanceMaster($node) ? 'master' : 'slave';
         }
 
         if ($node->getSortMode() !== TreeInterface::SORT_MODE_FREE) {
-            $parameters['sort'] = $node->getSortMode() . '_' . $node->getSortDir();
+            $parameters['sort'] = $node->getSortMode().'_'.$node->getSortDir();
         }
 
         $element = $this->elementService->findElement($node->getContentId());

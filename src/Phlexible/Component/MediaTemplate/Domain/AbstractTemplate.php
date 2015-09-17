@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation as Serializer;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Abstract template
+ * Abstract template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="mediaTemplate")

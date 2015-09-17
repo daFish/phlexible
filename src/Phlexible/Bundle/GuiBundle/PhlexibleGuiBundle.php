@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Gui bundle
+ * Gui bundle.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field\Container;
 
 /**
- * Root container
+ * Root container.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

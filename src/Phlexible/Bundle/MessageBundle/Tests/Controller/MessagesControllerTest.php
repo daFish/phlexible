@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\MessageBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Class MessagesControllerTest
+ * Class MessagesControllerTest.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

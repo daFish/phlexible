@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\CmsBundle\Usage;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Usage updater
+ * Usage updater.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

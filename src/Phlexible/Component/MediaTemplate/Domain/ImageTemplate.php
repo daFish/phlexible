@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaTemplate\Domain;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Image template
+ * Image template.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="mediaTemplate")
@@ -188,7 +188,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isForWeb()
     {
@@ -196,7 +196,7 @@ class ImageTemplate extends AbstractTemplate
     }
 
     /**
-     * @param boolean $forWeb
+     * @param bool $forWeb
      *
      * @return $this
      */
@@ -333,17 +333,17 @@ class ImageTemplate extends AbstractTemplate
     public function getParameters()
     {
         return array(
-            'width'            => $this->getWidth(),
-            'height'           => $this->getHeight(),
-            'method'           => $this->getMethod(),
-            'scale'            => $this->getScale(),
-            'for_web'          => $this->isForWeb(),
-            'format'           => $this->getFormat(),
-            'colorspace'       => $this->getColorspace(),
+            'width' => $this->getWidth(),
+            'height' => $this->getHeight(),
+            'method' => $this->getMethod(),
+            'scale' => $this->getScale(),
+            'for_web' => $this->isForWeb(),
+            'format' => $this->getFormat(),
+            'colorspace' => $this->getColorspace(),
             'tiff_compression' => $this->getTiffCompression(),
-            'depth'            => $this->getDepth(),
-            'quality'          => $this->getQuality(),
-            'backgroundcolor'  => $this->getBackgroundcolor(),
+            'depth' => $this->getDepth(),
+            'quality' => $this->getQuality(),
+            'backgroundcolor' => $this->getBackgroundcolor(),
         );
     }
 }

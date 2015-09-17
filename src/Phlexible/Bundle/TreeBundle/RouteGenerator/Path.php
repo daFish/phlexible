@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\RouteGenerator;
 
 /**
- * Path
+ * Path.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

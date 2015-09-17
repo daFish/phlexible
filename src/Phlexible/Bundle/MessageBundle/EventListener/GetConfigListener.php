@@ -15,7 +15,7 @@ use Phlexible\Bundle\GuiBundle\Event\GetConfigEvent;
 use Phlexible\Component\Message\Model\MessageManagerInterface;
 
 /**
- * Get config listener
+ * Get config listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

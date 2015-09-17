@@ -19,7 +19,7 @@ use Puli\Discovery\Api\ResourceDiscovery;
 use Puli\Repository\Resource\FileResource;
 
 /**
- * Scripts builder
+ * Scripts builder.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -64,13 +64,13 @@ class ScriptsBuilder
     }
 
     /**
-     * Get all javascripts for the given section
+     * Get all javascripts for the given section.
      *
      * @return string
      */
     public function build()
     {
-        $cache = new ResourceCollectionCache($this->cacheDir . '/gui.js', $this->debug);
+        $cache = new ResourceCollectionCache($this->cacheDir.'/gui.js', $this->debug);
 
         $bindings = $this->findBindings();
 
@@ -82,7 +82,6 @@ class ScriptsBuilder
             if (!$this->debug) {
                 $this->compressor->compressFile((string) $cache);
             }
-
         }
 
         return (string) $cache;
@@ -280,7 +279,9 @@ class ScriptsBuilder
             }
 
             $results->set($file->path, $file->file);
-        };
+        }
+
+;
 
         foreach ($entryPointFiles as $file) {
             addToResult($file, $results, $symbols);
@@ -301,17 +302,17 @@ class ScriptsBuilder
             $usedPaths[] = $path;
         }
 
-        $scripts = '/* Created: ' . date('Y-m-d H:i:s');
+        $scripts = '/* Created: '.date('Y-m-d H:i:s');
         if ($this->debug) {
-            $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Used paths:' . PHP_EOL . ' * ' .
-                implode(PHP_EOL . ' * ', $usedPaths) . PHP_EOL;
-            $scripts .= PHP_EOL . ' * ' . PHP_EOL . ' * Unused paths:' . PHP_EOL . ' * ' .
-                implode(PHP_EOL . ' * ', $unusedPaths) . PHP_EOL;
+            $scripts .= PHP_EOL.' * '.PHP_EOL.' * Used paths:'.PHP_EOL.' * '.
+                implode(PHP_EOL.' * ', $usedPaths).PHP_EOL;
+            $scripts .= PHP_EOL.' * '.PHP_EOL.' * Unused paths:'.PHP_EOL.' * '.
+                implode(PHP_EOL.' * ', $unusedPaths).PHP_EOL;
         }
         $scripts .= ' */';
         foreach ($results as $path => $file) {
             if ($this->debug) {
-                $scripts .= PHP_EOL . "/* Resource: $path */" . PHP_EOL;
+                $scripts .= PHP_EOL."/* Resource: $path */".PHP_EOL;
             }
             $scripts .= file_get_contents($file);
         }

@@ -15,11 +15,11 @@ use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Before save meta event
+ * Before save meta event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
-class BeforeSaveMetaEvent extends Event
+class BeforeSaveMeta extends Event
 {
     //private $eventName = Events::BEFORE_SAVE_META;
 

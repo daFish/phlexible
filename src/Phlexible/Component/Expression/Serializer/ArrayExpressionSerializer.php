@@ -18,7 +18,7 @@ use Webmozart\Expression\Logic;
 use Webmozart\Expression\Selector;
 
 /**
- * Array expression serializer
+ * Array expression serializer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -68,7 +68,7 @@ class ArrayExpressionSerializer implements ExpressionSerializerInterface
         } elseif ($expr instanceof Logic\Not) {
             $data = array(
                 'op' => 'not',
-                'expression' => $this->serializeExpression($expr->getNegatedExpression())
+                'expression' => $this->serializeExpression($expr->getNegatedExpression()),
             );
         } elseif ($expr instanceof Selector\Key) {
             $field = $expr->getKey();

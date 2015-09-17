@@ -16,7 +16,7 @@ use Phlexible\Component\Elementtype\Event\ElementtypeUsageEvent;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
- * Elementtype usage listeners
+ * Elementtype usage listeners.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -47,7 +47,7 @@ class ElementtypeUsageListener
             foreach ($elementtypes as $elementtype) {
                 $event->addUsage(
                     new Usage(
-                        $elementtype->getType() . ' elementtype',
+                        $elementtype->getType().' elementtype',
                         'reference',
                         $elementtype->getId(),
                         $elementtype->getName(),
@@ -64,7 +64,7 @@ class ElementtypeUsageListener
                 $viabilityElementtype = $this->elementtypeService->findElementtype($viability->getUnderElementtypeId());
                 $event->addUsage(
                     new Usage(
-                        $viabilityElementtype->getType() . ' elementtype',
+                        $viabilityElementtype->getType().' elementtype',
                         'layout area',
                         $viabilityElementtype->getId(),
                         $viabilityElementtype->getName(),

@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Asset\Filter;
 use Phlexible\Bundle\GuiBundle\Asset\Filter\BaseUrlFilter;
 
 /**
- * Base url filter test
+ * Base url filter test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

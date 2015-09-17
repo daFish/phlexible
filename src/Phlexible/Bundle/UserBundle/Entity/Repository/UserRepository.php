@@ -18,14 +18,14 @@ use Phlexible\Component\Message\Domain\Message;
 use Webmozart\Expression\Expression;
 
 /**
- * User repository
+ * User repository.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class UserRepository extends EntityRepository
 {
     /**
-     * Find messages by expression
+     * Find messages by expression.
      *
      * @param Expression $expression
      * @param array      $orderBy
@@ -60,7 +60,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Count messages by expression
+     * Count messages by expression.
      *
      * @param Expression $expression
      *
@@ -78,7 +78,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Find message by expression
+     * Find message by expression.
      *
      * @param Expression $expression
      * @param array      $orderBy
@@ -102,7 +102,7 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * Apply expression
+     * Apply expression.
      *
      * @param QueryBuilder $queryBuilder
      * @param Expression   $expression

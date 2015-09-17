@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Asset\Filter;
 
 /**
- * Filter phlexible baseurl and basepath
+ * Filter phlexible baseurl and basepath.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -34,8 +34,8 @@ class BaseUrlFilter
      */
     public function __construct($baseUrl, $basePath)
     {
-        $this->baseUrl = rtrim($baseUrl, '/') . '/';
-        $this->basePath = rtrim($basePath, '/') . '/';
+        $this->baseUrl = rtrim($baseUrl, '/').'/';
+        $this->basePath = rtrim($basePath, '/').'/';
     }
 
     /**
@@ -45,7 +45,7 @@ class BaseUrlFilter
     {
         return str_replace(
             array('/BASE_PATH/', '/BASE_URL/', '/BUNDLES_PATH/', '/BUNDLES_URL/'),
-            array($this->basePath, $this->baseUrl, $this->basePath . 'bundles/', $this->baseUrl . 'bundles/'),
+            array($this->basePath, $this->baseUrl, $this->basePath.'bundles/', $this->baseUrl.'bundles/'),
             $content
         );
     }

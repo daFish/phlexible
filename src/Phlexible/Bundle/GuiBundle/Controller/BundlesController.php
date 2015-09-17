@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Bundles controller
+ * Bundles controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 class BundlesController extends FOSRestController
 {
     /**
-     * Get bundles
+     * Get bundles.
      *
      * @return Response
      *
@@ -63,10 +63,10 @@ class BundlesController extends FOSRestController
             $path = $reflection->getFileName();
 
             $bundlesData[$name] = array(
-                'name'        => $name,
-                'classname'   => $className,
-                'package'     => $package,
-                'path'        => $path,
+                'name' => $name,
+                'classname' => $className,
+                'package' => $package,
+                'path' => $path,
             );
         }
 
@@ -74,8 +74,8 @@ class BundlesController extends FOSRestController
         $bundlesData = array_values($bundlesData);
 
         return array(
-            'bundles'  => $bundlesData,
-            'count'    => count($bundlesData),
+            'bundles' => $bundlesData,
+            'count' => count($bundlesData),
         );
     }
 }

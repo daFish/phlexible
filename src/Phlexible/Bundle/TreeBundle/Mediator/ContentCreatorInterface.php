@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Content creator interface
+ * Content creator interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

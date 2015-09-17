@@ -18,7 +18,7 @@ use Phlexible\Component\Node\Model\NodeManagerInterface;
 use Phlexible\Component\Tree\WorkingTreeContext;
 
 /**
- * Latest node changes portlet
+ * Latest node changes portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -63,7 +63,7 @@ class LatestNodeChangesPortlet extends Portlet
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -86,11 +86,11 @@ class LatestNodeChangesPortlet extends Portlet
 
             $first = true;
             foreach ($baseTitleArr as $chunk) {
-                $title .= ($first ? '<wbr />' : '') . $chunk;
+                $title .= ($first ? '<wbr />' : '').$chunk;
                 $first = false;
             }
 
-            $title .= ' [' . $node->getId() . ']';
+            $title .= ' ['.$node->getId().']';
             /*
                 $i = 0;
                 do
@@ -119,14 +119,14 @@ class LatestNodeChangesPortlet extends Portlet
 
             // TODO: modifiedAt
             $data[] = array(
-                'nodeId'       => $node->getId(),
-                'language'     => $locale,
-                'version'      => 1,
-                'title'        => strip_tags($title),
-                'icon'         => '',//$this->iconResolver->resolveNode($node),
-                'modifiedAt'   => $node->getCreatedAt()->format('Y-m-d H:i:s'),
+                'nodeId' => $node->getId(),
+                'language' => $locale,
+                'version' => 1,
+                'title' => strip_tags($title),
+                'icon' => '',//$this->iconResolver->resolveNode($node),
+                'modifiedAt' => $node->getCreatedAt()->format('Y-m-d H:i:s'),
                 'modifyUserId' => $node->getCreateUserId(),
-                'menu'         => $menu
+                'menu' => $menu,
             );
         }
 

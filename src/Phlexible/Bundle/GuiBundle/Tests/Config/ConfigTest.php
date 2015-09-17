@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Tests\Config;
 use Phlexible\Bundle\GuiBundle\Config\Config;
 
 /**
- * Config test
+ * Config test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -12,19 +12,19 @@
 namespace Phlexible\Bundle\TreeBundle\Model;
 
 /**
- * Page interface
+ * Page interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface PageInterface
 {
     /**
-     * @return boolean
+     * @return bool
      */
     public function getInNavigation();
 
     /**
-     * @param boolean $inNavigation
+     * @param bool $inNavigation
      *
      * @return $this
      */
@@ -79,12 +79,12 @@ interface PageInterface
     public function setRoutes(array $routes);
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNeedAuthentication();
 
     /**
-     * @param boolean $needsAuthentication
+     * @param bool $needsAuthentication
      *
      * @return $this
      */

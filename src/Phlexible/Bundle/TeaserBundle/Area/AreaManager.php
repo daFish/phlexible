@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Node\Model\NodeManagerInterface;
 
 /**
- * Area manager
+ * Area manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

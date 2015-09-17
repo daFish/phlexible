@@ -15,7 +15,7 @@ use Phlexible\Bundle\ProblemBundle\Entity\Problem;
 use Phlexible\Bundle\ProblemBundle\Problem\ProblemFetcher;
 
 /**
- * Problems portlet
+ * Problems portlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @author Phillip Look <pl@brainbits.net>
@@ -36,7 +36,7 @@ class ProblemsPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
     }
 
     /**
-     * Return Portlet data
+     * Return Portlet data.
      *
      * @return array
      */
@@ -57,11 +57,11 @@ class ProblemsPortlet extends \Phlexible\Bundle\DashboardBundle\Domain\Portlet
             }
 
             $data[] = array(
-                'id'       => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
+                'id' => strlen($problem->getId()) ? $problem->getId() : md5(serialize($problem)),
                 'severity' => $problem->getSeverity(),
-                'msg'      => $problem->getMessage(),
-                'hint'     => $problem->getHint(),
-                'link'     => $problem->getAttribute('link'),
+                'msg' => $problem->getMessage(),
+                'hint' => $problem->getHint(),
+                'link' => $problem->getAttribute('link'),
             );
         }
 

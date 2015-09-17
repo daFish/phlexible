@@ -16,14 +16,14 @@ use Phlexible\Component\Message\Exception\LogicException;
 use Webmozart\Expression\Expression;
 
 /**
- * Message manager
+ * Message manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface MessageManagerInterface
 {
     /**
-     * Find message
+     * Find message.
      *
      * @param string $id
      *
@@ -32,7 +32,7 @@ interface MessageManagerInterface
     public function find($id);
 
     /**
-     * Find messages
+     * Find messages.
      *
      * @param array $criteria
      * @param array $orderBy
@@ -44,7 +44,7 @@ interface MessageManagerInterface
     public function findBy(array $criteria, $orderBy = array(), $limit = null, $offset = null);
 
     /**
-     * Find message
+     * Find message.
      *
      * @param array $criteria
      * @param array $orderBy
@@ -84,21 +84,21 @@ interface MessageManagerInterface
     public function findOneByExpression(Expression $expression, $orderBy = array());
 
     /**
-     * Return type map
+     * Return type map.
      *
      * @return array
      */
     public function getTypeNames();
 
     /**
-     * Return facets
+     * Return facets.
      *
      * @return array
      */
     public function getFacets();
 
     /**
-     * Return facets by expression
+     * Return facets by expression.
      *
      * @param Expression $expression
      *
@@ -107,7 +107,7 @@ interface MessageManagerInterface
     public function getFacetsByExpression(Expression $expression);
 
     /**
-     * Update message
+     * Update message.
      *
      * @param Message $message
      *
@@ -116,7 +116,7 @@ interface MessageManagerInterface
     public function updateMessage(Message $message);
 
     /**
-     * Delete message
+     * Delete message.
      *
      * @param Message $message
      */

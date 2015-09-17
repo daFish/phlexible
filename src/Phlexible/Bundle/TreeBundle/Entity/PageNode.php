@@ -16,7 +16,7 @@ use Phlexible\Bundle\TreeBundle\Model\PageInterface;
 use Phlexible\Component\Node\Domain\Node;
 
 /**
- * Page node
+ * Page node.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

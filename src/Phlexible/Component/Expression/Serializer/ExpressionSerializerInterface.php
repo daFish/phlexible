@@ -14,7 +14,7 @@ namespace Phlexible\Component\Expression\Serializer;
 use Webmozart\Expression\Expression;
 
 /**
- * Expression serializer interface
+ * Expression serializer interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

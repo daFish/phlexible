@@ -22,7 +22,7 @@ use Phlexible\Component\ElementProxy\ClassManager;
 use Phlexible\Component\Elementtype\Domain\Elementtype;
 
 /**
- * Element tree mediator
+ * Element tree mediator.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -85,7 +85,7 @@ class ElementTreeMediator implements ContentProviderInterface
             return null;
         }
 
-        $method = 'get' . ucfirst($field);
+        $method = 'get'.ucfirst($field);
 
         return $mappedField->$method();
     }

@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Site navigation form type
+ * Site navigation form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,7 +33,7 @@ class SiteNavigationType extends AbstractType
         $builder->add('nodeId', 'integer');
         $builder->add('maxDepth', 'integer');
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             // cleanup extjs data - this shouldn't be necessary, try to remove data from extjs
             $data = $event->getData();
             if (isset($data['id'])) {
@@ -52,8 +52,8 @@ class SiteNavigationType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'        => 'Phlexible\Component\Site\Domain\Navigation',
-            'csrf_protection'   => false,
+            'data_class' => 'Phlexible\Component\Site\Domain\Navigation',
+            'csrf_protection' => false,
         ));
     }
 

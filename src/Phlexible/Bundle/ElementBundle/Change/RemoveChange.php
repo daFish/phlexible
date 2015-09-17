@@ -16,7 +16,7 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
- * Elementtype remove change
+ * Elementtype remove change.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

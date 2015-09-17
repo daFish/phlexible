@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\LinkExtractor;
 
 /**
- * Text link extractor
+ * Text link extractor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,15 +31,15 @@ class LinkFieldLinkExtractor implements LinkExtractorInterface
         $type = $value['type'];
         if (in_array($type, array('internal', 'intrasiteroot')) && !empty($value['tid'])) {
             return array(
-                array('type' => 'node', 'target' => $value['tid'])
+                array('type' => 'node', 'target' => $value['tid']),
             );
         } elseif ($type === 'external' && !empty($value['url'])) {
             return array(
-                array('type' => 'url', 'target' => $value['url'])
+                array('type' => 'url', 'target' => $value['url']),
             );
         } elseif ($type === 'mailto' && !empty($value['recipient'])) {
             return array(
-                array('type' => 'mailto', 'target' => $value['recipient'])
+                array('type' => 'mailto', 'target' => $value['recipient']),
             );
         }
 

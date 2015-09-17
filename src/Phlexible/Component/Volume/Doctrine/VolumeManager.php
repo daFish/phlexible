@@ -31,7 +31,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Expression\Expression;
 
 /**
- * Doctrine volume manager
+ * Doctrine volume manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -82,8 +82,7 @@ class VolumeManager implements VolumeManagerInterface
         $folderClass,
         $fileClass,
         array $volumeConfigs = array()
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->hashCalculator = $hashCalculator;
         $this->eventDispatcher = $eventDispatcher;
@@ -177,11 +176,12 @@ class VolumeManager implements VolumeManagerInterface
     }
 
     /**
-     * Return volume by file ID
+     * Return volume by file ID.
      *
      * @param string $fileId
      *
      * @return VolumeInterface
+     *
      * @throws NotFoundException
      */
     public function getByFileId($fileId)
@@ -196,11 +196,12 @@ class VolumeManager implements VolumeManagerInterface
     }
 
     /**
-     * Return volume by folder ID
+     * Return volume by folder ID.
      *
      * @param string $folderId
      *
      * @return VolumeInterface
+     *
      * @throws NotFoundException
      */
     public function getByFolderId($folderId)
@@ -215,7 +216,7 @@ class VolumeManager implements VolumeManagerInterface
     }
 
     /**
-     * Return all volumes
+     * Return all volumes.
      *
      * @return VolumeInterface[]
      */
@@ -450,8 +451,8 @@ class VolumeManager implements VolumeManagerInterface
             return;
         }
 
-        $oldPath = rtrim($oldPath, '/') . '/';
-        $replacePath = rtrim($folder->getPath(), '/') . '/';
+        $oldPath = rtrim($oldPath, '/').'/';
+        $replacePath = rtrim($folder->getPath(), '/').'/';
 
         $qb = $this->getFolderRepository()->createQueryBuilder('fo');
         $qb
@@ -477,8 +478,8 @@ class VolumeManager implements VolumeManagerInterface
     {
         $this->updateFolder($folder);
 
-        $oldPath = rtrim($oldPath, '/') . '/';
-        $replacePath = rtrim($folder->getPath(), '/') . '/';
+        $oldPath = rtrim($oldPath, '/').'/';
+        $replacePath = rtrim($folder->getPath(), '/').'/';
 
         $qb = $this->getFolderRepository()->createQueryBuilder('fo');
         $qb
@@ -593,7 +594,7 @@ class VolumeManager implements VolumeManagerInterface
     {
         $filesystem = new Filesystem();
 
-        $physicalPath = $folder->getVolume()->getRootDir() . $folder->getPath();
+        $physicalPath = $folder->getVolume()->getRootDir().$folder->getPath();
 
         if ($filesystem->exists($physicalPath) && !is_dir($physicalPath)) {
             throw new IOException('Delete folder failed, not a folder.');

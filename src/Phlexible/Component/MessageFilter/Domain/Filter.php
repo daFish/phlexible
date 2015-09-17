@@ -14,7 +14,7 @@ namespace Phlexible\Component\MessageFilter\Domain;
 use Webmozart\Expression\Expression;
 
 /**
- * Filter
+ * Filter.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

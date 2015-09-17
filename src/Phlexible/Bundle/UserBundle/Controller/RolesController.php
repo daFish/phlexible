@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Roles controller
+ * Roles controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RolesController extends FOSRestController
 {
     /**
-     * Get roles
+     * Get roles.
      *
      * @return Response
      *
@@ -50,14 +50,14 @@ class RolesController extends FOSRestController
         foreach (array_keys($roleHierarchy) as $role) {
             $roles[] = array(
                 'id' => $role,
-                'role' => $role
+                'role' => $role,
             );
         }
 
         return $this->handleView($this->view(
             array(
                 'roles' => $roles,
-                'count' => count($roles)
+                'count' => count($roles),
             )
         ));
     }

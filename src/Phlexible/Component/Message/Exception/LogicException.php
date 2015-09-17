@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Message\Exception;
 
 /**
- * Logic exception
+ * Logic exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class LogicException extends \LogicException implements ExceptionInterface
 {
-
 }

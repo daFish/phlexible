@@ -18,15 +18,15 @@ use Phlexible\Component\MetaSet\Domain\MetaSet;
 use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 
 /**
- * File meta data manager
+ * File meta data manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class FileMetaDataManager extends MetaDataManager
 {
     /**
-     * @param \Phlexible\Component\MetaSet\Domain\MetaSet               $metaSet
-     * @param ExtendedFileInterface $file
+     * @param \Phlexible\Component\MetaSet\Domain\MetaSet $metaSet
+     * @param ExtendedFileInterface                       $file
      *
      * @return \Phlexible\Component\MetaSet\Domain\MetaData|MetaDataInterface
      */
@@ -40,8 +40,8 @@ class FileMetaDataManager extends MetaDataManager
     }
 
     /**
-     * @param \Phlexible\Component\MetaSet\Domain\MetaSet               $metaSet
-     * @param ExtendedFileInterface $file
+     * @param \Phlexible\Component\MetaSet\Domain\MetaSet $metaSet
+     * @param ExtendedFileInterface                       $file
      *
      * @return null|MetaDataInterface
      */
@@ -77,7 +77,7 @@ class FileMetaDataManager extends MetaDataManager
 
             $id = '';
             foreach ($identifiers as $value) {
-                $id .= $value . '_';
+                $id .= $value.'_';
             }
             $id .= $row['set_id'];
 
@@ -105,7 +105,7 @@ class FileMetaDataManager extends MetaDataManager
     private function getIdentifiersFromFile(ExtendedFileInterface $file)
     {
         return array(
-            'file_id'      => $file->getId(),
+            'file_id' => $file->getId(),
             'file_version' => $file->getVersion(),
         );
     }

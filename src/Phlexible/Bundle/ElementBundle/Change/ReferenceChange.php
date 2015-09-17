@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\ElementBundle\Change;
 
 /**
- * Elementtype reference change
+ * Elementtype reference change.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

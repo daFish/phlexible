@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Folder meta controller
+ * Folder meta controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -65,15 +65,15 @@ class FoldersMetasController extends FOSRestController
                 $options = $optionResolver->resolve($field);
 
                 $folderMeta = array(
-                    'id'           => $field->getId(),
-                    'name'         => $field->getName(),
-                    'type'         => $field->getType(),
-                    'options'      => $options,
-                    'readonly'     => $field->isReadonly(),
-                    'required'     => $field->isRequired(),
+                    'id' => $field->getId(),
+                    'name' => $field->getName(),
+                    'type' => $field->getType(),
+                    'options' => $options,
+                    'readonly' => $field->isReadonly(),
+                    'required' => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                    'values'       => array(),
-                    'leaf'         => true,
+                    'values' => array(),
+                    'leaf' => true,
                 );
 
                 if ($metaData) {
@@ -86,14 +86,14 @@ class FoldersMetasController extends FOSRestController
             }
 
             $folderMetaSets[] = array(
-                'id'       => $metaSet->getId(),
-                'name'     => $metaSet->getName(),
-                'children' => $folderMetas
+                'id' => $metaSet->getId(),
+                'name' => $metaSet->getName(),
+                'children' => $folderMetas,
             );
         }
 
         return array(
-            'metasets' => $folderMetaSets
+            'metasets' => $folderMetaSets,
         );
     }
 

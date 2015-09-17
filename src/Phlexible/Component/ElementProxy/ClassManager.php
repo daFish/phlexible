@@ -14,7 +14,7 @@ namespace Phlexible\Component\ElementProxy;
 use Phlexible\Bundle\ElementBundle\Entity\ElementVersion;
 
 /**
- * Class manager
+ * Class manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -137,6 +137,7 @@ class ClassManager
      * @param ElementVersion $elementVersion
      *
      * @return MainStructureInterface
+     *
      * @throws \Exception
      */
     private function createByElementVersion(ElementVersion $elementVersion)
@@ -150,7 +151,7 @@ class ClassManager
         $className = $this->elementtypeIdMap[$elementtypeId]['classname'];
         $filename = $this->elementtypeIdMap[$elementtypeId]['filename'];
 
-        require_once $this->baseDir . '/' . $filename;
+        require_once $this->baseDir.'/'.$filename;
 
         return new $className($elementVersion->getElement()->getEid(), $elementVersion->getVersion());
     }
@@ -160,6 +161,7 @@ class ClassManager
      * @param string $id
      *
      * @return ChildStructureInterface
+     *
      * @throws \Exception
      */
     private function createByDsId($dsId, $id = null)
@@ -171,7 +173,7 @@ class ClassManager
         $className = $this->dsIdMap[$dsId]['classname'];
         $filename = $this->dsIdMap[$dsId]['filename'];
 
-        require_once $this->baseDir . '/' . $filename;
+        require_once $this->baseDir.'/'.$filename;
 
         return new $className($id);
     }

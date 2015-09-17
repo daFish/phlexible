@@ -21,7 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Changes command
+ * Changes command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -40,7 +40,6 @@ class ChangesCommand extends ContainerAwareCommand
             ->addOption('filter', null, InputOption::VALUE_REQUIRED, 'Filter changes. Specify "add", "update" or "remove".')
             ->addOption('queue', null, InputOption::VALUE_NONE, 'Via queue');
     }
-
 
     /**
      * {@inheritdoc}
@@ -111,7 +110,7 @@ class ChangesCommand extends ContainerAwareCommand
                             count($oldRevisions) ? implode(',', $oldRevisions) : '-',
                             "<fg=$color>{$change->getReason()}</fg=$color>",
                             count($oldRevisions) ?: '-',
-                            count($change->getUsage()) ?: '-'
+                            count($change->getUsage()) ?: '-',
                         )
                     );
                 }
@@ -163,4 +162,3 @@ class ChangesCommand extends ContainerAwareCommand
         return $elementStructure;
     }
 }
-

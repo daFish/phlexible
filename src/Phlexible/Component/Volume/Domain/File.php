@@ -17,7 +17,7 @@ use Phlexible\Component\Volume\Model\FolderInterface;
 use Phlexible\Component\Volume\VolumeInterface;
 
 /**
- * File
+ * File.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

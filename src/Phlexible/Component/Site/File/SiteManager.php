@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Site manager
+ * Site manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

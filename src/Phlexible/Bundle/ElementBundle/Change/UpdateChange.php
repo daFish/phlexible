@@ -16,7 +16,7 @@ use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Component\Elementtype\Usage\Usage;
 
 /**
- * Elementtype update change
+ * Elementtype update change.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,10 +33,10 @@ class UpdateChange extends Change
     private $outdatedElementSources = array();
 
     /**
-     * @param \Phlexible\Component\Elementtype\Domain\Elementtype     $elementtype
-     * @param Usage[]         $usage
-     * @param bool            $needImport
-     * @param ElementSource[] $outdatedElementSources
+     * @param \Phlexible\Component\Elementtype\Domain\Elementtype $elementtype
+     * @param Usage[]                                             $usage
+     * @param bool                                                $needImport
+     * @param ElementSource[]                                     $outdatedElementSources
      */
     public function __construct(Elementtype $elementtype, array $usage, $needImport, array $outdatedElementSources)
     {

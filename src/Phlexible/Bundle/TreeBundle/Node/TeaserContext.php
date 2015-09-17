@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node;
 
 /**
- * Teaser context
+ * Teaser context.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

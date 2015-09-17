@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Node history
+ * Node history.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * File meta sets controller
+ * File meta sets controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -58,13 +58,13 @@ class FilesMetaSetsController extends FOSRestController
         $sets = array();
         foreach ($metaSets as $metaSet) {
             $sets[] = array(
-                'id'   => $metaSet->getId(),
+                'id' => $metaSet->getId(),
                 'name' => $metaSet->getName(),
             );
         }
 
         return array(
-            'sets' => $sets
+            'sets' => $sets,
         );
     }
 

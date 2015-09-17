@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Site\Exception;
 
 /**
- * Delete cancelled exception
+ * Delete cancelled exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class DeleteCancelledException extends RuntimeException
 {
-
 }

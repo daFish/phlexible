@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Compressor;
 
 /**
- * Simple CSS compressor
+ * Simple CSS compressor.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

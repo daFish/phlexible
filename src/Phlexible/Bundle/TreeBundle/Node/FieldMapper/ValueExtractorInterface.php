@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
- * Value extractor interface
+ * Value extractor interface.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

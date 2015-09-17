@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Filter form type
+ * Filter form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -31,7 +31,7 @@ class FilterType extends AbstractType
         $dateOptions = array(
             'widget' => 'single_text',
             'date_format' => 'yyyy-MM-dd HH:mm:ss',
-            'format' => 'yyyy-MM-dd HH:mm:ss'
+            'format' => 'yyyy-MM-dd HH:mm:ss',
         );
 
         $builder->add('id', 'text');
@@ -52,7 +52,7 @@ class FilterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MessageFilter\Domain\Filter',
+            'data_class' => 'Phlexible\Component\MessageFilter\Domain\Filter',
             'csrf_protection' => false,
         ));
     }

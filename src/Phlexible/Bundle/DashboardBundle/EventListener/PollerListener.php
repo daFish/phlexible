@@ -16,7 +16,7 @@ use Phlexible\Bundle\GuiBundle\Event\PollEvent;
 use Phlexible\Bundle\GuiBundle\Poller\Message;
 
 /**
- * Poll listener
+ * Poll listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -14,7 +14,7 @@ namespace Phlexible\Component\NodeType\Model;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Node type manager interface
+ * Node type manager interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

@@ -18,7 +18,7 @@ use Phlexible\Component\NodeType\Domain\NodeTypeConstraint;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Site
+ * Site.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Serializer\XmlRoot(name="site")
@@ -286,7 +286,7 @@ class Site
     }
 
     /**
-     * Set all titles
+     * Set all titles.
      *
      * @param array $titles
      *
@@ -300,7 +300,7 @@ class Site
     }
 
     /**
-     * Return all titles
+     * Return all titles.
      *
      * @return array
      */
@@ -310,7 +310,7 @@ class Site
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $language
      * @param string $title
@@ -325,7 +325,7 @@ class Site
     }
 
     /**
-     * Return siteroot title
+     * Return siteroot title.
      *
      * @param string $language
      *
@@ -481,9 +481,10 @@ class Site
     }
 
     /**
-     * Return all special tids
+     * Return all special tids.
      *
      * @return NodeAlias[]
+     *
      * @deprecated
      */
     public function getSpecialTids()
@@ -492,12 +493,13 @@ class Site
     }
 
     /**
-     * Return a special tid
+     * Return a special tid.
      *
      * @param string $language
      * @param string $key
      *
      * @return string
+     *
      * @deprecated
      */
     public function getSpecialTid($language, $key)

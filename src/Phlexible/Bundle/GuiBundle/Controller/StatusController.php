@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Status controller
+ * Status controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/gui/status")
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StatusController extends Controller
 {
     /**
-     * List status actions
+     * List status actions.
      *
      * @return Response
      * @Route("", name="phlexible_gui_status")
@@ -46,7 +46,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Show events
+     * Show events.
      *
      * @return Response
      * @Route("/listeners", name="phlexible_gui_status_listeners")
@@ -59,13 +59,13 @@ class StatusController extends Controller
         sort($listenerNames);
 
         $output = '<pre>';
-        $output .= str_repeat('=', 3) . str_pad(' Events / Listeners ', 80, '=') . PHP_EOL . PHP_EOL;
+        $output .= str_repeat('=', 3).str_pad(' Events / Listeners ', 80, '=').PHP_EOL.PHP_EOL;
 
         foreach ($listenerNames as $listenerName) {
             $listeners = $dispatcher->getListeners($listenerName);
 
-            $output .= $listenerName .
-                ' (<a href="#' . $listenerName . '">' . count($listeners) . ' listeners</a>)' . PHP_EOL;
+            $output .= $listenerName.
+                ' (<a href="#'.$listenerName.'">'.count($listeners).' listeners</a>)'.PHP_EOL;
         }
 
         foreach ($listenerNames as $listenerName) {
@@ -75,18 +75,18 @@ class StatusController extends Controller
                 $listenerName = '(global)';
             }
 
-            $output .= PHP_EOL . PHP_EOL . str_repeat('-', 3) . '<a name="' . $listenerName . '"></a>'
-                . str_pad(' ' . $listenerName . ' ', 80, '-') . PHP_EOL . PHP_EOL;
+            $output .= PHP_EOL.PHP_EOL.str_repeat('-', 3).'<a name="'.$listenerName.'"></a>'
+                .str_pad(' '.$listenerName.' ', 80, '-').PHP_EOL.PHP_EOL;
 
             foreach ($listeners as $listener) {
                 if (is_array($listener)) {
                     if (is_object($listener[0])) {
-                        $listener = get_class($listener[0]) . '->' . $listener[1] . '()';
+                        $listener = get_class($listener[0]).'->'.$listener[1].'()';
                     } else {
-                        $listener = implode('::', $listener) . '()';
+                        $listener = implode('::', $listener).'()';
                     }
                 }
-                $output .= '* ' . $listener . PHP_EOL;
+                $output .= '* '.$listener.PHP_EOL;
             }
         }
 
@@ -94,7 +94,7 @@ class StatusController extends Controller
     }
 
     /**
-     * phpinfo
+     * phpinfo.
      *
      * @param Request $request
      *
@@ -113,7 +113,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Show versions
+     * Show versions.
      *
      * @return Response
      * @Route("/versions", name="phlexible_gui_status_versions")
@@ -121,18 +121,17 @@ class StatusController extends Controller
     public function versionsAction()
     {
         $output = '';
-        $output .= '<div>PHP: ' . PHP_VERSION . '</div>';
+        $output .= '<div>PHP: '.PHP_VERSION.'</div>';
         $output .= '<div>phlexible: 1.0.0</div>';
-        $output .= '<div>Symfony: ' . \Symfony\Component\HttpKernel\Kernel::VERSION . '</div>';
-        $output .= '<div>Doctrine DBAL: ' . \Doctrine\DBAL\Version::VERSION . '</div>';
-        $output .= '<div>Doctrine ORM: ' . \Doctrine\ORM\Version::VERSION . '</div>';
-
+        $output .= '<div>Symfony: '.\Symfony\Component\HttpKernel\Kernel::VERSION.'</div>';
+        $output .= '<div>Doctrine DBAL: '.\Doctrine\DBAL\Version::VERSION.'</div>';
+        $output .= '<div>Doctrine ORM: '.\Doctrine\ORM\Version::VERSION.'</div>';
 
         return new Response($output);
     }
 
     /**
-     * Show load
+     * Show load.
      *
      * @return Response
      * @Route("/load", name="phlexible_gui_status_load")
@@ -145,7 +144,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Show security context
+     * Show security context.
      *
      * @return Response
      * @Route("/context", name="phlexible_gui_status_context")
@@ -158,8 +157,8 @@ class StatusController extends Controller
         $user = $token->getUser();
 
         $output = '<pre>';
-        $output .= 'Token class: ' . get_class($token) . PHP_EOL;
-        $output .= 'User class:  ' . (is_object($user) ? get_class($user) : $user) . PHP_EOL;
+        $output .= 'Token class: '.get_class($token).PHP_EOL;
+        $output .= 'User class:  '.(is_object($user) ? get_class($user) : $user).PHP_EOL;
         $output .= PHP_EOL;
         $output .= 'Token username: ';
         $output .= print_r($token->getUsername(), 1).PHP_EOL;
@@ -174,7 +173,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Show session
+     * Show session.
      *
      * @param Request $request
      *
@@ -190,14 +189,14 @@ class StatusController extends Controller
             if (is_object($value)) {
                 $o = get_class($value);
             } elseif (is_array($value)) {
-                $o = 'array ' . count($value);
+                $o = 'array '.count($value);
             } else {
                 $o = $value;
                 if (@unserialize($o)) {
                     $o = unserialize($o);
                 }
             }
-            $output .= '<li>'.$key . ': ' . $o . '</li>';
+            $output .= '<li>'.$key.': '.$o.'</li>';
         }
         $output .= '</ul>';
 

@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Temp\MediaConverter\Transmuter;
 
 /**
- * Image previewer
+ * Image previewer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -72,7 +72,7 @@ class ImagePreviewer implements PreviewerInterface
 
         $spec = $this->specifier->specify($template);
         $extension = $this->specifier->getExtension($template);
-        $cacheFilename = $this->cacheDir . 'preview_image.' . $extension;
+        $cacheFilename = $this->cacheDir.'preview_image.'.$extension;
         $this->transmuter->transmute($filePath, $spec, $cacheFilename);
 
         $file = new File($cacheFilename);
@@ -80,15 +80,15 @@ class ImagePreviewer implements PreviewerInterface
         $size = getimagesize($cacheFilename);
 
         $data = array(
-            'path'       => $cacheFilename,
-            'file'       => basename($cacheFilename),
-            'size'       => filesize($cacheFilename),
-            'template'   => $template->getKey(),
-            'format'     => $extension,
-            'mimetype'   => $file->getMimeType(),
+            'path' => $cacheFilename,
+            'file' => basename($cacheFilename),
+            'size' => filesize($cacheFilename),
+            'template' => $template->getKey(),
+            'format' => $extension,
+            'mimetype' => $file->getMimeType(),
             'parameters' => $template->getParameters(),
-            'width'      => $size[0],
-            'height'     => $size[1],
+            'width' => $size[0],
+            'height' => $size[1],
         );
 
         return $data;
@@ -101,8 +101,8 @@ class ImagePreviewer implements PreviewerInterface
      */
     private function toCamelCase($value)
     {
-        $chunks    = explode('_', $value);
-        $ucfirsted = array_map(function($s) { return ucfirst($s); }, $chunks);
+        $chunks = explode('_', $value);
+        $ucfirsted = array_map(function ($s) { return ucfirst($s); }, $chunks);
 
         return implode('', $ucfirsted);
     }

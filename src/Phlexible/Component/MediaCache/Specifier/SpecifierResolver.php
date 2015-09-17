@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaCache\Specifier;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Specifier resolver
+ * Specifier resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -48,7 +48,7 @@ class SpecifierResolver
     }
 
     /**
-     * Determine and return worker
+     * Determine and return worker.
      *
      * @param TemplateInterface $template
      *

@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Date field
+ * Date field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

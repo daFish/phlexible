@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node\FieldMapper;
 
 /**
- * Link field mapper
+ * Link field mapper.
  *
  * @author Stephan Wentz <swentz@brainbits.net>
  */

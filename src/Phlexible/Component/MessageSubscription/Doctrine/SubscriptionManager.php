@@ -17,7 +17,7 @@ use Phlexible\Component\MessageSubscription\Domain\Subscription;
 use Phlexible\Component\MessageSubscription\Model\SubscriptionManagerInterface;
 
 /**
- * Doctrine subscription manager
+ * Doctrine subscription manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

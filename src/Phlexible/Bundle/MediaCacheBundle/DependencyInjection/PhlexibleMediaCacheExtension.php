@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Media cache extension
+ * Media cache extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -52,7 +52,7 @@ class PhlexibleMediaCacheExtension extends Extension
 
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('%s.yml', $config['db_driver']));
-            $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
+            $container->setParameter($this->getAlias().'.backend_type_'.$config['db_driver'], true);
         }
 
         $container->setParameter('phlexible_media_cache.process_on_add', $config['process_on_add']);

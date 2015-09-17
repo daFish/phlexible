@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Provider loading routes from Doctrine
+ * Provider loading routes from Doctrine.
  *
  * This is <strong>NOT</strong> not a doctrine repository but just the route
  * provider for the NestedMatcher. (you could of course implement this
@@ -56,7 +56,7 @@ class RouteProvider implements RouteProviderInterface
      * Constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param SiteHostnameMapper $mapper
+     * @param SiteHostnameMapper     $mapper
      * @param CandidatesInterface    $candidatesStrategy
      */
     public function __construct(EntityManagerInterface $entityManager, SiteHostnameMapper $mapper, CandidatesInterface $candidatesStrategy)
@@ -67,7 +67,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRouteCollectionForRequest(Request $request)
     {
@@ -85,7 +85,7 @@ class RouteProvider implements RouteProviderInterface
                 /* @var $route Route */
                 $route->addDefaults(array(
                     '_controller' => 'PhlexibleCmsBundle:Online:index',
-                    'preview'     => false,
+                    'preview' => false,
                 ));
                 $this->entityManager->detach($route);
                 $route->setHost($this->mapper->toLocal($route->getHost()));
@@ -99,7 +99,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRouteByName($name)
     {
@@ -128,7 +128,7 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRoutesByNames($names = null)
     {

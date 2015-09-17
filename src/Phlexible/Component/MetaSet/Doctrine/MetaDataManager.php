@@ -20,7 +20,7 @@ use Phlexible\Component\MetaSet\Model\MetaDataInterface;
 use Phlexible\Component\MetaSet\Model\MetaDataManagerInterface;
 
 /**
- * Meta data manager
+ * Meta data manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -183,7 +183,7 @@ class MetaDataManager implements MetaDataManagerInterface
         foreach ($rows as $row) {
             $id = '';
             foreach ($identifiers as $value) {
-                $id .= $value . '_';
+                $id .= $value.'_';
             }
             $id .= $row['set_id'];
 
@@ -205,5 +205,4 @@ class MetaDataManager implements MetaDataManagerInterface
 
         return $metaDatas;
     }
-
 }

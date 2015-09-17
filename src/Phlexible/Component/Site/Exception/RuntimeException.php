@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Site\Exception;
 
 /**
- * Runtime exception
+ * Runtime exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-
 }

@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Elementtype\Exception;
 
 /**
- * Create cancelled exception
+ * Create cancelled exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class CreateCancelledException extends RuntimeException
 {
-
 }

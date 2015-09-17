@@ -29,7 +29,7 @@ use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Node listener
+ * Node listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,9 +51,9 @@ class NodeListener implements EventSubscriberInterface
     private $historyManager;
 
     /**
-     * @param RouteManagerInterface      $routeManager
-     * @param \Phlexible\Component\Site\Model\SiteManagerInterface   $siterootManager
-     * @param NodeChangeManagerInterface $historyManager
+     * @param RouteManagerInterface                                $routeManager
+     * @param \Phlexible\Component\Site\Model\SiteManagerInterface $siterootManager
+     * @param NodeChangeManagerInterface                           $historyManager
      */
     public function __construct(
         RouteManagerInterface $routeManager,

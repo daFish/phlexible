@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Expression\Exception;
 
 /**
- * Unhandled expression exception for expressions
+ * Unhandled expression exception for expressions.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class UnhandledExpressionException extends InvalidArgumentException
 {
-
 }

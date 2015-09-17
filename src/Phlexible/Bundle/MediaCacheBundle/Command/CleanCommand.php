@@ -22,7 +22,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * Clean command
+ * Clean command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -87,7 +87,7 @@ class CleanCommand extends ContainerAwareCommand
 
             foreach (array_keys($files) as $file) {
                 if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
-                    $output->writeln('delete: ' . $file);
+                    $output->writeln('delete: '.$file);
                 }
 
                 if (!$pretend) {
@@ -95,7 +95,7 @@ class CleanCommand extends ContainerAwareCommand
                 }
             }
 
-            $output->writeln(count($files) . ' obsolete cache files.');
+            $output->writeln(count($files).' obsolete cache files.');
         } else {
             if ($pretend || $output->getVerbosity() !== OutputInterface::VERBOSITY_QUIET) {
                 $output->writeln('No obsolete cache files.');

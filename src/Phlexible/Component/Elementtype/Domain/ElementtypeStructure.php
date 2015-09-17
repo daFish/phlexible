@@ -15,7 +15,7 @@ use Phlexible\Component\Elementtype\ElementtypeStructure\ElementtypeStructureIte
 use Phlexible\Component\Elementtype\Exception\InvalidArgumentException;
 
 /**
- * Elementtype structure
+ * Elementtype structure.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -70,6 +70,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      * @param ElementtypeStructureNode $node
      *
      * @throws InvalidArgumentException
+     *
      * @return $this
      */
     public function addNode(ElementtypeStructureNode $node)
@@ -100,6 +101,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
      * @param string $dsId
      *
      * @return string
+     *
      * @throws InvalidArgumentException
      */
     public function getParentDsId($dsId)
@@ -319,7 +321,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
         $result = array();
         foreach ($this->dsIdMap as $dsId => $node) {
             /* @var $node ElementtypeStructureNode */
-            if ($fieldType == $node->getType()) {
+            if ($fieldType === $node->getType()) {
                 $result[] = $dsId;
             }
         }
@@ -339,7 +341,7 @@ class ElementtypeStructure implements \Countable, \IteratorAggregate
         $result = array();
         foreach ($this->dsIdMap as $node) {
             /* @var $node ElementtypeStructureNode */
-            if ($fieldType == $node->getType()) {
+            if ($fieldType === $node->getType()) {
                 $result[] = $node->getName();
             }
         }

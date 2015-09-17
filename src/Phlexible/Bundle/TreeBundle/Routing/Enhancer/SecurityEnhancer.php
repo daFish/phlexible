@@ -17,7 +17,7 @@ use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Security enhancer
+ * Security enhancer.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

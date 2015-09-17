@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Distiller;
 
 /**
- * Distilled node collection
+ * Distilled node collection.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

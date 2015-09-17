@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\GuiBundle\Portlet;
 use Phlexible\Bundle\DashboardBundle\Domain\Portlet;
 
 /**
- * Load lortlet
+ * Load lortlet.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

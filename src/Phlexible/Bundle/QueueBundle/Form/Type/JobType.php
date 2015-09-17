@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Job form type
+ * Job form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -42,7 +42,7 @@ class JobType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Bundle\QueueBundle\Entity\Job',
+            'data_class' => 'Phlexible\Bundle\QueueBundle\Entity\Job',
             'csrf_protection' => false,
         ));
     }

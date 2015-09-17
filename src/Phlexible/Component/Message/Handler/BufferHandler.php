@@ -14,7 +14,7 @@ namespace Phlexible\Component\Message\Handler;
 use Phlexible\Component\Message\Domain\Message;
 
 /**
- * Buffer handler
+ * Buffer handler.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

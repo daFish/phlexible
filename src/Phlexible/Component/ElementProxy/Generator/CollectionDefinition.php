@@ -12,7 +12,7 @@
 namespace Phlexible\Component\ElementProxy\Generator;
 
 /**
- * Collection definition
+ * Collection definition.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

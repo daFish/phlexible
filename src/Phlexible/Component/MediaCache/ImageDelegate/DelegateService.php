@@ -15,7 +15,7 @@ use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 use Temp\MediaClassifier\Model\MediaType;
 
 /**
- * Delegate worker
+ * Delegate worker.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

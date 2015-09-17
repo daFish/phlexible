@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Folder meta setscontroller
+ * Folder meta setscontroller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -57,7 +57,7 @@ class FoldersMetaSetsController extends FOSRestController
         $sets = array();
         foreach ($metaSets as $metaSet) {
             $sets[] = array(
-                'id'   => $metaSet->getId(),
+                'id' => $metaSet->getId(),
                 'name' => $metaSet->getName(),
             );
         }

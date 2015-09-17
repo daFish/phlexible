@@ -14,7 +14,7 @@ namespace Phlexible\Component\Elementtype\ElementtypeStructure\Diff;
 use Phlexible\Component\Elementtype\Domain\ElementtypeStructureNode;
 
 /**
- * Diff
+ * Diff.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

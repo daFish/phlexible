@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Meta set form type
+ * Meta set form type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -33,16 +33,16 @@ class MetaSetType extends AbstractType
         $builder->add('createdBy');
         $builder->add('createdAt', 'datetime', array(
             'widget' => 'single_text',
-            'input' => 'datetime'
+            'input' => 'datetime',
         ));
         $builder->add('modifiedBy');
         $builder->add('modifiedAt', 'datetime', array(
             'widget' => 'single_text',
-            'input' => 'datetime'
+            'input' => 'datetime',
         ));
         $builder->add('fields', 'collection', array(
-            'type'         => new MetaSetFieldType(),
-            'allow_add'    => true,
+            'type' => new MetaSetFieldType(),
+            'allow_add' => true,
             #'allow_delete' => true,
             'by_reference' => false,
             #'delete_empty' => true,
@@ -55,7 +55,7 @@ class MetaSetType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'      => 'Phlexible\Component\MetaSet\Domain\MetaSet',
+            'data_class' => 'Phlexible\Component\MetaSet\Domain\MetaSet',
             'csrf_protection' => false,
         ));
     }

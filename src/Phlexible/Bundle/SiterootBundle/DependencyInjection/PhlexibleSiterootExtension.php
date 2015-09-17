@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Siteroot extension
+ * Siteroot extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -28,7 +28,7 @@ class PhlexibleSiterootExtension extends Extension
      */
     public function load(array $config, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
         $configuration = $this->getConfiguration($config, $container);
@@ -36,7 +36,7 @@ class PhlexibleSiterootExtension extends Extension
 
         if ('custom' !== $config['db_driver']) {
             $loader->load(sprintf('%s.yml', $config['db_driver']));
-            $container->setParameter($this->getAlias() . '.backend_type_' . $config['db_driver'], true);
+            $container->setParameter($this->getAlias().'.backend_type_'.$config['db_driver'], true);
         }
 
         $mappings = array();

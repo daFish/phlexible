@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\RouteGenerator\NodeIdPathDecorator;
 use Phlexible\Bundle\TreeBundle\RouteGenerator\Path;
 
 /**
- * Node ID path decorator test
+ * Node ID path decorator test.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

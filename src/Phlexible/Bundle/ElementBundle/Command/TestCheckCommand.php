@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Test check command
+ * Test check command.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -56,4 +56,3 @@ class TestCheckCommand extends ContainerAwareCommand
         return 0;
     }
 }
-

@@ -15,7 +15,7 @@ use Phlexible\Component\MediaCache\Domain\CacheItem;
 use Phlexible\Component\MediaManager\Volume\ExtendedFileInterface;
 
 /**
- * Storage interface
+ * Storage interface.
  *
  * @author Peter Fahsel <pfahsel@brainbits.net>
  */

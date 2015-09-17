@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\ElementBundle\Lock;
 use Phlexible\Bundle\LockBundle\Lock\LockIdentifier;
 
 /**
- * Element slave lock identifier
+ * Element slave lock identifier.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

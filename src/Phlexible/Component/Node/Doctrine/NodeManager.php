@@ -21,7 +21,7 @@ use Phlexible\Component\Site\Model\SiteManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Node manager
+ * Node manager.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -44,7 +44,7 @@ class NodeManager implements NodeManagerInterface
 
     /**
      * @param EntityManagerInterface   $entityManager
-     * @param SiteManagerInterface $siterootManager
+     * @param SiteManagerInterface     $siterootManager
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
@@ -122,7 +122,7 @@ class NodeManager implements NodeManagerInterface
         }
 
         if (count($instanceTypes) > 1) {
-            $qb->andWhere("n INSTANCE OF (".implode(',', $instanceTypes).")");
+            $qb->andWhere('n INSTANCE OF ('.implode(',', $instanceTypes).')');
         }
 
         $result = $qb->getQuery()->getOneOrNullResult();
@@ -162,7 +162,7 @@ class NodeManager implements NodeManagerInterface
         }
 
         if (count($instanceTypes) > 1) {
-            $qb->andWhere("n INSTANCE OF (".implode(',', $instanceTypes).")");
+            $qb->andWhere('n INSTANCE OF ('.implode(',', $instanceTypes).')');
         }
 
         $result = $qb->getQuery()->getResult();
@@ -182,7 +182,6 @@ class NodeManager implements NodeManagerInterface
         } else {
             $beforeEventName = TreeEvents::BEFORE_CREATE_NODE;
             $eventName = TreeEvents::CREATE_NODE;
-
         }
         if ($this->eventDispatcher->dispatch($beforeEventName, $event)->isPropagationStopped()) {
             return false;

@@ -15,7 +15,7 @@ use Phlexible\Component\Site\Domain\Site;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Site event
+ * Site event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

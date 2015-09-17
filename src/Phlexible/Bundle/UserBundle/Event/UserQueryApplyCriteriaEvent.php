@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * User query apply criteria event
+ * User query apply criteria event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -37,7 +37,7 @@ class UserQueryApplyCriteriaEvent extends Event
     }
 
     /**
-     * Return criteria
+     * Return criteria.
      *
      * @return Criteria
      */

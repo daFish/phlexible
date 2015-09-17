@@ -27,7 +27,7 @@ use Webmozart\Expression\Expr;
 use Webmozart\Expression\Logic\Conjunction;
 
 /**
- * File controller
+ * File controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -37,7 +37,7 @@ use Webmozart\Expression\Logic\Conjunction;
 class FilesController extends FOSRestController
 {
     /**
-     * List files
+     * List files.
      *
      * @param Request $request
      *
@@ -64,7 +64,7 @@ class FilesController extends FOSRestController
         $expression = $request->get('expression');
 
         if (!$folderId) {
-            throw new BadRequestHttpException("No folder ID given");
+            throw new BadRequestHttpException('No folder ID given');
         }
 
         $data = array();
@@ -104,12 +104,12 @@ class FilesController extends FOSRestController
 
         return array(
             'files' => $data,
-            'count' => $total
+            'count' => $total,
         );
     }
 
     /**
-     * Return file
+     * Return file.
      *
      * @param Request $request
      * @param string  $fileId
@@ -138,18 +138,18 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId, $fileVersion);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $data = $serializer->serialize($file, $request->getLocale());
 
         return array(
-            'file' => $data
+            'file' => $data,
         );
     }
 
     /**
-     * Update file
+     * Update file.
      *
      * @param Request $request
      * @param string  $fileId
@@ -178,7 +178,7 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         if ($name) {
@@ -200,7 +200,7 @@ class FilesController extends FOSRestController
     }
 
     /**
-     * Delete File
+     * Delete File.
      *
      * @param Request $request
      * @param string  $fileId
@@ -224,19 +224,20 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $volume->deleteFile($file, $this->getUser()->getUsername());
     }
 
     /**
-     * Hide File
+     * Hide File.
      *
      * @param Request $request
      * @param string  $fileId
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -256,19 +257,20 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $volume->hide($file, $this->getUser()->getUsername());
     }
 
     /**
-     * Show file
+     * Show file.
      *
      * @param Request $request
      * @param string  $fileId
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -288,19 +290,20 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $volume->show($file, $this->getUser()->getUsername());
     }
 
     /**
-     * Rename file
+     * Rename file.
      *
      * @param Request $request
      * @param string  $fileId
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -321,19 +324,20 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $volume->renameFile($file, $name, $this->getUser()->getUsername());
     }
 
     /**
-     * Copy file
+     * Copy file.
      *
      * @param Request $request
      * @param string  $fileId
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -354,25 +358,26 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $folder = $volume->findFolder($folderId);
 
         if (!$folder instanceof FolderInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $volume->copyFile($file, $folder, $this->getUser()->getUsername());
     }
 
     /**
-     * Move file
+     * Move file.
      *
      * @param Request $request
      * @param string  $fileId
      *
      * @return Response
+     *
      * @deprecated
      *
      * @Rest\View(statusCode=204)
@@ -394,13 +399,13 @@ class FilesController extends FOSRestController
         $file = $volume->findFile($fileId);
 
         if (!$file instanceof FileInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $folder = $volume->findFolder($folderId);
 
         if (!$folder instanceof FolderInterface) {
-            throw new NotFoundHttpException("File not found");
+            throw new NotFoundHttpException('File not found');
         }
 
         $volume->moveFile($file, $folder, $this->getUser()->getUsername());

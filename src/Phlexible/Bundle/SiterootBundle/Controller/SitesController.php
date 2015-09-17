@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Site controller
+ * Site controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -64,7 +64,7 @@ class SitesController extends FOSRestController
     }
 
     /**
-     * Get sites
+     * Get sites.
      *
      * @return Response
      *
@@ -89,7 +89,7 @@ class SitesController extends FOSRestController
     }
 
     /**
-     * Get sites
+     * Get sites.
      *
      * @param string $siteId
      *
@@ -118,7 +118,7 @@ class SitesController extends FOSRestController
     }
 
     /**
-     * Create site
+     * Create site.
      *
      * @param Request $request
      *
@@ -141,7 +141,7 @@ class SitesController extends FOSRestController
     }
 
     /**
-     * Update site
+     * Update site.
      *
      * @param Request $request
      * @param string  $siteId
@@ -208,7 +208,7 @@ class SitesController extends FOSRestController
     }
 
     /**
-     * Delete site
+     * Delete site.
      *
      * @param string $siteId
      *

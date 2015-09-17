@@ -15,16 +15,16 @@ use Phlexible\Bundle\TreeBundle\Model\TreeInterface;
 use Phlexible\Component\Node\Model\NodeInterface;
 
 /**
- * Node context factory interface
+ * Node context factory interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 interface NodeContextFactoryInterface
 {
     /**
-     * @param TreeInterface $tree
+     * @param TreeInterface                                 $tree
      * @param \Phlexible\Component\Node\Model\NodeInterface $node
-     * @param string        $language
+     * @param string                                        $language
      *
      * @return NodeContext
      */

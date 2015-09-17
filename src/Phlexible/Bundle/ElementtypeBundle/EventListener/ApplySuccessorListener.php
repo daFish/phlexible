@@ -15,7 +15,7 @@ use Doctrine\DBAL\Connection;
 use Phlexible\Bundle\UserBundle\Event\ApplySuccessorEvent;
 
 /**
- * Elementtypes listeners
+ * Elementtypes listeners.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -51,7 +51,7 @@ class ApplySuccessorListener
                 'create_user_id' => $toUid,
             ),
             array(
-                'create_user_id' => $fromUid
+                'create_user_id' => $fromUid,
             )
         );
 
@@ -61,7 +61,7 @@ class ApplySuccessorListener
                 'create_user_id' => $toUid,
             ),
             array(
-                'create_user_id' => $fromUid
+                'create_user_id' => $fromUid,
             )
         );
     }

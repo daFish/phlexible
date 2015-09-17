@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\GuiBundle\Twig\Extension;
 
 /**
- * Twig gui extension
+ * Twig gui extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -52,9 +52,9 @@ class GuiExtension extends \Twig_Extension
     {
         return array(
             'project' => array(
-                'title'   => $this->projectTitle,
+                'title' => $this->projectTitle,
                 'version' => $this->projectVersion,
-                'url'     => $this->projectUrl,
+                'url' => $this->projectUrl,
             ),
         );
     }

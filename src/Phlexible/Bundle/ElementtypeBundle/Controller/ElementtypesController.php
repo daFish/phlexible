@@ -16,8 +16,8 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Phlexible\Bundle\ElementtypeBundle\Form\Type\ElementtypeType;
-use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Phlexible\Bundle\GuiBundle\Response\ResultResponse;
+use Phlexible\Component\Elementtype\Domain\Elementtype;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * List controller
+ * List controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -35,7 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ElementtypesController extends FOSRestController
 {
     /**
-     * Return elementtypes
+     * Return elementtypes.
      *
      * @return Response
      *
@@ -57,13 +57,13 @@ class ElementtypesController extends FOSRestController
         return $this->handleView($this->view(
             array(
                 'elementtypes' => array_values($elementtypes),
-                'count'        => count($elementtypes)
+                'count' => count($elementtypes),
             )
         ));
     }
 
     /**
-     * Return elementtype
+     * Return elementtype.
      *
      * @param string $elementtypeId
      *
@@ -90,12 +90,12 @@ class ElementtypesController extends FOSRestController
         }
 
         return array(
-            'elementtype' => $elementtype
+            'elementtype' => $elementtype,
         );
     }
 
     /**
-     * Return elementtype tree
+     * Return elementtype tree.
      *
      * @param string $elementtypeId
      *
@@ -130,7 +130,7 @@ class ElementtypesController extends FOSRestController
     }
 
     /**
-     * Create elementtype
+     * Create elementtype.
      *
      * @param Request $request
      *
@@ -153,7 +153,7 @@ class ElementtypesController extends FOSRestController
     }
 
     /**
-     * Update elementtype
+     * Update elementtype.
      *
      * @param Request $request
      * @param string  $elementtypeId
@@ -216,7 +216,7 @@ class ElementtypesController extends FOSRestController
     }
 
     /**
-     * Delete an elementtype
+     * Delete an elementtype.
      *
      * @param string $elementtypeId
      *
@@ -240,13 +240,13 @@ class ElementtypesController extends FOSRestController
 
         return $this->handleView($this->view(
             array(
-                'success' => true
+                'success' => true,
             )
         ));
     }
 
     /**
-     * Duplicate elementtype
+     * Duplicate elementtype.
      *
      * @param Request $request
      *

@@ -19,7 +19,7 @@ use Phlexible\Component\Node\Model\NodeInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Selector
+ * Selector.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -202,15 +202,15 @@ class Selector
     }
 
     /**
-     * @param Selection         $selection
-     * @param int               $depth
-     * @param array             $path
+     * @param Selection     $selection
+     * @param int           $depth
+     * @param array         $path
      * @param NodeInterface $node
-     * @param int               $version
-     * @param string            $language
-     * @param bool              $onlyAsync
-     * @param bool              $onlyOffline
-     * @param bool              $isInstance
+     * @param int           $version
+     * @param string        $language
+     * @param bool          $onlyAsync
+     * @param bool          $onlyOffline
+     * @param bool          $isInstance
      */
     private function handleNode(
         Selection $selection,
@@ -263,20 +263,20 @@ class Selector
                 $elementVersion->getBackendTitle($language),
                 $isInstance,
                 $depth,
-                $path . '+' . $language . '+' . $node->getId() . '+' . $language
+                $path.'+'.$language.'+'.$node->getId().'+'.$language
             )
         );
     }
 
     /**
-     * @param Selection         $selection
-     * @param int               $depth
-     * @param array             $path
+     * @param Selection     $selection
+     * @param int           $depth
+     * @param array         $path
      * @param NodeInterface $node
-     * @param string            $language
-     * @param bool              $onlyAsync
-     * @param bool              $onlyOffline
-     * @param bool              $includeTeaserInstances
+     * @param string        $language
+     * @param bool          $onlyAsync
+     * @param bool          $onlyOffline
+     * @param bool          $includeTeaserInstances
      */
     private function handleTeasers(
         Selection $selection,
@@ -366,7 +366,7 @@ class Selector
                 $elementVersion->getBackendTitle($language),
                 $isInstance,
                 $depth,
-                $path . '+' . $language . '+' . $teaser->getId() . '+' . $language
+                $path.'+'.$language.'+'.$teaser->getId().'+'.$language
             )
         );
     }

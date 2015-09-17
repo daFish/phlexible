@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Entity\Route;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Route event
+ * Route event.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -35,7 +35,7 @@ class RouteEvent extends Event
     }
 
     /**
-     * Return route
+     * Return route.
      *
      * @return Route
      */

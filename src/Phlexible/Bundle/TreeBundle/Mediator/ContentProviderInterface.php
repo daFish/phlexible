@@ -14,7 +14,7 @@ namespace Phlexible\Bundle\TreeBundle\Mediator;
 use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 
 /**
- * Content provider interface
+ * Content provider interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

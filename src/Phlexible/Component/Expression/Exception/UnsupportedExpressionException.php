@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Expression\Exception;
 
 /**
- * Unsupported expression exception for expressions
+ * Unsupported expression exception for expressions.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class UnsupportedExpressionException extends InvalidArgumentException
 {
-
 }

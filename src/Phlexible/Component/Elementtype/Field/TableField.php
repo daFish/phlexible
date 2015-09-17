@@ -12,7 +12,7 @@
 namespace Phlexible\Component\Elementtype\Field;
 
 /**
- * Table field
+ * Table field.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

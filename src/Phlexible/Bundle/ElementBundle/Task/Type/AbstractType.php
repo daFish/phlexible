@@ -16,7 +16,7 @@ use Phlexible\Bundle\TaskBundle\Task\Type\TypeInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Abstract element task type
+ * Abstract element task type.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -91,7 +91,7 @@ abstract class AbstractType implements TypeInterface
         return 'bla';
     }
 
-    /**
+    /*
      * Return associative array for placeholder replacement
      *
      * @return array
@@ -132,7 +132,7 @@ abstract class AbstractType implements TypeInterface
     }
         */
 
-    /**
+    /*
      * Return the task link
      *
      * @return array

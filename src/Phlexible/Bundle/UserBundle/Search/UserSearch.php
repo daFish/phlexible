@@ -20,7 +20,7 @@ use Webmozart\Expression\Logic\Disjunction;
 use Webmozart\Expression\Selector\Key;
 
 /**
- * User search
+ * User search.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -82,10 +82,10 @@ class UserSearch implements SearchProviderInterface
                 '/bundles/phlexibleuser/icons/user.png',
                 'Users Search',
                 array(
-                    'handler'    => 'users',
+                    'handler' => 'users',
                     'parameters' => array(
                         'userId' => $user->getId(),
-                        'query'  => $user->getUsername()
+                        'query' => $user->getUsername(),
                     ),
                 )
             );

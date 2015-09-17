@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * File meta controller
+ * File meta controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  *
@@ -67,15 +67,15 @@ class FilesMetasController extends FOSRestController
                 $options = $optionResolver->resolve($field);
 
                 $fileMeta = array(
-                    'id'           => $field->getId(),
-                    'name'         => $field->getName(),
-                    'type'         => $field->getType(),
-                    'options'      => $options,
-                    'readonly'     => $field->isReadonly(),
-                    'required'     => $field->isRequired(),
+                    'id' => $field->getId(),
+                    'name' => $field->getName(),
+                    'type' => $field->getType(),
+                    'options' => $options,
+                    'readonly' => $field->isReadonly(),
+                    'required' => $field->isRequired(),
                     'synchronized' => $field->isSynchronized(),
-                    'values'       => array(),
-                    'leaf'         => true,
+                    'values' => array(),
+                    'leaf' => true,
                 );
 
                 if ($metaData) {
@@ -88,14 +88,14 @@ class FilesMetasController extends FOSRestController
             }
 
             $fileMetaSets[] = array(
-                'id'       => $metaSet->getId(),
-                'name'     => $metaSet->getName(),
-                'children' => $fileMetas
+                'id' => $metaSet->getId(),
+                'name' => $metaSet->getName(),
+                'children' => $fileMetas,
             );
         }
 
         return array(
-            'metasets' => $fileMetaSets
+            'metasets' => $fileMetaSets,
         );
     }
 

@@ -12,7 +12,7 @@
 namespace Phlexible\Bundle\TreeBundle\Node;
 
 /**
- * Node hasher interface
+ * Node hasher interface.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

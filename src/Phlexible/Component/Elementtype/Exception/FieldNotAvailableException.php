@@ -12,11 +12,10 @@
 namespace Phlexible\Component\Elementtype\Exception;
 
 /**
- * Field not available exception
+ * Field not available exception.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
 class FieldNotAvailableException extends InvalidArgumentException
 {
-
 }

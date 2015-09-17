@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * List controller
+ * List controller.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  * @Route("/tree/list")
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ListController extends Controller
 {
     /**
-     * List all Elements
+     * List all Elements.
      *
      * @param Request $request
      *
@@ -90,13 +90,13 @@ class ListController extends Controller
         }
 
         return new JsonResponse(array(
-            'list'  => $data,
-            'total' => $cnt
+            'list' => $data,
+            'total' => $cnt,
         ));
     }
 
     /**
-     * Node reordering
+     * Node reordering.
      *
      * @param Request $request
      *

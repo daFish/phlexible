@@ -15,7 +15,7 @@ use Phlexible\Bundle\TreeBundle\Node\NodeContext;
 use Phlexible\Component\Site\Domain\Site;
 
 /**
- * Pattern resolver
+ * Pattern resolver.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -37,10 +37,10 @@ class PatternResolver
     }
 
     /**
-     * Resolved page title by configured pattern
+     * Resolved page title by configured pattern.
      *
      * @param string      $patternName
-     * @param Site    $siteroot
+     * @param Site        $siteroot
      * @param NodeContext $node
      * @param string      $language
      *
@@ -58,10 +58,10 @@ class PatternResolver
     }
 
     /**
-     * Resolve page title by pattern
+     * Resolve page title by pattern.
      *
      * @param string      $pattern
-     * @param Site    $siteroot
+     * @param Site        $siteroot
      * @param NodeContext $node
      * @param string      $language
      *

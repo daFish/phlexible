@@ -27,7 +27,7 @@ use Temp\MediaClassifier\Model\MediaType;
 use Temp\MetaReader\ReaderInterface;
 
 /**
- * Media site listener
+ * Media site listener.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -87,17 +87,16 @@ class VolumeListener implements EventSubscriberInterface
         $this->metasetMapping = $metasetMapping;
     }
 
-
     /**
      * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return array(
-            VolumeEvents::BEFORE_CREATE_FILE   => array('onBeforeCreateFile', 500),
+            VolumeEvents::BEFORE_CREATE_FILE => array('onBeforeCreateFile', 500),
             VolumeEvents::BEFORE_CREATE_FOLDER => array('onBeforeCreateFolder', 500),
-            VolumeEvents::BEFORE_REPLACE_FILE  => array('onBeforeReplaceFile', 500),
-            VolumeEvents::BEFORE_DELETE_FILE   => 'onBeforeDeleteFile',
+            VolumeEvents::BEFORE_REPLACE_FILE => array('onBeforeReplaceFile', 500),
+            VolumeEvents::BEFORE_DELETE_FILE => 'onBeforeDeleteFile',
             VolumeEvents::BEFORE_DELETE_FOLDER => 'onBeforeDeleteFolder',
         );
     }

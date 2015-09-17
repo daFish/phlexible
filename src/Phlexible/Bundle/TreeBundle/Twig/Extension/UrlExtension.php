@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Twig url extension
+ * Twig url extension.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */
@@ -71,7 +71,7 @@ class UrlExtension extends \Twig_Extension
             } elseif ($link['type'] === 'external') {
                 return $link['url'];
             } elseif ($link['type'] === 'mailto') {
-                return 'mailto:' . $link['recipient'];
+                return 'mailto:'.$link['recipient'];
             }
         } elseif (is_scalar($name) && strlen($name) && (is_int($name) || (int) $name)) {
             return $this->router->generate((int) $name, $parameters, $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH);
@@ -102,7 +102,7 @@ class UrlExtension extends \Twig_Extension
             } elseif ($link['type'] === 'external') {
                 return $link['url'];
             } elseif ($link['type'] === 'mailto') {
-                return 'mailto:' . $link['recipient'];
+                return 'mailto:'.$link['recipient'];
             }
         } elseif (is_scalar($name) && strlen($name) && (is_int($name) || (int) $name)) {
             return $this->router->generate((int) $name, $parameters, $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL);

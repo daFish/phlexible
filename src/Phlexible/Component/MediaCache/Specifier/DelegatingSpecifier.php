@@ -14,7 +14,7 @@ namespace Phlexible\Component\MediaCache\Specifier;
 use Phlexible\Component\MediaTemplate\Model\TemplateInterface;
 
 /**
- * Delegating specifier
+ * Delegating specifier.
  *
  * @author Stephan Wentz <sw@brainbits.net>
  */

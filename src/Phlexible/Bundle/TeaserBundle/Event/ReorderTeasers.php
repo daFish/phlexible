@@ -10,7 +10,7 @@
  */
 
 /**
- * Reorder teasers event
+ * Reorder teasers event.
  *
  * @author Peter Fahsel <pfahsel@brainbits.net>
  */
